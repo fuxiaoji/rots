@@ -30,5 +30,21 @@ for (const role of ["Japan", "Allies"]) {
 	assert.equal(first.publicTrace.fallback, false)
 }
 
-console.log("ERASMUS graph and deterministic policy tests passed")
+// Operation KE previously entered a dead state when the selected coastal hex had
+// no eligible evacuation units. Keep the original failing seed as a full-game regression.
+{
+	const seed = 424243
+	let state = rules.setup(seed, "South Pacific", {})
+	let ordinal = 0
+	while (state.active !== "None" && ordinal < 1000) {
+		const role = Array.isArray(state.active) ? state.active.slice().sort()[0] : state.active
+		const view = rules.view(state, role)
+		const decision = bot.decide(view, { role, seed, actionOrdinal: ++ordinal })
+		assert(Object.prototype.hasOwnProperty.call(view.actions, decision.action), `illegal action at ${ordinal}`)
+		state = rules.action(state, role, decision.action, decision.argument)
+	}
+	assert.equal(state.active, "None", "Operation KE regression seed must reach a normal ending")
+	assert(ordinal < 1000, "Operation KE regression seed exceeded the action guard")
+}
 
+console.log("ERASMUS graph and deterministic policy tests passed")

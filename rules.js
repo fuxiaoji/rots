@@ -15247,15 +15247,24 @@ P.guadalcanal_evacuation = {
         if (L.stage === 1) {
             prompt(`Choose coastal hex.`)
             L.allowed_hexes.forEach(c => action_hex(c))
+            if (L.allowed_hexes.length === 0) {
+                button("skip")
+            }
         } else if (L.stage === 2) {
             prompt(`Choose units to evacuation.${G.offensive.active_units[JP].length === 0 && L.allowed_units.length === 0 ? " (No possible units)." : ""}`)
             if (G.offensive.active_units[JP].length) {
                 button("done")
             }
             L.allowed_units.forEach(u => action_unit(u))
+            if (G.offensive.active_units[JP].length === 0 && L.allowed_units.length === 0) {
+                button("skip")
+            }
         } else {
             prompt(`Choose destination port hex.${L.allowed_hexes.length === 0 ? " (No possible hex)." : ""}`)
             L.allowed_hexes.forEach(c => action_hex(c))
+            if (L.allowed_hexes.length === 0) {
+                button("skip")
+            }
         }
 
     },
