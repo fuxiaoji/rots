@@ -50,7 +50,7 @@ function on_prompt(text) {
         P[LOCAL_STATUS].prompt()
         return escape_text(LOCAL_STATE.prompt)
     } else {
-        return escape_text(text)
+        return escape_text(eots_t(text))
     }
 }
 
@@ -69,7 +69,7 @@ function on_log(text, i) {
     }
     if (!SHOW_FULL_LOG && total > 100 && i === 0) {
         var p = document.createElement("div")
-        p.innerHTML = `Logs hidden: ${total - 100}.`
+        p.innerHTML = eots_language() === "zh-CN" ? `已隐藏 ${total - 100} 条日志。` : `Logs hidden: ${total - 100}.`
         return p
     } else if (!SHOW_FULL_LOG && total - i > 100) {
         return document.createElement("span")
@@ -144,7 +144,7 @@ function format_card_info(c) {
 function sub_card(match, p1) {
     const c = p1 | 0
     const cn = "card-tip"
-    return `<span class="${cn}" onmouseenter="on_focus_card_tip(${c})" onclick="on_focus_card_tip(${c})" onmouseleave="on_blur_tip()">${cards[c].name}</span>`
+    return `<span class="${cn}" onmouseenter="on_focus_card_tip(${c})" onclick="on_focus_card_tip(${c})" onmouseleave="on_blur_tip()">${eots_localized_name("cards", cards[c].name)}</span>`
 }
 
 
@@ -155,7 +155,7 @@ function get_piece_elem(p) {
 
 function sub_piece(match, p1) {
     const piece_id = p1 | 0
-    const name = pieces[piece_id].name
+    const name = eots_localized_name("units", pieces[piece_id].name)
     return `<span class="piece-tip" onclick="on_click_piece_tip(${piece_id})" onmouseenter="on_focus_piece_tip(${piece_id})" onmouseleave="on_blur_piece_tip(${piece_id})">${name}</span>`
 }
 
@@ -188,7 +188,7 @@ function get_hex_name(h) {
     } else if (hex_id != -1) {
         const hex_data = map[hex_id]
         if (hex_data.name) {
-            return `${hex_data.name} (${hex})`
+            return `${eots_localized_name("places", hex_data.name)} (${hex})`
         }
     }
     return `${hex}`

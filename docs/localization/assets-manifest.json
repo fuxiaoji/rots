@@ -1,0 +1,2445 @@
+{
+  "schema_version": 1,
+  "source_zip": "D:\\downloads\\empire-of-the-sun (2).zip",
+  "source_zip_sha256": "530970bbff82a383e52eff33eda05b4fdc645dbb38a79496c4ae2f750a9b4e42",
+  "imported_at": "2026-08-31T03:33:10.2445977Z",
+  "mapping_note": "Legacy art numbers are one-based; current engine card indices are zero-based. JP source card 88 is not imported because no current card metadata object matches it.",
+  "assets": [
+    {
+      "object_id": "map:cnmap_eots.75.avif",
+      "source": "empire-of-the-sun/images/cnmap_eots.75.avif",
+      "target": "images/cnmap_eots.75.avif",
+      "sha256": "e06e34fed27d442484444b5a6e136ec68c49e639c32b213bd732d890a578f5f5",
+      "bytes": 822781
+    },
+    {
+      "object_id": "map:cnmap_eots.150.avif",
+      "source": "empire-of-the-sun/images/cnmap_eots.150.avif",
+      "target": "images/cnmap_eots.150.avif",
+      "sha256": "a63a8198ee3fd9b7d2e8a6baddf0bfd336d0176967570f6d20440d5b7834c735",
+      "bytes": 2107015
+    },
+    {
+      "object_id": "map:cnmap_south_pacific.75.avif",
+      "source": "empire-of-the-sun/images/cnmap_south_pacific.75.avif",
+      "target": "images/cnmap_south_pacific.75.avif",
+      "sha256": "e7d1e26b9659c802d009889611c43e5586917b76f794fdff7fc7662367e8bb7d",
+      "bytes": 237164
+    },
+    {
+      "object_id": "map:cnmap_south_pacific.150.avif",
+      "source": "empire-of-the-sun/images/cnmap_south_pacific.150.avif",
+      "target": "images/cnmap_south_pacific.150.avif",
+      "sha256": "ca084f4344771a35858b5b708a69c56dcad6e2811ce6f353b4e1fe0697b53d9c",
+      "bytes": 641804
+    },
+    {
+      "object_id": "card:ap:0:100",
+      "source": "empire-of-the-sun/cards/card_ap_01.100.avif",
+      "target": "cards/zh/card_ap_00.100.avif",
+      "sha256": "28f2b352440657653ce152084b30300689b4461f9b7dc03a66c4ab82ab011548",
+      "bytes": 10832
+    },
+    {
+      "object_id": "card:ap:0:200",
+      "source": "empire-of-the-sun/cards/card_ap_01.200.avif",
+      "target": "cards/zh/card_ap_00.200.avif",
+      "sha256": "a7cc55c410399ff819c635d29a79d8a257a0e0af6142a12c761be88b991777f6",
+      "bytes": 25615
+    },
+    {
+      "object_id": "card:ap:1:100",
+      "source": "empire-of-the-sun/cards/card_ap_02.100.avif",
+      "target": "cards/zh/card_ap_01.100.avif",
+      "sha256": "7e8a3da96f3528ad7edf596aa4ff2f0dad8a1a8a0fad57b7f8fb09a36fe19607",
+      "bytes": 11939
+    },
+    {
+      "object_id": "card:ap:1:200",
+      "source": "empire-of-the-sun/cards/card_ap_02.200.avif",
+      "target": "cards/zh/card_ap_01.200.avif",
+      "sha256": "493162c51689ab22bd8fb9af36cdf613138e2d83bc22c2aa9aae61e70075c276",
+      "bytes": 28563
+    },
+    {
+      "object_id": "card:ap:2:100",
+      "source": "empire-of-the-sun/cards/card_ap_03.100.avif",
+      "target": "cards/zh/card_ap_02.100.avif",
+      "sha256": "3a58d5bf7e5e37f6500102895c26a1f88b27f2993cbb429bc618bee629ebe8bb",
+      "bytes": 46734
+    },
+    {
+      "object_id": "card:ap:2:200",
+      "source": "empire-of-the-sun/cards/card_ap_03.200.avif",
+      "target": "cards/zh/card_ap_02.200.avif",
+      "sha256": "3a58d5bf7e5e37f6500102895c26a1f88b27f2993cbb429bc618bee629ebe8bb",
+      "bytes": 46734
+    },
+    {
+      "object_id": "card:ap:3:100",
+      "source": "empire-of-the-sun/cards/card_ap_04.100.avif",
+      "target": "cards/zh/card_ap_03.100.avif",
+      "sha256": "38df46193c5bf6b8383c93ffc06030619f454f0f89512d51445cc01a744f3281",
+      "bytes": 18648
+    },
+    {
+      "object_id": "card:ap:3:200",
+      "source": "empire-of-the-sun/cards/card_ap_04.200.avif",
+      "target": "cards/zh/card_ap_03.200.avif",
+      "sha256": "e1c1b124217a6257259e783708c223c2ab11f133076e24b5349a7cb22ff88a58",
+      "bytes": 45875
+    },
+    {
+      "object_id": "card:ap:4:100",
+      "source": "empire-of-the-sun/cards/card_ap_05.100.avif",
+      "target": "cards/zh/card_ap_04.100.avif",
+      "sha256": "29dc92913c4bf7b59965f1e944ccb4079c1fb58d23a962a8bb517f1374d4b3fa",
+      "bytes": 12599
+    },
+    {
+      "object_id": "card:ap:4:200",
+      "source": "empire-of-the-sun/cards/card_ap_05.200.avif",
+      "target": "cards/zh/card_ap_04.200.avif",
+      "sha256": "72cfb6a575b2408b218f3a5866425e562eeeea06c926bf1b3fdeb42bacb40cc1",
+      "bytes": 31476
+    },
+    {
+      "object_id": "card:ap:5:100",
+      "source": "empire-of-the-sun/cards/card_ap_06.100.avif",
+      "target": "cards/zh/card_ap_05.100.avif",
+      "sha256": "6c79adb0780cf3ee443407ca05b0c8a963ce0b152285d6b7866ef2c41b90fd68",
+      "bytes": 13510
+    },
+    {
+      "object_id": "card:ap:5:200",
+      "source": "empire-of-the-sun/cards/card_ap_06.200.avif",
+      "target": "cards/zh/card_ap_05.200.avif",
+      "sha256": "a6f9a458cc9e9db59bd1071ec6726ee507f5c7c9f185cc86c7a21e35047769bf",
+      "bytes": 32548
+    },
+    {
+      "object_id": "card:ap:6:100",
+      "source": "empire-of-the-sun/cards/card_ap_07.100.avif",
+      "target": "cards/zh/card_ap_06.100.avif",
+      "sha256": "c414aadfe1a9bd6464523d1f762283684805bbf7f7e69d487745ff110546ddc0",
+      "bytes": 14082
+    },
+    {
+      "object_id": "card:ap:6:200",
+      "source": "empire-of-the-sun/cards/card_ap_07.200.avif",
+      "target": "cards/zh/card_ap_06.200.avif",
+      "sha256": "ca9b6d4d4397d76931ac7892fe86a7ba0ec2af325982a640a620595481a45800",
+      "bytes": 33460
+    },
+    {
+      "object_id": "card:ap:7:100",
+      "source": "empire-of-the-sun/cards/card_ap_08.100.avif",
+      "target": "cards/zh/card_ap_07.100.avif",
+      "sha256": "119a5965175fa30e71ad6cea980905cb984a89179030c7366ca00903b87f8d33",
+      "bytes": 12874
+    },
+    {
+      "object_id": "card:ap:7:200",
+      "source": "empire-of-the-sun/cards/card_ap_08.200.avif",
+      "target": "cards/zh/card_ap_07.200.avif",
+      "sha256": "2a736c9171328f6e297f9a4141ad1b4bcd8e25a30ea34eab75d2e21c50347093",
+      "bytes": 32099
+    },
+    {
+      "object_id": "card:ap:8:100",
+      "source": "empire-of-the-sun/cards/card_ap_09.100.avif",
+      "target": "cards/zh/card_ap_08.100.avif",
+      "sha256": "427809259fb531916eb121f3ddfb424efffe37837f05a0b0633c5ea3cd78f4c9",
+      "bytes": 13797
+    },
+    {
+      "object_id": "card:ap:8:200",
+      "source": "empire-of-the-sun/cards/card_ap_09.200.avif",
+      "target": "cards/zh/card_ap_08.200.avif",
+      "sha256": "7193009feef9e7e87954e16f00e0215349901f892bbfb309090027139bb5b09c",
+      "bytes": 35988
+    },
+    {
+      "object_id": "card:ap:9:100",
+      "source": "empire-of-the-sun/cards/card_ap_10.100.avif",
+      "target": "cards/zh/card_ap_09.100.avif",
+      "sha256": "8c6fbd4675a507bb53b0a0143f9787c2b0f4feaafc623b738c00bd239a048436",
+      "bytes": 16382
+    },
+    {
+      "object_id": "card:ap:9:200",
+      "source": "empire-of-the-sun/cards/card_ap_10.200.avif",
+      "target": "cards/zh/card_ap_09.200.avif",
+      "sha256": "81825f726de931ea32eb48b6cdd581d7796feb8a028020f3451ec17f8af052f6",
+      "bytes": 40784
+    },
+    {
+      "object_id": "card:ap:10:100",
+      "source": "empire-of-the-sun/cards/card_ap_11.100.avif",
+      "target": "cards/zh/card_ap_10.100.avif",
+      "sha256": "918c8fe1d1d3540e1688c3f599466a0d342895ee867e7cac29c4843a68e37655",
+      "bytes": 11742
+    },
+    {
+      "object_id": "card:ap:10:200",
+      "source": "empire-of-the-sun/cards/card_ap_11.200.avif",
+      "target": "cards/zh/card_ap_10.200.avif",
+      "sha256": "4f5f637f8c1e6a67ac850df79b2adfa2b8875c75564e15d003b0527102810deb",
+      "bytes": 29244
+    },
+    {
+      "object_id": "card:ap:11:100",
+      "source": "empire-of-the-sun/cards/card_ap_12.100.avif",
+      "target": "cards/zh/card_ap_11.100.avif",
+      "sha256": "db58c19646afab16b88084c4f87904ad4d132c5fb1af1a9cc7e41d4904a1c2d6",
+      "bytes": 11106
+    },
+    {
+      "object_id": "card:ap:11:200",
+      "source": "empire-of-the-sun/cards/card_ap_12.200.avif",
+      "target": "cards/zh/card_ap_11.200.avif",
+      "sha256": "f86df2f8880c9509cbbd9f9c64666b011fb7e4b03d27c7ae98ba58eda4d2c51f",
+      "bytes": 29026
+    },
+    {
+      "object_id": "card:ap:12:100",
+      "source": "empire-of-the-sun/cards/card_ap_13.100.avif",
+      "target": "cards/zh/card_ap_12.100.avif",
+      "sha256": "b94ac67fa4d881bebebde1a16c44b88c9fa27be3073a18c7ba267d10eb41cc6f",
+      "bytes": 10557
+    },
+    {
+      "object_id": "card:ap:12:200",
+      "source": "empire-of-the-sun/cards/card_ap_13.200.avif",
+      "target": "cards/zh/card_ap_12.200.avif",
+      "sha256": "3a06260652dc9c49ef958149f8adffb27397f6ccf0ce9385f9960ae102c45e74",
+      "bytes": 25999
+    },
+    {
+      "object_id": "card:ap:13:100",
+      "source": "empire-of-the-sun/cards/card_ap_14.100.avif",
+      "target": "cards/zh/card_ap_13.100.avif",
+      "sha256": "dbfb3e966ca2491b5864d67eb6096fca5346e0dd19f6e12b5ea060760421633e",
+      "bytes": 11784
+    },
+    {
+      "object_id": "card:ap:13:200",
+      "source": "empire-of-the-sun/cards/card_ap_14.200.avif",
+      "target": "cards/zh/card_ap_13.200.avif",
+      "sha256": "e24cbebf6cbe27940bf850b42e64858f3282433234d1d24fdba5d6a8113cf66a",
+      "bytes": 29290
+    },
+    {
+      "object_id": "card:ap:14:100",
+      "source": "empire-of-the-sun/cards/card_ap_15.100.avif",
+      "target": "cards/zh/card_ap_14.100.avif",
+      "sha256": "aad55064fb82e960d640af125a72ba2237d675aa4bbafb37d5cc2087d98a961c",
+      "bytes": 19076
+    },
+    {
+      "object_id": "card:ap:14:200",
+      "source": "empire-of-the-sun/cards/card_ap_15.200.avif",
+      "target": "cards/zh/card_ap_14.200.avif",
+      "sha256": "330dc8d8de3354638da574f99d7e3061a8bbf85a09764fb8f608e95231c75846",
+      "bytes": 47498
+    },
+    {
+      "object_id": "card:ap:15:100",
+      "source": "empire-of-the-sun/cards/card_ap_16.100.avif",
+      "target": "cards/zh/card_ap_15.100.avif",
+      "sha256": "4729ac97ea1a75a268ea8b02a59f5842ed4441973b8ee5ca80e9c102b0abf76d",
+      "bytes": 13661
+    },
+    {
+      "object_id": "card:ap:15:200",
+      "source": "empire-of-the-sun/cards/card_ap_16.200.avif",
+      "target": "cards/zh/card_ap_15.200.avif",
+      "sha256": "f738544bfc0025950147c92689f1b893e7c3421aa6d539193b994c7d1f511b41",
+      "bytes": 32818
+    },
+    {
+      "object_id": "card:ap:16:100",
+      "source": "empire-of-the-sun/cards/card_ap_17.100.avif",
+      "target": "cards/zh/card_ap_16.100.avif",
+      "sha256": "e3df398f2ac866db15684d0b09c3e24ee276f874456d38dc936e496710f2afdf",
+      "bytes": 18698
+    },
+    {
+      "object_id": "card:ap:16:200",
+      "source": "empire-of-the-sun/cards/card_ap_17.200.avif",
+      "target": "cards/zh/card_ap_16.200.avif",
+      "sha256": "e2f1d7a41663511aed257fdc2fc16f5d13948f8e1a3365742fa73e19d82fd518",
+      "bytes": 46652
+    },
+    {
+      "object_id": "card:ap:17:100",
+      "source": "empire-of-the-sun/cards/card_ap_18.100.avif",
+      "target": "cards/zh/card_ap_17.100.avif",
+      "sha256": "1fb049117bef525654701b22f4f1da316a3df309c568d2df8398b69758211e36",
+      "bytes": 12322
+    },
+    {
+      "object_id": "card:ap:17:200",
+      "source": "empire-of-the-sun/cards/card_ap_18.200.avif",
+      "target": "cards/zh/card_ap_17.200.avif",
+      "sha256": "8ab61ad2104c7a1a27a8529ac44e7eed3d57753be47eca43df756b64c3c7bb7b",
+      "bytes": 30654
+    },
+    {
+      "object_id": "card:ap:18:100",
+      "source": "empire-of-the-sun/cards/card_ap_19.100.avif",
+      "target": "cards/zh/card_ap_18.100.avif",
+      "sha256": "deb99b7cb1754cb79c0332835c3ea2f67d3ef7728f8e712367bb4a178e6c8135",
+      "bytes": 9782
+    },
+    {
+      "object_id": "card:ap:18:200",
+      "source": "empire-of-the-sun/cards/card_ap_19.200.avif",
+      "target": "cards/zh/card_ap_18.200.avif",
+      "sha256": "7dd18fc5fce6a24830ab702b48d0401f5e833f4f465ac3bef8ace38d608167e4",
+      "bytes": 23439
+    },
+    {
+      "object_id": "card:ap:19:100",
+      "source": "empire-of-the-sun/cards/card_ap_20.100.avif",
+      "target": "cards/zh/card_ap_19.100.avif",
+      "sha256": "3817f7a5ab2158751a365878d511601d48e72f5cb894f5fca2c4149416866672",
+      "bytes": 16029
+    },
+    {
+      "object_id": "card:ap:19:200",
+      "source": "empire-of-the-sun/cards/card_ap_20.200.avif",
+      "target": "cards/zh/card_ap_19.200.avif",
+      "sha256": "59ad14e16585a2996ee1055e1c4cb8004d105b0fc2fa8a88b7eb5f9354c2d8d6",
+      "bytes": 40155
+    },
+    {
+      "object_id": "card:ap:20:100",
+      "source": "empire-of-the-sun/cards/card_ap_21.100.avif",
+      "target": "cards/zh/card_ap_20.100.avif",
+      "sha256": "a9d5d0df0077d6abf7dab17be16081eb5de075eb74f379e9e570384a2fec9947",
+      "bytes": 10243
+    },
+    {
+      "object_id": "card:ap:20:200",
+      "source": "empire-of-the-sun/cards/card_ap_21.200.avif",
+      "target": "cards/zh/card_ap_20.200.avif",
+      "sha256": "bd2cf7b893a6f2d3bd28b0714d3790cc503b134aac1172933dc1aebeaebca658",
+      "bytes": 24156
+    },
+    {
+      "object_id": "card:ap:21:100",
+      "source": "empire-of-the-sun/cards/card_ap_22.100.avif",
+      "target": "cards/zh/card_ap_21.100.avif",
+      "sha256": "bbad8e8d1c0db35ea3bb435ee582c463017c8a4f8afb59633102a4ed8f0d4ab1",
+      "bytes": 16761
+    },
+    {
+      "object_id": "card:ap:21:200",
+      "source": "empire-of-the-sun/cards/card_ap_22.200.avif",
+      "target": "cards/zh/card_ap_21.200.avif",
+      "sha256": "9683aa8392f9e75ec1d4202fe5807a163e4af80bdd7a7b8599928487f10b4c6b",
+      "bytes": 41373
+    },
+    {
+      "object_id": "card:ap:22:100",
+      "source": "empire-of-the-sun/cards/card_ap_23.100.avif",
+      "target": "cards/zh/card_ap_22.100.avif",
+      "sha256": "09a669efbb327bf3792ab46b6e591b5f0ce98da3944887ac673883026ec61d16",
+      "bytes": 16451
+    },
+    {
+      "object_id": "card:ap:22:200",
+      "source": "empire-of-the-sun/cards/card_ap_23.200.avif",
+      "target": "cards/zh/card_ap_22.200.avif",
+      "sha256": "ec1c5d85cfc7897ddd2f6580c1f742b9420c6f1d393cb24a6c04e58873b1fe24",
+      "bytes": 41896
+    },
+    {
+      "object_id": "card:ap:23:100",
+      "source": "empire-of-the-sun/cards/card_ap_24.100.avif",
+      "target": "cards/zh/card_ap_23.100.avif",
+      "sha256": "41095fc618d9eeb8ea6aa6840fe598f5ce69bda4871a1d0f07c2741444c43b7f",
+      "bytes": 16544
+    },
+    {
+      "object_id": "card:ap:23:200",
+      "source": "empire-of-the-sun/cards/card_ap_24.200.avif",
+      "target": "cards/zh/card_ap_23.200.avif",
+      "sha256": "56421f1b3b28165803d334c379de14b8c5120a358a9b7fc972d6cadb44ad5aa9",
+      "bytes": 41454
+    },
+    {
+      "object_id": "card:ap:24:100",
+      "source": "empire-of-the-sun/cards/card_ap_25.100.avif",
+      "target": "cards/zh/card_ap_24.100.avif",
+      "sha256": "70deeebd8b25c9915a84050fe4e45faab3e5235eb2fee2c12b8a7097c097fef4",
+      "bytes": 16752
+    },
+    {
+      "object_id": "card:ap:24:200",
+      "source": "empire-of-the-sun/cards/card_ap_25.200.avif",
+      "target": "cards/zh/card_ap_24.200.avif",
+      "sha256": "dd27cb5cdde373e455785f5cd816134f4ea00aa4439f1e4c90c6e90222c193d3",
+      "bytes": 39628
+    },
+    {
+      "object_id": "card:ap:25:100",
+      "source": "empire-of-the-sun/cards/card_ap_26.100.avif",
+      "target": "cards/zh/card_ap_25.100.avif",
+      "sha256": "d44657badc8365bfb91ab5db2f281ac078e89b87189907e68c436d3d803bc963",
+      "bytes": 12816
+    },
+    {
+      "object_id": "card:ap:25:200",
+      "source": "empire-of-the-sun/cards/card_ap_26.200.avif",
+      "target": "cards/zh/card_ap_25.200.avif",
+      "sha256": "6d27dcbb1be758faddcdac54f3a8a26a565795bba5753ad3656f1118cb0ff21e",
+      "bytes": 30518
+    },
+    {
+      "object_id": "card:ap:26:100",
+      "source": "empire-of-the-sun/cards/card_ap_27.100.avif",
+      "target": "cards/zh/card_ap_26.100.avif",
+      "sha256": "91c7f6789d7a021dd3cd9f51e728f404fb55bd28f73d29c7169f03551004680d",
+      "bytes": 11177
+    },
+    {
+      "object_id": "card:ap:26:200",
+      "source": "empire-of-the-sun/cards/card_ap_27.200.avif",
+      "target": "cards/zh/card_ap_26.200.avif",
+      "sha256": "e7dbf6b7686ee5cf314099e873b9262a11a26e395470c5164c172d9a97eff098",
+      "bytes": 27965
+    },
+    {
+      "object_id": "card:ap:27:100",
+      "source": "empire-of-the-sun/cards/card_ap_28.100.avif",
+      "target": "cards/zh/card_ap_27.100.avif",
+      "sha256": "96df69ff1869d90d57e695875897fbce661dfe5877e1beacdc4b0b1a38aaf561",
+      "bytes": 15366
+    },
+    {
+      "object_id": "card:ap:27:200",
+      "source": "empire-of-the-sun/cards/card_ap_28.200.avif",
+      "target": "cards/zh/card_ap_27.200.avif",
+      "sha256": "4c1779f9ddd39b0b9f045900acdfe08e7e39e8ca9feb8742de4c2adb86672d00",
+      "bytes": 36982
+    },
+    {
+      "object_id": "card:ap:28:100",
+      "source": "empire-of-the-sun/cards/card_ap_29.100.avif",
+      "target": "cards/zh/card_ap_28.100.avif",
+      "sha256": "6174602203c0df68943c1530db96bd8562a8a41d0548158f831dab48021396c0",
+      "bytes": 14018
+    },
+    {
+      "object_id": "card:ap:28:200",
+      "source": "empire-of-the-sun/cards/card_ap_29.200.avif",
+      "target": "cards/zh/card_ap_28.200.avif",
+      "sha256": "bfe3fea83262e7c0598bc045c748bd004368ba7cb76ceda9edf416013dac8487",
+      "bytes": 33600
+    },
+    {
+      "object_id": "card:ap:29:100",
+      "source": "empire-of-the-sun/cards/card_ap_30.100.avif",
+      "target": "cards/zh/card_ap_29.100.avif",
+      "sha256": "61695bbf95089a1ac5eb25c07032b8ad46072b90cb8c21463636495c5bae2414",
+      "bytes": 19521
+    },
+    {
+      "object_id": "card:ap:29:200",
+      "source": "empire-of-the-sun/cards/card_ap_30.200.avif",
+      "target": "cards/zh/card_ap_29.200.avif",
+      "sha256": "cc79f39332fa638ea5190f558aa415def96dfabda05e362a9b2f64c79ea5bc18",
+      "bytes": 48385
+    },
+    {
+      "object_id": "card:ap:30:100",
+      "source": "empire-of-the-sun/cards/card_ap_31.100.avif",
+      "target": "cards/zh/card_ap_30.100.avif",
+      "sha256": "31e0532df1d8e977139583fcc790e0b0b43241fe33c8c0ff49916a4da6bca6e5",
+      "bytes": 10078
+    },
+    {
+      "object_id": "card:ap:30:200",
+      "source": "empire-of-the-sun/cards/card_ap_31.200.avif",
+      "target": "cards/zh/card_ap_30.200.avif",
+      "sha256": "21659cabea01cf4f1d9bb058be429d393f7190f49342a4f07ce1737dc98f87cd",
+      "bytes": 24113
+    },
+    {
+      "object_id": "card:ap:31:100",
+      "source": "empire-of-the-sun/cards/card_ap_32.100.avif",
+      "target": "cards/zh/card_ap_31.100.avif",
+      "sha256": "15a695fb7560e5ee48801d7d87d90c65d7455d9c37cca6c427f80a3a0013eaed",
+      "bytes": 9099
+    },
+    {
+      "object_id": "card:ap:31:200",
+      "source": "empire-of-the-sun/cards/card_ap_32.200.avif",
+      "target": "cards/zh/card_ap_31.200.avif",
+      "sha256": "22116ff309e614bc3b31d8f0b796361bcf78dfbc33827b1210807ff58f6990e1",
+      "bytes": 22033
+    },
+    {
+      "object_id": "card:ap:32:100",
+      "source": "empire-of-the-sun/cards/card_ap_33.100.avif",
+      "target": "cards/zh/card_ap_32.100.avif",
+      "sha256": "b2ca3264077170890f80cfa6b5bf4015701a38c521cd22fd6c856c24acb12be3",
+      "bytes": 33333
+    },
+    {
+      "object_id": "card:ap:32:200",
+      "source": "empire-of-the-sun/cards/card_ap_33.200.avif",
+      "target": "cards/zh/card_ap_32.200.avif",
+      "sha256": "351df7e366c301988035673da91069d0ff0569bf415fe4210ead7dd34946f049",
+      "bytes": 51912
+    },
+    {
+      "object_id": "card:ap:33:100",
+      "source": "empire-of-the-sun/cards/card_ap_34.100.avif",
+      "target": "cards/zh/card_ap_33.100.avif",
+      "sha256": "e80aeb1469b128e8f27244874174065a8021f3b896da459d430905f275479248",
+      "bytes": 9719
+    },
+    {
+      "object_id": "card:ap:33:200",
+      "source": "empire-of-the-sun/cards/card_ap_34.200.avif",
+      "target": "cards/zh/card_ap_33.200.avif",
+      "sha256": "b44ce2373480267aa4141350ce8ee6dc9dc404b63d08d1ff30f4393af371aa80",
+      "bytes": 24531
+    },
+    {
+      "object_id": "card:ap:34:100",
+      "source": "empire-of-the-sun/cards/card_ap_35.100.avif",
+      "target": "cards/zh/card_ap_34.100.avif",
+      "sha256": "0c0e3653bd8ce2bbbd0f0e4f6f395cd2d9e587b08da97dbea5638af996a7010d",
+      "bytes": 13317
+    },
+    {
+      "object_id": "card:ap:34:200",
+      "source": "empire-of-the-sun/cards/card_ap_35.200.avif",
+      "target": "cards/zh/card_ap_34.200.avif",
+      "sha256": "5df5ec04ccbfde00c7442e5d37d29147d849a09d2258044e288ba24c443b5e41",
+      "bytes": 33748
+    },
+    {
+      "object_id": "card:ap:35:100",
+      "source": "empire-of-the-sun/cards/card_ap_36.100.avif",
+      "target": "cards/zh/card_ap_35.100.avif",
+      "sha256": "afc5b53bce3b143c074b185a263b59c490293741cd791d119fda418c0b2c5035",
+      "bytes": 9624
+    },
+    {
+      "object_id": "card:ap:35:200",
+      "source": "empire-of-the-sun/cards/card_ap_36.200.avif",
+      "target": "cards/zh/card_ap_35.200.avif",
+      "sha256": "56d8b6d6c92abfe121519506cb8f010658c7e4c931c485e521b5e2a5bfa20b14",
+      "bytes": 24168
+    },
+    {
+      "object_id": "card:ap:36:100",
+      "source": "empire-of-the-sun/cards/card_ap_37.100.avif",
+      "target": "cards/zh/card_ap_36.100.avif",
+      "sha256": "4e38a07d1e0f09b3567d6178c9b9203946a48ed08b0ab96ae485a88a91175ad2",
+      "bytes": 15012
+    },
+    {
+      "object_id": "card:ap:36:200",
+      "source": "empire-of-the-sun/cards/card_ap_37.200.avif",
+      "target": "cards/zh/card_ap_36.200.avif",
+      "sha256": "2532c02161690253c168326a86bed4de9f6c14d8b368f6b247b7b164c92af4a6",
+      "bytes": 37073
+    },
+    {
+      "object_id": "card:ap:37:100",
+      "source": "empire-of-the-sun/cards/card_ap_38.100.avif",
+      "target": "cards/zh/card_ap_37.100.avif",
+      "sha256": "3c071f12fefae0c6b5c284bfe8d30d8e8b6b9029002a4b6e5a9cb80026c128c5",
+      "bytes": 16866
+    },
+    {
+      "object_id": "card:ap:37:200",
+      "source": "empire-of-the-sun/cards/card_ap_38.200.avif",
+      "target": "cards/zh/card_ap_37.200.avif",
+      "sha256": "dcbdfce6a173acffefda142e690693bdc400a467e85a5be3f4795588f29b23a5",
+      "bytes": 39754
+    },
+    {
+      "object_id": "card:ap:38:100",
+      "source": "empire-of-the-sun/cards/card_ap_39.100.avif",
+      "target": "cards/zh/card_ap_38.100.avif",
+      "sha256": "2ab96a85a875dbcd2f49f3571b04915a84ff3e2430180ab91d53b9ef09086f41",
+      "bytes": 22195
+    },
+    {
+      "object_id": "card:ap:38:200",
+      "source": "empire-of-the-sun/cards/card_ap_39.200.avif",
+      "target": "cards/zh/card_ap_38.200.avif",
+      "sha256": "4838949fac86533df3bb8561726ed77fe048ec7f630f25ff960b59d246490ac0",
+      "bytes": 55168
+    },
+    {
+      "object_id": "card:ap:39:100",
+      "source": "empire-of-the-sun/cards/card_ap_40.100.avif",
+      "target": "cards/zh/card_ap_39.100.avif",
+      "sha256": "39803c5305666c89ca9d674dafff7567f94fe56908729a28453e6fcd1eb6b294",
+      "bytes": 9357
+    },
+    {
+      "object_id": "card:ap:39:200",
+      "source": "empire-of-the-sun/cards/card_ap_40.200.avif",
+      "target": "cards/zh/card_ap_39.200.avif",
+      "sha256": "5137d0971dac268a59c3dbbf8a35668da8d6b6816b238211db8f1f3043e981e3",
+      "bytes": 22417
+    },
+    {
+      "object_id": "card:ap:40:100",
+      "source": "empire-of-the-sun/cards/card_ap_41.100.avif",
+      "target": "cards/zh/card_ap_40.100.avif",
+      "sha256": "d68e32c287c1a4058773d5bc212fcee4831ba3611bb9030486535f595ae375fa",
+      "bytes": 11799
+    },
+    {
+      "object_id": "card:ap:40:200",
+      "source": "empire-of-the-sun/cards/card_ap_41.200.avif",
+      "target": "cards/zh/card_ap_40.200.avif",
+      "sha256": "a257b3feb43584f9dbd5716d1679edae1c49151156bccddd82813e65c758e82d",
+      "bytes": 29429
+    },
+    {
+      "object_id": "card:ap:41:100",
+      "source": "empire-of-the-sun/cards/card_ap_42.100.avif",
+      "target": "cards/zh/card_ap_41.100.avif",
+      "sha256": "2e3e0935cdbeb48d919b840812aa4c9e7cff89064f5afbf2ae4bdb5db1d63365",
+      "bytes": 11761
+    },
+    {
+      "object_id": "card:ap:41:200",
+      "source": "empire-of-the-sun/cards/card_ap_42.200.avif",
+      "target": "cards/zh/card_ap_41.200.avif",
+      "sha256": "198d57deff738852baebf24d866506db392dd55d029c4c27b01c7f4a40cc1571",
+      "bytes": 29243
+    },
+    {
+      "object_id": "card:ap:42:100",
+      "source": "empire-of-the-sun/cards/card_ap_43.100.avif",
+      "target": "cards/zh/card_ap_42.100.avif",
+      "sha256": "a1bd32c1f05a0a75d09156fbc4ae45a6f0b0e439834e16bf8528f3451c74b834",
+      "bytes": 10720
+    },
+    {
+      "object_id": "card:ap:42:200",
+      "source": "empire-of-the-sun/cards/card_ap_43.200.avif",
+      "target": "cards/zh/card_ap_42.200.avif",
+      "sha256": "3f86c217ba5e9d3abd40e613f6170704be62520e66b06b63d5beeec8cb804c68",
+      "bytes": 26497
+    },
+    {
+      "object_id": "card:ap:43:100",
+      "source": "empire-of-the-sun/cards/card_ap_44.100.avif",
+      "target": "cards/zh/card_ap_43.100.avif",
+      "sha256": "140e521245d4206739ad76f2ba67ee6099cf5045cea4691a4b998450c2557dbf",
+      "bytes": 13200
+    },
+    {
+      "object_id": "card:ap:43:200",
+      "source": "empire-of-the-sun/cards/card_ap_44.200.avif",
+      "target": "cards/zh/card_ap_43.200.avif",
+      "sha256": "450eb379ab4cfaa9348cc26352f6a8e45e7105ef91c4d3d1242ca7f9556cb66e",
+      "bytes": 33834
+    },
+    {
+      "object_id": "card:ap:44:100",
+      "source": "empire-of-the-sun/cards/card_ap_45.100.avif",
+      "target": "cards/zh/card_ap_44.100.avif",
+      "sha256": "9a66aa7ed935584f5afe9e7f70ab6ea0c1ff61619afc42a4a52f5b16bf88ad21",
+      "bytes": 9826
+    },
+    {
+      "object_id": "card:ap:44:200",
+      "source": "empire-of-the-sun/cards/card_ap_45.200.avif",
+      "target": "cards/zh/card_ap_44.200.avif",
+      "sha256": "2415beba6330a7c5630c589c64f907e5b44115db3cec65114345fb393cf7a12f",
+      "bytes": 23982
+    },
+    {
+      "object_id": "card:ap:45:100",
+      "source": "empire-of-the-sun/cards/card_ap_46.100.avif",
+      "target": "cards/zh/card_ap_45.100.avif",
+      "sha256": "0bb123d2f02e1006db48a0b85d0eb20dcacb3246e3a00b8afc7a956070326771",
+      "bytes": 18059
+    },
+    {
+      "object_id": "card:ap:45:200",
+      "source": "empire-of-the-sun/cards/card_ap_46.200.avif",
+      "target": "cards/zh/card_ap_45.200.avif",
+      "sha256": "3d9890eb66ea81f52fe40cf65fe28d4cb3040f418d88079ac7153ac8ac9d72e4",
+      "bytes": 42952
+    },
+    {
+      "object_id": "card:ap:46:100",
+      "source": "empire-of-the-sun/cards/card_ap_47.100.avif",
+      "target": "cards/zh/card_ap_46.100.avif",
+      "sha256": "380cbe1b20ab2ee8ea7d38022fc5b6a59cb24f2ff79de1685b854b688b781c02",
+      "bytes": 12118
+    },
+    {
+      "object_id": "card:ap:46:200",
+      "source": "empire-of-the-sun/cards/card_ap_47.200.avif",
+      "target": "cards/zh/card_ap_46.200.avif",
+      "sha256": "2b6d9c142eef28a38c9aff962bf530a2bc93316efa5a226ef59d0031798bd6d0",
+      "bytes": 29576
+    },
+    {
+      "object_id": "card:ap:47:100",
+      "source": "empire-of-the-sun/cards/card_ap_48.100.avif",
+      "target": "cards/zh/card_ap_47.100.avif",
+      "sha256": "e4d41d488b38d713c768777804063192b366e9ec4edafcba7d91c15b0a59772c",
+      "bytes": 18804
+    },
+    {
+      "object_id": "card:ap:47:200",
+      "source": "empire-of-the-sun/cards/card_ap_48.200.avif",
+      "target": "cards/zh/card_ap_47.200.avif",
+      "sha256": "ece6df93eaa9ada8ebe131ce349b028bd725b3a3acee19936d990aae19b7a801",
+      "bytes": 45459
+    },
+    {
+      "object_id": "card:ap:48:100",
+      "source": "empire-of-the-sun/cards/card_ap_49.100.avif",
+      "target": "cards/zh/card_ap_48.100.avif",
+      "sha256": "55ddca5bf5e8201b8d95fa79d06c085c3222f5d7f0e32cae52e905e7f55db309",
+      "bytes": 12478
+    },
+    {
+      "object_id": "card:ap:48:200",
+      "source": "empire-of-the-sun/cards/card_ap_49.200.avif",
+      "target": "cards/zh/card_ap_48.200.avif",
+      "sha256": "1c4be420895ce8d967fd7f84ed220e408591468b9ea7d40d502e83e5cea295d6",
+      "bytes": 30032
+    },
+    {
+      "object_id": "card:ap:49:100",
+      "source": "empire-of-the-sun/cards/card_ap_50.100.avif",
+      "target": "cards/zh/card_ap_49.100.avif",
+      "sha256": "bca97f11df0ae3003664ffe882b57116228823abc16370938be43c44c1a279af",
+      "bytes": 16109
+    },
+    {
+      "object_id": "card:ap:49:200",
+      "source": "empire-of-the-sun/cards/card_ap_50.200.avif",
+      "target": "cards/zh/card_ap_49.200.avif",
+      "sha256": "3ebe46b5e625aaf6591525ab85ec60aaa16cf1abf3e6c1c1a773a203c9881998",
+      "bytes": 39435
+    },
+    {
+      "object_id": "card:ap:50:100",
+      "source": "empire-of-the-sun/cards/card_ap_51.100.avif",
+      "target": "cards/zh/card_ap_50.100.avif",
+      "sha256": "3d875bdca0dc3eb46a24c04ff20e25e2c847eba5b6e2e672f7d9fb00b8ede74c",
+      "bytes": 19731
+    },
+    {
+      "object_id": "card:ap:50:200",
+      "source": "empire-of-the-sun/cards/card_ap_51.200.avif",
+      "target": "cards/zh/card_ap_50.200.avif",
+      "sha256": "c8c69636d860de1efbf10448af614935c6f4f0a56c87655f6e50c01db0cca74e",
+      "bytes": 49167
+    },
+    {
+      "object_id": "card:ap:51:100",
+      "source": "empire-of-the-sun/cards/card_ap_52.100.avif",
+      "target": "cards/zh/card_ap_51.100.avif",
+      "sha256": "a46bfaa73fb6c0f551fbbe46ed11fb050d73634ca9f1ccaf078315d51a719c92",
+      "bytes": 17917
+    },
+    {
+      "object_id": "card:ap:51:200",
+      "source": "empire-of-the-sun/cards/card_ap_52.200.avif",
+      "target": "cards/zh/card_ap_51.200.avif",
+      "sha256": "e77db662f2f6bf01e26b15bd9a7dfc0e812cd49b12d78fd7c085a3180a90f474",
+      "bytes": 44801
+    },
+    {
+      "object_id": "card:ap:52:100",
+      "source": "empire-of-the-sun/cards/card_ap_53.100.avif",
+      "target": "cards/zh/card_ap_52.100.avif",
+      "sha256": "4487666f5d1b9f9b4270db07020350aaf5562bc82ecd15c5f7b10bd42477e7af",
+      "bytes": 9271
+    },
+    {
+      "object_id": "card:ap:52:200",
+      "source": "empire-of-the-sun/cards/card_ap_53.200.avif",
+      "target": "cards/zh/card_ap_52.200.avif",
+      "sha256": "516ab10a931139c7dff7647dc2649ed32497765f30796ac58bb836e838fe3e10",
+      "bytes": 23377
+    },
+    {
+      "object_id": "card:ap:53:100",
+      "source": "empire-of-the-sun/cards/card_ap_54.100.avif",
+      "target": "cards/zh/card_ap_53.100.avif",
+      "sha256": "c9dea666c60b9738b72fc07d5a623b08e0868139df04ecbaee71eb98e6579d8d",
+      "bytes": 9168
+    },
+    {
+      "object_id": "card:ap:53:200",
+      "source": "empire-of-the-sun/cards/card_ap_54.200.avif",
+      "target": "cards/zh/card_ap_53.200.avif",
+      "sha256": "92dd7f6decd4d61c969828bf4215e9a88bb825fa6953d9d7714be64446a1c089",
+      "bytes": 22691
+    },
+    {
+      "object_id": "card:ap:54:100",
+      "source": "empire-of-the-sun/cards/card_ap_55.100.avif",
+      "target": "cards/zh/card_ap_54.100.avif",
+      "sha256": "7b0d8dc285fb1ef6fa8c71e3c52ce49dea4dd9883c3eeb8e8100535307e1c5e0",
+      "bytes": 17549
+    },
+    {
+      "object_id": "card:ap:54:200",
+      "source": "empire-of-the-sun/cards/card_ap_55.200.avif",
+      "target": "cards/zh/card_ap_54.200.avif",
+      "sha256": "017a5b321b3c6f7799567b1c0691003ee2a8e27a92165fd4010a0575e72fa6cb",
+      "bytes": 42323
+    },
+    {
+      "object_id": "card:ap:55:100",
+      "source": "empire-of-the-sun/cards/card_ap_56.100.avif",
+      "target": "cards/zh/card_ap_55.100.avif",
+      "sha256": "8f91617935c9682648a173e3845e01e97efddc1ebfd8795f127288f343d62185",
+      "bytes": 9878
+    },
+    {
+      "object_id": "card:ap:55:200",
+      "source": "empire-of-the-sun/cards/card_ap_56.200.avif",
+      "target": "cards/zh/card_ap_55.200.avif",
+      "sha256": "7ea825fdc8a92ad7ea5a9d84762f0a18036bf126544e4918e7321064135ea3a9",
+      "bytes": 24217
+    },
+    {
+      "object_id": "card:ap:56:100",
+      "source": "empire-of-the-sun/cards/card_ap_57.100.avif",
+      "target": "cards/zh/card_ap_56.100.avif",
+      "sha256": "c08dcead7bfe1a4ae1644aa1f7fd9325dfdb65401a252ca70d61581b9d603746",
+      "bytes": 12199
+    },
+    {
+      "object_id": "card:ap:56:200",
+      "source": "empire-of-the-sun/cards/card_ap_57.200.avif",
+      "target": "cards/zh/card_ap_56.200.avif",
+      "sha256": "fc282e2c7ec4bd9b1e125994fbd8aa13fbc7f757144cb0dd8f715f06154dde2a",
+      "bytes": 29467
+    },
+    {
+      "object_id": "card:ap:57:100",
+      "source": "empire-of-the-sun/cards/card_ap_58.100.avif",
+      "target": "cards/zh/card_ap_57.100.avif",
+      "sha256": "44fe8881805447668dd192112147ab1d267a17818530e00b69c954c8f57c29a1",
+      "bytes": 14752
+    },
+    {
+      "object_id": "card:ap:57:200",
+      "source": "empire-of-the-sun/cards/card_ap_58.200.avif",
+      "target": "cards/zh/card_ap_57.200.avif",
+      "sha256": "846f82767b58b133a870c91246eba9cf9e62b85c2563f51d9fa00cc8ee4abac2",
+      "bytes": 35944
+    },
+    {
+      "object_id": "card:ap:58:100",
+      "source": "empire-of-the-sun/cards/card_ap_59.100.avif",
+      "target": "cards/zh/card_ap_58.100.avif",
+      "sha256": "63d73681a0ca0d98f1b006bdb4411f14c37251e94f07fd3cb57d2a502aead6fa",
+      "bytes": 8932
+    },
+    {
+      "object_id": "card:ap:58:200",
+      "source": "empire-of-the-sun/cards/card_ap_59.200.avif",
+      "target": "cards/zh/card_ap_58.200.avif",
+      "sha256": "afb746bbdd7c5ff10fbf879ddfb41e34583756943c51e5fd1c0b5bbfb9db3a14",
+      "bytes": 21158
+    },
+    {
+      "object_id": "card:ap:59:100",
+      "source": "empire-of-the-sun/cards/card_ap_60.100.avif",
+      "target": "cards/zh/card_ap_59.100.avif",
+      "sha256": "35270a3d0ddace841a8f80b865545dc8cbacdf92ddca6aa9edb15e4442e5ac76",
+      "bytes": 11758
+    },
+    {
+      "object_id": "card:ap:59:200",
+      "source": "empire-of-the-sun/cards/card_ap_60.200.avif",
+      "target": "cards/zh/card_ap_59.200.avif",
+      "sha256": "f394e6e841881bb6a4bc154318305a7304bda6133c9df2199f1cf544cc3e69c5",
+      "bytes": 28777
+    },
+    {
+      "object_id": "card:ap:60:100",
+      "source": "empire-of-the-sun/cards/card_ap_61.100.avif",
+      "target": "cards/zh/card_ap_60.100.avif",
+      "sha256": "fb6b39b1ffec7603c4c01b3dc6e3667748c28088674d6955067749b65879899c",
+      "bytes": 18917
+    },
+    {
+      "object_id": "card:ap:60:200",
+      "source": "empire-of-the-sun/cards/card_ap_61.200.avif",
+      "target": "cards/zh/card_ap_60.200.avif",
+      "sha256": "1145541edc3a741c8768b51afabe91e40e210135252653b1e1b719dce425bfcb",
+      "bytes": 46205
+    },
+    {
+      "object_id": "card:ap:61:100",
+      "source": "empire-of-the-sun/cards/card_ap_62.100.avif",
+      "target": "cards/zh/card_ap_61.100.avif",
+      "sha256": "2dccb792a0bd3d804ab46197d84a33027c2a8410e1fb483e8e62bb6de3a35b39",
+      "bytes": 18158
+    },
+    {
+      "object_id": "card:ap:61:200",
+      "source": "empire-of-the-sun/cards/card_ap_62.200.avif",
+      "target": "cards/zh/card_ap_61.200.avif",
+      "sha256": "c63efcc68bd61fb7aa92f6ce8fd4760f3ab6abd95911cd854cb43e0d65ee88eb",
+      "bytes": 43441
+    },
+    {
+      "object_id": "card:ap:62:100",
+      "source": "empire-of-the-sun/cards/card_ap_63.100.avif",
+      "target": "cards/zh/card_ap_62.100.avif",
+      "sha256": "6136fc7b6e1731907ea2070deabd2a2491562b002d0c0ad94cf290f48d9f1546",
+      "bytes": 9322
+    },
+    {
+      "object_id": "card:ap:62:200",
+      "source": "empire-of-the-sun/cards/card_ap_63.200.avif",
+      "target": "cards/zh/card_ap_62.200.avif",
+      "sha256": "15671c85d8f83780d7dc805f7e99b5ee889d10a21b977c1033b1c60e167abd95",
+      "bytes": 22856
+    },
+    {
+      "object_id": "card:ap:63:100",
+      "source": "empire-of-the-sun/cards/card_ap_64.100.avif",
+      "target": "cards/zh/card_ap_63.100.avif",
+      "sha256": "064976e7df928f371a3d1459e54f73b3de6d1713541b57cac33d10c64c13d58f",
+      "bytes": 8492
+    },
+    {
+      "object_id": "card:ap:63:200",
+      "source": "empire-of-the-sun/cards/card_ap_64.200.avif",
+      "target": "cards/zh/card_ap_63.200.avif",
+      "sha256": "1035ea170b885985fffd60c1d71eaf9bffd83f13aec68c6419fad4c9e1827b47",
+      "bytes": 21077
+    },
+    {
+      "object_id": "card:ap:64:100",
+      "source": "empire-of-the-sun/cards/card_ap_65.100.avif",
+      "target": "cards/zh/card_ap_64.100.avif",
+      "sha256": "74964abd8991dc7b4ddc8a5ed8362bf6794b9cbabe7654f8a1277eae66dfd493",
+      "bytes": 15365
+    },
+    {
+      "object_id": "card:ap:64:200",
+      "source": "empire-of-the-sun/cards/card_ap_65.200.avif",
+      "target": "cards/zh/card_ap_64.200.avif",
+      "sha256": "7c96cefda365c29ed87ac4cda0b4fc821f9acf55f03cc886b7a428322cd1ac1b",
+      "bytes": 39487
+    },
+    {
+      "object_id": "card:ap:65:100",
+      "source": "empire-of-the-sun/cards/card_ap_66.100.avif",
+      "target": "cards/zh/card_ap_65.100.avif",
+      "sha256": "561cd8a231345a57847b17dec77152928c3019da18b045659f07b3a7145960dc",
+      "bytes": 12163
+    },
+    {
+      "object_id": "card:ap:65:200",
+      "source": "empire-of-the-sun/cards/card_ap_66.200.avif",
+      "target": "cards/zh/card_ap_65.200.avif",
+      "sha256": "6f6d0e9295ef5b9b1f0c2a7b62f951eb2e695682d1a9350de37a07c48e29ba60",
+      "bytes": 29737
+    },
+    {
+      "object_id": "card:ap:66:100",
+      "source": "empire-of-the-sun/cards/card_ap_67.100.avif",
+      "target": "cards/zh/card_ap_66.100.avif",
+      "sha256": "ef64632efbe678063d4fe2d5fc2553c88627d54735dc86fc4d38c376096ad7ad",
+      "bytes": 10595
+    },
+    {
+      "object_id": "card:ap:66:200",
+      "source": "empire-of-the-sun/cards/card_ap_67.200.avif",
+      "target": "cards/zh/card_ap_66.200.avif",
+      "sha256": "866f00152be0eb6233bf671490e8a8998ad89f167a41a6c4ee3257e600589bcf",
+      "bytes": 26293
+    },
+    {
+      "object_id": "card:ap:67:100",
+      "source": "empire-of-the-sun/cards/card_ap_68.100.avif",
+      "target": "cards/zh/card_ap_67.100.avif",
+      "sha256": "06c0b08c9d32589faa37469a1053f11b0df1869ef47eac9f2f73d65091df6355",
+      "bytes": 16875
+    },
+    {
+      "object_id": "card:ap:67:200",
+      "source": "empire-of-the-sun/cards/card_ap_68.200.avif",
+      "target": "cards/zh/card_ap_67.200.avif",
+      "sha256": "d96e0cd6e51bdab09e90156be27acce3189c1f41038b9e577196fae47b2dc88a",
+      "bytes": 42825
+    },
+    {
+      "object_id": "card:ap:68:100",
+      "source": "empire-of-the-sun/cards/card_ap_69.100.avif",
+      "target": "cards/zh/card_ap_68.100.avif",
+      "sha256": "e48ce4ae49a888fe8621b0d836ee01a03e99b459333a4d7dde6d60f5803cf6e9",
+      "bytes": 18680
+    },
+    {
+      "object_id": "card:ap:68:200",
+      "source": "empire-of-the-sun/cards/card_ap_69.200.avif",
+      "target": "cards/zh/card_ap_68.200.avif",
+      "sha256": "ecf4dce548c43371836b2da13f75c4e3dc6dc9530ca7bf8efd0975aebe63ace0",
+      "bytes": 46341
+    },
+    {
+      "object_id": "card:ap:69:100",
+      "source": "empire-of-the-sun/cards/card_ap_70.100.avif",
+      "target": "cards/zh/card_ap_69.100.avif",
+      "sha256": "0b330831c4a3c938427b0768a10e1672c60bfb0344728762dd2f39354e62a2db",
+      "bytes": 19238
+    },
+    {
+      "object_id": "card:ap:69:200",
+      "source": "empire-of-the-sun/cards/card_ap_70.200.avif",
+      "target": "cards/zh/card_ap_69.200.avif",
+      "sha256": "68a857967d4f8d2aa3f6f39485a515d6dd41d3a512a5ff8fd4c14bcdb607ce14",
+      "bytes": 47000
+    },
+    {
+      "object_id": "card:ap:70:100",
+      "source": "empire-of-the-sun/cards/card_ap_71.100.avif",
+      "target": "cards/zh/card_ap_70.100.avif",
+      "sha256": "6bcff0b4fd61153a4bba4fc22f7065110849d88b10b90130b0623869db443f07",
+      "bytes": 10037
+    },
+    {
+      "object_id": "card:ap:70:200",
+      "source": "empire-of-the-sun/cards/card_ap_71.200.avif",
+      "target": "cards/zh/card_ap_70.200.avif",
+      "sha256": "2e8c3d1be8f40cd217043ed910fdd51108c3d206fea49b6fcf0c02ca2b4d5d43",
+      "bytes": 23422
+    },
+    {
+      "object_id": "card:ap:71:100",
+      "source": "empire-of-the-sun/cards/card_ap_72.100.avif",
+      "target": "cards/zh/card_ap_71.100.avif",
+      "sha256": "020beece051a330dc9c954590c066a01b76ba7c6583d1e363f906d7e44451325",
+      "bytes": 16184
+    },
+    {
+      "object_id": "card:ap:71:200",
+      "source": "empire-of-the-sun/cards/card_ap_72.200.avif",
+      "target": "cards/zh/card_ap_71.200.avif",
+      "sha256": "ace7020afeb49017737ae1f7e5c7814234d6f4feb55807e7763a1a6ac666017f",
+      "bytes": 38708
+    },
+    {
+      "object_id": "card:ap:72:100",
+      "source": "empire-of-the-sun/cards/card_ap_73.100.avif",
+      "target": "cards/zh/card_ap_72.100.avif",
+      "sha256": "0ae8ded6ada441b1c6060de3b30b704befd903e59c90448a1435912a7cd6ac24",
+      "bytes": 12196
+    },
+    {
+      "object_id": "card:ap:72:200",
+      "source": "empire-of-the-sun/cards/card_ap_73.200.avif",
+      "target": "cards/zh/card_ap_72.200.avif",
+      "sha256": "97499356cf6025c73ae9f896ac7e38841a82d5d3771ffdb5ff9d07b36b6dfca6",
+      "bytes": 29571
+    },
+    {
+      "object_id": "card:ap:73:100",
+      "source": "empire-of-the-sun/cards/card_ap_74.100.avif",
+      "target": "cards/zh/card_ap_73.100.avif",
+      "sha256": "b9ac1234ceddb93c47dab9b759c924fa01e35c364a983d9d51bc98cc4d2380fd",
+      "bytes": 13311
+    },
+    {
+      "object_id": "card:ap:73:200",
+      "source": "empire-of-the-sun/cards/card_ap_74.200.avif",
+      "target": "cards/zh/card_ap_73.200.avif",
+      "sha256": "3b5e66bfee14f1650ca47fb887780a727d98dd7b10dde4d887735e27e53d7445",
+      "bytes": 32710
+    },
+    {
+      "object_id": "card:ap:74:100",
+      "source": "empire-of-the-sun/cards/card_ap_75.100.avif",
+      "target": "cards/zh/card_ap_74.100.avif",
+      "sha256": "059c3ddadcc41d646edd43da7e9f87834e808ff3734fe0720292db67ab1bde27",
+      "bytes": 14229
+    },
+    {
+      "object_id": "card:ap:74:200",
+      "source": "empire-of-the-sun/cards/card_ap_75.200.avif",
+      "target": "cards/zh/card_ap_74.200.avif",
+      "sha256": "9b536c24d2da9955b9ac3e51b939da87c219de0bdd62aa0cdfd10a2a814bb1e8",
+      "bytes": 35541
+    },
+    {
+      "object_id": "card:ap:75:100",
+      "source": "empire-of-the-sun/cards/card_ap_76.100.avif",
+      "target": "cards/zh/card_ap_75.100.avif",
+      "sha256": "1f6ca38e2f08bb41c2b4ad96ef2e711eacedadfa06e87eeae2612ef365f8e8e4",
+      "bytes": 11639
+    },
+    {
+      "object_id": "card:ap:75:200",
+      "source": "empire-of-the-sun/cards/card_ap_76.200.avif",
+      "target": "cards/zh/card_ap_75.200.avif",
+      "sha256": "2bbe236e98ab3d067e82cdd4997c28d972cdc201fdbd4fc3ea505b23b1ec9b58",
+      "bytes": 28912
+    },
+    {
+      "object_id": "card:ap:76:100",
+      "source": "empire-of-the-sun/cards/card_ap_77.100.avif",
+      "target": "cards/zh/card_ap_76.100.avif",
+      "sha256": "880f4aca958564619d6badd1db6492587e1d4c6c456e729dc23fe6b2d6496abf",
+      "bytes": 9582
+    },
+    {
+      "object_id": "card:ap:76:200",
+      "source": "empire-of-the-sun/cards/card_ap_77.200.avif",
+      "target": "cards/zh/card_ap_76.200.avif",
+      "sha256": "cb17babda67120d0c4295320cbeb3e7321b7f9977f8227d11796dac52ed6ec7d",
+      "bytes": 24400
+    },
+    {
+      "object_id": "card:ap:77:100",
+      "source": "empire-of-the-sun/cards/card_ap_78.100.avif",
+      "target": "cards/zh/card_ap_77.100.avif",
+      "sha256": "86d3aae75f0e657c8efa2a65c7ab6000997c20b9ba657e6e3022a422599ec57a",
+      "bytes": 16470
+    },
+    {
+      "object_id": "card:ap:77:200",
+      "source": "empire-of-the-sun/cards/card_ap_78.200.avif",
+      "target": "cards/zh/card_ap_77.200.avif",
+      "sha256": "55767557b3d6c56524d93587af03a6ae940a567e6f5ae2422be228b5a8ca2dd1",
+      "bytes": 41527
+    },
+    {
+      "object_id": "card:ap:78:100",
+      "source": "empire-of-the-sun/cards/card_ap_79.100.avif",
+      "target": "cards/zh/card_ap_78.100.avif",
+      "sha256": "4f84e890ade37d2eeeee8b2ebf443b0622cfb798139ac6e89445c8f4788c648d",
+      "bytes": 22494
+    },
+    {
+      "object_id": "card:ap:78:200",
+      "source": "empire-of-the-sun/cards/card_ap_79.200.avif",
+      "target": "cards/zh/card_ap_78.200.avif",
+      "sha256": "7ed34faa115a6a355a5ba47108e133038af4b1f9368cbb2ed7fe2e5843a8dea9",
+      "bytes": 57319
+    },
+    {
+      "object_id": "card:ap:79:100",
+      "source": "empire-of-the-sun/cards/card_ap_80.100.avif",
+      "target": "cards/zh/card_ap_79.100.avif",
+      "sha256": "dc9379899b731ec53a76e0db3f5f8d127f839b7cd320fbb9af55bee34c41a22f",
+      "bytes": 13979
+    },
+    {
+      "object_id": "card:ap:79:200",
+      "source": "empire-of-the-sun/cards/card_ap_80.200.avif",
+      "target": "cards/zh/card_ap_79.200.avif",
+      "sha256": "12ef9e9d8a2103e69185d43dc93506cee1d57423bb190d02610c6163888f5268",
+      "bytes": 34585
+    },
+    {
+      "object_id": "card:ap:80:100",
+      "source": "empire-of-the-sun/cards/card_ap_81.100.avif",
+      "target": "cards/zh/card_ap_80.100.avif",
+      "sha256": "44f950b6900d2abe6e7dd8b5992f9401859e27a5a11a9e927d907cc9affc9076",
+      "bytes": 9422
+    },
+    {
+      "object_id": "card:ap:80:200",
+      "source": "empire-of-the-sun/cards/card_ap_81.200.avif",
+      "target": "cards/zh/card_ap_80.200.avif",
+      "sha256": "95635a419e9a120827d589d4cc2bad25666d6c13c942e30bf823326509a178c7",
+      "bytes": 24497
+    },
+    {
+      "object_id": "card:ap:81:100",
+      "source": "empire-of-the-sun/cards/card_ap_82.100.avif",
+      "target": "cards/zh/card_ap_81.100.avif",
+      "sha256": "c8d96f8b8d2c077022b68a6919ca0f3fcab9dffc4cbaa23524664202ae40aa26",
+      "bytes": 9582
+    },
+    {
+      "object_id": "card:ap:81:200",
+      "source": "empire-of-the-sun/cards/card_ap_82.200.avif",
+      "target": "cards/zh/card_ap_81.200.avif",
+      "sha256": "fab61c92169b5e5c50156997d93aefd9628d68f7b38e288dd405b3e15f3081af",
+      "bytes": 24069
+    },
+    {
+      "object_id": "card:ap:82:100",
+      "source": "empire-of-the-sun/cards/card_ap_83.100.avif",
+      "target": "cards/zh/card_ap_82.100.avif",
+      "sha256": "9f9eaa9b7a9975b7bbdfda128598ba1b9a4d148005fb6879d0fe0b600c57690a",
+      "bytes": 7967
+    },
+    {
+      "object_id": "card:ap:82:200",
+      "source": "empire-of-the-sun/cards/card_ap_83.200.avif",
+      "target": "cards/zh/card_ap_82.200.avif",
+      "sha256": "71ff91f25f32bb05710a10701b8853b660263c5e4c25b09303c64f109963b7d4",
+      "bytes": 20552
+    },
+    {
+      "object_id": "card:ap:83:100",
+      "source": "empire-of-the-sun/cards/card_ap_84.100.avif",
+      "target": "cards/zh/card_ap_83.100.avif",
+      "sha256": "d30755108a71b670c480e787719aa00d9e8e862dd97bd1dfc7b141b02c964311",
+      "bytes": 13638
+    },
+    {
+      "object_id": "card:ap:83:200",
+      "source": "empire-of-the-sun/cards/card_ap_84.200.avif",
+      "target": "cards/zh/card_ap_83.200.avif",
+      "sha256": "e26e5fd7fe1163bdb964fca353fc552bf4fa79fb1c2b582e5448892b17e459f7",
+      "bytes": 33723
+    },
+    {
+      "object_id": "card:ap:84:100",
+      "source": "empire-of-the-sun/cards/card_ap_85.100.avif",
+      "target": "cards/zh/card_ap_84.100.avif",
+      "sha256": "365b38cdd5777e32b43aa9c4648b08072a1947f8fdf825ddde0bb5c59cbfc4dd",
+      "bytes": 9412
+    },
+    {
+      "object_id": "card:ap:84:200",
+      "source": "empire-of-the-sun/cards/card_ap_85.200.avif",
+      "target": "cards/zh/card_ap_84.200.avif",
+      "sha256": "20266be533f6ff800988195886f1426894a6f2a94448cf863895e7adda48dd09",
+      "bytes": 20849
+    },
+    {
+      "object_id": "card:jp:0:100",
+      "source": "empire-of-the-sun/cards/card_jp_01.100.avif",
+      "target": "cards/zh/card_jp_00.100.avif",
+      "sha256": "8cbf2e70e45d21ec235864bc049c7af0f2ce13bc001b47593d6d08858a0a128e",
+      "bytes": 20274
+    },
+    {
+      "object_id": "card:jp:0:200",
+      "source": "empire-of-the-sun/cards/card_jp_01.200.avif",
+      "target": "cards/zh/card_jp_00.200.avif",
+      "sha256": "000f9d1983e7b931955147f0b5cf6ca8dc7332098658765b4ceab65499bb7af2",
+      "bytes": 49921
+    },
+    {
+      "object_id": "card:jp:1:100",
+      "source": "empire-of-the-sun/cards/card_jp_02.100.avif",
+      "target": "cards/zh/card_jp_01.100.avif",
+      "sha256": "9789b464b0216f833a3b3e4e991064d48519533e9f500479f9c52c8d6abeb669",
+      "bytes": 26610
+    },
+    {
+      "object_id": "card:jp:1:200",
+      "source": "empire-of-the-sun/cards/card_jp_02.200.avif",
+      "target": "cards/zh/card_jp_01.200.avif",
+      "sha256": "2d459aa8591cb90acad0b34a64b5dbce24a3a07ecb9074acc4c29fa182eee9fc",
+      "bytes": 65056
+    },
+    {
+      "object_id": "card:jp:2:100",
+      "source": "empire-of-the-sun/cards/card_jp_03.100.avif",
+      "target": "cards/zh/card_jp_02.100.avif",
+      "sha256": "06630bc9913a839765d1eb0491ceb91f0440cb2083cb50205fbdc0382bf58a65",
+      "bytes": 15401
+    },
+    {
+      "object_id": "card:jp:2:200",
+      "source": "empire-of-the-sun/cards/card_jp_03.200.avif",
+      "target": "cards/zh/card_jp_02.200.avif",
+      "sha256": "39cc5bea27702d1e158eb7114b1382028bbfda2e61c3da58dbf8bafb2ae432b7",
+      "bytes": 37472
+    },
+    {
+      "object_id": "card:jp:3:100",
+      "source": "empire-of-the-sun/cards/card_jp_04.100.avif",
+      "target": "cards/zh/card_jp_03.100.avif",
+      "sha256": "6a45c5284429924f6d2a4ce48dd3b5df208cdf0b6981cdeef9ea6efb878a4459",
+      "bytes": 5840
+    },
+    {
+      "object_id": "card:jp:3:200",
+      "source": "empire-of-the-sun/cards/card_jp_04.200.avif",
+      "target": "cards/zh/card_jp_03.200.avif",
+      "sha256": "dd407ff46ef37c2bbd666b73c729b59adefd0aef0aa9220a607adf594dc1be3c",
+      "bytes": 13227
+    },
+    {
+      "object_id": "card:jp:4:100",
+      "source": "empire-of-the-sun/cards/card_jp_05.100.avif",
+      "target": "cards/zh/card_jp_04.100.avif",
+      "sha256": "89363564facc27a45cdd4703c53f3c731496a03825bf58bc7df1300460c891b5",
+      "bytes": 18848
+    },
+    {
+      "object_id": "card:jp:4:200",
+      "source": "empire-of-the-sun/cards/card_jp_05.200.avif",
+      "target": "cards/zh/card_jp_04.200.avif",
+      "sha256": "c8f013cf334797e296c43e5a6518b3941c589182738d35642df6c8c9754ec7fa",
+      "bytes": 44504
+    },
+    {
+      "object_id": "card:jp:5:100",
+      "source": "empire-of-the-sun/cards/card_jp_06.100.avif",
+      "target": "cards/zh/card_jp_05.100.avif",
+      "sha256": "3d07c9aa39a4df491f05187d590cbea20eb0e29cd80635aa7e1aaef3942f3354",
+      "bytes": 12613
+    },
+    {
+      "object_id": "card:jp:5:200",
+      "source": "empire-of-the-sun/cards/card_jp_06.200.avif",
+      "target": "cards/zh/card_jp_05.200.avif",
+      "sha256": "17678b4b789b8ac519578005e59be70cde68da26201da13c7acdb2a4184e951e",
+      "bytes": 31140
+    },
+    {
+      "object_id": "card:jp:6:100",
+      "source": "empire-of-the-sun/cards/card_jp_07.100.avif",
+      "target": "cards/zh/card_jp_06.100.avif",
+      "sha256": "2931e82ad0ae6f150bfe62607261b53b1ad58405e3705359d61a4b4fc3e4022c",
+      "bytes": 11597
+    },
+    {
+      "object_id": "card:jp:6:200",
+      "source": "empire-of-the-sun/cards/card_jp_07.200.avif",
+      "target": "cards/zh/card_jp_06.200.avif",
+      "sha256": "6f6c95a157d1bd1bfd2b110831e98e69abf4759c06f886f47caf8cce1f79be69",
+      "bytes": 28370
+    },
+    {
+      "object_id": "card:jp:7:100",
+      "source": "empire-of-the-sun/cards/card_jp_08.100.avif",
+      "target": "cards/zh/card_jp_07.100.avif",
+      "sha256": "868425015896db581ff944b5fa4f779ba0c4ef460e040c2c00410082d03b4c5b",
+      "bytes": 12133
+    },
+    {
+      "object_id": "card:jp:7:200",
+      "source": "empire-of-the-sun/cards/card_jp_08.200.avif",
+      "target": "cards/zh/card_jp_07.200.avif",
+      "sha256": "ab68c2a488ea009a9049b245bddd632021ea87942134442ed967a97bff121d42",
+      "bytes": 31366
+    },
+    {
+      "object_id": "card:jp:8:100",
+      "source": "empire-of-the-sun/cards/card_jp_09.100.avif",
+      "target": "cards/zh/card_jp_08.100.avif",
+      "sha256": "f05208aae50bf2cfc414ce0795c1d7e958d7c763ec358deb7074eaaae7022367",
+      "bytes": 11212
+    },
+    {
+      "object_id": "card:jp:8:200",
+      "source": "empire-of-the-sun/cards/card_jp_09.200.avif",
+      "target": "cards/zh/card_jp_08.200.avif",
+      "sha256": "48d589467a81c146a05822ac95d608603d3163322b67f48cf2e8c14b82f3595a",
+      "bytes": 28160
+    },
+    {
+      "object_id": "card:jp:9:100",
+      "source": "empire-of-the-sun/cards/card_jp_10.100.avif",
+      "target": "cards/zh/card_jp_09.100.avif",
+      "sha256": "3ecb4c7699225de5dd26831eb4a21ddf0c9b4b8ddcd530236d38018ec269a48e",
+      "bytes": 10146
+    },
+    {
+      "object_id": "card:jp:9:200",
+      "source": "empire-of-the-sun/cards/card_jp_10.200.avif",
+      "target": "cards/zh/card_jp_09.200.avif",
+      "sha256": "f9338c836bda791e6b5e119c102e7e210f9b1d724d47765335250911d7afe929",
+      "bytes": 24682
+    },
+    {
+      "object_id": "card:jp:10:100",
+      "source": "empire-of-the-sun/cards/card_jp_11.100.avif",
+      "target": "cards/zh/card_jp_10.100.avif",
+      "sha256": "1d357a15396ec358232857a3f06383d841223f4b38889a2d68e0994cc216b8aa",
+      "bytes": 13505
+    },
+    {
+      "object_id": "card:jp:10:200",
+      "source": "empire-of-the-sun/cards/card_jp_11.200.avif",
+      "target": "cards/zh/card_jp_10.200.avif",
+      "sha256": "dfa001d92c78880c8b37aac944fb76ab304df8473b78a983c8605ae0ab549128",
+      "bytes": 33402
+    },
+    {
+      "object_id": "card:jp:11:100",
+      "source": "empire-of-the-sun/cards/card_jp_12.100.avif",
+      "target": "cards/zh/card_jp_11.100.avif",
+      "sha256": "18ca16fa819c2ffabf07806f4ef9c152cd8eb1d27f855f72a94ef843100f93b0",
+      "bytes": 41818
+    },
+    {
+      "object_id": "card:jp:11:200",
+      "source": "empire-of-the-sun/cards/card_jp_12.200.avif",
+      "target": "cards/zh/card_jp_11.200.avif",
+      "sha256": "18ca16fa819c2ffabf07806f4ef9c152cd8eb1d27f855f72a94ef843100f93b0",
+      "bytes": 41818
+    },
+    {
+      "object_id": "card:jp:12:100",
+      "source": "empire-of-the-sun/cards/card_jp_13.100.avif",
+      "target": "cards/zh/card_jp_12.100.avif",
+      "sha256": "411dd9a22cf10f04606db0385db3b74444a19e035a3d11891a4898f4bcead533",
+      "bytes": 11066
+    },
+    {
+      "object_id": "card:jp:12:200",
+      "source": "empire-of-the-sun/cards/card_jp_13.200.avif",
+      "target": "cards/zh/card_jp_12.200.avif",
+      "sha256": "ad502e231196f8a2ac594818e68aa690530deb38cd1e1a59b84068cb4610e803",
+      "bytes": 25136
+    },
+    {
+      "object_id": "card:jp:13:100",
+      "source": "empire-of-the-sun/cards/card_jp_14.100.avif",
+      "target": "cards/zh/card_jp_13.100.avif",
+      "sha256": "b033c210e24595b35b45cee71d234e7b56bf06c51af383f1c8eab3d4c45de9b1",
+      "bytes": 11370
+    },
+    {
+      "object_id": "card:jp:13:200",
+      "source": "empire-of-the-sun/cards/card_jp_14.200.avif",
+      "target": "cards/zh/card_jp_13.200.avif",
+      "sha256": "88c39c597f9a7f7ee452e6806f1e4fa7293b93501339ebf494c0ff6535ce218d",
+      "bytes": 28147
+    },
+    {
+      "object_id": "card:jp:14:100",
+      "source": "empire-of-the-sun/cards/card_jp_15.100.avif",
+      "target": "cards/zh/card_jp_14.100.avif",
+      "sha256": "45ca34949f778146555453f15beb6fa1186903215ddb62d57ec7f758e40a64f2",
+      "bytes": 14123
+    },
+    {
+      "object_id": "card:jp:14:200",
+      "source": "empire-of-the-sun/cards/card_jp_15.200.avif",
+      "target": "cards/zh/card_jp_14.200.avif",
+      "sha256": "510bb3aeef122173392315ecd3a42cf38ee9652fc20f39865b68551ece65419b",
+      "bytes": 32878
+    },
+    {
+      "object_id": "card:jp:15:100",
+      "source": "empire-of-the-sun/cards/card_jp_16.100.avif",
+      "target": "cards/zh/card_jp_15.100.avif",
+      "sha256": "64561b396ec7e68f5ef48bdf740d79b5e8cc2a90c0c3d4462c904e37de7fec6b",
+      "bytes": 8764
+    },
+    {
+      "object_id": "card:jp:15:200",
+      "source": "empire-of-the-sun/cards/card_jp_16.200.avif",
+      "target": "cards/zh/card_jp_15.200.avif",
+      "sha256": "94240e10152c06a2dc1e7c0ec842ba72caaa363e0b72ad9eb440313ef2e3f408",
+      "bytes": 21420
+    },
+    {
+      "object_id": "card:jp:16:100",
+      "source": "empire-of-the-sun/cards/card_jp_17.100.avif",
+      "target": "cards/zh/card_jp_16.100.avif",
+      "sha256": "10027b5e88d18cfb7669e4e7f0ffe8270bee5b44d8dbfb4b4582825846457527",
+      "bytes": 13117
+    },
+    {
+      "object_id": "card:jp:16:200",
+      "source": "empire-of-the-sun/cards/card_jp_17.200.avif",
+      "target": "cards/zh/card_jp_16.200.avif",
+      "sha256": "6276a2dc3a9b925ed8786fc1c3e9271252694806c80aad546cfb75a1c27ed610",
+      "bytes": 29703
+    },
+    {
+      "object_id": "card:jp:17:100",
+      "source": "empire-of-the-sun/cards/card_jp_18.100.avif",
+      "target": "cards/zh/card_jp_17.100.avif",
+      "sha256": "f4c9e214c532c1d662cc7e8af4d82c36787ba685924336f0020cb44a424fbee9",
+      "bytes": 21349
+    },
+    {
+      "object_id": "card:jp:17:200",
+      "source": "empire-of-the-sun/cards/card_jp_18.200.avif",
+      "target": "cards/zh/card_jp_17.200.avif",
+      "sha256": "c1a1d4d6d3b691deebbc1e080a1bbc16fa169df85f6a066c83ec03ee4a3bf214",
+      "bytes": 53322
+    },
+    {
+      "object_id": "card:jp:18:100",
+      "source": "empire-of-the-sun/cards/card_jp_19.100.avif",
+      "target": "cards/zh/card_jp_18.100.avif",
+      "sha256": "742e024dc0f52e862967edaae972aeaebb3112a4cb8b8656c71af9084cae58a8",
+      "bytes": 12091
+    },
+    {
+      "object_id": "card:jp:18:200",
+      "source": "empire-of-the-sun/cards/card_jp_19.200.avif",
+      "target": "cards/zh/card_jp_18.200.avif",
+      "sha256": "aafaa88021ec70ba352386d72708563df6ca8484e01d7cddb2e6d2cc69af0624",
+      "bytes": 29035
+    },
+    {
+      "object_id": "card:jp:19:100",
+      "source": "empire-of-the-sun/cards/card_jp_20.100.avif",
+      "target": "cards/zh/card_jp_19.100.avif",
+      "sha256": "d0c3309f16766a08ea6bd1719ae8ad84ab0e8fc7e1f30af87552b8378f6009dd",
+      "bytes": 14819
+    },
+    {
+      "object_id": "card:jp:19:200",
+      "source": "empire-of-the-sun/cards/card_jp_20.200.avif",
+      "target": "cards/zh/card_jp_19.200.avif",
+      "sha256": "a4fec5fd9e501e622405536cf2abb18e268ebb37c15edb50d31bdfee4d016c18",
+      "bytes": 34892
+    },
+    {
+      "object_id": "card:jp:20:100",
+      "source": "empire-of-the-sun/cards/card_jp_21.100.avif",
+      "target": "cards/zh/card_jp_20.100.avif",
+      "sha256": "79e36f589ce0bea0958db9e62579b4532db1de2a530c84ea7fcf4f850475b037",
+      "bytes": 15318
+    },
+    {
+      "object_id": "card:jp:20:200",
+      "source": "empire-of-the-sun/cards/card_jp_21.200.avif",
+      "target": "cards/zh/card_jp_20.200.avif",
+      "sha256": "1f3ecd495a091f7c6222004f8ac1a94f0e401c83e2df72790c9ee62b9b19c9bb",
+      "bytes": 36163
+    },
+    {
+      "object_id": "card:jp:21:100",
+      "source": "empire-of-the-sun/cards/card_jp_22.100.avif",
+      "target": "cards/zh/card_jp_21.100.avif",
+      "sha256": "cb38d20aea1be1be7a786310abc1b9a9f0aec005ede48d404597d592130ca67b",
+      "bytes": 12095
+    },
+    {
+      "object_id": "card:jp:21:200",
+      "source": "empire-of-the-sun/cards/card_jp_22.200.avif",
+      "target": "cards/zh/card_jp_21.200.avif",
+      "sha256": "f09822c7ce7c48bfd2d573d6f3a1aff5dac891dd1aad0bbb103c0aa9d9728720",
+      "bytes": 29081
+    },
+    {
+      "object_id": "card:jp:22:100",
+      "source": "empire-of-the-sun/cards/card_jp_23.100.avif",
+      "target": "cards/zh/card_jp_22.100.avif",
+      "sha256": "a672c0e58ca6a8ae12e5413c15b50301d5c8eee53f4ee372e22cd6aad532f152",
+      "bytes": 12386
+    },
+    {
+      "object_id": "card:jp:22:200",
+      "source": "empire-of-the-sun/cards/card_jp_23.200.avif",
+      "target": "cards/zh/card_jp_22.200.avif",
+      "sha256": "99abd246c51c1aa9d313e5ff30caa8f3f857b4f863a77898c647181cc7f13e97",
+      "bytes": 30716
+    },
+    {
+      "object_id": "card:jp:23:100",
+      "source": "empire-of-the-sun/cards/card_jp_24.100.avif",
+      "target": "cards/zh/card_jp_23.100.avif",
+      "sha256": "f19c674efafaea7671cdb14f393dca8684e79ad73e8b796f69474b61c81ed3e2",
+      "bytes": 14269
+    },
+    {
+      "object_id": "card:jp:23:200",
+      "source": "empire-of-the-sun/cards/card_jp_24.200.avif",
+      "target": "cards/zh/card_jp_23.200.avif",
+      "sha256": "b653830de0791eb5557ca080e37387bfb41f586a19c13d5a78d9a6f10beee7ea",
+      "bytes": 36306
+    },
+    {
+      "object_id": "card:jp:24:100",
+      "source": "empire-of-the-sun/cards/card_jp_25.100.avif",
+      "target": "cards/zh/card_jp_24.100.avif",
+      "sha256": "67f192e2acce5ed5d23e43360e7b988006d4cdcd33ffaf6034f1b2dfe50a0773",
+      "bytes": 8679
+    },
+    {
+      "object_id": "card:jp:24:200",
+      "source": "empire-of-the-sun/cards/card_jp_25.200.avif",
+      "target": "cards/zh/card_jp_24.200.avif",
+      "sha256": "a8bdb8cea2a2212662d7557d317d5b596ae755094a0f400dc63cba3896818802",
+      "bytes": 21712
+    },
+    {
+      "object_id": "card:jp:25:100",
+      "source": "empire-of-the-sun/cards/card_jp_26.100.avif",
+      "target": "cards/zh/card_jp_25.100.avif",
+      "sha256": "32522b2756420ea22a35d277abc644a0bdb423306b34c6b70b6802b4476ca3f7",
+      "bytes": 8193
+    },
+    {
+      "object_id": "card:jp:25:200",
+      "source": "empire-of-the-sun/cards/card_jp_26.200.avif",
+      "target": "cards/zh/card_jp_25.200.avif",
+      "sha256": "72a7f871fb0cbb80c4fe7efe90c68c228ce3dc398e20f310ddf4e3351afc846a",
+      "bytes": 20070
+    },
+    {
+      "object_id": "card:jp:26:100",
+      "source": "empire-of-the-sun/cards/card_jp_27.100.avif",
+      "target": "cards/zh/card_jp_26.100.avif",
+      "sha256": "1827f2c19503eb258c4ffac69b2a6685904669a36da060a0fb95253931a8b34a",
+      "bytes": 14484
+    },
+    {
+      "object_id": "card:jp:26:200",
+      "source": "empire-of-the-sun/cards/card_jp_27.200.avif",
+      "target": "cards/zh/card_jp_26.200.avif",
+      "sha256": "8acb42f57723cba2adeba50f30920aa63ef9f7588d8e017d446c8c156552012a",
+      "bytes": 36093
+    },
+    {
+      "object_id": "card:jp:27:100",
+      "source": "empire-of-the-sun/cards/card_jp_28.100.avif",
+      "target": "cards/zh/card_jp_27.100.avif",
+      "sha256": "08bc23915bbadeee99b025004694f39a6465fa5584590f38e46e3a5098b1de73",
+      "bytes": 34610
+    },
+    {
+      "object_id": "card:jp:27:200",
+      "source": "empire-of-the-sun/cards/card_jp_28.200.avif",
+      "target": "cards/zh/card_jp_27.200.avif",
+      "sha256": "565896d28f5799d36427e0589413a7713ab7ae0c59a61f8aeb776c2995ad9178",
+      "bytes": 56348
+    },
+    {
+      "object_id": "card:jp:28:100",
+      "source": "empire-of-the-sun/cards/card_jp_29.100.avif",
+      "target": "cards/zh/card_jp_28.100.avif",
+      "sha256": "36e09292802870508f4fd710388b6bb75e3456eb56e3d61de79db480a7a333d6",
+      "bytes": 12119
+    },
+    {
+      "object_id": "card:jp:28:200",
+      "source": "empire-of-the-sun/cards/card_jp_29.200.avif",
+      "target": "cards/zh/card_jp_28.200.avif",
+      "sha256": "a112e62ffc1a8dd02b86f3b1e31d3729f48366dd01c8c75d7a576f97e31dd758",
+      "bytes": 28758
+    },
+    {
+      "object_id": "card:jp:29:100",
+      "source": "empire-of-the-sun/cards/card_jp_30.100.avif",
+      "target": "cards/zh/card_jp_29.100.avif",
+      "sha256": "c54ea63d253c96ac86c8b62713f910c71872ba005d21b2be83372d5ce2a15185",
+      "bytes": 11585
+    },
+    {
+      "object_id": "card:jp:29:200",
+      "source": "empire-of-the-sun/cards/card_jp_30.200.avif",
+      "target": "cards/zh/card_jp_29.200.avif",
+      "sha256": "97c384ee91a4372aef044b27ef626bb08d117fd92527b99b6a756d0a98ea0161",
+      "bytes": 26831
+    },
+    {
+      "object_id": "card:jp:30:100",
+      "source": "empire-of-the-sun/cards/card_jp_31.100.avif",
+      "target": "cards/zh/card_jp_30.100.avif",
+      "sha256": "95668fcdd4f1d0eae0f2954fde7b1d390f832351776f9ad7ff05e770ba4878c5",
+      "bytes": 14004
+    },
+    {
+      "object_id": "card:jp:30:200",
+      "source": "empire-of-the-sun/cards/card_jp_31.200.avif",
+      "target": "cards/zh/card_jp_30.200.avif",
+      "sha256": "590519a192a725634382fb6ed72f0f496b9d345aab3ac60dcae71c0934b7392b",
+      "bytes": 33636
+    },
+    {
+      "object_id": "card:jp:31:100",
+      "source": "empire-of-the-sun/cards/card_jp_32.100.avif",
+      "target": "cards/zh/card_jp_31.100.avif",
+      "sha256": "c490c8a4962fefdd8e1aa40f31bc611d0258dd33afb6ce7acacd79bdbf1f5c72",
+      "bytes": 11710
+    },
+    {
+      "object_id": "card:jp:31:200",
+      "source": "empire-of-the-sun/cards/card_jp_32.200.avif",
+      "target": "cards/zh/card_jp_31.200.avif",
+      "sha256": "278409776a9b853b26b63c94ccb85fac892f1e42eb70c4ed1691089a2004674e",
+      "bytes": 29602
+    },
+    {
+      "object_id": "card:jp:32:100",
+      "source": "empire-of-the-sun/cards/card_jp_33.100.avif",
+      "target": "cards/zh/card_jp_32.100.avif",
+      "sha256": "8af10abff01e2d7dfb1cdf04d120851469f46cd332f09e7aac2959483a365185",
+      "bytes": 13930
+    },
+    {
+      "object_id": "card:jp:32:200",
+      "source": "empire-of-the-sun/cards/card_jp_33.200.avif",
+      "target": "cards/zh/card_jp_32.200.avif",
+      "sha256": "72f6501903f42d0b11a335120fdfb4bf6525d0ea04654c64df1ff9c75f8d03a7",
+      "bytes": 31838
+    },
+    {
+      "object_id": "card:jp:33:100",
+      "source": "empire-of-the-sun/cards/card_jp_34.100.avif",
+      "target": "cards/zh/card_jp_33.100.avif",
+      "sha256": "93650702cfb08464f5d0dd546eca279a5b894a36b6359f6d66278c9e934aa3c3",
+      "bytes": 11088
+    },
+    {
+      "object_id": "card:jp:33:200",
+      "source": "empire-of-the-sun/cards/card_jp_34.200.avif",
+      "target": "cards/zh/card_jp_33.200.avif",
+      "sha256": "1e6ee518afb10cebd9f26f99c8853f0552ad1079795fbd08da87a439f23071af",
+      "bytes": 27216
+    },
+    {
+      "object_id": "card:jp:34:100",
+      "source": "empire-of-the-sun/cards/card_jp_35.100.avif",
+      "target": "cards/zh/card_jp_34.100.avif",
+      "sha256": "b1a1b2213a81b837f1499419c2d302bb3655a52a52d35beec00721234170ee42",
+      "bytes": 14501
+    },
+    {
+      "object_id": "card:jp:34:200",
+      "source": "empire-of-the-sun/cards/card_jp_35.200.avif",
+      "target": "cards/zh/card_jp_34.200.avif",
+      "sha256": "4eb6edc31d2bd09d9af852f8461263c7de8d3bea6a00697aeb2986905a634f36",
+      "bytes": 35595
+    },
+    {
+      "object_id": "card:jp:35:100",
+      "source": "empire-of-the-sun/cards/card_jp_36.100.avif",
+      "target": "cards/zh/card_jp_35.100.avif",
+      "sha256": "f20cb42382c740a2fc5158ef9d4c116578852c0d0c744a80aeee5f8771f44608",
+      "bytes": 13489
+    },
+    {
+      "object_id": "card:jp:35:200",
+      "source": "empire-of-the-sun/cards/card_jp_36.200.avif",
+      "target": "cards/zh/card_jp_35.200.avif",
+      "sha256": "9e35949f9b55e347e534368f34b64b31356d1cdb7fdf8cf04d329c00e0b8111a",
+      "bytes": 33414
+    },
+    {
+      "object_id": "card:jp:36:100",
+      "source": "empire-of-the-sun/cards/card_jp_37.100.avif",
+      "target": "cards/zh/card_jp_36.100.avif",
+      "sha256": "7594353cf853a2bc73e316dac608f1ecbd55ffbd62f7b317fd266cb5e09b01fb",
+      "bytes": 14943
+    },
+    {
+      "object_id": "card:jp:36:200",
+      "source": "empire-of-the-sun/cards/card_jp_37.200.avif",
+      "target": "cards/zh/card_jp_36.200.avif",
+      "sha256": "c0af13fc8d1040636e796c862815c2f860832bbac37507e5adbe3f3e7d5c1d54",
+      "bytes": 36923
+    },
+    {
+      "object_id": "card:jp:37:100",
+      "source": "empire-of-the-sun/cards/card_jp_38.100.avif",
+      "target": "cards/zh/card_jp_37.100.avif",
+      "sha256": "f826c78d2ab87e9389f9d6d05e21bd00f95d5e5095f6bb673756083788863e8f",
+      "bytes": 15095
+    },
+    {
+      "object_id": "card:jp:37:200",
+      "source": "empire-of-the-sun/cards/card_jp_38.200.avif",
+      "target": "cards/zh/card_jp_37.200.avif",
+      "sha256": "b5f0dcc5dcf0389d93839a7cc656c6cde26aefc4d8ab76d801153d60418ee998",
+      "bytes": 36700
+    },
+    {
+      "object_id": "card:jp:38:100",
+      "source": "empire-of-the-sun/cards/card_jp_39.100.avif",
+      "target": "cards/zh/card_jp_38.100.avif",
+      "sha256": "99c182d4d042051942574ff718aba350d241b1cf7f9ef769284303a7205a3649",
+      "bytes": 11137
+    },
+    {
+      "object_id": "card:jp:38:200",
+      "source": "empire-of-the-sun/cards/card_jp_39.200.avif",
+      "target": "cards/zh/card_jp_38.200.avif",
+      "sha256": "61aa5281884f1c8e8598b89f48041e6caa6448f448ff0b2eb4887d31758b80dc",
+      "bytes": 27435
+    },
+    {
+      "object_id": "card:jp:39:100",
+      "source": "empire-of-the-sun/cards/card_jp_40.100.avif",
+      "target": "cards/zh/card_jp_39.100.avif",
+      "sha256": "8a615e22517c972fb0320ba20a94477e07d2b7a504f3eb6061925a640cabfe7d",
+      "bytes": 8048
+    },
+    {
+      "object_id": "card:jp:39:200",
+      "source": "empire-of-the-sun/cards/card_jp_40.200.avif",
+      "target": "cards/zh/card_jp_39.200.avif",
+      "sha256": "75b0b749bb96f5ef87f36f40e4217cc387df8c59f143b547578eef1074ce04be",
+      "bytes": 19723
+    },
+    {
+      "object_id": "card:jp:40:100",
+      "source": "empire-of-the-sun/cards/card_jp_41.100.avif",
+      "target": "cards/zh/card_jp_40.100.avif",
+      "sha256": "576be395592f84df9b04286adb5bccd79dd3f190ea98223ffeebec073e79f90f",
+      "bytes": 11762
+    },
+    {
+      "object_id": "card:jp:40:200",
+      "source": "empire-of-the-sun/cards/card_jp_41.200.avif",
+      "target": "cards/zh/card_jp_40.200.avif",
+      "sha256": "1fdc3e98bc29c8995ce36632b82fd41b371ea28e0c8740f34a6da8846fb6b7ff",
+      "bytes": 27696
+    },
+    {
+      "object_id": "card:jp:41:100",
+      "source": "empire-of-the-sun/cards/card_jp_42.100.avif",
+      "target": "cards/zh/card_jp_41.100.avif",
+      "sha256": "13126803765df639afe6ac4ad15ba5740bed25ad81b39b6f8b69ee1548cc4b87",
+      "bytes": 10825
+    },
+    {
+      "object_id": "card:jp:41:200",
+      "source": "empire-of-the-sun/cards/card_jp_42.200.avif",
+      "target": "cards/zh/card_jp_41.200.avif",
+      "sha256": "38fe832dbf400ec8dd72e65d33bedff9564928c484d4889ae8ec56cbd9547c85",
+      "bytes": 26857
+    },
+    {
+      "object_id": "card:jp:42:100",
+      "source": "empire-of-the-sun/cards/card_jp_43.100.avif",
+      "target": "cards/zh/card_jp_42.100.avif",
+      "sha256": "0f8f00fe9b685832ebe226dc3c4a6c691d2ccaecd785310225d6e92ced0c1f35",
+      "bytes": 20992
+    },
+    {
+      "object_id": "card:jp:42:200",
+      "source": "empire-of-the-sun/cards/card_jp_43.200.avif",
+      "target": "cards/zh/card_jp_42.200.avif",
+      "sha256": "098d546df813e75bffd11f4666b4a0c5d614437d61fec50bd9a40a1e51aca0b9",
+      "bytes": 51715
+    },
+    {
+      "object_id": "card:jp:43:100",
+      "source": "empire-of-the-sun/cards/card_jp_44.100.avif",
+      "target": "cards/zh/card_jp_43.100.avif",
+      "sha256": "94a17d8531f517c0704752d96a1963ad59be7cb6694130fbc5bcd060dc89d860",
+      "bytes": 24793
+    },
+    {
+      "object_id": "card:jp:43:200",
+      "source": "empire-of-the-sun/cards/card_jp_44.200.avif",
+      "target": "cards/zh/card_jp_43.200.avif",
+      "sha256": "dc295c0f883d46027c978dc2e9f357a504d488a624ac906e564678b0352bb685",
+      "bytes": 31695
+    },
+    {
+      "object_id": "card:jp:44:100",
+      "source": "empire-of-the-sun/cards/card_jp_45.100.avif",
+      "target": "cards/zh/card_jp_44.100.avif",
+      "sha256": "c2d378f48c5b83cd859bd0fb71dc781542cbe232c04cdea0cf8d3cf6c8439d50",
+      "bytes": 15187
+    },
+    {
+      "object_id": "card:jp:44:200",
+      "source": "empire-of-the-sun/cards/card_jp_45.200.avif",
+      "target": "cards/zh/card_jp_44.200.avif",
+      "sha256": "0ef6860d0137b1872cf9f36902a8973d896ec71eb77b7abbbf78a861ae4035d2",
+      "bytes": 38192
+    },
+    {
+      "object_id": "card:jp:45:100",
+      "source": "empire-of-the-sun/cards/card_jp_46.100.avif",
+      "target": "cards/zh/card_jp_45.100.avif",
+      "sha256": "2dc9b7f0e0ed03690e9227105b07007b423b01bd76ce05b164f9b70a77a064e2",
+      "bytes": 13828
+    },
+    {
+      "object_id": "card:jp:45:200",
+      "source": "empire-of-the-sun/cards/card_jp_46.200.avif",
+      "target": "cards/zh/card_jp_45.200.avif",
+      "sha256": "ce87f675dc8ea624c06f69b45cc32700ec70ae59817b058386ff5e06333d5710",
+      "bytes": 32378
+    },
+    {
+      "object_id": "card:jp:46:100",
+      "source": "empire-of-the-sun/cards/card_jp_47.100.avif",
+      "target": "cards/zh/card_jp_46.100.avif",
+      "sha256": "b537735536191f0d6e0b41239521f30ebdb1845100218968a77cdd459acc507d",
+      "bytes": 11187
+    },
+    {
+      "object_id": "card:jp:46:200",
+      "source": "empire-of-the-sun/cards/card_jp_47.200.avif",
+      "target": "cards/zh/card_jp_46.200.avif",
+      "sha256": "2f0824f295cec9e338883a123338ab80ea55b8426e7689b24fa267d9ba1648aa",
+      "bytes": 26943
+    },
+    {
+      "object_id": "card:jp:47:100",
+      "source": "empire-of-the-sun/cards/card_jp_48.100.avif",
+      "target": "cards/zh/card_jp_47.100.avif",
+      "sha256": "4ea7b42693b3ce21c4f61ca2f5fcc2ef84ba337d5f56174d3e4a869cbe6c5258",
+      "bytes": 12498
+    },
+    {
+      "object_id": "card:jp:47:200",
+      "source": "empire-of-the-sun/cards/card_jp_48.200.avif",
+      "target": "cards/zh/card_jp_47.200.avif",
+      "sha256": "85b7ef984158ab7abc0bb23ceeda1224019c825c1a81f6416ddb93b7249ca24d",
+      "bytes": 27861
+    },
+    {
+      "object_id": "card:jp:48:100",
+      "source": "empire-of-the-sun/cards/card_jp_49.100.avif",
+      "target": "cards/zh/card_jp_48.100.avif",
+      "sha256": "d544c874e600c6ceca95276dda096c775729861e9ff6cb43b0794c600eb37e66",
+      "bytes": 5859
+    },
+    {
+      "object_id": "card:jp:48:200",
+      "source": "empire-of-the-sun/cards/card_jp_49.200.avif",
+      "target": "cards/zh/card_jp_48.200.avif",
+      "sha256": "224bca696c48dbf4809188cda47d31af3ca6e10c12d6f70edfccea3e226f7c73",
+      "bytes": 14003
+    },
+    {
+      "object_id": "card:jp:49:100",
+      "source": "empire-of-the-sun/cards/card_jp_50.100.avif",
+      "target": "cards/zh/card_jp_49.100.avif",
+      "sha256": "1d359bd8825a1e892dec541e424d13c023dda341e9e8e1bf450289297c967b37",
+      "bytes": 26423
+    },
+    {
+      "object_id": "card:jp:49:200",
+      "source": "empire-of-the-sun/cards/card_jp_50.200.avif",
+      "target": "cards/zh/card_jp_49.200.avif",
+      "sha256": "1d359bd8825a1e892dec541e424d13c023dda341e9e8e1bf450289297c967b37",
+      "bytes": 26423
+    },
+    {
+      "object_id": "card:jp:50:100",
+      "source": "empire-of-the-sun/cards/card_jp_51.100.avif",
+      "target": "cards/zh/card_jp_50.100.avif",
+      "sha256": "4b860d6d511743d042383f0595ff94e9858ef9c4d26bdca7913c84ae64f9ff63",
+      "bytes": 12402
+    },
+    {
+      "object_id": "card:jp:50:200",
+      "source": "empire-of-the-sun/cards/card_jp_51.200.avif",
+      "target": "cards/zh/card_jp_50.200.avif",
+      "sha256": "ade9bf7e7c9733ab34472c150728a038a948a69ed8045bc888a4953a3dcc1d6c",
+      "bytes": 29746
+    },
+    {
+      "object_id": "card:jp:51:100",
+      "source": "empire-of-the-sun/cards/card_jp_52.100.avif",
+      "target": "cards/zh/card_jp_51.100.avif",
+      "sha256": "a47f5ce07bb5809d067484de1cbb54add9e35f4eb57fb52da8a404222dca981a",
+      "bytes": 12489
+    },
+    {
+      "object_id": "card:jp:51:200",
+      "source": "empire-of-the-sun/cards/card_jp_52.200.avif",
+      "target": "cards/zh/card_jp_51.200.avif",
+      "sha256": "d0d604f9d3b21a2ef1d47a30aecef098797666e00261e11ea6eaf23165227972",
+      "bytes": 29872
+    },
+    {
+      "object_id": "card:jp:52:100",
+      "source": "empire-of-the-sun/cards/card_jp_53.100.avif",
+      "target": "cards/zh/card_jp_52.100.avif",
+      "sha256": "239e32a826d0b46e7825eb1ad8421ef18317494d24e5eb5dd89b919c48002dae",
+      "bytes": 12436
+    },
+    {
+      "object_id": "card:jp:52:200",
+      "source": "empire-of-the-sun/cards/card_jp_53.200.avif",
+      "target": "cards/zh/card_jp_52.200.avif",
+      "sha256": "8d534ce1765dd95374c9753657e813d55ef0df83a6819f7ef78fc6b79a24eae9",
+      "bytes": 29845
+    },
+    {
+      "object_id": "card:jp:53:100",
+      "source": "empire-of-the-sun/cards/card_jp_54.100.avif",
+      "target": "cards/zh/card_jp_53.100.avif",
+      "sha256": "ce2de3fef75f17a6418d5ec3ac225a5cff72f86ffc54148a5306302ccebce594",
+      "bytes": 12447
+    },
+    {
+      "object_id": "card:jp:53:200",
+      "source": "empire-of-the-sun/cards/card_jp_54.200.avif",
+      "target": "cards/zh/card_jp_53.200.avif",
+      "sha256": "b33c3e25b771b769f1a13261a1c268e7312c32682d065cc2519f6e896a5ad3f9",
+      "bytes": 29818
+    },
+    {
+      "object_id": "card:jp:54:100",
+      "source": "empire-of-the-sun/cards/card_jp_55.100.avif",
+      "target": "cards/zh/card_jp_54.100.avif",
+      "sha256": "c8120dd94682b33d60df41ad011d409a299bb2e09f5ab4bda1e704bf20294e93",
+      "bytes": 11873
+    },
+    {
+      "object_id": "card:jp:54:200",
+      "source": "empire-of-the-sun/cards/card_jp_55.200.avif",
+      "target": "cards/zh/card_jp_54.200.avif",
+      "sha256": "1c6cfe9f889ee887560a668754c0851942145c3c73157ecc296968e65620e59f",
+      "bytes": 29153
+    },
+    {
+      "object_id": "card:jp:55:100",
+      "source": "empire-of-the-sun/cards/card_jp_56.100.avif",
+      "target": "cards/zh/card_jp_55.100.avif",
+      "sha256": "c2003a590a48524614f4f6fde197972d6f5fac53d407b7e9ff1efcd0be74fc76",
+      "bytes": 12420
+    },
+    {
+      "object_id": "card:jp:55:200",
+      "source": "empire-of-the-sun/cards/card_jp_56.200.avif",
+      "target": "cards/zh/card_jp_55.200.avif",
+      "sha256": "d5b1494fa986b875f779b658bb5ae5476a0510fb9a906907c58c0d0fbf95aab0",
+      "bytes": 29928
+    },
+    {
+      "object_id": "card:jp:56:100",
+      "source": "empire-of-the-sun/cards/card_jp_57.100.avif",
+      "target": "cards/zh/card_jp_56.100.avif",
+      "sha256": "c85e34fa35a126aa00617703a86ebfebf92535e6577dfc9149a3939f24d0d611",
+      "bytes": 12424
+    },
+    {
+      "object_id": "card:jp:56:200",
+      "source": "empire-of-the-sun/cards/card_jp_57.200.avif",
+      "target": "cards/zh/card_jp_56.200.avif",
+      "sha256": "d993552d85b35dc80071d569bb0af2868988a2a03b8f148dd3db0119c8de02b2",
+      "bytes": 29713
+    },
+    {
+      "object_id": "card:jp:57:100",
+      "source": "empire-of-the-sun/cards/card_jp_58.100.avif",
+      "target": "cards/zh/card_jp_57.100.avif",
+      "sha256": "30d19a4c270219b3dccb728bc6938bdcb7e00cd17ab1c1760b1c5cbabf5d6e97",
+      "bytes": 16469
+    },
+    {
+      "object_id": "card:jp:57:200",
+      "source": "empire-of-the-sun/cards/card_jp_58.200.avif",
+      "target": "cards/zh/card_jp_57.200.avif",
+      "sha256": "619304b9ae85a13c96f572bb3d931d14ec9b75207a5938a676d5c5d4dcc69df5",
+      "bytes": 36997
+    },
+    {
+      "object_id": "card:jp:58:100",
+      "source": "empire-of-the-sun/cards/card_jp_59.100.avif",
+      "target": "cards/zh/card_jp_58.100.avif",
+      "sha256": "dd2e5f1e5ba47ff42906390cac46e2af661014e6c35518f916a7617c68552a85",
+      "bytes": 16202
+    },
+    {
+      "object_id": "card:jp:58:200",
+      "source": "empire-of-the-sun/cards/card_jp_59.200.avif",
+      "target": "cards/zh/card_jp_58.200.avif",
+      "sha256": "5855165a480ba1d7ffd92bab8edee07f84012534f969003862d62f8a311cb5e4",
+      "bytes": 36428
+    },
+    {
+      "object_id": "card:jp:59:100",
+      "source": "empire-of-the-sun/cards/card_jp_60.100.avif",
+      "target": "cards/zh/card_jp_59.100.avif",
+      "sha256": "972f71161d06e088c2656d1d87cad9a10470dc71cec95988dca23917527c4414",
+      "bytes": 16244
+    },
+    {
+      "object_id": "card:jp:59:200",
+      "source": "empire-of-the-sun/cards/card_jp_60.200.avif",
+      "target": "cards/zh/card_jp_59.200.avif",
+      "sha256": "b34cd8fcd4097d21d24b05666c65d4229c6e5a416c80b47c42f28febbfe56805",
+      "bytes": 38633
+    },
+    {
+      "object_id": "card:jp:60:100",
+      "source": "empire-of-the-sun/cards/card_jp_61.100.avif",
+      "target": "cards/zh/card_jp_60.100.avif",
+      "sha256": "d0374df1c8e91bd0e6b1d8c0e6417967fb5075d9f8bc64bd6297dfb9c7e1315f",
+      "bytes": 20954
+    },
+    {
+      "object_id": "card:jp:60:200",
+      "source": "empire-of-the-sun/cards/card_jp_61.200.avif",
+      "target": "cards/zh/card_jp_60.200.avif",
+      "sha256": "aba5ae7d9c2e16dd8b6841462565f5aad6e2c1d27024792546cee9a0e4c55be0",
+      "bytes": 51162
+    },
+    {
+      "object_id": "card:jp:61:100",
+      "source": "empire-of-the-sun/cards/card_jp_62.100.avif",
+      "target": "cards/zh/card_jp_61.100.avif",
+      "sha256": "31428aa4125d85c0ddf3509a3c770f3e27185d28e822895cdb5fb8ff97e5b581",
+      "bytes": 20914
+    },
+    {
+      "object_id": "card:jp:61:200",
+      "source": "empire-of-the-sun/cards/card_jp_62.200.avif",
+      "target": "cards/zh/card_jp_61.200.avif",
+      "sha256": "a9296ecad5d0f093a5322f7d2efddf74c3035961c76f46af3447a6297f27e16b",
+      "bytes": 51071
+    },
+    {
+      "object_id": "card:jp:62:100",
+      "source": "empire-of-the-sun/cards/card_jp_63.100.avif",
+      "target": "cards/zh/card_jp_62.100.avif",
+      "sha256": "87bc98cf7d1d83190c67f95fec9d00b9f6628fa4d07b5b4b3131f3f45d83b06d",
+      "bytes": 21136
+    },
+    {
+      "object_id": "card:jp:62:200",
+      "source": "empire-of-the-sun/cards/card_jp_63.200.avif",
+      "target": "cards/zh/card_jp_62.200.avif",
+      "sha256": "a928f68cd717bbcb0f262b77183262d9f499f0cc9efde68eab0a046db1671d83",
+      "bytes": 51344
+    },
+    {
+      "object_id": "card:jp:63:100",
+      "source": "empire-of-the-sun/cards/card_jp_64.100.avif",
+      "target": "cards/zh/card_jp_63.100.avif",
+      "sha256": "19742766c6616ff52b32aa116383644f62712ce8584d80721ec1334cec5f99fe",
+      "bytes": 52515
+    },
+    {
+      "object_id": "card:jp:63:200",
+      "source": "empire-of-the-sun/cards/card_jp_64.200.avif",
+      "target": "cards/zh/card_jp_63.200.avif",
+      "sha256": "19742766c6616ff52b32aa116383644f62712ce8584d80721ec1334cec5f99fe",
+      "bytes": 52515
+    },
+    {
+      "object_id": "card:jp:64:100",
+      "source": "empire-of-the-sun/cards/card_jp_65.100.avif",
+      "target": "cards/zh/card_jp_64.100.avif",
+      "sha256": "13dd572db91c423dc87345f969622d999a323290c957d53d0139eead4f53cbb7",
+      "bytes": 15767
+    },
+    {
+      "object_id": "card:jp:64:200",
+      "source": "empire-of-the-sun/cards/card_jp_65.200.avif",
+      "target": "cards/zh/card_jp_64.200.avif",
+      "sha256": "813f5dc2a2ab06d3a68efe18e2b9d961f794df829a9902efc720d713aaa8cb54",
+      "bytes": 39957
+    },
+    {
+      "object_id": "card:jp:65:100",
+      "source": "empire-of-the-sun/cards/card_jp_66.100.avif",
+      "target": "cards/zh/card_jp_65.100.avif",
+      "sha256": "56a27e7336dda129595c564249ad1fc8bd46483365987e5cd1bbefd6908e2b89",
+      "bytes": 20930
+    },
+    {
+      "object_id": "card:jp:65:200",
+      "source": "empire-of-the-sun/cards/card_jp_66.200.avif",
+      "target": "cards/zh/card_jp_65.200.avif",
+      "sha256": "4c8b6278652a444e263f181520b7c47c17dd9f4c15bfbdbb119591cf7f579815",
+      "bytes": 50853
+    },
+    {
+      "object_id": "card:jp:66:100",
+      "source": "empire-of-the-sun/cards/card_jp_67.100.avif",
+      "target": "cards/zh/card_jp_66.100.avif",
+      "sha256": "cc74edeb0ea3e95b8aac48e1421bbaeb1146d406a41f474b18f791f115221791",
+      "bytes": 13844
+    },
+    {
+      "object_id": "card:jp:66:200",
+      "source": "empire-of-the-sun/cards/card_jp_67.200.avif",
+      "target": "cards/zh/card_jp_66.200.avif",
+      "sha256": "2908dac095c8ea0b197c4a56d172cca3810a5f3a630439cafa245a1547082c4b",
+      "bytes": 33435
+    },
+    {
+      "object_id": "card:jp:67:100",
+      "source": "empire-of-the-sun/cards/card_jp_68.100.avif",
+      "target": "cards/zh/card_jp_67.100.avif",
+      "sha256": "cec84fc3ccf82798592afde057a09ba96550e1b35d7934931a5ead1ad7160e1c",
+      "bytes": 13801
+    },
+    {
+      "object_id": "card:jp:67:200",
+      "source": "empire-of-the-sun/cards/card_jp_68.200.avif",
+      "target": "cards/zh/card_jp_67.200.avif",
+      "sha256": "5ce80357f08d75ec02ef2c35c54f689a10e9165431611330c6c240afb1e04216",
+      "bytes": 36305
+    },
+    {
+      "object_id": "card:jp:68:100",
+      "source": "empire-of-the-sun/cards/card_jp_69.100.avif",
+      "target": "cards/zh/card_jp_68.100.avif",
+      "sha256": "6d86f8efe31a7c5643509b2a85889e92fe4619f29d00eb99f57640ffb27e14ba",
+      "bytes": 5901
+    },
+    {
+      "object_id": "card:jp:68:200",
+      "source": "empire-of-the-sun/cards/card_jp_69.200.avif",
+      "target": "cards/zh/card_jp_68.200.avif",
+      "sha256": "cf59f96635ae3b2a96ca3c81e4d91edad050f6149b83312aee9e9b6035025370",
+      "bytes": 13373
+    },
+    {
+      "object_id": "card:jp:69:100",
+      "source": "empire-of-the-sun/cards/card_jp_70.100.avif",
+      "target": "cards/zh/card_jp_69.100.avif",
+      "sha256": "c9a49de173d6894d2698a5ed3befa4db0b26e5e85caeb9c8140115e8c45e5b80",
+      "bytes": 5883
+    },
+    {
+      "object_id": "card:jp:69:200",
+      "source": "empire-of-the-sun/cards/card_jp_70.200.avif",
+      "target": "cards/zh/card_jp_69.200.avif",
+      "sha256": "c1feea79e22dcc9f924579618e23ad5a0d4b5fd516ed89d1f0490475bc2b930d",
+      "bytes": 13438
+    },
+    {
+      "object_id": "card:jp:70:100",
+      "source": "empire-of-the-sun/cards/card_jp_71.100.avif",
+      "target": "cards/zh/card_jp_70.100.avif",
+      "sha256": "e38dd47ee9b47e0d6b20f3126ce2978711d82254358ff9c103b021c6d741a482",
+      "bytes": 14699
+    },
+    {
+      "object_id": "card:jp:70:200",
+      "source": "empire-of-the-sun/cards/card_jp_71.200.avif",
+      "target": "cards/zh/card_jp_70.200.avif",
+      "sha256": "fe25529223ea8dc767711209ddafbaf09813ce0f51f51ba218708548fc9201a3",
+      "bytes": 37219
+    },
+    {
+      "object_id": "card:jp:71:100",
+      "source": "empire-of-the-sun/cards/card_jp_72.100.avif",
+      "target": "cards/zh/card_jp_71.100.avif",
+      "sha256": "fe2cd5cf24c4f2a2b2c7324a5acd0435c5bc766b4ce693351188206e79aebec9",
+      "bytes": 9935
+    },
+    {
+      "object_id": "card:jp:71:200",
+      "source": "empire-of-the-sun/cards/card_jp_72.200.avif",
+      "target": "cards/zh/card_jp_71.200.avif",
+      "sha256": "02dd997c8103628be5f65ba37325c754a42e6f95b445a8c9f4a82cfd95b2693d",
+      "bytes": 24836
+    },
+    {
+      "object_id": "card:jp:72:100",
+      "source": "empire-of-the-sun/cards/card_jp_73.100.avif",
+      "target": "cards/zh/card_jp_72.100.avif",
+      "sha256": "ea70e86d9fabc88960a3faf36e0a448e2ae2d8ceaef4d9a36afe77f101e19ce4",
+      "bytes": 12417
+    },
+    {
+      "object_id": "card:jp:72:200",
+      "source": "empire-of-the-sun/cards/card_jp_73.200.avif",
+      "target": "cards/zh/card_jp_72.200.avif",
+      "sha256": "534e25f44030963392c9e54a6df175602119c116688c95543ab3c052daec72fe",
+      "bytes": 29284
+    },
+    {
+      "object_id": "card:jp:73:100",
+      "source": "empire-of-the-sun/cards/card_jp_74.100.avif",
+      "target": "cards/zh/card_jp_73.100.avif",
+      "sha256": "7c1c20a2095b50679eb2a8299a31466ecbeb9bdbd01aba8e2a9fdacffcdc204d",
+      "bytes": 6658
+    },
+    {
+      "object_id": "card:jp:73:200",
+      "source": "empire-of-the-sun/cards/card_jp_74.200.avif",
+      "target": "cards/zh/card_jp_73.200.avif",
+      "sha256": "f32bdbf888d1648cc0e9c90706d62fe2e669f827483607b3b160401383d5b068",
+      "bytes": 15628
+    },
+    {
+      "object_id": "card:jp:74:100",
+      "source": "empire-of-the-sun/cards/card_jp_75.100.avif",
+      "target": "cards/zh/card_jp_74.100.avif",
+      "sha256": "8a0a3015781293754510783967d2d3729db86cd27950abbb8a465123b98032f9",
+      "bytes": 13290
+    },
+    {
+      "object_id": "card:jp:74:200",
+      "source": "empire-of-the-sun/cards/card_jp_75.200.avif",
+      "target": "cards/zh/card_jp_74.200.avif",
+      "sha256": "db6e4bb52ad68771f1940f5ecd99a4ee500510abf30d18b042d8408f618a511e",
+      "bytes": 33352
+    },
+    {
+      "object_id": "card:jp:75:100",
+      "source": "empire-of-the-sun/cards/card_jp_76.100.avif",
+      "target": "cards/zh/card_jp_75.100.avif",
+      "sha256": "8ea8cbf88ec0ce7149f2fda496a22757bc3b15ade4d69ca5422c669e20fe4ecc",
+      "bytes": 19152
+    },
+    {
+      "object_id": "card:jp:75:200",
+      "source": "empire-of-the-sun/cards/card_jp_76.200.avif",
+      "target": "cards/zh/card_jp_75.200.avif",
+      "sha256": "a160b3f765859dfdbe2b4ad241a550d8621b5d9a2e6eaa24d178e9595bd25970",
+      "bytes": 46651
+    },
+    {
+      "object_id": "card:jp:76:100",
+      "source": "empire-of-the-sun/cards/card_jp_77.100.avif",
+      "target": "cards/zh/card_jp_76.100.avif",
+      "sha256": "3a1064260b45e864bd9fd303a7359cef878c030e45f87bb7ed6cc82e54bfbaee",
+      "bytes": 14161
+    },
+    {
+      "object_id": "card:jp:76:200",
+      "source": "empire-of-the-sun/cards/card_jp_77.200.avif",
+      "target": "cards/zh/card_jp_76.200.avif",
+      "sha256": "521496ab9a31e8cee450cf5ddad189e0566cf175ed549d962dfa6a9897bdc20b",
+      "bytes": 34734
+    },
+    {
+      "object_id": "card:jp:77:100",
+      "source": "empire-of-the-sun/cards/card_jp_78.100.avif",
+      "target": "cards/zh/card_jp_77.100.avif",
+      "sha256": "ff0e099835065bfc3ff253426fd02cf3563895bc02c48fa91960718fefc5618c",
+      "bytes": 11451
+    },
+    {
+      "object_id": "card:jp:77:200",
+      "source": "empire-of-the-sun/cards/card_jp_78.200.avif",
+      "target": "cards/zh/card_jp_77.200.avif",
+      "sha256": "ee4d184bcaddb60d37aa07897652adfa85e889573df3b14f827ebfd7659d0d1b",
+      "bytes": 28408
+    },
+    {
+      "object_id": "card:jp:78:100",
+      "source": "empire-of-the-sun/cards/card_jp_79.100.avif",
+      "target": "cards/zh/card_jp_78.100.avif",
+      "sha256": "a073953a4587216b7c3f82609dd0de25c423fed7e758531d926cfe854a5cd143",
+      "bytes": 19166
+    },
+    {
+      "object_id": "card:jp:78:200",
+      "source": "empire-of-the-sun/cards/card_jp_79.200.avif",
+      "target": "cards/zh/card_jp_78.200.avif",
+      "sha256": "e39b680f61b0e3ca4dd2ee604c8cd156433e4170a9f4de7bee02322020215229",
+      "bytes": 46393
+    },
+    {
+      "object_id": "card:jp:79:100",
+      "source": "empire-of-the-sun/cards/card_jp_80.100.avif",
+      "target": "cards/zh/card_jp_79.100.avif",
+      "sha256": "d9f016a5dcb438e9bbdd4ccd34a1f6fe11cedafa4b486d11280739fa46fc669e",
+      "bytes": 14931
+    },
+    {
+      "object_id": "card:jp:79:200",
+      "source": "empire-of-the-sun/cards/card_jp_80.200.avif",
+      "target": "cards/zh/card_jp_79.200.avif",
+      "sha256": "0481956713d7011fb62adc8fbd061c10a18a83efb519241139761a231e1c576d",
+      "bytes": 37923
+    },
+    {
+      "object_id": "card:jp:80:100",
+      "source": "empire-of-the-sun/cards/card_jp_81.100.avif",
+      "target": "cards/zh/card_jp_80.100.avif",
+      "sha256": "72b0e04706be86835d4148a010d44c72b55483119d28eafe62bcadc98599e22c",
+      "bytes": 20948
+    },
+    {
+      "object_id": "card:jp:80:200",
+      "source": "empire-of-the-sun/cards/card_jp_81.200.avif",
+      "target": "cards/zh/card_jp_80.200.avif",
+      "sha256": "1e281255f87d72d060ce880d0cb74dec6f62c7fb4f51d826a8c7f98b27756615",
+      "bytes": 50879
+    },
+    {
+      "object_id": "card:jp:81:100",
+      "source": "empire-of-the-sun/cards/card_jp_82.100.avif",
+      "target": "cards/zh/card_jp_81.100.avif",
+      "sha256": "a5e2fd9316fa404f74d82b68bc32b9f2801012ff21d8ae3e0da486e5ce962b3e",
+      "bytes": 12579
+    },
+    {
+      "object_id": "card:jp:81:200",
+      "source": "empire-of-the-sun/cards/card_jp_82.200.avif",
+      "target": "cards/zh/card_jp_81.200.avif",
+      "sha256": "07670f65ca67591fb71424086811083d93745b07144a8d90316a32f533027f27",
+      "bytes": 28221
+    },
+    {
+      "object_id": "card:jp:82:100",
+      "source": "empire-of-the-sun/cards/card_jp_83.100.avif",
+      "target": "cards/zh/card_jp_82.100.avif",
+      "sha256": "1582d10f299b934941a722928c501b17d738f995fc994452a9bac0e8f596b3e3",
+      "bytes": 9492
+    },
+    {
+      "object_id": "card:jp:82:200",
+      "source": "empire-of-the-sun/cards/card_jp_83.200.avif",
+      "target": "cards/zh/card_jp_82.200.avif",
+      "sha256": "588970233985807b29d59818a91566f90d6eb6ceadfda926cb18de5a56ed48ce",
+      "bytes": 23608
+    },
+    {
+      "object_id": "card:jp:83:100",
+      "source": "empire-of-the-sun/cards/card_jp_84.100.avif",
+      "target": "cards/zh/card_jp_83.100.avif",
+      "sha256": "7ea0c32dad76383ec3373d35b63601d091f00e681d0ddc7af7a98833a418adc7",
+      "bytes": 5866
+    },
+    {
+      "object_id": "card:jp:83:200",
+      "source": "empire-of-the-sun/cards/card_jp_84.200.avif",
+      "target": "cards/zh/card_jp_83.200.avif",
+      "sha256": "57d29dddf5eef50ffd19b41f36929fe13f1af6aa4fa5f65873e43b156d6545b9",
+      "bytes": 13103
+    },
+    {
+      "object_id": "card:jp:84:100",
+      "source": "empire-of-the-sun/cards/card_jp_85.100.avif",
+      "target": "cards/zh/card_jp_84.100.avif",
+      "sha256": "9d0a9297c696761db591d58be06767fdb6ce4b16e00fff16fd118af8c4c0c017",
+      "bytes": 13798
+    },
+    {
+      "object_id": "card:jp:84:200",
+      "source": "empire-of-the-sun/cards/card_jp_85.200.avif",
+      "target": "cards/zh/card_jp_84.200.avif",
+      "sha256": "abcb56893492cd5206c09675ac142fcc7263b5c233836544c265800856c68b17",
+      "bytes": 33014
+    },
+    {
+      "object_id": "card:jp:85:100",
+      "source": "empire-of-the-sun/cards/card_jp_86.100.avif",
+      "target": "cards/zh/card_jp_85.100.avif",
+      "sha256": "7c1055f64de50f5e4044d2cad70573c967ec1927da8f937e0f94299a76e90876",
+      "bytes": 15318
+    },
+    {
+      "object_id": "card:jp:85:200",
+      "source": "empire-of-the-sun/cards/card_jp_86.200.avif",
+      "target": "cards/zh/card_jp_85.200.avif",
+      "sha256": "3db21470398d397930c10d6f4d16aabe2d29e8672652c11f545fd3bcd739cfe8",
+      "bytes": 35749
+    },
+    {
+      "object_id": "card:jp:86:100",
+      "source": "empire-of-the-sun/cards/card_jp_87.100.avif",
+      "target": "cards/zh/card_jp_86.100.avif",
+      "sha256": "0cab96faf53f9eb0509b9537cb3b19f4a76d08d51a3bb5c0d22f4905e929b302",
+      "bytes": 12658
+    },
+    {
+      "object_id": "card:jp:86:200",
+      "source": "empire-of-the-sun/cards/card_jp_87.200.avif",
+      "target": "cards/zh/card_jp_86.200.avif",
+      "sha256": "2e0af4f813a4d889a12c1cf5d8cc09d8027790c073c8799d2778cf4f20d14d7d",
+      "bytes": 29094
+    }
+  ]
+}

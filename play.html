@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <!-- vim:set nowrap: -->
-<html>
+<html lang="zh-CN">
 <head>
     <meta name="viewport"
           content="width=device-width, height=device-height, user-scalable=no, interactive-widget=resizes-content, viewport-fit=cover">
     <meta name="theme-color" content="#444">
     <meta charset="UTF-8">
-    <title>EMPIRE OF THE SUN</title>
+    <title>太阳帝国 / EMPIRE OF THE SUN</title>
     <link id="favicon" rel="icon" href="page_logo.svg">
     <link rel="stylesheet" href="/fonts/fonts.css">
     <link rel="stylesheet" href="/common/client.css">
     <link rel="stylesheet" href="world.css">
     <link rel="stylesheet" href="play.css">
     <link rel="stylesheet" href="images.css">
+    <link rel="stylesheet" href="cards-zh.css">
     <script defer src="/common/client.js"></script>
     <script defer src="world.js"></script>
     <script defer src="data.js"></script>
@@ -22,37 +23,37 @@
 <body>
 
 <div id="event_cards_ap" class="dialog">
-    <div class="dialog_header">Allied Event Cards</div>
+    <div class="dialog_header" data-i18n="Allied Event Cards">Allied Event Cards</div>
     <div class="dialog_x" onclick="hide_dialog('event_cards_ap')">&#x274c;</div>
     <div class="dialog_body"></div>
 </div>
 
 <div id="event_cards_jp" class="dialog">
-    <div class="dialog_header">Japanese Event Cards</div>
+    <div class="dialog_header" data-i18n="Japanese Event Cards">Japanese Event Cards</div>
     <div class="dialog_x" onclick="hide_dialog('event_cards_jp')">&#x274c;</div>
     <div class="dialog_body"></div>
 </div>
 
 <div id="vp_check" class="dialog">
-    <div class="dialog_header">Victory Points</div>
+    <div class="dialog_header" data-i18n="Victory Points">Victory Points</div>
     <div class="dialog_body"></div>
     <div class="dialog_x" onclick="hide_dialog('vp_check')">&#x274c;</div>
 </div>
 
 <div id="elim_check" class="dialog">
-    <div class="dialog_header">Eliminated Units</div>
+    <div class="dialog_header" data-i18n="Eliminated Units">Eliminated Units</div>
     <div class="dialog_body"></div>
     <div class="dialog_x" onclick="hide_dialog('elim_check')">&#x274c;</div>
 </div>
 
 <div id="pw_check" class="dialog">
-    <div class="dialog_header">Political Status</div>
+    <div class="dialog_header" data-i18n="Political Status">Political Status</div>
     <div class="dialog_body"></div>
     <div class="dialog_x" onclick="hide_dialog('pw_check')">&#x274c;</div>
 </div>
 
 <div id="battle_info" class="dialog">
-    <div class="dialog_header">Battle info</div>
+    <div class="dialog_header" data-i18n="Battle info">Battle info</div>
     <div class="dialog_body"></div>
     <div class="dialog_x" onclick="hide_dialog('battle_info')">&#x274c;</div>
 </div>
@@ -64,7 +65,11 @@
         <details>
             <summary><img src="/images/cog.svg"></summary>
             <menu>
-                <li><label><input type=checkbox name="noroad">Default road markers</label>
+                <li><label><span data-i18n="Language">Language</span>
+                    <select id="eots_language" onchange="eots_set_language(this.value)">
+                        <option value="zh-CN">中文</option><option value="en-US">English</option>
+                    </select></label>
+                <li><label><input type=checkbox name="noroad"><span data-i18n="Default road markers">Default road markers</span></label>
                 <li><label><input type=checkbox name="nopath">Hide unit path</label>
                 <li><label><input type=checkbox name="fullcontrol">Vassal like control</label>
                 <li><label><input type=checkbox name="hidezoi">Hide ZOI</label>
@@ -121,16 +126,16 @@
 
     <div id="panels">
         <div class="panel" id="active_cards">
-            <div class="panel-head">Current offensive</div>
+            <div class="panel-head" data-i18n="Current offensive">Current offensive</div>
             <div class="panel-body"></div>
         </div>
         <div class="panel" id="jp_hand">
-            <div class="panel-head">Japan Hand</div>
+            <div class="panel-head" data-i18n="Japan Hand">Japan Hand</div>
             <div class="panel-body"></div>
         </div>
 
         <div class="panel" id="ap_hand">
-            <div class="panel-head">Allied Hand</div>
+            <div class="panel-head" data-i18n="Allied Hand">Allied Hand</div>
             <div class="panel-body"></div>
         </div>
 

@@ -145,9 +145,11 @@ function update_role_info() {
     for (let who = JP; who <= AP; who++) {
         var hand_size = Number.isInteger(G.hand[who]) ? G.hand[who] : G.hand[who].length
         var fo = G.events[events.FUTURE_OFFENSIVE_JP.id + who]
-        roles[who].stat.innerHTML = `${hand_size} cards${fo && fo < G.turn ? " + FO" : ""}${G.passes[who] ? ", " + G.passes[who] + " passes" : ""}`
+        roles[who].stat.innerHTML = eots_language() === "zh-CN"
+            ? `${hand_size} 张卡牌${fo && fo < G.turn ? " + 未来攻势" : ""}${G.passes[who] ? ", " + G.passes[who] + " 次过牌" : ""}`
+            : `${hand_size} cards${fo && fo < G.turn ? " + FO" : ""}${G.passes[who] ? ", " + G.passes[who] + " passes" : ""}`
         if (!hand_size) {
-            roles[who].stat.innerHTML = `Pass`
+            roles[who].stat.innerHTML = eots_t("Pass")
         }
     }
 }
@@ -396,53 +398,53 @@ function on_update() {
         P[LOCAL_STATUS].on_update()
     }
 
-    action_button("play_card", "Play card")
-    action_button("to_unit", "Rebuild unit")
-    action_button("roll", "Roll")
+    action_button("play_card", eots_t("Play card"))
+    action_button("to_unit", eots_t("Rebuild unit"))
+    action_button("roll", eots_t("Roll"))
 
-    action_button("awaiting", "Prompt")
-    action_button("continue", "Continue")
-    action_button("bonus", "Use Bonus")
-    action_button("event", "Play Event")
-    action_button("ops", "Play for Operations")
-    action_button("hold", "Hold")
-    action_button("advanced_move", "Advanced move")
-    action_button("no_move", "No move")
-    action_button("eliminate", "Eliminate")
-    action_button("stop", "Stop")
-    action_button("displace", "Displace")
-    action_button("divisions_button", "Reduce divisions track")
-
-
-    action_button("displace_hq", "HQ Withdrawal")
-    action_button("return_hq", "Early HQ Return")
-    action_button("inter_service", "Remove Inter-Service Rivalry")
-    action_button("china_offensive", "China Offensive")
-    action_button("future_offensive", "Future Offensive")
-    action_button("jarhat", "Build Jarhat Road")
-    action_button("imphal", "Build Imphal Road")
-    action_button("ledo", "Build Ledo Road")
-    action_button("discard", "Discard")
+    action_button("awaiting", eots_t("Prompt"))
+    action_button("continue", eots_t("Continue"))
+    action_button("bonus", eots_t("Use Bonus"))
+    action_button("event", eots_t("Play Event"))
+    action_button("ops", eots_t("Play for Operations"))
+    action_button("hold", eots_t("Hold"))
+    action_button("advanced_move", eots_t("Advanced move"))
+    action_button("no_move", eots_t("No move"))
+    action_button("eliminate", eots_t("Eliminate"))
+    action_button("stop", eots_t("Stop"))
+    action_button("displace", eots_t("Displace"))
+    action_button("divisions_button", eots_t("Reduce divisions track"))
 
 
-    action_button("all", "Choose all")
-    action_button("pass", "Pass")
-    action_button("skip", "Skip")
-    action_button("range", "Range")
+    action_button("displace_hq", eots_t("HQ Withdrawal"))
+    action_button("return_hq", eots_t("Early HQ Return"))
+    action_button("inter_service", eots_t("Remove Inter-Service Rivalry"))
+    action_button("china_offensive", eots_t("China Offensive"))
+    action_button("future_offensive", eots_t("Future Offensive"))
+    action_button("jarhat", eots_t("Build Jarhat Road"))
+    action_button("imphal", eots_t("Build Imphal Road"))
+    action_button("ledo", eots_t("Build Ledo Road"))
+    action_button("discard", eots_t("Discard"))
 
-    action_button("next", "Next")
-    action_button("done", "Done")
-    action_button("delay", "Delay")
-    action_button("no_organic", "Disable organic")
-    action_button("avoid_zoi", "Avoid ZOI")
-    action_button("strat_move", "Strategic")
-    action_button("amphibious", "Amphibious")
-    action_button("ground_move", "Ground")
-    action_button("extended_air", "Extended range")
-    action_button("barges", "Barges")
 
-    action_button("redo", "Redo")
-    action_button("undo", "Undo")
+    action_button("all", eots_t("Choose all"))
+    action_button("pass", eots_t("Pass"))
+    action_button("skip", eots_t("Skip"))
+    action_button("range", eots_t("Range"))
+
+    action_button("next", eots_t("Next"))
+    action_button("done", eots_t("Done"))
+    action_button("delay", eots_t("Delay"))
+    action_button("no_organic", eots_t("Disable organic"))
+    action_button("avoid_zoi", eots_t("Avoid ZOI"))
+    action_button("strat_move", eots_t("Strategic"))
+    action_button("amphibious", eots_t("Amphibious"))
+    action_button("ground_move", eots_t("Ground"))
+    action_button("extended_air", eots_t("Extended range"))
+    action_button("barges", eots_t("Barges"))
+
+    action_button("redo", eots_t("Redo"))
+    action_button("undo", eots_t("Undo"))
     end_update()
 }
 

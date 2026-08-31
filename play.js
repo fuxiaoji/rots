@@ -6946,6 +6946,617 @@ const ROAD_EVENTS = Object.keys(events).filter(k => events[k].road).map(k => {
 function is_event_active(event) {
     return G.events[event.id]
 }/** import common/data.js*/
+/** import common/i18n.js*/
+/** Data-only game localization. Canonical game objects are never mutated. */
+
+const EOTS_LANGUAGE_KEY = "eots.language"
+const EOTS_DEFAULT_LANGUAGE = "zh-CN"
+
+var EOTS_UI_ZH = {
+	"Japan": "日本", "Allies": "盟军", "Observer": "观察者",
+	"Play card": "打出卡牌", "Rebuild unit": "重建单位", "Roll": "掷骰",
+	"Prompt": "提示", "Continue": "继续", "Use Bonus": "使用修正",
+	"Play Event": "触发事件", "Play for Operations": "作为作战牌打出",
+	"Hold": "保留", "Advanced move": "扩展移动", "No move": "不移动",
+	"Eliminate": "消灭", "Stop": "停止", "Displace": "撤离",
+	"Reduce divisions track": "降低师级编制", "HQ Withdrawal": "司令部撤退",
+	"Early HQ Return": "司令部提前返回", "Remove Inter-Service Rivalry": "消除军种对立",
+	"China Offensive": "中国攻势", "Future Offensive": "未来攻势",
+	"Build Jarhat Road": "修筑焦尔哈德公路", "Build Imphal Road": "修筑英帕尔公路",
+	"Build Ledo Road": "修筑利多公路", "Discard": "弃牌", "Choose all": "全选",
+	"Pass": "过牌", "Skip": "跳过", "Range": "航程", "Next": "下一步",
+	"Done": "完成", "Delay": "延迟", "Disable organic": "禁用建制移动",
+	"Avoid ZOI": "避开影响区", "Strategic": "战略移动", "Amphibious": "两栖突击",
+	"Ground": "地面移动", "Extended range": "延长航程", "Barges": "驳船",
+	"Redo": "重做", "Undo": "撤销", "Review Proposal": "查看回滚提议",
+	"Allied Event Cards": "盟军事件卡", "Japanese Event Cards": "日本事件卡",
+	"Victory Points": "胜利点", "Eliminated Units": "被消灭单位",
+	"Political Status": "国家状态", "Battle info": "战斗信息",
+	"Current offensive": "当前攻势", "Japan Hand": "日本手牌", "Allied Hand": "盟军手牌",
+	"Default road markers": "默认道路标记", "Hide unit path": "隐藏单位路径",
+	"Vassal like control": "类 Vassal 控制", "Hide ZOI": "隐藏影响区",
+	"Read me!": "说明", "Rules": "规则", "Charts": "图表",
+	"Allied Deck": "盟军牌库", "Japanese Deck": "日本牌库",
+	"Inspect Japanese Cards": "查看日本卡牌", "Inspect Allied Cards": "查看盟军卡牌",
+	"Inspect Political Status": "查看国家状态", "Inspect Victory Points": "查看胜利点",
+	"Inspect Eliminated Units": "查看被消灭单位", "Check Unit Supply": "检查单位补给",
+	"Check Distance": "检查距离", "Load full log": "载入完整日志",
+	"Language": "语言", "Chinese": "中文", "English": "English",
+	"ERASMUS decision trace": "伊拉斯谟决策轨迹"
+}
+
+function eots_language() {
+	if (typeof localStorage === "undefined") return EOTS_DEFAULT_LANGUAGE
+	return localStorage.getItem(EOTS_LANGUAGE_KEY) || EOTS_DEFAULT_LANGUAGE
+}
+
+function eots_t(text) {
+	if (eots_language() !== "zh-CN" || typeof text !== "string") return text
+	return EOTS_UI_ZH[text] || text
+}
+
+function eots_localized_name(kind, name) {
+	if (eots_language() !== "zh-CN" || typeof EOTS_ZH_NAMES === "undefined") return name
+	return (EOTS_ZH_NAMES[kind] && EOTS_ZH_NAMES[kind][name]) || name
+}
+
+/** import common/i18n.js*/
+/** import common/locale_zh.js*/
+/** Generated data-only translations; see docs/localization/assets-manifest.json. */
+var EOTS_ZH_NAMES = {
+  "units": {
+    "Akagi": "赤城",
+    "Amagi": "天城",
+    "Enterprise": "企业",
+    "Essex": "埃塞克斯",
+    "Exeter": "埃克塞特",
+    "Hermes": "竞技神",
+    "Hiei": "比叡",
+    "Indomitable": "不挠",
+    "Intrepid": "无畏",
+    "Junyo": "隼鹰",
+    "Kaiyo": "海鹰",
+    "Kamikaze": "神风",
+    "Kent": "澳大利亚",
+    "Kongo": "金刚",
+    "Lexington": "列克星敦",
+    "London": "伦敦",
+    "Missouri": "密苏里",
+    "Mogami": "最上",
+    "Nachi": "那智",
+    "Nagato": "长门",
+    "New Jersey": "新泽西",
+    "New York": "纽约",
+    "Northampton": "北安普顿",
+    "Ryujo": "龙骧",
+    "Shokaku": "翔鹤",
+    "Soryu": "苍龙",
+    "Taiho": "大凤",
+    "Takao": "高雄",
+    "Tenyru": "天龙",
+    "Victorious": "胜利",
+    "Warspite": "厌战",
+    "Washington": "华盛顿",
+    "Wasp": "胡蜂",
+    "Yamato": "大和",
+    "Zuiho": "瑞凤",
+    "Bataan": "巴丹",
+    "Hancock": "汉考克",
+    "Alaska": "阿拉斯加",
+    "Aoba": "青叶",
+    "Baltimore": "巴尔的摩",
+    "Bunker Hill": "邦克山",
+    "Casablanca": "卡萨布兰卡",
+    "Cowpens": "考彭斯",
+    "Franklin": "富兰克林",
+    "Mississippi": "密西西比",
+    "Sangamon": "桑加蒙",
+    "Shangri-La": "香格里拉",
+    "St. Lo": "圣洛",
+    "Belleau Wood": "贝洛森林",
+    "Duke of York": "约克公爵",
+    "Massachusetts": "马萨诸塞",
+    "North Carolina": "北卡罗来纳",
+    "San Jacinto": "圣贾辛托",
+    "New Orleans": "新奥尔良",
+    "Commencement Bay": "科芒斯曼特湾",
+    "B.H. Richard": "好人理查德",
+    "MD/CA": "主力舰队",
+    "Dutch": "荷兰",
+    "Force Z": "Z 舰队",
+    "US Asia (Cruiser)": "休斯顿",
+    "Us Asia (Destroyer)": "克莱姆森",
+    "ABDA HQ": "美英荷澳HQ",
+    "ANZAC HQ": "澳新军团HQ",
+    "Central Pacific HQ": "中太平洋HQ",
+    "Combined Fleet HQ (Ozawa)": "联合舰队HQ（小泽）",
+    "Combined Fleet HQ (Yamamoto)": "联合舰队HQ（山本）",
+    "Malaya HQ": "马来亚HQ",
+    "SEAC HQ": "东南亚HQ",
+    "South HQ": "南方军HQ",
+    "South Pacific HQ (Ghormley)": "南太平洋HQ（戈姆利）",
+    "South Pacific HQ (Halsey)": "南太平洋HQ（哈尔西）",
+    "South Seas HQ": "南洋HQ",
+    "South West Pacific HQ": "西南太平洋HQ",
+    "1st Marine Division": "陆战1师",
+    "2nd Marine Division": "陆战2师",
+    "3rd Marine Division": "陆战3师",
+    "4th Marine Division": "陆战4师",
+    "5th Marine Division": "陆战5师",
+    "6th Marine Division": "陆战6师",
+    "Marine Brigade": "海军陆战旅",
+    "SF Brigade": "陆战突击旅",
+    "1st Marine Aircraft Wing": "第1海军陆战队航空联队",
+    "2nd Marine Aircraft Wing": "第2海军陆战队航空联队",
+    "3rd Marine Aircraft Wing": "第3海军陆战队航空联队",
+    "Marine Fighter Attack Squadron 211": "海军陆战队第211战斗机中队",
+    "1st Australian Corps": "第1澳大利亚军",
+    "2nd Australian Corps": "第2澳大利亚军",
+    "3rd Australian Corps": "第3澳大利亚军",
+    "4th Australian Corps": "第4澳大利亚军",
+    "8th Australian Division": "第8澳大利亚师",
+    "Australian Air Force": "澳大利亚空军",
+    "3rd New Zealand Division": "第3新西兰师",
+    "1st Burma Division": "第1缅甸师",
+    "Burma Indian Division": "印缅师",
+    "1st Indian Corps": "第1印度军",
+    "2nd Indian Corps": "第2印度军",
+    "3rd Indian Corps": "第3印度军",
+    "4th Indian Corps": "第4印度军",
+    "Chinese 5th Army": "中国第5军",
+    "Chinese 6th Army": "中国第6军",
+    "Chinese 66th Army": "中国第66军",
+    "Hong Kong Division": "香港师",
+    "Malayan Air Force (RAF)": "马来亚空军（英国）",
+    "Far East Air Force (RAF)": "远东空军（英国）",
+    "Wake Island Brigade": "威克岛守备旅",
+    "NL Corps": "北吕宋军",
+    "R Corps": "菲律宾预备军",
+    "SL Corps": "南吕宋军",
+    "M Corps": "棉兰老岛军",
+    "P Brigade": "菲律宾保安旅",
+    "Java Division": "爪哇师",
+    "Royal Netherlands Air Force": "荷兰空军",
+    "1st Regiment": "第1团(荷兰)",
+    "2nd Regiment": "第2团(荷兰)",
+    "3rd Regiment": "第3团(荷兰)",
+    "4th Regiment": "第4团(荷兰)",
+    "5th Regiment": "第5团(荷兰)",
+    "6th Regiment": "第6团(荷兰)",
+    "7th Regiment": "第7团(荷兰)",
+    "8th Regiment": "第8团(荷兰)",
+    "7th Armored Brigade": "第7装甲旅",
+    "77th Brigade": "第77特战旅",
+    "1st SN Brigade": "第1特别海军陆战队",
+    "2nd SN Brigade": "第2特别海军陆战队",
+    "3rd SN Brigade": "第3特别海军陆战队",
+    "4th SN Brigade": "第4特别海军陆战队",
+    "South Seas Brigade": "南海支队",
+    "I Corps": "第1军",
+    "IX Corps": "第9军",
+    "X Corps": "第10军",
+    "XI Corps": "第11军",
+    "XIV Corps": "第14军",
+    "XXIV Corps": "第24军",
+    "15th Corps": "第15军",
+    "33rd Corps": "第33军",
+    "2nd Army": "第2军",
+    "14th Army": "第14军",
+    "15th Army": "第15军",
+    "16th Army": "第16军",
+    "17th Army": "第17军",
+    "18th Army": "第18军",
+    "19th Army": "第19军",
+    "25th Army": "第25军",
+    "27th Army": "第27军",
+    "28th Army": "第28军",
+    "29th Army": "第29军",
+    "31st Army": "第31军",
+    "32nd Army": "第32军",
+    "33rd Army": "第33军",
+    "35th Army": "第35军",
+    "36th Army": "第36军",
+    "37th Army": "第37军",
+    "38th Army": "第38军",
+    "39th Army": "第39军",
+    "Korean Army": "朝鲜军",
+    "Eastern District Army": "东部军",
+    "11th Airborne Division": "第11空降师",
+    "PM Brigade": "巴布亚旅",
+    "1st Air Division": "第1飞行师团",
+    "2nd Air Division": "第2飞行师团",
+    "3rd Air Division": "第3飞行师团",
+    "4th Air Division": "第4飞行师团",
+    "5th Air Division": "第5飞行师团",
+    "6th Air Division": "第6飞行师团",
+    "7th Air Division": "第7飞行师团",
+    "8th Air Division": "第8飞行师团",
+    "9th Air Division": "第9飞行师团",
+    "10th Air Division": "第10飞行师团",
+    "11th Air Division": "第11飞行师团",
+    "12th Air Division": "第12飞行师团",
+    "21st Air Flotilla": "第21航空战队",
+    "22nd Air Flotilla": "第22航空战队",
+    "23rd Air Flotilla": "第23航空战队",
+    "24th Air Flotilla": "第24航空战队",
+    "25th Air Flotilla": "第25航空战队",
+    "26th Air Flotilla": "第26航空战队",
+    "27th Air Flotilla": "第27航空战队",
+    "28th Air Flotilla": "第28航空战队",
+    "50th Air Flotilla": "第50航空战队",
+    "51st Air Flotilla": "第51航空战队",
+    "61st Air Flotilla": "第61航空战队",
+    "62nd Air Flotilla": "第62航空战队",
+    "Tainan Air Unit": "台南航空队",
+    "5th Air Force": "第5航空队",
+    "5th Air Force (LRB)": "第5航空队（远程）",
+    "7th Air Force": "第7航空队",
+    "7th Air Force (LRB)": "第7航空队（远程）",
+    "10th Air Force (LRB)": "第10航空队（远程）",
+    "11th Air Force": "第11航空队",
+    "11th Air Force (LRB)": "第11航空队（远程）",
+    "13th Air Force": "第13航空队",
+    "13th Air Force (LRB)": "第13航空队（远程）",
+    "14th Air Force": "第14航空队",
+    "14th Air Force (LRB)": "第14航空队（远程）",
+    "Far East Air Force (US)": "远东空军（美国）",
+    "19th LRB air unit": "第19远程轰炸机部队",
+    "The American Volunteer Groups": "飞虎队",
+    "SEAC Air Force": "东南亚空军",
+    "SEAC Air Force (LRB)": "东南亚空军（远程）",
+    "XX Bomber Command (B-29)": "第20轰炸机司令部（B-29）",
+    "XXI Bomber Command (B-29)": "第21轰炸机司令部（B-29）",
+    "Japanese garrison": "日本守备队",
+    "Japanese Home Islands garrison": "日本本土守备队"
+  },
+  "cards": {
+    "Battan Death March": "巴丹死亡行军",
+    "Imperial HQ Debate": "帝国大本营辩论",
+    "Prime Minister Curtin": "柯廷总理",
+    "Arcadia Conference": "阿卡迪亚会议",
+    "Operation Matador": "斗牛士行动",
+    "Doolittle Raid": "杜立特空袭",
+    "`Vinegar` Joe Stilwell": "酸醋乔·史迪威",
+    "Australian Coast Watchers": "澳大利亚海岸监视哨",
+    "Olympic and Coronet": "奥林匹克与王冠行动",
+    "General Douglas MacArthur": "麦克阿瑟",
+    "War in europe": "欧洲战事",
+    "Commander Rochefort": "罗什福尔",
+    "Operation Watchtower": "瞭望塔行动",
+    "Heroic Repair": "英勇抢修",
+    "Makin Is. Raid": "突袭马金岛",
+    "China Airlift": "中国空运",
+    "Edwin Booz": "埃德温·博斯",
+    "Anakim Operation": "安纳吉姆行动",
+    "Halsey Replaces Ghormley": "哈尔西接替戈姆利",
+    "Operation Cartwheel": "车轮行动",
+    "Orde Wingate": "奥德·温盖特",
+    "PT Boats": "鱼雷快艇",
+    "Skip Bombing Attack": "跳弹轰炸攻击",
+    "Operation Lilliput": "小人国行动",
+    "US Army Breaks Japanese Army Codes": "破译日本陆军密码",
+    "Operation Vengeance": "复仇行动",
+    "Operation Chronicle": "编年史行动",
+    "Operation Toenails": "脚指甲行动",
+    "Operation Sandcrab-Cottage": "沙蟹-茅舍行动",
+    "Black Day": "黑色之日",
+    "Operation Reno II": "雷诺II行动",
+    "Quadrant Conference": "四分仪会议",
+    "Operation Culevrin": "长炮行动",
+    "Operation Ash": "灰烬行动",
+    "Operation Cherry Blossom": "樱花行动",
+    "Operation Galvanic": "电流行动",
+    "Operation Tarzan": "人猿泰山行动",
+    "Sextant Conference": "六分仪会议",
+    "Operation Dexterity": "灵巧行动",
+    "Japanese Army/Navy Dispute": "日本陆海军争端",
+    "Operation Squarepeg": "方栓行动",
+    "Operation Flintlock": "燧发枪行动",
+    "Operation Brewer": "酿酒人行动",
+    "New China Army": "新式中国军队",
+    "Roosevelt Threatens Chungking": "罗斯福威胁重庆",
+    "Tornado Taskforce": "龙卷风特混舰队",
+    "Chenault": "陈纳德",
+    "Roosevelt-Nimitz-MacArthur": "罗斯福-尼米兹-麦克阿瑟",
+    "Operation Forager II": "征粮者II行动",
+    "Hurricane Taskforce": "飓风特混舰队",
+    "Operation Forager": "征粮者行动",
+    "Typhoon Taskforce": "台风特混舰队",
+    "Axiom": "公理行动",
+    "Operation Romulus": "罗慕路斯行动",
+    "Ultra Information": "超级机密情报",
+    "20th Bomber Command": "第20轰炸机司令部",
+    "Submarine Attack": "潜艇攻击",
+    "Operation King II": "国王II行动",
+    "Operation Stalemate": "和棋行动",
+    "Tradewind Taskforce": "信风特混舰队",
+    "MacArthur `moral obligation`": "麦克阿瑟的道义责任",
+    "Curtis LeMay": "柯蒂斯·李梅",
+    "S-Day": "S日",
+    "Slim`s Burma Offensive": "斯利姆缅甸攻势",
+    "Slim's Burma Offensive": "斯利姆缅甸攻势",
+    "Victor Plans": "胜利者计划",
+    "Halsey": "哈尔西",
+    "Operation Iceberg": "冰山行动",
+    "Operation Detachment": "分遣队行动",
+    "Oboe": "双簧管行动",
+    "Mao Tse Tung": "毛泽东",
+    "Soviet Invade Manchuria": "苏联入侵满洲",
+    "New Submarine Doctrine": "新式潜艇战术",
+    "China Offensive": "中国攻势",
+    "U.S. Carrier Raids": "美国航母突袭",
+    "Operation Z": "Z作战",
+    "IAI - Operation No. 1": "南方作战",
+    "Col. Tsuji, Unit 82": "辻政信",
+    "JN25 Code Change": "JN25更换密码",
+    "Japanese Aircraft Production Efficiency": "日本高效飞机生产",
+    "Doolittle Raid Reprisal": "报复杜立特空袭",
+    "US Joint Staff Debate": "美国联合参谋部辩论",
+    "Operation C": "C号作战",
+    "Rear Admiral Matami Ugaki": "宇垣缠",
+    "2nd Operational Phase": "第二阶段作战",
+    "US/British Second Front Conference": "美英第二战场会议",
+    "Operation MI": "MI作战",
+    "Operation MO": "MO作战",
+    "Mahatma Gandhi": "圣雄甘地",
+    "Operation RI": "RI作战",
+    "Japanese Counterattack at Savo Island": "萨沃岛海战",
+    "Bridge on River Kwai": "桂河大桥",
+    "Weather": "恶劣天气",
+    "Naval Battle of Guadalcanal": "瓜岛海战",
+    "Operation RE": "RE行动",
+    "Operation KA": "KA行动",
+    "Chiang Kai-shek": "蒋介石",
+    "Big Tokyo Express Operation": "大东京快车行动",
+    "Combined Fleet": "联合舰队",
+    "Flight Instructors": "飞行教官",
+    "New Operation Plan": "新式战法",
+    "Operation I-Go": "I号作战",
+    "Imperial Intervention": "天皇调停",
+    "US Army/Navy Dispute": "美国陆海军争论",
+    "Operation KE": "克号作战",
+    "1st Convoy Escort Fleet": "第一护航舰队",
+    "Grand Escort Command": "护航总司令部",
+    "Subhas Chandra Bose": "钱德拉·鲍斯",
+    "Operation U-Go": "U号作战",
+    "Patrick Hurley": "帕特里克·赫尔利",
+    "Ichi-Go": "一号作战",
+    "Tojo Resigns": "东条辞职",
+    "Tokyo Express": "东京快车",
+    "Operation Sho-Go": "捷号作战",
+    "Operation A-Go": "阿号作战",
+    "VADM Kondo": "近藤信竹",
+    "General Adachi": "安达二十三",
+    "Ha-Go": "波号作战",
+    "Western Force": "西方部队",
+    "Central Force": "中央部队",
+    "East Force": "东方部队",
+    "Kamikaze Attack": "神风特攻",
+    "Yamato Suicide Run": "大和特攻",
+    "Japanese Army/Navy": "日本陆海军",
+    "High Altitude Interceptors": "高空拦截机",
+    "Carrier Conversion": "航母改装",
+    "Ants": "蚂蚁运输",
+    "Tokyo Rose": "东京玫瑰",
+    "Operation Tsurugi": "剑号作战",
+    "Fuel Shortage": "燃料短缺",
+    "Tainan Air Unit": "台南航空队",
+    "Tinian Raid": "袭击天宁岛",
+    "Attack on the Panama Canal": "袭击巴拿马运河",
+    "Indian Worker`s Strike": "印度工人罢工",
+    "Indian Worker's Strike": "印度工人罢工",
+    "Invasion of Java": "入侵爪哇",
+    "Battle of Kolombanga": "科隆班加拉海战"
+  },
+  "places": {
+    "Adak": "埃达克",
+    "Admiralty Islands": "阿德默勒尔蒂",
+    "Air Ferry": "空中转运",
+    "Aitape": "艾塔佩",
+    "Akyab": "阿恰布",
+    "Amboina": "安汶",
+    "Amchitka": "安奇卡",
+    "Andaman": "安达曼",
+    "Aroe": "阿鲁",
+    "Asuncion": "亚松森",
+    "Atafu": "阿塔富",
+    "Attu/Kiska": "阿图/基斯卡岛",
+    "Babar": "巴巴尔",
+    "Baka": "巴卡岛",
+    "Baker": "贝克岛",
+    "Bali": "巴厘岛",
+    "Balikpapan": "巴厘巴板",
+    "Bandjermasin": "马辰",
+    "Bangka": "邦加",
+    "Bangkok": "曼谷",
+    "Batan": "巴坦",
+    "Batavia": "巴达维亚",
+    "Batjan": "巴占",
+    "Biak": "比亚克",
+    "Billiton": "勿里洞",
+    "Bonin": "小笠原群岛",
+    "Bougainville": "布干维尔",
+    "Broome": "布鲁姆",
+    "Buna": "布纳",
+    "Cairns": "凯恩斯",
+    "Calcutta": "加尔各答",
+    "Cam Ranh": "金兰",
+    "Canton": "坎顿",
+    "Cape York": "约克角",
+    "Cebu": "宿务岛",
+    "Ceram": "塞兰岛",
+    "Colombo": "科伦坡",
+    "D`Entrecasteaux": "当特尔卡斯托",
+    "Dacca": "达卡",
+    "Darwin": "达尔文",
+    "Davao": "达沃",
+    "Derby": "德比",
+    "Dimasur": "迪马普尔",
+    "Dutch Harbor": "荷兰港",
+    "Efate": "埃法特岛",
+    "Eniwetok": "埃尼威托克",
+    "Espiritu Santo": "圣灵岛",
+    "Fakaofo": "法考福",
+    "Faraulep": "法劳莱普",
+    "Flores": "弗洛勒斯",
+    "Funafuti": "富纳富提",
+    "Gardner": "加德纳",
+    "Gasmata": "加斯马塔",
+    "Gili Gili": "吉利吉利",
+    "Green": "格林岛",
+    "Guadalcanal": "瓜达尔卡纳尔",
+    "Guam": "关岛",
+    "Hainan": "海南岛",
+    "Hakodate": "函馆",
+    "Hall": "霍尔",
+    "Halmahera": "哈马黑拉",
+    "Hanoi": "河内",
+    "Harbin": "哈尔滨",
+    "Hilo": "希洛",
+    "Hollandia": "荷兰迪亚",
+    "Hong Kong": "香港",
+    "Howland": "豪兰岛",
+    "Hue": "顺化",
+    "Ifalik": "伊法利克",
+    "Imphal": "英帕尔",
+    "Is. le Horn": "霍恩群岛",
+    "Iwo Jima": "硫磺岛",
+    "Jaluit": "贾卢伊特",
+    "Jarhat": "焦尔哈德",
+    "Jitra": "吉打",
+    "Johnston": "约翰斯顿",
+    "Jolo": "霍洛岛",
+    "Kauai": "考艾岛",
+    "Kavieng": "卡维恩",
+    "Kendari": "肯达里",
+    "Koepang": "古邦",
+    "Kota Bharu": "哥打巴鲁",
+    "Kuala Lumpur": "吉隆坡",
+    "Kuantan": "关丹",
+    "Kunming": "昆明",
+    "Kure": "吴港",
+    "Kusaie": "科斯雷",
+    "Kwajalein": "夸贾林",
+    "Kynshu": "九州岛",
+    "Kyoto": "京都",
+    "Lae": "莱城",
+    "Lashio": "腊戍",
+    "Lau Group": "劳群岛",
+    "Ledo": "利多",
+    "Leyte": "莱特岛",
+    "Little Andaman": "小安达曼",
+    "Madang": "马当",
+    "Madras": "马德拉斯",
+    "Makassar": "望加锡",
+    "Malaita": "马莱塔",
+    "Maldive Is.": "马尔代夫",
+    "Maloelap": "马洛埃拉普",
+    "Mandalay": "曼德勒",
+    "Manila": "马尼拉",
+    "Marcus": "南鸟岛",
+    "Mare": "马雷岛",
+    "Medan": "棉兰",
+    "Menado": "万鸦老",
+    "Midway": "中途岛",
+    "Mili": "米利",
+    "Miri": "米里",
+    "Moa": "莫阿",
+    "Motorai": "莫托赖",
+    "Moumea": "努美阿",
+    "Mukden": "奉天",
+    "Myitkyina": "密支那",
+    "Nagoya": "名古屋",
+    "Namu": "纳穆",
+    "Nanumea": "纳诺梅阿",
+    "Nauru": "瑙鲁",
+    "Ndeni": "恩代尼岛",
+    "New Georgia": "新乔治亚",
+    "Nicobar": "尼科巴",
+    "Ninigo": "尼尼戈",
+    "Nomoi": "诺莫伊",
+    "Nonouti": "诺诺乌蒂",
+    "Oahu": "珍珠港",
+    "Obi": "奥比岛",
+    "Ocean": "海洋岛",
+    "Okinawa": "冲绳岛",
+    "Ominato": "大凑",
+    "Onotoa": "奥诺托阿",
+    "Osaka": "大阪",
+    "Palau": "帕劳",
+    "Palembang": "巨港",
+    "Palmyra": "帕尔米拉",
+    "Panay": "班乃岛",
+    "Peiping": "北平",
+    "Pentacost": "五旬节岛",
+    "Phnom Penh": "金边",
+    "Phoenix": "菲尼克斯",
+    "Ponape": "波纳佩",
+    "Port Arthur": "旅顺",
+    "Port Moresby": "莫尔兹比港",
+    "Pulap": "普拉普",
+    "Pusan": "釜山",
+    "Rabaul": "拉包尔",
+    "Rangoon": "仰光",
+    "Rasa": "大东岛",
+    "Rennell": "伦内尔岛",
+    "Rongelap": "朗格拉普",
+    "Rossel": "罗塞尔",
+    "Roti": "罗地",
+    "Saigon": "西贡",
+    "Saipan": "塞班岛",
+    "Samoe": "萨摩亚",
+    "San Cristobal": "圣克里斯托巴尔",
+    "Santa Isabel": "圣伊莎贝尔",
+    "Sarong": "索龙",
+    "Seoul": "汉城",
+    "Shanghai": "上海",
+    "Shima": "志摩岛",
+    "Singapore": "新加坡",
+    "Singora": "宋卡",
+    "Sinkawang": "山口洋",
+    "Soela": "苏拉",
+    "Soemba": "松巴",
+    "Soembawa": "松巴哇",
+    "Soerabaja": "泗水",
+    "Swatow": "汕头",
+    "Taihoku": "台北",
+    "Tainan": "台南",
+    "Tana": "塔纳岛",
+    "Tanimbar": "塔宁巴尔",
+    "Taongi": "塔翁吉",
+    "Tarakan": "打拉根",
+    "Tarawa": "塔拉瓦",
+    "Teloekbetoeng": "直落勿洞",
+    "Tientsin": "天津",
+    "Tjilatjap": "芝拉扎",
+    "Tokyo": "东京",
+    "Tongatabu": "汤加塔布",
+    "Tora Vanikoro": "瓦尼科罗",
+    "Townsville": "汤斯维尔",
+    "Trincomalee": "亭可马里",
+    "Truk": "特鲁克",
+    "Tsingtao": "青岛",
+    "Udorn": "乌隆",
+    "Ujae": "乌贾",
+    "Ulithi": "乌利西",
+    "Umnak": "乌姆纳克",
+    "Vanua": "瓦努阿",
+    "Viti": "维提岛",
+    "Vogelkop": "鸟头半岛",
+    "Waigeo": "卫吉岛",
+    "Wake": "威克岛",
+    "Wenchow": "温州",
+    "Wetar": "韦塔",
+    "Wewak": "韦瓦克",
+    "Woleai": "沃莱艾",
+    "Woodlark": "伍德拉克",
+    "Wotje": "沃特杰",
+    "Wyndham": "温德姆",
+    "Yap": "雅浦岛",
+    "Yungning": "邕宁"
+  }
+}
+/** import common/locale_zh.js*/
 /** import common/utils.js*/
 /** import common/library.js*/
 
@@ -10711,6 +11322,28 @@ function init_canvas(scenario) {
 
     CANVAS_CTX.scale(scale, scale)
 }/** import client/init.js*/
+/** import client/i18n.js*/
+function eots_apply_static_locale() {
+	document.documentElement.lang = eots_language()
+	document.querySelectorAll("[data-i18n]").forEach(function (element) {
+		var key = element.dataset.i18n
+		element.textContent = eots_t(key)
+	})
+	var selector = document.getElementById("eots_language")
+	if (selector) selector.value = eots_language()
+	var wrap = document.getElementById("mapwrap")
+	if (wrap) wrap.classList.toggle("cn-map", eots_language() === "zh-CN")
+}
+
+function eots_set_language(language) {
+	localStorage.setItem(EOTS_LANGUAGE_KEY, language === "en-US" ? "en-US" : "zh-CN")
+	eots_apply_static_locale()
+	if (typeof on_update === "function" && typeof view !== "undefined") on_update()
+}
+
+document.addEventListener("DOMContentLoaded", eots_apply_static_locale)
+
+/** import client/i18n.js*/
 /** import client/actions.js*/
 var LOCAL_STATUS = 0
 var LOCAL_STATE = null
@@ -11872,9 +12505,11 @@ function update_role_info() {
     for (let who = JP; who <= AP; who++) {
         var hand_size = Number.isInteger(G.hand[who]) ? G.hand[who] : G.hand[who].length
         var fo = G.events[events.FUTURE_OFFENSIVE_JP.id + who]
-        roles[who].stat.innerHTML = `${hand_size} cards${fo && fo < G.turn ? " + FO" : ""}${G.passes[who] ? ", " + G.passes[who] + " passes" : ""}`
+        roles[who].stat.innerHTML = eots_language() === "zh-CN"
+            ? `${hand_size} 张卡牌${fo && fo < G.turn ? " + 未来攻势" : ""}${G.passes[who] ? ", " + G.passes[who] + " 次过牌" : ""}`
+            : `${hand_size} cards${fo && fo < G.turn ? " + FO" : ""}${G.passes[who] ? ", " + G.passes[who] + " passes" : ""}`
         if (!hand_size) {
-            roles[who].stat.innerHTML = `Pass`
+            roles[who].stat.innerHTML = eots_t("Pass")
         }
     }
 }
@@ -12123,53 +12758,53 @@ function on_update() {
         P[LOCAL_STATUS].on_update()
     }
 
-    action_button("play_card", "Play card")
-    action_button("to_unit", "Rebuild unit")
-    action_button("roll", "Roll")
+    action_button("play_card", eots_t("Play card"))
+    action_button("to_unit", eots_t("Rebuild unit"))
+    action_button("roll", eots_t("Roll"))
 
-    action_button("awaiting", "Prompt")
-    action_button("continue", "Continue")
-    action_button("bonus", "Use Bonus")
-    action_button("event", "Play Event")
-    action_button("ops", "Play for Operations")
-    action_button("hold", "Hold")
-    action_button("advanced_move", "Advanced move")
-    action_button("no_move", "No move")
-    action_button("eliminate", "Eliminate")
-    action_button("stop", "Stop")
-    action_button("displace", "Displace")
-    action_button("divisions_button", "Reduce divisions track")
-
-
-    action_button("displace_hq", "HQ Withdrawal")
-    action_button("return_hq", "Early HQ Return")
-    action_button("inter_service", "Remove Inter-Service Rivalry")
-    action_button("china_offensive", "China Offensive")
-    action_button("future_offensive", "Future Offensive")
-    action_button("jarhat", "Build Jarhat Road")
-    action_button("imphal", "Build Imphal Road")
-    action_button("ledo", "Build Ledo Road")
-    action_button("discard", "Discard")
+    action_button("awaiting", eots_t("Prompt"))
+    action_button("continue", eots_t("Continue"))
+    action_button("bonus", eots_t("Use Bonus"))
+    action_button("event", eots_t("Play Event"))
+    action_button("ops", eots_t("Play for Operations"))
+    action_button("hold", eots_t("Hold"))
+    action_button("advanced_move", eots_t("Advanced move"))
+    action_button("no_move", eots_t("No move"))
+    action_button("eliminate", eots_t("Eliminate"))
+    action_button("stop", eots_t("Stop"))
+    action_button("displace", eots_t("Displace"))
+    action_button("divisions_button", eots_t("Reduce divisions track"))
 
 
-    action_button("all", "Choose all")
-    action_button("pass", "Pass")
-    action_button("skip", "Skip")
-    action_button("range", "Range")
+    action_button("displace_hq", eots_t("HQ Withdrawal"))
+    action_button("return_hq", eots_t("Early HQ Return"))
+    action_button("inter_service", eots_t("Remove Inter-Service Rivalry"))
+    action_button("china_offensive", eots_t("China Offensive"))
+    action_button("future_offensive", eots_t("Future Offensive"))
+    action_button("jarhat", eots_t("Build Jarhat Road"))
+    action_button("imphal", eots_t("Build Imphal Road"))
+    action_button("ledo", eots_t("Build Ledo Road"))
+    action_button("discard", eots_t("Discard"))
 
-    action_button("next", "Next")
-    action_button("done", "Done")
-    action_button("delay", "Delay")
-    action_button("no_organic", "Disable organic")
-    action_button("avoid_zoi", "Avoid ZOI")
-    action_button("strat_move", "Strategic")
-    action_button("amphibious", "Amphibious")
-    action_button("ground_move", "Ground")
-    action_button("extended_air", "Extended range")
-    action_button("barges", "Barges")
 
-    action_button("redo", "Redo")
-    action_button("undo", "Undo")
+    action_button("all", eots_t("Choose all"))
+    action_button("pass", eots_t("Pass"))
+    action_button("skip", eots_t("Skip"))
+    action_button("range", eots_t("Range"))
+
+    action_button("next", eots_t("Next"))
+    action_button("done", eots_t("Done"))
+    action_button("delay", eots_t("Delay"))
+    action_button("no_organic", eots_t("Disable organic"))
+    action_button("avoid_zoi", eots_t("Avoid ZOI"))
+    action_button("strat_move", eots_t("Strategic"))
+    action_button("amphibious", eots_t("Amphibious"))
+    action_button("ground_move", eots_t("Ground"))
+    action_button("extended_air", eots_t("Extended range"))
+    action_button("barges", eots_t("Barges"))
+
+    action_button("redo", eots_t("Redo"))
+    action_button("undo", eots_t("Undo"))
     end_update()
 }
 
@@ -12211,7 +12846,8 @@ function update_violations() {
 
 function apply_conflict_marker(marker, hex) {
     marker.innerText = String.fromCharCode(65 + G.offensive.battle_names.indexOf(hex))
-}/** import client/update.js*/
+}
+/** import client/update.js*/
 /** import client/utils.js*/
 function center_rect([x, y], w, h) {
     return [x - w / 2, y - h / 2, w, h]
@@ -12350,7 +12986,7 @@ function on_prompt(text) {
         P[LOCAL_STATUS].prompt()
         return escape_text(LOCAL_STATE.prompt)
     } else {
-        return escape_text(text)
+        return escape_text(eots_t(text))
     }
 }
 
@@ -12369,7 +13005,7 @@ function on_log(text, i) {
     }
     if (!SHOW_FULL_LOG && total > 100 && i === 0) {
         var p = document.createElement("div")
-        p.innerHTML = `Logs hidden: ${total - 100}.`
+        p.innerHTML = eots_language() === "zh-CN" ? `已隐藏 ${total - 100} 条日志。` : `Logs hidden: ${total - 100}.`
         return p
     } else if (!SHOW_FULL_LOG && total - i > 100) {
         return document.createElement("span")
@@ -12444,7 +13080,7 @@ function format_card_info(c) {
 function sub_card(match, p1) {
     const c = p1 | 0
     const cn = "card-tip"
-    return `<span class="${cn}" onmouseenter="on_focus_card_tip(${c})" onclick="on_focus_card_tip(${c})" onmouseleave="on_blur_tip()">${cards[c].name}</span>`
+    return `<span class="${cn}" onmouseenter="on_focus_card_tip(${c})" onclick="on_focus_card_tip(${c})" onmouseleave="on_blur_tip()">${eots_localized_name("cards", cards[c].name)}</span>`
 }
 
 
@@ -12455,7 +13091,7 @@ function get_piece_elem(p) {
 
 function sub_piece(match, p1) {
     const piece_id = p1 | 0
-    const name = pieces[piece_id].name
+    const name = eots_localized_name("units", pieces[piece_id].name)
     return `<span class="piece-tip" onclick="on_click_piece_tip(${piece_id})" onmouseenter="on_focus_piece_tip(${piece_id})" onmouseleave="on_blur_piece_tip(${piece_id})">${name}</span>`
 }
 
@@ -12488,7 +13124,7 @@ function get_hex_name(h) {
     } else if (hex_id != -1) {
         const hex_data = map[hex_id]
         if (hex_data.name) {
-            return `${hex_data.name} (${hex})`
+            return `${eots_localized_name("places", hex_data.name)} (${hex})`
         }
     }
     return `${hex}`
@@ -12603,4 +13239,5 @@ function on_focus_card_tip(c) {
     world.tip.innerHTML = ""
     const card = cards[c]
     world.tip.classList = `card card_${card.faction ? "ap" : "jp"}_${card.num}`
-}/** import client/framework.js*/
+}
+/** import client/framework.js*/

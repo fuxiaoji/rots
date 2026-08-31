@@ -14,7 +14,7 @@ for (var i = 0; i < output.length - 1; i += 2) {
 function read_dir(dir) {
     fs.readdirSync(dir, {withFileTypes: true})
         .forEach(item => {
-            var full_name=item.path + "/" + item.name
+            var full_name=Path.join(dir, item.name).replace(/\\/g, "/")
             if (item.isDirectory()) {
                 read_dir(full_name)
             } else {
