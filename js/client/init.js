@@ -1,3 +1,6 @@
+// New RTT clients call this hook during map initialization; older clients do not provide it.
+var update_map_size = window.update_map_size || function () {}
+
 function clear_paths() {
     CANVAS_CTX.clearRect(0, 0, CANVAS.width, CANVAS.height);
 }

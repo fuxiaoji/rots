@@ -161,7 +161,7 @@ function on_view() {
 }
 
 function create_view() {
-    V.active = G.active
+    V.active = Array.isArray(G.active) ? G.active.map(role => ROLES[role]) : (ROLES[G.active] ?? "None")
     V.turn = G.turn
     V.sid = G.sid
     V.location = G.location

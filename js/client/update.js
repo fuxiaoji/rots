@@ -143,13 +143,15 @@ function get_control_marker(h) {
 
 function update_role_info() {
     for (let who = JP; who <= AP; who++) {
+        var role_info = roles[who] || roles[who === JP ? "Japan" : "Allies"]
+        if (!role_info) continue
         var hand_size = Number.isInteger(G.hand[who]) ? G.hand[who] : G.hand[who].length
         var fo = G.events[events.FUTURE_OFFENSIVE_JP.id + who]
-        roles[who].stat.innerHTML = eots_language() === "zh-CN"
+        role_info.stat.innerHTML = eots_language() === "zh-CN"
             ? `${hand_size} 张卡牌${fo && fo < G.turn ? " + 未来攻势" : ""}${G.passes[who] ? ", " + G.passes[who] + " 次过牌" : ""}`
             : `${hand_size} cards${fo && fo < G.turn ? " + FO" : ""}${G.passes[who] ? ", " + G.passes[who] + " passes" : ""}`
         if (!hand_size) {
-            roles[who].stat.innerHTML = eots_t("Pass")
+            role_info.stat.innerHTML = eots_t("Pass")
         }
     }
 }
