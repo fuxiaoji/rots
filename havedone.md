@@ -49,3 +49,12 @@
 
 - 机器图表已完整保存 12 页证据与条件节点，但 PDF 流程箭头拓扑仍需逐节点人工黄金样例校对。
 - 17.0–22.0 中文规则来源仍缺失，不以推测补齐。
+
+### 版本与复现记录
+
+- 游戏模块功能提交：`746a493`、`0bbdfa7`、`fa8f38f`、`a7afe21`（分支 `codex/full-zh-erasmus-pve`）。
+- RTT 平台提交：`8415751`、`5321fb0`（分支 `codex/full-zh-erasmus-pve`）。
+- 素材清单 SHA-256：`217C5011859A7BFBCFA43024E7BFD3BC304F12C453A712DB741CF7ADE3B31F72`。
+- 数据库结构版本：幂等迁移 `players.bot_id + game_ai_trace`；全新安装 schema 已同步。
+- PvE 验收固定种子：`424242`；日本玩家与盟军玩家方向均通过合法动作/轨迹冒烟。
+- 本地启动：在 `D:\desktop\rots-runtime-pve` 执行 `node server.js`，当前验收端口为 `http://localhost:8081`。
