@@ -734,6 +734,12 @@ body.hex-clickable .action_hex { z-index: 50; }
 }
 
 #mapwrap.south_pacific.cn-map #map,
+#mapwrap.southpac.cn-map #map,
 body.south_pacific #mapwrap.cn-map #map {
     background-image: image-set(url("images/cnmap_south_pacific.150.avif") 2x, url("images/cnmap_south_pacific.75.avif") 1x);
 }
+
+#ai_trace_panel { padding: 8px; border-bottom: 1px solid #777; }
+#ai_trace_panel summary { cursor: pointer; font-weight: bold; }
+#ai_trace { max-height: 28vh; overflow: auto; font-size: 12px; }
+#ai_trace p { margin: 6px 0; }

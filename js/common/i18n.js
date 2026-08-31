@@ -43,11 +43,14 @@ function eots_language() {
 
 function eots_t(text) {
 	if (eots_language() !== "zh-CN" || typeof text !== "string") return text
-	return EOTS_UI_ZH[text] || text
+	if (EOTS_UI_ZH[text]) return EOTS_UI_ZH[text]
+	return text
+		.replace("You are watching!", "正在观战！")
+		.replace("Waiting for Allies to confirm post battle move.", "等待盟军确认战后移动。")
+		.replace("Waiting for Japan to confirm post battle move.", "等待日本确认战后移动。")
 }
 
 function eots_localized_name(kind, name) {
 	if (eots_language() !== "zh-CN" || typeof EOTS_ZH_NAMES === "undefined") return name
 	return (EOTS_ZH_NAMES[kind] && EOTS_ZH_NAMES[kind][name]) || name
 }
-

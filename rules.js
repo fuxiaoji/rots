@@ -19474,9 +19474,15 @@ function erasmus_candidates(actions) {
 	})
 }
 
-function erasmus_pick_argument(value, seedText) {
+function erasmus_pick_argument(value, seedText, action, view) {
 	if (!Array.isArray(value)) return undefined
-	const sorted = value.slice().sort((a, b) => String(a).localeCompare(String(b), "en", { numeric: true }))
+	let candidates = value
+	if (action === "unit" && view.offensive && Array.isArray(view.offensive.active_units)) {
+		const selected = new Set(view.offensive.active_units.flat())
+		const unselected = value.filter(item => !selected.has(item))
+		if (unselected.length) candidates = unselected
+	}
+	const sorted = candidates.slice().sort((a, b) => String(a).localeCompare(String(b), "en", { numeric: true }))
 	return sorted[erasmus_hash(seedText) % sorted.length]
 }
 
@@ -19488,13 +19494,18 @@ function erasmus_decide(view, context) {
 	const family = erasmus_action_family(view, legal)
 	const chart = erasmus_chart_id(role, phase, family)
 	let action = ERASMUS_ACTION_PRIORITY.find(name => legal.includes(name))
+	const progress = String(view.prompt || "").match(/(\d+)\s+of\s+(\d+)/i)
+	if (progress && Number(progress[1]) >= Number(progress[2]) && legal.includes("done")) action = "done"
+	if (legal.includes("done") && legal.includes("unit") && view.offensive &&
+		Array.isArray(view.offensive.active_units) && view.offensive.active_units.flat().length > 0)
+		action = "done"
 	let fallback = false
 	if (!action) {
 		action = legal.slice().sort()[0]
 		fallback = true
 	}
 	const seedText = `${context.seed}:${context.actionOrdinal}:${chart}:${action}`
-	const argument = erasmus_pick_argument(view.actions[action], seedText)
+	const argument = erasmus_pick_argument(view.actions[action], seedText, action, view)
 	const roll = erasmus_hash(seedText + ":roll") % 10
 	const publicTrace = {
 		policy: ERASMUS_VERSION, chart, node: `${chart}-${fallback ? "FALLBACK" : "POLICY"}`,
@@ -19515,7 +19526,6 @@ var EOTS_BOTS = {
 		scenarios: ["South Pacific"], roles: ["Japan", "Allies"], decide: erasmus_decide,
 	},
 }
-
 /** import server/bots/erasmus.js*/
 /** import server/framework.js*/
 /* FRAMEWORK */
