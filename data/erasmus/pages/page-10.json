@@ -1,0 +1,430 @@
+{
+  "schema_version": 2,
+  "id": "ERASMUS-AP-10",
+  "chart_id": "ERASMUS-AP-10",
+  "role": "Allies",
+  "phase": "all",
+  "kind": "card-selection",
+  "action_family": "card",
+  "source_page": 10,
+  "source": {
+    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "page": 10,
+    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/10-盟军-全阶段卡牌选择.md"
+  },
+  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/10-盟军-全阶段卡牌选择.md",
+  "rules": [
+    "EOTS-5",
+    "EOTS-7"
+  ],
+  "nodes": [
+    {
+      "id": "ERASMUS-AP-10-START",
+      "type": "start",
+      "confidence": "confirmed",
+      "source_page": 10,
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-10-C01"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-C01",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 10,
+      "predicate": {
+        "id": "AP_FO_ACTIVE"
+      },
+      "label_zh": "AP_FO_ACTIVE",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-10-S01"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-10-C02"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-C02",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 10,
+      "predicate": {
+        "id": "AP_HAND_GT_2"
+      },
+      "label_zh": "AP_HAND_GT_2",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-10-S02"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-10-C03"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-C03",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 10,
+      "predicate": {
+        "id": "AP_FIRST_CARD"
+      },
+      "label_zh": "AP_FIRST_CARD",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-10-S03"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-10-C04"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-C04",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 10,
+      "predicate": {
+        "id": "AP_HAS_FISSION"
+      },
+      "label_zh": "AP_HAS_FISSION",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-10-S04"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-10-C05"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-C05",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 10,
+      "predicate": {
+        "id": "AP_HAS_EVENT_CARD"
+      },
+      "label_zh": "AP_HAS_EVENT_CARD",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-10-S05"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-10-C06"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-C06",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 10,
+      "predicate": {
+        "id": "AP_HAS_LIMITED_EVENT"
+      },
+      "label_zh": "AP_HAS_LIMITED_EVENT",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-10-S06"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-10-C07"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-C07",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 10,
+      "predicate": {
+        "id": "AP_ALL_EVENTS_LIMITED"
+      },
+      "label_zh": "AP_ALL_EVENTS_LIMITED",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-10-S07"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-10-C08"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-C08",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 10,
+      "predicate": {
+        "id": "AP_CBI_COMPLETE"
+      },
+      "label_zh": "AP_CBI_COMPLETE",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-10-S08"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-10-C09"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-C09",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 10,
+      "predicate": {
+        "id": "AP_CHINA_EVENT_AVAILABLE"
+      },
+      "label_zh": "AP_CHINA_EVENT_AVAILABLE",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-10-S01"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-10-SELECT"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-S01",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 10,
+      "strategy": "AP_FUTURE_OFFENSIVE_CARD",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-10-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-S02",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 10,
+      "strategy": "AP_LIMITED_EVENT_CARD",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-10-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-S03",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 10,
+      "strategy": "AP_UNLIMITED_EVENT_CARD",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-10-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-S04",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 10,
+      "strategy": "AP_LIMITED_OPS_CARD",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-10-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-S05",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 10,
+      "strategy": "AP_UNLIMITED_OPS_CARD",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-10-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-S06",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 10,
+      "strategy": "AP_CHINA_EVENT_CARD",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-10-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-S07",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 10,
+      "strategy": "AP_EVENT_CARD",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-10-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-S08",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 10,
+      "strategy": "AP_PASS",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-10-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-SELECT",
+      "type": "priority",
+      "confidence": "inferred",
+      "source_page": 10,
+      "family": "card",
+      "strategies": [
+        {
+          "id": "AP_FUTURE_OFFENSIVE_CARD",
+          "priority": 1,
+          "actionTag": "AP_FUTURE_OFFENSIVE_CARD"
+        },
+        {
+          "id": "AP_LIMITED_EVENT_CARD",
+          "priority": 2,
+          "actionTag": "AP_LIMITED_EVENT_CARD"
+        },
+        {
+          "id": "AP_UNLIMITED_EVENT_CARD",
+          "priority": 3,
+          "actionTag": "AP_UNLIMITED_EVENT_CARD"
+        },
+        {
+          "id": "AP_LIMITED_OPS_CARD",
+          "priority": 4,
+          "actionTag": "AP_LIMITED_OPS_CARD"
+        },
+        {
+          "id": "AP_UNLIMITED_OPS_CARD",
+          "priority": 5,
+          "actionTag": "AP_UNLIMITED_OPS_CARD"
+        },
+        {
+          "id": "AP_CHINA_EVENT_CARD",
+          "priority": 6,
+          "actionTag": "AP_CHINA_EVENT_CARD"
+        },
+        {
+          "id": "AP_EVENT_CARD",
+          "priority": 7,
+          "actionTag": "AP_EVENT_CARD"
+        },
+        {
+          "id": "AP_PASS",
+          "priority": 8,
+          "actionTag": "AP_PASS"
+        }
+      ],
+      "edges": [
+        {
+          "when": "candidate_found",
+          "to": "ERASMUS-AP-10-END"
+        },
+        {
+          "when": "no_candidate",
+          "to": "ERASMUS-AP-10-FALLBACK"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-10-FALLBACK",
+      "type": "fallback",
+      "confidence": "inferred",
+      "source_page": 10,
+      "allowed_actions": [
+        "pass",
+        "skip"
+      ],
+      "reason": "chart candidates are not legal in current view"
+    },
+    {
+      "id": "ERASMUS-AP-10-END",
+      "type": "terminal",
+      "confidence": "confirmed",
+      "source_page": 10
+    }
+  ],
+  "strategies": [
+    "AP_FUTURE_OFFENSIVE_CARD",
+    "AP_LIMITED_EVENT_CARD",
+    "AP_UNLIMITED_EVENT_CARD",
+    "AP_LIMITED_OPS_CARD",
+    "AP_UNLIMITED_OPS_CARD",
+    "AP_CHINA_EVENT_CARD",
+    "AP_EVENT_CARD",
+    "AP_PASS"
+  ],
+  "dice_tables": [],
+  "qa": {
+    "inferred_nodes": [
+      "ERASMUS-AP-10-C01",
+      "ERASMUS-AP-10-C02",
+      "ERASMUS-AP-10-C03",
+      "ERASMUS-AP-10-C04",
+      "ERASMUS-AP-10-C05",
+      "ERASMUS-AP-10-C06",
+      "ERASMUS-AP-10-C07",
+      "ERASMUS-AP-10-C08",
+      "ERASMUS-AP-10-C09",
+      "ERASMUS-AP-10-S01",
+      "ERASMUS-AP-10-S02",
+      "ERASMUS-AP-10-S03",
+      "ERASMUS-AP-10-S04",
+      "ERASMUS-AP-10-S05",
+      "ERASMUS-AP-10-S06",
+      "ERASMUS-AP-10-S07",
+      "ERASMUS-AP-10-S08",
+      "ERASMUS-AP-10-SELECT",
+      "ERASMUS-AP-10-FALLBACK"
+    ],
+    "visual_review_required": true,
+    "source_line_count": 146
+  }
+}

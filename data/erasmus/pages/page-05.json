@@ -1,0 +1,474 @@
+{
+  "schema_version": 2,
+  "id": "ERASMUS-JP-05",
+  "chart_id": "ERASMUS-JP-05",
+  "role": "Japan",
+  "phase": "all",
+  "kind": "task-force",
+  "action_family": "task-force",
+  "source_page": 5,
+  "source": {
+    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "page": 5,
+    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/05-日本-全阶段任务部队编成.md"
+  },
+  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/05-日本-全阶段任务部队编成.md",
+  "rules": [
+    "EOTS-7",
+    "EOTS-8",
+    "EOTS-9"
+  ],
+  "nodes": [
+    {
+      "id": "ERASMUS-JP-05-START",
+      "type": "start",
+      "confidence": "confirmed",
+      "source_page": 5,
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-05-C01"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-C01",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 5,
+      "predicate": {
+        "id": "TARGET_IS_SEACOAST_OR_ISLAND"
+      },
+      "label_zh": "TARGET_IS_SEACOAST_OR_ISLAND",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-05-S01"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-05-C02"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-C02",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 5,
+      "predicate": {
+        "id": "CAN_GROUND_ADVANCE"
+      },
+      "label_zh": "CAN_GROUND_ADVANCE",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-05-S02"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-05-C03"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-C03",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 5,
+      "predicate": {
+        "id": "TARGET_EMPTY"
+      },
+      "label_zh": "TARGET_EMPTY",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-05-S03"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-05-C04"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-C04",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 5,
+      "predicate": {
+        "id": "TARGET_ONLY_ENEMY_NAVAL"
+      },
+      "label_zh": "TARGET_ONLY_ENEMY_NAVAL",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-05-S04"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-05-C05"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-C05",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 5,
+      "predicate": {
+        "id": "GROUND_CAN_ENTER_EXIT"
+      },
+      "label_zh": "GROUND_CAN_ENTER_EXIT",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-05-S05"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-05-C06"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-C06",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 5,
+      "predicate": {
+        "id": "TARGET_IS_SR"
+      },
+      "label_zh": "TARGET_IS_SR",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-05-S06"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-05-C07"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-C07",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 5,
+      "predicate": {
+        "id": "ENEMY_AIR_CAN_REACT"
+      },
+      "label_zh": "ENEMY_AIR_CAN_REACT",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-05-S07"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-05-C08"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-C08",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 5,
+      "predicate": {
+        "id": "HAS_SUPPORT_POINTS"
+      },
+      "label_zh": "HAS_SUPPORT_POINTS",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-05-S01"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-05-C09"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-C09",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 5,
+      "predicate": {
+        "id": "DAMAGE_LEVEL_MET"
+      },
+      "label_zh": "DAMAGE_LEVEL_MET",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-05-S02"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-05-C10"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-C10",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 5,
+      "predicate": {
+        "id": "ENEMY_NAVAL_GROUND_CAN_REACT"
+      },
+      "label_zh": "ENEMY_NAVAL_GROUND_CAN_REACT",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-05-S03"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-05-C11"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-C11",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 5,
+      "predicate": {
+        "id": "IS_EC_OFFENSIVE"
+      },
+      "label_zh": "IS_EC_OFFENSIVE",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-05-S04"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-05-C12"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-C12",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 5,
+      "predicate": {
+        "id": "IS_LAST_TARGET"
+      },
+      "label_zh": "IS_LAST_TARGET",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-05-S05"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-05-SELECT"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-S01",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 5,
+      "strategy": "JP_AIR_STRIKE",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-05-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-S02",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 5,
+      "strategy": "JP_AIR_SUPPORT_GROUND",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-05-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-S03",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 5,
+      "strategy": "JP_AIR_SEA_GROUND",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-05-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-S04",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 5,
+      "strategy": "JP_SEA_SUPPORT_LANDING",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-05-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-S05",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 5,
+      "strategy": "JP_AIR_SEA_LANDING",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-05-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-S06",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 5,
+      "strategy": "JP_GROUND_ADVANCE",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-05-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-S07",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 5,
+      "strategy": "JP_UNSUPPORTED_LANDING",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-05-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-SELECT",
+      "type": "priority",
+      "confidence": "inferred",
+      "source_page": 5,
+      "family": "task-force",
+      "strategies": [
+        {
+          "id": "JP_AIR_STRIKE",
+          "priority": 1,
+          "actionTag": "JP_AIR_STRIKE"
+        },
+        {
+          "id": "JP_AIR_SUPPORT_GROUND",
+          "priority": 2,
+          "actionTag": "JP_AIR_SUPPORT_GROUND"
+        },
+        {
+          "id": "JP_AIR_SEA_GROUND",
+          "priority": 3,
+          "actionTag": "JP_AIR_SEA_GROUND"
+        },
+        {
+          "id": "JP_SEA_SUPPORT_LANDING",
+          "priority": 4,
+          "actionTag": "JP_SEA_SUPPORT_LANDING"
+        },
+        {
+          "id": "JP_AIR_SEA_LANDING",
+          "priority": 5,
+          "actionTag": "JP_AIR_SEA_LANDING"
+        },
+        {
+          "id": "JP_GROUND_ADVANCE",
+          "priority": 6,
+          "actionTag": "JP_GROUND_ADVANCE"
+        },
+        {
+          "id": "JP_UNSUPPORTED_LANDING",
+          "priority": 7,
+          "actionTag": "JP_UNSUPPORTED_LANDING"
+        }
+      ],
+      "edges": [
+        {
+          "when": "candidate_found",
+          "to": "ERASMUS-JP-05-END"
+        },
+        {
+          "when": "no_candidate",
+          "to": "ERASMUS-JP-05-FALLBACK"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-05-FALLBACK",
+      "type": "fallback",
+      "confidence": "inferred",
+      "source_page": 5,
+      "allowed_actions": [
+        "pass",
+        "skip"
+      ],
+      "reason": "chart candidates are not legal in current view"
+    },
+    {
+      "id": "ERASMUS-JP-05-END",
+      "type": "terminal",
+      "confidence": "confirmed",
+      "source_page": 5
+    }
+  ],
+  "strategies": [
+    "JP_AIR_STRIKE",
+    "JP_AIR_SUPPORT_GROUND",
+    "JP_AIR_SEA_GROUND",
+    "JP_SEA_SUPPORT_LANDING",
+    "JP_AIR_SEA_LANDING",
+    "JP_GROUND_ADVANCE",
+    "JP_UNSUPPORTED_LANDING"
+  ],
+  "dice_tables": [],
+  "qa": {
+    "inferred_nodes": [
+      "ERASMUS-JP-05-C01",
+      "ERASMUS-JP-05-C02",
+      "ERASMUS-JP-05-C03",
+      "ERASMUS-JP-05-C04",
+      "ERASMUS-JP-05-C05",
+      "ERASMUS-JP-05-C06",
+      "ERASMUS-JP-05-C07",
+      "ERASMUS-JP-05-C08",
+      "ERASMUS-JP-05-C09",
+      "ERASMUS-JP-05-C10",
+      "ERASMUS-JP-05-C11",
+      "ERASMUS-JP-05-C12",
+      "ERASMUS-JP-05-S01",
+      "ERASMUS-JP-05-S02",
+      "ERASMUS-JP-05-S03",
+      "ERASMUS-JP-05-S04",
+      "ERASMUS-JP-05-S05",
+      "ERASMUS-JP-05-S06",
+      "ERASMUS-JP-05-S07",
+      "ERASMUS-JP-05-SELECT",
+      "ERASMUS-JP-05-FALLBACK"
+    ],
+    "visual_review_required": true,
+    "source_line_count": 181
+  }
+}

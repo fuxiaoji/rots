@@ -1,0 +1,398 @@
+{
+  "schema_version": 2,
+  "id": "ERASMUS-AP-12",
+  "chart_id": "ERASMUS-AP-12",
+  "role": "Allies",
+  "phase": "all",
+  "kind": "reaction",
+  "action_family": "reaction",
+  "source_page": 12,
+  "source": {
+    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "page": 12,
+    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/12-盟军-全阶段反应.md"
+  },
+  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/12-盟军-全阶段反应.md",
+  "rules": [
+    "EOTS-5",
+    "EOTS-7"
+  ],
+  "nodes": [
+    {
+      "id": "ERASMUS-AP-12-START",
+      "type": "start",
+      "confidence": "confirmed",
+      "source_page": 12,
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-12-C01"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-12-C01",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 12,
+      "predicate": {
+        "id": "ISR_REACTION"
+      },
+      "label_zh": "ISR_REACTION",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-12-S01"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-12-C02"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-12-C02",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 12,
+      "predicate": {
+        "id": "HAS_BATTLE"
+      },
+      "label_zh": "HAS_BATTLE",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-12-S02"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-12-C03"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-12-C03",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 12,
+      "predicate": {
+        "id": "HQ_IN_RANGE"
+      },
+      "label_zh": "HQ_IN_RANGE",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-12-S03"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-12-C04"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-12-C04",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 12,
+      "predicate": {
+        "id": "ATTACK_REACTION_AVAILABLE"
+      },
+      "label_zh": "ATTACK_REACTION_AVAILABLE",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-12-S04"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-12-C05"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-12-C05",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 12,
+      "predicate": {
+        "id": "DEI_COMPLETE"
+      },
+      "label_zh": "DEI_COMPLETE",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-12-S05"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-12-C06"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-12-C06",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 12,
+      "predicate": {
+        "id": "NUKE_TARGET"
+      },
+      "label_zh": "NUKE_TARGET",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-12-S01"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-12-C07"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-12-C07",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 12,
+      "predicate": {
+        "id": "PBM_AIR_REQUIRED"
+      },
+      "label_zh": "PBM_AIR_REQUIRED",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-12-S02"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-12-C08"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-12-C08",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 12,
+      "predicate": {
+        "id": "PBM_SEA_REQUIRED"
+      },
+      "label_zh": "PBM_SEA_REQUIRED",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-12-S03"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-12-C09"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-12-C09",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 12,
+      "predicate": {
+        "id": "PBM_AA_FAILED"
+      },
+      "label_zh": "PBM_AA_FAILED",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-12-S04"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-12-SELECT"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-12-S01",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 12,
+      "strategy": "AP_INTEL_REACTION",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-12-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-12-S02",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 12,
+      "strategy": "AP_COUNTERATTACK_REACTION",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-12-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-12-S03",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 12,
+      "strategy": "AP_PBM_AIR",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-12-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-12-S04",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 12,
+      "strategy": "AP_PBM_SEA",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-12-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-12-S05",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 12,
+      "strategy": "AP_PBM_AA",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-12-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-12-SELECT",
+      "type": "priority",
+      "confidence": "inferred",
+      "source_page": 12,
+      "family": "reaction",
+      "strategies": [
+        {
+          "id": "AP_INTEL_REACTION",
+          "priority": 1,
+          "actionTag": "AP_INTEL_REACTION"
+        },
+        {
+          "id": "AP_COUNTERATTACK_REACTION",
+          "priority": 2,
+          "actionTag": "AP_COUNTERATTACK_REACTION"
+        },
+        {
+          "id": "AP_PBM_AIR",
+          "priority": 3,
+          "actionTag": "AP_PBM_AIR"
+        },
+        {
+          "id": "AP_PBM_SEA",
+          "priority": 4,
+          "actionTag": "AP_PBM_SEA"
+        },
+        {
+          "id": "AP_PBM_AA",
+          "priority": 5,
+          "actionTag": "AP_PBM_AA"
+        }
+      ],
+      "edges": [
+        {
+          "when": "candidate_found",
+          "to": "ERASMUS-AP-12-END"
+        },
+        {
+          "when": "no_candidate",
+          "to": "ERASMUS-AP-12-FALLBACK"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-12-DICE-01",
+      "type": "dice",
+      "confidence": "inferred",
+      "source_page": 12,
+      "table_id": "ERASMUS-AP-12-D10",
+      "sides": 10,
+      "ranges": [
+        {
+          "min": 0,
+          "max": 3,
+          "result": "low"
+        },
+        {
+          "min": 4,
+          "max": 9,
+          "result": "high"
+        }
+      ],
+      "inference_basis": "PDF reaction/PBM Roll 1d10 branches"
+    },
+    {
+      "id": "ERASMUS-AP-12-FALLBACK",
+      "type": "fallback",
+      "confidence": "inferred",
+      "source_page": 12,
+      "allowed_actions": [
+        "pass",
+        "skip"
+      ],
+      "reason": "chart candidates are not legal in current view"
+    },
+    {
+      "id": "ERASMUS-AP-12-END",
+      "type": "terminal",
+      "confidence": "confirmed",
+      "source_page": 12
+    }
+  ],
+  "strategies": [
+    "AP_INTEL_REACTION",
+    "AP_COUNTERATTACK_REACTION",
+    "AP_PBM_AIR",
+    "AP_PBM_SEA",
+    "AP_PBM_AA"
+  ],
+  "dice_tables": [
+    {
+      "id": "ERASMUS-AP-12-D10",
+      "sides": 10,
+      "source_page": 12
+    }
+  ],
+  "qa": {
+    "inferred_nodes": [
+      "ERASMUS-AP-12-C01",
+      "ERASMUS-AP-12-C02",
+      "ERASMUS-AP-12-C03",
+      "ERASMUS-AP-12-C04",
+      "ERASMUS-AP-12-C05",
+      "ERASMUS-AP-12-C06",
+      "ERASMUS-AP-12-C07",
+      "ERASMUS-AP-12-C08",
+      "ERASMUS-AP-12-C09",
+      "ERASMUS-AP-12-S01",
+      "ERASMUS-AP-12-S02",
+      "ERASMUS-AP-12-S03",
+      "ERASMUS-AP-12-S04",
+      "ERASMUS-AP-12-S05",
+      "ERASMUS-AP-12-SELECT",
+      "ERASMUS-AP-12-DICE-01",
+      "ERASMUS-AP-12-FALLBACK"
+    ],
+    "visual_review_required": true,
+    "source_line_count": 190
+  }
+}

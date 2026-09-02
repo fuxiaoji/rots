@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-08-31T06:23:46.611Z",
+  "generatedAt": "2026-09-02T14:55:56.785Z",
   "summary": {
-    "policy": "erasmus-v2.0-zh.1",
+    "policy": "erasmus-v2.0-zh.2",
     "scenario": "South Pacific",
     "gameCount": 50,
     "baseSeed": 424242,
@@ -13,7 +13,7 @@
     "actionLimit": 0,
     "errors": 0,
     "fallbackActions": 0,
-    "averageActions": 285.76,
+    "averageActions": 284.86,
     "averageTurn": 6
   },
   "games": [
@@ -21,12 +21,12 @@
       "seed": 424242,
       "status": "complete",
       "winner": "Japan",
-      "actions": 309,
+      "actions": 314,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 147,
-        "Allies": 162
+        "Japan": 154,
+        "Allies": 160
       },
       "message": "Japanese Decisive Victory"
     },
@@ -34,12 +34,12 @@
       "seed": 424243,
       "status": "complete",
       "winner": "Japan",
-      "actions": 299,
+      "actions": 301,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 143,
-        "Allies": 156
+        "Japan": 151,
+        "Allies": 150
       },
       "message": "Japanese Decisive Victory"
     },
@@ -47,12 +47,12 @@
       "seed": 424244,
       "status": "complete",
       "winner": "Japan",
-      "actions": 279,
+      "actions": 284,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 127,
-        "Allies": 152
+        "Japan": 126,
+        "Allies": 158
       },
       "message": "Japanese Decisive Victory"
     },
@@ -60,12 +60,12 @@
       "seed": 424245,
       "status": "complete",
       "winner": "Japan",
-      "actions": 274,
+      "actions": 267,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 127,
-        "Allies": 147
+        "Japan": 118,
+        "Allies": 149
       },
       "message": "Japanese Decisive Victory"
     },
@@ -73,12 +73,12 @@
       "seed": 424246,
       "status": "complete",
       "winner": "Japan",
-      "actions": 289,
+      "actions": 265,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 141,
-        "Allies": 148
+        "Japan": 118,
+        "Allies": 147
       },
       "message": "Japanese Decisive Victory"
     },
@@ -86,11 +86,11 @@
       "seed": 424247,
       "status": "complete",
       "winner": "Japan",
-      "actions": 284,
+      "actions": 282,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 135,
+        "Japan": 133,
         "Allies": 149
       },
       "message": "Japanese Decisive Victory"
@@ -99,12 +99,12 @@
       "seed": 424248,
       "status": "complete",
       "winner": "Japan",
-      "actions": 288,
+      "actions": 294,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 133,
-        "Allies": 155
+        "Japan": 144,
+        "Allies": 150
       },
       "message": "Japanese Decisive Victory"
     },
@@ -112,12 +112,12 @@
       "seed": 424249,
       "status": "complete",
       "winner": "Japan",
-      "actions": 282,
+      "actions": 295,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 131,
-        "Allies": 151
+        "Japan": 139,
+        "Allies": 156
       },
       "message": "Japanese Decisive Victory"
     },
@@ -125,12 +125,12 @@
       "seed": 424250,
       "status": "complete",
       "winner": "Japan",
-      "actions": 271,
+      "actions": 276,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 119,
-        "Allies": 152
+        "Japan": 129,
+        "Allies": 147
       },
       "message": "Japanese Decisive Victory"
     },
@@ -138,56 +138,17 @@
       "seed": 424251,
       "status": "complete",
       "winner": "Japan",
-      "actions": 297,
+      "actions": 298,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 132,
+        "Japan": 133,
         "Allies": 165
       },
       "message": "Japanese Decisive Victory"
     },
     {
       "seed": 424252,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 284,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 128,
-        "Allies": 156
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424253,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 286,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 136,
-        "Allies": 150
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424254,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 291,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 140,
-        "Allies": 151
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424255,
       "status": "complete",
       "winner": "Japan",
       "actions": 275,
@@ -200,228 +161,59 @@
       "message": "Japanese Decisive Victory"
     },
     {
-      "seed": 424256,
+      "seed": 424253,
       "status": "complete",
       "winner": "Japan",
-      "actions": 256,
+      "actions": 298,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 111,
-        "Allies": 145
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424257,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 278,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 140,
-        "Allies": 138
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424258,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 272,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 131,
-        "Allies": 141
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424259,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 288,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 133,
-        "Allies": 155
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424260,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 300,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 138,
-        "Allies": 162
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424261,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 299,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 141,
-        "Allies": 158
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424262,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 288,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 133,
-        "Allies": 155
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424263,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 279,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 127,
+        "Japan": 146,
         "Allies": 152
       },
       "message": "Japanese Decisive Victory"
     },
     {
-      "seed": 424264,
+      "seed": 424254,
       "status": "complete",
       "winner": "Japan",
-      "actions": 291,
+      "actions": 286,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 132,
-        "Allies": 159
+        "Japan": 139,
+        "Allies": 147
       },
       "message": "Japanese Decisive Victory"
     },
     {
-      "seed": 424265,
+      "seed": 424255,
       "status": "complete",
       "winner": "Japan",
-      "actions": 279,
+      "actions": 292,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 133,
-        "Allies": 146
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424266,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 268,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 126,
-        "Allies": 142
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424267,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 308,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 147,
+        "Japan": 131,
         "Allies": 161
       },
       "message": "Japanese Decisive Victory"
     },
     {
-      "seed": 424268,
+      "seed": 424256,
       "status": "complete",
       "winner": "Japan",
-      "actions": 312,
+      "actions": 252,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 155,
-        "Allies": 157
+        "Japan": 104,
+        "Allies": 148
       },
       "message": "Japanese Decisive Victory"
     },
     {
-      "seed": 424269,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 282,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 126,
-        "Allies": 156
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424270,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 262,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 118,
-        "Allies": 144
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424271,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 268,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 122,
-        "Allies": 146
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424272,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 309,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 150,
-        "Allies": 159
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424273,
+      "seed": 424257,
       "status": "complete",
       "winner": "Japan",
       "actions": 288,
@@ -434,46 +226,85 @@
       "message": "Japanese Decisive Victory"
     },
     {
-      "seed": 424274,
+      "seed": 424258,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 270,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 118,
+        "Allies": 152
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424259,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 287,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 132,
+        "Allies": 155
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424260,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 297,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 134,
+        "Allies": 163
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424261,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 301,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 146,
+        "Allies": 155
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424262,
       "status": "complete",
       "winner": "Japan",
       "actions": 288,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 137,
-        "Allies": 151
+        "Japan": 129,
+        "Allies": 159
       },
       "message": "Japanese Decisive Victory"
     },
     {
-      "seed": 424275,
+      "seed": 424263,
       "status": "complete",
       "winner": "Japan",
-      "actions": 296,
+      "actions": 285,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 141,
-        "Allies": 155
+        "Japan": 128,
+        "Allies": 157
       },
       "message": "Japanese Decisive Victory"
     },
     {
-      "seed": 424276,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 279,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 125,
-        "Allies": 154
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424277,
+      "seed": 424264,
       "status": "complete",
       "winner": "Japan",
       "actions": 289,
@@ -486,15 +317,184 @@
       "message": "Japanese Decisive Victory"
     },
     {
-      "seed": 424278,
+      "seed": 424265,
       "status": "complete",
       "winner": "Japan",
-      "actions": 268,
+      "actions": 276,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 131,
+        "Allies": 145
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424266,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 264,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
         "Japan": 123,
+        "Allies": 141
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424267,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 305,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 145,
+        "Allies": 160
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424268,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 315,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 155,
+        "Allies": 160
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424269,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 296,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 143,
+        "Allies": 153
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424270,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 271,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 121,
+        "Allies": 150
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424271,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 276,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 124,
+        "Allies": 152
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424272,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 302,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 145,
+        "Allies": 157
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424273,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 278,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 138,
+        "Allies": 140
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424274,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 285,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 136,
+        "Allies": 149
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424275,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 293,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 148,
         "Allies": 145
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424276,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 256,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 114,
+        "Allies": 142
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424277,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 291,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 130,
+        "Allies": 161
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424278,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 259,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 118,
+        "Allies": 141
       },
       "message": "Japanese Decisive Victory"
     },
@@ -502,12 +502,12 @@
       "seed": 424279,
       "status": "complete",
       "winner": "Japan",
-      "actions": 287,
+      "actions": 282,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 139,
-        "Allies": 148
+        "Japan": 130,
+        "Allies": 152
       },
       "message": "Japanese Decisive Victory"
     },
@@ -515,12 +515,12 @@
       "seed": 424280,
       "status": "complete",
       "winner": "Japan",
-      "actions": 271,
+      "actions": 278,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 123,
-        "Allies": 148
+        "Japan": 118,
+        "Allies": 160
       },
       "message": "Japanese Decisive Victory"
     },
@@ -528,12 +528,12 @@
       "seed": 424281,
       "status": "complete",
       "winner": "Japan",
-      "actions": 292,
+      "actions": 279,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 136,
-        "Allies": 156
+        "Japan": 130,
+        "Allies": 149
       },
       "message": "Japanese Decisive Victory"
     },
@@ -541,12 +541,12 @@
       "seed": 424282,
       "status": "complete",
       "winner": "Japan",
-      "actions": 306,
+      "actions": 302,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
         "Japan": 154,
-        "Allies": 152
+        "Allies": 148
       },
       "message": "Japanese Decisive Victory"
     },
@@ -554,12 +554,12 @@
       "seed": 424283,
       "status": "complete",
       "winner": "Japan",
-      "actions": 292,
+      "actions": 273,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 123,
-        "Allies": 169
+        "Japan": 118,
+        "Allies": 155
       },
       "message": "Japanese Decisive Victory"
     },
@@ -567,12 +567,12 @@
       "seed": 424284,
       "status": "complete",
       "winner": "Japan",
-      "actions": 287,
+      "actions": 295,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 127,
-        "Allies": 160
+        "Japan": 133,
+        "Allies": 162
       },
       "message": "Japanese Decisive Victory"
     },
@@ -580,69 +580,17 @@
       "seed": 424285,
       "status": "complete",
       "winner": "Japan",
-      "actions": 291,
+      "actions": 298,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 138,
-        "Allies": 153
+        "Japan": 143,
+        "Allies": 155
       },
       "message": "Japanese Decisive Victory"
     },
     {
       "seed": 424286,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 279,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 125,
-        "Allies": 154
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424287,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 281,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 128,
-        "Allies": 153
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424288,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 294,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 134,
-        "Allies": 160
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424289,
-      "status": "complete",
-      "winner": "Japan",
-      "actions": 271,
-      "turn": 6,
-      "fallback": 0,
-      "roleActions": {
-        "Japan": 128,
-        "Allies": 143
-      },
-      "message": "Japanese Decisive Victory"
-    },
-    {
-      "seed": 424290,
       "status": "complete",
       "winner": "Japan",
       "actions": 267,
@@ -655,15 +603,67 @@
       "message": "Japanese Decisive Victory"
     },
     {
-      "seed": 424291,
+      "seed": 424287,
       "status": "complete",
       "winner": "Japan",
-      "actions": 315,
+      "actions": 292,
       "turn": 6,
       "fallback": 0,
       "roleActions": {
-        "Japan": 158,
-        "Allies": 157
+        "Japan": 131,
+        "Allies": 161
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424288,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 271,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 124,
+        "Allies": 147
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424289,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 284,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 135,
+        "Allies": 149
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424290,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 272,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 122,
+        "Allies": 150
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424291,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 299,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 141,
+        "Allies": 158
       },
       "message": "Japanese Decisive Victory"
     }

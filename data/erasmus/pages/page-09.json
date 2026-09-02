@@ -1,0 +1,347 @@
+{
+  "schema_version": 2,
+  "id": "ERASMUS-AP-09",
+  "chart_id": "ERASMUS-AP-09",
+  "role": "Allies",
+  "phase": "end",
+  "kind": "decision-axis",
+  "action_family": "strategy",
+  "source_page": 9,
+  "source": {
+    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "page": 9,
+    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/09-盟军-终局阶段决策轴.md"
+  },
+  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/09-盟军-终局阶段决策轴.md",
+  "rules": [
+    "EOTS-5",
+    "EOTS-7"
+  ],
+  "nodes": [
+    {
+      "id": "ERASMUS-AP-09-START",
+      "type": "start",
+      "confidence": "confirmed",
+      "source_page": 9,
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-09-C01"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-09-C01",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 9,
+      "predicate": {
+        "id": "AP_HAS_PASS"
+      },
+      "label_zh": "AP_HAS_PASS",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-09-S01"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-09-C02"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-09-C02",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 9,
+      "predicate": {
+        "id": "IS_FINAL_TURN"
+      },
+      "label_zh": "IS_FINAL_TURN",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-09-S02"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-09-C03"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-09-C03",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 9,
+      "predicate": {
+        "id": "AP_HAS_3_CARDS"
+      },
+      "label_zh": "AP_HAS_3_CARDS",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-09-S03"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-09-C04"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-09-C04",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 9,
+      "predicate": {
+        "id": "AP_STRATEGIC_BASE"
+      },
+      "label_zh": "AP_STRATEGIC_BASE",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-09-S04"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-09-C05"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-09-C05",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 9,
+      "predicate": {
+        "id": "AP_B29_TARGET"
+      },
+      "label_zh": "AP_B29_TARGET",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-09-S05"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-09-C06"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-09-C06",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 9,
+      "predicate": {
+        "id": "AP_CAN_ATOMIC_VICTORY"
+      },
+      "label_zh": "AP_CAN_ATOMIC_VICTORY",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-09-S06"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-09-SELECT"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-09-S01",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 9,
+      "strategy": "AP_PASS",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-09-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-09-S02",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 9,
+      "strategy": "AP_EVENT",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-09-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-09-S03",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 9,
+      "strategy": "AP_CAPTURE_STRATEGIC_BASE",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-09-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-09-S04",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 9,
+      "strategy": "AP_PUSH_B29",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-09-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-09-S05",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 9,
+      "strategy": "AP_REDEPLOY",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-09-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-09-S06",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 9,
+      "strategy": "AP_INVade_JAPAN",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-09-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-09-S07",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 9,
+      "strategy": "AP_ATOMIC_VICTORY",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-09-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-09-SELECT",
+      "type": "priority",
+      "confidence": "inferred",
+      "source_page": 9,
+      "family": "strategy",
+      "strategies": [
+        {
+          "id": "AP_PASS",
+          "priority": 1,
+          "actionTag": "AP_PASS"
+        },
+        {
+          "id": "AP_EVENT",
+          "priority": 2,
+          "actionTag": "AP_EVENT"
+        },
+        {
+          "id": "AP_CAPTURE_STRATEGIC_BASE",
+          "priority": 3,
+          "actionTag": "AP_CAPTURE_STRATEGIC_BASE"
+        },
+        {
+          "id": "AP_PUSH_B29",
+          "priority": 4,
+          "actionTag": "AP_PUSH_B29"
+        },
+        {
+          "id": "AP_REDEPLOY",
+          "priority": 5,
+          "actionTag": "AP_REDEPLOY"
+        },
+        {
+          "id": "AP_INVade_JAPAN",
+          "priority": 6,
+          "actionTag": "AP_INVade_JAPAN"
+        },
+        {
+          "id": "AP_ATOMIC_VICTORY",
+          "priority": 7,
+          "actionTag": "AP_ATOMIC_VICTORY"
+        }
+      ],
+      "edges": [
+        {
+          "when": "candidate_found",
+          "to": "ERASMUS-AP-09-END"
+        },
+        {
+          "when": "no_candidate",
+          "to": "ERASMUS-AP-09-FALLBACK"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-09-FALLBACK",
+      "type": "fallback",
+      "confidence": "inferred",
+      "source_page": 9,
+      "allowed_actions": [
+        "pass",
+        "skip"
+      ],
+      "reason": "chart candidates are not legal in current view"
+    },
+    {
+      "id": "ERASMUS-AP-09-END",
+      "type": "terminal",
+      "confidence": "confirmed",
+      "source_page": 9
+    }
+  ],
+  "strategies": [
+    "AP_PASS",
+    "AP_EVENT",
+    "AP_CAPTURE_STRATEGIC_BASE",
+    "AP_PUSH_B29",
+    "AP_REDEPLOY",
+    "AP_INVade_JAPAN",
+    "AP_ATOMIC_VICTORY"
+  ],
+  "dice_tables": [],
+  "qa": {
+    "inferred_nodes": [
+      "ERASMUS-AP-09-C01",
+      "ERASMUS-AP-09-C02",
+      "ERASMUS-AP-09-C03",
+      "ERASMUS-AP-09-C04",
+      "ERASMUS-AP-09-C05",
+      "ERASMUS-AP-09-C06",
+      "ERASMUS-AP-09-S01",
+      "ERASMUS-AP-09-S02",
+      "ERASMUS-AP-09-S03",
+      "ERASMUS-AP-09-S04",
+      "ERASMUS-AP-09-S05",
+      "ERASMUS-AP-09-S06",
+      "ERASMUS-AP-09-S07",
+      "ERASMUS-AP-09-SELECT",
+      "ERASMUS-AP-09-FALLBACK"
+    ],
+    "visual_review_required": true,
+    "source_line_count": 152
+  }
+}

@@ -1,0 +1,410 @@
+{
+  "schema_version": 2,
+  "id": "ERASMUS-JP-04",
+  "chart_id": "ERASMUS-JP-04",
+  "role": "Japan",
+  "phase": "all",
+  "kind": "card-selection",
+  "action_family": "card",
+  "source_page": 4,
+  "source": {
+    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "page": 4,
+    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/04-日本-全阶段卡牌选择.md"
+  },
+  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/04-日本-全阶段卡牌选择.md",
+  "rules": [
+    "EOTS-5",
+    "EOTS-7"
+  ],
+  "nodes": [
+    {
+      "id": "ERASMUS-JP-04-START",
+      "type": "start",
+      "confidence": "confirmed",
+      "source_page": 4,
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-04-C01"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-C01",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 4,
+      "predicate": {
+        "id": "JP_FO_ACTIVE"
+      },
+      "label_zh": "JP_FO_ACTIVE",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-04-S01"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-04-C02"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-C02",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 4,
+      "predicate": {
+        "id": "JP_HAND_GT_2"
+      },
+      "label_zh": "JP_HAND_GT_2",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-04-S02"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-04-C03"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-C03",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 4,
+      "predicate": {
+        "id": "JP_FIRST_CARD"
+      },
+      "label_zh": "JP_FIRST_CARD",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-04-S03"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-04-C04"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-C04",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 4,
+      "predicate": {
+        "id": "JP_HAS_IMPERIAL_INTERVENTION"
+      },
+      "label_zh": "JP_HAS_IMPERIAL_INTERVENTION",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-04-S04"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-04-C05"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-C05",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 4,
+      "predicate": {
+        "id": "JP_HAS_EVENT_CARD"
+      },
+      "label_zh": "JP_HAS_EVENT_CARD",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-04-S05"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-04-C06"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-C06",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 4,
+      "predicate": {
+        "id": "JP_HAS_LIMITED_EVENT"
+      },
+      "label_zh": "JP_HAS_LIMITED_EVENT",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-04-S06"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-04-C07"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-C07",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 4,
+      "predicate": {
+        "id": "JP_ALL_EVENTS_LIMITED"
+      },
+      "label_zh": "JP_ALL_EVENTS_LIMITED",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-04-S07"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-04-C08"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-C08",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 4,
+      "predicate": {
+        "id": "JP_ISR_TARGET"
+      },
+      "label_zh": "JP_ISR_TARGET",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-04-S01"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-04-C09"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-C09",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 4,
+      "predicate": {
+        "id": "JP_FUTURE_OFFENSIVE"
+      },
+      "label_zh": "JP_FUTURE_OFFENSIVE",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-04-S02"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-04-SELECT"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-S01",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 4,
+      "strategy": "JP_FUTURE_OFFENSIVE_CARD",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-04-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-S02",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 4,
+      "strategy": "JP_LIMITED_EVENT_CARD",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-04-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-S03",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 4,
+      "strategy": "JP_UNLIMITED_EVENT_CARD",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-04-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-S04",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 4,
+      "strategy": "JP_LIMITED_OPS_CARD",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-04-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-S05",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 4,
+      "strategy": "JP_UNLIMITED_OPS_CARD",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-04-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-S06",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 4,
+      "strategy": "JP_EVENT_CARD",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-04-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-S07",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 4,
+      "strategy": "JP_PASS",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-04-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-SELECT",
+      "type": "priority",
+      "confidence": "inferred",
+      "source_page": 4,
+      "family": "card",
+      "strategies": [
+        {
+          "id": "JP_FUTURE_OFFENSIVE_CARD",
+          "priority": 1,
+          "actionTag": "JP_FUTURE_OFFENSIVE_CARD"
+        },
+        {
+          "id": "JP_LIMITED_EVENT_CARD",
+          "priority": 2,
+          "actionTag": "JP_LIMITED_EVENT_CARD"
+        },
+        {
+          "id": "JP_UNLIMITED_EVENT_CARD",
+          "priority": 3,
+          "actionTag": "JP_UNLIMITED_EVENT_CARD"
+        },
+        {
+          "id": "JP_LIMITED_OPS_CARD",
+          "priority": 4,
+          "actionTag": "JP_LIMITED_OPS_CARD"
+        },
+        {
+          "id": "JP_UNLIMITED_OPS_CARD",
+          "priority": 5,
+          "actionTag": "JP_UNLIMITED_OPS_CARD"
+        },
+        {
+          "id": "JP_EVENT_CARD",
+          "priority": 6,
+          "actionTag": "JP_EVENT_CARD"
+        },
+        {
+          "id": "JP_PASS",
+          "priority": 7,
+          "actionTag": "JP_PASS"
+        }
+      ],
+      "edges": [
+        {
+          "when": "candidate_found",
+          "to": "ERASMUS-JP-04-END"
+        },
+        {
+          "when": "no_candidate",
+          "to": "ERASMUS-JP-04-FALLBACK"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-04-FALLBACK",
+      "type": "fallback",
+      "confidence": "inferred",
+      "source_page": 4,
+      "allowed_actions": [
+        "pass",
+        "skip"
+      ],
+      "reason": "chart candidates are not legal in current view"
+    },
+    {
+      "id": "ERASMUS-JP-04-END",
+      "type": "terminal",
+      "confidence": "confirmed",
+      "source_page": 4
+    }
+  ],
+  "strategies": [
+    "JP_FUTURE_OFFENSIVE_CARD",
+    "JP_LIMITED_EVENT_CARD",
+    "JP_UNLIMITED_EVENT_CARD",
+    "JP_LIMITED_OPS_CARD",
+    "JP_UNLIMITED_OPS_CARD",
+    "JP_EVENT_CARD",
+    "JP_PASS"
+  ],
+  "dice_tables": [],
+  "qa": {
+    "inferred_nodes": [
+      "ERASMUS-JP-04-C01",
+      "ERASMUS-JP-04-C02",
+      "ERASMUS-JP-04-C03",
+      "ERASMUS-JP-04-C04",
+      "ERASMUS-JP-04-C05",
+      "ERASMUS-JP-04-C06",
+      "ERASMUS-JP-04-C07",
+      "ERASMUS-JP-04-C08",
+      "ERASMUS-JP-04-C09",
+      "ERASMUS-JP-04-S01",
+      "ERASMUS-JP-04-S02",
+      "ERASMUS-JP-04-S03",
+      "ERASMUS-JP-04-S04",
+      "ERASMUS-JP-04-S05",
+      "ERASMUS-JP-04-S06",
+      "ERASMUS-JP-04-S07",
+      "ERASMUS-JP-04-SELECT",
+      "ERASMUS-JP-04-FALLBACK"
+    ],
+    "visual_review_required": true,
+    "source_line_count": 138
+  }
+}

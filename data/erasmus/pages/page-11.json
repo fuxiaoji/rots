@@ -1,0 +1,474 @@
+{
+  "schema_version": 2,
+  "id": "ERASMUS-AP-11",
+  "chart_id": "ERASMUS-AP-11",
+  "role": "Allies",
+  "phase": "all",
+  "kind": "task-force",
+  "action_family": "task-force",
+  "source_page": 11,
+  "source": {
+    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "page": 11,
+    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/11-盟军-全阶段任务部队编成.md"
+  },
+  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/11-盟军-全阶段任务部队编成.md",
+  "rules": [
+    "EOTS-7",
+    "EOTS-8",
+    "EOTS-9"
+  ],
+  "nodes": [
+    {
+      "id": "ERASMUS-AP-11-START",
+      "type": "start",
+      "confidence": "confirmed",
+      "source_page": 11,
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-11-C01"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-C01",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 11,
+      "predicate": {
+        "id": "TARGET_IS_SEACOAST_OR_ISLAND"
+      },
+      "label_zh": "TARGET_IS_SEACOAST_OR_ISLAND",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-11-S01"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-11-C02"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-C02",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 11,
+      "predicate": {
+        "id": "CAN_GROUND_ADVANCE"
+      },
+      "label_zh": "CAN_GROUND_ADVANCE",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-11-S02"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-11-C03"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-C03",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 11,
+      "predicate": {
+        "id": "TARGET_EMPTY"
+      },
+      "label_zh": "TARGET_EMPTY",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-11-S03"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-11-C04"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-C04",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 11,
+      "predicate": {
+        "id": "TARGET_ONLY_ENEMY_NAVAL"
+      },
+      "label_zh": "TARGET_ONLY_ENEMY_NAVAL",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-11-S04"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-11-C05"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-C05",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 11,
+      "predicate": {
+        "id": "GROUND_CAN_ENTER_EXIT"
+      },
+      "label_zh": "GROUND_CAN_ENTER_EXIT",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-11-S05"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-11-C06"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-C06",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 11,
+      "predicate": {
+        "id": "TARGET_IS_SR"
+      },
+      "label_zh": "TARGET_IS_SR",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-11-S06"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-11-C07"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-C07",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 11,
+      "predicate": {
+        "id": "ENEMY_AIR_CAN_REACT"
+      },
+      "label_zh": "ENEMY_AIR_CAN_REACT",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-11-S07"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-11-C08"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-C08",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 11,
+      "predicate": {
+        "id": "HAS_SUPPORT_POINTS"
+      },
+      "label_zh": "HAS_SUPPORT_POINTS",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-11-S01"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-11-C09"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-C09",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 11,
+      "predicate": {
+        "id": "DAMAGE_LEVEL_MET"
+      },
+      "label_zh": "DAMAGE_LEVEL_MET",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-11-S02"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-11-C10"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-C10",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 11,
+      "predicate": {
+        "id": "ENEMY_NAVAL_GROUND_CAN_REACT"
+      },
+      "label_zh": "ENEMY_NAVAL_GROUND_CAN_REACT",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-11-S03"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-11-C11"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-C11",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 11,
+      "predicate": {
+        "id": "IS_EC_OFFENSIVE"
+      },
+      "label_zh": "IS_EC_OFFENSIVE",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-11-S04"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-11-C12"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-C12",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 11,
+      "predicate": {
+        "id": "IS_LAST_TARGET"
+      },
+      "label_zh": "IS_LAST_TARGET",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-11-S05"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-11-SELECT"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-S01",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 11,
+      "strategy": "AP_AIR_STRIKE",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-11-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-S02",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 11,
+      "strategy": "AP_AIR_SUPPORT_GROUND",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-11-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-S03",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 11,
+      "strategy": "AP_AIR_SEA_GROUND",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-11-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-S04",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 11,
+      "strategy": "AP_SEA_SUPPORT_LANDING",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-11-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-S05",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 11,
+      "strategy": "AP_AIR_SEA_LANDING",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-11-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-S06",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 11,
+      "strategy": "AP_GROUND_ADVANCE",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-11-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-S07",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 11,
+      "strategy": "AP_UNSUPPORTED_LANDING",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-11-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-SELECT",
+      "type": "priority",
+      "confidence": "inferred",
+      "source_page": 11,
+      "family": "task-force",
+      "strategies": [
+        {
+          "id": "AP_AIR_STRIKE",
+          "priority": 1,
+          "actionTag": "AP_AIR_STRIKE"
+        },
+        {
+          "id": "AP_AIR_SUPPORT_GROUND",
+          "priority": 2,
+          "actionTag": "AP_AIR_SUPPORT_GROUND"
+        },
+        {
+          "id": "AP_AIR_SEA_GROUND",
+          "priority": 3,
+          "actionTag": "AP_AIR_SEA_GROUND"
+        },
+        {
+          "id": "AP_SEA_SUPPORT_LANDING",
+          "priority": 4,
+          "actionTag": "AP_SEA_SUPPORT_LANDING"
+        },
+        {
+          "id": "AP_AIR_SEA_LANDING",
+          "priority": 5,
+          "actionTag": "AP_AIR_SEA_LANDING"
+        },
+        {
+          "id": "AP_GROUND_ADVANCE",
+          "priority": 6,
+          "actionTag": "AP_GROUND_ADVANCE"
+        },
+        {
+          "id": "AP_UNSUPPORTED_LANDING",
+          "priority": 7,
+          "actionTag": "AP_UNSUPPORTED_LANDING"
+        }
+      ],
+      "edges": [
+        {
+          "when": "candidate_found",
+          "to": "ERASMUS-AP-11-END"
+        },
+        {
+          "when": "no_candidate",
+          "to": "ERASMUS-AP-11-FALLBACK"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-11-FALLBACK",
+      "type": "fallback",
+      "confidence": "inferred",
+      "source_page": 11,
+      "allowed_actions": [
+        "pass",
+        "skip"
+      ],
+      "reason": "chart candidates are not legal in current view"
+    },
+    {
+      "id": "ERASMUS-AP-11-END",
+      "type": "terminal",
+      "confidence": "confirmed",
+      "source_page": 11
+    }
+  ],
+  "strategies": [
+    "AP_AIR_STRIKE",
+    "AP_AIR_SUPPORT_GROUND",
+    "AP_AIR_SEA_GROUND",
+    "AP_SEA_SUPPORT_LANDING",
+    "AP_AIR_SEA_LANDING",
+    "AP_GROUND_ADVANCE",
+    "AP_UNSUPPORTED_LANDING"
+  ],
+  "dice_tables": [],
+  "qa": {
+    "inferred_nodes": [
+      "ERASMUS-AP-11-C01",
+      "ERASMUS-AP-11-C02",
+      "ERASMUS-AP-11-C03",
+      "ERASMUS-AP-11-C04",
+      "ERASMUS-AP-11-C05",
+      "ERASMUS-AP-11-C06",
+      "ERASMUS-AP-11-C07",
+      "ERASMUS-AP-11-C08",
+      "ERASMUS-AP-11-C09",
+      "ERASMUS-AP-11-C10",
+      "ERASMUS-AP-11-C11",
+      "ERASMUS-AP-11-C12",
+      "ERASMUS-AP-11-S01",
+      "ERASMUS-AP-11-S02",
+      "ERASMUS-AP-11-S03",
+      "ERASMUS-AP-11-S04",
+      "ERASMUS-AP-11-S05",
+      "ERASMUS-AP-11-S06",
+      "ERASMUS-AP-11-S07",
+      "ERASMUS-AP-11-SELECT",
+      "ERASMUS-AP-11-FALLBACK"
+    ],
+    "visual_review_required": true,
+    "source_line_count": 188
+  }
+}

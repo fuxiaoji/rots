@@ -6,14 +6,33 @@ const path = require("path")
 
 const root = path.resolve(__dirname, "..")
 const graphs = JSON.parse(fs.readFileSync(path.join(root, "data/erasmus/charts.json"), "utf8"))
+const pageDir = path.join(root, "data/erasmus/pages")
+const pageFiles = fs.readdirSync(pageDir).filter(name => /^page-\d\d\.json$/.test(name)).sort()
+assert.equal(pageFiles.length, 12)
 assert.equal(graphs.charts.length, 12)
 assert.deepEqual(new Set(graphs.charts.map(chart => chart.source_page)), new Set(Array.from({ length: 12 }, (_, i) => i + 1)))
 for (const chart of graphs.charts) {
+	assert.equal(chart.schema_version, 2, `${chart.id}: schema version`)
 	const ids = new Set(chart.nodes.map(node => node.id))
 	assert.equal(ids.size, chart.nodes.length, `${chart.id}: duplicate node`)
-	for (const node of chart.nodes)
-		for (const edge of [node.on_true, node.on_false].filter(Boolean))
-			assert(ids.has(edge), `${chart.id}: dangling edge ${edge}`)
+	for (const node of chart.nodes) {
+		for (const edge of (node.edges || []))
+			assert(ids.has(edge.to), `${chart.id}: dangling edge ${edge.to}`)
+		if (node.type === "condition") {
+			assert(node.predicate?.id, `${chart.id}: condition without predicate`)
+			assert(node.edges.some(edge => edge.when === true), `${chart.id}: condition without true edge`)
+			assert(node.edges.some(edge => edge.when === false), `${chart.id}: condition without false edge`)
+		}
+	}
+	assert(chart.nodes.some(node => node.type === "action"), `${chart.id}: no action nodes`)
+	assert(chart.nodes.some(node => node.type === "fallback"), `${chart.id}: no explicit fallback`)
+	if (chart.kind === "reaction") assert.equal(chart.dice_tables[0].sides, 10, `${chart.id}: dice table`)
+}
+for (const filename of pageFiles) {
+	const page = JSON.parse(fs.readFileSync(path.join(pageDir, filename), "utf8"))
+	assert.equal(page.schema_version, 2)
+	assert.equal(page.source_page, Number(filename.slice(5, 7)))
+	assert.equal(page.source.page, page.source_page)
 }
 
 const rules = require(path.join(root, "rules.js"))

@@ -1,0 +1,388 @@
+{
+  "schema_version": 2,
+  "id": "ERASMUS-JP-01",
+  "chart_id": "ERASMUS-JP-01",
+  "role": "Japan",
+  "phase": "early",
+  "kind": "decision-axis",
+  "action_family": "strategy",
+  "source_page": 1,
+  "source": {
+    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "page": 1,
+    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/01-日本-早期阶段决策轴.md"
+  },
+  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/01-日本-早期阶段决策轴.md",
+  "rules": [
+    "EOTS-5",
+    "EOTS-7"
+  ],
+  "nodes": [
+    {
+      "id": "ERASMUS-JP-01-START",
+      "type": "start",
+      "confidence": "confirmed",
+      "source_page": 1,
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-01-C01"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-C01",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 1,
+      "predicate": {
+        "id": "JP_PHI_RESOURCES"
+      },
+      "label_zh": "JP_PHI_RESOURCES",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-01-S01"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-01-C02"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-C02",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 1,
+      "predicate": {
+        "id": "JP_RESOURCES_LTE_13"
+      },
+      "label_zh": "JP_RESOURCES_LTE_13",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-01-S02"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-01-C03"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-C03",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 1,
+      "predicate": {
+        "id": "JP_LOGISTICS_GTE_20"
+      },
+      "label_zh": "JP_LOGISTICS_GTE_20",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-01-S03"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-01-C04"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-C04",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 1,
+      "predicate": {
+        "id": "TURN_GE_3"
+      },
+      "label_zh": "TURN_GE_3",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-01-S04"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-01-C05"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-C05",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 1,
+      "predicate": {
+        "id": "JP_AZOI_COMPLETE"
+      },
+      "label_zh": "JP_AZOI_COMPLETE",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-01-S05"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-01-C06"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-C06",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 1,
+      "predicate": {
+        "id": "JP_RABAUL_CONTROLLED"
+      },
+      "label_zh": "JP_RABAUL_CONTROLLED",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-01-S06"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-01-C07"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-C07",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 1,
+      "predicate": {
+        "id": "JP_TARGET_LIST_FALLBACK"
+      },
+      "label_zh": "JP_TARGET_LIST_FALLBACK",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-JP-01-S07"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-JP-01-SELECT"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-S01",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 1,
+      "strategy": "JP_SOUTHWEST_RESOURCE",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-01-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-S02",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 1,
+      "strategy": "JP_EVENT",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-01-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-S03",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 1,
+      "strategy": "JP_PRESSURE_INDIA",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-01-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-S04",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 1,
+      "strategy": "JP_PRESSURE_HQ",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-01-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-S05",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 1,
+      "strategy": "JP_CENTRAL_PACIFIC",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-01-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-S06",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 1,
+      "strategy": "JP_CHINA",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-01-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-S07",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 1,
+      "strategy": "JP_NEW_GUINEA",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-01-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-S08",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 1,
+      "strategy": "JP_PHILIPPINES",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-JP-01-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-SELECT",
+      "type": "priority",
+      "confidence": "inferred",
+      "source_page": 1,
+      "family": "strategy",
+      "strategies": [
+        {
+          "id": "JP_SOUTHWEST_RESOURCE",
+          "priority": 1,
+          "actionTag": "JP_SOUTHWEST_RESOURCE"
+        },
+        {
+          "id": "JP_EVENT",
+          "priority": 2,
+          "actionTag": "JP_EVENT"
+        },
+        {
+          "id": "JP_PRESSURE_INDIA",
+          "priority": 3,
+          "actionTag": "JP_PRESSURE_INDIA"
+        },
+        {
+          "id": "JP_PRESSURE_HQ",
+          "priority": 4,
+          "actionTag": "JP_PRESSURE_HQ"
+        },
+        {
+          "id": "JP_CENTRAL_PACIFIC",
+          "priority": 5,
+          "actionTag": "JP_CENTRAL_PACIFIC"
+        },
+        {
+          "id": "JP_CHINA",
+          "priority": 6,
+          "actionTag": "JP_CHINA"
+        },
+        {
+          "id": "JP_NEW_GUINEA",
+          "priority": 7,
+          "actionTag": "JP_NEW_GUINEA"
+        },
+        {
+          "id": "JP_PHILIPPINES",
+          "priority": 8,
+          "actionTag": "JP_PHILIPPINES"
+        }
+      ],
+      "edges": [
+        {
+          "when": "candidate_found",
+          "to": "ERASMUS-JP-01-END"
+        },
+        {
+          "when": "no_candidate",
+          "to": "ERASMUS-JP-01-FALLBACK"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-JP-01-FALLBACK",
+      "type": "fallback",
+      "confidence": "inferred",
+      "source_page": 1,
+      "allowed_actions": [
+        "pass",
+        "skip"
+      ],
+      "reason": "chart candidates are not legal in current view"
+    },
+    {
+      "id": "ERASMUS-JP-01-END",
+      "type": "terminal",
+      "confidence": "confirmed",
+      "source_page": 1
+    }
+  ],
+  "strategies": [
+    "JP_SOUTHWEST_RESOURCE",
+    "JP_EVENT",
+    "JP_PRESSURE_INDIA",
+    "JP_PRESSURE_HQ",
+    "JP_CENTRAL_PACIFIC",
+    "JP_CHINA",
+    "JP_NEW_GUINEA",
+    "JP_PHILIPPINES"
+  ],
+  "dice_tables": [],
+  "qa": {
+    "inferred_nodes": [
+      "ERASMUS-JP-01-C01",
+      "ERASMUS-JP-01-C02",
+      "ERASMUS-JP-01-C03",
+      "ERASMUS-JP-01-C04",
+      "ERASMUS-JP-01-C05",
+      "ERASMUS-JP-01-C06",
+      "ERASMUS-JP-01-C07",
+      "ERASMUS-JP-01-S01",
+      "ERASMUS-JP-01-S02",
+      "ERASMUS-JP-01-S03",
+      "ERASMUS-JP-01-S04",
+      "ERASMUS-JP-01-S05",
+      "ERASMUS-JP-01-S06",
+      "ERASMUS-JP-01-S07",
+      "ERASMUS-JP-01-S08",
+      "ERASMUS-JP-01-SELECT",
+      "ERASMUS-JP-01-FALLBACK"
+    ],
+    "visual_review_required": true,
+    "source_line_count": 210
+  }
+}

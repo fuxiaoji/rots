@@ -1,0 +1,430 @@
+{
+  "schema_version": 2,
+  "id": "ERASMUS-AP-07",
+  "chart_id": "ERASMUS-AP-07",
+  "role": "Allies",
+  "phase": "early",
+  "kind": "decision-axis",
+  "action_family": "strategy",
+  "source_page": 7,
+  "source": {
+    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "page": 7,
+    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/07-盟军-早期阶段决策轴.md"
+  },
+  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/07-盟军-早期阶段决策轴.md",
+  "rules": [
+    "EOTS-5",
+    "EOTS-7"
+  ],
+  "nodes": [
+    {
+      "id": "ERASMUS-AP-07-START",
+      "type": "start",
+      "confidence": "confirmed",
+      "source_page": 7,
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-07-C01"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-C01",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 7,
+      "predicate": {
+        "id": "AP_HAS_3_CARDS"
+      },
+      "label_zh": "AP_HAS_3_CARDS",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-07-S01"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-07-C02"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-C02",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 7,
+      "predicate": {
+        "id": "AP_HQ_SUPPLY_AVAILABLE"
+      },
+      "label_zh": "AP_HQ_SUPPLY_AVAILABLE",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-07-S02"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-07-C03"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-C03",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 7,
+      "predicate": {
+        "id": "AP_RABAUL_CONTROLLED"
+      },
+      "label_zh": "AP_RABAUL_CONTROLLED",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-07-S03"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-07-C04"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-C04",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 7,
+      "predicate": {
+        "id": "AP_CBI_BUILT"
+      },
+      "label_zh": "AP_CBI_BUILT",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-07-S04"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-07-C05"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-C05",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 7,
+      "predicate": {
+        "id": "AP_HAS_PASS"
+      },
+      "label_zh": "AP_HAS_PASS",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-07-S05"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-07-C06"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-C06",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 7,
+      "predicate": {
+        "id": "AP_LAST_CARD"
+      },
+      "label_zh": "AP_LAST_CARD",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-07-S06"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-07-C07"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-C07",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 7,
+      "predicate": {
+        "id": "AP_THIRD_TURN"
+      },
+      "label_zh": "AP_THIRD_TURN",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-07-S07"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-07-C08"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-C08",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 7,
+      "predicate": {
+        "id": "AP_PHILIPPINES_NOT_SURRENDERED"
+      },
+      "label_zh": "AP_PHILIPPINES_NOT_SURRENDERED",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-07-S08"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-07-C09"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-C09",
+      "type": "condition",
+      "confidence": "inferred",
+      "source_page": 7,
+      "predicate": {
+        "id": "AP_ABDA_HQ_READY"
+      },
+      "label_zh": "AP_ABDA_HQ_READY",
+      "edges": [
+        {
+          "when": true,
+          "to": "ERASMUS-AP-07-S01"
+        },
+        {
+          "when": false,
+          "to": "ERASMUS-AP-07-SELECT"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-S01",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 7,
+      "strategy": "AP_PHILIPPINES",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-07-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-S02",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 7,
+      "strategy": "AP_MALAYA",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-07-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-S03",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 7,
+      "strategy": "AP_ABDA",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-07-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-S04",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 7,
+      "strategy": "AP_CBI",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-07-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-S05",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 7,
+      "strategy": "AP_ORANGE_PLAN",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-07-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-S06",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 7,
+      "strategy": "AP_EVENT",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-07-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-S07",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 7,
+      "strategy": "AP_PASS",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-07-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-S08",
+      "type": "action",
+      "confidence": "inferred",
+      "source_page": 7,
+      "strategy": "AP_DEI_DEFENSE",
+      "edges": [
+        {
+          "when": "always",
+          "to": "ERASMUS-AP-07-END"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-SELECT",
+      "type": "priority",
+      "confidence": "inferred",
+      "source_page": 7,
+      "family": "strategy",
+      "strategies": [
+        {
+          "id": "AP_PHILIPPINES",
+          "priority": 1,
+          "actionTag": "AP_PHILIPPINES"
+        },
+        {
+          "id": "AP_MALAYA",
+          "priority": 2,
+          "actionTag": "AP_MALAYA"
+        },
+        {
+          "id": "AP_ABDA",
+          "priority": 3,
+          "actionTag": "AP_ABDA"
+        },
+        {
+          "id": "AP_CBI",
+          "priority": 4,
+          "actionTag": "AP_CBI"
+        },
+        {
+          "id": "AP_ORANGE_PLAN",
+          "priority": 5,
+          "actionTag": "AP_ORANGE_PLAN"
+        },
+        {
+          "id": "AP_EVENT",
+          "priority": 6,
+          "actionTag": "AP_EVENT"
+        },
+        {
+          "id": "AP_PASS",
+          "priority": 7,
+          "actionTag": "AP_PASS"
+        },
+        {
+          "id": "AP_DEI_DEFENSE",
+          "priority": 8,
+          "actionTag": "AP_DEI_DEFENSE"
+        }
+      ],
+      "edges": [
+        {
+          "when": "candidate_found",
+          "to": "ERASMUS-AP-07-END"
+        },
+        {
+          "when": "no_candidate",
+          "to": "ERASMUS-AP-07-FALLBACK"
+        }
+      ]
+    },
+    {
+      "id": "ERASMUS-AP-07-FALLBACK",
+      "type": "fallback",
+      "confidence": "inferred",
+      "source_page": 7,
+      "allowed_actions": [
+        "pass",
+        "skip"
+      ],
+      "reason": "chart candidates are not legal in current view"
+    },
+    {
+      "id": "ERASMUS-AP-07-END",
+      "type": "terminal",
+      "confidence": "confirmed",
+      "source_page": 7
+    }
+  ],
+  "strategies": [
+    "AP_PHILIPPINES",
+    "AP_MALAYA",
+    "AP_ABDA",
+    "AP_CBI",
+    "AP_ORANGE_PLAN",
+    "AP_EVENT",
+    "AP_PASS",
+    "AP_DEI_DEFENSE"
+  ],
+  "dice_tables": [],
+  "qa": {
+    "inferred_nodes": [
+      "ERASMUS-AP-07-C01",
+      "ERASMUS-AP-07-C02",
+      "ERASMUS-AP-07-C03",
+      "ERASMUS-AP-07-C04",
+      "ERASMUS-AP-07-C05",
+      "ERASMUS-AP-07-C06",
+      "ERASMUS-AP-07-C07",
+      "ERASMUS-AP-07-C08",
+      "ERASMUS-AP-07-C09",
+      "ERASMUS-AP-07-S01",
+      "ERASMUS-AP-07-S02",
+      "ERASMUS-AP-07-S03",
+      "ERASMUS-AP-07-S04",
+      "ERASMUS-AP-07-S05",
+      "ERASMUS-AP-07-S06",
+      "ERASMUS-AP-07-S07",
+      "ERASMUS-AP-07-S08",
+      "ERASMUS-AP-07-SELECT",
+      "ERASMUS-AP-07-FALLBACK"
+    ],
+    "visual_review_required": true,
+    "source_line_count": 160
+  }
+}

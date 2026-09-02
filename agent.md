@@ -44,6 +44,7 @@
 - `tests/`：未来的规则单元测试、场景回归测试和 AI 评估测试。
 - `tools/rules/`：规则资料提取、校验和索引工具。
 - `data/erasmus/`：机器可读图表和策略版本数据。
+- `data/erasmus/pages/`：逐页图表 JSON/Markdown；页面文档是图表解释器的权威输入，禁止重新生成占位拓扑覆盖人工修订。
 - `docs/localization/`：汉化素材来源、映射和覆盖率记录。
 
 ## 完成定义
