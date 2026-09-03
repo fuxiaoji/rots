@@ -75,6 +75,7 @@
 - RTT PvE 场景白名单扩到 `1942-1945 (The Shortened Campaign)`（`create.html` 不再强制回南太平洋），供人类在浏览器里亲自体验完整剧本 vs 伊拉斯谟；服务端建局冒烟通过。
 - 50 局多种子完整剧本验证（seeds 20260903–20260952，审计运行器 `tests/erasmus-campaign-audit.js`）：发现并修复 **Fuel Shortage 事件窗死锁**（`events.js` `P.fuel_shortage`：选中单位无可落位目的地时窗口只剩 undo，真人靠 undo、bot 无合法动作）——`prompt()` 检测陷阱自动丢弃该次选择并写入 `L.unmovable` 不再重复候选；引擎级语义等价出口，策略版本仍 `erasmus-v2.0-zh.4`。修复后 50/50 正常终局、0 报错；胜率日本 50 / 盟军 0；双方战略（决策轴+选牌）与战术（编成+反应+空袭会战申报+交火）决策均 >0（日本 49.9%/50.1%，盟军 46.6%/53.4%）。SP 50 与 1942 10 局回归与基线逐项一致。
 - 无头自对打环境修复（策略版本 `erasmus-v2.0-zh.5`）：地面/海上接敌移动路径原由客户端算（`L.allowed_hexes` + `move(path)`），服务端不暴露路径动作参数，无头 bot 无法推进进敌格。新增 opt-in `headless_moves` 开关，`P.move_offensive_units` 在攻击/会战移动/反应三阶段复用客户端 `update_move_hex()` 计算落格并按目标评分执行 `advance`（推进/夺格/进战斗格），解除 PBM 无路可走悬死、补 `js/move.js append_path` 潜伏 `units` 未定义 bug、`erasmus.js` 加 `advance` 覆盖与 awaiting-only 兜底。50 局完整剧本（headless 开）50/50 终局 0 报错、260 次地面接敌、双方各 1322/1911 次推进决策、盟军夺格 22→177；headless 关的 OFF 50 / SP 50 / 1942 10 三组回归与 zh.4 基线 0 差异（行为 opt-in，关闭不变）。胜负仍日本全胜——阵营失衡为已知范围外，非本修复对象。
+- 盟军 0 胜定向归因（headless 10 局，seeds 20260903–20260912）：10/10 以 **PW 归零条约败** 结束（t8–11），~2/3 扣分是 Progress of War 未达标（逐回合需新夺 ≥pow 个名城格，几乎每回合失败，10 局 ~67 败 vs 2 成）；夺格吞吐太低且散——马来亚/暹罗同几格的反复拉锯（Kuala Lumpur×11/Jitra×8）占 29/44，中央太平洋只偶达 Saipan/Palau，**从未触达菲律宾马尼拉/冲绳/日本本土任何格**（0 例），故“登陆日本失败率”实为“从未能发起登陆”；~50% 攻势无战事（No battle hexes declared）。根因是图表解释器只有分窗战术、无回合级选轴与夺格配额。修复方向（拟 zh.6，未实施）：回合级“保 PoW 夺格节奏 + 中央太平洋主线 + 过滤空转攻势”。
 
 ## 初始评估指标
 

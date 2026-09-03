@@ -151,3 +151,16 @@
 - 验证（`EOTS_HEADLESS_MOVES=1`，seeds 20260903–20260952，完整剧本 50 局）：**50/50 正常终局、0 error / 0 action-limit / 0 setup-error**；日志 260 次真实地面接敌移动（`moved to … (Ground move).`）；地面/海上推进决策日本 1322 / 盟军 1911；夺格显著上升——盟军夺格 22→177、日本夺格 13→30；交战约 3 倍——` fire (` 日本 463→1634、盟军 607→1755；“未申报会战”降 3113→1591（部队能真正进格，空袭不再大量落空）。胜负仍日本 50/盟军 0（此前已记录的阵营失衡，非本环境缺陷）。fallback 103→105（新增 2 个 awaiting 确认，良性）。
 - 回归（headless 关闭，逐位一致）：OFF 50 局（同种子）per-game seed/winner/actions/turn 与旧 zh.4 记录基线 **0 差异**，`groundMove 0 / advance 0` 证明行为 opt-in 且关闭时完全不变；SP 50 局（424242–424291）与 1942 10 局（424242–424251）基线重跑 **0 差异**（逐 seed 决策/动作/回合/阵营动作数逐位相同），重生成文件仅 `policy` 标签 zh.4→zh.5 与时间戳不同。
 - 产物：审计运行器 `tests/erasmus-campaign-audit.js` 支持 `EOTS_HEADLESS_MOVES=1` 并新增 `groundMove/capturedAP/capturedJP/advance` 计数；结果 `tests/results/audit50-…-50-20260903-headless.json`（开启）与 `audit50-…-50-20260903.json`（关闭，含新计数）。
+
+### 定向策略调查：盟军 0 胜归因（无头推进后，headless-moves 开）
+
+- 目的（用户要求）：查盟军 0 胜的策略原因（例如进攻太散 / 登陆日本失败率）。方法：不改引擎，`rules.setup/action` 返回实时 `G`；加 `tests/_dbg_strategy.js` 采样终局信息/终态控制/事件日志（PW 变动原因、Progress of War、夺格地域），10 局 headless（seeds 20260903–20260912，1942-1945 缩短战役）。
+- 终局事实：10/10 由 **“Japanese Victory by Treaty Negotiations”** 结束（美国 PW 归零），结束回合 8–11；无 1 局跑到 t12“Japan did not surrender”，更无盟军战略轰炸/封锁/本土占领胜利。PW 自 ~t5 起几乎每回合 −1，2/3 以上扣分原因为 `current progress of war X<Y`（PoW 未达标；10 局累计 ~67 次失败 vs 成功仅 2 回合），次因 Tokyo Rose / Tojo Resigns / US Casualties 等事件扣分。
+- 直接原因：盟军 **始终达不到 Progress of War 的逐回合夺格指标**（每回合须控制 ≥ pow 个“本回合新夺下的名城格”，pow 多为 3–4），PW 逐回合见底 → t8–11 条约投降。
+- 为什么 PoW 达不到（进攻吞吐与格局）：盟军每局发起 ~47 次攻势，但 ~23 次（≈50%）以“No battle hexes declared”告终（激活部队够不到可打的敌格）；净夺格极低（~4.6 次/局），且集中在少数格的反复拉锯：10 局里 Kuala Lumpur×11、Jitra×8、Singora/Kota Bharu×5（马来亚/暹罗死胡同战区，占 AP 夺格事件 29/44），Harbin/Mukden×3；中央太平洋登岛梯次仅偶发（Marshall×3；Saipan/Ponape/Kusaie/Palau 各 1）；**从未夺下 Manila、也无 Bonin/Okinawa/Formosa/日本本土任何一格/名城**（0 例日本地域夺格事件，终态日本本土 9/11 仍日控、8 座日本名城全部日控）。
+- 对用户假设的裁决：
+  - “进攻太散”：**部分成立**——夺格事件大量浪费在马来半岛同几个镇的反复夺占（非通向日本的轴），中央太平洋推进稀疏无主线；但更本质是夺格吞吐与节奏不足。
+  - “登陆日本失败率”：**不适用**——盟军从未到达发起登陆日本的进攻起点（无任何日本地域/名城夺格事件），最近只到过 Saipan/Palau（各 1 次），缺乏菲律宾—冲绳—本土的前进基地链，也从未达成战略轰炸(需 t≤9 且 JP 资源 ≤1)或封锁条件。
+  - 根因在 AI 设计层：12 页流程图为“分窗战术”决策，无回合级大局（选轴 + 逐回合夺格配额 + HQ/编成聚焦），攻势目标退化为 advance() 的局部最近敌格；空袭/海战丰富，面向日本本土的两栖夺岛推进不足；~50% 无战事攻势表明激活/目标选择浪费。
+- 建议修复方向（按优先级）：(1) 回合级目标：PoW 未达标时优先执行“可夺 ≥1 日控名城格、邻接己方前线、两栖可达”的攻势（提夺格节奏）；(2) 选轴：集中中央太平洋主线（Marshalls→Carolines→Marianas→硫磺/冲绳），东南亚仅取守势；(3) 停止空转攻势：激活前过滤无“范围内可战敌格”的 HQ/单位，压掉 ~50% No-battle；(4) 重测目标：PW 不再见底后，1945 战略轰炸/封锁胜机才可达。此项为策略层改动（预计 `erasmus-v2.0-zh.6`），尚未实施。
+- 侦察脚本（未提交，仍 scratch）：`tests/_dbg_strategy.js`、`tests/_agg_strategy.js`、`tests/results/_strategy-10-20260903-headless.json`。
