@@ -125,3 +125,15 @@
 - 起因：用户在 RTT 想亲自体验完整剧本，但 PvE 入口把伊拉斯谟 bot 锁死在 South Pacific（`bot.scenarios=["South Pacific"]`，且 `create.html` 的 PvE 分支强制 `scenario.value="South Pacific"`，服务端建局也校验 bot 场景白名单）。
 - 改动：`js/server/bots/erasmus.js` 的 `erasmus-v2` 场景白名单加入 `1942-1945 (The Shortened Campaign)`（该剧本已在无头 AI vs AI 验证：10 局 0 报错 + 会战申报）；`create.html` 更新 PvE 文案并移除强制回南太平洋的逻辑；重编译 `rules.js`。策略版本仍为 `erasmus-v2.0-zh.4`（仅扩展可用场景，未改任何决策路径）。
 - 冒烟：以 Researcher(user_id=1) 会话 POST `/create/empire-of-the-sun`（mode=pve, human_role=Allies, scenario=1942-1945…）→ 重定向到 play 页、页面 200、随后 `/api/delete` 清理。说明完整剧本 PvE 建局链路可用；RTT bot 驱动在 SP 方向已在此前验收，战役剧本决策逻辑与无头批次一致。
+
+### 50 局多种子完整剧本验证 + Fuel Shortage 事件窗死锁修复
+
+- 目标（用户验收标准）：用不同种子让状态机在 `1942-1945 (The Shortened Campaign)` 自对打 50 局，看胜率，并观察战略（决策轴+选牌）与战术（任务部队编成+反应+会战）两层是否都在用行动。
+- 首次 50 局审计（seeds 20260903–20260952，`tests/erasmus-campaign-audit.js`）：48/50 正常终局、日本 48 胜/盟军 0、0 action-limit/0 setup-error、fallback 103；**2 局死锁报错**：seed 20260924（turn 10、第 1041 动作）与 seed 20260947（turn 6、第 576 动作），同为日本方在 prompt `Move units. Units could be selected: 1.` 窗口只剩 `undo`（`ERASMUS has no legal action`）。
+- 根因（确定性重放取证）：该窗口是 **Fuel Shortage（燃料短缺，JP 事件卡 C161）事件效果窗**（`js/server/events.js` `P.fuel_shortage`）。窗口允许把至多 5 个海军/HQ 单位搬到同一资源港；引擎把候选 `allowed_units` 列得很宽（只要所在格无盟军非海军 ZOI 即列候选），而 `unit()` 选中后若 `allowed_hexes` 为空（目标港已超编、该单位本就在目标港、或不可达）便无任何落位目的地。此时 `active_stack` 非空使 `done` 被隐藏，窗口只剩 `undo`——真人可撤销该次选择，确定性 bot 不会。两例均为已把 P20/P19/P15 迁到 H703 后、再选第 4 个海军单位时触发。
+- 修复（引擎级语义等价出口，沿用 Operation KE / `commit_offensive_confirm` cancel 的先例）：`P.fuel_shortage.prompt()` 检测“已有选中单位但 `allowed_hexes` 为空”时，自动丢弃该次选择、把该单位写入本次事件的 `L.unmovable`（`check_fuel_shortage_data()` 不再把它列回候选），回到选择状态继续；若已无可搬迁单位则由既有自动 `end()` 结束窗口。属引擎改动，未触碰任何可达决策路径，策略版本保持 `erasmus-v2.0-zh.4`。重编译 `rules.js`。
+- 修复后重跑：两个失败种子各自正常终局；完整 50 局审计 **50/50 正常终局、0 error/0 action-limit/0 setup-error**，胜者仍为日本 50、盟军 0。
+- 战略/战术层面使用（50 局合并决策，按 12 页图页归类，双方均 >0）：日本共 24046 决策 = 决策轴 6890 + 选牌 5114（战略 12004，49.9%）+ 编成 9888 + 反应 2154（战术 12042，50.1%）；盟军共 35044 决策 = 决策轴 9071 + 选牌 7268（战略 16339，46.6%）+ 编成 17199 + 反应 1506（战术 18705，53.4%）。战术交战证据：会战申报（declare 窗 `unit→action_hex` 空袭）日本 322 格 / 盟军 520 格，真实交火行（` fire (`）日本 463 / 盟军 607。→ 战略与战术两层在双方阵营都持续用上行动。
+- 回归：South Pacific 固定种子 424242–424291 重跑 50 局 50/50 正常终局、0 错误、0 fallback（avg 317.46，与修复前一致）；`1942-1945` 固定种子 424242–424251 重跑 10 局 10/10、fallback 20、avg 1216.5 动作 / 10.8 回合、日本 10，与原基线逐项一致——引擎出口只在陷阱状态介入，不影响原可达流程。
+- 产物：`tests/erasmus-campaign-audit.js`（剧本参数化审计运行器：胜率 + 战略/战术分层决策 + 会战申报/交火计数）；`tests/results/audit50-1942-1945-The-Shortened-Campaign-50-20260903.json`（修复后规范结果）与 `audit50-1942-1945-The-Shortened-Campaign-50-20260903-prefix-48of50-2errors.json`（修复前 48/50 + 2 死锁的证据）。
+- 结论/边界：50 局流程全部正确终局、0 报错，双方均同时使用战略与战术层行动；但胜负仍为日本 50/盟军 0——阵营失衡是伊拉斯谟 v2.0 复刻策略的已知范围外问题（此前 SP 50 局、1942 10 局亦日本全胜），非流程缺陷。无头 bot 的地面/海上接敌移动仍是已知边界，会战以空袭申报为主。

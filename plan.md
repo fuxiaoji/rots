@@ -73,6 +73,7 @@
 - 1942 完整剧本自对弈：修复 `before_commit_offensive` 卡牌攻势限制导致的“确认窗仅剩 undo”死锁——受限确认窗新增 `cancel` 出口，回退到选行动窗口并将该卡本回合禁止再以攻势打出；新增剧本参数化 AI vs AI 运行器，`1942-1945 (The Shortened Campaign)` 10 局 0 报错、全部正常终局。
 - 攻势零会战修复：`evaluateChart` 里“unit+done 且有激活单位即强制 done”的兜底不再作用于 `Declare battle hexes.` 窗口——该窗口的 `unit` 是选取射程内已激活空中单位发起空袭（随后 `action_hex` 创建战斗格），此前被整窗吞掉导致全程零会战。策略版本 `erasmus-v2.0-zh.4`；1942 全剧本 10 局 0 报错、每局平均申报 16.5 个会战格并产生真实交战，South Pacific 50 种子回归 0 fallback/全部终局。已知边界：无头 bot 无法做地面接敌移动（目标路径由客户端 `move(path)` 提供，服务端不暴露路径参数），会战以空中打击为主。
 - RTT PvE 场景白名单扩到 `1942-1945 (The Shortened Campaign)`（`create.html` 不再强制回南太平洋），供人类在浏览器里亲自体验完整剧本 vs 伊拉斯谟；服务端建局冒烟通过。
+- 50 局多种子完整剧本验证（seeds 20260903–20260952，审计运行器 `tests/erasmus-campaign-audit.js`）：发现并修复 **Fuel Shortage 事件窗死锁**（`events.js` `P.fuel_shortage`：选中单位无可落位目的地时窗口只剩 undo，真人靠 undo、bot 无合法动作）——`prompt()` 检测陷阱自动丢弃该次选择并写入 `L.unmovable` 不再重复候选；引擎级语义等价出口，策略版本仍 `erasmus-v2.0-zh.4`。修复后 50/50 正常终局、0 报错；胜率日本 50 / 盟军 0；双方战略（决策轴+选牌）与战术（编成+反应+空袭会战申报+交火）决策均 >0（日本 49.9%/50.1%，盟军 46.6%/53.4%）。SP 50 与 1942 10 局回归与基线逐项一致。
 
 ## 初始评估指标
 

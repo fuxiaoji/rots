@@ -15890,6 +15890,7 @@ function check_fuel_shortage_data() {
     })
     L.moved.forEach(u => set_delete(result, u))
     G.active_stack.forEach(u => set_delete(result, u))
+    if (Array.isArray(L.unmovable)) L.unmovable.forEach(u => set_delete(result, u))
     L.allowed_hexes = []
     if (G.active_stack.length && L.target && G.supply_cache[L.target] & HEX_TEMP_FLAG1) {
         L.allowed_hexes = [L.target]
@@ -15940,11 +15941,27 @@ P.fuel_shortage = {
             }
         })
         L.moved = []
+        L.unmovable = [] // 本次燃料短缺事件中“被选中却无可落位目的地”的单位, 不再重新候选。
         L.stage = 0
     },
     inactive: "apply card effect",
     prompt() {
         prompt(`Move units. Units could be selected: ${5 - L.moved.length}.`)
+        // 引擎死锁出口(无头自对弈在 1942-1945 多种子复现): 已选单位/编队但 allowed_hexes
+        // 为空 —— 目标港已超编、不可达, 或该单位本就在目标港。此时窗口只剩 undo(真人会撤销
+        // 该次选择, 确定性 bot 不会)。等价地自动丢弃本次选择、把该单位标记为本次事件不可搬迁
+        // (不重复候选), 回到选择状态继续; 若已无任何可搬迁单位则由 check_fuel_shortage_data
+        // 依既有逻辑自动结束窗口。
+        if (G.active_stack.length && L.allowed_hexes.length === 0) {
+            G.active_stack.forEach(u => {
+                var idx = L.moved.indexOf(u)
+                if (idx >= 0) L.moved.splice(idx, 1)
+                if (L.unmovable.indexOf(u) < 0) L.unmovable.push(u)
+            })
+            G.active_stack = []
+            check_fuel_shortage_data()
+            if (L.P !== "fuel_shortage") return // check_fuel_shortage_data 内部已 end(), 新窗口已渲染
+        }
         L.allowed_units.forEach(u => action_unit(u))
         L.allowed_hexes.forEach(h => action_hex(h))
         if (L.moved.length && !G.active_stack.length) {

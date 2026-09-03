@@ -1,0 +1,1850 @@
+{
+  "generatedAt": "2026-09-03T07:40:46.809Z",
+  "tally": {
+    "policy": "erasmus-v2.0-zh.4",
+    "scenario": "1942-1945 (The Shortened Campaign)",
+    "gameCount": 50,
+    "baseSeed": 20260903,
+    "maxActions": 60000,
+    "complete": 50,
+    "japanWins": 50,
+    "alliesWins": 0,
+    "otherWins": 0,
+    "errors": 0,
+    "setupErrors": 0,
+    "actionLimit": 0,
+    "fallback": 103,
+    "role": {
+      "Japan": {
+        "decisions": 24046,
+        "byKind": {
+          "axis": 6890,
+          "card": 5114,
+          "taskforce": 9888,
+          "reaction": 2154,
+          "?": 0
+        },
+        "airStrikeUnits": 322,
+        "airStrikeHexes": 322,
+        "fire": 463
+      },
+      "Allies": {
+        "decisions": 35044,
+        "byKind": {
+          "axis": 9071,
+          "card": 7268,
+          "taskforce": 17199,
+          "reaction": 1506,
+          "?": 0
+        },
+        "airStrikeUnits": 520,
+        "airStrikeHexes": 520,
+        "fire": 607
+      }
+    },
+    "noBattleHex": 3113
+  },
+  "perGame": [
+    {
+      "seed": 20260903,
+      "winner": "Japan",
+      "actions": 889,
+      "turn": 8,
+      "fallback": 3,
+      "noBattleHex": 49,
+      "role": {
+        "Japan": {
+          "decisions": 358,
+          "byKind": {
+            "axis": 103,
+            "card": 79,
+            "taskforce": 143,
+            "reaction": 33,
+            "?": 0
+          },
+          "airStrikeUnits": 4,
+          "airStrikeHexes": 4,
+          "fire": 8
+        },
+        "Allies": {
+          "decisions": 531,
+          "byKind": {
+            "axis": 134,
+            "card": 107,
+            "taskforce": 266,
+            "reaction": 24,
+            "?": 0
+          },
+          "airStrikeUnits": 9,
+          "airStrikeHexes": 9,
+          "fire": 7
+        }
+      }
+    },
+    {
+      "seed": 20260904,
+      "winner": "Japan",
+      "actions": 1320,
+      "turn": 12,
+      "fallback": 1,
+      "noBattleHex": 67,
+      "role": {
+        "Japan": {
+          "decisions": 524,
+          "byKind": {
+            "axis": 147,
+            "card": 110,
+            "taskforce": 219,
+            "reaction": 48,
+            "?": 0
+          },
+          "airStrikeUnits": 9,
+          "airStrikeHexes": 9,
+          "fire": 13
+        },
+        "Allies": {
+          "decisions": 796,
+          "byKind": {
+            "axis": 211,
+            "card": 168,
+            "taskforce": 385,
+            "reaction": 32,
+            "?": 0
+          },
+          "airStrikeUnits": 11,
+          "airStrikeHexes": 11,
+          "fire": 13
+        }
+      }
+    },
+    {
+      "seed": 20260905,
+      "winner": "Japan",
+      "actions": 1343,
+      "turn": 12,
+      "fallback": 3,
+      "noBattleHex": 72,
+      "role": {
+        "Japan": {
+          "decisions": 538,
+          "byKind": {
+            "axis": 142,
+            "card": 113,
+            "taskforce": 230,
+            "reaction": 53,
+            "?": 0
+          },
+          "airStrikeUnits": 8,
+          "airStrikeHexes": 8,
+          "fire": 10
+        },
+        "Allies": {
+          "decisions": 805,
+          "byKind": {
+            "axis": 211,
+            "card": 167,
+            "taskforce": 392,
+            "reaction": 35,
+            "?": 0
+          },
+          "airStrikeUnits": 11,
+          "airStrikeHexes": 11,
+          "fire": 15
+        }
+      }
+    },
+    {
+      "seed": 20260906,
+      "winner": "Japan",
+      "actions": 1361,
+      "turn": 12,
+      "fallback": 3,
+      "noBattleHex": 64,
+      "role": {
+        "Japan": {
+          "decisions": 569,
+          "byKind": {
+            "axis": 168,
+            "card": 115,
+            "taskforce": 238,
+            "reaction": 48,
+            "?": 0
+          },
+          "airStrikeUnits": 11,
+          "airStrikeHexes": 11,
+          "fire": 14
+        },
+        "Allies": {
+          "decisions": 792,
+          "byKind": {
+            "axis": 210,
+            "card": 163,
+            "taskforce": 387,
+            "reaction": 32,
+            "?": 0
+          },
+          "airStrikeUnits": 13,
+          "airStrikeHexes": 13,
+          "fire": 17
+        }
+      }
+    },
+    {
+      "seed": 20260907,
+      "winner": "Japan",
+      "actions": 1351,
+      "turn": 12,
+      "fallback": 1,
+      "noBattleHex": 77,
+      "role": {
+        "Japan": {
+          "decisions": 552,
+          "byKind": {
+            "axis": 161,
+            "card": 123,
+            "taskforce": 218,
+            "reaction": 50,
+            "?": 0
+          },
+          "airStrikeUnits": 4,
+          "airStrikeHexes": 4,
+          "fire": 5
+        },
+        "Allies": {
+          "decisions": 799,
+          "byKind": {
+            "axis": 202,
+            "card": 176,
+            "taskforce": 385,
+            "reaction": 36,
+            "?": 0
+          },
+          "airStrikeUnits": 12,
+          "airStrikeHexes": 12,
+          "fire": 12
+        }
+      }
+    },
+    {
+      "seed": 20260908,
+      "winner": "Japan",
+      "actions": 1386,
+      "turn": 12,
+      "fallback": 2,
+      "noBattleHex": 67,
+      "role": {
+        "Japan": {
+          "decisions": 564,
+          "byKind": {
+            "axis": 168,
+            "card": 114,
+            "taskforce": 232,
+            "reaction": 50,
+            "?": 0
+          },
+          "airStrikeUnits": 6,
+          "airStrikeHexes": 6,
+          "fire": 10
+        },
+        "Allies": {
+          "decisions": 822,
+          "byKind": {
+            "axis": 212,
+            "card": 169,
+            "taskforce": 409,
+            "reaction": 32,
+            "?": 0
+          },
+          "airStrikeUnits": 19,
+          "airStrikeHexes": 19,
+          "fire": 18
+        }
+      }
+    },
+    {
+      "seed": 20260909,
+      "winner": "Japan",
+      "actions": 1337,
+      "turn": 12,
+      "fallback": 2,
+      "noBattleHex": 65,
+      "role": {
+        "Japan": {
+          "decisions": 534,
+          "byKind": {
+            "axis": 146,
+            "card": 114,
+            "taskforce": 226,
+            "reaction": 48,
+            "?": 0
+          },
+          "airStrikeUnits": 9,
+          "airStrikeHexes": 9,
+          "fire": 15
+        },
+        "Allies": {
+          "decisions": 803,
+          "byKind": {
+            "axis": 209,
+            "card": 166,
+            "taskforce": 396,
+            "reaction": 32,
+            "?": 0
+          },
+          "airStrikeUnits": 13,
+          "airStrikeHexes": 13,
+          "fire": 14
+        }
+      }
+    },
+    {
+      "seed": 20260910,
+      "winner": "Japan",
+      "actions": 1207,
+      "turn": 11,
+      "fallback": 4,
+      "noBattleHex": 68,
+      "role": {
+        "Japan": {
+          "decisions": 468,
+          "byKind": {
+            "axis": 132,
+            "card": 103,
+            "taskforce": 189,
+            "reaction": 44,
+            "?": 0
+          },
+          "airStrikeUnits": 6,
+          "airStrikeHexes": 6,
+          "fire": 9
+        },
+        "Allies": {
+          "decisions": 739,
+          "byKind": {
+            "axis": 193,
+            "card": 157,
+            "taskforce": 360,
+            "reaction": 29,
+            "?": 0
+          },
+          "airStrikeUnits": 8,
+          "airStrikeHexes": 8,
+          "fire": 13
+        }
+      }
+    },
+    {
+      "seed": 20260911,
+      "winner": "Japan",
+      "actions": 1117,
+      "turn": 10,
+      "fallback": 1,
+      "noBattleHex": 60,
+      "role": {
+        "Japan": {
+          "decisions": 459,
+          "byKind": {
+            "axis": 133,
+            "card": 94,
+            "taskforce": 189,
+            "reaction": 43,
+            "?": 0
+          },
+          "airStrikeUnits": 6,
+          "airStrikeHexes": 6,
+          "fire": 8
+        },
+        "Allies": {
+          "decisions": 658,
+          "byKind": {
+            "axis": 170,
+            "card": 135,
+            "taskforce": 326,
+            "reaction": 27,
+            "?": 0
+          },
+          "airStrikeUnits": 8,
+          "airStrikeHexes": 8,
+          "fire": 9
+        }
+      }
+    },
+    {
+      "seed": 20260912,
+      "winner": "Japan",
+      "actions": 1244,
+      "turn": 11,
+      "fallback": 2,
+      "noBattleHex": 59,
+      "role": {
+        "Japan": {
+          "decisions": 504,
+          "byKind": {
+            "axis": 147,
+            "card": 101,
+            "taskforce": 211,
+            "reaction": 45,
+            "?": 0
+          },
+          "airStrikeUnits": 9,
+          "airStrikeHexes": 9,
+          "fire": 16
+        },
+        "Allies": {
+          "decisions": 740,
+          "byKind": {
+            "axis": 194,
+            "card": 152,
+            "taskforce": 363,
+            "reaction": 31,
+            "?": 0
+          },
+          "airStrikeUnits": 12,
+          "airStrikeHexes": 12,
+          "fire": 18
+        }
+      }
+    },
+    {
+      "seed": 20260913,
+      "winner": "Japan",
+      "actions": 839,
+      "turn": 8,
+      "fallback": 1,
+      "noBattleHex": 46,
+      "role": {
+        "Japan": {
+          "decisions": 359,
+          "byKind": {
+            "axis": 100,
+            "card": 84,
+            "taskforce": 146,
+            "reaction": 29,
+            "?": 0
+          },
+          "airStrikeUnits": 6,
+          "airStrikeHexes": 6,
+          "fire": 9
+        },
+        "Allies": {
+          "decisions": 480,
+          "byKind": {
+            "axis": 131,
+            "card": 105,
+            "taskforce": 222,
+            "reaction": 22,
+            "?": 0
+          },
+          "airStrikeUnits": 2,
+          "airStrikeHexes": 2,
+          "fire": 2
+        }
+      }
+    },
+    {
+      "seed": 20260914,
+      "winner": "Japan",
+      "actions": 1369,
+      "turn": 12,
+      "fallback": 1,
+      "noBattleHex": 77,
+      "role": {
+        "Japan": {
+          "decisions": 558,
+          "byKind": {
+            "axis": 162,
+            "card": 113,
+            "taskforce": 231,
+            "reaction": 52,
+            "?": 0
+          },
+          "airStrikeUnits": 9,
+          "airStrikeHexes": 9,
+          "fire": 11
+        },
+        "Allies": {
+          "decisions": 811,
+          "byKind": {
+            "axis": 214,
+            "card": 174,
+            "taskforce": 384,
+            "reaction": 39,
+            "?": 0
+          },
+          "airStrikeUnits": 8,
+          "airStrikeHexes": 8,
+          "fire": 11
+        }
+      }
+    },
+    {
+      "seed": 20260915,
+      "winner": "Japan",
+      "actions": 916,
+      "turn": 9,
+      "fallback": 3,
+      "noBattleHex": 53,
+      "role": {
+        "Japan": {
+          "decisions": 389,
+          "byKind": {
+            "axis": 117,
+            "card": 82,
+            "taskforce": 156,
+            "reaction": 34,
+            "?": 0
+          },
+          "airStrikeUnits": 5,
+          "airStrikeHexes": 5,
+          "fire": 9
+        },
+        "Allies": {
+          "decisions": 527,
+          "byKind": {
+            "axis": 137,
+            "card": 108,
+            "taskforce": 257,
+            "reaction": 25,
+            "?": 0
+          },
+          "airStrikeUnits": 5,
+          "airStrikeHexes": 5,
+          "fire": 5
+        }
+      }
+    },
+    {
+      "seed": 20260916,
+      "winner": "Japan",
+      "actions": 1133,
+      "turn": 10,
+      "fallback": 4,
+      "noBattleHex": 54,
+      "role": {
+        "Japan": {
+          "decisions": 465,
+          "byKind": {
+            "axis": 136,
+            "card": 94,
+            "taskforce": 196,
+            "reaction": 39,
+            "?": 0
+          },
+          "airStrikeUnits": 7,
+          "airStrikeHexes": 7,
+          "fire": 9
+        },
+        "Allies": {
+          "decisions": 668,
+          "byKind": {
+            "axis": 165,
+            "card": 132,
+            "taskforce": 342,
+            "reaction": 29,
+            "?": 0
+          },
+          "airStrikeUnits": 13,
+          "airStrikeHexes": 13,
+          "fire": 14
+        }
+      }
+    },
+    {
+      "seed": 20260917,
+      "winner": "Japan",
+      "actions": 970,
+      "turn": 9,
+      "fallback": 3,
+      "noBattleHex": 47,
+      "role": {
+        "Japan": {
+          "decisions": 392,
+          "byKind": {
+            "axis": 120,
+            "card": 92,
+            "taskforce": 145,
+            "reaction": 35,
+            "?": 0
+          },
+          "airStrikeUnits": 3,
+          "airStrikeHexes": 3,
+          "fire": 3
+        },
+        "Allies": {
+          "decisions": 578,
+          "byKind": {
+            "axis": 147,
+            "card": 118,
+            "taskforce": 292,
+            "reaction": 21,
+            "?": 0
+          },
+          "airStrikeUnits": 11,
+          "airStrikeHexes": 11,
+          "fire": 11
+        }
+      }
+    },
+    {
+      "seed": 20260918,
+      "winner": "Japan",
+      "actions": 1379,
+      "turn": 12,
+      "fallback": 2,
+      "noBattleHex": 80,
+      "role": {
+        "Japan": {
+          "decisions": 589,
+          "byKind": {
+            "axis": 171,
+            "card": 120,
+            "taskforce": 243,
+            "reaction": 55,
+            "?": 0
+          },
+          "airStrikeUnits": 14,
+          "airStrikeHexes": 14,
+          "fire": 20
+        },
+        "Allies": {
+          "decisions": 790,
+          "byKind": {
+            "axis": 208,
+            "card": 165,
+            "taskforce": 379,
+            "reaction": 38,
+            "?": 0
+          },
+          "airStrikeUnits": 5,
+          "airStrikeHexes": 5,
+          "fire": 3
+        }
+      }
+    },
+    {
+      "seed": 20260919,
+      "winner": "Japan",
+      "actions": 1193,
+      "turn": 11,
+      "fallback": 2,
+      "noBattleHex": 64,
+      "role": {
+        "Japan": {
+          "decisions": 477,
+          "byKind": {
+            "axis": 140,
+            "card": 98,
+            "taskforce": 198,
+            "reaction": 41,
+            "?": 0
+          },
+          "airStrikeUnits": 5,
+          "airStrikeHexes": 5,
+          "fire": 5
+        },
+        "Allies": {
+          "decisions": 716,
+          "byKind": {
+            "axis": 187,
+            "card": 147,
+            "taskforce": 352,
+            "reaction": 30,
+            "?": 0
+          },
+          "airStrikeUnits": 11,
+          "airStrikeHexes": 11,
+          "fire": 12
+        }
+      }
+    },
+    {
+      "seed": 20260920,
+      "winner": "Japan",
+      "actions": 994,
+      "turn": 9,
+      "fallback": 3,
+      "noBattleHex": 54,
+      "role": {
+        "Japan": {
+          "decisions": 418,
+          "byKind": {
+            "axis": 118,
+            "card": 88,
+            "taskforce": 178,
+            "reaction": 34,
+            "?": 0
+          },
+          "airStrikeUnits": 5,
+          "airStrikeHexes": 5,
+          "fire": 5
+        },
+        "Allies": {
+          "decisions": 576,
+          "byKind": {
+            "axis": 150,
+            "card": 115,
+            "taskforce": 285,
+            "reaction": 26,
+            "?": 0
+          },
+          "airStrikeUnits": 7,
+          "airStrikeHexes": 7,
+          "fire": 10
+        }
+      }
+    },
+    {
+      "seed": 20260921,
+      "winner": "Japan",
+      "actions": 1136,
+      "turn": 10,
+      "fallback": 2,
+      "noBattleHex": 53,
+      "role": {
+        "Japan": {
+          "decisions": 454,
+          "byKind": {
+            "axis": 128,
+            "card": 97,
+            "taskforce": 191,
+            "reaction": 38,
+            "?": 0
+          },
+          "airStrikeUnits": 7,
+          "airStrikeHexes": 7,
+          "fire": 11
+        },
+        "Allies": {
+          "decisions": 682,
+          "byKind": {
+            "axis": 173,
+            "card": 141,
+            "taskforce": 339,
+            "reaction": 29,
+            "?": 0
+          },
+          "airStrikeUnits": 14,
+          "airStrikeHexes": 14,
+          "fire": 19
+        }
+      }
+    },
+    {
+      "seed": 20260922,
+      "winner": "Japan",
+      "actions": 1281,
+      "turn": 11,
+      "fallback": 1,
+      "noBattleHex": 69,
+      "role": {
+        "Japan": {
+          "decisions": 537,
+          "byKind": {
+            "axis": 154,
+            "card": 110,
+            "taskforce": 226,
+            "reaction": 47,
+            "?": 0
+          },
+          "airStrikeUnits": 9,
+          "airStrikeHexes": 9,
+          "fire": 11
+        },
+        "Allies": {
+          "decisions": 744,
+          "byKind": {
+            "axis": 194,
+            "card": 151,
+            "taskforce": 365,
+            "reaction": 34,
+            "?": 0
+          },
+          "airStrikeUnits": 8,
+          "airStrikeHexes": 8,
+          "fire": 10
+        }
+      }
+    },
+    {
+      "seed": 20260923,
+      "winner": "Japan",
+      "actions": 949,
+      "turn": 9,
+      "fallback": 2,
+      "noBattleHex": 56,
+      "role": {
+        "Japan": {
+          "decisions": 373,
+          "byKind": {
+            "axis": 98,
+            "card": 82,
+            "taskforce": 160,
+            "reaction": 33,
+            "?": 0
+          },
+          "airStrikeUnits": 6,
+          "airStrikeHexes": 6,
+          "fire": 8
+        },
+        "Allies": {
+          "decisions": 576,
+          "byKind": {
+            "axis": 153,
+            "card": 128,
+            "taskforce": 270,
+            "reaction": 25,
+            "?": 0
+          },
+          "airStrikeUnits": 4,
+          "airStrikeHexes": 4,
+          "fire": 4
+        }
+      }
+    },
+    {
+      "seed": 20260924,
+      "winner": "Japan",
+      "actions": 1237,
+      "turn": 11,
+      "fallback": 1,
+      "noBattleHex": 65,
+      "role": {
+        "Japan": {
+          "decisions": 495,
+          "byKind": {
+            "axis": 141,
+            "card": 114,
+            "taskforce": 190,
+            "reaction": 50,
+            "?": 0
+          },
+          "airStrikeUnits": 5,
+          "airStrikeHexes": 5,
+          "fire": 10
+        },
+        "Allies": {
+          "decisions": 742,
+          "byKind": {
+            "axis": 188,
+            "card": 145,
+            "taskforce": 379,
+            "reaction": 30,
+            "?": 0
+          },
+          "airStrikeUnits": 13,
+          "airStrikeHexes": 13,
+          "fire": 15
+        }
+      }
+    },
+    {
+      "seed": 20260925,
+      "winner": "Japan",
+      "actions": 1294,
+      "turn": 12,
+      "fallback": 1,
+      "noBattleHex": 71,
+      "role": {
+        "Japan": {
+          "decisions": 533,
+          "byKind": {
+            "axis": 155,
+            "card": 123,
+            "taskforce": 205,
+            "reaction": 50,
+            "?": 0
+          },
+          "airStrikeUnits": 7,
+          "airStrikeHexes": 7,
+          "fire": 8
+        },
+        "Allies": {
+          "decisions": 761,
+          "byKind": {
+            "axis": 200,
+            "card": 170,
+            "taskforce": 361,
+            "reaction": 30,
+            "?": 0
+          },
+          "airStrikeUnits": 7,
+          "airStrikeHexes": 7,
+          "fire": 8
+        }
+      }
+    },
+    {
+      "seed": 20260926,
+      "winner": "Japan",
+      "actions": 1113,
+      "turn": 10,
+      "fallback": 3,
+      "noBattleHex": 58,
+      "role": {
+        "Japan": {
+          "decisions": 456,
+          "byKind": {
+            "axis": 128,
+            "card": 93,
+            "taskforce": 198,
+            "reaction": 37,
+            "?": 0
+          },
+          "airStrikeUnits": 6,
+          "airStrikeHexes": 6,
+          "fire": 7
+        },
+        "Allies": {
+          "decisions": 657,
+          "byKind": {
+            "axis": 167,
+            "card": 137,
+            "taskforce": 322,
+            "reaction": 31,
+            "?": 0
+          },
+          "airStrikeUnits": 10,
+          "airStrikeHexes": 10,
+          "fire": 14
+        }
+      }
+    },
+    {
+      "seed": 20260927,
+      "winner": "Japan",
+      "actions": 1219,
+      "turn": 11,
+      "fallback": 2,
+      "noBattleHex": 56,
+      "role": {
+        "Japan": {
+          "decisions": 501,
+          "byKind": {
+            "axis": 140,
+            "card": 108,
+            "taskforce": 211,
+            "reaction": 42,
+            "?": 0
+          },
+          "airStrikeUnits": 8,
+          "airStrikeHexes": 8,
+          "fire": 10
+        },
+        "Allies": {
+          "decisions": 718,
+          "byKind": {
+            "axis": 181,
+            "card": 145,
+            "taskforce": 363,
+            "reaction": 29,
+            "?": 0
+          },
+          "airStrikeUnits": 15,
+          "airStrikeHexes": 15,
+          "fire": 21
+        }
+      }
+    },
+    {
+      "seed": 20260928,
+      "winner": "Japan",
+      "actions": 1289,
+      "turn": 12,
+      "fallback": 1,
+      "noBattleHex": 68,
+      "role": {
+        "Japan": {
+          "decisions": 509,
+          "byKind": {
+            "axis": 152,
+            "card": 113,
+            "taskforce": 196,
+            "reaction": 48,
+            "?": 0
+          },
+          "airStrikeUnits": 2,
+          "airStrikeHexes": 2,
+          "fire": 3
+        },
+        "Allies": {
+          "decisions": 780,
+          "byKind": {
+            "axis": 195,
+            "card": 167,
+            "taskforce": 386,
+            "reaction": 32,
+            "?": 0
+          },
+          "airStrikeUnits": 16,
+          "airStrikeHexes": 16,
+          "fire": 17
+        }
+      }
+    },
+    {
+      "seed": 20260929,
+      "winner": "Japan",
+      "actions": 1014,
+      "turn": 9,
+      "fallback": 2,
+      "noBattleHex": 50,
+      "role": {
+        "Japan": {
+          "decisions": 435,
+          "byKind": {
+            "axis": 125,
+            "card": 93,
+            "taskforce": 180,
+            "reaction": 37,
+            "?": 0
+          },
+          "airStrikeUnits": 6,
+          "airStrikeHexes": 6,
+          "fire": 8
+        },
+        "Allies": {
+          "decisions": 579,
+          "byKind": {
+            "axis": 143,
+            "card": 120,
+            "taskforce": 290,
+            "reaction": 26,
+            "?": 0
+          },
+          "airStrikeUnits": 9,
+          "airStrikeHexes": 9,
+          "fire": 10
+        }
+      }
+    },
+    {
+      "seed": 20260930,
+      "winner": "Japan",
+      "actions": 1235,
+      "turn": 11,
+      "fallback": 3,
+      "noBattleHex": 57,
+      "role": {
+        "Japan": {
+          "decisions": 510,
+          "byKind": {
+            "axis": 144,
+            "card": 104,
+            "taskforce": 220,
+            "reaction": 42,
+            "?": 0
+          },
+          "airStrikeUnits": 13,
+          "airStrikeHexes": 13,
+          "fire": 17
+        },
+        "Allies": {
+          "decisions": 725,
+          "byKind": {
+            "axis": 204,
+            "card": 147,
+            "taskforce": 345,
+            "reaction": 29,
+            "?": 0
+          },
+          "airStrikeUnits": 11,
+          "airStrikeHexes": 11,
+          "fire": 13
+        }
+      }
+    },
+    {
+      "seed": 20260931,
+      "winner": "Japan",
+      "actions": 1309,
+      "turn": 12,
+      "fallback": 3,
+      "noBattleHex": 79,
+      "role": {
+        "Japan": {
+          "decisions": 507,
+          "byKind": {
+            "axis": 138,
+            "card": 108,
+            "taskforce": 206,
+            "reaction": 55,
+            "?": 0
+          },
+          "airStrikeUnits": 6,
+          "airStrikeHexes": 6,
+          "fire": 10
+        },
+        "Allies": {
+          "decisions": 802,
+          "byKind": {
+            "axis": 204,
+            "card": 167,
+            "taskforce": 399,
+            "reaction": 32,
+            "?": 0
+          },
+          "airStrikeUnits": 8,
+          "airStrikeHexes": 8,
+          "fire": 9
+        }
+      }
+    },
+    {
+      "seed": 20260932,
+      "winner": "Japan",
+      "actions": 1153,
+      "turn": 10,
+      "fallback": 1,
+      "noBattleHex": 68,
+      "role": {
+        "Japan": {
+          "decisions": 486,
+          "byKind": {
+            "axis": 136,
+            "card": 98,
+            "taskforce": 211,
+            "reaction": 41,
+            "?": 0
+          },
+          "airStrikeUnits": 6,
+          "airStrikeHexes": 6,
+          "fire": 9
+        },
+        "Allies": {
+          "decisions": 667,
+          "byKind": {
+            "axis": 177,
+            "card": 142,
+            "taskforce": 315,
+            "reaction": 33,
+            "?": 0
+          },
+          "airStrikeUnits": 6,
+          "airStrikeHexes": 6,
+          "fire": 7
+        }
+      }
+    },
+    {
+      "seed": 20260933,
+      "winner": "Japan",
+      "actions": 906,
+      "turn": 8,
+      "fallback": 2,
+      "noBattleHex": 44,
+      "role": {
+        "Japan": {
+          "decisions": 373,
+          "byKind": {
+            "axis": 110,
+            "card": 82,
+            "taskforce": 150,
+            "reaction": 31,
+            "?": 0
+          },
+          "airStrikeUnits": 4,
+          "airStrikeHexes": 4,
+          "fire": 7
+        },
+        "Allies": {
+          "decisions": 533,
+          "byKind": {
+            "axis": 132,
+            "card": 106,
+            "taskforce": 269,
+            "reaction": 26,
+            "?": 0
+          },
+          "airStrikeUnits": 13,
+          "airStrikeHexes": 13,
+          "fire": 13
+        }
+      }
+    },
+    {
+      "seed": 20260934,
+      "winner": "Japan",
+      "actions": 1190,
+      "turn": 11,
+      "fallback": 2,
+      "noBattleHex": 66,
+      "role": {
+        "Japan": {
+          "decisions": 452,
+          "byKind": {
+            "axis": 122,
+            "card": 104,
+            "taskforce": 181,
+            "reaction": 45,
+            "?": 0
+          },
+          "airStrikeUnits": 5,
+          "airStrikeHexes": 5,
+          "fire": 8
+        },
+        "Allies": {
+          "decisions": 738,
+          "byKind": {
+            "axis": 194,
+            "card": 154,
+            "taskforce": 360,
+            "reaction": 30,
+            "?": 0
+          },
+          "airStrikeUnits": 11,
+          "airStrikeHexes": 11,
+          "fire": 15
+        }
+      }
+    },
+    {
+      "seed": 20260935,
+      "winner": "Japan",
+      "actions": 1211,
+      "turn": 11,
+      "fallback": 3,
+      "noBattleHex": 64,
+      "role": {
+        "Japan": {
+          "decisions": 493,
+          "byKind": {
+            "axis": 144,
+            "card": 107,
+            "taskforce": 197,
+            "reaction": 45,
+            "?": 0
+          },
+          "airStrikeUnits": 7,
+          "airStrikeHexes": 7,
+          "fire": 11
+        },
+        "Allies": {
+          "decisions": 718,
+          "byKind": {
+            "axis": 190,
+            "card": 151,
+            "taskforce": 347,
+            "reaction": 30,
+            "?": 0
+          },
+          "airStrikeUnits": 10,
+          "airStrikeHexes": 10,
+          "fire": 14
+        }
+      }
+    },
+    {
+      "seed": 20260936,
+      "winner": "Japan",
+      "actions": 1020,
+      "turn": 9,
+      "fallback": 2,
+      "noBattleHex": 55,
+      "role": {
+        "Japan": {
+          "decisions": 411,
+          "byKind": {
+            "axis": 117,
+            "card": 87,
+            "taskforce": 172,
+            "reaction": 35,
+            "?": 0
+          },
+          "airStrikeUnits": 4,
+          "airStrikeHexes": 4,
+          "fire": 6
+        },
+        "Allies": {
+          "decisions": 609,
+          "byKind": {
+            "axis": 156,
+            "card": 124,
+            "taskforce": 302,
+            "reaction": 27,
+            "?": 0
+          },
+          "airStrikeUnits": 9,
+          "airStrikeHexes": 9,
+          "fire": 10
+        }
+      }
+    },
+    {
+      "seed": 20260937,
+      "winner": "Japan",
+      "actions": 1260,
+      "turn": 11,
+      "fallback": 1,
+      "noBattleHex": 60,
+      "role": {
+        "Japan": {
+          "decisions": 531,
+          "byKind": {
+            "axis": 156,
+            "card": 111,
+            "taskforce": 218,
+            "reaction": 46,
+            "?": 0
+          },
+          "airStrikeUnits": 7,
+          "airStrikeHexes": 7,
+          "fire": 7
+        },
+        "Allies": {
+          "decisions": 729,
+          "byKind": {
+            "axis": 186,
+            "card": 145,
+            "taskforce": 366,
+            "reaction": 32,
+            "?": 0
+          },
+          "airStrikeUnits": 14,
+          "airStrikeHexes": 14,
+          "fire": 18
+        }
+      }
+    },
+    {
+      "seed": 20260938,
+      "winner": "Japan",
+      "actions": 1246,
+      "turn": 11,
+      "fallback": 3,
+      "noBattleHex": 78,
+      "role": {
+        "Japan": {
+          "decisions": 492,
+          "byKind": {
+            "axis": 140,
+            "card": 100,
+            "taskforce": 210,
+            "reaction": 42,
+            "?": 0
+          },
+          "airStrikeUnits": 4,
+          "airStrikeHexes": 4,
+          "fire": 7
+        },
+        "Allies": {
+          "decisions": 754,
+          "byKind": {
+            "axis": 194,
+            "card": 159,
+            "taskforce": 365,
+            "reaction": 36,
+            "?": 0
+          },
+          "airStrikeUnits": 8,
+          "airStrikeHexes": 8,
+          "fire": 7
+        }
+      }
+    },
+    {
+      "seed": 20260939,
+      "winner": "Japan",
+      "actions": 979,
+      "turn": 9,
+      "fallback": 3,
+      "noBattleHex": 54,
+      "role": {
+        "Japan": {
+          "decisions": 407,
+          "byKind": {
+            "axis": 121,
+            "card": 83,
+            "taskforce": 167,
+            "reaction": 36,
+            "?": 0
+          },
+          "airStrikeUnits": 3,
+          "airStrikeHexes": 3,
+          "fire": 5
+        },
+        "Allies": {
+          "decisions": 572,
+          "byKind": {
+            "axis": 152,
+            "card": 118,
+            "taskforce": 277,
+            "reaction": 25,
+            "?": 0
+          },
+          "airStrikeUnits": 9,
+          "airStrikeHexes": 9,
+          "fire": 9
+        }
+      }
+    },
+    {
+      "seed": 20260940,
+      "winner": "Japan",
+      "actions": 1037,
+      "turn": 9,
+      "fallback": 1,
+      "noBattleHex": 56,
+      "role": {
+        "Japan": {
+          "decisions": 419,
+          "byKind": {
+            "axis": 130,
+            "card": 85,
+            "taskforce": 160,
+            "reaction": 44,
+            "?": 0
+          },
+          "airStrikeUnits": 3,
+          "airStrikeHexes": 3,
+          "fire": 4
+        },
+        "Allies": {
+          "decisions": 618,
+          "byKind": {
+            "axis": 156,
+            "card": 117,
+            "taskforce": 321,
+            "reaction": 24,
+            "?": 0
+          },
+          "airStrikeUnits": 12,
+          "airStrikeHexes": 12,
+          "fire": 12
+        }
+      }
+    },
+    {
+      "seed": 20260941,
+      "winner": "Japan",
+      "actions": 1074,
+      "turn": 10,
+      "fallback": 2,
+      "noBattleHex": 55,
+      "role": {
+        "Japan": {
+          "decisions": 426,
+          "byKind": {
+            "axis": 119,
+            "card": 93,
+            "taskforce": 179,
+            "reaction": 35,
+            "?": 0
+          },
+          "airStrikeUnits": 6,
+          "airStrikeHexes": 6,
+          "fire": 7
+        },
+        "Allies": {
+          "decisions": 648,
+          "byKind": {
+            "axis": 167,
+            "card": 136,
+            "taskforce": 318,
+            "reaction": 27,
+            "?": 0
+          },
+          "airStrikeUnits": 9,
+          "airStrikeHexes": 9,
+          "fire": 11
+        }
+      }
+    },
+    {
+      "seed": 20260942,
+      "winner": "Japan",
+      "actions": 1277,
+      "turn": 12,
+      "fallback": 4,
+      "noBattleHex": 77,
+      "role": {
+        "Japan": {
+          "decisions": 505,
+          "byKind": {
+            "axis": 147,
+            "card": 117,
+            "taskforce": 196,
+            "reaction": 45,
+            "?": 0
+          },
+          "airStrikeUnits": 4,
+          "airStrikeHexes": 4,
+          "fire": 7
+        },
+        "Allies": {
+          "decisions": 772,
+          "byKind": {
+            "axis": 199,
+            "card": 170,
+            "taskforce": 368,
+            "reaction": 35,
+            "?": 0
+          },
+          "airStrikeUnits": 8,
+          "airStrikeHexes": 8,
+          "fire": 7
+        }
+      }
+    },
+    {
+      "seed": 20260943,
+      "winner": "Japan",
+      "actions": 1372,
+      "turn": 12,
+      "fallback": 1,
+      "noBattleHex": 75,
+      "role": {
+        "Japan": {
+          "decisions": 546,
+          "byKind": {
+            "axis": 146,
+            "card": 123,
+            "taskforce": 227,
+            "reaction": 50,
+            "?": 0
+          },
+          "airStrikeUnits": 7,
+          "airStrikeHexes": 7,
+          "fire": 11
+        },
+        "Allies": {
+          "decisions": 826,
+          "byKind": {
+            "axis": 215,
+            "card": 171,
+            "taskforce": 401,
+            "reaction": 39,
+            "?": 0
+          },
+          "airStrikeUnits": 14,
+          "airStrikeHexes": 14,
+          "fire": 19
+        }
+      }
+    },
+    {
+      "seed": 20260944,
+      "winner": "Japan",
+      "actions": 1213,
+      "turn": 11,
+      "fallback": 2,
+      "noBattleHex": 62,
+      "role": {
+        "Japan": {
+          "decisions": 489,
+          "byKind": {
+            "axis": 141,
+            "card": 107,
+            "taskforce": 196,
+            "reaction": 45,
+            "?": 0
+          },
+          "airStrikeUnits": 6,
+          "airStrikeHexes": 6,
+          "fire": 8
+        },
+        "Allies": {
+          "decisions": 724,
+          "byKind": {
+            "axis": 186,
+            "card": 155,
+            "taskforce": 352,
+            "reaction": 31,
+            "?": 0
+          },
+          "airStrikeUnits": 11,
+          "airStrikeHexes": 11,
+          "fire": 13
+        }
+      }
+    },
+    {
+      "seed": 20260945,
+      "winner": "Japan",
+      "actions": 1102,
+      "turn": 10,
+      "fallback": 1,
+      "noBattleHex": 49,
+      "role": {
+        "Japan": {
+          "decisions": 461,
+          "byKind": {
+            "axis": 130,
+            "card": 99,
+            "taskforce": 197,
+            "reaction": 35,
+            "?": 0
+          },
+          "airStrikeUnits": 6,
+          "airStrikeHexes": 6,
+          "fire": 10
+        },
+        "Allies": {
+          "decisions": 641,
+          "byKind": {
+            "axis": 164,
+            "card": 136,
+            "taskforce": 313,
+            "reaction": 28,
+            "?": 0
+          },
+          "airStrikeUnits": 12,
+          "airStrikeHexes": 12,
+          "fire": 11
+        }
+      }
+    },
+    {
+      "seed": 20260946,
+      "winner": "Japan",
+      "actions": 1418,
+      "turn": 12,
+      "fallback": 1,
+      "noBattleHex": 61,
+      "role": {
+        "Japan": {
+          "decisions": 558,
+          "byKind": {
+            "axis": 167,
+            "card": 115,
+            "taskforce": 223,
+            "reaction": 53,
+            "?": 0
+          },
+          "airStrikeUnits": 7,
+          "airStrikeHexes": 7,
+          "fire": 12
+        },
+        "Allies": {
+          "decisions": 860,
+          "byKind": {
+            "axis": 212,
+            "card": 169,
+            "taskforce": 447,
+            "reaction": 32,
+            "?": 0
+          },
+          "airStrikeUnits": 25,
+          "airStrikeHexes": 25,
+          "fire": 28
+        }
+      }
+    },
+    {
+      "seed": 20260947,
+      "winner": "Japan",
+      "actions": 1372,
+      "turn": 12,
+      "fallback": 1,
+      "noBattleHex": 71,
+      "role": {
+        "Japan": {
+          "decisions": 578,
+          "byKind": {
+            "axis": 161,
+            "card": 111,
+            "taskforce": 255,
+            "reaction": 51,
+            "?": 0
+          },
+          "airStrikeUnits": 13,
+          "airStrikeHexes": 13,
+          "fire": 19
+        },
+        "Allies": {
+          "decisions": 794,
+          "byKind": {
+            "axis": 212,
+            "card": 167,
+            "taskforce": 378,
+            "reaction": 37,
+            "?": 0
+          },
+          "airStrikeUnits": 8,
+          "airStrikeHexes": 8,
+          "fire": 9
+        }
+      }
+    },
+    {
+      "seed": 20260948,
+      "winner": "Japan",
+      "actions": 1358,
+      "turn": 12,
+      "fallback": 3,
+      "noBattleHex": 75,
+      "role": {
+        "Japan": {
+          "decisions": 551,
+          "byKind": {
+            "axis": 156,
+            "card": 117,
+            "taskforce": 226,
+            "reaction": 52,
+            "?": 0
+          },
+          "airStrikeUnits": 5,
+          "airStrikeHexes": 5,
+          "fire": 8
+        },
+        "Allies": {
+          "decisions": 807,
+          "byKind": {
+            "axis": 203,
+            "card": 172,
+            "taskforce": 397,
+            "reaction": 35,
+            "?": 0
+          },
+          "airStrikeUnits": 11,
+          "airStrikeHexes": 11,
+          "fire": 16
+        }
+      }
+    },
+    {
+      "seed": 20260949,
+      "winner": "Japan",
+      "actions": 1093,
+      "turn": 10,
+      "fallback": 3,
+      "noBattleHex": 60,
+      "role": {
+        "Japan": {
+          "decisions": 444,
+          "byKind": {
+            "axis": 129,
+            "card": 95,
+            "taskforce": 183,
+            "reaction": 37,
+            "?": 0
+          },
+          "airStrikeUnits": 7,
+          "airStrikeHexes": 7,
+          "fire": 9
+        },
+        "Allies": {
+          "decisions": 649,
+          "byKind": {
+            "axis": 180,
+            "card": 131,
+            "taskforce": 311,
+            "reaction": 27,
+            "?": 0
+          },
+          "airStrikeUnits": 8,
+          "airStrikeHexes": 8,
+          "fire": 6
+        }
+      }
+    },
+    {
+      "seed": 20260950,
+      "winner": "Japan",
+      "actions": 965,
+      "turn": 9,
+      "fallback": 1,
+      "noBattleHex": 57,
+      "role": {
+        "Japan": {
+          "decisions": 408,
+          "byKind": {
+            "axis": 113,
+            "card": 90,
+            "taskforce": 165,
+            "reaction": 40,
+            "?": 0
+          },
+          "airStrikeUnits": 3,
+          "airStrikeHexes": 3,
+          "fire": 4
+        },
+        "Allies": {
+          "decisions": 557,
+          "byKind": {
+            "axis": 141,
+            "card": 120,
+            "taskforce": 272,
+            "reaction": 24,
+            "?": 0
+          },
+          "airStrikeUnits": 4,
+          "airStrikeHexes": 4,
+          "fire": 4
+        }
+      }
+    },
+    {
+      "seed": 20260951,
+      "winner": "Japan",
+      "actions": 1369,
+      "turn": 12,
+      "fallback": 2,
+      "noBattleHex": 68,
+      "role": {
+        "Japan": {
+          "decisions": 568,
+          "byKind": {
+            "axis": 167,
+            "card": 119,
+            "taskforce": 232,
+            "reaction": 50,
+            "?": 0
+          },
+          "airStrikeUnits": 8,
+          "airStrikeHexes": 8,
+          "fire": 14
+        },
+        "Allies": {
+          "decisions": 801,
+          "byKind": {
+            "axis": 207,
+            "card": 159,
+            "taskforce": 401,
+            "reaction": 34,
+            "?": 0
+          },
+          "airStrikeUnits": 14,
+          "airStrikeHexes": 14,
+          "fire": 23
+        }
+      }
+    },
+    {
+      "seed": 20260952,
+      "winner": "Japan",
+      "actions": 1051,
+      "turn": 9,
+      "fallback": 2,
+      "noBattleHex": 53,
+      "role": {
+        "Japan": {
+          "decisions": 421,
+          "byKind": {
+            "axis": 124,
+            "card": 89,
+            "taskforce": 172,
+            "reaction": 36,
+            "?": 0
+          },
+          "airStrikeUnits": 6,
+          "airStrikeHexes": 6,
+          "fire": 8
+        },
+        "Allies": {
+          "decisions": 630,
+          "byKind": {
+            "axis": 161,
+            "card": 124,
+            "taskforce": 318,
+            "reaction": 27,
+            "?": 0
+          },
+          "airStrikeUnits": 11,
+          "airStrikeHexes": 11,
+          "fire": 11
+        }
+      }
+    }
+  ],
+  "errors": []
+}
