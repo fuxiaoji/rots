@@ -108,6 +108,7 @@ function on_setup(scenario, options) {
     if (options.experienced) {
         G.async = 1
     }
+    G.headless_moves = Boolean(options && options.headless_moves)
     for (let i = 1; i < LAST_BOARD_HEX; i++) {
         if (is_controllable_hex(i) && ["JMandates", "Korea", "Manchuria", "China", "Formosa", "Indochina", "Caroline", "Marshall", "Japan"].includes(get_map_data(i).region)) {
             capture_hex(i, JP)
@@ -194,6 +195,7 @@ function create_view() {
     V.china_divisions = G.china_divisions
     V.offensive = object_copy(G.offensive)
     V.move_type = L.move_type
+    V.headless_moves = !!G.headless_moves
     if (G.offensive.battle.battle_hex) {
         set_add(V.offensive.battle_hexes, G.offensive.battle.battle_hex)
     }

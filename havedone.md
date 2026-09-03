@@ -137,3 +137,17 @@
 - 回归：South Pacific 固定种子 424242–424291 重跑 50 局 50/50 正常终局、0 错误、0 fallback（avg 317.46，与修复前一致）；`1942-1945` 固定种子 424242–424251 重跑 10 局 10/10、fallback 20、avg 1216.5 动作 / 10.8 回合、日本 10，与原基线逐项一致——引擎出口只在陷阱状态介入，不影响原可达流程。
 - 产物：`tests/erasmus-campaign-audit.js`（剧本参数化审计运行器：胜率 + 战略/战术分层决策 + 会战申报/交火计数）；`tests/results/audit50-1942-1945-The-Shortened-Campaign-50-20260903.json`（修复后规范结果）与 `audit50-1942-1945-The-Shortened-Campaign-50-20260903-prefix-48of50-2errors.json`（修复前 48/50 + 2 死锁的证据）。
 - 结论/边界：50 局流程全部正确终局、0 报错，双方均同时使用战略与战术层行动；但胜负仍为日本 50/盟军 0——阵营失衡是伊拉斯谟 v2.0 复刻策略的已知范围外问题（此前 SP 50 局、1942 10 局亦日本全胜），非流程缺陷。无头 bot 的地面/海上接敌移动仍是已知边界，会战以空袭申报为主。
+
+### 修复无头自对打环境：AI 可发起地面/海上推进（headless advance），完整对局验证
+
+- 目标（用户验收标准）：修复状态机自对打环境里 AI 无法发起地面/海上推进的 bug（无头 bot 从不移动进敌格），用完整对局测试。
+- 现象：1942 完整剧本 50 局审计里地面/海上单位从不接敌，只有空袭申报会战（上条记录的“已知边界”）。原因是进攻式位移目标路径由**客户端**用 `L.allowed_hexes` 计算后以 `move(path)` 发给引擎，服务端不把路径暴露为动作参数——无头 bot 既拿不到路径、也没有任何服务端动作可表达“把已激活单位移到敌格”。
+- 修复设计（服务端无头推进骨架，复用客户端原套 `update_move_hex()` 机器）：
+  - 新增可选开关 `G.headless_moves`（`rules.setup(seed, scenario, {headless_moves:true})` → `js/server/game.js on_setup`），并镜像到视图 `V.headless_moves`。默认关闭，关闭时引擎行为与旧基线逐位一致。
+  - `js/server/offensive.js` `P.move_offensive_units`：`headless_moves` 且 `active_stack` 为空时按所在阶段（攻击 ATTACK_STAGE / 会战移动 POST_BATTLE_STAGE / 反应 REACTION_STAGE）判断是否有可推进单位，有则在窗口挂出真实 `advance` 按钮；`advance()` 选中最低格址的一组非空中单位 → 调真实 `self.unit(u)` 选择 → `update_move_hex()` 算出该组可落格 → 按阶段目标评分取最优（攻击：敌占格[地面可夺格/纯海需敌海军]、空敌控格占格；会战移动：可停驻格；反应：进战斗格）→ 清理有机跟随 → `self.move(path)`。
+  - 攻击阶段由此真正推进到敌格并夺格；会战移动阶段解除此前“PBM 地面/海军不能原地停驻 → 无路可走只能 done → 每局在 Move units 窗空转至 30k 动作上限”的悬死；反应阶段防守方地面/海军单位能进战斗格参与反应与脱离（触发防守方 disengagement）。
+- 顺带修复引擎潜在缺陷：`js/move.js` `append_path` else 分支误引用未定义全局 `units[0]`（应为 `G.location[unit]`）——无头地面推进开始后触发防守方反应单位移动时必崩，属潜伏 bug 首次暴露。
+- 策略层：`js/server/bots/erasmus.js` `erasmus-v2.0-zh.4 → .5`。`evaluateChart` 新增 `advance` 覆盖（移动窗出现 advance 时必选，优先于“强制 done”与 fallback，否则移动窗被整窗吞掉）；新增 awaiting-only 兜底（窗口只提供 `awaiting` 时返回 awaiting——地面推进触发 disengagement_confirm 窗即此类）。`erasmus_hash(seedText)` 不含版本串，故 zh.5 不改变任何 headless-关闭决策。
+- 验证（`EOTS_HEADLESS_MOVES=1`，seeds 20260903–20260952，完整剧本 50 局）：**50/50 正常终局、0 error / 0 action-limit / 0 setup-error**；日志 260 次真实地面接敌移动（`moved to … (Ground move).`）；地面/海上推进决策日本 1322 / 盟军 1911；夺格显著上升——盟军夺格 22→177、日本夺格 13→30；交战约 3 倍——` fire (` 日本 463→1634、盟军 607→1755；“未申报会战”降 3113→1591（部队能真正进格，空袭不再大量落空）。胜负仍日本 50/盟军 0（此前已记录的阵营失衡，非本环境缺陷）。fallback 103→105（新增 2 个 awaiting 确认，良性）。
+- 回归（headless 关闭，逐位一致）：OFF 50 局（同种子）per-game seed/winner/actions/turn 与旧 zh.4 记录基线 **0 差异**，`groundMove 0 / advance 0` 证明行为 opt-in 且关闭时完全不变；SP 50 局（424242–424291）与 1942 10 局（424242–424251）基线重跑 **0 差异**（逐 seed 决策/动作/回合/阵营动作数逐位相同），重生成文件仅 `policy` 标签 zh.4→zh.5 与时间戳不同。
+- 产物：审计运行器 `tests/erasmus-campaign-audit.js` 支持 `EOTS_HEADLESS_MOVES=1` 并新增 `groundMove/capturedAP/capturedJP/advance` 计数；结果 `tests/results/audit50-…-50-20260903-headless.json`（开启）与 `audit50-…-50-20260903.json`（关闭，含新计数）。

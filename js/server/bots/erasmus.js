@@ -1,6 +1,6 @@
 /** import server/erasmus_data.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.4"
+const ERASMUS_VERSION = "erasmus-v2.0-zh.5"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "unit", "hex", "strat_move", "ground_move", "roll", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
@@ -111,7 +111,20 @@ function pick_argument(value, seedText, action, view) {
 
 function evaluateChart(chart, view, context) {
     const legal = legal_actions(view)
-    if (!legal.length) throw new Error("ERASMUS has no legal action")
+    if (!legal.length) {
+        // 窗口只有 awaiting(如无头地面推进触发的 disengagement 确认窗, 引擎仅给
+        // 这一个按钮): 无其它动作可选, 必须确认继续; 其余 undo/redo/awaiting 被过滤。
+        if (view.actions && view.actions.awaiting !== undefined) {
+            const chartId = (chart && (chart.chart_id || chart.id)) || "NO-CHART"
+            const nodeId = `${chartId}-START`
+            const base = { policy: ERASMUS_VERSION, chart: chartId, node: nodeId, role: context.role,
+                conditions: [], strategy: "HEADLESS_AWAIT", action: "awaiting", argument: undefined,
+                dice: null, fallback: false, inferred: false,
+                explanation: "窗口只提供 awaiting(确认继续), 无其它合法动作。" }
+            return { action: "awaiting", argument: undefined, publicTrace: base, privateTrace: { ...base, legalActions: legal, candidates: {} } }
+        }
+        throw new Error("ERASMUS has no legal action")
+    }
     const nodes = new Map(chart.nodes.map(item => [item.id, item]))
     const prefix = chart.chart_id || chart.id
     let current = nodes.get(`${prefix}-START`)
@@ -154,6 +167,14 @@ function evaluateChart(chart, view, context) {
     if (fallback) {
         const fallbackNode = nodes.get(`${prefix}-FALLBACK`)
         action = (fallbackNode?.allowed_actions || []).find(item => legal.includes(item)) || legal.slice().sort()[0]
+    }
+    // 无头自对打: advance 只在 headless_moves 攻击方 ATTACK_STAGE 空栈移动窗出现(引擎端
+    // 唯一来源), 表示该窗应把一组地面/海军沿合法格推进向敌而不是直接 done。它必须覆盖
+    // 上面 “强制 done” 与 fallback, 否则移动窗被整窗吞掉, 地面/海军永远无法接敌。
+    if (legal.includes("advance")) {
+        action = "advance"
+        fallback = false
+        strategy = "HEADLESS_ADVANCE"
     }
     const nodeId = fallback ? `${prefix}-FALLBACK` : (current?.id || `${prefix}-FALLBACK`)
     const seedText = `${context.seed}:${context.actionOrdinal}:${chart.id}:${nodeId}`

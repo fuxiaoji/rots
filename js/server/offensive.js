@@ -720,6 +720,10 @@ P.move_offensive_units = {
             )) {
             button("done")
         }
+        const headlessKind = G.headless_moves && G.active_stack.length === 0 ? headless_stage_kind() : null
+        if (headlessKind && headless_advance_has_candidates(headlessKind)) {
+            button("advance")
+        }
 
         if (G.active_stack.length === 0) {
             L.movable_units.forEach(u => action_unit(u))
@@ -933,6 +937,16 @@ P.move_offensive_units = {
     no_move() {
         call("move_to", {hex: G.location[G.active_stack[0]]})
     },
+    advance() {
+        const kind = G.headless_moves && G.active_stack.length === 0 ? headless_stage_kind() : null
+        if (!kind) {
+            return
+        }
+        const r = headless_advance_one(this, kind)
+        if (r.type === "none") {
+            this.done()
+        }
+    },
     done() {
         G.offensive.active_units[R].filter(u => !map_has(G.offensive.paths, u))
             .forEach(u => map_set(G.offensive.paths, u, [ANY_MOVE, 0, G.location[u]]))
@@ -958,6 +972,153 @@ function ground_move_completed(hex, faction) {
 function set_mt(mt) {
     L.move_type = mt
     L.move_data = get_move_data()
+}
+
+/* 无头自对打推进/收拢:
+   地面/海上移动的目标路径仅由客户端(move(path))提供, 服务端不暴露路径参数, 因此无头
+   bot 永远只能空中打击, 无法把地面/登陆部队推进到敌占格、也无法在战后/反应窗把部队移走。
+   这里补上服务端等价物: 当 G.headless_moves 时在移动窗展示 advance 按钮, 引擎按与客户端
+   完全相同的 update_move_hex() 合法格计算, 选一个目标并沿该窗既有 move(path) 语义完成推进。
+   三个阶段语义不同:
+     - ATTACK_STAGE(攻击方): 推进向敌。敌单位占格(攻击, 防御方地面越少越优) > 敌控空置格(夺取)。
+       纯海军编成只主动迎击敌舰队(敌 naval>0 格), 不冲陆地/机场, 避免裸舰队撞岸空耗。
+     - REACTION_STAGE: 反应部队须进入会战格支援; 只移需要动(不在会战格)的单位。
+     - POST_BATTLE_STAGE: 战后须收拢到可落脚格; 只移“在此不能停(could_unit_stop_here 失败)”的单位。
+   每个 advance 只处理最低格一个编成; 若全无可动/无可达目标则返回 none(由调用方 done)。 */
+
+function headless_stage_kind() {
+    if (G.offensive.stage === ATTACK_STAGE && G.active === G.offensive.attacker) return "attack"
+    if (G.offensive.stage === POST_BATTLE_STAGE) return "pbm"
+    if (G.offensive.stage === REACTION_STAGE) return "reaction"
+    return null
+}
+
+function headless_enemy_units_at(hex, faction) {
+    let count = 0, ground = 0, naval = 0
+    for (let u = 1; u < pieces.length; u++) {
+        const p = pieces[u]
+        if (!p || p.faction !== faction) continue
+        const h = G.location[u]
+        if (h !== hex) continue
+        count++
+        if (p.class === "ground" || p.class === "hq") ground++
+        else if (p.class === "naval") naval++
+    }
+    return { count, ground, naval }
+}
+
+function headless_nearest_enemy_dist(hex, faction) {
+    let best = 99
+    for (let u = 1; u < pieces.length; u++) {
+        const p = pieces[u]
+        if (!p || p.faction !== faction) continue
+        const h = G.location[u]
+        if (!(h >= 0 && h <= LAST_BOARD_HEX)) continue
+        const d = get_distance(hex, h)
+        if (d < best) best = d
+    }
+    return best
+}
+
+// 分数: [类别, ...次键, hex], 越小越优; 只在 allowed_hexes(引擎合法落点)上评比。
+function headless_target_score(hex, hasGround, faction, kind) {
+    const eu = headless_enemy_units_at(hex, 1 - faction)
+    if (kind === "attack") {
+        if (eu.count > 0) {
+            if (hasGround) return [0, eu.ground, eu.count, headless_nearest_enemy_dist(hex, 1 - faction), hex]
+            if (eu.naval > 0) return [0, eu.naval, eu.count, headless_nearest_enemy_dist(hex, 1 - faction), hex]
+            return null
+        }
+        if (is_space_controlled(hex, 1 - faction)) {
+            if (!hasGround) return null
+            return [1, headless_nearest_enemy_dist(hex, 1 - faction), hex]
+        }
+        return null
+    }
+    if (kind === "reaction") {
+        // 反应: 支援会战(格内是敌人进攻部队); 选我方风险最低的会战格。
+        return [eu.count, eu.ground, hex]
+    }
+    // pbm: 战后不许新开战/进敌占(引擎已排除), 优选己方控制空格的“安全落脚”。
+    const controlled = is_space_controlled(hex, faction)
+    return [eu.count > 0 ? 2 : (controlled ? 0 : 1), eu.count, hex]
+}
+
+function headless_score_lt(a, b) {
+    for (let i = 0; i < a.length && i < b.length; i++) {
+        if (a[i] !== b[i]) return a[i] < b[i]
+    }
+    return a.length < b.length
+}
+
+// 该移动窗是否还有“需要 advance 处理的”非空中单位(不同阶段的可动/必动条件)。
+function headless_advance_has_candidates(kind) {
+    for (const u of L.movable_units) {
+        const p = pieces[u]
+        if (!p || p.class === "air") continue
+        const h = G.location[u]
+        if (!(h >= 0 && h <= LAST_BOARD_HEX)) continue
+        if (kind === "attack") return true
+        if (kind === "pbm" && !could_unit_stop_here(u)) return true
+        if (kind === "reaction" && !set_has(G.offensive.battle_hexes, h)) return true
+    }
+    return false
+}
+
+// 尝试推进/收拢一个编成(同一格未移动、非空中可移动单位)。调用方在空 active_stack 下进入。
+// 返回 {type:"move"} 已排定一次移动(子窗随后运行), {type:"decline"} 放弃一组单位, {type:"none"} 无候选。
+function headless_advance_one(self, kind) {
+    if (G.active_stack.length) return { type: "decline" }
+    const need = u => {
+        const p = pieces[u]
+        if (!p || p.class === "air") return false
+        const h = G.location[u]
+        if (!(h >= 0 && h <= LAST_BOARD_HEX)) return false
+        if (kind === "attack") return true
+        if (kind === "pbm") return !could_unit_stop_here(u)
+        if (kind === "reaction") return !set_has(G.offensive.battle_hexes, h)
+        return false
+    }
+    let loc = -1
+    for (const u of L.movable_units) {
+        if (!need(u)) continue
+        const h = G.location[u]
+        if (loc < 0 || h < loc) loc = h
+    }
+    if (loc < 0) return { type: "none" }
+    const group = L.movable_units.filter(u => {
+        const p = pieces[u]
+        return p && p.class !== "air" && G.location[u] === loc
+    })
+    if (!group.length) return { type: "none" }
+    // 逐个真实选入(获得 organic 配对/移动路径语义, 并从 movable 移除以保证单窗只走一次)
+    group.forEach(u => self.unit(u))
+    L.move_data = get_move_data()
+    update_move_hex()
+    const hasGround = group.some(u => pieces[u] && pieces[u].class === "ground")
+    let best = null, bestScore = null
+    map_for_each(L.allowed_hexes, (h) => {
+        const sc = headless_target_score(h, hasGround, G.active, kind)
+        if (!sc) return
+        if (!best || headless_score_lt(sc, bestScore)) {
+            bestScore = sc
+            best = h
+        }
+    })
+    if (best === null) {
+        // 无可达落点: 放弃该组(单位已退出 movable, 视为本窗未移动)
+        G.offensive.organic = G.offensive.organic.filter(u => !set_has(group, u))
+        G.active_stack = []
+        L.allowed_hexes = []
+        L.move_data = {}
+        return { type: "decline" }
+    }
+    const path = object_copy(map_get(L.allowed_hexes, best))
+    L.allowed_hexes = []
+    G.offensive.organic = G.offensive.organic.filter(u => !set_has(group, u))
+    push_undo()
+    self.move(path)
+    return { type: "move" }
 }
 
 function get_air_attack_hex() {

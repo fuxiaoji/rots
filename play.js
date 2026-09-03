@@ -9770,7 +9770,8 @@ function append_path(unit, path) {
     if (prev_path) {
         full_path.push(...prev_path.slice(2))
     } else {
-        full_path.push(G.location[units[0]])
+        // 无既有路径时以该单位当前格为起点(原实现引用不存在的全局 units[0], 地面无头推进触发)
+        full_path.push(G.location[unit])
     }
     full_path.push(...path.slice(3))
     return full_path
