@@ -1621,6 +1621,39 @@ P.commit_offensive_confirm = {
             button("next")
         } else {
             prompt(`${offensive_card_header()} Confirm ${action}. ` + L.L.verify_error)
+            // 卡牌 before_commit_offensive 限制未满足: 该攻势无法提交。给行动方一个
+            // 显式的“放弃攻势”出口(等价于人工多次 undo 回到 Select action 窗口),
+            // 避免确认窗只提供 undo 而让确定性 bot 无合法动作可选。
+            button("cancel")
+        }
+    },
+    cancel() {
+        var c = G.offensive.offensive_card
+        var rollback = G.offensive.card_rollback
+        var len = G.offensive.card_undo_len
+        if (rollback) {
+            restore_state(rollback)
+            if (len !== undefined && len !== null && G.undo && G.undo.length > len) {
+                G.undo.length = len // 丢弃本次攻势过程中压入的 undo 点
+            }
+            G.offensive = G.offensive || {}
+            G.offensive.oc_denied = G.offensive.oc_denied || {}
+            if (c >= 0) {
+                G.offensive.oc_denied[c] = true
+            }
+            log(`#GCard restriction unsatisfied; offensive abandoned and card ${c} kept.`)
+        } else if (G.undo && G.undo.length > 0) {
+            pop_undo()
+            G.offensive = G.offensive || {}
+            G.offensive.oc_denied = G.offensive.oc_denied || {}
+            if (c >= 0) {
+                G.offensive.oc_denied[c] = true
+            }
+        } else {
+            log("Card offensive restriction unsatisfied and no rollback available; proceeding anyway.")
+            resolve_into_turn_draw(JP)
+            resolve_into_turn_draw(AP)
+            end()
         }
     },
     next() {

@@ -1,0 +1,152 @@
+{
+  "generatedAt": "2026-09-03T04:07:56.968Z",
+  "summary": {
+    "policy": "erasmus-v2.0-zh.3",
+    "scenario": "1942-1945 (The Shortened Campaign)",
+    "gameCount": 10,
+    "baseSeed": 424242,
+    "maxActions": 60000,
+    "complete": 10,
+    "japanWins": 10,
+    "alliesWins": 0,
+    "otherWins": 0,
+    "setupErrors": 0,
+    "errors": 0,
+    "actionLimit": 0,
+    "fallbackActions": 20,
+    "averageActions": 1187.5,
+    "averageTurn": 11.3
+  },
+  "games": [
+    {
+      "seed": 424242,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1244,
+      "turn": 12,
+      "fallback": 1,
+      "roleActions": {
+        "Japan": 499,
+        "Allies": 745
+      },
+      "won_text": null
+    },
+    {
+      "seed": 424243,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 920,
+      "turn": 9,
+      "fallback": 2,
+      "roleActions": {
+        "Japan": 368,
+        "Allies": 552
+      },
+      "won_text": null
+    },
+    {
+      "seed": 424244,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1174,
+      "turn": 11,
+      "fallback": 1,
+      "roleActions": {
+        "Japan": 464,
+        "Allies": 710
+      },
+      "won_text": null
+    },
+    {
+      "seed": 424245,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1243,
+      "turn": 12,
+      "fallback": 4,
+      "roleActions": {
+        "Japan": 509,
+        "Allies": 734
+      },
+      "won_text": null
+    },
+    {
+      "seed": 424246,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1171,
+      "turn": 11,
+      "fallback": 2,
+      "roleActions": {
+        "Japan": 464,
+        "Allies": 707
+      },
+      "won_text": null
+    },
+    {
+      "seed": 424247,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1239,
+      "turn": 12,
+      "fallback": 1,
+      "roleActions": {
+        "Japan": 499,
+        "Allies": 740
+      },
+      "won_text": null
+    },
+    {
+      "seed": 424248,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1182,
+      "turn": 11,
+      "fallback": 3,
+      "roleActions": {
+        "Japan": 471,
+        "Allies": 711
+      },
+      "won_text": null
+    },
+    {
+      "seed": 424249,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1135,
+      "turn": 11,
+      "fallback": 2,
+      "roleActions": {
+        "Japan": 458,
+        "Allies": 677
+      },
+      "won_text": null
+    },
+    {
+      "seed": 424250,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1264,
+      "turn": 12,
+      "fallback": 2,
+      "roleActions": {
+        "Japan": 506,
+        "Allies": 758
+      },
+      "won_text": null
+    },
+    {
+      "seed": 424251,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1303,
+      "turn": 12,
+      "fallback": 2,
+      "roleActions": {
+        "Japan": 518,
+        "Allies": 785
+      },
+      "won_text": null
+    }
+  ]
+}

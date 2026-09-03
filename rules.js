@@ -12110,6 +12110,39 @@ P.commit_offensive_confirm = {
             button("next")
         } else {
             prompt(`${offensive_card_header()} Confirm ${action}. ` + L.L.verify_error)
+            // 卡牌 before_commit_offensive 限制未满足: 该攻势无法提交。给行动方一个
+            // 显式的“放弃攻势”出口(等价于人工多次 undo 回到 Select action 窗口),
+            // 避免确认窗只提供 undo 而让确定性 bot 无合法动作可选。
+            button("cancel")
+        }
+    },
+    cancel() {
+        var c = G.offensive.offensive_card
+        var rollback = G.offensive.card_rollback
+        var len = G.offensive.card_undo_len
+        if (rollback) {
+            restore_state(rollback)
+            if (len !== undefined && len !== null && G.undo && G.undo.length > len) {
+                G.undo.length = len // 丢弃本次攻势过程中压入的 undo 点
+            }
+            G.offensive = G.offensive || {}
+            G.offensive.oc_denied = G.offensive.oc_denied || {}
+            if (c >= 0) {
+                G.offensive.oc_denied[c] = true
+            }
+            log(`#GCard restriction unsatisfied; offensive abandoned and card ${c} kept.`)
+        } else if (G.undo && G.undo.length > 0) {
+            pop_undo()
+            G.offensive = G.offensive || {}
+            G.offensive.oc_denied = G.offensive.oc_denied || {}
+            if (c >= 0) {
+                G.offensive.oc_denied[c] = true
+            }
+        } else {
+            log("Card offensive restriction unsatisfied and no rollback available; proceeding anyway.")
+            resolve_into_turn_draw(JP)
+            resolve_into_turn_draw(AP)
+            end()
         }
     },
     next() {
@@ -14314,6 +14347,16 @@ function build_road(card, event) {
     goto("end_action")
 }
 
+// 在打出一张会启动攻势序列(offensive_sequence)的卡前保存可回退快照。
+// 若该卡的 before_commit_offensive 限制未被满足, P.commit_offensive_confirm 会把确认窗
+// 卡死为“仅剩 undo”。此快照让 cancel() 能把牌退回“Select action”窗口重新决策,
+// 并把该卡标记为本次出牌禁止再以攻势(OC/事件)打出, 避免确定性 AI 原地死循环。
+function snapshot_offensive_card_action() {
+    push_undo()
+    G.offensive.card_undo_len = G.undo ? G.undo.length : 0
+    G.offensive.card_rollback = copy_state()
+}
+
 P.offensive_segment = {
     _begin() {
         if (G.active === AP) {
@@ -14351,18 +14394,19 @@ P.offensive_segment_card_action = {
         get_allowed_actions(L.c).forEach(a => button(a))
     },
     ops() {
-        push_undo()
+        snapshot_offensive_card_action()
         activate_card(L.c)
         G.offensive.type = OC
         log(`${card_get_log_str(L.c)} played as operation card.`)
         goto("offensive_sequence")
     },
     event() {
-        push_undo()
         if (cards[L.c].type === MILITARY) {
+            snapshot_offensive_card_action()
             play_event(L.c)
             goto("offensive_sequence")
         } else {
+            push_undo()
             G.offensive.offensive_card = L.c
             goto("end_action")
             play_event(G.offensive.offensive_card)
@@ -14459,13 +14503,16 @@ P.future_offensive = {
         prompt("Play future offensive card or pass.")
         if (L.pass) {
             button("done")
+        } else if (G.offensive.oc_denied && G.offensive.oc_denied[G.future_offensive[G.active]]) {
+            // FO 卡本回合不能以事件启动其攻势(限制未满足): 只能跳过。
+            button("done")
         } else {
             button("pass")
             action("event", G.future_offensive[G.active])
         }
     },
     event() {
-        push_undo()
+        snapshot_offensive_card_action()
         play_event(G.future_offensive[G.active])
         goto("offensive_sequence")
     },
@@ -14575,6 +14622,14 @@ function get_allowed_actions(num) {
 
     if (G.future_offensive[R] <= 0 && !card.reshuffle) {
         result.push("future_offensive")
+    }
+    // 若该卡曾因 before_commit_offensive 限制不满足而被退回, 本回合禁止再以攻势方式打出,
+    // 否则确定性 AI 会原地反复(打出攻势 → 限制失败 → 退回)死循环。
+    if (G.offensive.oc_denied && G.offensive.oc_denied[num]) {
+        array_delete_item(result, "ops")
+        if (card.type === MILITARY) {
+            array_delete_item(result, "event")
+        }
     }
     return result
 }
@@ -19437,7 +19492,7 @@ var ERASMUS_CHARTS = [{"schema_version":2,"id":"ERASMUS-JP-01","chart_id":"ERASM
 /** import server/erasmus_data.js*/
 
 const ERASMUS_VERSION = "erasmus-v2.0-zh.3"
-const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "unit", "hex", "strat_move", "ground_move", "roll", "continue", "next", "done", "skip", "pass"]
+const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "unit", "hex", "strat_move", "ground_move", "roll", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
     ops: ["ops", "event", "card", "play_card", "action_hex", "unit", "hex", "strat_move", "ground_move", "roll", "continue", "next", "done", "skip", "pass"],

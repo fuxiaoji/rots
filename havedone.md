@@ -97,3 +97,16 @@
 - 卡牌后缀消歧：`*_OPS_CARD` 节点在“Select action”窗口按 OC 打出（此前一律落入 event 优先），`*_EVENT_CARD` 与事件战略保持 EC 优先；顶窗口选择卡牌行为不变。
 - 重编译 `rules.js`（bot 仅服务端，`play.js` 不变，无客户端影响）。
 - 回归：`tests/erasmus.test.js` 通过（图完整性 + 确定性 + Operation KE 种子 424243）。固定种子 424242–424291 重跑 50 局：50/50 正常终局、0 非法动作、0 fallback、0 动作上限中止；胜负仍为日本 50、盟军 0 —— 阵营策略平衡仍超出本批范围，待逐页视觉校对后再校准。
+
+### 1942 完整剧本 AI vs AI 自对弈（10 局验收）
+
+- 目标（用户验收标准）：`1942-1945 (The Shortened Campaign)`（sid 5）完成 10 局 AI vs AI，0 报错且正确完成博弈。
+- 首次探索（seed 424242，turn 8，第 727 动作）复现死锁：盟军把带 `before_commit_offensive` 攻势限制的卡以事件方式启动攻势，承诺路径不满足限制时，`commit_offensive_confirm` 只留 `undo`，bot 无合法动作 → `ERASMUS has no legal action`。触发卡为 Operation Iceberg/Detachment（AP 74/75，`events.js` 限制盟军地面单位须在东京 10 格内进行两栖登陆）；同类可触发限制的卡还有 JP 12、AP 9/38/65、SANDCRAB、KING_II。
+- 引擎修复（`js/server/actions.js`、`js/server/offensive.js`）：
+  - 新增 `snapshot_offensive_card_action()`：在从牌卡启动攻势序列前（ops / MILITARY event / future-offensive event 三条路径）保存 `G.offensive.card_rollback` 快照与 undo 长度，牌尚未耗用。
+  - `commit_offensive_confirm` 的 `verify_error` 分支新增显式 `cancel` 出口：恢复 pre-ops 快照、剪除本次攻势期间的 undo 点，并把该卡写入 `G.offensive.oc_denied[card]`，再回到“Select action”窗口重新决策（等价于人工多次 undo 的行为，不绕过卡牌规则）。
+  - `get_allowed_actions` 对 `oc_denied` 卡移除 `ops`（MILITARY 卡再移除 `event`）；`future_offensive` 窗口尊重同一标记；`oc_denied` 随每次出牌后 `reset_offensive()` 自动清除（下一次选牌重新评估）。
+  - `js/server/bots/erasmus.js` `ACTION_PRIORITY` 末尾新增 `cancel`，使解释器在受限确认窗可选取该出口。属引擎级修复，策略版本保持 `erasmus-v2.0-zh.3`（与 Operation KE 修复同例，不改变任何原可达决策路径）。
+- 验收结果：固定种子 424242–424251 共 10 局全部 `complete`、0 error / 0 action-limit / 0 setup-error，均有引擎终局胜方（日本 10、盟军 0，阵营失衡为已知范围外）。平均 1187.5 动作、平均终局回合 11.3；单局复核 seed 424242 使用 `cancel` 出口 7 次、全程 0 个仅-undo 窗口。
+- 回归：South Pacific 固定种子 424242–424291 重跑 50 局：50/50 正常终局、0 错误、0 fallback、0 动作上限中止，胜负与改动前完全一致（日本 50）——引擎改动对南太平洋流程无影响。
+- 新增 `tests/erasmus-campaign-run.js`（剧本参数化 AI vs AI 运行器），逐局 JSON 与汇总见 `tests/results/erasmus-campaign-1942-1945-The-Shortened-Campaign-10-424242.json`。
