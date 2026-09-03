@@ -1113,6 +1113,24 @@ function headless_advance_one(self, kind) {
             best = h
         }
     })
+    if (best === null && kind === "attack" && hasGround && L.move_data && (L.move_data.move_type & AMPH_MOVE)
+        && ((typeof process === "undefined") || process.env.B_CRUISE !== "0")) {
+        // B: 两栖编成“空海巡航”。焦点是敌占/待夺格但本激活够不着(允许落点里没有任何敌控
+        // 格)时, 原实现直接放弃该组 → 海军陆战队永远停在原地, 无法把跨洋远征拉近目标;
+        // 这里改向“离焦点最近的合法落点”移动一格(逐激活/逐回合推进), 使登岛链条得以闭合。
+        let foc = null
+        if (typeof eop_focus_faction === "function") { try { foc = eop_focus_faction(G.active) } catch (e) { foc = null } }
+        if (foc !== null && foc >= 0 && foc <= LAST_BOARD_HEX && typeof get_distance === "function") {
+            let appr = null, apprD = Infinity
+            map_for_each(L.allowed_hexes, (h) => {
+                const d = get_distance(h, foc)
+                if (d < apprD || (d === apprD && (appr === null || h < appr))) { apprD = d; appr = h }
+            })
+            if (appr !== null) {
+                best = appr; bestScore = [10, apprD, appr]
+            }
+        }
+    }
     if (best === null) {
         // 无可达落点: 放弃该组(单位已退出 movable, 视为本窗未移动)
         G.offensive.organic = G.offensive.organic.filter(u => !set_has(group, u))

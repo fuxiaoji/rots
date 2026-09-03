@@ -237,3 +237,25 @@
 - 清单定向命中实测：`清单#3「造成美国ISR」`×2（JP 阵营 `isr_rivalry` 牌，card 118）、`清单#4「东京玫瑰」`×1（card 158）——按序执行（行 3 条件不满足才落到行 4）正确。
 - 回归全绿：`tests/erasmus.test.js`（gate-off 确定性 + SP Operation KE 种子）通过；goal-fidelity 39/39；state-fidelity 59/59；rules.js 经 `tools/inline.js` 重建，同种子 action 计数逐位不变（确定性与 gate-off 零影响）。
 - 产物：`js/server/erasmus_state.js`（A 指针忠实 + C 事件绑定/清单定向）、`js/server/bots/erasmus.js`（chain 传参 + via trace）、`js/server/erasmus_ops.js`（外部已解析 chain 直用）、`tests/erasmus-goal-fidelity.test.js`/`tests/erasmus-event-strategy.test.js`（新）、`tests/_py_goal_golden.py` + `tests/results/py-goals-golden.json`（新金标）。
+
+## zh.7 B 引擎占格/登岛执行（两栖编成空海巡航 + 登陆力激活偏置）
+
+### 根因（headless 两栖/夺岛链路缺在哪）
+
+- 由用户指示的 A/B/C 三分项（见上），B 为引擎侧"进攻→占格/两栖登岛"执行。先修计数再修行为：早期夺格探针只扫 `role==="Allies"` 的 action 日志增量，而引擎常在**对方方**的 `done`/`next` 边界结算夺控（`capture_hex` 对占领方记 `AP/JP captured`），且会战窗内 `log()` 给行加 `&A`/`&J` 前缀（framework.js），故把 ~8 成 AP 夺格事件漏掉——曾误报"基线 0 夺岛"。
+- 用全量逐格夺控行 `/^(?:&A)?AP captured H(\d+)/`（不限 role、同 action 同格去重）复测，zh.7 提交的基线引擎已能浅层触岛（见下 A/B 表基线列），此前 zh.7"Iwo/Saipan 等 0 次"应属该计数低估；终局在握口径仍为 0（两口径不矛盾：前者计夺控翻转事件、后者计终局控制）。
+- 真根因三处（与早期定性一致）：(1) **攻势总挑离焦点最近的单位**——多为纯空/海军航母，只对敌岛做远距空袭，空袭不夺控、凑不出登陆兵力；(2) **两栖编成不渡空海**——headless 推进只在"本激活可达范围内有敌控格"时才动，海军陆战队距焦点岛超过一程就永远停在原地，跨洋远征拉不近；(3) 即使激活了两栖地面，后续目标/单位仍按最近空/海军打分。
+
+### 修复（两个执行器改动，默认开，环境开关保 A/B 可复现）
+
+- `js/server/erasmus_ops.js` `eop_pick_unit`（B_BIAS 门，默认开）：焦点是敌占（需夺占而非纯消耗）且候选里有距焦点不劣于最近单位太多（`≤max(8, 最近距+10)`）的两栖地面（`p.asp`/`p.strat_move`）时，优先激活海军陆战队成登陆力量，不再总挑最近航母。
+- `js/server/offensive.js` headless 推进（B_CRUISE 门，默认开）：攻击阶段含地面+两栖移动能力、且本激活无任何可达敌控格（`best===null`，原逻辑直接放弃该组）时，改为朝 eop 焦点**最近的合法落点**巡航一格——逐激活/逐回合把远征军拉近待夺岛，闭合登岛链条。
+- 只改这两处执行；py 决策树/回合级钉选（A/C 部分）不动。
+
+### 验证（同种子 40 局 A/B，seeds 20260903–20260942，headless 1942-1945）
+
+- 两臂均 40/40 正常终局、0 error / 0 action-limit。逐格夺控事件口径：基线 AP 193 次（4.8/局）→ 修复 497 次（12.4/局）；触岛种子 26/40 → 39/40；岛屿夺控事件 70 → 290。
+- 纵深（每 40 局达某关键岛）基线 → 修复：恩尼威托克 5→33、硫磺岛 8→32、关岛 8→20、塞班 5→15、乌利西 1→17、帕劳 1→11——两栖登岛从"偶尔浅触"变成"高概率打到中太平洋纵深"。日志确认为真实夺控：`%ABattle hex` + `&A+3 Amphibious assault` + `&AAP captured`（有 ASP/会战的强攻登岛，非空地翻转）。
+- 边界（如实记录）：马尼拉/冲绳/日本本土**终局控制 0/40**（两臂皆然）——剧本在 ~t8–12 由日本 PW 条约先胜终止，引擎两栖力量已达硫磺岛(距冲绳两格)/马尔库斯岛，但冲绳/本土不在剧本时间窗内；逐回合 PoW 夺格节奏与盟军终胜属后续迭代（非 B 修复对象）。
+- 回归全绿：`tests/erasmus.test.js`（gate-off）、goal-fidelity 39/39、state-fidelity 59/59、event-strategy 8/8；rules.js 经 `tools/inline.js` 重建后复跑通过。已 grep 确认无提交金标重放本 headless-1942 路径（改动只影响 headless 进攻推进与聚焦激活）。
+- 产物：`js/server/erasmus_ops.js`（eop_pick_unit 两栖偏置）、`js/server/offensive.js`（两栖空海巡航）、`tests/results/b-amphibious-ab-40.json`（A/B 汇总）、`tests/_b_measure.js`（修正计数 runner，未跟踪）。

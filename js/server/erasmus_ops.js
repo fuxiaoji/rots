@@ -162,17 +162,32 @@ function eop_pick_unit(candidates, role) {
     const focus = eop_focus(role)
     if (focus === null) return undefined
     if (typeof G === "undefined" || !G || !G.location) return undefined
-    let best = null, bestD = Infinity
+    const mine = role === "Japan" ? JP : AP
+    const d = h => (typeof get_distance === "function") ? get_distance(h, focus) : Math.abs(h - focus)
+    const scored = []
     for (const u of candidates) {
         const loc = G.location[u]
         if (!(loc >= 0 && loc <= LAST_BOARD_HEX)) continue
-        let d
-        if (loc === focus) d = 0
-        else if (typeof get_distance === "function") d = get_distance(loc, focus)
-        else d = Math.abs(loc - focus)
-        if (d < bestD || (d === bestD && (best === null || u < best))) { bestD = d; best = u }
+        scored.push([u, d(loc)])
     }
-    return best !== null ? best : undefined
+    if (!scored.length) return undefined
+    scored.sort((a, b) => a[1] - b[1] || a[0] - b[0])
+    // B: 焦点是敌占格(需“夺占”而非纯消耗)时, 若候选里有距离不比最近单位太远的两栖
+    // 地面(海军陆战队 asp / 可战略海运 strat_move), 优先选它组成登陆力量 —— 否则每次
+    // 攻势总是挑离焦点最近的纯空/海军, 只会对岛屿做远距空袭, 永远无法登岛占格。
+    // 只在 node 端用环境开关做 A/B; 浏览器 PvE(process 未定义)时默认开启该偏置。
+    const biasOn = (typeof process === "undefined") || process.env.B_BIAS !== "0"
+    if (biasOn && !is_space_controlled(focus, mine)) {
+        const refD = scored[0][1]
+        const cap = Math.max(8, refD + 10)
+        const pick = scored.find(([u, dist]) => {
+            if (dist > cap) return false
+            const p = pieces[u]
+            return p && p.class === "ground" && (p.asp || p.strat_move)
+        })
+        if (pick) return pick[0]
+    }
+    return scored[0][0]
 }
 
 // ---- 引擎无头推进就近转向 ------------------------------------------------

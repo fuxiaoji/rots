@@ -11603,6 +11603,24 @@ function headless_advance_one(self, kind) {
             best = h
         }
     })
+    if (best === null && kind === "attack" && hasGround && L.move_data && (L.move_data.move_type & AMPH_MOVE)
+        && ((typeof process === "undefined") || process.env.B_CRUISE !== "0")) {
+        // B: 两栖编成“空海巡航”。焦点是敌占/待夺格但本激活够不着(允许落点里没有任何敌控
+        // 格)时, 原实现直接放弃该组 → 海军陆战队永远停在原地, 无法把跨洋远征拉近目标;
+        // 这里改向“离焦点最近的合法落点”移动一格(逐激活/逐回合推进), 使登岛链条得以闭合。
+        let foc = null
+        if (typeof eop_focus_faction === "function") { try { foc = eop_focus_faction(G.active) } catch (e) { foc = null } }
+        if (foc !== null && foc >= 0 && foc <= LAST_BOARD_HEX && typeof get_distance === "function") {
+            let appr = null, apprD = Infinity
+            map_for_each(L.allowed_hexes, (h) => {
+                const d = get_distance(h, foc)
+                if (d < apprD || (d === apprD && (appr === null || h < appr))) { apprD = d; appr = h }
+            })
+            if (appr !== null) {
+                best = appr; bestScore = [10, apprD, appr]
+            }
+        }
+    }
     if (best === null) {
         // 无可达落点: 放弃该组(单位已退出 movable, 视为本窗未移动)
         G.offensive.organic = G.offensive.organic.filter(u => !set_has(group, u))
@@ -19847,17 +19865,32 @@ function eop_pick_unit(candidates, role) {
     const focus = eop_focus(role)
     if (focus === null) return undefined
     if (typeof G === "undefined" || !G || !G.location) return undefined
-    let best = null, bestD = Infinity
+    const mine = role === "Japan" ? JP : AP
+    const d = h => (typeof get_distance === "function") ? get_distance(h, focus) : Math.abs(h - focus)
+    const scored = []
     for (const u of candidates) {
         const loc = G.location[u]
         if (!(loc >= 0 && loc <= LAST_BOARD_HEX)) continue
-        let d
-        if (loc === focus) d = 0
-        else if (typeof get_distance === "function") d = get_distance(loc, focus)
-        else d = Math.abs(loc - focus)
-        if (d < bestD || (d === bestD && (best === null || u < best))) { bestD = d; best = u }
+        scored.push([u, d(loc)])
     }
-    return best !== null ? best : undefined
+    if (!scored.length) return undefined
+    scored.sort((a, b) => a[1] - b[1] || a[0] - b[0])
+    // B: 焦点是敌占格(需“夺占”而非纯消耗)时, 若候选里有距离不比最近单位太远的两栖
+    // 地面(海军陆战队 asp / 可战略海运 strat_move), 优先选它组成登陆力量 —— 否则每次
+    // 攻势总是挑离焦点最近的纯空/海军, 只会对岛屿做远距空袭, 永远无法登岛占格。
+    // 只在 node 端用环境开关做 A/B; 浏览器 PvE(process 未定义)时默认开启该偏置。
+    const biasOn = (typeof process === "undefined") || process.env.B_BIAS !== "0"
+    if (biasOn && !is_space_controlled(focus, mine)) {
+        const refD = scored[0][1]
+        const cap = Math.max(8, refD + 10)
+        const pick = scored.find(([u, dist]) => {
+            if (dist > cap) return false
+            const p = pieces[u]
+            return p && p.class === "ground" && (p.asp || p.strat_move)
+        })
+        if (pick) return pick[0]
+    }
+    return scored[0][0]
 }
 
 // ---- 引擎无头推进就近转向 ------------------------------------------------
