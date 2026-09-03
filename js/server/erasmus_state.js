@@ -18,7 +18,9 @@
 // ---- 策略 kind(策略级: 驱动选牌窗/微执行) --------------------------------
 // CONQUEST: 有序夺控/作战目标链(喂 eop 焦点层); EVENT: 事件战略(选事件牌);
 // PASS: 本回合跳; GARRISON/DEFEND: v1 有界近似(按 EVENT 微执行, trace 标注);
-// ABSTRACT: 抽象目标(B29/原子弹) -> 无链，按 EVENT/默认轴微执行。
+// ABSTRACT: 抽象目标(B29/原子弹)。D4 起不再按 EVENT 空打事件 —— 用 OC 打攻势把
+// 抽象目标落成可执行链(推进B29=前推轰炸基地链/使 B29 可达; 原子弹胜利=资源夺回链),
+// 选牌窗意图 = OPS(原子弹胜利持苏联牌时优先事件)。
 //
 // ---- 目标级 kind(每行 parse_goals, 忠实 py L801-943) ----------------------
 // CONQUEST 夺取/投降名单; SUPPRESS 压制AZOI(不夺控); GARRISON 驻军(需己控);
@@ -111,14 +113,25 @@ function esm_geo() {
 // 状态机缓存
 // ===========================================================================
 function esm_key(seed) { return `${seed}|${G.sid}` }
+// D1: 新对局出现时, 把 erasmus_ops 的外部链覆盖(EOP_OVERRIDE)一并清掉。
+// gate 开路径的 erasmus.js 只在 gate 关/异常时清链, 多局同进程下第 2 局起会沿用
+// 上一局末的链(实测: 同种子单局=T10、批内第2局=T12) —— 这里在新局边界统一清。
+function esm_clear_cross_game() {
+    if (typeof eop_clear_all_chains === "function") { try { eop_clear_all_chains() } catch (e) { /* ignore */ } }
+}
+function esm_new_lock(seed, ord) {
+    const e = { turn: G.turn, role: { Japan: null, Allies: null }, seenOrd: ord || 0, bombFail: false, lastOrdTurn: 0 }
+    esm_clear_cross_game()
+    return e
+}
 function esm_lock(seed) {
     const k = esm_key(seed)
     let e = ESM_LOCKED[k]
-    if (!e) { e = { turn: G.turn, role: { Japan: null, Allies: null }, seenOrd: 0, bombFail: false, lastOrdTurn: 0 }; ESM_LOCKED[k] = e }
+    if (!e) { e = esm_new_lock(seed, arguments[1]); ESM_LOCKED[k] = e }
     // 新对局检测: 回合回退 或 actionOrdinal 回退(多局同进程防串台)。
     if ((G.turn < e.turn && e.turn > 0) || (arguments[1] !== undefined && arguments[1] < e.seenOrd && e.seenOrd > 0)) {
         delete ESM_LOCKED[k]
-        e = { turn: G.turn, role: { Japan: null, Allies: null }, seenOrd: arguments[1] || 0, bombFail: false, lastOrdTurn: 0 }
+        e = esm_new_lock(seed, arguments[1])
         ESM_LOCKED[k] = e
         ESM_PREP = {} // 清一次地理缓存（保险, 通常同 sid 不变）
     }
@@ -318,6 +331,25 @@ function esm_al_eval_late(ctx, d10) {
 // ===========================================================================
 // 引擎真实状态 -> ctx 布尔
 // ===========================================================================
+// D3: 引擎口径的 PoW 银行 —— G.capture 中当前仍由 AP 控制的格数(= cycle.js
+// check_progress_of_war 的 pow_count)。政治阶段据此判是否 -1 PW, 盟军在首卡窗应据此
+// 知道"本回合是否必须靠夺格把银行补回 ≥G.pow"。
+function esm_pow_bank() {
+    try {
+        let n = 0
+        for (const h of (G.capture || [])) {
+            if (h >= 0 && h <= LAST_BOARD_HEX && is_space_controlled(h, AP)) n++
+        }
+        return n
+    } catch (e) { return 0 }
+}
+// D5: 引擎 victory_1945 的日本控制资源格(get_jp_resources() 同源计数, 剧本 RESOURCE_HEX)。
+function esm_jp_resource_hexes() {
+    try {
+        if (typeof RESOURCE_HEX === "undefined" || typeof G === "undefined") return []
+        return RESOURCE_HEX.filter(h => h >= 0 && h <= LAST_BOARD_HEX && is_space_controlled(h, JP))
+    } catch (e) { return [] }
+}
 function esm_build_ctx(role, lock, seedText) {
     const ctx = {
         cards_in_hand: (G.hand && G.hand[esm_role_faction(role)]) ? G.hand[esm_role_faction(role)].length : 5,
@@ -403,10 +435,28 @@ function esm_build_ctx(role, lock, seedText) {
         ctx.al_O_dei_not_surrendered = (typeof nations !== "undefined") ? !surr(nations.DEI.id) : true
         ctx.al_P_abda_hq_supplied = (() => { const loc = G.location[HQ_ABDA]; return (loc >= 0 && loc <= LAST_BOARD_HEX) && !(G.oos && set_has(G.oos, HQ_ABDA)) })()
         // 中期
-        ctx.al_M_B_needs_war_progress = !!G.pow
+        ctx.al_M_B_needs_war_progress = (() => {
+            // D3: 真实"战争进程亏空" —— 引擎口径 pow_count(=G.capture 中当前 AP 仍控的 named 格)
+            // < G.pow。原 !!G.pow 只在 t≥4 后恒真, 无法表达"银行已达标/未达标", 更不会在
+            // 银行耗尽时催动夺格 —— 而 PoW 亏空正是条约败主因(每次政治阶段 pow_count<pow 即 -1 PW)。
+            if (!(G.pow > 0)) return false
+            try { return esm_pow_bank() < G.pow } catch (e) { return false }
+        })()
         ctx.al_M_D_jp_controls_counterattack_target = (() => {
-            const list = ["Midway", "Dutch Harbor", "Dacca", "Dimasur", "Jarhat", "Ledo", "Imphal", "Guadalcanal", "Attu", "Port Moresby", "Gili-Gili", "Espiritu Santo"]
-            try { return list.some(t => { const h = esm_idx(t); return h != null && is_space_controlled(h, JP) }) } catch (e) { return true }
+            // D3: 反攻战略门槛 = py 中期树 "D 日本控制≥1反攻目标"(页8 原文), 目标集与反攻
+            // 执行链同源 = 图表 16 行清单(中途岛→努美阿)解析出的同一份 hex 链。此前的
+            // front-scan(任何 JP 控 named 格距 AP ≤3)把谓词与执行链解耦: 1942 马来亚前线使
+            // D 恒真 → 反攻连钉, 但 16 个清单目标几乎全在盟军手中, eop 焦点 null、攻势空转。
+            // 忠实语义: D 为真 恰等价于 链上存在日本实际控制的清单目标 → 钉反攻必有真实焦点。
+            try {
+                const entry = esm_strategy_entry("Allies", "mid", "反攻战略")
+                if (!entry) return false
+                const chain = esm_chain_of(esm_parse_entry(entry, "Allies", "mid"))
+                for (const h of chain) {
+                    if (h >= 0 && h <= LAST_BOARD_HEX && is_space_controlled(h, JP)) return true
+                }
+                return false
+            } catch (e) { return false }
         })()
         // 晚期
         ctx.al_L_B_is_turn_12 = G.turn === 12
@@ -426,6 +476,16 @@ function esm_build_ctx(role, lock, seedText) {
         })()
         ctx.al_L_G_meets_atomic_bomb_criteria = esm_atomic_met(lock)
     }
+    // D5 诊断(仅 trace 用, 不进决策): 钉选时刻的引擎权威账本 —— PoW 银行/G.pow/JP 资源/
+    // 轰炸战役标记/JP 手里的资源格 —— 供审计"为何条约败/离胜利线多远"。
+    try {
+        ctx._diag = {
+            turn: G.turn, pow: G.pow, bank: esm_pow_bank(),
+            jpRes: (typeof get_jp_resources === "function") ? get_jp_resources() : -1,
+            marker: (G.events && events && events.STRAT_BOMBING_CAMPAIGN) ? (G.events[events.STRAT_BOMBING_CAMPAIGN.id] || 0) : -1,
+            resHexes: (typeof RESOURCE_HEX !== "undefined") ? RESOURCE_HEX.filter(h => h >= 0 && h <= LAST_BOARD_HEX && is_space_controlled(h, JP)) : [],
+        }
+    } catch (e) { /* 无 G 时不设 */ }
     return ctx
 }
 
@@ -728,6 +788,52 @@ function esm_eval(role, phase, ctx, lock) {
 }
 
 // ===========================================================================
+// D2: 跨回合同轴延续(pin 层驱动, 不改 esm_eval 纯树/保真测试)。
+// py 参考 demo 的语义是“一条战略执行到目标达成或阶段切换”; zh.7 逐回合首卡独立
+// 重掷, 使中太平洋/CBI 这类 d10 轮换轴每回合对翻、链首格(如 Kwajalein)始终夺不下。
+// 规则: 仅当“旧轴与新掷都是同阶段 d10 轮换轴”时, 若旧轴仍具未夺目标且尚未停滞,
+// 则延续旧轴(override 本次重掷); 旧轴连钉 ≥2 回合仍无链上推进则放行换轴(停滞出口,
+// 避免死守无产出轴)。树的确定性优先分支(can_pass/事件/反攻/占领轰炸基地/推进B29/
+// 原子弹/登陆日本 等)不是轮换轴, 照常打断延续。
+// ===========================================================================
+const ESM_ROLL_AXES = {
+    mid: { "南太平洋战略": 1, "中太平洋战略": 1, "DEI战略": 1, "CBI战略": 1 },
+    late: { "重返菲律宾": 1, "跳岛作战": 1 },
+}
+function esm_is_roll_axis(phase, name) {
+    return !!(phase === "mid" || phase === "late") && (ESM_ROLL_AXES[phase] || {})[name]
+}
+function esm_chain_focus(chain, faction) {
+    for (const h of chain || []) {
+        if (!(h >= 0 && h <= LAST_BOARD_HEX)) continue
+        if (!is_space_controlled(h, faction)) return h
+    }
+    return null
+}
+function esm_chain_held_count(chain, faction) {
+    let n = 0
+    for (const h of chain || []) {
+        if (h >= 0 && h <= LAST_BOARD_HEX && is_space_controlled(h, faction)) n++
+    }
+    return n
+}
+function esm_pin_axis_continuity(lock, role, phase, freshName) {
+    const c = lock.role[role]
+    if (!c || !c.strategy) return freshName
+    if (c.phase !== phase) return freshName
+    const prevName = c.strategyName
+    if (!esm_is_roll_axis(phase, prevName) || !esm_is_roll_axis(phase, freshName)) return freshName
+    if (freshName === prevName) return freshName
+    const chain = c.strategy.chain
+    if (!Array.isArray(chain) || !chain.length) return freshName
+    const faction = esm_role_faction(role)
+    if (esm_chain_focus(chain, faction) === null) return freshName            // 链目标全达成 -> 允许重掷
+    const elapsed = G.turn - (c.runStart || G.turn)
+    if (elapsed >= 2 && esm_chain_held_count(chain, faction) <= (c.runHeld === undefined ? 0 : c.runHeld)) return freshName // 停滞 -> 放行
+    return prevName
+}
+
+// ===========================================================================
 // 主入口: 每窗口调用; 首卡窗求值并钉住; 其余返回已钉战略(同回合沿用)。
 // 返回 null 表示 gate 关(调方走原路径)。strategy: {name,kind,tokens,notes,phase,role,chain,axisTrace}
 // ===========================================================================
@@ -763,7 +869,9 @@ function esm_pin_strategy(view, context) {
     const phase = esm_phase(role)
     const seedText = `${context.seed}:${ord}:${role}:${phase}:${G.turn}`
     const ctx = esm_build_ctx(role, lock, seedText)
-    const name = esm_eval(role, phase, ctx, lock)
+    let name = esm_eval(role, phase, ctx, lock)
+    // D2: 同轴延续(仅影响“同阶段 d10 轮换轴”之间的选择; 纯树结果 freshName 仍是求值真值)。
+    name = esm_pin_axis_continuity(lock, role, phase, name)
     // 事件战略: 钉住内容统一展开到【早期】事件清单(py 三处口径殊途同归):
     //   (a) JP 表中/晚期目标 = "同早期阶段事件战略"(指针);
     //   (b) AL mid/late 决策树直接 return AL_EARLY_STRATEGIES["事件战略"](py 共用早期条目,
@@ -780,6 +888,46 @@ function esm_pin_strategy(view, context) {
         try { goals = esm_parse_entry(entry, role, contentPhase) } catch (e) { goals = [] }
         chain = esm_chain_of(goals)
     }
+    // D4: ABSTRACT 自身无 hex 链(纯文本目标), 落到可执行回退链, 让 eop 焦点层在"推进B29/
+    // 原子弹胜利"钉住期间仍有可打的主攻方向:
+    //   推进B29   -> 占领轰炸基地(把基地前推到距东京 ≤8, B29 才谈得上就位/轰炸);
+    //   原子弹胜利 -> 重返菲律宾(夺回莱特/马尼拉/DEI/马来亚, 压低 get_jp_resources)。
+    if (entry && entry.kind === "ABSTRACT" && !chain.length) {
+        const fbName = name === "推进B29" ? "占领轰炸基地" : (name === "原子弹胜利" ? "重返菲律宾" : null)
+        if (fbName) {
+            const fb = esm_strategy_entry(role, "late", fbName)
+            if (fb) {
+                try {
+                    const fbGoals = esm_parse_entry(fb, role, "late")
+                    goals = fbGoals
+                    chain = esm_chain_of(fbGoals)
+                } catch (e) { /* 保持空链 */ }
+            }
+        }
+    }
+    // D5: 资源剥夺入链 —— 引擎 victory_1945 要 get_jp_resources() ≤ 1; 决策树"原子弹胜利"
+    // 的 res≤(苏联已打?3:5)只是"选择原子弹战略"的门槛, 不足以致胜, 且 登陆日本 的链目标是
+    // 本土格、不覆盖日本手里的资源格(实测多种子终局 res 停在 3-6)。故只在【终局冲刺轴】——
+    // 登陆日本 / 原子弹胜利(此时轰炸基地与 B29 就绪、前方正是本土/朝鲜/满洲)——钉住时,
+    // 把"仍在日本手里的资源格"按距链首近者前置进链: 本土线先清韩国/满洲(Seoul/Harbin/Mukden),
+    // 南方残留资源随前线就近先取 —— 让 eop 焦点把资源真正打到 ≤1。
+    // 门必须窄: 若用 al_L_F(=控塞班即真)会过早(如 T5 拿下塞班就转入夺资源), 反而饿死中期
+    // 夺格攒 PoW 银行的主线 —— 实测把 seed20260924 从 T11 拖回 T8 条约败。
+    if ((name === "登陆日本" || name === "原子弹胜利") && chain.length) {
+        try {
+            const rem = esm_jp_resource_hexes()
+            if (rem.length) {
+                const jpRes = (typeof get_jp_resources === "function") ? get_jp_resources() : rem.length
+                if (jpRes > 1) {
+                    const head = chain[0]
+                    if (typeof get_distance === "function") rem.sort((a, b) => get_distance(a, head) - get_distance(b, head) || a - b)
+                    const have = new Set(chain)
+                    const add = rem.filter(h => !have.has(h))
+                    if (add.length) chain = add.concat(chain)
+                }
+            }
+        } catch (e) { /* 保守: 不动链 */ }
+    }
     const strategy = entry ? {
         name, nameFull: entry.name, kind: entry.kind, notes: entry.notes, targets: entry.targets,
         phase, role, seed: seedText, ord, pinnedNow: true, goals, chain, ctx, d10Rolls: [],
@@ -788,7 +936,12 @@ function esm_pin_strategy(view, context) {
         name, nameFull: name, kind: "EVENT", notes: [], targets: [], phase, role, ord,
         pinnedNow: true, goals: [], chain: [], ctx, d10Rolls: [],
     }
-    lock.role[role] = { turn: G.turn, phase, strategyName: name, strategy }
+    // D2: 记录本轴连续运行起点的回合与链上控格数(供下一回合的延续/停滞判定)。
+    const prevCache = lock.role[role]
+    const sameRun = !!(prevCache && prevCache.strategyName === name)
+    const runStart = (sameRun && prevCache.runStart) ? prevCache.runStart : G.turn
+    const runHeld = (sameRun && prevCache.runHeld !== undefined) ? prevCache.runHeld : esm_chain_held_count(chain, faction)
+    lock.role[role] = { turn: G.turn, phase, strategyName: name, strategy, runStart, runHeld }
     return strategy
 }
 
@@ -799,12 +952,21 @@ function esm_card_window_action(strategy, view, context) {
     const hand = Array.isArray(view.actions.card) ? view.actions.card.slice() : []
     if (!hand.length) return null
     const faction = esm_role_faction(strategy.role)
-    const wantOps = strategy.kind === "CONQUEST"
-    const wantEvent = strategy.kind === "EVENT" || strategy.kind === "ABSTRACT"
+    const wantOps = strategy.kind === "CONQUEST" || strategy.kind === "ABSTRACT"
+    const wantEvent = strategy.kind === "EVENT"
     if (strategy.kind === "PASS" && legal.includes("pass")) return { action: "pass", argument: undefined, via: strategy.name }
     if (strategy.kind === "GARRISON" || strategy.kind === "DEFEND") {
         // v1 有界近似: 国防圈/最终防御 -> 事件微执行(打事件/低值牌), 保留大 OC 卡。
         return esm_choose_card(hand, "event", legal, strategy)
+    }
+    if (strategy.kind === "ABSTRACT") {
+        // D4: 推进B29/原子弹胜利 = 打 OC 攻势把基地/资源链推向完成(而非当事件空耗)。
+        // 原子弹胜利: 手中持"苏联入侵满洲"(AP#79)且可作事件时优先事件打出。
+        const at = esm_atomic_event_pick(strategy, hand)
+        if (at) return at
+        const r = esm_choose_card(hand, "ops", legal, strategy)
+        if (r) return r
+        return esm_choose_card(hand, "event", legal, strategy) || null
     }
     if (wantOps) {
         const r = esm_choose_card(hand, "ops", legal, strategy)
@@ -895,11 +1057,23 @@ function esm_event_strategy_card_pick(strategy, hand) {
 // 选行动窗("C{idx}: Select action."): 按已钉战略选 ops/event 等。
 function esm_card_action_window_action(strategy, view, context) {
     const legal = Object.keys(view.actions || {}).filter(a => { const v = view.actions[a]; return Array.isArray(v) ? v.length > 0 : Boolean(v) })
-    const wantEvent = strategy.kind === "EVENT" || strategy.kind === "ABSTRACT" || strategy.kind === "GARRISON" || strategy.kind === "DEFEND"
-    const wantOps = strategy.kind === "CONQUEST"
+    const wantEvent = strategy.kind === "EVENT" || strategy.kind === "GARRISON" || strategy.kind === "DEFEND"
+    const wantOps = strategy.kind === "CONQUEST" || strategy.kind === "ABSTRACT"   // D4: ABSTRACT 走 OPS
     if (wantOps && legal.includes("ops")) return { action: "ops", argument: undefined, via: strategy.name + ":ops" }
     if (wantEvent && legal.includes("event")) return { action: "event", argument: undefined, via: strategy.name + ":event" }
     // 意图不可行时按现图表默认优先级(minimal 兜底)
+    return null
+}
+
+// D4: 原子弹胜利 —— 手牌含"苏联入侵满洲"(AP#79)且可作事件时, 优先事件打出(触发 esm_atomic_met
+// 的苏联条件); 否则返回 null 让调用方走 OPS 攻势。
+function esm_atomic_event_pick(strategy, hand) {
+    if (!strategy || strategy.kind !== "ABSTRACT" || strategy.name !== "原子弹胜利") return null
+    if (typeof SOVIET_INVADE === "undefined" || !hand || hand.indexOf(SOVIET_INVADE) === -1) return null
+    const allowed = (() => { try { return get_allowed_actions(SOVIET_INVADE) } catch (e) { return null } })()
+    if (allowed && allowed.indexOf("event") !== -1) {
+        return { action: "card", argument: SOVIET_INVADE, via: strategy.name + ":soviet" }
+    }
     return null
 }
 
@@ -911,5 +1085,6 @@ function esm_trace_of(strategy) {
         strategy: strategy.name, chainHead: strategy.chain[0] !== undefined ? strategy.chain[0] : null,
         focus: eop_focus(strategy.role), chainLen: strategy.chain.length,
         goals: goalKinds.length ? goalKinds : undefined,
-        ...(strategy.eventPhase ? { eventPhase: strategy.eventPhase } : {}) }
+        ...(strategy.eventPhase ? { eventPhase: strategy.eventPhase } : {}),
+        ...(strategy.ctx && strategy.ctx._diag ? { diag: strategy.ctx._diag } : {}) }
 }

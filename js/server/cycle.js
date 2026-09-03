@@ -161,8 +161,17 @@ P.strategic_bombing = {
     },
     roll() {
         var close_air_base = TOKYO_AIR_BASES.filter(h => is_space_controlled(h, AP) && (G.supply_cache[h] & AP_SUPPLY_AIRFIELD)).length > 0
-        if (!G.active_stack.map(u => bombing(u, close_air_base)).reduce((a, b) => a || b, false)) {
-            G.events[events.STRAT_BOMBING_CAMPAIGN.id] = 0
+        var campaign = events.STRAT_BOMBING_CAMPAIGN
+        var ok = G.active_stack.map(u => bombing(u, close_air_base)).reduce((a, b) => a || b, false)
+        // D5 对账: 战略轰炸战役标记改为“连续成功的战役段计数”(1..9 封顶), 逐回合只 +1 一次
+        // (不再走 check_event 存 G.turn)。victory_1945 判 1<=标记<=9; 原语义下标记=首次成功
+        // 轰炸发生的回合号, 而 B29 在 1942-45 等 12 回合剧本第 9 回合才增援、最早第 10 回合
+        // 才能首炸 → 标记恒 ≥10, “日本因战略轰炸投降”在规则层面永不可达(实测多种子 mk=10,
+        // res 降到 3 也不投降)。按段计数后, res<=1 且战役在 9 段内即触发盟军胜利。
+        if (ok) {
+            G.events[campaign.id] = Math.min((G.events[campaign.id] || 0) + 1, 9)
+        } else {
+            G.events[campaign.id] = 0
         }
         G.active_stack = []
         clear_undo()

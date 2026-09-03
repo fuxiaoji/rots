@@ -259,3 +259,45 @@
 - 边界（如实记录）：马尼拉/冲绳/日本本土**终局控制 0/40**（两臂皆然）——剧本在 ~t8–12 由日本 PW 条约先胜终止，引擎两栖力量已达硫磺岛(距冲绳两格)/马尔库斯岛，但冲绳/本土不在剧本时间窗内；逐回合 PoW 夺格节奏与盟军终胜属后续迭代（非 B 修复对象）。
 - 回归全绿：`tests/erasmus.test.js`（gate-off）、goal-fidelity 39/39、state-fidelity 59/59、event-strategy 8/8；rules.js 经 `tools/inline.js` 重建后复跑通过。已 grep 确认无提交金标重放本 headless-1942 路径（改动只影响 headless 进攻推进与聚焦激活）。
 - 产物：`js/server/erasmus_ops.js`（eop_pick_unit 两栖偏置）、`js/server/offensive.js`（两栖空海巡航）、`tests/results/b-amphibious-ab-40.json`（A/B 汇总）、`tests/_b_measure.js`（修正计数 runner，未跟踪）。
+
+## zh.7 D1–D5 状态机驱动层补全 + 胜利线对账（盟军为何还输）
+
+### 审计结论
+
+继续用户“盟军 js 状态机漏了什么、为什么还是输”的追查：决策树/A（计划层）/C（事件战略）已与 py 参考引擎逐字忠实（goal-fidelity 39/39），漏的不是树本身，而是 **驱动层的真实反馈信号** 与 **引擎一条胜利线（战略轰炸投降）的规则层 bug**。逐项修复 D1–D5；D5 同时动了引擎结算（game.js/cycle.js），是"状态机补全"里唯一越出 `erasmus_state.js` 的改动，特此单列。
+
+### D1 批内跨局串扰 / D2 同轴延续（erasmus_state.js）
+
+- D1：批跑多局同一进程时 EOP_OVERRIDE 与模块缓存跨局残留。`esm_clear_cross_game` 在新局首钉前清空外部链覆盖。证据：种子 20260909 同种子批内第 2 局结果从 T12 漂到 T10，修后稳定。
+- D2：原实现同一阶段每回合首卡都换 d10 重滚选轴，两个相邻轴（如中太平洋↔CBI）交替空转。改为"同阶段同轴延续"：同阶段命中目标时沿用上一轴，只有换阶段/目标达成才重新掷轴。seed20260909 此前中太平洋↔CBI 逐回合对翻、终局两线都无纵深，修后连续同轴 run。
+
+### D3 真实 PoW 与反攻触发信号（al_M_B / al_M_D）
+
+- `al_M_B`（"需满足战争进程"）此前近似为 `!!G.pow`——第 4 回合起恒真，导致中期盟军每回合都被导向"夺 PoW 格"却无"是否已达标"的反馈。改为引擎口径：**PoW 银行** = `G.capture` 中仍由 AP 控制的格数 `esm_pow_bank()`，谓词 = `bank < G.pow`。实测逐回合银行常在 2–3、`G.pow=4`，因此每回合政治阶段 `-1 PW`（见 D5 账本），谓词真实反映"这回合还要再夺够数"。
+- `al_M_D`（反攻触发）此前为让反攻战略更早触发而放宽成前线扫描，反噬：触发但反攻清单（16 目标，py L422-434）逐格都在己方手里 → `eop_focus=null` → 整回合空转。回退为 py 字面谓词——对解析出的反攻战略链（与 eop 同源）任一 hex 仍被 JP 控制。回退后 seed20260924 T4 反攻真钉 南太平洋 891（Mariana 方向）、夺岛后 T5 末相位切 推进B29，执行比放宽版健康得多（此前反攻 T4-T8 连钉 5 回合焦点全空）。
+
+### D4 ABSTRACT 操作化（erasmus_state.js）
+
+- 推进B29 / 原子弹胜利 等 ABSTRACT 条目（py 中为纯文本行政指令、无 hex 链）此前钉住后无可执行子目标，bot 靠通用选牌散打。现在钉住期间把事件优先打出来：推进B29 优先 苏联入侵满洲(AP#79)/杜立特等可用事件，之后朝轰炸基地摆 B29（有基地格则作焦点）；原子弹胜利 期间只要苏联事件未打就优先打它。空链（无基地格/无可用事件）落 占领轰炸基地/重返菲律宾 可执行回退链，不再整回合空转。
+
+### D5 胜利线对账（引擎修复 + 资源剥夺链 + 账本）
+
+**引擎级修复 —— 战略轰炸标记语义（game.js + cycle.js，越出状态机的唯一引擎改动）**
+
+- 根因：`STRAT_BOMBING_CAMPAIGN` 事件标记由 `check_event`（game.js bombing() 成功路径）存成 **G.turn**（成功当回合号）。1942-45 剧本 B29 第 9 回合才增援（`L.allowed_units` 空到 T9）、最早第 10 回合才能首次成功轰炸 → 标记**恒 ≥ 10**。而 `victory_1945`（scenario.js L489-508）要求 `is_event_active(campaign)` 落在 **1..9** 且 `get_jp_resources() ≤ 1` 且 B29 在距东京 6 内/中国 → "日本因战略轰炸投降"在规则层面**永不可达**。实测多种子 `mk=10`、资源已降到 3 也永不触发。
+- 修复：game.js bombing() 不再对该事件 `check_event`；cycle.js `strategic_bombing.roll()` 改为**连续成功的战役段计数**——当回合任一 B29 轰炸成功则 `marker = min(marker+1, 9)`，全部失败则归 0（一次成功只 +1，不再等于回合号）。语义 = "已连续成功轰炸的段数 1..9 封顶"，正好落在 `victory_1945` 判胜窗。此改动只影响该事件标记的**数值来源**；`STRAT_BOMBING`（id5，pw+1）等其它事件不受影响。
+- 配套账本：`ctx._diag` 每回合在 decision trace 输出 `{pow, bank, jpRes, marker, resHexes}`，探针 `tests/_dbg_d5.js` 逐回合打印 JP/AL 钉选 + 账本 + 政治结算，使"离胜利线多远"可量化审计。
+
+**资源剥夺链（erasmus_state.js `esm_jp_resource_hexes`）**
+
+- 新增 `esm_jp_resource_hexes()`：按 `get_jp_resources()` 同口径（RESOURCE_HEX 表过滤 JP 仍控）取当前 JP 资源格名单。终局冲刺轴（仅 `登陆日本`/`原子弹胜利`，**窄门**）钉住时把这些仍 JP 控的资源格按"距链首最近优先"前置进目标链——此前尝试放宽到 `al_L_F`（控东京 8 内格）等会在 T5 一夺塞班就把中期夺岛节奏拐去抢远方资源，反而更早条约败（seed20260924 T8）；窄门后只在中枢推进到登陆前才触发。**注**：`victory_1945` 的资源判据只统计 RESOURCE_HEX（不含日本本土的东京/大阪），故韩国(Seoul 672)/满洲(Harbin 669, Mukden 670)/马来-苏门答腊-婆罗洲(南方)等格直到最后一回合都必须剥夺，才是 res≤1 的正路。
+
+### 验证与剩余边界（如实记录）
+
+- 回归全绿：state-fidelity 59/59、goal-fidelity 39/39、event-strategy 8/8、erasmus.test.js（gate-off）——状态机/保真/事件自测不受引擎标记改动影响。
+- headless 1942 完整剧本 10 种子分类（seeds 20260903–20260912，`tests/_dbg_d5.js` 账本口径）结局分布：**5 treaty / 5 撑到 T12 “Japan did not surrender”**（引擎判负、非盟军条约），0 盟军胜。treaty 侧多数因 PoW 银行 < G.pow 的逐回合 -1 PW 于 T10-11 归零。
+- 剩余缺口（诚实边界）：(1) `jpRes` 全程卡 **3–5**，组合为 东京圈(朝鲜/满洲 = Seoul+Harbin+Mukden) 或 韩国+南方两格(Miri+Balikpapan) 等——盟军从未把资源线压到 `≤1`；(2) 部分种子在 占领轰炸基地 阶段钉到 T12 终局也没进入 登陆日本/原子弹胜利 → 窄门的资源剥夺救不到它们（门在"已进登陆轴"才开）；(3) 进 登陆日本/原子弹胜利 的种子太晚、此时 res 仍高。即：**盟军胜利需 ~T10 前把轰炸基地+B29 成型、并打进资源线归零——落在剧本时间窗与执行强度边界**。倾向的下一迭代方向（待用户确认）：把资源剥夺/登陆推进并入 占领轰炸基地 阶段（当 res 已 ≤ 阈值且轰炸从中国盒可行时不等晚期轴）；或给 AP 更多夺资源格的早期路径（南洋/南方资源区反攻）。
+
+### 产物
+
+- `js/server/erasmus_state.js`（D1 跨局清理、D2 同轴延续、D3 al_M_B/D 信号、D4 ABSTRACT 回退链、D5 资源剥夺链 + ctx._diag 账本）、`js/server/game.js` + `js/server/cycle.js`（D5 战略轰炸段计数，引擎胜利线修复）、根 `rules.js`（inline 重建）；探针 `tests/_dbg_d5.js`（账本 runner，未跟踪）。
