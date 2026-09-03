@@ -71,6 +71,7 @@
 - `erasmus_complete_ai_state_machine.py` 作为可运行的确定性状态机 AI 研究参考（覆盖决策轴/选牌/编成/反应四窗，含 `--self-test`）。
 - JS 引擎 `js/server/bots/erasmus.js` 解释器升级为“按候选迭代 + 合法动作过滤”的优先级解析；`*_OPS_CARD` 与 `*_EVENT_CARD` 在选行动窗口消歧；策略版本 `erasmus-v2.0-zh.3`，50 固定种子回归 0 fallback、全部正常终局。
 - 1942 完整剧本自对弈：修复 `before_commit_offensive` 卡牌攻势限制导致的“确认窗仅剩 undo”死锁——受限确认窗新增 `cancel` 出口，回退到选行动窗口并将该卡本回合禁止再以攻势打出；新增剧本参数化 AI vs AI 运行器，`1942-1945 (The Shortened Campaign)` 10 局 0 报错、全部正常终局。
+- 攻势零会战修复：`evaluateChart` 里“unit+done 且有激活单位即强制 done”的兜底不再作用于 `Declare battle hexes.` 窗口——该窗口的 `unit` 是选取射程内已激活空中单位发起空袭（随后 `action_hex` 创建战斗格），此前被整窗吞掉导致全程零会战。策略版本 `erasmus-v2.0-zh.4`；1942 全剧本 10 局 0 报错、每局平均申报 16.5 个会战格并产生真实交战，South Pacific 50 种子回归 0 fallback/全部终局。已知边界：无头 bot 无法做地面接敌移动（目标路径由客户端 `move(path)` 提供，服务端不暴露路径参数），会战以空中打击为主。
 
 ## 初始评估指标
 

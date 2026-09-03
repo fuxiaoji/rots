@@ -1,6 +1,6 @@
 /** import server/erasmus_data.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.3"
+const ERASMUS_VERSION = "erasmus-v2.0-zh.4"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "unit", "hex", "strat_move", "ground_move", "roll", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
@@ -145,7 +145,12 @@ function evaluateChart(chart, view, context) {
     }
     const progress = String(view.prompt || "").match(/(\d+)\s+of\s+(\d+)/i)
     if (progress && Number(progress[1]) >= Number(progress[2]) && legal.includes("done")) action = "done"
-    if (legal.includes("done") && legal.includes("unit") && view.offensive?.active_units?.flat?.().length > 0) action = "done"
+    // “Declare battle hexes.”窗口的 unit 是选择可打击的已激活空中单位(随后用
+    // action_hex 指向目标格并 create_battle_hex), 并非追加激活单位, 因此该窗口
+    // 不能强制按 done 跳过——否则攻势永远零会战(有射程内敌格也不会申报)。
+    // 激活/移动窗口仍由上一行逻辑收尾(done), 行为不变。
+    const isDeclareHexesWindow = /declare battle hexes|confirm declared battle hexes/i.test(String(view.prompt || ""))
+    if (!isDeclareHexesWindow && legal.includes("done") && legal.includes("unit") && view.offensive?.active_units?.flat?.().length > 0) action = "done"
     if (fallback) {
         const fallbackNode = nodes.get(`${prefix}-FALLBACK`)
         action = (fallbackNode?.allowed_actions || []).find(item => legal.includes(item)) || legal.slice().sort()[0]

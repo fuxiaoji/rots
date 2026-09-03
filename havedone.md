@@ -110,3 +110,12 @@
 - 验收结果：固定种子 424242–424251 共 10 局全部 `complete`、0 error / 0 action-limit / 0 setup-error，均有引擎终局胜方（日本 10、盟军 0，阵营失衡为已知范围外）。平均 1187.5 动作、平均终局回合 11.3；单局复核 seed 424242 使用 `cancel` 出口 7 次、全程 0 个仅-undo 窗口。
 - 回归：South Pacific 固定种子 424242–424291 重跑 50 局：50/50 正常终局、0 错误、0 fallback、0 动作上限中止，胜负与改动前完全一致（日本 50）——引擎改动对南太平洋流程无影响。
 - 新增 `tests/erasmus-campaign-run.js`（剧本参数化 AI vs AI 运行器），逐局 JSON 与汇总见 `tests/results/erasmus-campaign-1942-1945-The-Shortened-Campaign-10-424242.json`。
+
+### 修复：攻势零会战（"Declare battle hexes."窗口被强制按 done 跳过）
+
+- 现象（用户报告）：AI vs AI 全程 88 次攻势从未申报会战、零战斗。已用插桩重放确认：17 个“Declare battle hexes.”窗口全部 `possible_units=1、possible_hexes=1..6`（已激活的射程内空中单位可打击敌格），但每个窗口决策都记录 `strategy=JP/AP_AIR_STRIKE, action=done, legal=unit,done`。
+- 根因：`js/server/bots/erasmus.js` `evaluateChart` 内的一条兜底覆盖对所有“同时出现 unit+done 且攻势已有 ≥1 个激活单位”的窗口一律强制 `action="done"`（原意图是激活窗口选 1 个单位后收尾、移动窗口直接跳过）。它把“Declare battle hexes.”窗口一并吞掉——而该窗口的 `unit` 不是追加激活，而是**选择射程内已激活的空中单位**，随后 `action_hex` 指向目标敌格并 `create_battle_hex`。于是空中打击永远无法发起。
+- 修复：仅对申报会战窗口（prompt 含 `Declare battle hexes`/`Confirm declared battle hexes`）豁免该强制 done；激活/移动窗口的收尾行为保持不变。策略版本 `erasmus-v2.0-zh.3 → .4`。
+- 附加约束核实（无头 bot 的移动上限）：地面/海上单位进攻式位移的目标路径由**客户端**用 `L.allowed_hexes` 计算后以 `move(path)` 发送，服务端并不把路径暴露为动作参数；因此无头 bot 唯一可服务端发起的会战路径是申报窗口的空中打击（含对地面/海上驻格的空袭）。地面单位接敌仍依赖移动，属于图表级解释器之外的战术层，记录为已知边界而非伪装。
+- 验证（种子 424242，1942 完整剧本）：仍正常终局、胜者日本、回合 12、0 报错；本局申报 17 个会战格（17×`unit→action_hex`），日志出现真实交战（如 T2 马尼拉 `JP fire (8)…=4` / `AP fire (7)…=4`、T3 特鲁克与拉包尔空袭、T4 莱特岛等）。
+- 回归：South Pacific 固定种子 424242–424291 重跑 50 局：50/50 正常终局、0 错误、0 fallback、0 动作上限，胜负仍为日本 50；平均动作 284.86→317.46（出现空袭会战所致，稳定性不变）。1942-1945 固定种子 424242–424251 重跑 10 局：10/10 正常终局、0 错误、0 动作上限，fallback 20（与改动前基线 20 相同），平均 1216.5 动作 / 10.8 回合，胜者仍为日本 10；全批申报会战 165 个（平均 16.5/局）、交战掷骰 208 次（平均 20.8/局）——改动前这两项均为 0。
