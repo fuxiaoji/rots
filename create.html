@@ -91,7 +91,7 @@
 <fieldset id="pve_options">
     <legend>游戏模式 / Game mode</legend>
     <label><input type="radio" name="mode" value="pvp" checked> 双人对战 PvP</label><br>
-    <label><input type="radio" name="mode" value="pve"> 单人对抗伊拉斯谟 PvE（仅南太平洋）</label>
+    <label><input type="radio" name="mode" value="pve"> 单人对抗伊拉斯谟 PvE（南太平洋 / 1942-1945 缩短战役）</label>
     <p id="pve_role" hidden>
         玩家阵营：
         <label><input type="radio" name="human_role" value="Allies" checked> 盟军</label>
@@ -139,10 +139,8 @@
         input.onchange = function () {
             var pve = document.querySelector("input[name='mode']:checked").value === "pve"
             document.getElementById("pve_role").hidden = !pve
-            if (pve) {
-                scenario.value = "South Pacific"
-                scenario.onchange()
-            }
+            // PvE 也允许选 1942-1945 缩短战役等 bot 支持场景, 不再强制回南太平洋。
+            scenario.onchange()
         }
     })
 </script>

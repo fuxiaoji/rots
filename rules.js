@@ -19665,7 +19665,7 @@ function evaluateChart(chart, view, context) {
 var EOTS_BOTS = {
     "erasmus-v2": {
         name: "伊拉斯谟 v2.0", version: ERASMUS_VERSION,
-        scenarios: ["South Pacific"], roles: ["Japan", "Allies"],
+        scenarios: ["South Pacific", "1942-1945 (The Shortened Campaign)"], roles: ["Japan", "Allies"],
         decide(view, context) {
             const chart = select_chart(context.role, view)
             if (!chart) throw new Error(`No Erasmus chart for ${context.role}`)
