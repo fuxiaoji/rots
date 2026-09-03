@@ -67,6 +67,10 @@
 
 当前迭代：12 页已生成独立 JSON/Markdown 文档与运行时编译数据，图表解释器已接入 South Pacific；条件谓词仍有显式 inferred 项，必须继续逐页视觉校对和黄金路径覆盖。未经校对的图表条件不得伪装成确定规则。
 
+配套补全（2026-09-03）：
+- `erasmus_complete_ai_state_machine.py` 作为可运行的确定性状态机 AI 研究参考（覆盖决策轴/选牌/编成/反应四窗，含 `--self-test`）。
+- JS 引擎 `js/server/bots/erasmus.js` 解释器升级为“按候选迭代 + 合法动作过滤”的优先级解析；`*_OPS_CARD` 与 `*_EVENT_CARD` 在选行动窗口消歧。
+
 ## 初始评估指标
 
 - 引擎：规则测试通过率、重放一致率、非法状态率、每步耗时。
