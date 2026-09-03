@@ -90,3 +90,10 @@
 - 随机只来自显式种子(默认 424242)；每个决策返回可审计 trace：图页代码/页码、条件链、掷骰、策略稳定 ID、动作语义建议、置信度。
 - `python erasmus_complete_ai_state_machine.py --self-test` 通过：10 个代表性窗口场景 + 引用完整性 + 同种子可复现 + 关键分支断言。
 - 决策分支走向仍标 `inferred`，不伪装 PDF 视觉校对结论；策略方块文字逐条对应 12 页图表 Markdown。
+
+### JS 引擎 PvE 解释器改进
+
+- `js/server/bots/erasmus.js` 策略版本升级 `erasmus-v2.0-zh.2 → .3`：`priority(SELECT)` 节点现按图 `candidate_found`/`no_candidate` 边语义迭代候选策略，只在该优先级表全部不可执行时才落入图表 fallback 保护出口；决策轨迹新增 `attempted`（逐候选审计）。
+- 卡牌后缀消歧：`*_OPS_CARD` 节点在“Select action”窗口按 OC 打出（此前一律落入 event 优先），`*_EVENT_CARD` 与事件战略保持 EC 优先；顶窗口选择卡牌行为不变。
+- 重编译 `rules.js`（bot 仅服务端，`play.js` 不变，无客户端影响）。
+- 回归：`tests/erasmus.test.js` 通过（图完整性 + 确定性 + Operation KE 种子 424243）。固定种子 424242–424291 重跑 50 局：50/50 正常终局、0 非法动作、0 fallback、0 动作上限中止；胜负仍为日本 50、盟军 0 —— 阵营策略平衡仍超出本批范围，待逐页视觉校对后再校准。

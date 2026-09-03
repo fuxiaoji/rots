@@ -69,7 +69,7 @@
 
 配套补全（2026-09-03）：
 - `erasmus_complete_ai_state_machine.py` 作为可运行的确定性状态机 AI 研究参考（覆盖决策轴/选牌/编成/反应四窗，含 `--self-test`）。
-- JS 引擎 `js/server/bots/erasmus.js` 解释器升级为“按候选迭代 + 合法动作过滤”的优先级解析；`*_OPS_CARD` 与 `*_EVENT_CARD` 在选行动窗口消歧。
+- JS 引擎 `js/server/bots/erasmus.js` 解释器升级为“按候选迭代 + 合法动作过滤”的优先级解析；`*_OPS_CARD` 与 `*_EVENT_CARD` 在选行动窗口消歧；策略版本 `erasmus-v2.0-zh.3`，50 固定种子回归 0 fallback、全部正常终局。
 
 ## 初始评估指标
 
