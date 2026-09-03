@@ -1,0 +1,1217 @@
+{
+  "generatedAt": "2026-09-03T12:45:11.237Z",
+  "sum": {
+    "policy": "erasmus-v2.0-zh.7",
+    "scenario": "1942-1945 (The Shortened Campaign)",
+    "gameCount": 50,
+    "baseSeed": 20260903,
+    "headless_moves": true,
+    "complete": 50,
+    "japanWins": 50,
+    "alliesWins": 0,
+    "errors": 0,
+    "setupErrors": 0,
+    "actionLimit": 0,
+    "fallback": 89,
+    "firstPins": 968,
+    "pins": 71032,
+    "byKind": {
+      "CONQUEST": 57135,
+      "EVENT": 7679,
+      "PASS": 2580,
+      "ABSTRACT": 3638
+    },
+    "byPhase": {
+      "Japan": {
+        "early": 8006,
+        "mid": 21348,
+        "late": 2556
+      },
+      "Allies": {
+        "early": 6165,
+        "mid": 20246,
+        "late": 12711
+      }
+    },
+    "roll": {
+      "Japan": {
+        "外围防御战略": 2620,
+        "资源战略": 21324,
+        "事件战略": 1968,
+        "激进的南方资源战略": 3418,
+        "PASS": 2580
+      },
+      "Allies": {
+        "建立ABDA": 5711,
+        "DEI战略": 1723,
+        "南太平洋战略": 11326,
+        "占领轰炸基地": 9073,
+        "中太平洋战略": 5942,
+        "CBI战略": 1255,
+        "推进B29": 3638,
+        "橙色计划": 454
+      }
+    },
+    "touch": {}
+  },
+  "perGame": [
+    {
+      "seed": 20260903,
+      "winner": "Japan",
+      "actions": 1720,
+      "turn": 11,
+      "fallback": 3,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 173,
+          "资源战略": 495
+        },
+        "Allies": {
+          "建立ABDA": 123,
+          "DEI战略": 88,
+          "南太平洋战略": 356,
+          "占领轰炸基地": 264
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260904,
+      "winner": "Japan",
+      "actions": 1729,
+      "turn": 11,
+      "fallback": 1,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 69,
+          "事件战略": 67,
+          "资源战略": 524
+        },
+        "Allies": {
+          "建立ABDA": 128,
+          "南太平洋战略": 381,
+          "中太平洋战略": 79,
+          "占领轰炸基地": 281
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260905,
+      "winner": "Japan",
+      "actions": 1668,
+      "turn": 11,
+      "fallback": 3,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "事件战略": 49,
+          "激进的南方资源战略": 84,
+          "资源战略": 465,
+          "PASS": 24
+        },
+        "Allies": {
+          "建立ABDA": 122,
+          "CBI战略": 98,
+          "中太平洋战略": 154,
+          "南太平洋战略": 163,
+          "占领轰炸基地": 294
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260906,
+      "winner": "Japan",
+      "actions": 1886,
+      "turn": 12,
+      "fallback": 2,
+      "firstPins": 22,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 174,
+          "资源战略": 583
+        },
+        "Allies": {
+          "建立ABDA": 129,
+          "南太平洋战略": 187,
+          "中太平洋战略": 168,
+          "DEI战略": 69,
+          "占领轰炸基地": 362
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260907,
+      "winner": "Japan",
+      "actions": 1517,
+      "turn": 11,
+      "fallback": 1,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 71,
+          "激进的南方资源战略": 78,
+          "资源战略": 153,
+          "PASS": 295
+        },
+        "Allies": {
+          "建立ABDA": 110,
+          "南太平洋战略": 168,
+          "推进B29": 433
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260908,
+      "winner": "Japan",
+      "actions": 1451,
+      "turn": 10,
+      "fallback": 2,
+      "firstPins": 18,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 93,
+          "激进的南方资源战略": 95,
+          "资源战略": 169,
+          "PASS": 246
+        },
+        "Allies": {
+          "建立ABDA": 122,
+          "中太平洋战略": 85,
+          "南太平洋战略": 92,
+          "推进B29": 365
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260909,
+      "winner": "Japan",
+      "actions": 1890,
+      "turn": 12,
+      "fallback": 1,
+      "firstPins": 22,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 96,
+          "激进的南方资源战略": 80,
+          "资源战略": 588
+        },
+        "Allies": {
+          "建立ABDA": 124,
+          "南太平洋战略": 285,
+          "DEI战略": 85,
+          "中太平洋战略": 88,
+          "占领轰炸基地": 332
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260910,
+      "winner": "Japan",
+      "actions": 1817,
+      "turn": 12,
+      "fallback": 4,
+      "firstPins": 22,
+      "roll": {
+        "Japan": {
+          "事件战略": 76,
+          "外围防御战略": 83,
+          "资源战略": 535
+        },
+        "Allies": {
+          "建立ABDA": 126,
+          "中太平洋战略": 344,
+          "南太平洋战略": 96,
+          "占领轰炸基地": 322
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260911,
+      "winner": "Japan",
+      "actions": 1760,
+      "turn": 11,
+      "fallback": 1,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 193,
+          "资源战略": 492
+        },
+        "Allies": {
+          "建立ABDA": 56,
+          "橙色计划": 82,
+          "DEI战略": 112,
+          "中太平洋战略": 162,
+          "南太平洋战略": 93,
+          "CBI战略": 98,
+          "占领轰炸基地": 261
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260912,
+      "winner": "Japan",
+      "actions": 1307,
+      "turn": 9,
+      "fallback": 1,
+      "firstPins": 16,
+      "roll": {
+        "Japan": {
+          "事件战略": 125,
+          "资源战略": 387
+        },
+        "Allies": {
+          "建立ABDA": 110,
+          "南太平洋战略": 267,
+          "中太平洋战略": 166,
+          "占领轰炸基地": 86
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260913,
+      "winner": "Japan",
+      "actions": 1796,
+      "turn": 12,
+      "fallback": 2,
+      "firstPins": 22,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 169,
+          "资源战略": 542
+        },
+        "Allies": {
+          "建立ABDA": 115,
+          "南太平洋战略": 271,
+          "中太平洋战略": 159,
+          "占领轰炸基地": 323
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260914,
+      "winner": "Japan",
+      "actions": 1355,
+      "turn": 9,
+      "fallback": 1,
+      "firstPins": 16,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 83,
+          "事件战略": 35,
+          "资源战略": 412
+        },
+        "Allies": {
+          "建立ABDA": 108,
+          "南太平洋战略": 460,
+          "占领轰炸基地": 77
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260915,
+      "winner": "Japan",
+      "actions": 1710,
+      "turn": 11,
+      "fallback": 2,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 153,
+          "资源战略": 501
+        },
+        "Allies": {
+          "建立ABDA": 100,
+          "南太平洋战略": 193,
+          "中太平洋战略": 185,
+          "DEI战略": 98,
+          "占领轰炸基地": 265
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260916,
+      "winner": "Japan",
+      "actions": 1794,
+      "turn": 11,
+      "fallback": 4,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 183,
+          "资源战略": 514
+        },
+        "Allies": {
+          "建立ABDA": 133,
+          "南太平洋战略": 395,
+          "CBI战略": 76,
+          "占领轰炸基地": 278
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260917,
+      "winner": "Japan",
+      "actions": 1543,
+      "turn": 10,
+      "fallback": 2,
+      "firstPins": 18,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 84,
+          "事件战略": 81,
+          "资源战略": 456
+        },
+        "Allies": {
+          "建立ABDA": 106,
+          "中太平洋战略": 172,
+          "南太平洋战略": 261,
+          "占领轰炸基地": 187
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260918,
+      "winner": "Japan",
+      "actions": 1687,
+      "turn": 12,
+      "fallback": 2,
+      "firstPins": 22,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 83,
+          "外围防御战略": 76,
+          "资源战略": 185,
+          "PASS": 345
+        },
+        "Allies": {
+          "建立ABDA": 127,
+          "南太平洋战略": 97,
+          "DEI战略": 76,
+          "推进B29": 493
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260919,
+      "winner": "Japan",
+      "actions": 1687,
+      "turn": 11,
+      "fallback": 2,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 85,
+          "激进的南方资源战略": 86,
+          "资源战略": 498
+        },
+        "Allies": {
+          "建立ABDA": 126,
+          "南太平洋战略": 338,
+          "中太平洋战略": 74,
+          "占领轰炸基地": 268
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260920,
+      "winner": "Japan",
+      "actions": 1684,
+      "turn": 11,
+      "fallback": 3,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "事件战略": 67,
+          "外围防御战略": 75,
+          "资源战略": 480
+        },
+        "Allies": {
+          "建立ABDA": 117,
+          "南太平洋战略": 458,
+          "占领轰炸基地": 274
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260921,
+      "winner": "Japan",
+      "actions": 1903,
+      "turn": 12,
+      "fallback": 1,
+      "firstPins": 22,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 184,
+          "资源战略": 568
+        },
+        "Allies": {
+          "建立ABDA": 134,
+          "南太平洋战略": 288,
+          "中太平洋战略": 88,
+          "DEI战略": 74,
+          "占领轰炸基地": 351
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260922,
+      "winner": "Japan",
+      "actions": 1841,
+      "turn": 12,
+      "fallback": 1,
+      "firstPins": 22,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 178,
+          "资源战略": 392,
+          "PASS": 183
+        },
+        "Allies": {
+          "建立ABDA": 134,
+          "南太平洋战略": 369,
+          "中太平洋战略": 74,
+          "占领轰炸基地": 76,
+          "推进B29": 214
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260923,
+      "winner": "Japan",
+      "actions": 1589,
+      "turn": 10,
+      "fallback": 2,
+      "firstPins": 18,
+      "roll": {
+        "Japan": {
+          "事件战略": 68,
+          "激进的南方资源战略": 97,
+          "资源战略": 438
+        },
+        "Allies": {
+          "建立ABDA": 139,
+          "CBI战略": 97,
+          "中太平洋战略": 72,
+          "南太平洋战略": 274,
+          "占领轰炸基地": 177
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260924,
+      "winner": "Japan",
+      "actions": 1681,
+      "turn": 11,
+      "fallback": 1,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "事件战略": 57,
+          "激进的南方资源战略": 86,
+          "资源战略": 505
+        },
+        "Allies": {
+          "橙色计划": 120,
+          "中太平洋战略": 94,
+          "南太平洋战略": 280,
+          "CBI战略": 76,
+          "占领轰炸基地": 250
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260925,
+      "winner": "Japan",
+      "actions": 1489,
+      "turn": 10,
+      "fallback": 1,
+      "firstPins": 18,
+      "roll": {
+        "Japan": {
+          "事件战略": 143,
+          "资源战略": 432
+        },
+        "Allies": {
+          "建立ABDA": 119,
+          "中太平洋战略": 170,
+          "DEI战略": 173,
+          "南太平洋战略": 89,
+          "占领轰炸基地": 185
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260926,
+      "winner": "Japan",
+      "actions": 1379,
+      "turn": 9,
+      "fallback": 2,
+      "firstPins": 16,
+      "roll": {
+        "Japan": {
+          "事件战略": 58,
+          "激进的南方资源战略": 80,
+          "资源战略": 384
+        },
+        "Allies": {
+          "建立ABDA": 126,
+          "南太平洋战略": 364,
+          "DEI战略": 82,
+          "占领轰炸基地": 101
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260927,
+      "winner": "Japan",
+      "actions": 1405,
+      "turn": 9,
+      "fallback": 2,
+      "firstPins": 16,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 82,
+          "激进的南方资源战略": 94,
+          "资源战略": 369
+        },
+        "Allies": {
+          "建立ABDA": 141,
+          "中太平洋战略": 263,
+          "南太平洋战略": 80,
+          "CBI战略": 97,
+          "占领轰炸基地": 95
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260928,
+      "winner": "Japan",
+      "actions": 1726,
+      "turn": 11,
+      "fallback": 1,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 91,
+          "事件战略": 85,
+          "资源战略": 534
+        },
+        "Allies": {
+          "建立ABDA": 121,
+          "南太平洋战略": 257,
+          "中太平洋战略": 161,
+          "占领轰炸基地": 274
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260929,
+      "winner": "Japan",
+      "actions": 1208,
+      "turn": 8,
+      "fallback": 2,
+      "firstPins": 14,
+      "roll": {
+        "Japan": {
+          "事件战略": 140,
+          "资源战略": 334
+        },
+        "Allies": {
+          "建立ABDA": 130,
+          "南太平洋战略": 372,
+          "DEI战略": 84
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260930,
+      "winner": "Japan",
+      "actions": 1796,
+      "turn": 12,
+      "fallback": 2,
+      "firstPins": 22,
+      "roll": {
+        "Japan": {
+          "事件战略": 78,
+          "激进的南方资源战略": 70,
+          "资源战略": 403,
+          "PASS": 168
+        },
+        "Allies": {
+          "建立ABDA": 139,
+          "中太平洋战略": 175,
+          "南太平洋战略": 181,
+          "DEI战略": 85,
+          "占领轰炸基地": 76,
+          "推进B29": 204
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260931,
+      "winner": "Japan",
+      "actions": 1787,
+      "turn": 12,
+      "fallback": 3,
+      "firstPins": 22,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 165,
+          "资源战略": 337,
+          "PASS": 217
+        },
+        "Allies": {
+          "建立ABDA": 109,
+          "中太平洋战略": 165,
+          "南太平洋战略": 284,
+          "推进B29": 303
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260932,
+      "winner": "Japan",
+      "actions": 1720,
+      "turn": 11,
+      "fallback": 2,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 178,
+          "资源战略": 510
+        },
+        "Allies": {
+          "建立ABDA": 112,
+          "CBI战略": 102,
+          "中太平洋战略": 247,
+          "南太平洋战略": 82,
+          "占领轰炸基地": 270
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260933,
+      "winner": "Japan",
+      "actions": 1851,
+      "turn": 12,
+      "fallback": 3,
+      "firstPins": 22,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 87,
+          "激进的南方资源战略": 83,
+          "资源战略": 566
+        },
+        "Allies": {
+          "建立ABDA": 126,
+          "南太平洋战略": 91,
+          "中太平洋战略": 171,
+          "DEI战略": 175,
+          "占领轰炸基地": 326
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260934,
+      "winner": "Japan",
+      "actions": 1296,
+      "turn": 9,
+      "fallback": 2,
+      "firstPins": 16,
+      "roll": {
+        "Japan": {
+          "事件战略": 128,
+          "资源战略": 369
+        },
+        "Allies": {
+          "建立ABDA": 108,
+          "CBI战略": 94,
+          "中太平洋战略": 182,
+          "南太平洋战略": 156,
+          "占领轰炸基地": 86
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260935,
+      "winner": "Japan",
+      "actions": 1607,
+      "turn": 12,
+      "fallback": 2,
+      "firstPins": 22,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 178,
+          "资源战略": 71,
+          "PASS": 375
+        },
+        "Allies": {
+          "建立ABDA": 131,
+          "南太平洋战略": 85,
+          "推进B29": 571
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260936,
+      "winner": "Japan",
+      "actions": 1337,
+      "turn": 9,
+      "fallback": 2,
+      "firstPins": 16,
+      "roll": {
+        "Japan": {
+          "事件战略": 62,
+          "外围防御战略": 73,
+          "资源战略": 379
+        },
+        "Allies": {
+          "建立ABDA": 112,
+          "南太平洋战略": 385,
+          "中太平洋战略": 80,
+          "占领轰炸基地": 83
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260937,
+      "winner": "Japan",
+      "actions": 1510,
+      "turn": 10,
+      "fallback": 1,
+      "firstPins": 18,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 158,
+          "资源战略": 429
+        },
+        "Allies": {
+          "建立ABDA": 128,
+          "CBI战略": 92,
+          "南太平洋战略": 158,
+          "DEI战略": 92,
+          "中太平洋战略": 82,
+          "占领轰炸基地": 174
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260938,
+      "winner": "Japan",
+      "actions": 1371,
+      "turn": 9,
+      "fallback": 1,
+      "firstPins": 16,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 173,
+          "资源战略": 373
+        },
+        "Allies": {
+          "建立ABDA": 135,
+          "南太平洋战略": 204,
+          "中太平洋战略": 233,
+          "占领轰炸基地": 76
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260939,
+      "winner": "Japan",
+      "actions": 1681,
+      "turn": 12,
+      "fallback": 2,
+      "firstPins": 22,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 157,
+          "资源战略": 107,
+          "PASS": 403
+        },
+        "Allies": {
+          "建立ABDA": 116,
+          "南太平洋战略": 95,
+          "推进B29": 599
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260940,
+      "winner": "Japan",
+      "actions": 1506,
+      "turn": 10,
+      "fallback": 2,
+      "firstPins": 18,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 166,
+          "资源战略": 447
+        },
+        "Allies": {
+          "建立ABDA": 115,
+          "中太平洋战略": 168,
+          "南太平洋战略": 172,
+          "CBI战略": 80,
+          "占领轰炸基地": 162
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260941,
+      "winner": "Japan",
+      "actions": 1642,
+      "turn": 11,
+      "fallback": 1,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 91,
+          "事件战略": 50,
+          "资源战略": 505
+        },
+        "Allies": {
+          "建立ABDA": 111,
+          "南太平洋战略": 186,
+          "中太平洋战略": 260,
+          "占领轰炸基地": 239
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260942,
+      "winner": "Japan",
+      "actions": 1752,
+      "turn": 11,
+      "fallback": 2,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 179,
+          "资源战略": 497
+        },
+        "Allies": {
+          "建立ABDA": 142,
+          "中太平洋战略": 169,
+          "南太平洋战略": 183,
+          "DEI战略": 93,
+          "占领轰炸基地": 258
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260943,
+      "winner": "Japan",
+      "actions": 1735,
+      "turn": 11,
+      "fallback": 2,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "事件战略": 78,
+          "激进的南方资源战略": 91,
+          "资源战略": 518
+        },
+        "Allies": {
+          "建立ABDA": 131,
+          "南太平洋战略": 354,
+          "中太平洋战略": 87,
+          "占领轰炸基地": 262
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260944,
+      "winner": "Japan",
+      "actions": 1539,
+      "turn": 10,
+      "fallback": 1,
+      "firstPins": 18,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 84,
+          "事件战略": 79,
+          "资源战略": 430
+        },
+        "Allies": {
+          "橙色计划": 128,
+          "南太平洋战略": 286,
+          "中太平洋战略": 167,
+          "占领轰炸基地": 157
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260945,
+      "winner": "Japan",
+      "actions": 1700,
+      "turn": 11,
+      "fallback": 1,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 85,
+          "事件战略": 75,
+          "资源战略": 503
+        },
+        "Allies": {
+          "建立ABDA": 87,
+          "CBI战略": 87,
+          "南太平洋战略": 368,
+          "占领轰炸基地": 265
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260946,
+      "winner": "Japan",
+      "actions": 1449,
+      "turn": 10,
+      "fallback": 3,
+      "firstPins": 18,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 87,
+          "事件战略": 77,
+          "资源战略": 92,
+          "PASS": 324
+        },
+        "Allies": {
+          "建立ABDA": 124,
+          "南太平洋战略": 92,
+          "推进B29": 456
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260947,
+      "winner": "Japan",
+      "actions": 1687,
+      "turn": 11,
+      "fallback": 1,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 89,
+          "事件战略": 61,
+          "资源战略": 480
+        },
+        "Allies": {
+          "建立ABDA": 132,
+          "南太平洋战略": 189,
+          "中太平洋战略": 266,
+          "占领轰炸基地": 266
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260948,
+      "winner": "Japan",
+      "actions": 1637,
+      "turn": 11,
+      "fallback": 2,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "激进的南方资源战略": 72,
+          "外围防御战略": 82,
+          "资源战略": 500
+        },
+        "Allies": {
+          "建立ABDA": 118,
+          "南太平洋战略": 295,
+          "中太平洋战略": 158,
+          "占领轰炸基地": 219
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260949,
+      "winner": "Japan",
+      "actions": 1746,
+      "turn": 11,
+      "fallback": 1,
+      "firstPins": 20,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 171,
+          "资源战略": 540
+        },
+        "Allies": {
+          "橙色计划": 124,
+          "CBI战略": 87,
+          "南太平洋战略": 195,
+          "DEI战略": 157,
+          "占领轰炸基地": 252
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260950,
+      "winner": "Japan",
+      "actions": 1335,
+      "turn": 9,
+      "fallback": 1,
+      "firstPins": 16,
+      "roll": {
+        "Japan": {
+          "事件战略": 63,
+          "激进的南方资源战略": 102,
+          "资源战略": 361
+        },
+        "Allies": {
+          "建立ABDA": 133,
+          "中太平洋战略": 327,
+          "南太平洋战略": 88,
+          "占领轰炸基地": 78
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260951,
+      "winner": "Japan",
+      "actions": 1881,
+      "turn": 12,
+      "fallback": 1,
+      "firstPins": 22,
+      "roll": {
+        "Japan": {
+          "外围防御战略": 159,
+          "资源战略": 599
+        },
+        "Allies": {
+          "建立ABDA": 118,
+          "DEI战略": 88,
+          "南太平洋战略": 175,
+          "CBI战略": 74,
+          "中太平洋战略": 82,
+          "占领轰炸基地": 355
+        }
+      },
+      "touch": {},
+      "won_text": null
+    },
+    {
+      "seed": 20260952,
+      "winner": "Japan",
+      "actions": 1400,
+      "turn": 9,
+      "fallback": 1,
+      "firstPins": 16,
+      "roll": {
+        "Japan": {
+          "事件战略": 166,
+          "资源战略": 373
+        },
+        "Allies": {
+          "建立ABDA": 158,
+          "中太平洋战略": 165,
+          "南太平洋战略": 88,
+          "DEI战略": 92,
+          "CBI战略": 97,
+          "占领轰炸基地": 86
+        }
+      },
+      "touch": {},
+      "won_text": null
+    }
+  ],
+  "errors": []
+}

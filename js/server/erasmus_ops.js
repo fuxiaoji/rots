@@ -74,6 +74,18 @@ function eop_resolve_token(token) {
     return EOP_IDX_BY_NAME[key] !== undefined ? EOP_IDX_BY_NAME[key] : null
 }
 
+// 回合级状态机外部链覆盖 (erasmus-v2.0-zh.7): erasmus_state.js 在 gate 开时于
+// 每方首卡窗钉住整回合战略, 把该战略的优先目标链(epoch token 表)作为"外部主轴"
+// 覆盖固定 EOP_AXES。gate 关时必须清空(否则同进程跨剧本串台)。
+var EOP_OVERRIDE = { Japan: null, Allies: null }
+
+function eop_set_strategy_chain(role, override) {
+    EOP_OVERRIDE[role] = override || null
+}
+function eop_clear_all_chains() {
+    EOP_OVERRIDE = { Japan: null, Allies: null }
+}
+
 // 当前主轴的完整目标链 (只含能解析到真实 hex 的目标; 解析失败的目标静默跳过)。
 function eop_axis_chain(role) {
     const axis = eop_axis(role)
@@ -88,6 +100,11 @@ function eop_axis_chain(role) {
 
 // 该方当前应当遵循的主轴; 无主轴(如日本资源已足、转入防守)返回 null。
 function eop_axis(role) {
+    const ov = EOP_OVERRIDE[role]
+    if (ov && ov.tokens && ov.tokens.length) {
+        return { id: ov.name || (role + "_AXIS"), role: role,
+            note: ov.note ? `${ov.name} — ${ov.note}` : (ov.name || role + "轴"), tokens: ov.tokens }
+    }
     if (role === "Allies") return EOP_AXES.AP
     // 日本: 控制资源 < 13 时抢南方资源; 达标后转入防守, 不再无谓远征。
     let jpRes = 99

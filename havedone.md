@@ -181,3 +181,30 @@
 - 回归（headless 关闭，行为 opt-in 不变）：erasmus.test.js 通过；SP 50（424242–424291）与 1942 10（424242–424251）逐项与 zh.6 初版 0 差异（SP 地图目标 token 多不可解析 → 焦点 null → 回落原逻辑，平均 actions 338.96 逐位相同，证明聚焦层对 SP 惰性、对非 headless 无副作用）。
 - 结论与未解：录制的“目标优先级表”已能在 JS 端执行（选目标格/会战单位/可渡海推进都向主轴聚焦，轨迹可审计，Python 侧同源规范通过自测）；但 **盟军 0 胜未变**——zh.6 只覆盖了归因里“选轴+焦点执行”这一在无记忆窗口内可完成的子集；回合级“保 PoW 夺格节奏/配额”、盟军两栖登岛兵力与引擎推进、以及 ~50% 空转攻势的激活前过滤，仍需回合级记忆或引擎侧支援（留作 zh.7）。
 - 产物：`js/server/erasmus_ops.js`（新）、`js/server/bots/erasmus.js`（zh.6）、`js/server/offensive.js`（登退守卫 + 推进转向限定）、`erasmus_complete_ai_execution_engine.py`（新，py 规范）、`data/erasmus/map_names.json`（新，`tools/dump_erasmus_map.js` 生成）；结果 `tests/results/audit50-1942-1945-The-Shortened-Campaign-50-20260903-headless.json`。
+
+## zh.7 回合级状态机选轴（erasmus-v2.0-zh.7）
+
+### 目的与裁决
+
+- 任务（用户原始要求“现在开始将完整py参考引擎版本移植到rtt上，做出完整的状态机aiJS版”）：此前已确认 JS 侧“盟军 0 胜/后期不翻盘”的代码根因之一是**图表解释器只有分窗战术、无回合级选轴**（决策轴图在 `select_chart` 里只是装饰出口，~70/90 谓词恒定 false）。zh.6 落地了“选轴+焦点执行”的**无记忆**子集；zh.7 按用户指示把 py 参考引擎 `erasmus_complete_ai_execution_engine.py`（编码完整伊拉斯谟图表决策轴：各派系 × 早期/中期/晚期决策树 + 有序目标链）**1:1 移植成 JS 回合级状态机**。
+- 已定口径（用户确认，不可再改）：选轴时机 = **每方每游戏回合首卡窗**（“Select card to play.”）求值一次、钉住该回合战略，下回合首卡重评；启用范围 = **仅完整全图剧本**（地图含菲律宾/DEI/日本区域，排除 South Pacific/Burma 子图 → gate-off 保持 zh.6 行为不变）；“日本后勤值” = 当前手牌中可作 EC 的军事事件牌 `logistic`(LV) 之和；“原子弹标准” = 图表 09 + 脚注[7] 三条件逐字（无战略轰炸失败记录 ∧（苏联入侵满洲已发生 ∨ 盟军持 AP#79 且可作事件）∧ 日资源格 ≤(已打苏联?3:5)）。
+- 裁决：状态机移植本身达成并验证（见下）；但 **盟军 0 胜未变**——zh.7 只解决“回合级选轴缺位”；两栖登岛/夺岛推进仍缺（50 局 AP 从未夺下马尼拉/马里亚纳/冲绳/日本本土名城格），留 zh.8。
+
+### 实现（新文件/改动）
+
+- 新 `js/server/erasmus_state.js`（状态机 + 谓词求值 + 策略表）：`esm_gate_on()`（按 sid 缓存；内容级自检菲律宾/DEI/日本区域齐全）；阶段门槛逐字页脚（JP mid = 马/东印度/菲全降 ∨ 回合≥4 且非 late；JP late = 盟军控制距东京 8 格内港口；AL mid = 回合 4–8 且塞班未占；AL late = 盟军控塞班 ∨ 回合≥9）；逐 `(seed,sid,role)` lock 缓存（回合回退/ordinal 回退自动重置，防同进程跨局串台）；首卡检测 `esm_is_card_window`；决策树 `esm_jp_eval_early/mid/late`、`esm_al_eval_early/mid/late` 逐字镜像 py L583-743；`esm_build_ctx` 把 ~40 个 py 布尔字段映射到真实引擎状态（HQ OOS=`G.oos`、DEI 全降=`nations.DEI.keys` 全控、后勤=手牌 LV 合计、苏联=AP#79 removed/可打、Gandhi=JP 15/21 在手、轰炸失败=STRAT_BOMBING_CAMPAIGN 置 0 逐回合记录等）；策略表 `ESM_JP_LIB/ESM_AL_LIB` 转录 py L169-513（名称/说明/可解析目标 token，含 eop 别名与数值格号）；每策略标 kind（CONQUEST/EVENT/PASS/GARRISON/DEFEND/ABSTRACT），选牌/选行动窗按 kind 选 ops 或事件（`get_allowed_actions` 验证，非法退化不抛错）。
+- `js/server/bots/erasmus.js`：引入 state 模块（`/** import server/erasmus_state.js */`）；版本 `erasmus-v2.0-zh.7`；`decide()` 先 `esm_gate_on()`——gate 开时 `esm_pin_strategy` 求值并 `eop_set_strategy_chain` 覆盖轴，gate 关则 `eop_clear_all_chains`（杜绝同进程跨剧本串台）；SM 决策经 `erasmus_sm_decision` 输出分页 trace（决策轴页 JP-01/02/03、AP-07/08/09，非首卡选牌页 JP-04/AP-10），`sm.pinnedNow` 标出“钉选”事件；任何 SM 异常不阻断（退回 zh.6 原路径）。
+- `js/server/erasmus_ops.js`：`EOP_OVERRIDE` + `eop_set_strategy_chain/clear_all_chains`——有外部链（钉住战略的目标 token 链）时 `eop_axis/focus/pick_action_hex/pick_unit/advance_tiebreak` 用该链，无则回落固定 EOP_AXES（gate-off 行为与 zh.6 相同）。
+
+### 保真自测（1:1 硬证据）
+
+- 新 `tests/erasmus-state-fidelity.test.js`：经 vm 载入 `js/server/erasmus_state.js` 纯决策树函数，把 py self-test 三黄金用例（JP early→马绍尔防御；JP end 手牌不足→事件战略；可 PASS→PASS）+ 由 py 决策树代码逐行手推的 roll-free 全分支用例（共 **59 例**）同 ctx 断言同策略名——全部通过。
+- gate-off 回归（行为不变）：`tests/erasmus.test.js` 通过；SP-50（424242–424291）50/50 complete、JP 50/AL 0、fallback 0、avg actions 338.96 —— 与 zh.6 基线逐项一致（仅 policy 标签变 zh.7）。
+
+### gate-on 验证（`EOTS_HEADLESS_MOVES=1`，1942-1945 缩短战役）
+
+- 状态机单局 trace 抽查（seed 20260903 首卡钉选）：JP early→外围防御战略、AL early→建立ABDA；JP 自 t4 起 mid→资源战略（D 资源<13 恒真出口）；AL mid t4→DEI战略、t5–8→南太平洋战略（roll≤4）、t9+ late→占领轰炸基地（无轰炸基地出口）——每方每回合一次钉选、同回合沿用、下回合重评，与走图一致。
+- 50 局（seeds 20260903–20260952）：**50/50 正常终局、0 error / 0 action-limit / 0 setup-error**；日本 50 / 盟军 0；fallback 89；钉选 968 次（≈19.4/局）；决策 kind 分布 CONQUEST 57135 / EVENT 7679 / ABSTRACT 3638 / PASS 2580；轴(钉+沿用) phase 分布 JP early 8006/mid 21348/late 2556、AL early 6165/mid 20246/late 12711。
+- 同种子 10 局对照（20260903–20260912，headless）zh.6→zh.7：`noBattleHex` 278→249、`capturedAP` 14→23、`capturedJP` 10→0（日本转图表守势、不再无脑南进）、`groundMove` 24→45、AP `advance` 131→357、fire JP 401→505 / AL 382→537、fallback 28→19——状态机按设计改变行为，盟军攻势吞吐与聚焦提升。
+- 仍未解（与 zh.6 相同根因）：**盟军 0 胜**。50 局 AP 夺格仍无法触及岛屿/本土链（`Manila/Leyte/Davao/Iwo/Okinawa/Saipan/本土名城` 全部 0 次），即“登陆日本失败率”仍为“从未能发起两栖登岛”——引擎侧海军两栖/登陆推进与回合级 PoW 夺格节奏留 zh.8。
+- 产物：`js/server/erasmus_state.js`（新）、`js/server/bots/erasmus.js`（zh.7）、`js/server/erasmus_ops.js`（外部链覆盖）、`tests/erasmus-state-fidelity.test.js`（新）、`tests/erasmus-state-audit.js`（新，SM 指标 runner）；结果 `tests/results/sm-1942-1945-The-Shortened-Campaign-50-20260903-headless.json`。

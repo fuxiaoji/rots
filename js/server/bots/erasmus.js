@@ -1,7 +1,8 @@
 /** import server/erasmus_ops.js*/
 /** import server/erasmus_data.js*/
+/** import server/erasmus_state.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.6"
+const ERASMUS_VERSION = "erasmus-v2.0-zh.7"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "unit", "hex", "strat_move", "ground_move", "roll", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
@@ -211,14 +212,69 @@ function evaluateChart(chart, view, context) {
     return { action, argument, publicTrace, privateTrace: { ...publicTrace, argument, legalActions: legal, candidates: view.actions[action] } }
 }
 
+// 状态机 trace 分页: 决策轴首卡窗记对应轴图页(JP-01/02/03, AP-07/08/09);
+// 其余同回合选牌窗记选牌图页(JP-04/AP-10)。
+function erasmus_sm_page(strategy, isPin) {
+    const rolePage = strategy.role === "Japan" ? "JP" : "AP"
+    const axis = { early: 1, mid: 2, late: 3 }
+    if (isPin) return `${rolePage}-0${axis[strategy.phase] || 1}`
+    return rolePage === "JP" ? "JP-04" : "AP-10"
+}
+
+// 钉住/沿用战略时, 构造 decision trace(字段与 evaluateChart 兼容)。
+function erasmus_sm_decision(strategy, pick, view, context) {
+    const isPin = Number(strategy.ord) === Number(context.actionOrdinal || 0)
+    const page = erasmus_sm_page(strategy, isPin)
+    const node = `${page}-SM-${strategy.name}`
+    const arg = pick.action === "card" ? "[出牌后公开]" : pick.argument
+    // 决策 trace 附加 isPin: 本窗是否即“钉选”事件(每方每回合首卡), 沿用窗为 false。
+    const sm = Object.assign(esm_trace_of(strategy) || {}, { pinnedNow: isPin })
+    const base = {
+        policy: ERASMUS_VERSION, chart: page, node, role: context.role,
+        conditions: [], strategy: strategy.name, sm, action: pick.action, argument: arg,
+        dice: null, fallback: false, inferred: false, explanation: `状态机(zh.7): ${strategy.phase}阶段选轴「${strategy.name}」钉住整回合. ${(strategy.notes || []).join(" ")}`,
+    }
+    return { action: pick.action, argument: pick.argument, publicTrace: base, privateTrace: { ...base, argument: pick.argument, legalActions: Object.keys(view.actions || {}) } }
+}
+
 var EOTS_BOTS = {
     "erasmus-v2": {
         name: "伊拉斯谟 v2.0", version: ERASMUS_VERSION,
         scenarios: ["South Pacific", "1942-1945 (The Shortened Campaign)"], roles: ["Japan", "Allies"],
         decide(view, context) {
+            // 完整全图剧本(1942-45 等): 回合级状态机选轴; 其余剧本(=gate 关)保持 zh.6。
+            let sm = null
+            try {
+                if (esm_gate_on()) {
+                    sm = esm_pin_strategy(view, context)
+                    if (sm) eop_set_strategy_chain(context.role, { name: sm.name, note: (sm.notes || []).join("; "), tokens: sm.tokens })
+                } else {
+                    eop_clear_all_chains()   // 防同进程跨剧本串台
+                }
+            } catch (e) {
+                sm = null   // 任何 SM 异常不阻断游戏: 退回原路径(等同 zh.6)
+                if (typeof eop_clear_all_chains === "function") eop_clear_all_chains()
+            }
+            if (sm) {
+                // 选牌窗 / “Select action.” 窗: 按钉住战略的 kind 决定 PASS/OC/事件。
+                if (esm_is_card_window(view)) {
+                    const pick = esm_card_window_action(sm, view, context)
+                    if (pick) return erasmus_sm_decision(sm, pick, view, context)
+                } else if (esm_is_card_action_window(view)) {
+                    const pick = esm_card_action_window_action(sm, view, context)
+                    if (pick) return erasmus_sm_decision(sm, pick, view, context)
+                }
+                // 其余窗口走原图表微执行(焦点已由外部链覆盖转向钉住战略)。
+            }
             const chart = select_chart(context.role, view)
             if (!chart) throw new Error(`No Erasmus chart for ${context.role}`)
-            return evaluateChart(chart, view, context)
+            const res = evaluateChart(chart, view, context)
+            if (sm && res && res.publicTrace) {
+                const t = esm_trace_of(sm)
+                res.publicTrace.sm = t
+                if (!res.publicTrace.axis) res.publicTrace.axis = t ? t.axis : null
+            }
+            return res
         },
     },
 }
