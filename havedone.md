@@ -164,3 +164,20 @@
   - 根因在 AI 设计层：12 页流程图为“分窗战术”决策，无回合级大局（选轴 + 逐回合夺格配额 + HQ/编成聚焦），攻势目标退化为 advance() 的局部最近敌格；空袭/海战丰富，面向日本本土的两栖夺岛推进不足；~50% 无战事攻势表明激活/目标选择浪费。
 - 建议修复方向（按优先级）：(1) 回合级目标：PoW 未达标时优先执行“可夺 ≥1 日控名城格、邻接己方前线、两栖可达”的攻势（提夺格节奏）；(2) 选轴：集中中央太平洋主线（Marshalls→Carolines→Marianas→硫磺/冲绳），东南亚仅取守势；(3) 停止空转攻势：激活前过滤无“范围内可战敌格”的 HQ/单位，压掉 ~50% No-battle；(4) 重测目标：PW 不再见底后，1945 战略轰炸/封锁胜机才可达。此项为策略层改动（预计 `erasmus-v2.0-zh.6`），尚未实施。
 - 侦察脚本（未提交，仍 scratch）：`tests/_dbg_strategy.js`、`tests/_agg_strategy.js`、`tests/results/_strategy-10-20260903-headless.json`。
+
+### 目标优先级“双轨”落地：Python 参考引擎 + JS 目标聚焦操作层（erasmus-v2.0-zh.6）
+
+目的（用户要求“我录入了目标，请完善” → 选“双轨（先 py 后 JS）”）：把上面归因结论落实——图表解释器只有分窗战术、无主轴线，导致攻势散打。先以 Python 补全“战略→目标优先级→编成→夺格”的可审计规范引擎，再在 JS bot 落同一目标表。
+
+- Python 参考引擎（规范/审计用）：`erasmus_complete_ai_execution_engine.py`（与已提交的 `erasmus_complete_ai_state_machine.py` 同目录同风格，`--self-test` 通过）。补：地图 region 表错名（`新几内亚→Guinea`）；目标文本三型解析——跨战略指针（“见 X 战略”）、资源展开（“所有 X 资源”→ 该地域 resource hex）、抽象 CONQUEST 转地域名城表；`ErasmusExecutor.execute` 输出“目标达成前不换目标”的夺格 trace（含当前回合、焦点链、是否空转），并断言同 seed 确定性。策略目标优先级来自 PDF 转录（01–12 决策轴 + 各战略 CONQUEST 表），作为 JS 端同源口径。
+- JS 端新增目标聚焦操作层 `js/server/erasmus_ops.js`（无跨窗口记忆 → 每次决策由当前地图控制状态重算“当前主轴/焦点”）。两条主轴：盟军 `AP_CENPAC_MAIN`（Wake→Tarawa→Kwajalein→Eniwetok→Palau/Ulithi→Saipan→Iwo Jima→Okinawa→日本本土，含 hex id 数字 token）；日本 `JP_SOUTH_RESOURCE`（日本资源<13 时：Balikpapan/Tarakan→Batavia→…→Singapore→Manila/Davao；资源达标返回 null 不再远征）。地图名→idx 用运行时 `map[]`（含别名表：Timor=Koepang、Gili-Gili、Buin=…等；Noumea/Salamaua/Finschhafen 不在 1942-45 地图置 null 跳过）。
+- `js/server/bots/erasmus.js` 接入（版本 `erasmus-v2.0-zh.6`）：`evaluateChart` 求参改走 `target_argument`——`action_hex` 用 `eop_pick_action_hex`（候选里取离焦点最近；无主轴返回 undefined 回落原哈希）；会战相关 `unit`（Activate units / Declare battle hexes / Assign units to battle）用 `eop_pick_unit`（取离焦点最近的进攻单位，消除“有会战能力却零会战”）。publicTrace 增 `axis/axis_note/focus`，每次决策可审计 AI 是否聚焦。焦点=主轴第一个我方未夺控目标 → 天然实现“目标达成前不换目标”（夺控才放行下一格）。
+- `js/server/offensive.js`：无头地面/海上推进的 `headless_target_score` 增加“向焦点转向”键，但**仅限含 naval 单位（可海运/两栖）的攻击编成**——初期版本对纯地面也转向，把缅甸地面军跨大陆拖向中太平洋，造成经中国夺 Harbin/Mukden 的绕路与夺格/推进骤降；改为纯地面仍走原“最近敌格”就近逻辑后该拖拽消失。另修无头登退崩溃：`select_retreat_hex` 中“无进攻路径（原地被击退）的进攻方单位”读 `undefined.length` 崩溃（seeds 20260924/20260941 两局 error）→ 无路径视为无撤退路线交 UI/bot 走 eliminate。
+
+### zh.6 验证（`EOTS_HEADLESS_MOVES=1`，完整剧本 1942-1945 缩短战役）
+
+- 最终锁定版 50 局（seeds 20260903–20260952）：**50/50 正常终局、0 error / 0 action-limit / 0 setup-error**；日本 50 / 盟军 0；fallback 121；groundMove 152；capturedAP 54 / capturedJP 39；noBattleHex 1450（≈29/局）。焦点可追踪：日本每次决策 `axis=JP_SOUTH_RESOURCE`、盟军 `axis=AP_CENPAC_MAIN`；`action_hex` 命中焦点本身约 20–35%（另有相当比例是焦点附近/前线可选格）。
+- 同种子 10 局对照（20260903–20260912，headless）：zh.5 基线 vs zh.6 → `noBattleHex` 343→278（−19%）、`groundMove` 62→24、`capturedAP` 46→14（基线含马来亚 Kuala Lumpur/Jitra 反复拉锯的重复计数）、`capturedJP` 6→10（日本沿南方资源轴夺控 Balikpapan/Tarakan/Bangka 等依目标表推进）。拉锯让位于不同战线（中缅/满洲/巴丹等种子间漂移），仍未形成中太平洋主轴夺格。
+- 回归（headless 关闭，行为 opt-in 不变）：erasmus.test.js 通过；SP 50（424242–424291）与 1942 10（424242–424251）逐项与 zh.6 初版 0 差异（SP 地图目标 token 多不可解析 → 焦点 null → 回落原逻辑，平均 actions 338.96 逐位相同，证明聚焦层对 SP 惰性、对非 headless 无副作用）。
+- 结论与未解：录制的“目标优先级表”已能在 JS 端执行（选目标格/会战单位/可渡海推进都向主轴聚焦，轨迹可审计，Python 侧同源规范通过自测）；但 **盟军 0 胜未变**——zh.6 只覆盖了归因里“选轴+焦点执行”这一在无记忆窗口内可完成的子集；回合级“保 PoW 夺格节奏/配额”、盟军两栖登岛兵力与引擎推进、以及 ~50% 空转攻势的激活前过滤，仍需回合级记忆或引擎侧支援（留作 zh.7）。
+- 产物：`js/server/erasmus_ops.js`（新）、`js/server/bots/erasmus.js`（zh.6）、`js/server/offensive.js`（登退守卫 + 推进转向限定）、`erasmus_complete_ai_execution_engine.py`（新，py 规范）、`data/erasmus/map_names.json`（新，`tools/dump_erasmus_map.js` 生成）；结果 `tests/results/audit50-1942-1945-The-Shortened-Campaign-50-20260903-headless.json`。

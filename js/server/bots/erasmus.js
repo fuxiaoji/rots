@@ -1,6 +1,7 @@
+/** import server/erasmus_ops.js*/
 /** import server/erasmus_data.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.5"
+const ERASMUS_VERSION = "erasmus-v2.0-zh.6"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "unit", "hex", "strat_move", "ground_move", "roll", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
@@ -109,6 +110,22 @@ function pick_argument(value, seedText, action, view) {
     return candidates[erasmus_hash(seedText) % candidates.length]
 }
 
+// 目标聚焦 (操作层, 见 erasmus_ops.js): 当该方有“主轴/焦点”时, 把选目标格
+// (action_hex) 与选进攻单位 (unit) 的散打改为沿主轴线行动——先打当前最优先
+// 未夺目标, 目标不可达时打离焦点最近的格/单位, 逐步向主轴推进。
+function target_argument(action, value, seedText, role, view) {
+    const prompt = String(view?.prompt || "")
+    if (action === "action_hex") {
+        const picked = eop_pick_action_hex(value, role)
+        return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
+    }
+    if (action === "unit" && /Activate units|Declare battle hexes|Confirm declared battle hexes|Assign units to battle/i.test(prompt)) {
+        const picked = eop_pick_unit(value, role)
+        return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
+    }
+    return pick_argument(value, seedText, action, view)
+}
+
 function evaluateChart(chart, view, context) {
     const legal = legal_actions(view)
     if (!legal.length) {
@@ -180,11 +197,13 @@ function evaluateChart(chart, view, context) {
     const seedText = `${context.seed}:${context.actionOrdinal}:${chart.id}:${nodeId}`
     const diceTable = chart.dice_tables?.[0]
     const dice = diceTable ? { id: diceTable.id, sides: diceTable.sides, result: erasmus_hash(`${seedText}:dice`) % diceTable.sides + 1 } : null
-    const argument = pick_argument(view.actions[action], `${seedText}:${action}`, action, view)
+    const argument = target_argument(action, view.actions[action], `${seedText}:${action}`, context.role, view)
+    const focusInfo = eop_trace(context.role)
     const publicTrace = {
         policy: ERASMUS_VERSION, chart: chart.id, node: nodeId, role: context.role, conditions,
         attempted: attempted.length ? attempted : undefined,
         strategy, action, argument: action === "card" ? "[出牌后公开]" : argument, dice, fallback,
+        axis: focusInfo.axis, focus: focusInfo.focus,
         inferred: chart.qa?.inferred_nodes?.includes(nodeId) || false,
         explanation: fallback ? "图表优先策略在本窗口均不可执行(no_candidate)，执行图表声明的保护出口。"
             : "沿图表条件分支和策略优先级迭代候选(candidate_found)后选择。",

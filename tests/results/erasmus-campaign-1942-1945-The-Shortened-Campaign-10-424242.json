@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-09-03T08:35:22.280Z",
+  "generatedAt": "2026-09-03T11:18:18.301Z",
   "summary": {
-    "policy": "erasmus-v2.0-zh.5",
+    "policy": "erasmus-v2.0-zh.6",
     "scenario": "1942-1945 (The Shortened Campaign)",
     "gameCount": 10,
     "baseSeed": 424242,
@@ -13,21 +13,21 @@
     "setupErrors": 0,
     "errors": 0,
     "actionLimit": 0,
-    "fallbackActions": 20,
-    "averageActions": 1216.5,
-    "averageTurn": 10.8
+    "fallbackActions": 22,
+    "averageActions": 1337.3,
+    "averageTurn": 11.1
   },
   "games": [
     {
       "seed": 424242,
       "status": "complete",
       "winner": "Japan",
-      "actions": 1341,
+      "actions": 1308,
       "turn": 12,
-      "fallback": 2,
+      "fallback": 1,
       "roleActions": {
-        "Japan": 548,
-        "Allies": 793
+        "Japan": 510,
+        "Allies": 798
       },
       "won_text": null
     },
@@ -35,12 +35,12 @@
       "seed": 424243,
       "status": "complete",
       "winner": "Japan",
-      "actions": 1316,
+      "actions": 1424,
       "turn": 12,
       "fallback": 2,
       "roleActions": {
-        "Japan": 532,
-        "Allies": 784
+        "Japan": 559,
+        "Allies": 865
       },
       "won_text": null
     },
@@ -48,12 +48,12 @@
       "seed": 424244,
       "status": "complete",
       "winner": "Japan",
-      "actions": 1132,
-      "turn": 10,
-      "fallback": 3,
+      "actions": 1291,
+      "turn": 11,
+      "fallback": 4,
       "roleActions": {
-        "Japan": 461,
-        "Allies": 671
+        "Japan": 527,
+        "Allies": 764
       },
       "won_text": null
     },
@@ -61,12 +61,12 @@
       "seed": 424245,
       "status": "complete",
       "winner": "Japan",
-      "actions": 1240,
-      "turn": 11,
-      "fallback": 2,
+      "actions": 1402,
+      "turn": 12,
+      "fallback": 3,
       "roleActions": {
-        "Japan": 514,
-        "Allies": 726
+        "Japan": 578,
+        "Allies": 824
       },
       "won_text": null
     },
@@ -74,12 +74,12 @@
       "seed": 424246,
       "status": "complete",
       "winner": "Japan",
-      "actions": 1354,
+      "actions": 1508,
       "turn": 12,
-      "fallback": 1,
+      "fallback": 2,
       "roleActions": {
-        "Japan": 555,
-        "Allies": 799
+        "Japan": 640,
+        "Allies": 868
       },
       "won_text": null
     },
@@ -87,12 +87,12 @@
       "seed": 424247,
       "status": "complete",
       "winner": "Japan",
-      "actions": 1029,
+      "actions": 1060,
       "turn": 9,
       "fallback": 1,
       "roleActions": {
-        "Japan": 433,
-        "Allies": 596
+        "Japan": 439,
+        "Allies": 621
       },
       "won_text": null
     },
@@ -100,12 +100,12 @@
       "seed": 424248,
       "status": "complete",
       "winner": "Japan",
-      "actions": 1173,
-      "turn": 10,
+      "actions": 998,
+      "turn": 8,
       "fallback": 2,
       "roleActions": {
-        "Japan": 483,
-        "Allies": 690
+        "Japan": 421,
+        "Allies": 577
       },
       "won_text": null
     },
@@ -113,12 +113,12 @@
       "seed": 424249,
       "status": "complete",
       "winner": "Japan",
-      "actions": 1142,
-      "turn": 10,
-      "fallback": 2,
+      "actions": 1521,
+      "turn": 12,
+      "fallback": 1,
       "roleActions": {
-        "Japan": 462,
-        "Allies": 680
+        "Japan": 630,
+        "Allies": 891
       },
       "won_text": null
     },
@@ -126,12 +126,12 @@
       "seed": 424250,
       "status": "complete",
       "winner": "Japan",
-      "actions": 1224,
-      "turn": 11,
-      "fallback": 3,
+      "actions": 1498,
+      "turn": 12,
+      "fallback": 4,
       "roleActions": {
-        "Japan": 492,
-        "Allies": 732
+        "Japan": 619,
+        "Allies": 879
       },
       "won_text": null
     },
@@ -139,12 +139,12 @@
       "seed": 424251,
       "status": "complete",
       "winner": "Japan",
-      "actions": 1214,
+      "actions": 1363,
       "turn": 11,
       "fallback": 2,
       "roleActions": {
-        "Japan": 495,
-        "Allies": 719
+        "Japan": 564,
+        "Allies": 799
       },
       "won_text": null
     }

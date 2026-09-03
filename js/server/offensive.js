@@ -1021,17 +1021,23 @@ function headless_nearest_enemy_dist(hex, faction) {
 }
 
 // 分数: [类别, ...次键, hex], 越小越优; 只在 allowed_hexes(引擎合法落点)上评比。
-function headless_target_score(hex, hasGround, faction, kind) {
+// zh.6: 攻击方若有“操作层主轴焦点”(erasmus_ops), 只有能渡海的编成(含 naval 单位,
+// 可两栖/海运跳岛)才用离焦点的距离作同等目标内的次级键 —— 引导登陆沿主轴线夺格;
+// 纯地面/纯陆路编成不能渡海, 若也朝海外焦点转向, 会把地面军拖去跨大陆绕路(如经
+// 缅甸→中国直趋中太平洋), 故仍按原“距最近敌军”就近推进。无焦点/非渡海编成时行为逐位不变。
+function headless_target_score(hex, hasGround, faction, kind, steer) {
     const eu = headless_enemy_units_at(hex, 1 - faction)
+    const approach = steer && typeof eop_advance_tiebreak === "function" ? eop_advance_tiebreak(hex, faction) : -1
+    const nearKey = hex => approach >= 0 ? approach : headless_nearest_enemy_dist(hex, 1 - faction)
     if (kind === "attack") {
         if (eu.count > 0) {
-            if (hasGround) return [0, eu.ground, eu.count, headless_nearest_enemy_dist(hex, 1 - faction), hex]
-            if (eu.naval > 0) return [0, eu.naval, eu.count, headless_nearest_enemy_dist(hex, 1 - faction), hex]
+            if (hasGround) return [0, eu.ground, eu.count, nearKey(hex), hex]
+            if (eu.naval > 0) return [0, eu.naval, eu.count, nearKey(hex), hex]
             return null
         }
         if (is_space_controlled(hex, 1 - faction)) {
             if (!hasGround) return null
-            return [1, headless_nearest_enemy_dist(hex, 1 - faction), hex]
+            return [1, nearKey(hex), hex]
         }
         return null
     }
@@ -1096,9 +1102,11 @@ function headless_advance_one(self, kind) {
     L.move_data = get_move_data()
     update_move_hex()
     const hasGround = group.some(u => pieces[u] && pieces[u].class === "ground")
+    // 仅攻击阶段、且该编成含 naval(能海运/两栖)时才朝主轴焦点转向; 纯地面走原就近逻辑。
+    const steer = kind === "attack" && group.some(u => pieces[u] && pieces[u].class === "naval")
     let best = null, bestScore = null
     map_for_each(L.allowed_hexes, (h) => {
-        const sc = headless_target_score(h, hasGround, G.active, kind)
+        const sc = headless_target_score(h, hasGround, G.active, kind, steer)
         if (!sc) return
         if (!best || headless_score_lt(sc, bestScore)) {
             bestScore = sc
@@ -3122,6 +3130,13 @@ function select_retreat_hex() {
     var location = G.location[u]
     if (pieces[u].faction === G.offensive.attacker) {
         var path = map_get(G.offensive.paths, u)
+        // 有的进攻方单位没有“进攻路径”(原地会战被击退/未推进), map_get 返回
+        // undefined; 短于 2 的路径也没有“返回格”。两者都视为无撤退路线 → 清空
+        // hex_to_retreat, 交 UI/bot 走 eliminate, 而不是读 undefined.length 崩溃。
+        if (!Array.isArray(path) || path.length < 2) {
+            L.hex_to_retreat = []
+            return
+        }
         L.hex_to_retreat = [path[path.length - 2]]
         if (is_faction_units(L.hex_to_retreat, 1 - G.offensive.attacker)) {
             L.hex_to_retreat = []

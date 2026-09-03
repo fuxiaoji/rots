@@ -1,0 +1,5113 @@
+{
+ "generatedFrom": "js/common/data_map.js",
+ "note": "idx = (floor(id/100)-10)*29 + id%100; terrain: OCEAN=0 OPEN=1 JUNGLE=2 MIXED=3 MOUNTAIN=4 ATOLL=5; 目标文本里 2912/3606 这类是地图 hex id,已由 id 换算成 idx。",
+ "count": 206,
+ "landCount": 361,
+ "hexes": {
+  "5": {
+   "id": 1005,
+   "name": "Maldive Is.",
+   "region": "Ceylon",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "94": {
+   "id": 1307,
+   "name": "Colombo",
+   "region": "Ceylon",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "95": {
+   "id": 1308,
+   "name": "Trincomalee",
+   "region": "Ceylon",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "122": {
+   "id": 1406,
+   "name": "Madras",
+   "region": "India",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "212": {
+   "id": 1709,
+   "name": "Little Andaman",
+   "region": null,
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "213": {
+   "id": 1710,
+   "name": "Nicobar",
+   "region": null,
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "237": {
+   "id": 1805,
+   "name": "Calcutta",
+   "region": "India",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "241": {
+   "id": 1809,
+   "name": "Andaman",
+   "region": null,
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "245": {
+   "id": 1813,
+   "name": "Medan",
+   "region": "Sumatra",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": false
+  },
+  "266": {
+   "id": 1905,
+   "name": "Dacca",
+   "region": "NIndia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "273": {
+   "id": 1912,
+   "name": "Jitra",
+   "region": "Malaya",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "274": {
+   "id": 1913,
+   "name": "Kuala Lumpur",
+   "region": "Malaya",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "277": {
+   "id": 1916,
+   "name": "Palembang",
+   "region": "Sumatra",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": false
+  },
+  "278": {
+   "id": 1917,
+   "name": "Teloekbetoeng",
+   "region": "Sumatra",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "295": {
+   "id": 2005,
+   "name": "Dimasur",
+   "region": "NIndia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "296": {
+   "id": 2006,
+   "name": "Akyab",
+   "region": "Burma",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "298": {
+   "id": 2008,
+   "name": "Rangoon",
+   "region": "Burma",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": true
+  },
+  "302": {
+   "id": 2012,
+   "name": "Singora",
+   "region": "Malaya",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "304": {
+   "id": 2014,
+   "name": "Kuantan",
+   "region": "Malaya",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": false
+  },
+  "305": {
+   "id": 2015,
+   "name": "Singapore",
+   "region": "Malaya",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "307": {
+   "id": 2017,
+   "name": "Bangka",
+   "region": "Sumatra",
+   "city": null,
+   "resource": true,
+   "airfield": false,
+   "port": false
+  },
+  "308": {
+   "id": 2018,
+   "name": "Batavia",
+   "region": "Java",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "309": {
+   "id": 2019,
+   "name": "Tjilatjap",
+   "region": "Java",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "323": {
+   "id": 2104,
+   "name": "Jarhat",
+   "region": "NIndia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "324": {
+   "id": 2105,
+   "name": "Imphal",
+   "region": "NIndia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "325": {
+   "id": 2106,
+   "name": "Mandalay",
+   "region": "Burma",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "329": {
+   "id": 2110,
+   "name": "Bangkok",
+   "region": "Siam",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "331": {
+   "id": 2112,
+   "name": "Kota Bharu",
+   "region": "Malaya",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "336": {
+   "id": 2117,
+   "name": "Billiton",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "353": {
+   "id": 2205,
+   "name": "Ledo",
+   "region": "NIndia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "354": {
+   "id": 2206,
+   "name": "Lashio",
+   "region": "Burma",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "358": {
+   "id": 2210,
+   "name": "Udorn",
+   "region": "Siam",
+   "city": "CITY",
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "359": {
+   "id": 2211,
+   "name": "Phnom Penh",
+   "region": "Indochina",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "360": {
+   "id": 2212,
+   "name": "Saigon",
+   "region": "Indochina",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "364": {
+   "id": 2216,
+   "name": "Sinkawang",
+   "region": "Borneo",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "368": {
+   "id": 2220,
+   "name": "Soerabaja",
+   "region": "Java",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": true
+  },
+  "382": {
+   "id": 2305,
+   "name": "Myitkyina",
+   "region": "Burma",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "388": {
+   "id": 2311,
+   "name": "Cam Ranh",
+   "region": "Indochina",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "395": {
+   "id": 2318,
+   "name": "Bandjermasin",
+   "region": "Borneo",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "397": {
+   "id": 2320,
+   "name": "Bali",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "413": {
+   "id": 2407,
+   "name": "Kunming",
+   "region": "IChina",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "415": {
+   "id": 2409,
+   "name": "Hanoi",
+   "region": "Indochina",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "416": {
+   "id": 2410,
+   "name": "Hue",
+   "region": "Indochina",
+   "city": "CITY",
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "421": {
+   "id": 2415,
+   "name": "Miri",
+   "region": "Borneo",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": true
+  },
+  "427": {
+   "id": 2421,
+   "name": "Soembawa",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "432": {
+   "id": 2426,
+   "name": "Broome",
+   "region": "Australia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "443": {
+   "id": 2508,
+   "name": "Yungning",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "444": {
+   "id": 2509,
+   "name": "Hainan",
+   "region": "China",
+   "city": "CITY",
+   "resource": false,
+   "airfield": false,
+   "port": true
+  },
+  "452": {
+   "id": 2517,
+   "name": "Balikpapan",
+   "region": "Borneo",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": true
+  },
+  "456": {
+   "id": 2521,
+   "name": "Soemba",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "460": {
+   "id": 2525,
+   "name": "Derby",
+   "region": "Australia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "473": {
+   "id": 2609,
+   "name": "Canton",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "480": {
+   "id": 2616,
+   "name": "Tarakan",
+   "region": "Borneo",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": true
+  },
+  "484": {
+   "id": 2620,
+   "name": "Makassar",
+   "region": "Celebes",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "485": {
+   "id": 2621,
+   "name": "Flores",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "486": {
+   "id": 2622,
+   "name": "Roti",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "502": {
+   "id": 2709,
+   "name": "Hong Kong",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "508": {
+   "id": 2715,
+   "name": "Jolo",
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "512": {
+   "id": 2719,
+   "name": "Kendari",
+   "region": "Celebes",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "514": {
+   "id": 2721,
+   "name": "Koepang",
+   "region": "DEI",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "531": {
+   "id": 2809,
+   "name": "Swatow",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "535": {
+   "id": 2813,
+   "name": "Manila",
+   "region": "Philippines",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": true
+  },
+  "536": {
+   "id": 2814,
+   "name": "Panay",
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "541": {
+   "id": 2819,
+   "name": "Soela",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "543": {
+   "id": 2821,
+   "name": "Wetar",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "547": {
+   "id": 2825,
+   "name": "Wyndham",
+   "region": "Australia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "559": {
+   "id": 2908,
+   "name": "Wenchow",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "560": {
+   "id": 2909,
+   "name": "Tainan",
+   "region": "Formosa",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "561": {
+   "id": 2910,
+   "name": "Batan",
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "565": {
+   "id": 2914,
+   "name": "Cebu",
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "566": {
+   "id": 2915,
+   "name": "Davao",
+   "region": "Philippines",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "568": {
+   "id": 2917,
+   "name": "Menado",
+   "region": "Celebes",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "569": {
+   "id": 2918,
+   "name": "Batjan",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "570": {
+   "id": 2919,
+   "name": "Amboina",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "572": {
+   "id": 2921,
+   "name": "Moa",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "584": {
+   "id": 3004,
+   "name": "Peiping",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "585": {
+   "id": 3005,
+   "name": "Tientsin",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "587": {
+   "id": 3007,
+   "name": "Shanghai",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "589": {
+   "id": 3009,
+   "name": "Taihoku",
+   "region": "Formosa",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "594": {
+   "id": 3014,
+   "name": "Leyte",
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "597": {
+   "id": 3017,
+   "name": "Motorai",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "598": {
+   "id": 3018,
+   "name": "Halmahera",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "599": {
+   "id": 3019,
+   "name": "Obi",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "600": {
+   "id": 3020,
+   "name": "Ceram",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "601": {
+   "id": 3021,
+   "name": "Babar",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "603": {
+   "id": 3023,
+   "name": "Darwin",
+   "region": "Australia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "613": {
+   "id": 3104,
+   "name": "Port Arthur",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "614": {
+   "id": 3105,
+   "name": "Tsingtao",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "627": {
+   "id": 3118,
+   "name": "Waigeo",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "628": {
+   "id": 3119,
+   "name": "Sarong",
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "630": {
+   "id": 3121,
+   "name": "Tanimbar",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "647": {
+   "id": 3209,
+   "name": "Okinawa",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "657": {
+   "id": 3219,
+   "name": "Vogelkop",
+   "region": "Guinea",
+   "city": null,
+   "resource": true,
+   "airfield": false,
+   "port": false
+  },
+  "659": {
+   "id": 3221,
+   "name": "Aroe",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "669": {
+   "id": 3302,
+   "name": "Harbin",
+   "region": "Manchuria",
+   "city": "CHINESE_CITY",
+   "resource": true,
+   "airfield": true,
+   "port": false
+  },
+  "670": {
+   "id": 3303,
+   "name": "Mukden",
+   "region": "Manchuria",
+   "city": "CHINESE_CITY",
+   "resource": true,
+   "airfield": true,
+   "port": false
+  },
+  "672": {
+   "id": 3305,
+   "name": "Seoul",
+   "region": "Korea",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": true
+  },
+  "673": {
+   "id": 3306,
+   "name": "Pusan",
+   "region": "Korea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "674": {
+   "id": 3307,
+   "name": "Kynshu",
+   "region": "Japan",
+   "city": "JAPANESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "675": {
+   "id": 3308,
+   "name": "Shima",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "676": {
+   "id": 3309,
+   "name": "Rasa",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "686": {
+   "id": 3319,
+   "name": "Biak",
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "703": {
+   "id": 3407,
+   "name": "Kure",
+   "region": "Japan",
+   "city": "JAPANESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "712": {
+   "id": 3416,
+   "name": "Palau",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "731": {
+   "id": 3506,
+   "name": "Kyoto",
+   "region": "Japan",
+   "city": "JAPANESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "732": {
+   "id": 3507,
+   "name": "Osaka",
+   "region": "Japan",
+   "city": "JAPANESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "740": {
+   "id": 3515,
+   "name": "Yap",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "745": {
+   "id": 3520,
+   "name": "Hollandia",
+   "region": "Guinea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "761": {
+   "id": 3607,
+   "name": "Nagoya",
+   "region": "Japan",
+   "city": "JAPANESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "769": {
+   "id": 3615,
+   "name": "Ulithi",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "774": {
+   "id": 3620,
+   "name": "Aitape",
+   "region": "Guinea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "778": {
+   "id": 3624,
+   "name": "Cape York",
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "780": {
+   "id": 3626,
+   "name": "Cairns",
+   "region": "Australia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "787": {
+   "id": 3704,
+   "name": "Hakodate",
+   "region": "Japan",
+   "city": "JAPANESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "788": {
+   "id": 3705,
+   "name": "Ominato",
+   "region": "Japan",
+   "city": "JAPANESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "789": {
+   "id": 3706,
+   "name": "Tokyo",
+   "region": "Japan",
+   "city": "JAPANESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "791": {
+   "id": 3708,
+   "name": "Bonin",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "792": {
+   "id": 3709,
+   "name": "Iwo Jima",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "799": {
+   "id": 3716,
+   "name": "Woleai",
+   "region": "Caroline",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "802": {
+   "id": 3719,
+   "name": "Ninigo",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "803": {
+   "id": 3720,
+   "name": "Wewak",
+   "region": "Guinea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "804": {
+   "id": 3721,
+   "name": "Madang",
+   "region": "Guinea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "810": {
+   "id": 3727,
+   "name": "Townsville",
+   "region": "Australia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "824": {
+   "id": 3812,
+   "name": "Asuncion",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "825": {
+   "id": 3813,
+   "name": "Saipan",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "826": {
+   "id": 3814,
+   "name": "Guam",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "828": {
+   "id": 3816,
+   "name": "Faraulep",
+   "region": "Caroline",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "829": {
+   "id": 3817,
+   "name": "Ifalik",
+   "region": "Caroline",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "832": {
+   "id": 3820,
+   "name": "Admiralty Islands",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "834": {
+   "id": 3822,
+   "name": "Lae",
+   "region": "Guinea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "835": {
+   "id": 3823,
+   "name": "Port Moresby",
+   "region": "Guinea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "857": {
+   "id": 3916,
+   "name": "Pulap",
+   "region": "Caroline",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "862": {
+   "id": 3921,
+   "name": "Gasmata",
+   "region": "AMandates",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "863": {
+   "id": 3922,
+   "name": "Buna",
+   "region": "Guinea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "886": {
+   "id": 4016,
+   "name": "Hall",
+   "region": "Caroline",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "887": {
+   "id": 4017,
+   "name": "Truk",
+   "region": "Caroline",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "890": {
+   "id": 4020,
+   "name": "Kavieng",
+   "region": "AMandates",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "891": {
+   "id": 4021,
+   "name": "Rabaul",
+   "region": "AMandates",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "893": {
+   "id": 4023,
+   "name": "D`Entrecasteaux",
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "894": {
+   "id": 4024,
+   "name": "Gili Gili",
+   "region": "Guinea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "909": {
+   "id": 4110,
+   "name": "Marcus",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "916": {
+   "id": 4117,
+   "name": "Nomoi",
+   "region": "Caroline",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "920": {
+   "id": 4121,
+   "name": "Green",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "921": {
+   "id": 4122,
+   "name": "Woodlark",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "923": {
+   "id": 4124,
+   "name": "Rossel",
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "949": {
+   "id": 4221,
+   "name": "Baka",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "950": {
+   "id": 4222,
+   "name": "Bougainville",
+   "region": "AMandates",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "973": {
+   "id": 4316,
+   "name": "Ponape",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "979": {
+   "id": 4322,
+   "name": "New Georgia",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1001": {
+   "id": 4415,
+   "name": "Eniwetok",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1008": {
+   "id": 4422,
+   "name": "Santa Isabel",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1009": {
+   "id": 4423,
+   "name": "Guadalcanal",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1010": {
+   "id": 4424,
+   "name": "Rennell",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1032": {
+   "id": 4517,
+   "name": "Kusaie",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1037": {
+   "id": 4522,
+   "name": "Malaita",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1038": {
+   "id": 4523,
+   "name": "San Cristobal",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1044": {
+   "id": 4600,
+   "name": "Attu/Kiska",
+   "region": "Alaska",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1056": {
+   "id": 4612,
+   "name": "Wake",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1059": {
+   "id": 4615,
+   "name": "Rongelap",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1060": {
+   "id": 4616,
+   "name": "Ujae",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1073": {
+   "id": 4700,
+   "name": "Amchitka",
+   "region": "Alaska",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1086": {
+   "id": 4713,
+   "name": "Taongi",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1088": {
+   "id": 4715,
+   "name": "Kwajalein",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1089": {
+   "id": 4716,
+   "name": "Namu",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1092": {
+   "id": 4719,
+   "name": "Nauru",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1096": {
+   "id": 4723,
+   "name": "Ndeni",
+   "region": "Hebrides",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1102": {
+   "id": 4800,
+   "name": "Adak",
+   "region": "Alaska",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1117": {
+   "id": 4815,
+   "name": "Wotje",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1118": {
+   "id": 4816,
+   "name": "Maloelap",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1119": {
+   "id": 4817,
+   "name": "Jaluit",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1121": {
+   "id": 4819,
+   "name": "Ocean",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1126": {
+   "id": 4824,
+   "name": "Tora Vanikoro",
+   "region": "Hebrides",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1127": {
+   "id": 4825,
+   "name": "Espiritu Santo",
+   "region": "Hebrides",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1128": {
+   "id": 4826,
+   "name": "Efate",
+   "region": "Hebrides",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1129": {
+   "id": 4827,
+   "name": "Mare",
+   "region": "Hebrides",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1130": {
+   "id": 4828,
+   "name": "Moumea",
+   "region": "Hebrides",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1147": {
+   "id": 4916,
+   "name": "Mili",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1156": {
+   "id": 4925,
+   "name": "Pentacost",
+   "region": "Hebrides",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1157": {
+   "id": 4926,
+   "name": "Tana",
+   "region": "Hebrides",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1160": {
+   "id": 5000,
+   "name": "Umnak",
+   "region": "Alaska",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1178": {
+   "id": 5018,
+   "name": "Tarawa",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1179": {
+   "id": 5019,
+   "name": "Nonouti",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1189": {
+   "id": 5100,
+   "name": "Dutch Harbor",
+   "region": "Alaska",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1197": {
+   "id": 5108,
+   "name": "Midway",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1208": {
+   "id": 5119,
+   "name": "Onotoa",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1239": {
+   "id": 5221,
+   "name": "Nanumea",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1268": {
+   "id": 5321,
+   "name": "Funafuti",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1272": {
+   "id": 5325,
+   "name": "Viti",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1284": {
+   "id": 5408,
+   "name": "Air Ferry",
+   "region": null,
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1293": {
+   "id": 5417,
+   "name": "Howland",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1294": {
+   "id": 5418,
+   "name": "Baker",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1299": {
+   "id": 5423,
+   "name": "Is. le Horn",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1301": {
+   "id": 5425,
+   "name": "Vanua",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1316": {
+   "id": 5511,
+   "name": "Johnston",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1330": {
+   "id": 5525,
+   "name": "Lau Group",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1371": {
+   "id": 5708,
+   "name": "Kauai",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1380": {
+   "id": 5717,
+   "name": "Canton",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1382": {
+   "id": 5719,
+   "name": "Gardner",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1383": {
+   "id": 5720,
+   "name": "Atafu",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1387": {
+   "id": 5724,
+   "name": "Tongatabu",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1400": {
+   "id": 5808,
+   "name": "Oahu",
+   "region": "Oceania",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1406": {
+   "id": 5814,
+   "name": "Palmyra",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1411": {
+   "id": 5819,
+   "name": "Phoenix",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1413": {
+   "id": 5821,
+   "name": "Fakaofo",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1415": {
+   "id": 5823,
+   "name": "Samoe",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1429": {
+   "id": 5908,
+   "name": "Hilo",
+   "region": "Oceania",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  }
+ },
+ "landHexes": {
+  "5": {
+   "id": 1005,
+   "name": "Maldive Is.",
+   "region": "Ceylon",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "64": {
+   "id": 1206,
+   "name": null,
+   "region": "India",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "93": {
+   "id": 1306,
+   "name": null,
+   "region": "India",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "94": {
+   "id": 1307,
+   "name": "Colombo",
+   "region": "Ceylon",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "95": {
+   "id": 1308,
+   "name": "Trincomalee",
+   "region": "Ceylon",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "122": {
+   "id": 1406,
+   "name": "Madras",
+   "region": "India",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "150": {
+   "id": 1505,
+   "name": null,
+   "region": "India",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "180": {
+   "id": 1606,
+   "name": null,
+   "region": "India",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "208": {
+   "id": 1705,
+   "name": null,
+   "region": "India",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "215": {
+   "id": 1712,
+   "name": null,
+   "region": "Sumatra",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "216": {
+   "id": 1713,
+   "name": null,
+   "region": "Sumatra",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "217": {
+   "id": 1714,
+   "name": null,
+   "region": "Sumatra",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "237": {
+   "id": 1805,
+   "name": "Calcutta",
+   "region": "India",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "245": {
+   "id": 1813,
+   "name": "Medan",
+   "region": "Sumatra",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": false
+  },
+  "246": {
+   "id": 1814,
+   "name": null,
+   "region": "Sumatra",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "247": {
+   "id": 1815,
+   "name": null,
+   "region": "Sumatra",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "248": {
+   "id": 1816,
+   "name": null,
+   "region": "Sumatra",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "249": {
+   "id": 1817,
+   "name": null,
+   "region": "Sumatra",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "266": {
+   "id": 1905,
+   "name": "Dacca",
+   "region": "NIndia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "272": {
+   "id": 1911,
+   "name": null,
+   "region": "Siam",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "273": {
+   "id": 1912,
+   "name": "Jitra",
+   "region": "Malaya",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "274": {
+   "id": 1913,
+   "name": "Kuala Lumpur",
+   "region": "Malaya",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "275": {
+   "id": 1914,
+   "name": null,
+   "region": "Sumatra",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "276": {
+   "id": 1915,
+   "name": null,
+   "region": "Sumatra",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "277": {
+   "id": 1916,
+   "name": "Palembang",
+   "region": "Sumatra",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": false
+  },
+  "278": {
+   "id": 1917,
+   "name": "Teloekbetoeng",
+   "region": "Sumatra",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "279": {
+   "id": 1918,
+   "name": null,
+   "region": "Java",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "295": {
+   "id": 2005,
+   "name": "Dimasur",
+   "region": "NIndia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "296": {
+   "id": 2006,
+   "name": "Akyab",
+   "region": "Burma",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "297": {
+   "id": 2007,
+   "name": null,
+   "region": "Burma",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "298": {
+   "id": 2008,
+   "name": "Rangoon",
+   "region": "Burma",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": true
+  },
+  "300": {
+   "id": 2010,
+   "name": null,
+   "region": "Siam",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "301": {
+   "id": 2011,
+   "name": null,
+   "region": "Siam",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "302": {
+   "id": 2012,
+   "name": "Singora",
+   "region": "Malaya",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "303": {
+   "id": 2013,
+   "name": null,
+   "region": "Malaya",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "304": {
+   "id": 2014,
+   "name": "Kuantan",
+   "region": "Malaya",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": false
+  },
+  "305": {
+   "id": 2015,
+   "name": "Singapore",
+   "region": "Malaya",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "307": {
+   "id": 2017,
+   "name": "Bangka",
+   "region": "Sumatra",
+   "city": null,
+   "resource": true,
+   "airfield": false,
+   "port": false
+  },
+  "308": {
+   "id": 2018,
+   "name": "Batavia",
+   "region": "Java",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "309": {
+   "id": 2019,
+   "name": "Tjilatjap",
+   "region": "Java",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "317": {
+   "id": 2027,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "318": {
+   "id": 2028,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "323": {
+   "id": 2104,
+   "name": "Jarhat",
+   "region": "NIndia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "324": {
+   "id": 2105,
+   "name": "Imphal",
+   "region": "NIndia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "325": {
+   "id": 2106,
+   "name": "Mandalay",
+   "region": "Burma",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "326": {
+   "id": 2107,
+   "name": null,
+   "region": "Burma",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "327": {
+   "id": 2108,
+   "name": null,
+   "region": "Burma",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "328": {
+   "id": 2109,
+   "name": null,
+   "region": "Siam",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "329": {
+   "id": 2110,
+   "name": "Bangkok",
+   "region": "Siam",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "330": {
+   "id": 2111,
+   "name": null,
+   "region": "Indochina",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "331": {
+   "id": 2112,
+   "name": "Kota Bharu",
+   "region": "Malaya",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "332": {
+   "id": 2113,
+   "name": null,
+   "region": "Malaya",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "336": {
+   "id": 2117,
+   "name": "Billiton",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "338": {
+   "id": 2119,
+   "name": null,
+   "region": "Java",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "345": {
+   "id": 2126,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "346": {
+   "id": 2127,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "353": {
+   "id": 2205,
+   "name": "Ledo",
+   "region": "NIndia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "354": {
+   "id": 2206,
+   "name": "Lashio",
+   "region": "Burma",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "355": {
+   "id": 2207,
+   "name": null,
+   "region": "Burma",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "356": {
+   "id": 2208,
+   "name": null,
+   "region": "Indochina",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "357": {
+   "id": 2209,
+   "name": null,
+   "region": "Siam",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "358": {
+   "id": 2210,
+   "name": "Udorn",
+   "region": "Siam",
+   "city": "CITY",
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "359": {
+   "id": 2211,
+   "name": "Phnom Penh",
+   "region": "Indochina",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "360": {
+   "id": 2212,
+   "name": "Saigon",
+   "region": "Indochina",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "364": {
+   "id": 2216,
+   "name": "Sinkawang",
+   "region": "Borneo",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "365": {
+   "id": 2217,
+   "name": null,
+   "region": "Borneo",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "366": {
+   "id": 2218,
+   "name": null,
+   "region": "Borneo",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "368": {
+   "id": 2220,
+   "name": "Soerabaja",
+   "region": "Java",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": true
+  },
+  "374": {
+   "id": 2226,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "375": {
+   "id": 2227,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "376": {
+   "id": 2228,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "382": {
+   "id": 2305,
+   "name": "Myitkyina",
+   "region": "Burma",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "383": {
+   "id": 2306,
+   "name": null,
+   "region": "IChina",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "384": {
+   "id": 2307,
+   "name": null,
+   "region": "IChina",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "385": {
+   "id": 2308,
+   "name": null,
+   "region": "Indochina",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "386": {
+   "id": 2309,
+   "name": null,
+   "region": "Indochina",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "387": {
+   "id": 2310,
+   "name": null,
+   "region": "Indochina",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "388": {
+   "id": 2311,
+   "name": "Cam Ranh",
+   "region": "Indochina",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "389": {
+   "id": 2312,
+   "name": null,
+   "region": "Indochina",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "392": {
+   "id": 2315,
+   "name": null,
+   "region": "Borneo",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "393": {
+   "id": 2316,
+   "name": null,
+   "region": "Borneo",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "394": {
+   "id": 2317,
+   "name": null,
+   "region": "Borneo",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "395": {
+   "id": 2318,
+   "name": "Bandjermasin",
+   "region": "Borneo",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "397": {
+   "id": 2320,
+   "name": "Bali",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "403": {
+   "id": 2326,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "404": {
+   "id": 2327,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "412": {
+   "id": 2406,
+   "name": null,
+   "region": "IChina",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "413": {
+   "id": 2407,
+   "name": "Kunming",
+   "region": "IChina",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "414": {
+   "id": 2408,
+   "name": null,
+   "region": "IChina",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "415": {
+   "id": 2409,
+   "name": "Hanoi",
+   "region": "Indochina",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "416": {
+   "id": 2410,
+   "name": "Hue",
+   "region": "Indochina",
+   "city": "CITY",
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "417": {
+   "id": 2411,
+   "name": null,
+   "region": "Indochina",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "421": {
+   "id": 2415,
+   "name": "Miri",
+   "region": "Borneo",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": true
+  },
+  "422": {
+   "id": 2416,
+   "name": null,
+   "region": "Borneo",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "423": {
+   "id": 2417,
+   "name": null,
+   "region": "Borneo",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "424": {
+   "id": 2418,
+   "name": null,
+   "region": "Borneo",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "427": {
+   "id": 2421,
+   "name": "Soembawa",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "431": {
+   "id": 2425,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "432": {
+   "id": 2426,
+   "name": "Broome",
+   "region": "Australia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "433": {
+   "id": 2427,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "441": {
+   "id": 2506,
+   "name": null,
+   "region": "IChina",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "442": {
+   "id": 2507,
+   "name": null,
+   "region": "IChina",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "443": {
+   "id": 2508,
+   "name": "Yungning",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "444": {
+   "id": 2509,
+   "name": "Hainan",
+   "region": "China",
+   "city": "CITY",
+   "resource": false,
+   "airfield": false,
+   "port": true
+  },
+  "450": {
+   "id": 2515,
+   "name": null,
+   "region": "Borneo",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "451": {
+   "id": 2516,
+   "name": null,
+   "region": "Borneo",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "452": {
+   "id": 2517,
+   "name": "Balikpapan",
+   "region": "Borneo",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": true
+  },
+  "456": {
+   "id": 2521,
+   "name": "Soemba",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "459": {
+   "id": 2524,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "460": {
+   "id": 2525,
+   "name": "Derby",
+   "region": "Australia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "472": {
+   "id": 2608,
+   "name": null,
+   "region": "IChina",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "473": {
+   "id": 2609,
+   "name": "Canton",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "479": {
+   "id": 2615,
+   "name": null,
+   "region": "Borneo",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "480": {
+   "id": 2616,
+   "name": "Tarakan",
+   "region": "Borneo",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": true
+  },
+  "481": {
+   "id": 2617,
+   "name": null,
+   "region": "Borneo",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "482": {
+   "id": 2618,
+   "name": null,
+   "region": "Celebes",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "483": {
+   "id": 2619,
+   "name": null,
+   "region": "Celebes",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "484": {
+   "id": 2620,
+   "name": "Makassar",
+   "region": "Celebes",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "485": {
+   "id": 2621,
+   "name": "Flores",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "486": {
+   "id": 2622,
+   "name": "Roti",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "489": {
+   "id": 2625,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "490": {
+   "id": 2626,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "501": {
+   "id": 2708,
+   "name": null,
+   "region": "China",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "502": {
+   "id": 2709,
+   "name": "Hong Kong",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "506": {
+   "id": 2713,
+   "name": null,
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "507": {
+   "id": 2714,
+   "name": null,
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "508": {
+   "id": 2715,
+   "name": "Jolo",
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "510": {
+   "id": 2717,
+   "name": null,
+   "region": "Celebes",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "511": {
+   "id": 2718,
+   "name": null,
+   "region": "Celebes",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "512": {
+   "id": 2719,
+   "name": "Kendari",
+   "region": "Celebes",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "514": {
+   "id": 2721,
+   "name": "Koepang",
+   "region": "DEI",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "517": {
+   "id": 2724,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "518": {
+   "id": 2725,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "531": {
+   "id": 2809,
+   "name": "Swatow",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "534": {
+   "id": 2812,
+   "name": null,
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "535": {
+   "id": 2813,
+   "name": "Manila",
+   "region": "Philippines",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": true
+  },
+  "536": {
+   "id": 2814,
+   "name": "Panay",
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "537": {
+   "id": 2815,
+   "name": null,
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "540": {
+   "id": 2818,
+   "name": null,
+   "region": "Celebes",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "541": {
+   "id": 2819,
+   "name": "Soela",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "543": {
+   "id": 2821,
+   "name": "Wetar",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "544": {
+   "id": 2822,
+   "name": null,
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "546": {
+   "id": 2824,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "547": {
+   "id": 2825,
+   "name": "Wyndham",
+   "region": "Australia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "548": {
+   "id": 2826,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "559": {
+   "id": 2908,
+   "name": "Wenchow",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "560": {
+   "id": 2909,
+   "name": "Tainan",
+   "region": "Formosa",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "561": {
+   "id": 2910,
+   "name": "Batan",
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "562": {
+   "id": 2911,
+   "name": null,
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "563": {
+   "id": 2912,
+   "name": null,
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "564": {
+   "id": 2913,
+   "name": null,
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "565": {
+   "id": 2914,
+   "name": "Cebu",
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "566": {
+   "id": 2915,
+   "name": "Davao",
+   "region": "Philippines",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "568": {
+   "id": 2917,
+   "name": "Menado",
+   "region": "Celebes",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "569": {
+   "id": 2918,
+   "name": "Batjan",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "570": {
+   "id": 2919,
+   "name": "Amboina",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "572": {
+   "id": 2921,
+   "name": "Moa",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "574": {
+   "id": 2923,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "575": {
+   "id": 2924,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "576": {
+   "id": 2925,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "584": {
+   "id": 3004,
+   "name": "Peiping",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "585": {
+   "id": 3005,
+   "name": "Tientsin",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "586": {
+   "id": 3006,
+   "name": null,
+   "region": "China",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "587": {
+   "id": 3007,
+   "name": "Shanghai",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "588": {
+   "id": 3008,
+   "name": null,
+   "region": "China",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "589": {
+   "id": 3009,
+   "name": "Taihoku",
+   "region": "Formosa",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "594": {
+   "id": 3014,
+   "name": "Leyte",
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "595": {
+   "id": 3015,
+   "name": null,
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "596": {
+   "id": 3016,
+   "name": null,
+   "region": "Philippines",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "597": {
+   "id": 3017,
+   "name": "Motorai",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "598": {
+   "id": 3018,
+   "name": "Halmahera",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "599": {
+   "id": 3019,
+   "name": "Obi",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "600": {
+   "id": 3020,
+   "name": "Ceram",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "601": {
+   "id": 3021,
+   "name": "Babar",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "603": {
+   "id": 3023,
+   "name": "Darwin",
+   "region": "Australia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "604": {
+   "id": 3024,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "605": {
+   "id": 3025,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "612": {
+   "id": 3103,
+   "name": null,
+   "region": "China",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "613": {
+   "id": 3104,
+   "name": "Port Arthur",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "614": {
+   "id": 3105,
+   "name": "Tsingtao",
+   "region": "China",
+   "city": "CHINESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "615": {
+   "id": 3106,
+   "name": null,
+   "region": "China",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "627": {
+   "id": 3118,
+   "name": "Waigeo",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "628": {
+   "id": 3119,
+   "name": "Sarong",
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "630": {
+   "id": 3121,
+   "name": "Tanimbar",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "632": {
+   "id": 3123,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "633": {
+   "id": 3124,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "634": {
+   "id": 3125,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "641": {
+   "id": 3203,
+   "name": null,
+   "region": "Manchuria",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "642": {
+   "id": 3204,
+   "name": null,
+   "region": "Manchuria",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "643": {
+   "id": 3205,
+   "name": null,
+   "region": "Korea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "644": {
+   "id": 3206,
+   "name": null,
+   "region": "Korea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "647": {
+   "id": 3209,
+   "name": "Okinawa",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "657": {
+   "id": 3219,
+   "name": "Vogelkop",
+   "region": "Guinea",
+   "city": null,
+   "resource": true,
+   "airfield": false,
+   "port": false
+  },
+  "658": {
+   "id": 3220,
+   "name": null,
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "659": {
+   "id": 3221,
+   "name": "Aroe",
+   "region": "DEI",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "662": {
+   "id": 3224,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "663": {
+   "id": 3225,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "664": {
+   "id": 3226,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "665": {
+   "id": 3227,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "669": {
+   "id": 3302,
+   "name": "Harbin",
+   "region": "Manchuria",
+   "city": "CHINESE_CITY",
+   "resource": true,
+   "airfield": true,
+   "port": false
+  },
+  "670": {
+   "id": 3303,
+   "name": "Mukden",
+   "region": "Manchuria",
+   "city": "CHINESE_CITY",
+   "resource": true,
+   "airfield": true,
+   "port": false
+  },
+  "671": {
+   "id": 3304,
+   "name": null,
+   "region": "Korea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "672": {
+   "id": 3305,
+   "name": "Seoul",
+   "region": "Korea",
+   "city": "CITY",
+   "resource": true,
+   "airfield": true,
+   "port": true
+  },
+  "673": {
+   "id": 3306,
+   "name": "Pusan",
+   "region": "Korea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "674": {
+   "id": 3307,
+   "name": "Kynshu",
+   "region": "Japan",
+   "city": "JAPANESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "675": {
+   "id": 3308,
+   "name": "Shima",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "676": {
+   "id": 3309,
+   "name": "Rasa",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "686": {
+   "id": 3319,
+   "name": "Biak",
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "687": {
+   "id": 3320,
+   "name": null,
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "691": {
+   "id": 3324,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "692": {
+   "id": 3325,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "693": {
+   "id": 3326,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "694": {
+   "id": 3327,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "698": {
+   "id": 3402,
+   "name": null,
+   "region": "Manchuria",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "699": {
+   "id": 3403,
+   "name": null,
+   "region": "Manchuria",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "700": {
+   "id": 3404,
+   "name": null,
+   "region": "Manchuria",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "703": {
+   "id": 3407,
+   "name": "Kure",
+   "region": "Japan",
+   "city": "JAPANESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "712": {
+   "id": 3416,
+   "name": "Palau",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "716": {
+   "id": 3420,
+   "name": null,
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "717": {
+   "id": 3421,
+   "name": null,
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "718": {
+   "id": 3422,
+   "name": null,
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "721": {
+   "id": 3425,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "722": {
+   "id": 3426,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "723": {
+   "id": 3427,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "724": {
+   "id": 3428,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "731": {
+   "id": 3506,
+   "name": "Kyoto",
+   "region": "Japan",
+   "city": "JAPANESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "732": {
+   "id": 3507,
+   "name": "Osaka",
+   "region": "Japan",
+   "city": "JAPANESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "740": {
+   "id": 3515,
+   "name": "Yap",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "744": {
+   "id": 3519,
+   "name": null,
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "745": {
+   "id": 3520,
+   "name": "Hollandia",
+   "region": "Guinea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "746": {
+   "id": 3521,
+   "name": null,
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "747": {
+   "id": 3522,
+   "name": null,
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "749": {
+   "id": 3524,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "750": {
+   "id": 3525,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "751": {
+   "id": 3526,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "752": {
+   "id": 3527,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "760": {
+   "id": 3606,
+   "name": null,
+   "region": "Japan",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "761": {
+   "id": 3607,
+   "name": "Nagoya",
+   "region": "Japan",
+   "city": "JAPANESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "769": {
+   "id": 3615,
+   "name": "Ulithi",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "774": {
+   "id": 3620,
+   "name": "Aitape",
+   "region": "Guinea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "775": {
+   "id": 3621,
+   "name": null,
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "776": {
+   "id": 3622,
+   "name": null,
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "777": {
+   "id": 3623,
+   "name": null,
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "778": {
+   "id": 3624,
+   "name": "Cape York",
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "779": {
+   "id": 3625,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "780": {
+   "id": 3626,
+   "name": "Cairns",
+   "region": "Australia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "781": {
+   "id": 3627,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "782": {
+   "id": 3628,
+   "name": null,
+   "region": "Australia",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "786": {
+   "id": 3703,
+   "name": null,
+   "region": "Japan",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "787": {
+   "id": 3704,
+   "name": "Hakodate",
+   "region": "Japan",
+   "city": "JAPANESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "788": {
+   "id": 3705,
+   "name": "Ominato",
+   "region": "Japan",
+   "city": "JAPANESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "789": {
+   "id": 3706,
+   "name": "Tokyo",
+   "region": "Japan",
+   "city": "JAPANESE_CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "791": {
+   "id": 3708,
+   "name": "Bonin",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "792": {
+   "id": 3709,
+   "name": "Iwo Jima",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "799": {
+   "id": 3716,
+   "name": "Woleai",
+   "region": "Caroline",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "802": {
+   "id": 3719,
+   "name": "Ninigo",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "803": {
+   "id": 3720,
+   "name": "Wewak",
+   "region": "Guinea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "804": {
+   "id": 3721,
+   "name": "Madang",
+   "region": "Guinea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "805": {
+   "id": 3722,
+   "name": null,
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "810": {
+   "id": 3727,
+   "name": "Townsville",
+   "region": "Australia",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "812": {
+   "id": 3800,
+   "name": null,
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "813": {
+   "id": 3801,
+   "name": null,
+   "region": "Sakhalin",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "814": {
+   "id": 3802,
+   "name": null,
+   "region": "Sakhalin",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "815": {
+   "id": 3803,
+   "name": null,
+   "region": "Sakhalin",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "816": {
+   "id": 3804,
+   "name": null,
+   "region": "Japan",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "824": {
+   "id": 3812,
+   "name": "Asuncion",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "825": {
+   "id": 3813,
+   "name": "Saipan",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "826": {
+   "id": 3814,
+   "name": "Guam",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "828": {
+   "id": 3816,
+   "name": "Faraulep",
+   "region": "Caroline",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "829": {
+   "id": 3817,
+   "name": "Ifalik",
+   "region": "Caroline",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "832": {
+   "id": 3820,
+   "name": "Admiralty Islands",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "834": {
+   "id": 3822,
+   "name": "Lae",
+   "region": "Guinea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "835": {
+   "id": 3823,
+   "name": "Port Moresby",
+   "region": "Guinea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "841": {
+   "id": 3900,
+   "name": null,
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "857": {
+   "id": 3916,
+   "name": "Pulap",
+   "region": "Caroline",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "862": {
+   "id": 3921,
+   "name": "Gasmata",
+   "region": "AMandates",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "863": {
+   "id": 3922,
+   "name": "Buna",
+   "region": "Guinea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "864": {
+   "id": 3923,
+   "name": null,
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "870": {
+   "id": 4000,
+   "name": null,
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "886": {
+   "id": 4016,
+   "name": "Hall",
+   "region": "Caroline",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "887": {
+   "id": 4017,
+   "name": "Truk",
+   "region": "Caroline",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "890": {
+   "id": 4020,
+   "name": "Kavieng",
+   "region": "AMandates",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "891": {
+   "id": 4021,
+   "name": "Rabaul",
+   "region": "AMandates",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "892": {
+   "id": 4022,
+   "name": null,
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "893": {
+   "id": 4023,
+   "name": "D`Entrecasteaux",
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "894": {
+   "id": 4024,
+   "name": "Gili Gili",
+   "region": "Guinea",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "899": {
+   "id": 4100,
+   "name": null,
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "909": {
+   "id": 4110,
+   "name": "Marcus",
+   "region": "JMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "916": {
+   "id": 4117,
+   "name": "Nomoi",
+   "region": "Caroline",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "919": {
+   "id": 4120,
+   "name": null,
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "920": {
+   "id": 4121,
+   "name": "Green",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "921": {
+   "id": 4122,
+   "name": "Woodlark",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "923": {
+   "id": 4124,
+   "name": "Rossel",
+   "region": "Guinea",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "928": {
+   "id": 4200,
+   "name": null,
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "949": {
+   "id": 4221,
+   "name": "Baka",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "950": {
+   "id": 4222,
+   "name": "Bougainville",
+   "region": "AMandates",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "957": {
+   "id": 4300,
+   "name": null,
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "973": {
+   "id": 4316,
+   "name": "Ponape",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "979": {
+   "id": 4322,
+   "name": "New Georgia",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "986": {
+   "id": 4400,
+   "name": null,
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1001": {
+   "id": 4415,
+   "name": "Eniwetok",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1008": {
+   "id": 4422,
+   "name": "Santa Isabel",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1009": {
+   "id": 4423,
+   "name": "Guadalcanal",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1010": {
+   "id": 4424,
+   "name": "Rennell",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1015": {
+   "id": 4500,
+   "name": null,
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1032": {
+   "id": 4517,
+   "name": "Kusaie",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1037": {
+   "id": 4522,
+   "name": "Malaita",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1038": {
+   "id": 4523,
+   "name": "San Cristobal",
+   "region": "AMandates",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1044": {
+   "id": 4600,
+   "name": "Attu/Kiska",
+   "region": "Alaska",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1056": {
+   "id": 4612,
+   "name": "Wake",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1059": {
+   "id": 4615,
+   "name": "Rongelap",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1060": {
+   "id": 4616,
+   "name": "Ujae",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1071": {
+   "id": 4627,
+   "name": null,
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1073": {
+   "id": 4700,
+   "name": "Amchitka",
+   "region": "Alaska",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1086": {
+   "id": 4713,
+   "name": "Taongi",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1088": {
+   "id": 4715,
+   "name": "Kwajalein",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1089": {
+   "id": 4716,
+   "name": "Namu",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1092": {
+   "id": 4719,
+   "name": "Nauru",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1096": {
+   "id": 4723,
+   "name": "Ndeni",
+   "region": "Hebrides",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1100": {
+   "id": 4727,
+   "name": null,
+   "region": "Hebrides",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1102": {
+   "id": 4800,
+   "name": "Adak",
+   "region": "Alaska",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1117": {
+   "id": 4815,
+   "name": "Wotje",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1118": {
+   "id": 4816,
+   "name": "Maloelap",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1119": {
+   "id": 4817,
+   "name": "Jaluit",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1121": {
+   "id": 4819,
+   "name": "Ocean",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1126": {
+   "id": 4824,
+   "name": "Tora Vanikoro",
+   "region": "Hebrides",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1127": {
+   "id": 4825,
+   "name": "Espiritu Santo",
+   "region": "Hebrides",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1128": {
+   "id": 4826,
+   "name": "Efate",
+   "region": "Hebrides",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1129": {
+   "id": 4827,
+   "name": "Mare",
+   "region": "Hebrides",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1130": {
+   "id": 4828,
+   "name": "Moumea",
+   "region": "Hebrides",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1131": {
+   "id": 4900,
+   "name": null,
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1147": {
+   "id": 4916,
+   "name": "Mili",
+   "region": "Marshall",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1156": {
+   "id": 4925,
+   "name": "Pentacost",
+   "region": "Hebrides",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1157": {
+   "id": 4926,
+   "name": "Tana",
+   "region": "Hebrides",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1160": {
+   "id": 5000,
+   "name": "Umnak",
+   "region": "Alaska",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1178": {
+   "id": 5018,
+   "name": "Tarawa",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1179": {
+   "id": 5019,
+   "name": "Nonouti",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1189": {
+   "id": 5100,
+   "name": "Dutch Harbor",
+   "region": "Alaska",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1197": {
+   "id": 5108,
+   "name": "Midway",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1208": {
+   "id": 5119,
+   "name": "Onotoa",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1218": {
+   "id": 5200,
+   "name": null,
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1239": {
+   "id": 5221,
+   "name": "Nanumea",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1268": {
+   "id": 5321,
+   "name": "Funafuti",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1272": {
+   "id": 5325,
+   "name": "Viti",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1293": {
+   "id": 5417,
+   "name": "Howland",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1294": {
+   "id": 5418,
+   "name": "Baker",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1299": {
+   "id": 5423,
+   "name": "Is. le Horn",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1301": {
+   "id": 5425,
+   "name": "Vanua",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1316": {
+   "id": 5511,
+   "name": "Johnston",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1330": {
+   "id": 5525,
+   "name": "Lau Group",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1371": {
+   "id": 5708,
+   "name": "Kauai",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1380": {
+   "id": 5717,
+   "name": "Canton",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1382": {
+   "id": 5719,
+   "name": "Gardner",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1383": {
+   "id": 5720,
+   "name": "Atafu",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1387": {
+   "id": 5724,
+   "name": "Tongatabu",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1400": {
+   "id": 5808,
+   "name": "Oahu",
+   "region": "Oceania",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1406": {
+   "id": 5814,
+   "name": "Palmyra",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": false
+  },
+  "1411": {
+   "id": 5819,
+   "name": "Phoenix",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1413": {
+   "id": 5821,
+   "name": "Fakaofo",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": false,
+   "port": false
+  },
+  "1415": {
+   "id": 5823,
+   "name": "Samoe",
+   "region": "Oceania",
+   "city": null,
+   "resource": false,
+   "airfield": true,
+   "port": true
+  },
+  "1429": {
+   "id": 5908,
+   "name": "Hilo",
+   "region": "Oceania",
+   "city": "CITY",
+   "resource": false,
+   "airfield": true,
+   "port": false
+  }
+ }
+}
