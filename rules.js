@@ -19771,10 +19771,13 @@ function eop_clear_all_chains() {
     EOP_OVERRIDE = { Japan: null, Allies: null }
 }
 
-// 当前主轴的完整目标链 (只含能解析到真实 hex 的目标; 解析失败的目标静默跳过)。
+// 当前主轴的完整目标链。外部链覆盖(erasmus_state)直接携带已解析好的有序 idx
+// chain(=parse_goals 全部 hex, 忠实 py target_chain), 不走 token 二次解析;
+// 默认 EOP_AXES 走 name/4-digit token -> idx。
 function eop_axis_chain(role) {
     const axis = eop_axis(role)
     if (!axis) return []
+    if (Array.isArray(axis.chain) && axis.chain.length) return axis.chain.slice()
     const out = []
     for (const tk of axis.tokens) {
         const idx = eop_resolve_token(tk)
@@ -19786,9 +19789,10 @@ function eop_axis_chain(role) {
 // 该方当前应当遵循的主轴; 无主轴(如日本资源已足、转入防守)返回 null。
 function eop_axis(role) {
     const ov = EOP_OVERRIDE[role]
-    if (ov && ov.tokens && ov.tokens.length) {
+    if (ov && ((ov.tokens && ov.tokens.length) || (Array.isArray(ov.chain) && ov.chain.length))) {
         return { id: ov.name || (role + "_AXIS"), role: role,
-            note: ov.note ? `${ov.name} — ${ov.note}` : (ov.name || role + "轴"), tokens: ov.tokens }
+            note: ov.note ? `${ov.name} — ${ov.note}` : (ov.name || role + "轴"),
+            tokens: ov.tokens || [], chain: ov.chain || [] }
     }
     if (role === "Allies") return EOP_AXES.AP
     // 日本: 控制资源 < 13 时抢南方资源; 达标后转入防守, 不再无谓远征。
@@ -19895,10 +19899,16 @@ var ERASMUS_CHARTS = [{"schema_version":2,"id":"ERASMUS-JP-01","chart_id":"ERASM
 //
 // 确定性: 不进引擎 RNG(绝不碰 G.seed)。随机分支(d10) 用 erasmus_hash 派生。
 
-// ---- 策略 kind ------------------------------------------------------------
-// CONQUEST: 有序夺控目标链（喂 eop 焦点层）; EVENT: 事件战略(选事件牌);
+// ---- 策略 kind(策略级: 驱动选牌窗/微执行) --------------------------------
+// CONQUEST: 有序夺控/作战目标链(喂 eop 焦点层); EVENT: 事件战略(选事件牌);
 // PASS: 本回合跳; GARRISON/DEFEND: v1 有界近似(按 EVENT 微执行, trace 标注);
-// ABSTRACT: 抽象目标(B29/原子弹) -> 无链，按 EVENT/默认轴微执行; 特殊标记在 notes。
+// ABSTRACT: 抽象目标(B29/原子弹) -> 无链，按 EVENT/默认轴微执行。
+//
+// ---- 目标级 kind(每行 parse_goals, 忠实 py L801-943) ----------------------
+// CONQUEST 夺取/投降名单; SUPPRESS 压制AZOI(不夺控); GARRISON 驻军(需己控);
+// PORTS 加强港口; INVADE_JAPAN 登陆日本本土(预案 marker 或带城市名单);
+// B29/NAVAL/ADMIN 行政/舰队/事件 —— 无 hex 或交事件窗。
+// chain(喂 eop 焦点层) = parse_goals 全部 hex 去重保序(py execute 的 target_chain)。
 
 var ESM_GATE_CACHE = {}
 var ESM_LOCKED = {}          // key `${seed}|${sid}` -> { turn, role: {Japan:{...},Allies:{...}}, seenOrd, bombFail, lastTurn }
@@ -20319,71 +20329,267 @@ function esm_atomic_met(lock) {
 }
 
 // ===========================================================================
-// 策略表(转录 py L169-513; 每项含说明行/notes/可解析目标 token)
-// kind: CONQUEST/EVENT/PASS/GARRISON/DEFEND/ABSTRACT
+// parse_goals 移植(py L101-116/L801-943): 把“有序分步目标”每行解析成 Goal
+// (kind + 有序 hex + region + 抽象项), 供计划审计与 chain(喂 eop) 使用。
+// 逐字复刻 py: 分类关键字/指针(见X)/区域资源展开/落底 region 命名格 全保留。
+// 地图注册表 = engine get_map_data(与 py 一次性导出 data/erasmus/map_names.json
+// 同源); 解析只在 gate 开时运行(短路的引擎函数取不到也不炸)。
 // ===========================================================================
-const ESM_STRATEGY = (name, kind, tokens, notes) => ({ name, kind, tokens, notes })
+var ESM_PARSE_REG = null            // 单次 parse 期间的注册表(指针递归共用)
 
+function esm_reg_from_entries(land, namedMap) {
+    // land: Map<idx,{region}>; namedMap: Map<idx,{name,region,resource}> —— py HEXES/LAND
+    const named = [], namedIdx = new Set(), regionNamed = new Map(), regionResource = new Map()
+    const push = (m, region, idx) => { if (!m.has(region)) m.set(region, []); m.get(region).push(idx) }
+    const idxs = Array.from(new Set([...land.keys(), ...namedMap.keys()])).sort((a, b) => a - b)
+    for (const idx of idxs) {
+        const lr = land.get(idx), ne = namedMap.get(idx)
+        const region = ne ? ne.region : (lr ? lr.region : null)
+        if (region) push(regionNamed, region, idx)
+        if (ne) {
+            named.push({ idx, name: ne.name, region: ne.region, resource: !!ne.resource })
+            namedIdx.add(idx)
+            if (ne.resource && ne.region) push(regionResource, ne.region, idx)
+        }
+    }
+    return { named, namedIdx, regionNamed, regionResource }
+}
+
+function esm_reg_build() {
+    if (ESM_PARSE_REG) return ESM_PARSE_REG
+    if (typeof get_map_data !== "function" || typeof LAST_BOARD_HEX === "undefined") return null
+    const sid = (typeof G !== "undefined" && G) ? G.sid : "?"
+    if (ESM_PREP._reg && ESM_PREP._reg.sid === sid) return ESM_PREP._reg
+    const land = new Map(), namedMap = new Map()
+    for (let i = 0; i <= LAST_BOARD_HEX; i++) {
+        let md = null
+        try { md = get_map_data(i) } catch (e) { md = null }
+        if (!md) continue
+        if (md.region) land.set(i, { region: md.region })
+        if (md.name) namedMap.set(i, { name: String(md.name), region: md.region, resource: !!md.resource })
+    }
+    ESM_PREP._reg = esm_reg_from_entries(land, namedMap)
+    ESM_PREP._reg.sid = sid
+    return ESM_PREP._reg
+}
+
+// ---- 目标词 -> hex(逐字 py L63-116) ---------------------------------------
+const ESM_NAME_ALIASES = { "uluthi": "Ulithi", "uluth": "Ulithi", "timor": "Koepang",
+    "gili-gili": "Gili Gili", "marcus island": "Marcus", "marshalls": "Kwajalein",
+    "saipan/tinian": "Saipan", "dutch harbor": "Dutch Harbor", "attukiska": "Attu/Kiska",
+    "sasebo": "Kynshu" }
+function esm_norm(s) { return String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "") }
+function esm_name_hexes(token) {
+    const reg = esm_reg_build()
+    let t = esm_norm(token)
+    if (Object.prototype.hasOwnProperty.call(ESM_NAME_ALIASES, t)) t = esm_norm(ESM_NAME_ALIASES[t])
+    if (!t || t.length < 3 || !reg) return []
+    const hits = []
+    for (const e of reg.named) { const n = esm_norm(e.name); if (t.includes(n) || n.includes(t)) hits.push(e.idx) }
+    return hits
+}
+function esm_line_hexes(text) {
+    const hexes = []
+    let m
+    const idRe = /\d{4}/g
+    while ((m = idRe.exec(text))) {                     // 4-digit hex id 先取(py 顺序)
+        const id = +m[0], idx = (Math.floor(id / 100) - 10) * 29 + (id % 100)
+        if (hexes.indexOf(idx) < 0) hexes.push(idx)
+    }
+    const runRe = /[A-Za-z][A-Za-z\-/\. ]{1,30}[A-Za-z]/g   // 英文名按出现序(py 同)
+    while ((m = runRe.exec(text))) {
+        for (const idx of esm_name_hexes(m[0])) if (hexes.indexOf(idx) < 0) hexes.push(idx)
+    }
+    return hexes
+}
+
+// ---- 行分类(逐字 py _classify L874-897) ------------------------------------
+const ESM_ADMIN_KW = ["Roll", "1d10", "切换", "放牌", "跳过", "PASS", "FOQ", "按顺序",
+    "整理手牌", "同早期", "事件战略", "其他放牌", "如果已控制则加固", "欧战为正打欧战牌"]
+function esm_classify(text) {
+    if (ESM_ADMIN_KW.some(k => text.includes(k))) return "ADMIN"
+    if (text.includes("压制")) return "SUPPRESS"
+    if (text.includes("登陆日本") || text.includes("板载冲锋")) return "INVADE_JAPAN"
+    if (text.includes("攻击美国舰队") || text.includes("脱离") || text.includes("护航") ||
+        (text.includes("航母") && text.includes("攻击"))) return "NAVAL"
+    if (text.includes("B29") || text.includes("轰炸")) return "B29"
+    if (text.includes("驻军") || text.includes("加固")) return "GARRISON"
+    if (text.includes("加强港口")) return "PORTS"
+    if (["投降", "占领", "夺", "攻占", "推进", "登陆", "进军"].some(k => text.includes(k))) return "CONQUEST"
+    return esm_line_hexes(text).length ? "CONQUEST" : "ADMIN"
+}
+
+const ESM_CN_REGION = { "东印度": "DEI", "菲律宾": "Philippines", "马来亚": "Malaya", "缅甸": "Burma",
+    "中国": "China", "印度": "India", "新几内亚": "Guinea", "日本": "Japan", "中太平洋": "Marshall",
+    "澳洲": "Australia", "塞班": null, "硫磺岛": null, "冲绳": null, "台湾": null }
+function esm_region_of(text) {
+    for (const cn of Object.keys(ESM_CN_REGION)) {
+        const reg = ESM_CN_REGION[cn]
+        if (reg && text.includes(cn) && !text.includes(reg)) return reg
+    }
+    return null
+}
+
+// ---- 指针 / 区域资源 / 落底(py _resolve_pointer/_resource_hexes) -----------
+function esm_pointer_hexes(token, visiting) {
+    // 按 py _resolve_pointer(L857-871): 检索顺序 JP_MID,JP_EARLY,JP_LATE,AL_MID,
+    // AL_LATE,AL_EARLY; 每命中库键(或名)含 token 即把被指向战略的目标链
+    // 扁平化(跨 Goal 不去重, 与 py `[h for g in parse_goals(s) for h in g.hexes]`
+    // 一致), 取链长最长者返回。e.g. "见外围防御": JP_MID 外围(7格) vs JP_EARLY
+    // 外围(13格,含瓜岛) → 取 EARLY 13 格链(与 py 金标一致)。
+    const order = [["Japan", "mid"], ["Japan", "early"], ["Japan", "late"],
+                   ["Allies", "mid"], ["Allies", "late"], ["Allies", "early"]]
+    let best = []
+    for (const [role, phase] of order) {
+        const lib = esm_lib(role)[phase] || {}
+        for (const key of Object.keys(lib)) {
+            const e = lib[key]
+            if (!(key.includes(token) || token.includes(key) || (e.name || "").includes(token))) continue
+            const cand = esm_goal_hexes_of(role, phase, key, visiting)
+            if (cand.length > best.length) best = cand
+        }
+    }
+    return best
+}
+function esm_goal_hexes_of(role, phase, key, visiting) {
+    const entry = esm_strategy_entry(role, phase, key)
+    if (!entry) return []
+    const tag = role + "|" + phase + "|" + key
+    if (visiting.has(tag)) return []
+    visiting.add(tag)
+    const goals = esm_parse_goals_inner(entry, role, phase, visiting)
+    visiting.delete(tag)
+    // 跨 Goal 扁平化不去重(py _resolve_pointer 口径); 去重仅属执行链 esm_chain_of。
+    const chain = []
+    for (const g of goals) for (const h of g.hexes) chain.push(h)
+    return chain
+}
+
+// ---- 主解析(py parse_goals L907-943) ----------------------------------------
+function esm_parse_goals_inner(entry, role, phase, visiting) {
+    const reg = esm_reg_build()
+    const goals = []
+    const targets = (entry && entry.targets) || []
+    for (let i = 0; i < targets.length; i++) {
+        const text = String(targets[i]).trim()
+        if (!text) continue
+        const kind = esm_classify(text)
+        let hexes = esm_line_hexes(text)
+        const region = esm_region_of(text)
+        if (kind === "CONQUEST" && !hexes.length) {
+            const pm = text.match(/见\s*([一-鿿]+)/)          // “见外围防御”跨战略指针
+            if (pm) hexes = esm_pointer_hexes(pm[1], visiting)
+            if (!hexes.length && region) {
+                const rm = text.match(/所有[一-鿿]{0,8}资源/)   // “所有X资源”区域资源格
+                if (rm && reg && reg.regionResource.has(region)) {
+                    hexes = reg.regionResource.get(region).slice().sort((a, b) => a - b)
+                }
+            }
+            if (!hexes.length && region && reg) {            // 落底: region 命名格
+                const list = reg.regionNamed.get(region) || []
+                hexes = list.filter(h => reg.namedIdx.has(h)).sort((a, b) => a - b)
+            }
+        }
+        goals.push({ priority: i + 1, kind, text, hexes, region })
+    }
+    return goals
+}
+function esm_parse_entry(entry, role, phase, reg) {
+    const visiting = new Set()
+    const prev = ESM_PARSE_REG
+    ESM_PARSE_REG = reg || esm_reg_build()
+    try { return esm_parse_goals_inner(entry, role, phase, visiting) }
+    finally { ESM_PARSE_REG = prev }
+}
+function esm_chain_of(goals) {
+    const chain = []
+    for (const g of goals || []) for (const h of g.hexes) if (chain.indexOf(h) < 0) chain.push(h)
+    return chain
+}
+
+// ===========================================================================
+// 策略表(转录 py L169-513 原文): 键 = 决策树返回名; 每项 = {name(全称), kind
+// (策略级驱动), targets(逐字 py 目标行), notes}. targets 经 parse_goals 解析成
+// 有序 Goal(逐字分类/顺序/指针/资源展开) —— 与 py 同源可对拍。
+// ===========================================================================
 const ESM_JP_LIB = {
     early: {
-        "激进的空优战略": ESM_STRATEGY("激进的空优战略", "CONQUEST", ["Jolo", "Makassar", "Teloekbetoeng", "Bandjermasin"], ["压制东印度空优", "攻击覆盖目标的敌方 AZOI 单位(见 py 注4/7)"]),
-        "保守的空优战略": ESM_STRATEGY("保守的空优战略", "CONQUEST", ["Jolo", "Makassar", "Teloekbetoeng", "Bandjermasin"], ["压制盟军 HQ(菲律宾/新加坡/ABDA), 再压制东印度"]),
-        "激进的南方资源战略": ESM_STRATEGY("激进的南方资源战略", "CONQUEST", ["Balikpapan", "Tarakan", "Batavia", "Tjilatjap", "Soerabaja", "Bangka", "Palembang", "Medan", "Kuantan", "Singapore", "Manila", "Davao"], ["东印度->马来亚->菲律宾投降顺序"]),
-        "保守的南方资源战略": ESM_STRATEGY("保守的南方资源战略", "CONQUEST", ["Jolo", "Makassar", "Teloekbetoeng", "Bandjermasin", "Kuantan", "Singapore", "Manila", "Davao"], ["压制东印度后马来亚/菲律宾投降"]),
-        "中缅印战略": ESM_STRATEGY("中缅印战略 (CBI)", "CONQUEST", ["Rangoon", "Mandalay", "Lashio", "Myitkyina"], ["缅甸投降链; 中国投降(Lashio/攻势/事件)"]),
-        "中太平洋战略": ESM_STRATEGY("中太平洋战略", "CONQUEST", ["Rabaul", "Attu", "Kiska", "Wake", "Tarawa", "Midway"], ["拉包尔(若被盟军控)->阿图/吉斯卡->马绍尔防御->中途岛"]),
-        "马绍尔防御": ESM_STRATEGY("马绍尔防御", "CONQUEST", ["Wake", "Tarawa"], ["补全键(页1 M 出口)"]),
-        "外围防御战略": ESM_STRATEGY("外围防御战略", "CONQUEST", ["Sarong", "Vogelkop", "Biak", "Guadalcanal", "Port Moresby", "Hollandia", "Lae", "Buna", "Wewak", "Gili-Gili"], ["澳洲委任统治地/新几内亚防御"]),
-        "事件战略": ESM_STRATEGY("事件战略", "EVENT", [], ["欧战/ISR/东京玫瑰/补员/天气/东条1OC/放牌(页1 事件战略)"]),
+        "激进的空优战略": { name: "激进的空优战略", kind: "CONQUEST", targets: ["1. 压制东印度: Jolo [4], Makassar [4], Teloekbetoeng [4], Bandjermasin [4]"], notes: ["[4].如有可能,战后移动一个空中单位到目标格,不然移动一个航母过去。", "[7].以足够的力量,按伤害等级消灭覆盖目标的敌方AZOI单位的力量进行空中/海上攻击..."] },
+        "保守的空优战略": { name: "保守的空优战略", kind: "CONQUEST", targets: ["1. 压制盟军HQ: 菲律宾(0.25x), 新加坡(0.5x), ABDA(0.5x)", "2. 压制东印度: Jolo, Makassar, Teloekbetoeng, Bandjermasin"], notes: ["[1].激活必须使盟军HQ断补。"] },
+        "激进的南方资源战略": { name: "激进的南方资源战略", kind: "CONQUEST", targets: ["1. 压制盟军HQ: 菲律宾(0.25x), 新加坡(0.5x), ABDA(0.5x)", "2. 东印度投降: Balikpapan, Tarakan, Batavia(若无日军则占领), Tjilatjap, Soerabaja, Bangka, Palembang, Medan", "3. 马来亚投降: Kuantan关丹, Singapore新加坡", "4. 菲律宾投降: Manila马尼拉, Davao达沃", "5. Roll 1d10 分配"], notes: ["[1].激活必须使盟军HQ断补。"] },
+        "保守的南方资源战略": { name: "保守的南方资源战略", kind: "CONQUEST", targets: ["1. 压制东印度: Jolo, Makassar, Teloekbetoeng, Bandjermasin", "2. 马来亚投降: Kuantan, Singapore", "3. 菲律宾投降: Manila, Davao", "4. Roll 1d10 分配"], notes: [] },
+        "中缅印战略": { name: "中缅印战略 (CBI)", kind: "CONQUEST", targets: ["1. 缅甸投降: Rangoon仰光, Mandalay曼德勒, Lashio腊戍, Myitkyina密支那", "2. 中国投降: Lashio腊戍, 中国攻势, 中国事件"], notes: [] },
+        "中太平洋战略": { name: "中太平洋战略", kind: "CONQUEST", targets: ["1. 拉包尔 Rabaul (若被盟军控制)", "2. 阿图/吉斯卡 Attu/Kiska [6]", "3. 马绍尔防御: Wake威克岛, Tarawa塔拉瓦", "4. 中途岛 Midway"], notes: ["[6].如果已经控制,则用至少3step的地面单位加固这里,其他情况则忽视该条。"] },
+        "马绍尔防御": { name: "马绍尔防御", kind: "CONQUEST", targets: ["1. Wake威克岛", "2. Tarawa塔拉瓦"], notes: ["[6].如果已经控制,则用至少3step的地面单位加固这里,其他情况则忽视该条。"] },
+        "外围防御战略": { name: "外围防御战略", kind: "CONQUEST", targets: ["1. 澳洲委任统治地: 西北新几内亚(Sarong, Vogelkop, Biak), Guadalcanal瓜岛, Port Moresby莫尔茨比", "2. 新几内亚: Hollandia, Lae, Buna, Biak, Vogelkop, Wewak, Gili-Gili, Port Moresby"], notes: [] },
+        "事件战略": { name: "事件战略", kind: "EVENT", targets: ["1. 欧战为正打欧战牌,否则FOQ", "2. 结束日本ISR", "3. 造成美国ISR", "4. 东京玫瑰", "5. 补员牌", "6. 天气牌", "7. 东条作为1OC", "8. 其他放牌"], notes: ["[3].如果卡牌条件允许,按照策略指示使用卡牌。", "[5].如果欧洲战事为正数,则打出可用的欧战牌,否则按指示投骰。"] },
     },
     mid: {
-        "资源战略": ESM_STRATEGY("资源战略", "CONQUEST", ["Seoul", "Manila", "Kuantan", "Balikpapan", "Tarakan", "Batavia", "Tjilatjap", "Soerabaja", "Palembang", "Medan", "Rangoon", "Mandalay", "Lashio", "Myitkyina"], ["占资源至>=13; 新几内亚16目标; 缅甸/中国; 加强港口"]),
-        "中太平洋战略": ESM_STRATEGY("中太平洋战略", "CONQUEST", ["Attu", "Kiska", "Wake", "Midway"], ["阿图->威克->中途岛->攻击美国舰队"]),
-        "中缅印战略": ESM_STRATEGY("中缅印战略 (CBI)", "CONQUEST", ["Rangoon", "Mandalay", "Lashio", "Myitkyina", "Akyab", "Imphal", "Dimasur", "Jarhat", "Ledo", "Dacca"], ["缅甸投降->加强港口->印度投降->事件战略"]),
-        "印度战略": ESM_STRATEGY("印度战略", "CONQUEST", ["Akyab", "Imphal", "Dimasur", "Jarhat", "Ledo", "Dacca"], ["印度投降链; 中国; 加强港口"]),
-        "外围防御战略": ESM_STRATEGY("外围防御战略", "CONQUEST", ["Biak", "Vogelkop", "Hollandia", "Lae", "Buna", "Buin", "Gili-Gili", "Port Moresby"], ["南太平洋侧翼; 用 AZOI 覆盖后转移"]),
-        "事件战略": ESM_STRATEGY("事件战略", "EVENT", [], ["同早期阶段事件战略"]),
-        "PASS": ESM_STRATEGY("PASS", "PASS", [], ["跳过本回合行动"]),
+        "资源战略": { name: "资源战略", kind: "CONQUEST", targets: ["1. 占领资源: Seoul首尔, Manila马尼拉, Kuantan关丹, 所有东印度资源", "2. 新几内亚投降: 16个目标顺序推进 (见外围防御)", "3. 缅甸投降: Rangoon, Mandalay, Lashio, Myitkyina", "4. 中国投降: Lashio, 中国攻势, 中国事件", "5. 加强港口: Truk, Rabaul, Saipan, Davao, Saigon, Eniwetok, Kwajalein, Palau"], notes: ["[3].占领尽可能多的资源格,直到日本控制至少13个(优先无敌军、弱敌军)。", "[5].在指定位置放置至少3step地面或1step空中单位。"] },
+        "中太平洋战略": { name: "中太平洋战略", kind: "CONQUEST", targets: ["1. Attu/Kiska阿图", "2. Wake威克岛", "3. Midway中途岛", "4. 攻击美国舰队"], notes: [] },
+        "中缅印战略": { name: "中缅印战略 (CBI)", kind: "CONQUEST", targets: ["1. 缅甸投降: Rangoon, Mandalay, Lashio, Myitkyina", "2. 中国投降: Lashio, 中国攻势, 中国事件", "3. 加强港口", "4. 印度投降: Akyab, Imphal, Dimasur, Jarhat, Ledo, Dacca", "5. 事件战略"], notes: ["[1].如果卡牌条件允许,按照策略指示使用卡牌。"] },
+        "印度战略": { name: "印度战略", kind: "CONQUEST", targets: ["1. 印度投降: Akyab, Imphal, Dimasur, Jarhat, Ledo, Dacca", "2. 中国投降: Lashio, 中国攻势, 中国事件", "3. 加强港口"], notes: [] },
+        "外围防御战略": { name: "外围防御战略", kind: "CONQUEST", targets: ["1. 南太平洋侧翼: Biak, Vogelkop, Hollandia, Lae, Buna, Buin, Gili-Gili, Port Moresby", "2. 加强港口"], notes: ["[4].如果可能的话,用AZOI覆盖这些目标,否则转移到下一个目标。", "[5].在指定位置放置至少3step地面或1step空中单位。"] },
+        "事件战略": { name: "事件战略", kind: "EVENT", targets: ["同早期阶段事件战略"], notes: ["[1].如果卡牌条件允许,按照策略指示使用卡牌。"] },
+        "PASS": { name: "PASS", kind: "PASS", targets: ["跳过本回合行动"], notes: [] },
     },
     late: {
-        "最终国防圈战略": ESM_STRATEGY("最终国防圈战略", "GARRISON", ["Okinawa", "Seoul", "Pusan", "Tainan", "Saipan", "Iwo Jima", "Kyoto", "Sasebo", "Kure", "Tokyo", "Osaka", "Nagoya", "Ominato", "Hakodate"], ["港口驻军: Okinawa/Seoul/Pusan/Tainan/Saipan; 机场驻军 Iwo/Kyoto; 日本港口驻军"]),
-        "最终防御战略": ESM_STRATEGY("最终防御战略", "DEFEND", [], ["集结部队; 海空支援; 板载冲锋(v1 近似: 事件微执行)"]),
-        "事件战略": ESM_STRATEGY("事件战略", "EVENT", [], ["同早期阶段事件战略"]),
-        "PASS": ESM_STRATEGY("PASS", "PASS", [], ["跳过本回合行动"]),
+        "最终国防圈战略": { name: "最终国防圈战略", kind: "GARRISON", targets: ["1. 港口驻军: Okinawa冲绳, Seoul首尔, Pusan釜山, Tainan台南, Saipan/Tinian塞班", "2. 机场驻军: Iwo Jima硫磺岛, Kyoto京都", "3. 日本港口驻军: Sasebo佐世保, Kure吴, Tokyo东京, Osaka大阪, Nagoya名古屋, Ominato大凑, Hakodate函馆"], notes: ["[3].将任意空中/海上补员用于本州岛，维持到资源格的AZOI。"] },
+        "最终防御战略": { name: "最终防御战略", kind: "DEFEND", targets: ["1. 集结部队", "2. 海空支援", "3. 板载冲锋"], notes: ["[4].移动地面单位填满盟军占据格的相邻格。", "[5].尽可能在本州岛每个六角格放置空中/海上单位。", "[6].如果相邻格被占据满，用最大战力进攻盟军。", "[7].所有本州岛战斗派空中/海上单位支援。", "[8].战斗到最后一step地面单位。"] },
+        "事件战略": { name: "事件战略", kind: "EVENT", targets: ["同早期阶段事件战略"], notes: ["[1].如果满足条件按顺序执行。第12回合绝不把牌作为FOQ。"] },
+        "PASS": { name: "PASS", kind: "PASS", targets: ["跳过本回合行动"], notes: [] },
     },
 }
 
 const ESM_AL_LIB = {
     early: {
-        "撤离菲律宾": ESM_STRATEGY("撤离菲律宾", "EVENT", [], ["P旅->Biak; R军->Kendari; [SL]军->Manila; FEAF->Manila; 19LRB->Timor(已就位视为完成; v1近似事件微执行)"]),
-        "撤离马来亚": ESM_STRATEGY("撤离马来亚", "EVENT", [], ["8 Aus->Kendari; MA Air->Palembang"]),
-        "建立ABDA": ESM_STRATEGY("建立 ABDA 指挥部", "EVENT", [], ["放置 ABDA HQ 到 Tjilatjap/Kendari/Balikpapan/Soerabaja/Tarakan"]),
-        "增强CBI防御": ESM_STRATEGY("增强 CBI 防御", "EVENT", [], ["1Ind->Rangoon; BInd->Akyab; 66/6/5集团军->Lashio/Mandalay/Myitkyina; 1Burma->Imphal"]),
-        "DEI防御": ESM_STRATEGY("DEI 防御", "EVENT", [], ["派英联邦或美军前往 ABDA HQ 港口"]),
-        "橙色计划": ESM_STRATEGY("橙色计划 (Plan Orange)", "CONQUEST", ["Leyte", "Manila"], ["美国军护航->莱特; 莱特已控->马尼拉"]),
-        "攻势进攻": ESM_STRATEGY("攻势进攻", "EVENT", [], ["对最弱日军 1x海空攻击; 脱离航母免被灭"]),
-        "事件战略": ESM_STRATEGY("事件战略", "EVENT", [], ["欧战; ISR/FOQ; 杜立特; 巴丹行军; FOQ"]),
+        "撤离菲律宾": { name: "撤离菲律宾", kind: "EVENT", targets: ["1. P旅到Biak", "2. R军到Kendari", "3. [SL]军到Manila", "4. [FEAF]到Manila", "5. [19 LRB]到Timor"], notes: ["如果单位已就位则视为完成"] },
+        "撤离马来亚": { name: "撤离马来亚", kind: "EVENT", targets: ["1. 8 Aus到Kendari", "2. MA Air到Palembang"], notes: [] },
+        "建立ABDA": { name: "建立 ABDA 指挥部", kind: "EVENT", targets: ["放置ABDA HQ到: 1. Tjilatjap, 2. Kendari, 3. Balikpapan, 4. Soerabaja, 5. Tarakan"], notes: [] },
+        "增强CBI防御": { name: "增强 CBI 防御", kind: "EVENT", targets: ["1. 1 Ind到Rangoon", "2. B Ind师到Akyab", "3. 66集团军到Lashio", "4. 6集团军到Mandalay", "5. 5集团军到Myitkyina", "6. 1 Burma到Imphal"], notes: ["所有单位就位视作建立完成"] },
+        "DEI防御": { name: "DEI 防御", kind: "EVENT", targets: ["派英联邦或美军前往ABDA HQ港口 (Tjilatjap, Kendari, Balikpapan, Soerabaja, Tarakan)"], notes: [] },
+        "橙色计划": { name: "橙色计划 (Plan Orange)", kind: "CONQUEST", targets: ["1. 美国军护航派往莱特岛(Leyte)", "2. 若莱特被控，派往马尼拉(Manila)"], notes: [] },
+        "攻势进攻": { name: "攻势进攻", kind: "EVENT", targets: ["1. 对最弱日本单位发起1x海空攻击", "2. 脱离最后一支航母避免被灭"], notes: [] },
+        "事件战略": { name: "事件战略", kind: "EVENT", targets: ["1. 欧战事件", "2. 结束ISR或FOQ", "3. 造成日本ISR", "4. 杜立特空袭", "5. 巴丹行军", "6. FOQ"], notes: [] },
     },
     mid: {
-        "反攻战略": ESM_STRATEGY("反攻战略", "CONQUEST", ["Midway", "Dutch Harbor", "Dacca", "Dimasur", "Jarhat", "Ledo", "Imphal", "Guadalcanal", "Attu", "Kiska", "Port Moresby", "Gili-Gili", "Espiritu Santo"], ["16 反攻目标顺序(澳洲港/机场等按可达性); 多与激活点攻击日军航空兵"]),
-        "南太平洋战略": ESM_STRATEGY("南太平洋战略", "CONQUEST", ["Guadalcanal", "Gili-Gili", "Port Moresby", "Buna", "Lae", "New Georgia", "Bougainville", "Rabaul", "Madang", "Wewak", "Aitape", "Admiralty Islands", "Hollandia", "Biak", "Sarong", "Vogelkop"], ["优先 ANZAC 或 SW Pac HQ"]),
-        "中太平洋战略": ESM_STRATEGY("中太平洋战略", "CONQUEST", ["Wake", "Tarawa", "Kwajalein", "Eniwetok", "Palau", "Ulithi", "Saipan"], ["优先 Cen Pac HQ 其次 SW Pac HQ"]),
-        "CBI战略": ESM_STRATEGY("CBI 战略", "CONQUEST", ["Dacca", "Akyab", "Dimasur", "Jarhat", "Imphal", "Ledo", "Myitkyina", "Lashio", "Mandalay", "Rangoon"], ["优先 SEAC 或联合 HQ"]),
-        "DEI战略": ESM_STRATEGY("DEI 战略", "CONQUEST", ["Timor", "Kendari", "Soerabaja", "Balikpapan", "Tarakan"], ["优先 ANZAC 或 SW Pac HQ"]),
+        "反攻战略": { name: "反攻战略", kind: "CONQUEST", targets: ["1. Midway中途岛", "2. Dutch Harbor荷兰港", "3. Dacca达卡(仅地面推进)", "4. Dimasur迪马布尔", "5. Jarhat乔尔哈特", "6. Ledo雷多", "7. Imphal/Kohima英帕尔", "8. 澳洲港口(优先地面,其次AA)", "9. 澳洲机场(优先地面,其次AA)", "10. Guadalcanal瓜岛", "11. Attu/Kiska阿图岛", "12. Port Moresby莫尔茨比(仅地面推进)", "13. Gili-Gili吉里吉里(仅地面推进)", "14. New Hebrides新赫布里底(通过AA)", "15. Noumea努美阿(优先AA,其次地面)", "16. Roll 1d10 切换其他战略"], notes: ["按顺序占领, 无法攻击则向前移动基地", "多余激活点攻击日军航空兵"] },
+        "南太平洋战略": { name: "南太平洋战略", kind: "CONQUEST", targets: ["1. Guadalcanal", "2. Gili-Gili", "3. Port Moresby", "4. Buna", "5. Lae", "6. New Georgia", "7. Bougainville", "8. Gasmata/Rabaul", "9. Madang", "10. Wewak", "11. Aitape", "12. Admiralty Islands", "13. Hollandia", "14. Biak", "15. Sarong", "16. Vogelkop"], notes: ["优先ANZAC或SW Pac HQ"] },
+        "中太平洋战略": { name: "中太平洋战略", kind: "CONQUEST", targets: ["1. Wake威克岛", "2. Tarawa塔拉瓦", "3. Kwajalein夸贾林", "4. Eniwetok恩尼威托克", "5. Palau帕劳", "6. Uluthi乌利西", "7. Saipan塞班"], notes: ["优先Cen Pac HQ，其次SW Pac HQ"] },
+        "CBI战略": { name: "CBI 战略", kind: "CONQUEST", targets: ["1. Dacca", "2. Akyab", "3. Dimasur", "4. Jarhat", "5. Imphal/Kohima", "6. Ledo", "7. Myitkyina", "8. Lashio", "9. Mandalay", "10. Rangoon"], notes: ["优先SEAC HQ或联合HQ"] },
+        "DEI战略": { name: "DEI 战略", kind: "CONQUEST", targets: ["1. Timor", "2. Kendari", "3. Soerabaja", "4. Balikpapan", "5. Tarakan"], notes: ["优先ANZAC或SW Pac HQ"] },
     },
     late: {
-        "占领轰炸基地": ESM_STRATEGY("占领战略轰炸基地", "CONQUEST", ["Saipan", "Guam", "Marcus Island", "Iwo Jima", "Okinawa", "Tainan", "Taihoku"], ["使用最大攻势卡占领"]),
-        "推进B29": ESM_STRATEGY("推进 B29", "ABSTRACT", [], ["OC 移动 B29 到战略基地; 其余激活点攻击指挥范围内日军航母/空军"]),
-        "重返菲律宾": ESM_STRATEGY("重返菲律宾", "CONQUEST", ["Leyte", "Davao", 2912, "Manila"], ["先占 SW Pac HQ 距莱特 4 格基地; 莱特->达沃->2912->马尼拉; 解放 DEI/马来亚"]),
-        "跳岛作战": ESM_STRATEGY("跳岛作战", "CONQUEST", ["Kwajalein", "Eniwetok", "Saipan", "Iwo Jima", "Okinawa", "Sasebo", "Tokyo", "Ominato"], ["Cen Pac; 最高优先级目标达成前不执行下一目标"]),
-        "原子弹胜利": ESM_STRATEGY("原子弹胜利", "ABSTRACT", [], ["打出苏联入侵满洲; 占领剩余日本资源格"]),
-        "登陆日本": ESM_STRATEGY("登陆日本", "CONQUEST", ["Sasebo", "Tokyo", "Ominato", 3606, "Nagoya", "Kyoto", "Kure", "Osaka"], []),
+        "占领轰炸基地": { name: "占领战略轰炸基地", kind: "CONQUEST", targets: ["1. Saipan塞班", "2. Guam关岛", "3. Marcus Island南鸟岛", "4. Iwo Jima硫磺岛", "5. Okinawa冲绳", "6. Tainan台南", "7. Taihoku台北"], notes: ["使用最大攻势卡占领"] },
+        "推进B29": { name: "推进 B29", kind: "ABSTRACT", targets: ["使用OC移动B29到战略基地", "剩余激活点攻击指挥范围内日军航母/空军"], notes: [] },
+        "重返菲律宾": { name: "重返菲律宾", kind: "CONQUEST", targets: ["1. 占领连接SW Pac HQ距莱特4格基地", "2. Leyte莱特", "3. Davao达沃", "4. 2912六角格(与马尼拉相邻)", "5. Manila马尼拉", "6. 解放 DEI", "7. 解放马来亚"], notes: ["优先SW Pacific HQ"] },
+        "跳岛作战": { name: "跳岛作战", kind: "CONQUEST", targets: ["1. Kwajalein夸贾林", "2. Eniwetok恩尼威托克", "3. Saipan塞班", "4. Iwo Jima硫磺岛", "5. Okinawa冲绳", "6. 登陆日本"], notes: ["优先Cen Pacific HQ", "在最高优先级目标达成前，不要执行下一个目标"] },
+        "原子弹胜利": { name: "原子弹胜利", kind: "ABSTRACT", targets: ["1. 打出苏联入侵满洲", "2. 占领剩下的日本资源格"], notes: ["需无战略轰炸失败且日本资源<=3 (未打出苏联入侵时<=5)"] },
+        "登陆日本": { name: "登陆日本", kind: "CONQUEST", targets: ["1. Sasebo佐世保", "2. Tokyo东京", "3. Ominato大凑", "4. 3606格", "5. Nagoya名古屋", "6. Kyoto京都", "7. Kure吴", "8. Osaka大阪"], notes: [] },
     },
 }
 
 function esm_lib(role) { return role === "Japan" ? ESM_JP_LIB : ESM_AL_LIB }
 function esm_strategy_entry(role, phase, name) {
     return (esm_lib(role)[phase] || {})[name] || null
+}
+// C: 决策树输出名 -> 本次钉住应绑定的库条目。
+//   • 事件战略: 任何阶段都绑定【早期】条目 —— py 中/晚期 JP 表目标 = “同早期阶段事件战略”,
+//     AL mid/late 决策树直接 return AL_EARLY_STRATEGIES["事件战略"], 早期条目即完整清单。
+//   • PASS: 库中无条目, 给字面条目。
+//   • 其余: 本阶段精确命中; 无则跨阶段回找(防御, 避免静默空钉)。
+function esm_bind_strategy_entry(role, phase, name) {
+    const earlyEvt = name === "事件战略" ? esm_strategy_entry(role, "early", name) : null
+    if (earlyEvt) return earlyEvt
+    if (name === "PASS") return { name: "PASS", kind: "PASS", targets: ["跳过本回合行动"], notes: [] }
+    const hit = esm_strategy_entry(role, phase, name)
+    if (hit) return hit
+    for (const p of ["early", "mid", "late"]) {
+        if (p === phase) continue
+        const h = esm_strategy_entry(role, p, name)
+        if (h) return h
+    }
+    return null
 }
 // "轮流战略": 上次重返->跳岛; 上次跳岛->重返。
 function esm_resolve_alternate(lock, role) {
@@ -20442,23 +20648,29 @@ function esm_pin_strategy(view, context) {
     const seedText = `${context.seed}:${ord}:${role}:${phase}:${G.turn}`
     const ctx = esm_build_ctx(role, lock, seedText)
     const name = esm_eval(role, phase, ctx, lock)
-    const entry = esm_strategy_entry(role, phase, name) || (name === "PASS" ? ESM_STRATEGY("PASS", "PASS", [], ["跳过本回合行动"]) : null)
-    let chain = []
-    let strategy
+    // 事件战略: 钉住内容统一展开到【早期】事件清单(py 三处口径殊途同归):
+    //   (a) JP 表中/晚期目标 = "同早期阶段事件战略"(指针);
+    //   (b) AL mid/late 决策树直接 return AL_EARLY_STRATEGIES["事件战略"](py 共用早期条目,
+    //       且 JS AL mid/late 库无此键 —— 原实现静默落空 EVENT);
+    //   (c) 早期条目自身即完整 8/6 行清单。
+    // 故无论哪阶段选中事件战略, 都按【早期】清单整回合执行(C: 事件战略顺序化)。
+    // 事件战略 -> 早期条目(见 esm_bind_strategy_entry 注释)。
+    const isEventStrat = name === "事件战略"
+    const entry = esm_bind_strategy_entry(role, phase, name)
+    const contentPhase = isEventStrat ? "early" : phase
+    let goals = [], chain = []
     if (entry) {
-        strategy = {
-            name, kind: entry.kind, tokens: entry.tokens, notes: entry.notes,
-            phase, role, seed: seedText, ord,
-            pinnedNow: true,
-            chain: [],
-            ctx, d10Rolls: [],
-        }
-        for (const t of entry.tokens) {
-            const idx = eop_resolve_token(t)
-            if (idx !== null && idx >= 0 && idx <= LAST_BOARD_HEX && !strategy.chain.includes(idx)) strategy.chain.push(idx)
-        }
-    } else {
-        strategy = { name, kind: "EVENT", tokens: [], notes: [], phase, role, ord, pinnedNow: true, chain: [], ctx, d10Rolls: [] }
+        // 忠实 parse_goals: 有序 Goal(kind+hex+region) + 指针/资源/落底展开。
+        try { goals = esm_parse_entry(entry, role, contentPhase) } catch (e) { goals = [] }
+        chain = esm_chain_of(goals)
+    }
+    const strategy = entry ? {
+        name, nameFull: entry.name, kind: entry.kind, notes: entry.notes, targets: entry.targets,
+        phase, role, seed: seedText, ord, pinnedNow: true, goals, chain, ctx, d10Rolls: [],
+        eventPhase: isEventStrat ? "early" : undefined,
+    } : {
+        name, nameFull: name, kind: "EVENT", notes: [], targets: [], phase, role, ord,
+        pinnedNow: true, goals: [], chain: [], ctx, d10Rolls: [],
     }
     lock.role[role] = { turn: G.turn, phase, strategyName: name, strategy }
     return strategy
@@ -20484,6 +20696,9 @@ function esm_card_window_action(strategy, view, context) {
         return esm_choose_card(hand, "event", legal, strategy) || null
     }
     if (wantEvent) {
+        // C: 事件战略按早期事件清单顺序定向选牌; 清单无可执行行 -> 退化为通用选牌。
+        const dl = esm_event_strategy_card_pick(strategy, hand)
+        if (dl) return dl
         const r = esm_choose_card(hand, "event", legal, strategy)
         if (r) return r
         return esm_choose_card(hand, "ops", legal, strategy) || null
@@ -20509,6 +20724,58 @@ function esm_choose_card(hand, intent, legal, strategy) {
     return { action: "card", argument: chosen, via: `${strategy.name}:${viaAction}` }
 }
 
+// ---- C: 事件战略顺序化 ------------------------------------------------------
+// 把已钉早期事件清单(JP 8 行 / AL 6 行)逐行译成“手牌/引擎状态”条件, 按清单顺序取
+// 首个可执行行:
+//   • 结束己方ISR(JP 行2 / AL 行2 前半) — 己方 ISR 激活时, 取【己方阵营】ISR 和解牌
+//     (isr_agreement; 引擎 default_event 按 card.faction 清除该方 ISR);
+//   • 造成敌方ISR(JP 行3 / AL 行3)         — 敌方尚未 ISR 时, 取【己方阵营】ISR 竞争牌
+//     (isr_rivalry; 引擎 default_event 对 1-faction 施加竞争);
+//   • 点名事件牌: 东京玫瑰 / 杜立特空袭 / 巴丹行军 / 天气牌(JP 行4,6 / AL 行4,5);
+//   • 其余行(欧战正负 / 补员牌 / 东条1OC / FOQ / 其他放牌): 引擎无可稳定判定的执行信号,
+//     顺延该行 —— 通用选牌(esm_choose_card)即覆盖“其他放牌/补员”等兜底。
+// 命中行的意图子集内选最小 OV(事件意图下保住大 OC 牌)。确定性: 只读引擎当前状态
+// (G.inter_service) 与牌面 meta, 不触碰引擎 RNG。行级条件不满足则顺延, 故为真“顺序化”。
+// 全行不可行 -> null, 调方退化为现通用行为。
+function esm_event_strategy_card_pick(strategy, hand) {
+    if (!strategy || strategy.kind !== "EVENT" || strategy.name !== "事件战略") return null
+    const list = (strategy.targets || []).map(t => String(t).replace(/^\d+\s*[.、)]?\s*/, "")).filter(Boolean)
+    if (!list.length) return null
+    const mine = esm_role_faction(strategy.role)
+    const foe = 1 - mine
+    const ownRiv = (G.inter_service && G.inter_service[mine]) === 1
+    const foeRiv = (G.inter_service && G.inter_service[foe]) === 1
+    const meta = c => cards[c] || {}
+    const eventCapable = c => { try { return (get_allowed_actions(c) || []).includes("event") } catch (e) { return false } }
+    const pool = (hand || []).filter(eventCapable)
+    if (!pool.length) return null
+    const own = f => pool.filter(c => meta(c).faction === mine && f(meta(c)))
+    for (let i = 0; i < list.length; i++) {
+        const line = list[i]
+        let hit = null
+        if (/结束.*ISR|ISR.*(?:结束|清除|消除)/.test(line)) {
+            if (ownRiv) hit = own(m => m.isr_agreement)            // 己方 ISR 激活时才值得打和解牌
+        } else if (/造成.*ISR|引发.*ISR/.test(line)) {
+            if (!foeRiv) hit = own(m => m.isr_rivalry)             // 敌方已 ISR 则重复施加无效
+        } else if (/东京玫瑰|Tokyo Rose/i.test(line)) {
+            hit = pool.filter(c => /tokyo rose/i.test(meta(c).name))
+        } else if (/杜立特|Doolittle Raid/i.test(line)) {
+            hit = pool.filter(c => /^doolittle raid$/i.test(meta(c).name))
+        } else if (/巴丹|Bataan|Battan/i.test(line)) {
+            hit = pool.filter(c => /battan death march|bataan death march/i.test(meta(c).name))
+        } else if (/天气|weather/i.test(line)) {
+            hit = pool.filter(c => /^weather$/i.test(meta(c).name))
+        } else {
+            hit = null    // 无可稳定判定的执行信号 -> 顺延(其他放牌等由通用兜底覆盖)
+        }
+        if (!hit || !hit.length) continue
+        const ov = c => Number(meta(c).ops) || 0
+        const best = hit.slice().sort((a, b) => { const d = ov(a) - ov(b); return d === 0 ? a - b : d })[0]
+        return { action: "card", argument: best, via: `${strategy.name}:清单#${i + 1}「${line}」` }
+    }
+    return null
+}
+
 // 选行动窗("C{idx}: Select action."): 按已钉战略选 ops/event 等。
 function esm_card_action_window_action(strategy, view, context) {
     const legal = Object.keys(view.actions || {}).filter(a => { const v = view.actions[a]; return Array.isArray(v) ? v.length > 0 : Boolean(v) })
@@ -20523,9 +20790,12 @@ function esm_card_action_window_action(strategy, view, context) {
 // 对外 trace: 供 erasmus.js publicTrace 附加
 function esm_trace_of(strategy) {
     if (!strategy) return null
+    const goalKinds = (strategy.goals || []).map(g => g.kind)
     return { axis: strategy.role + "/" + strategy.phase + "/" + strategy.name, kind: strategy.kind, phase: strategy.phase,
         strategy: strategy.name, chainHead: strategy.chain[0] !== undefined ? strategy.chain[0] : null,
-        focus: eop_focus(strategy.role), chainLen: strategy.chain.length }
+        focus: eop_focus(strategy.role), chainLen: strategy.chain.length,
+        goals: goalKinds.length ? goalKinds : undefined,
+        ...(strategy.eventPhase ? { eventPhase: strategy.eventPhase } : {}) }
 }
 /** import server/erasmus_state.js*/
 
@@ -20759,7 +21029,9 @@ function erasmus_sm_decision(strategy, pick, view, context) {
     const base = {
         policy: ERASMUS_VERSION, chart: page, node, role: context.role,
         conditions: [], strategy: strategy.name, sm, action: pick.action, argument: arg,
-        dice: null, fallback: false, inferred: false, explanation: `状态机(zh.7): ${strategy.phase}阶段选轴「${strategy.name}」钉住整回合. ${(strategy.notes || []).join(" ")}`,
+        dice: null, fallback: false, inferred: false,
+        ...(pick.via ? { via: pick.via } : {}),
+        explanation: `状态机(zh.7): ${strategy.phase}阶段选轴「${strategy.name}」钉住整回合. ${(strategy.notes || []).join(" ")}`,
     }
     return { action: pick.action, argument: pick.argument, publicTrace: base, privateTrace: { ...base, argument: pick.argument, legalActions: Object.keys(view.actions || {}) } }
 }
@@ -20774,7 +21046,8 @@ var EOTS_BOTS = {
             try {
                 if (esm_gate_on()) {
                     sm = esm_pin_strategy(view, context)
-                    if (sm) eop_set_strategy_chain(context.role, { name: sm.name, note: (sm.notes || []).join("; "), tokens: sm.tokens })
+                    // 忠实目标链: chain = parse_goals 有序 idx; goals = 每行 Goal(kind/text)
+                    if (sm) eop_set_strategy_chain(context.role, { name: sm.name, kind: sm.kind, note: (sm.notes || []).join("; "), goals: sm.goals, chain: sm.chain })
                 } else {
                     eop_clear_all_chains()   // 防同进程跨剧本串台
                 }

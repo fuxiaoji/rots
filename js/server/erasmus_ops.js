@@ -86,10 +86,13 @@ function eop_clear_all_chains() {
     EOP_OVERRIDE = { Japan: null, Allies: null }
 }
 
-// 当前主轴的完整目标链 (只含能解析到真实 hex 的目标; 解析失败的目标静默跳过)。
+// 当前主轴的完整目标链。外部链覆盖(erasmus_state)直接携带已解析好的有序 idx
+// chain(=parse_goals 全部 hex, 忠实 py target_chain), 不走 token 二次解析;
+// 默认 EOP_AXES 走 name/4-digit token -> idx。
 function eop_axis_chain(role) {
     const axis = eop_axis(role)
     if (!axis) return []
+    if (Array.isArray(axis.chain) && axis.chain.length) return axis.chain.slice()
     const out = []
     for (const tk of axis.tokens) {
         const idx = eop_resolve_token(tk)
@@ -101,9 +104,10 @@ function eop_axis_chain(role) {
 // 该方当前应当遵循的主轴; 无主轴(如日本资源已足、转入防守)返回 null。
 function eop_axis(role) {
     const ov = EOP_OVERRIDE[role]
-    if (ov && ov.tokens && ov.tokens.length) {
+    if (ov && ((ov.tokens && ov.tokens.length) || (Array.isArray(ov.chain) && ov.chain.length))) {
         return { id: ov.name || (role + "_AXIS"), role: role,
-            note: ov.note ? `${ov.name} — ${ov.note}` : (ov.name || role + "轴"), tokens: ov.tokens }
+            note: ov.note ? `${ov.name} — ${ov.note}` : (ov.name || role + "轴"),
+            tokens: ov.tokens || [], chain: ov.chain || [] }
     }
     if (role === "Allies") return EOP_AXES.AP
     // 日本: 控制资源 < 13 时抢南方资源; 达标后转入防守, 不再无谓远征。

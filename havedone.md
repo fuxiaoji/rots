@@ -208,3 +208,32 @@
 - 同种子 10 局对照（20260903–20260912，headless）zh.6→zh.7：`noBattleHex` 278→249、`capturedAP` 14→23、`capturedJP` 10→0（日本转图表守势、不再无脑南进）、`groundMove` 24→45、AP `advance` 131→357、fire JP 401→505 / AL 382→537、fallback 28→19——状态机按设计改变行为，盟军攻势吞吐与聚焦提升。
 - 仍未解（与 zh.6 相同根因）：**盟军 0 胜**。50 局 AP 夺格仍无法触及岛屿/本土链（`Manila/Leyte/Davao/Iwo/Okinawa/Saipan/本土名城` 全部 0 次），即“登陆日本失败率”仍为“从未能发起两栖登岛”——引擎侧海军两栖/登陆推进与回合级 PoW 夺格节奏留 zh.8。
 - 产物：`js/server/erasmus_state.js`（新）、`js/server/bots/erasmus.js`（zh.7）、`js/server/erasmus_ops.js`（外部链覆盖）、`tests/erasmus-state-fidelity.test.js`（新）、`tests/erasmus-state-audit.js`（新，SM 指标 runner）；结果 `tests/results/sm-1942-1945-The-Shortened-Campaign-50-20260903-headless.json`。
+
+## zh.7 A/C 忠实补做（A 计划层忠实化 + C 事件战略顺序化）
+
+### 触发与裁决
+
+- 用户：“研究一下，状态机原文是没问题的，可能是你偷懒了，有些部分没做”——对已 1:1 移植的 py 参考引擎做缺失部分审计；经 AskUserQuestion 选定 **A 计划层忠实化 / B 引擎占格·登岛执行 / C 事件战略顺序化**（D=只出报告未选）。本段提交 A + C（B 引擎侧两栖/登岛推进另段处理）。
+
+### A 计划层忠实化（parse 逐字对拍）
+
+- 移植 py `_resolve_pointer`（L857-871）为 `esm_pointer_hexes`：检索顺序固定 `[JP_MID,JP_EARLY,JP_LATE,AL_MID,AL_LATE,AL_EARLY]`、匹配 `token∈key or key∈token`（JS 额外兼容带后缀 `name` 的键）、候选 = `parse_goals` 全部 hex **跨 Goal 扁平化不去重**、取链最长者。
+- 修两处失配根因（“见外围防御”曾错落 13 格 Guinea 兜底，38→39）：(a) 检索顺序数组用 `"Japan"/"Allies"` 而 esm_lib 期 `"JP"/"AL"` → 全不匹配触发地域兜底；(b) 指针递归候选去重但 py 不去重。
+- 金标闭环：`tests/_py_goal_golden.py` 由 py `parse_goals` 导出 `tests/results/py-goals-golden.json`（与引擎共享 `data/erasmus/map_names.json` 注册表）；`tests/erasmus-goal-fidelity.test.js` vm 载入 JS parse，逐策略比 kind 序列 + 逐位内部 idx —— **39/39 策略逐字相等**（A 补做前 38/39）。
+
+### C 事件战略顺序化（py 事件清单驱动选牌窗）
+
+- 事实核对：py `ErasmusExecutor.execute` 对 EVENT 类目标仅 `_log("admin",…)` 不打牌——事件战略的清单文本（JP 早期 8 行 / AL 早期 6 行）是“按序打事件牌”的行为说明；py AL mid/late 决策树在 `cards_in_hand<3` 时 `return AL_EARLY_STRATEGIES["事件战略"]`（共用早期条目，L711/L726），JP mid/late 表中/晚目标 = “同早期阶段事件战略”。
+- JS 缺口：钉住点 JS AL mid/late 库无 `事件战略` 键 → 原实现静默落空成空 EVENT（无清单）；JP mid/late 指针条目解析成一 Goal 无清单行 → 选牌窗走通用 min-OV。
+- 改 `js/server/erasmus_state.js`：
+  - `esm_bind_strategy_entry(role, phase, name)`：`事件战略` 任何阶段都绑定到该方【早期】事件战略条目（PASS 字面条目；其余本阶段命中、无则跨阶段回找防静默空钉）。`esm_pin_strategy` 改走该纯函数，`contentPhase` 取 early、strategy 增 `eventPhase:"early"`。
+  - `esm_event_strategy_card_pick(strategy, hand)`：把清单逐行译成“手牌/引擎状态”条件、按序取首个可执行行——结束己方 ISR（己方 `G.inter_service[mine]===1` 时取己方阵营 `isr_agreement` 事件牌）、造成敌方 ISR（敌方未 ISR 时取己方阵营 `isr_rivalry` 事件牌）、点名事件（东京玫瑰/杜立特空袭/巴丹行军/天气）；命中行内取最小 OV；欧战正负/补员/东条1OC/FOQ/其他放牌行无可稳定判定信号顺延（通用选牌兜底即“其他放牌/补员”）。确定性：只读 `G.inter_service` 与牌面 meta，不触碰引擎 RNG。
+  - `esm_choose_card` 事件意图分支先经清单定向；命中返回 `via=事件战略:清单#N「行」`。`js/server/bots/erasmus.js` `erasmus_sm_decision` 把 `pick.via` 带入 publicTrace，trace 可审计具体命中的清单行。
+- 自测 `tests/erasmus-event-strategy.test.js`（纯 vm）：JP/AL × early/mid/late 选中 `事件战略` → 绑定早期条目、解析出行数与早期清单一致（8/6）、无 hex 链 —— 8 例全过。
+
+### 验证（`EOTS_HEADLESS_MOVES=1`，1942-1945 缩短战役）
+
+- headless 16 局（seeds 20260903–20260918）0 error / 全部终局；事件战略钉选 6 次（JP 早期 roll≤2，钉选点=每回合首卡故中/晚手牌不足分支罕见，AL mid/late 绑定由纯自测覆盖）；事件战略钉选 `goals=8`（早期 8 行全到）`eventPhase=early`。
+- 清单定向命中实测：`清单#3「造成美国ISR」`×2（JP 阵营 `isr_rivalry` 牌，card 118）、`清单#4「东京玫瑰」`×1（card 158）——按序执行（行 3 条件不满足才落到行 4）正确。
+- 回归全绿：`tests/erasmus.test.js`（gate-off 确定性 + SP Operation KE 种子）通过；goal-fidelity 39/39；state-fidelity 59/59；rules.js 经 `tools/inline.js` 重建，同种子 action 计数逐位不变（确定性与 gate-off 零影响）。
+- 产物：`js/server/erasmus_state.js`（A 指针忠实 + C 事件绑定/清单定向）、`js/server/bots/erasmus.js`（chain 传参 + via trace）、`js/server/erasmus_ops.js`（外部已解析 chain 直用）、`tests/erasmus-goal-fidelity.test.js`/`tests/erasmus-event-strategy.test.js`（新）、`tests/_py_goal_golden.py` + `tests/results/py-goals-golden.json`（新金标）。

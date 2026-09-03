@@ -1,0 +1,2849 @@
+{
+ "JP": {
+  "early": {
+   "激进的空优战略": {
+    "name": "激进的空优战略",
+    "targets": [
+     "1. 压制东印度: Jolo [4], Makassar [4], Teloekbetoeng [4], Bandjermasin [4]"
+    ],
+    "notes": [
+     "[4].如有可能,战后移动一个空中单位到目标格,不然移动一个航母过去。",
+     "[7].以足够的力量,按伤害等级消灭覆盖目标的敌方AZOI单位的力量进行空中/海上攻击..."
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "SUPPRESS",
+      "text": "1. 压制东印度: Jolo [4], Makassar [4], Teloekbetoeng [4], Bandjermasin [4]",
+      "hexes": [
+       508,
+       484,
+       278,
+       395
+      ],
+      "hex_labels": [
+       "Jolo",
+       "Makassar",
+       "Teloekbetoeng",
+       "Bandjermasin"
+      ],
+      "region": "DEI",
+      "sub": []
+     }
+    ]
+   },
+   "保守的空优战略": {
+    "name": "保守的空优战略",
+    "targets": [
+     "1. 压制盟军HQ: 菲律宾(0.25x), 新加坡(0.5x), ABDA(0.5x)",
+     "2. 压制东印度: Jolo, Makassar, Teloekbetoeng, Bandjermasin"
+    ],
+    "notes": [
+     "[1].激活必须使盟军HQ断补。"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "SUPPRESS",
+      "text": "1. 压制盟军HQ: 菲律宾(0.25x), 新加坡(0.5x), ABDA(0.5x)",
+      "hexes": [],
+      "hex_labels": [],
+      "region": "Philippines",
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "SUPPRESS",
+      "text": "2. 压制东印度: Jolo, Makassar, Teloekbetoeng, Bandjermasin",
+      "hexes": [
+       508,
+       484,
+       278,
+       395
+      ],
+      "hex_labels": [
+       "Jolo",
+       "Makassar",
+       "Teloekbetoeng",
+       "Bandjermasin"
+      ],
+      "region": "DEI",
+      "sub": []
+     }
+    ]
+   },
+   "激进的南方资源战略": {
+    "name": "激进的南方资源战略",
+    "targets": [
+     "1. 压制盟军HQ: 菲律宾(0.25x), 新加坡(0.5x), ABDA(0.5x)",
+     "2. 东印度投降: Balikpapan, Tarakan, Batavia(若无日军则占领), Tjilatjap, Soerabaja, Bangka, Palembang, Medan",
+     "3. 马来亚投降: Kuantan关丹, Singapore新加坡",
+     "4. 菲律宾投降: Manila马尼拉, Davao达沃",
+     "5. Roll 1d10 分配"
+    ],
+    "notes": [
+     "[1].激活必须使盟军HQ断补。"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "SUPPRESS",
+      "text": "1. 压制盟军HQ: 菲律宾(0.25x), 新加坡(0.5x), ABDA(0.5x)",
+      "hexes": [],
+      "hex_labels": [],
+      "region": "Philippines",
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. 东印度投降: Balikpapan, Tarakan, Batavia(若无日军则占领), Tjilatjap, Soerabaja, Bangka, Palembang, Medan",
+      "hexes": [
+       397,
+       452,
+       480,
+       308,
+       309,
+       368,
+       307,
+       277,
+       245
+      ],
+      "hex_labels": [
+       "Bali",
+       "Balikpapan",
+       "Tarakan",
+       "Batavia",
+       "Tjilatjap",
+       "Soerabaja",
+       "Bangka",
+       "Palembang",
+       "Medan"
+      ],
+      "region": "DEI",
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "CONQUEST",
+      "text": "3. 马来亚投降: Kuantan关丹, Singapore新加坡",
+      "hexes": [
+       304,
+       305
+      ],
+      "hex_labels": [
+       "Kuantan",
+       "Singapore"
+      ],
+      "region": "Malaya",
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "CONQUEST",
+      "text": "4. 菲律宾投降: Manila马尼拉, Davao达沃",
+      "hexes": [
+       535,
+       566
+      ],
+      "hex_labels": [
+       "Manila",
+       "Davao"
+      ],
+      "region": "Philippines",
+      "sub": []
+     },
+     {
+      "priority": 5,
+      "kind": "ADMIN",
+      "text": "5. Roll 1d10 分配",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "保守的南方资源战略": {
+    "name": "保守的南方资源战略",
+    "targets": [
+     "1. 压制东印度: Jolo, Makassar, Teloekbetoeng, Bandjermasin",
+     "2. 马来亚投降: Kuantan, Singapore",
+     "3. 菲律宾投降: Manila, Davao",
+     "4. Roll 1d10 分配"
+    ],
+    "notes": [],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "SUPPRESS",
+      "text": "1. 压制东印度: Jolo, Makassar, Teloekbetoeng, Bandjermasin",
+      "hexes": [
+       508,
+       484,
+       278,
+       395
+      ],
+      "hex_labels": [
+       "Jolo",
+       "Makassar",
+       "Teloekbetoeng",
+       "Bandjermasin"
+      ],
+      "region": "DEI",
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. 马来亚投降: Kuantan, Singapore",
+      "hexes": [
+       304,
+       305
+      ],
+      "hex_labels": [
+       "Kuantan",
+       "Singapore"
+      ],
+      "region": "Malaya",
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "CONQUEST",
+      "text": "3. 菲律宾投降: Manila, Davao",
+      "hexes": [
+       535,
+       566
+      ],
+      "hex_labels": [
+       "Manila",
+       "Davao"
+      ],
+      "region": "Philippines",
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "ADMIN",
+      "text": "4. Roll 1d10 分配",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "中缅印战略": {
+    "name": "中缅印战略 (CBI)",
+    "targets": [
+     "1. 缅甸投降: Rangoon仰光, Mandalay曼德勒, Lashio腊戍, Myitkyina密支那",
+     "2. 中国投降: Lashio腊戍, 中国攻势, 中国事件"
+    ],
+    "notes": [],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. 缅甸投降: Rangoon仰光, Mandalay曼德勒, Lashio腊戍, Myitkyina密支那",
+      "hexes": [
+       298,
+       325,
+       354,
+       382
+      ],
+      "hex_labels": [
+       "Rangoon",
+       "Mandalay",
+       "Lashio",
+       "Myitkyina"
+      ],
+      "region": "Burma",
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. 中国投降: Lashio腊戍, 中国攻势, 中国事件",
+      "hexes": [
+       354
+      ],
+      "hex_labels": [
+       "Lashio"
+      ],
+      "region": "China",
+      "sub": []
+     }
+    ]
+   },
+   "中太平洋战略": {
+    "name": "中太平洋战略",
+    "targets": [
+     "1. 拉包尔 Rabaul (若被盟军控制)",
+     "2. 阿图/吉斯卡 Attu/Kiska [6]",
+     "3. 马绍尔防御: Wake威克岛, Tarawa塔拉瓦",
+     "4. 中途岛 Midway"
+    ],
+    "notes": [
+     "[6].如果已经控制,则用至少3step的地面单位加固这里,其他情况则忽视该条。"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. 拉包尔 Rabaul (若被盟军控制)",
+      "hexes": [
+       891
+      ],
+      "hex_labels": [
+       "Rabaul"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. 阿图/吉斯卡 Attu/Kiska [6]",
+      "hexes": [
+       1044
+      ],
+      "hex_labels": [
+       "Attu/Kiska"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "CONQUEST",
+      "text": "3. 马绍尔防御: Wake威克岛, Tarawa塔拉瓦",
+      "hexes": [
+       1056,
+       1178
+      ],
+      "hex_labels": [
+       "Wake",
+       "Tarawa"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "CONQUEST",
+      "text": "4. 中途岛 Midway",
+      "hexes": [
+       1197
+      ],
+      "hex_labels": [
+       "Midway"
+      ],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "马绍尔防御": {
+    "name": "马绍尔防御",
+    "targets": [
+     "1. Wake威克岛",
+     "2. Tarawa塔拉瓦"
+    ],
+    "notes": [
+     "[6].如果已经控制,则用至少3step的地面单位加固这里,其他情况则忽视该条。"
+    ],
+    "instructions": "补全键(图表第1页 M 出口); evaluate_early 引用它, 早期库原缺此键。",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. Wake威克岛",
+      "hexes": [
+       1056
+      ],
+      "hex_labels": [
+       "Wake"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. Tarawa塔拉瓦",
+      "hexes": [
+       1178
+      ],
+      "hex_labels": [
+       "Tarawa"
+      ],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "外围防御战略": {
+    "name": "外围防御战略",
+    "targets": [
+     "1. 澳洲委任统治地: 西北新几内亚(Sarong, Vogelkop, Biak), Guadalcanal瓜岛, Port Moresby莫尔茨比",
+     "2. 新几内亚: Hollandia, Lae, Buna, Biak, Vogelkop, Wewak, Gili-Gili, Port Moresby"
+    ],
+    "notes": [],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. 澳洲委任统治地: 西北新几内亚(Sarong, Vogelkop, Biak), Guadalcanal瓜岛, Port Moresby莫尔茨比",
+      "hexes": [
+       628,
+       657,
+       686,
+       1009,
+       835
+      ],
+      "hex_labels": [
+       "Sarong",
+       "Vogelkop",
+       "Biak",
+       "Guadalcanal",
+       "Port Moresby"
+      ],
+      "region": "Guinea",
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. 新几内亚: Hollandia, Lae, Buna, Biak, Vogelkop, Wewak, Gili-Gili, Port Moresby",
+      "hexes": [
+       745,
+       834,
+       863,
+       686,
+       657,
+       803,
+       894,
+       835
+      ],
+      "hex_labels": [
+       "Hollandia",
+       "Lae",
+       "Buna",
+       "Biak",
+       "Vogelkop",
+       "Wewak",
+       "Gili Gili",
+       "Port Moresby"
+      ],
+      "region": "Guinea",
+      "sub": []
+     }
+    ]
+   },
+   "事件战略": {
+    "name": "事件战略",
+    "targets": [
+     "1. 欧战为正打欧战牌,否则FOQ",
+     "2. 结束日本ISR",
+     "3. 造成美国ISR",
+     "4. 东京玫瑰",
+     "5. 补员牌",
+     "6. 天气牌",
+     "7. 东条作为1OC",
+     "8. 其他放牌"
+    ],
+    "notes": [
+     "[3].如果卡牌条件允许,按照策略指示使用卡牌。",
+     "[5].如果欧洲战事为正数,则打出可用的欧战牌,否则按指示投骰。"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "ADMIN",
+      "text": "1. 欧战为正打欧战牌,否则FOQ",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "ADMIN",
+      "text": "2. 结束日本ISR",
+      "hexes": [],
+      "hex_labels": [],
+      "region": "Japan",
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "ADMIN",
+      "text": "3. 造成美国ISR",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "ADMIN",
+      "text": "4. 东京玫瑰",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 5,
+      "kind": "ADMIN",
+      "text": "5. 补员牌",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 6,
+      "kind": "ADMIN",
+      "text": "6. 天气牌",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 7,
+      "kind": "ADMIN",
+      "text": "7. 东条作为1OC",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 8,
+      "kind": "ADMIN",
+      "text": "8. 其他放牌",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     }
+    ]
+   }
+  },
+  "mid": {
+   "资源战略": {
+    "name": "资源战略",
+    "targets": [
+     "1. 占领资源: Seoul首尔, Manila马尼拉, Kuantan关丹, 所有东印度资源",
+     "2. 新几内亚投降: 16个目标顺序推进 (见外围防御)",
+     "3. 缅甸投降: Rangoon, Mandalay, Lashio, Myitkyina",
+     "4. 中国投降: Lashio, 中国攻势, 中国事件",
+     "5. 加强港口: Truk, Rabaul, Saipan, Davao, Saigon, Eniwetok, Kwajalein, Palau"
+    ],
+    "notes": [
+     "[3].占领尽可能多的资源格,直到日本控制至少13个(优先无敌军、弱敌军)。",
+     "[5].在指定位置放置至少3step地面或1step空中单位。"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. 占领资源: Seoul首尔, Manila马尼拉, Kuantan关丹, 所有东印度资源",
+      "hexes": [
+       672,
+       535,
+       304
+      ],
+      "hex_labels": [
+       "Seoul",
+       "Manila",
+       "Kuantan"
+      ],
+      "region": "DEI",
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. 新几内亚投降: 16个目标顺序推进 (见外围防御)",
+      "hexes": [
+       628,
+       657,
+       686,
+       1009,
+       835,
+       745,
+       834,
+       863,
+       686,
+       657,
+       803,
+       894,
+       835
+      ],
+      "hex_labels": [
+       "Sarong",
+       "Vogelkop",
+       "Biak",
+       "Guadalcanal",
+       "Port Moresby",
+       "Hollandia",
+       "Lae",
+       "Buna",
+       "Biak",
+       "Vogelkop",
+       "Wewak",
+       "Gili Gili",
+       "Port Moresby"
+      ],
+      "region": "Guinea",
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "CONQUEST",
+      "text": "3. 缅甸投降: Rangoon, Mandalay, Lashio, Myitkyina",
+      "hexes": [
+       298,
+       325,
+       354,
+       382
+      ],
+      "hex_labels": [
+       "Rangoon",
+       "Mandalay",
+       "Lashio",
+       "Myitkyina"
+      ],
+      "region": "Burma",
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "CONQUEST",
+      "text": "4. 中国投降: Lashio, 中国攻势, 中国事件",
+      "hexes": [
+       354
+      ],
+      "hex_labels": [
+       "Lashio"
+      ],
+      "region": "China",
+      "sub": []
+     },
+     {
+      "priority": 5,
+      "kind": "PORTS",
+      "text": "5. 加强港口: Truk, Rabaul, Saipan, Davao, Saigon, Eniwetok, Kwajalein, Palau",
+      "hexes": [
+       887,
+       891,
+       825,
+       566,
+       360,
+       1001,
+       1088,
+       712
+      ],
+      "hex_labels": [
+       "Truk",
+       "Rabaul",
+       "Saipan",
+       "Davao",
+       "Saigon",
+       "Eniwetok",
+       "Kwajalein",
+       "Palau"
+      ],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "中太平洋战略": {
+    "name": "中太平洋战略",
+    "targets": [
+     "1. Attu/Kiska阿图",
+     "2. Wake威克岛",
+     "3. Midway中途岛",
+     "4. 攻击美国舰队"
+    ],
+    "notes": [],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. Attu/Kiska阿图",
+      "hexes": [
+       1044
+      ],
+      "hex_labels": [
+       "Attu/Kiska"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. Wake威克岛",
+      "hexes": [
+       1056
+      ],
+      "hex_labels": [
+       "Wake"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "CONQUEST",
+      "text": "3. Midway中途岛",
+      "hexes": [
+       1197
+      ],
+      "hex_labels": [
+       "Midway"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "NAVAL",
+      "text": "4. 攻击美国舰队",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "中缅印战略": {
+    "name": "中缅印战略 (CBI)",
+    "targets": [
+     "1. 缅甸投降: Rangoon, Mandalay, Lashio, Myitkyina",
+     "2. 中国投降: Lashio, 中国攻势, 中国事件",
+     "3. 加强港口",
+     "4. 印度投降: Akyab, Imphal, Dimasur, Jarhat, Ledo, Dacca",
+     "5. 事件战略"
+    ],
+    "notes": [
+     "[1].如果卡牌条件允许,按照策略指示使用卡牌。"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. 缅甸投降: Rangoon, Mandalay, Lashio, Myitkyina",
+      "hexes": [
+       298,
+       325,
+       354,
+       382
+      ],
+      "hex_labels": [
+       "Rangoon",
+       "Mandalay",
+       "Lashio",
+       "Myitkyina"
+      ],
+      "region": "Burma",
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. 中国投降: Lashio, 中国攻势, 中国事件",
+      "hexes": [
+       354
+      ],
+      "hex_labels": [
+       "Lashio"
+      ],
+      "region": "China",
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "PORTS",
+      "text": "3. 加强港口",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "CONQUEST",
+      "text": "4. 印度投降: Akyab, Imphal, Dimasur, Jarhat, Ledo, Dacca",
+      "hexes": [
+       296,
+       324,
+       295,
+       323,
+       353,
+       266
+      ],
+      "hex_labels": [
+       "Akyab",
+       "Imphal",
+       "Dimasur",
+       "Jarhat",
+       "Ledo",
+       "Dacca"
+      ],
+      "region": "India",
+      "sub": []
+     },
+     {
+      "priority": 5,
+      "kind": "ADMIN",
+      "text": "5. 事件战略",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "印度战略": {
+    "name": "印度战略",
+    "targets": [
+     "1. 印度投降: Akyab, Imphal, Dimasur, Jarhat, Ledo, Dacca",
+     "2. 中国投降: Lashio, 中国攻势, 中国事件",
+     "3. 加强港口"
+    ],
+    "notes": [],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. 印度投降: Akyab, Imphal, Dimasur, Jarhat, Ledo, Dacca",
+      "hexes": [
+       296,
+       324,
+       295,
+       323,
+       353,
+       266
+      ],
+      "hex_labels": [
+       "Akyab",
+       "Imphal",
+       "Dimasur",
+       "Jarhat",
+       "Ledo",
+       "Dacca"
+      ],
+      "region": "India",
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. 中国投降: Lashio, 中国攻势, 中国事件",
+      "hexes": [
+       354
+      ],
+      "hex_labels": [
+       "Lashio"
+      ],
+      "region": "China",
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "PORTS",
+      "text": "3. 加强港口",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "外围防御战略": {
+    "name": "外围防御战略",
+    "targets": [
+     "1. 南太平洋侧翼: Biak, Vogelkop, Hollandia, Lae, Buna, Buin, Gili-Gili, Port Moresby",
+     "2. 加强港口"
+    ],
+    "notes": [
+     "[4].如果可能的话,用AZOI覆盖这些目标,否则转移到下一个目标。",
+     "[5].在指定位置放置至少3step地面或1step空中单位。"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. 南太平洋侧翼: Biak, Vogelkop, Hollandia, Lae, Buna, Buin, Gili-Gili, Port Moresby",
+      "hexes": [
+       686,
+       657,
+       745,
+       834,
+       863,
+       894,
+       835
+      ],
+      "hex_labels": [
+       "Biak",
+       "Vogelkop",
+       "Hollandia",
+       "Lae",
+       "Buna",
+       "Gili Gili",
+       "Port Moresby"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "PORTS",
+      "text": "2. 加强港口",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "事件战略": {
+    "name": "事件战略",
+    "targets": [
+     "同早期阶段事件战略"
+    ],
+    "notes": [
+     "[1].如果卡牌条件允许,按照策略指示使用卡牌。"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "ADMIN",
+      "text": "同早期阶段事件战略",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "PASS": {
+    "name": "PASS",
+    "targets": [
+     "跳过本回合行动"
+    ],
+    "notes": [],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "ADMIN",
+      "text": "跳过本回合行动",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     }
+    ]
+   }
+  },
+  "late": {
+   "最终国防圈战略": {
+    "name": "最终国防圈战略",
+    "targets": [
+     "1. 港口驻军: Okinawa冲绳, Seoul首尔, Pusan釜山, Tainan台南, Saipan/Tinian塞班",
+     "2. 机场驻军: Iwo Jima硫磺岛, Kyoto京都",
+     "3. 日本港口驻军: Sasebo佐世保, Kure吴, Tokyo东京, Osaka大阪, Nagoya名古屋, Ominato大凑, Hakodate函馆"
+    ],
+    "notes": [
+     "[3].将任意空中/海上补员用于本州岛，维持到资源格的AZOI。"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "GARRISON",
+      "text": "1. 港口驻军: Okinawa冲绳, Seoul首尔, Pusan釜山, Tainan台南, Saipan/Tinian塞班",
+      "hexes": [
+       647,
+       672,
+       673,
+       560,
+       825
+      ],
+      "hex_labels": [
+       "Okinawa",
+       "Seoul",
+       "Pusan",
+       "Tainan",
+       "Saipan"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "GARRISON",
+      "text": "2. 机场驻军: Iwo Jima硫磺岛, Kyoto京都",
+      "hexes": [
+       792,
+       731
+      ],
+      "hex_labels": [
+       "Iwo Jima",
+       "Kyoto"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "GARRISON",
+      "text": "3. 日本港口驻军: Sasebo佐世保, Kure吴, Tokyo东京, Osaka大阪, Nagoya名古屋, Ominato大凑, Hakodate函馆",
+      "hexes": [
+       674,
+       703,
+       789,
+       732,
+       761,
+       788,
+       787
+      ],
+      "hex_labels": [
+       "Kynshu",
+       "Kure",
+       "Tokyo",
+       "Osaka",
+       "Nagoya",
+       "Ominato",
+       "Hakodate"
+      ],
+      "region": "Japan",
+      "sub": []
+     }
+    ]
+   },
+   "最终防御战略": {
+    "name": "最终防御战略",
+    "targets": [
+     "1. 集结部队",
+     "2. 海空支援",
+     "3. 板载冲锋"
+    ],
+    "notes": [
+     "[4].移动地面单位填满盟军占据格的相邻格。",
+     "[5].尽可能在本州岛每个六角格放置空中/海上单位。",
+     "[6].如果相邻格被占据满，用最大战力进攻盟军。",
+     "[7].所有本州岛战斗派空中/海上单位支援。",
+     "[8].战斗到最后一step地面单位。"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "ADMIN",
+      "text": "1. 集结部队",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "ADMIN",
+      "text": "2. 海空支援",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "INVADE_JAPAN",
+      "text": "3. 板载冲锋",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "事件战略": {
+    "name": "事件战略",
+    "targets": [
+     "同早期阶段事件战略"
+    ],
+    "notes": [
+     "[1].如果满足条件按顺序执行。第12回合绝不把牌作为FOQ。"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "ADMIN",
+      "text": "同早期阶段事件战略",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "PASS": {
+    "name": "PASS",
+    "targets": [
+     "跳过本回合行动"
+    ],
+    "notes": [],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "ADMIN",
+      "text": "跳过本回合行动",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     }
+    ]
+   }
+  }
+ },
+ "AL": {
+  "early": {
+   "撤离菲律宾": {
+    "name": "撤离菲律宾",
+    "targets": [
+     "1. P旅到Biak",
+     "2. R军到Kendari",
+     "3. [SL]军到Manila",
+     "4. [FEAF]到Manila",
+     "5. [19 LRB]到Timor"
+    ],
+    "notes": [
+     "如果单位已就位则视为完成"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. P旅到Biak",
+      "hexes": [
+       686
+      ],
+      "hex_labels": [
+       "Biak"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. R军到Kendari",
+      "hexes": [
+       512
+      ],
+      "hex_labels": [
+       "Kendari"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "CONQUEST",
+      "text": "3. [SL]军到Manila",
+      "hexes": [
+       535
+      ],
+      "hex_labels": [
+       "Manila"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "CONQUEST",
+      "text": "4. [FEAF]到Manila",
+      "hexes": [
+       535
+      ],
+      "hex_labels": [
+       "Manila"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 5,
+      "kind": "CONQUEST",
+      "text": "5. [19 LRB]到Timor",
+      "hexes": [
+       514
+      ],
+      "hex_labels": [
+       "Koepang"
+      ],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "撤离马来亚": {
+    "name": "撤离马来亚",
+    "targets": [
+     "1. 8 Aus到Kendari",
+     "2. MA Air到Palembang"
+    ],
+    "notes": [],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. 8 Aus到Kendari",
+      "hexes": [
+       512
+      ],
+      "hex_labels": [
+       "Kendari"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. MA Air到Palembang",
+      "hexes": [
+       277
+      ],
+      "hex_labels": [
+       "Palembang"
+      ],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "建立ABDA": {
+    "name": "建立 ABDA 指挥部",
+    "targets": [
+     "放置ABDA HQ到: 1. Tjilatjap, 2. Kendari, 3. Balikpapan, 4. Soerabaja, 5. Tarakan"
+    ],
+    "notes": [],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "放置ABDA HQ到: 1. Tjilatjap, 2. Kendari, 3. Balikpapan, 4. Soerabaja, 5. Tarakan",
+      "hexes": [
+       309,
+       512,
+       397,
+       452,
+       368,
+       480
+      ],
+      "hex_labels": [
+       "Tjilatjap",
+       "Kendari",
+       "Bali",
+       "Balikpapan",
+       "Soerabaja",
+       "Tarakan"
+      ],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "增强CBI防御": {
+    "name": "增强 CBI 防御",
+    "targets": [
+     "1. 1 Ind到Rangoon",
+     "2. B Ind师到Akyab",
+     "3. 66集团军到Lashio",
+     "4. 6集团军到Mandalay",
+     "5. 5集团军到Myitkyina",
+     "6. 1 Burma到Imphal"
+    ],
+    "notes": [
+     "所有单位就位视作建立完成"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. 1 Ind到Rangoon",
+      "hexes": [
+       298
+      ],
+      "hex_labels": [
+       "Rangoon"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. B Ind师到Akyab",
+      "hexes": [
+       296
+      ],
+      "hex_labels": [
+       "Akyab"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "CONQUEST",
+      "text": "3. 66集团军到Lashio",
+      "hexes": [
+       354
+      ],
+      "hex_labels": [
+       "Lashio"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "CONQUEST",
+      "text": "4. 6集团军到Mandalay",
+      "hexes": [
+       325
+      ],
+      "hex_labels": [
+       "Mandalay"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 5,
+      "kind": "CONQUEST",
+      "text": "5. 5集团军到Myitkyina",
+      "hexes": [
+       382
+      ],
+      "hex_labels": [
+       "Myitkyina"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 6,
+      "kind": "CONQUEST",
+      "text": "6. 1 Burma到Imphal",
+      "hexes": [
+       324
+      ],
+      "hex_labels": [
+       "Imphal"
+      ],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "DEI防御": {
+    "name": "DEI 防御",
+    "targets": [
+     "派英联邦或美军前往ABDA HQ港口 (Tjilatjap, Kendari, Balikpapan, Soerabaja, Tarakan)"
+    ],
+    "notes": [],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "派英联邦或美军前往ABDA HQ港口 (Tjilatjap, Kendari, Balikpapan, Soerabaja, Tarakan)",
+      "hexes": [
+       309,
+       512,
+       397,
+       452,
+       368,
+       480
+      ],
+      "hex_labels": [
+       "Tjilatjap",
+       "Kendari",
+       "Bali",
+       "Balikpapan",
+       "Soerabaja",
+       "Tarakan"
+      ],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "橙色计划": {
+    "name": "橙色计划 (Plan Orange)",
+    "targets": [
+     "1. 美国军护航派往莱特岛(Leyte)",
+     "2. 若莱特被控，派往马尼拉(Manila)"
+    ],
+    "notes": [],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "NAVAL",
+      "text": "1. 美国军护航派往莱特岛(Leyte)",
+      "hexes": [
+       594
+      ],
+      "hex_labels": [
+       "Leyte"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. 若莱特被控，派往马尼拉(Manila)",
+      "hexes": [
+       535
+      ],
+      "hex_labels": [
+       "Manila"
+      ],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "攻势进攻": {
+    "name": "攻势进攻",
+    "targets": [
+     "1. 对最弱日本单位发起1x海空攻击",
+     "2. 脱离最后一支航母避免被灭"
+    ],
+    "notes": [],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "ADMIN",
+      "text": "1. 对最弱日本单位发起1x海空攻击",
+      "hexes": [],
+      "hex_labels": [],
+      "region": "Japan",
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "NAVAL",
+      "text": "2. 脱离最后一支航母避免被灭",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "事件战略": {
+    "name": "事件战略",
+    "targets": [
+     "1. 欧战事件",
+     "2. 结束ISR或FOQ",
+     "3. 造成日本ISR",
+     "4. 杜立特空袭",
+     "5. 巴丹行军",
+     "6. FOQ"
+    ],
+    "notes": [],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "ADMIN",
+      "text": "1. 欧战事件",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "ADMIN",
+      "text": "2. 结束ISR或FOQ",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "ADMIN",
+      "text": "3. 造成日本ISR",
+      "hexes": [],
+      "hex_labels": [],
+      "region": "Japan",
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "ADMIN",
+      "text": "4. 杜立特空袭",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 5,
+      "kind": "ADMIN",
+      "text": "5. 巴丹行军",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 6,
+      "kind": "ADMIN",
+      "text": "6. FOQ",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     }
+    ]
+   }
+  },
+  "mid": {
+   "反攻战略": {
+    "name": "反攻战略",
+    "targets": [
+     "1. Midway中途岛",
+     "2. Dutch Harbor荷兰港",
+     "3. Dacca达卡(仅地面推进)",
+     "4. Dimasur迪马布尔",
+     "5. Jarhat乔尔哈特",
+     "6. Ledo雷多",
+     "7. Imphal/Kohima英帕尔",
+     "8. 澳洲港口(优先地面,其次AA)",
+     "9. 澳洲机场(优先地面,其次AA)",
+     "10. Guadalcanal瓜岛",
+     "11. Attu/Kiska阿图岛",
+     "12. Port Moresby莫尔茨比(仅地面推进)",
+     "13. Gili-Gili吉里吉里(仅地面推进)",
+     "14. New Hebrides新赫布里底(通过AA)",
+     "15. Noumea努美阿(优先AA,其次地面)",
+     "16. Roll 1d10 切换其他战略"
+    ],
+    "notes": [
+     "按顺序占领, 无法攻击则向前移动基地",
+     "多余激活点攻击日军航空兵"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. Midway中途岛",
+      "hexes": [
+       1197
+      ],
+      "hex_labels": [
+       "Midway"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. Dutch Harbor荷兰港",
+      "hexes": [
+       1189
+      ],
+      "hex_labels": [
+       "Dutch Harbor"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "CONQUEST",
+      "text": "3. Dacca达卡(仅地面推进)",
+      "hexes": [
+       266
+      ],
+      "hex_labels": [
+       "Dacca"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "CONQUEST",
+      "text": "4. Dimasur迪马布尔",
+      "hexes": [
+       295
+      ],
+      "hex_labels": [
+       "Dimasur"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 5,
+      "kind": "CONQUEST",
+      "text": "5. Jarhat乔尔哈特",
+      "hexes": [
+       323
+      ],
+      "hex_labels": [
+       "Jarhat"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 6,
+      "kind": "CONQUEST",
+      "text": "6. Ledo雷多",
+      "hexes": [
+       353
+      ],
+      "hex_labels": [
+       "Ledo"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 7,
+      "kind": "CONQUEST",
+      "text": "7. Imphal/Kohima英帕尔",
+      "hexes": [
+       324
+      ],
+      "hex_labels": [
+       "Imphal"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 8,
+      "kind": "ADMIN",
+      "text": "8. 澳洲港口(优先地面,其次AA)",
+      "hexes": [],
+      "hex_labels": [],
+      "region": "Australia",
+      "sub": []
+     },
+     {
+      "priority": 9,
+      "kind": "ADMIN",
+      "text": "9. 澳洲机场(优先地面,其次AA)",
+      "hexes": [],
+      "hex_labels": [],
+      "region": "Australia",
+      "sub": []
+     },
+     {
+      "priority": 10,
+      "kind": "CONQUEST",
+      "text": "10. Guadalcanal瓜岛",
+      "hexes": [
+       1009
+      ],
+      "hex_labels": [
+       "Guadalcanal"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 11,
+      "kind": "CONQUEST",
+      "text": "11. Attu/Kiska阿图岛",
+      "hexes": [
+       1044
+      ],
+      "hex_labels": [
+       "Attu/Kiska"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 12,
+      "kind": "CONQUEST",
+      "text": "12. Port Moresby莫尔茨比(仅地面推进)",
+      "hexes": [
+       835
+      ],
+      "hex_labels": [
+       "Port Moresby"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 13,
+      "kind": "CONQUEST",
+      "text": "13. Gili-Gili吉里吉里(仅地面推进)",
+      "hexes": [
+       894
+      ],
+      "hex_labels": [
+       "Gili Gili"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 14,
+      "kind": "ADMIN",
+      "text": "14. New Hebrides新赫布里底(通过AA)",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 15,
+      "kind": "ADMIN",
+      "text": "15. Noumea努美阿(优先AA,其次地面)",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 16,
+      "kind": "ADMIN",
+      "text": "16. Roll 1d10 切换其他战略",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "南太平洋战略": {
+    "name": "南太平洋战略",
+    "targets": [
+     "1. Guadalcanal",
+     "2. Gili-Gili",
+     "3. Port Moresby",
+     "4. Buna",
+     "5. Lae",
+     "6. New Georgia",
+     "7. Bougainville",
+     "8. Gasmata/Rabaul",
+     "9. Madang",
+     "10. Wewak",
+     "11. Aitape",
+     "12. Admiralty Islands",
+     "13. Hollandia",
+     "14. Biak",
+     "15. Sarong",
+     "16. Vogelkop"
+    ],
+    "notes": [
+     "优先ANZAC或SW Pac HQ"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. Guadalcanal",
+      "hexes": [
+       1009
+      ],
+      "hex_labels": [
+       "Guadalcanal"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. Gili-Gili",
+      "hexes": [
+       894
+      ],
+      "hex_labels": [
+       "Gili Gili"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "CONQUEST",
+      "text": "3. Port Moresby",
+      "hexes": [
+       835
+      ],
+      "hex_labels": [
+       "Port Moresby"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "CONQUEST",
+      "text": "4. Buna",
+      "hexes": [
+       863
+      ],
+      "hex_labels": [
+       "Buna"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 5,
+      "kind": "CONQUEST",
+      "text": "5. Lae",
+      "hexes": [
+       834
+      ],
+      "hex_labels": [
+       "Lae"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 6,
+      "kind": "CONQUEST",
+      "text": "6. New Georgia",
+      "hexes": [
+       979
+      ],
+      "hex_labels": [
+       "New Georgia"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 7,
+      "kind": "CONQUEST",
+      "text": "7. Bougainville",
+      "hexes": [
+       950
+      ],
+      "hex_labels": [
+       "Bougainville"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 8,
+      "kind": "CONQUEST",
+      "text": "8. Gasmata/Rabaul",
+      "hexes": [
+       862,
+       891
+      ],
+      "hex_labels": [
+       "Gasmata",
+       "Rabaul"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 9,
+      "kind": "CONQUEST",
+      "text": "9. Madang",
+      "hexes": [
+       804
+      ],
+      "hex_labels": [
+       "Madang"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 10,
+      "kind": "CONQUEST",
+      "text": "10. Wewak",
+      "hexes": [
+       803
+      ],
+      "hex_labels": [
+       "Wewak"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 11,
+      "kind": "CONQUEST",
+      "text": "11. Aitape",
+      "hexes": [
+       774
+      ],
+      "hex_labels": [
+       "Aitape"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 12,
+      "kind": "CONQUEST",
+      "text": "12. Admiralty Islands",
+      "hexes": [
+       832
+      ],
+      "hex_labels": [
+       "Admiralty Islands"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 13,
+      "kind": "CONQUEST",
+      "text": "13. Hollandia",
+      "hexes": [
+       745
+      ],
+      "hex_labels": [
+       "Hollandia"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 14,
+      "kind": "CONQUEST",
+      "text": "14. Biak",
+      "hexes": [
+       686
+      ],
+      "hex_labels": [
+       "Biak"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 15,
+      "kind": "CONQUEST",
+      "text": "15. Sarong",
+      "hexes": [
+       628
+      ],
+      "hex_labels": [
+       "Sarong"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 16,
+      "kind": "CONQUEST",
+      "text": "16. Vogelkop",
+      "hexes": [
+       657
+      ],
+      "hex_labels": [
+       "Vogelkop"
+      ],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "中太平洋战略": {
+    "name": "中太平洋战略",
+    "targets": [
+     "1. Wake威克岛",
+     "2. Tarawa塔拉瓦",
+     "3. Kwajalein夸贾林",
+     "4. Eniwetok恩尼威托克",
+     "5. Palau帕劳",
+     "6. Uluthi乌利西",
+     "7. Saipan塞班"
+    ],
+    "notes": [
+     "优先Cen Pac HQ，其次SW Pac HQ"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. Wake威克岛",
+      "hexes": [
+       1056
+      ],
+      "hex_labels": [
+       "Wake"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. Tarawa塔拉瓦",
+      "hexes": [
+       1178
+      ],
+      "hex_labels": [
+       "Tarawa"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "CONQUEST",
+      "text": "3. Kwajalein夸贾林",
+      "hexes": [
+       1088
+      ],
+      "hex_labels": [
+       "Kwajalein"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "CONQUEST",
+      "text": "4. Eniwetok恩尼威托克",
+      "hexes": [
+       1001
+      ],
+      "hex_labels": [
+       "Eniwetok"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 5,
+      "kind": "CONQUEST",
+      "text": "5. Palau帕劳",
+      "hexes": [
+       712
+      ],
+      "hex_labels": [
+       "Palau"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 6,
+      "kind": "CONQUEST",
+      "text": "6. Uluthi乌利西",
+      "hexes": [
+       769
+      ],
+      "hex_labels": [
+       "Ulithi"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 7,
+      "kind": "CONQUEST",
+      "text": "7. Saipan塞班",
+      "hexes": [
+       825
+      ],
+      "hex_labels": [
+       "Saipan"
+      ],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "CBI战略": {
+    "name": "CBI 战略",
+    "targets": [
+     "1. Dacca",
+     "2. Akyab",
+     "3. Dimasur",
+     "4. Jarhat",
+     "5. Imphal/Kohima",
+     "6. Ledo",
+     "7. Myitkyina",
+     "8. Lashio",
+     "9. Mandalay",
+     "10. Rangoon"
+    ],
+    "notes": [
+     "优先SEAC HQ或联合HQ"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. Dacca",
+      "hexes": [
+       266
+      ],
+      "hex_labels": [
+       "Dacca"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. Akyab",
+      "hexes": [
+       296
+      ],
+      "hex_labels": [
+       "Akyab"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "CONQUEST",
+      "text": "3. Dimasur",
+      "hexes": [
+       295
+      ],
+      "hex_labels": [
+       "Dimasur"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "CONQUEST",
+      "text": "4. Jarhat",
+      "hexes": [
+       323
+      ],
+      "hex_labels": [
+       "Jarhat"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 5,
+      "kind": "CONQUEST",
+      "text": "5. Imphal/Kohima",
+      "hexes": [
+       324
+      ],
+      "hex_labels": [
+       "Imphal"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 6,
+      "kind": "CONQUEST",
+      "text": "6. Ledo",
+      "hexes": [
+       353
+      ],
+      "hex_labels": [
+       "Ledo"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 7,
+      "kind": "CONQUEST",
+      "text": "7. Myitkyina",
+      "hexes": [
+       382
+      ],
+      "hex_labels": [
+       "Myitkyina"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 8,
+      "kind": "CONQUEST",
+      "text": "8. Lashio",
+      "hexes": [
+       354
+      ],
+      "hex_labels": [
+       "Lashio"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 9,
+      "kind": "CONQUEST",
+      "text": "9. Mandalay",
+      "hexes": [
+       325
+      ],
+      "hex_labels": [
+       "Mandalay"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 10,
+      "kind": "CONQUEST",
+      "text": "10. Rangoon",
+      "hexes": [
+       298
+      ],
+      "hex_labels": [
+       "Rangoon"
+      ],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "DEI战略": {
+    "name": "DEI 战略",
+    "targets": [
+     "1. Timor",
+     "2. Kendari",
+     "3. Soerabaja",
+     "4. Balikpapan",
+     "5. Tarakan"
+    ],
+    "notes": [
+     "优先ANZAC或SW Pac HQ"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. Timor",
+      "hexes": [
+       514
+      ],
+      "hex_labels": [
+       "Koepang"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. Kendari",
+      "hexes": [
+       512
+      ],
+      "hex_labels": [
+       "Kendari"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "CONQUEST",
+      "text": "3. Soerabaja",
+      "hexes": [
+       368
+      ],
+      "hex_labels": [
+       "Soerabaja"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "CONQUEST",
+      "text": "4. Balikpapan",
+      "hexes": [
+       397,
+       452
+      ],
+      "hex_labels": [
+       "Bali",
+       "Balikpapan"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 5,
+      "kind": "CONQUEST",
+      "text": "5. Tarakan",
+      "hexes": [
+       480
+      ],
+      "hex_labels": [
+       "Tarakan"
+      ],
+      "region": null,
+      "sub": []
+     }
+    ]
+   }
+  },
+  "late": {
+   "占领轰炸基地": {
+    "name": "占领战略轰炸基地",
+    "targets": [
+     "1. Saipan塞班",
+     "2. Guam关岛",
+     "3. Marcus Island南鸟岛",
+     "4. Iwo Jima硫磺岛",
+     "5. Okinawa冲绳",
+     "6. Tainan台南",
+     "7. Taihoku台北"
+    ],
+    "notes": [
+     "使用最大攻势卡占领"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. Saipan塞班",
+      "hexes": [
+       825
+      ],
+      "hex_labels": [
+       "Saipan"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. Guam关岛",
+      "hexes": [
+       826
+      ],
+      "hex_labels": [
+       "Guam"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "CONQUEST",
+      "text": "3. Marcus Island南鸟岛",
+      "hexes": [
+       909
+      ],
+      "hex_labels": [
+       "Marcus"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "CONQUEST",
+      "text": "4. Iwo Jima硫磺岛",
+      "hexes": [
+       792
+      ],
+      "hex_labels": [
+       "Iwo Jima"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 5,
+      "kind": "CONQUEST",
+      "text": "5. Okinawa冲绳",
+      "hexes": [
+       647
+      ],
+      "hex_labels": [
+       "Okinawa"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 6,
+      "kind": "CONQUEST",
+      "text": "6. Tainan台南",
+      "hexes": [
+       560
+      ],
+      "hex_labels": [
+       "Tainan"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 7,
+      "kind": "CONQUEST",
+      "text": "7. Taihoku台北",
+      "hexes": [
+       589
+      ],
+      "hex_labels": [
+       "Taihoku"
+      ],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "推进B29": {
+    "name": "推进 B29",
+    "targets": [
+     "使用OC移动B29到战略基地",
+     "剩余激活点攻击指挥范围内日军航母/空军"
+    ],
+    "notes": [],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "B29",
+      "text": "使用OC移动B29到战略基地",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "NAVAL",
+      "text": "剩余激活点攻击指挥范围内日军航母/空军",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "重返菲律宾": {
+    "name": "重返菲律宾",
+    "targets": [
+     "1. 占领连接SW Pac HQ距莱特4格基地",
+     "2. Leyte莱特",
+     "3. Davao达沃",
+     "4. 2912六角格(与马尼拉相邻)",
+     "5. Manila马尼拉",
+     "6. 解放 DEI",
+     "7. 解放马来亚"
+    ],
+    "notes": [
+     "优先SW Pacific HQ"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. 占领连接SW Pac HQ距莱特4格基地",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. Leyte莱特",
+      "hexes": [
+       594
+      ],
+      "hex_labels": [
+       "Leyte"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "CONQUEST",
+      "text": "3. Davao达沃",
+      "hexes": [
+       566
+      ],
+      "hex_labels": [
+       "Davao"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "CONQUEST",
+      "text": "4. 2912六角格(与马尼拉相邻)",
+      "hexes": [
+       563
+      ],
+      "hex_labels": [
+       "H563(2912)"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 5,
+      "kind": "CONQUEST",
+      "text": "5. Manila马尼拉",
+      "hexes": [
+       535
+      ],
+      "hex_labels": [
+       "Manila"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 6,
+      "kind": "ADMIN",
+      "text": "6. 解放 DEI",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 7,
+      "kind": "ADMIN",
+      "text": "7. 解放马来亚",
+      "hexes": [],
+      "hex_labels": [],
+      "region": "Malaya",
+      "sub": []
+     }
+    ]
+   },
+   "跳岛作战": {
+    "name": "跳岛作战",
+    "targets": [
+     "1. Kwajalein夸贾林",
+     "2. Eniwetok恩尼威托克",
+     "3. Saipan塞班",
+     "4. Iwo Jima硫磺岛",
+     "5. Okinawa冲绳",
+     "6. 登陆日本"
+    ],
+    "notes": [
+     "优先Cen Pacific HQ",
+     "在最高优先级目标达成前，不要执行下一个目标"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. Kwajalein夸贾林",
+      "hexes": [
+       1088
+      ],
+      "hex_labels": [
+       "Kwajalein"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. Eniwetok恩尼威托克",
+      "hexes": [
+       1001
+      ],
+      "hex_labels": [
+       "Eniwetok"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "CONQUEST",
+      "text": "3. Saipan塞班",
+      "hexes": [
+       825
+      ],
+      "hex_labels": [
+       "Saipan"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "CONQUEST",
+      "text": "4. Iwo Jima硫磺岛",
+      "hexes": [
+       792
+      ],
+      "hex_labels": [
+       "Iwo Jima"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 5,
+      "kind": "CONQUEST",
+      "text": "5. Okinawa冲绳",
+      "hexes": [
+       647
+      ],
+      "hex_labels": [
+       "Okinawa"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 6,
+      "kind": "INVADE_JAPAN",
+      "text": "6. 登陆日本",
+      "hexes": [],
+      "hex_labels": [],
+      "region": "Japan",
+      "sub": []
+     }
+    ]
+   },
+   "登陆日本": {
+    "name": "登陆日本",
+    "targets": [
+     "1. Sasebo佐世保",
+     "2. Tokyo东京",
+     "3. Ominato大凑",
+     "4. 3606格",
+     "5. Nagoya名古屋",
+     "6. Kyoto京都",
+     "7. Kure吴",
+     "8. Osaka大阪"
+    ],
+    "notes": [],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "CONQUEST",
+      "text": "1. Sasebo佐世保",
+      "hexes": [
+       674
+      ],
+      "hex_labels": [
+       "Kynshu"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. Tokyo东京",
+      "hexes": [
+       789
+      ],
+      "hex_labels": [
+       "Tokyo"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 3,
+      "kind": "CONQUEST",
+      "text": "3. Ominato大凑",
+      "hexes": [
+       788
+      ],
+      "hex_labels": [
+       "Ominato"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 4,
+      "kind": "CONQUEST",
+      "text": "4. 3606格",
+      "hexes": [
+       760
+      ],
+      "hex_labels": [
+       "H760(3606)"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 5,
+      "kind": "CONQUEST",
+      "text": "5. Nagoya名古屋",
+      "hexes": [
+       761
+      ],
+      "hex_labels": [
+       "Nagoya"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 6,
+      "kind": "CONQUEST",
+      "text": "6. Kyoto京都",
+      "hexes": [
+       731
+      ],
+      "hex_labels": [
+       "Kyoto"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 7,
+      "kind": "CONQUEST",
+      "text": "7. Kure吴",
+      "hexes": [
+       703
+      ],
+      "hex_labels": [
+       "Kure"
+      ],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 8,
+      "kind": "CONQUEST",
+      "text": "8. Osaka大阪",
+      "hexes": [
+       732
+      ],
+      "hex_labels": [
+       "Osaka"
+      ],
+      "region": null,
+      "sub": []
+     }
+    ]
+   },
+   "原子弹胜利": {
+    "name": "原子弹胜利",
+    "targets": [
+     "1. 打出苏联入侵满洲",
+     "2. 占领剩下的日本资源格"
+    ],
+    "notes": [
+     "需无战略轰炸失败且日本资源<=3 (未打出苏联入侵时<=5)"
+    ],
+    "instructions": "",
+    "goals": [
+     {
+      "priority": 1,
+      "kind": "ADMIN",
+      "text": "1. 打出苏联入侵满洲",
+      "hexes": [],
+      "hex_labels": [],
+      "region": null,
+      "sub": []
+     },
+     {
+      "priority": 2,
+      "kind": "CONQUEST",
+      "text": "2. 占领剩下的日本资源格",
+      "hexes": [
+       674,
+       703,
+       731,
+       732,
+       761,
+       787,
+       788,
+       789
+      ],
+      "hex_labels": [
+       "Kynshu",
+       "Kure",
+       "Kyoto",
+       "Osaka",
+       "Nagoya",
+       "Hakodate",
+       "Ominato",
+       "Tokyo"
+      ],
+      "region": "Japan",
+      "sub": []
+     }
+    ]
+   }
+  }
+ }
+}

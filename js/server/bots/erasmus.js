@@ -232,7 +232,9 @@ function erasmus_sm_decision(strategy, pick, view, context) {
     const base = {
         policy: ERASMUS_VERSION, chart: page, node, role: context.role,
         conditions: [], strategy: strategy.name, sm, action: pick.action, argument: arg,
-        dice: null, fallback: false, inferred: false, explanation: `状态机(zh.7): ${strategy.phase}阶段选轴「${strategy.name}」钉住整回合. ${(strategy.notes || []).join(" ")}`,
+        dice: null, fallback: false, inferred: false,
+        ...(pick.via ? { via: pick.via } : {}),
+        explanation: `状态机(zh.7): ${strategy.phase}阶段选轴「${strategy.name}」钉住整回合. ${(strategy.notes || []).join(" ")}`,
     }
     return { action: pick.action, argument: pick.argument, publicTrace: base, privateTrace: { ...base, argument: pick.argument, legalActions: Object.keys(view.actions || {}) } }
 }
@@ -247,7 +249,8 @@ var EOTS_BOTS = {
             try {
                 if (esm_gate_on()) {
                     sm = esm_pin_strategy(view, context)
-                    if (sm) eop_set_strategy_chain(context.role, { name: sm.name, note: (sm.notes || []).join("; "), tokens: sm.tokens })
+                    // 忠实目标链: chain = parse_goals 有序 idx; goals = 每行 Goal(kind/text)
+                    if (sm) eop_set_strategy_chain(context.role, { name: sm.name, kind: sm.kind, note: (sm.notes || []).join("; "), goals: sm.goals, chain: sm.chain })
                 } else {
                     eop_clear_all_chains()   // 防同进程跨剧本串台
                 }
