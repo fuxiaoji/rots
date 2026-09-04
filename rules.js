@@ -20856,9 +20856,20 @@ function esm_name_hexes(token) {
     let t = esm_norm(token)
     if (Object.prototype.hasOwnProperty.call(ESM_NAME_ALIASES, t)) t = esm_norm(ESM_NAME_ALIASES[t])
     if (!t || t.length < 3 || !reg) return []
-    const hits = []
-    for (const e of reg.named) { const n = esm_norm(e.name); if (t.includes(n) || n.includes(t)) hits.push(e.idx) }
-    return hits
+    // Exact normalized names must win before fuzzy abbreviation matching. Without
+    // this guard, "Balikpapan" also matched the shorter map name "Bali" and put
+    // a non-chart target at the head of the DEI surrender objective.
+    const exact = []
+    for (const e of reg.named) if (esm_norm(e.name) === t) exact.push(e.idx)
+    if (exact.length) return exact
+    const fuzzy = []
+    for (const e of reg.named) {
+        const n = esm_norm(e.name)
+        if (t.includes(n) || n.includes(t)) fuzzy.push({ idx: e.idx, delta: Math.abs(n.length - t.length) })
+    }
+    if (!fuzzy.length) return []
+    const best = Math.min(...fuzzy.map(e => e.delta))
+    return fuzzy.filter(e => e.delta === best).map(e => e.idx)
 }
 function esm_line_hexes(text) {
     const hexes = []
