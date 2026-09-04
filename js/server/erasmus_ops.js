@@ -155,33 +155,58 @@ function eop_pick_action_hex(candidates, role) {
 }
 
 // ---- 选进攻/激活单位 ------------------------------------------------------
-// 进攻单位/会战申报单位: 优先能打到焦点(距焦点最近)的单位, 使后续 action_hex
-// 候选里包含焦点或最靠近焦点的敌格, 消除“有会战能力却全程零会战”。
+// 敌方单位落点(任意军种), 供"靠前线"就近打分; 引擎未提供迭代器时退化为直接扫 pieces。
+function eop_enemy_locs(mine) {
+    if (typeof G === "undefined" || !G || !G.location) return []
+    const enemy = mine === JP ? AP : JP
+    const out = []
+    for (let u = 1; u < pieces.length; u++) {
+        const p = pieces[u]
+        if (!p || p.faction !== enemy) continue
+        const h = G.location[u]
+        if (h >= 0 && h <= LAST_BOARD_HEX) out.push(h)
+    }
+    return out
+}
+function eop_min_dist(hex, locs) {
+    if (typeof get_distance !== "function" || !locs.length) return 99
+    let best = 99
+    for (let i = 0; i < locs.length; i++) {
+        const d = get_distance(hex, locs[i])
+        if (d < best) best = d
+    }
+    return best
+}
+
+// 进攻单位/会战申报单位: 主键 = 到最近敌单位的距离(越靠前线, 激活后当回合即可开战夺格,
+// 而非空跑一整轮又无会战可报), 次键 = 到焦点距离(保留战略方向)。此前只按"距焦点最近"
+// 挑单位, 而焦点(如拉包尔)常远在战线后方, 挑出的单位离任何敌军都远 → 移动后够不着敌格
+// → ~半攻势"Confirm offensive"直接跳过会战 → 每回合夺格数远低于 PoW 所需 4。
 function eop_pick_unit(candidates, role) {
     if (!Array.isArray(candidates) || candidates.length === 0) return undefined
     const focus = eop_focus(role)
-    if (focus === null) return undefined
     if (typeof G === "undefined" || !G || !G.location) return undefined
     const mine = role === "Japan" ? JP : AP
-    const d = h => (typeof get_distance === "function") ? get_distance(h, focus) : Math.abs(h - focus)
+    const enemyLocs = eop_enemy_locs(mine)
+    const fd = h => (focus === null ? 99 : (typeof get_distance === "function") ? get_distance(h, focus) : Math.abs(h - focus))
     const scored = []
     for (const u of candidates) {
         const loc = G.location[u]
         if (!(loc >= 0 && loc <= LAST_BOARD_HEX)) continue
-        scored.push([u, d(loc)])
+        scored.push([u, eop_min_dist(loc, enemyLocs), fd(loc)])
     }
     if (!scored.length) return undefined
-    scored.sort((a, b) => a[1] - b[1] || a[0] - b[0])
-    // B: 焦点是敌占格(需“夺占”而非纯消耗)时, 若候选里有距离不比最近单位太远的两栖
-    // 地面(海军陆战队 asp / 可战略海运 strat_move), 优先选它组成登陆力量 —— 否则每次
-    // 攻势总是挑离焦点最近的纯空/海军, 只会对岛屿做远距空袭, 永远无法登岛占格。
+    scored.sort((a, b) => a[1] - b[1] || a[2] - b[2] || a[0] - b[0])
+    // B: 焦点是敌占格(需“夺占”而非纯消耗)时, 若候选里有"到最近敌军距离"不比最优单位远太多的
+    // 两栖地面(海军陆战队 asp / 可战略海运 strat_move), 优先选它组成登陆力量 —— 否则每次
+    // 攻势总挑最近敌军的纯空/海军, 只会对岛屿做远距空袭, 永远无法登岛占格。
     // 只在 node 端用环境开关做 A/B; 浏览器 PvE(process 未定义)时默认开启该偏置。
     const biasOn = (typeof process === "undefined") || process.env.B_BIAS !== "0"
-    if (biasOn && !is_space_controlled(focus, mine)) {
+    if (biasOn && focus !== null && !is_space_controlled(focus, mine)) {
         const refD = scored[0][1]
-        const cap = Math.max(8, refD + 10)
-        const pick = scored.find(([u, dist]) => {
-            if (dist > cap) return false
+        const cap = Math.max(3, refD + 3)
+        const pick = scored.find(([u, ed]) => {
+            if (ed > cap) return false
             const p = pieces[u]
             return p && p.class === "ground" && (p.asp || p.strat_move)
         })

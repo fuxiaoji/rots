@@ -298,6 +298,14 @@ function evaluateChart(chart, view, context) {
             }
         }
     }
+    // "Move units"窗口 + 已有选中组(unselect 非空) + 无 advance(无头推进不可用) + 有
+    // no_move/advanced_move 可收尾: 继续选 unit 会在 (1/N)↔(2/N) 间 toggle 死循环。
+    // 就地待命(no_move)收尾该组, 让窗口前进。(spec_move 撤退窗无 no_move, 仍走 unit 撤销。)
+    if (/move units/i.test(String(view.prompt || "")) && !legal.includes("advance")
+        && Array.isArray(view?.unselect) && view.unselect.length > 0 && action === "unit"
+        && (legal.includes("no_move") || legal.includes("advanced_move"))) {
+        action = legal.includes("no_move") ? "no_move" : "advanced_move"
+    }
     // 最终安全网: 无头下绝不把“切 move_type/无路径 move”当最终动作 —— 它们只会崩溃或重落到
     // 死窗。真到这一步(上面各分支已规避, 属兜底), 退回可控收尾/撤销动作, 让窗口推进而非卡死。
     if (HEADLESS_MOVE_NOOP.has(action)) {
