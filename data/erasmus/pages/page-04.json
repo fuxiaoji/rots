@@ -61,8 +61,7 @@
     },
     {
       "id": "JP04-CLASSIFY",
-      "type": "action",
-      "strategy": "JP_CLASSIFY_CARDS",
+      "type": "process",
       "label_zh": "卡牌分类",
       "edges": [
         {
@@ -530,7 +529,6 @@
     }
   ],
   "strategies": [
-    "JP_CLASSIFY_CARDS",
     "JP_FIRST_STRIKE_EVENT_CARD",
     "JP_UNRESTRICTED_EVENT_CARD",
     "JP_RESTRICTED_EVENT_CARD",

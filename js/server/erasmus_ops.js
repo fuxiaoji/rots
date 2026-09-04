@@ -368,5 +368,76 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
         formation:landing?"supported-amphibious-assault":f.requiresOccupation?"ground-with-support":"air-sea-strike",
         groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength}
 }
-function planReaction(view,candidates){const units=Array.isArray(view?.ai?.units)?view.ai.units:[],byId=new Map(units.map(u=>[u.id,u]));return (candidates||[]).slice().sort((a,b)=>(byId.get(b)?.lf||0)-(byId.get(a)?.lf||0)||a-b)[0]}
-function planPostBattleMovement(view,candidates){return planReaction(view,candidates)}
+
+function selectOperationalHq(view,candidates,role){
+    if(!Array.isArray(candidates)||!candidates.length)return undefined
+    const byId=new Map((view?.ai?.units||[]).map(u=>[u.id,u])),focus=view?.ai?.focus
+    const axis=eop_axis(role),name=String(axis?.id||axis?.note||"").toLowerCase()
+    const preferred=role==="Allies"?(name.includes("cbi")?/seac/i:name.includes("dei")||name.includes("philipp")?/south west/i:name.includes("south pacific")?/south pacific/i:/central pacific/i)
+        :(name.includes("cbi")||name.includes("india")?/south hq/i:name.includes("central")?/combined fleet/i:/south hq|south seas/i)
+    const score=id=>{const u=byId.get(id),d=u&&focus!==null&&focus!==undefined&&typeof get_distance==="function"?get_distance(u.location,focus):99
+        return [u&&preferred.test(String(u.name||""))?0:1,d,-(u?.cm||0),-(u?.cr||0),id]}
+    return candidates.slice().sort((a,b)=>{const x=score(a),y=score(b);for(let i=0;i<x.length;i++)if(x[i]!==y[i])return x[i]-y[i];return 0})[0]
+}
+function planReaction(view,candidates,action,role,strategy){
+    if(!Array.isArray(candidates)||!candidates.length)return undefined
+    const units=Array.isArray(view?.ai?.units)?view.ai.units:[],byId=new Map(units.map(u=>[u.id,u]))
+    const mine=role==="Japan"?JP:AP, enemy=1-mine
+    if(action==="card"){
+        const cardsMeta=Array.isArray(view?.ai?.ownCards)?view.ai.ownCards.slice():[]
+        for(const id of candidates)if(!cardsMeta.some(c=>c.id===id)&&typeof cards!=="undefined"&&cards[id])cardsMeta.push({id,name:cards[id].name,intelligence:cards[id].intelligence,reaction:cards[id].reaction})
+        const wanted=String(strategy||"")
+        if(wanted.includes("CARD_PRIORITY")){
+            const rank=c=>{
+                const n=String(c?.name||"")
+                if(role==="Allies")return /intelligence|情报/i.test(n)||c?.intelligence!==undefined?0:/counter|反攻/i.test(n)?1:/ambush|伏击/i.test(n)?2:/submarine/i.test(n)?3:4
+                return /jn.?25|intelligence|情报/i.test(n)||c?.intelligence!==undefined?0:/counter|反击/i.test(n)?1:/kamikaze|神风/i.test(n)?2:/submarine/i.test(n)?3:4
+            }
+            const byId=new Map(cardsMeta.map(c=>[c.id,c]))
+            return candidates.slice().sort((a,b)=>rank(byId.get(a))-rank(byId.get(b))||a-b)[0]
+        }
+        const re=wanted.includes("WEATHER")?/weather/i:wanted.includes("KAMIKAZE")?/kamikaze/i
+            :wanted.includes("SUBMARINE")?/submarine/i:wanted.includes("AMBUSH")?/(ambush|伏击)/i
+            :wanted.includes("COUNTER")?/(counter|反攻)/i:/(jn.?25|intelligence|情报)/i
+        const ids=new Set(cardsMeta.filter(c=>re.test(String(c.name||""))).map(c=>c.id))
+        const hit=candidates.filter(id=>ids.has(id)).sort((a,b)=>a-b)
+        return hit[0]
+    }
+    if(action==="action_hex"||action==="hex"){
+        const score=h=>{
+            const md=typeof get_map_data==="function"?get_map_data(h):{}
+            const at=units.filter(u=>u.location===h), own=at.filter(u=>u.faction===mine), foe=at.filter(u=>u.faction===enemy)
+            // 反应格优先级（双方同构）：己方 HQ、资源格、港口、机场、其他。
+            const tier=own.some(u=>u.class==="hq")?0:md.resource?1:md.port?2:md.airfield?3:4
+            const foePower=foe.reduce((s,u)=>s+(u.reduced?(u.rcf||Math.ceil(u.cf/2)):u.cf||0),0)
+            return [tier,foePower,h]
+        }
+        return candidates.slice().sort((a,b)=>{const x=score(a),y=score(b);return x[0]-y[0]||x[1]-y[1]||x[2]-y[2]})[0]
+    }
+    // 反应兵力标准：先使海空战力达到敌海空1倍，再使己方空军数量追平；最后才加地面。
+    const active=new Set((view?.offensive?.active_units||[]).flat())
+    const selected=[...active].map(id=>byId.get(id)).filter(u=>u&&u.faction===mine)
+    const attackers=[...active].map(id=>byId.get(id)).filter(u=>u&&u.faction===enemy)
+    const cf=u=>u?(u.reduced?(Number(u.rcf)||Math.ceil((Number(u.cf)||0)/2)):(Number(u.cf)||0)):0
+    const ownAS=selected.filter(u=>u.class==="air"||u.class==="naval").reduce((s,u)=>s+cf(u),0)
+    const enemyAS=attackers.filter(u=>u.class==="air"||u.class==="naval").reduce((s,u)=>s+cf(u),0)
+    const ownAir=selected.filter(u=>u.class==="air").length, enemyAir=attackers.filter(u=>u.class==="air").length
+    const rank=u=>ownAS<enemyAS?(u.class==="air"?0:u.class==="naval"?1:2)
+        :ownAir<enemyAir?(u.class==="air"?0:u.class==="naval"?1:2)
+        :(u.class==="ground"?0:u.class==="air"?1:2)
+    return candidates.slice().sort((a,b)=>rank(byId.get(a))-rank(byId.get(b))||cf(byId.get(b))-cf(byId.get(a))||a-b)[0]
+}
+
+// 第6/12页 PBM 的单位顺序。落点的六级/三级优先级由 offensive.js 在计算真实合法路径后
+// 评分；这里负责在交互式 unit 窗严格按“航空→海上→失败AA地面”选择，并在同类中选择
+// 最强航空或稳定的最低 id。函数只读取 view.ai 的只读投影。
+function planPostBattleMovement(view,candidates,action,role){
+    if(!Array.isArray(candidates)||!candidates.length)return undefined
+    if(action!=="unit")return undefined
+    const units=Array.isArray(view?.ai?.units)?view.ai.units:[],byId=new Map(units.map(u=>[u.id,u]))
+    const failed=new Set(view?.ai?.pbm?.failedAAUnits||[])
+    const cf=u=>u?(u.reduced?(Number(u.rcf)||Math.ceil((Number(u.cf)||0)/2)):(Number(u.cf)||0)):0
+    const rank=u=>u?.class==="air"?0:u?.class==="naval"?1:(u?.class==="ground"&&failed.has(u.id)?2:3)
+    return candidates.slice().sort((a,b)=>rank(byId.get(a))-rank(byId.get(b))
+        ||(rank(byId.get(a))===0?cf(byId.get(b))-cf(byId.get(a)):0)||a-b)[0]
+}

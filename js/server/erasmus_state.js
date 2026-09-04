@@ -702,6 +702,13 @@ function esm_name_hexes(token) {
     const exact = []
     for (const e of reg.named) if (esm_norm(e.name) === t) exact.push(e.idx)
     if (exact.length) return exact
+    // 斜线表示两个备选地点时两者都保留（Gasmata/Rabaul）；地图本身确有同名组合格
+    // （Attu/Kiska、Saipan/Tinian）已在上面的 exact 分支命中，不会被拆开。
+    if(String(token).includes("/")){
+        const split=[]
+        for(const part of String(token).split("/"))for(const idx of esm_name_hexes(part))if(!split.includes(idx))split.push(idx)
+        if(split.length)return split
+    }
     const fuzzy = []
     for (const e of reg.named) {
         const n = esm_norm(e.name)
@@ -1075,6 +1082,11 @@ function esm_card_window_action(strategy, view, context) {
     const wantEvent = strategy.kind === "EVENT"
     if (strategy.kind === "PASS" && legal.includes("pass")) return { action: "pass", argument: undefined, via: strategy.name }
 
+    // 第4/10页是每次出牌都必须重走的独立决策树，不能被当前决策轴的 CONQUEST/EVENT
+    // 类型短路。返回 null 才表示图表没有给出可执行牌，继续使用战略轴的事件清单。
+    const chartPick = esm_card_selection_tree(strategy, hand)
+    if (chartPick) return chartPick
+
     // 日本第4页：手牌多于2张时，C/D 未命中后先检查 E“可执行的无限制军事事件”。
     // 旧实现按决策轴战略类型直接挑 OC，完全绕过本页，因而会把反应牌当 OC，同时留下
     // 高后勤军事事件。命中 E 时按图表的 EC 选择标准取后勤值最高者，并把用途意图带到
@@ -1144,6 +1156,58 @@ function esm_choose_card(hand, intent, legal, strategy) {
     const chosen = pool[0]
     const viaAction = hasIntent(chosen) ? intent : (byId.get(chosen)?.allowed || []).includes("event") ? "event" : "ops"
     return { action: "card", argument: chosen, via: `${strategy.name}:${viaAction}` }
+}
+
+function esm_set_card_pick(strategy, card, intent, node, label) {
+    strategy.cardIntent=intent
+    strategy.selectedCard=card.id
+    strategy.cardTreeNode=node
+    return {action:"card",argument:card.id,via:label}
+}
+
+function esm_card_selection_tree(strategy, hand) {
+    const side=strategy.role==="Japan"?"JP":"AP", prefix=side==="JP"?"JP04":"AP10"
+    const c=classifyCards(hand,strategy.role)
+    if(!c.length)return null
+    const sortEvent=(a,b)=>b.lv-a.lv||b.ops-a.ops||a.id-b.id
+    const sortOps=(a,b)=>Number(a.military)-Number(b.military)||b.ops-a.ops||a.id-b.id
+    const event=c.filter(x=>x.eventPlayable), ops=c.filter(x=>x.opsPlayable)
+    const unres=event.filter(x=>x.unrestricted), restricted=c.filter(x=>x.restricted)
+    const restrictedEvent=restricted.filter(x=>x.eventPlayable)
+    const nonMilitaryOps=ops.filter(x=>!x.military)
+    const played=!!(G.offensive&&G.offensive.active_cards&&G.offensive.active_cards.length)
+    // AP L+M：每次非首张攻势牌前，若中国距投降≤2且有可用中国事件，立即打出。
+    if(side==="AP"&&played&&G.surrender&&G.surrender[nations.CHINA.id]>=3){
+        const china=event.filter(x=>cards[x.id]&&cards[x.id].china)
+        if(china.length)return esm_set_card_pick(strategy,china.sort(sortEvent)[0],"event",`${prefix}-S-CHINA`,"盟军卡牌选择:L+M→中国事件")
+    }
+    // 图中 B 以下只在手牌>2时进入先发/军事事件链。
+    if(c.length>2){
+        const firstGame=!(G.discard?.[JP]?.length||G.discard?.[AP]?.length||played)
+        if(firstGame){
+            const re=side==="JP"?/i.?go|second operational phase|第二阶段作战/i:/flintlock|shoestring|燧发枪|脚指甲/i
+            const first=event.filter(x=>re.test(x.name))
+            if(first.length)return esm_set_card_pick(strategy,first.sort(sortEvent)[0],"event",`${prefix}-S-FIRST`,`${strategy.role}卡牌选择:C+D→先发打击EC`)
+        }
+        if(unres.length)return esm_set_card_pick(strategy,unres.sort(sortEvent)[0],"event",`${prefix}-S-UNRESTRICTED-EC`,`${strategy.role}卡牌选择:E→无限制军事事件EC`)
+        if(restricted.length){
+            if(restrictedEvent.length)return esm_set_card_pick(strategy,restrictedEvent.sort(sortEvent)[0],"event",`${prefix}-S-RESTRICTED-EC`,`${strategy.role}卡牌选择:F+G→有限制军事事件EC`)
+            const pool=nonMilitaryOps.length?nonMilitaryOps:ops
+            if(pool.length)return esm_set_card_pick(strategy,pool.sort(sortOps)[0],"ops",`${prefix}-S-RESTRICTED-OC`,`${strategy.role}卡牌选择:F+G→受限事件OC`)
+        }
+        if(ops.length)return esm_set_card_pick(strategy,(nonMilitaryOps.length?nonMilitaryOps:ops).sort(sortOps)[0],"ops",`${prefix}-S-NONMIL-OC`,`${strategy.role}卡牌选择:F→无军事事件OC`)
+    }
+    // H：本回合已有 FO 时打非军事 OC。J：仅剩一牌且非第12回合，设置 FO。
+    const mine=esm_role_faction(strategy.role)
+    if(G.future_offensive&&G.future_offensive[mine]>0&&ops.length)
+        return esm_set_card_pick(strategy,(nonMilitaryOps.length?nonMilitaryOps:ops).sort(sortOps)[0],"ops",`${prefix}-S-NONMIL-OC`,`${strategy.role}卡牌选择:H→无军事事件OC`)
+    if(c.length===1&&G.turn!==12&&c[0].futurePlayable)
+        return esm_set_card_pick(strategy,c[0],"future_offensive",`${prefix}-S-FO`,`${strategy.role}卡牌选择:J→未来攻势`)
+    // K：最后可用事件是反应牌时不浪费其事件能力，按 OC；否则进入事件战略。
+    const usableEvents=event.filter(x=>!cards[x.id]?.reaction)
+    if(!usableEvents.length&&ops.length)
+        return esm_set_card_pick(strategy,(nonMilitaryOps.length?nonMilitaryOps:ops).sort(sortOps)[0],"ops",`${prefix}-S-NONMIL-OC`,`${strategy.role}卡牌选择:K→保留反应牌`)
+    return null
 }
 
 // 第4/10页共用卡牌分类器。只读取己方手牌；allowed 是引擎对当前

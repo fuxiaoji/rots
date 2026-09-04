@@ -8,7 +8,7 @@
 |---|---|---|
 | JP04-START | start | always→JP04-A |
 | JP04-A | condition / JP_CARD_ALREADY_PLAYED | true→JP04-B；false→JP04-CLASSIFY |
-| JP04-CLASSIFY | action | always→JP04-B |
+| JP04-CLASSIFY | process | always→JP04-B |
 | JP04-B | condition / JP_HAND_GT_2 | true→JP04-C；false→JP04-H |
 | JP04-C | condition / JP_FIRST_GAME_CARD | true→JP04-D；false→JP04-E |
 | JP04-D | condition / JP_HAS_FIRST_STRIKE_EVENT | true→JP04-S-FIRST；false→JP04-E |

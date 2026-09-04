@@ -1025,7 +1025,59 @@ function headless_nearest_enemy_dist(hex, faction) {
 // 可两栖/海运跳岛)才用离焦点的距离作同等目标内的次级键 —— 引导登陆沿主轴线夺格;
 // 纯地面/纯陆路编成不能渡海, 若也朝海外焦点转向, 会把地面军拖去跨大陆绕路(如经
 // 缅甸→中国直趋中太平洋), 故仍按原“距最近敌军”就近推进。无焦点/非渡海编成时行为逐位不变。
-function headless_target_score(hex, hasGround, faction, kind, steer) {
+function headless_units_at(hex, faction) {
+    const r = { air:0, naval:0, ground:0, hq:0, strongestAir:0 }
+    for (let u=1; u<pieces.length; ++u) {
+        const p=pieces[u]
+        if (!p || p.faction!==faction || G.location[u]!==hex) continue
+        if (p.class === "air") { r.air++; r.strongestAir=Math.max(r.strongestAir, Number(p.cf)||0) }
+        else if (p.class === "naval") r.naval++
+        else if (p.class === "ground") r.ground++
+        else if (p.class === "hq") r.hq++
+    }
+    return r
+}
+
+// 第6/12页航空 PBM 六级目标、海上 PBM 三级目标、AA PBM 两级目标。
+// 这里的 candidates 已经过引擎 update_move_hex() 合法性过滤，因此评分只决定图表优先级，
+// 不会绕过航程、地形、控制、叠放或移动规则。
+function erasmus_pbm_target_score(hex, faction, piece, source) {
+    const md=get_map_data(hex), own=headless_units_at(hex,faction), enemy=headless_units_at(hex,1-faction)
+    const enemyZoi=typeof has_zoi === "function" && has_zoi(hex,1-faction)
+    const dist=typeof get_distance === "function" ? get_distance(source,hex) : Math.abs(source-hex)
+    if (piece.class === "air") {
+        if (!md.airfield) return null
+        // 脚注[12]/[11]：每机场不超过一个空中单位；当前移动单位原地不计为冲突。
+        const resident=own.air-(hex===source?1:0)
+        if (resident>0) return null
+        // 双方图表同构：无敌 ZOI 的己方 HQ → 敌 HQ → 敌 AZOI 下己港 → 己机场 → 己地面 → 最近资源格。
+        // 日本图表排除日本本土 HQ；盟军没有对应本土排除。
+        const nonHomeHq=own.hq>0 && !enemyZoi && !(faction===JP && md.region==="Japan")
+        if (nonHomeHq) return [0,-(Number(piece.cf)||0),dist,hex]
+        if (enemy.hq>0) return [1,-(Number(piece.cf)||0),dist,hex]
+        if (md.port && enemyZoi) return [2,-(Number(piece.cf)||0),dist,hex]
+        if (enemyZoi) return [3,-(Number(piece.cf)||0),dist,hex]
+        if (own.ground>0 && enemyZoi) return [4,-(Number(piece.cf)||0),dist,hex]
+        if (md.resource) return [5,dist,hex]
+        return [6,dist,hex]
+    }
+    if (piece.class === "naval") {
+        if (!md.port) return null
+        // 日本首选南方HQ缺舰；盟军首选任一可落脚HQ港。真实可达性已由移动器保证。
+        const hqPriority=own.hq>0 && (faction===AP || (md.name||"").toLowerCase().includes("south"))
+        if (hqPriority && own.naval-(hex===source?1:0)<=0) return [0,dist,hex]
+        if (own.ground>0 && own.naval-(hex===source?1:0)<=0 && own.air===0) return [1,dist,hex]
+        return [2,dist,hex]
+    }
+    if (piece.class === "ground") {
+        if (!md.port) return null
+        if (own.naval>0) return [0,dist,hex]
+        return [1,dist,hex]
+    }
+    return null
+}
+
+function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece, source) {
     const eu = headless_enemy_units_at(hex, 1 - faction)
     const approach = steer && typeof eop_advance_tiebreak === "function" ? eop_advance_tiebreak(hex, faction) : -1
     const nearKey = hex => approach >= 0 ? approach : headless_nearest_enemy_dist(hex, 1 - faction)
@@ -1060,9 +1112,12 @@ function headless_target_score(hex, hasGround, faction, kind, steer) {
         }
         return [eu.count, eu.ground, hex]
     }
-    // pbm: 战后不许新开战/进敌占(引擎已排除), 优选己方控制空格的“安全落脚”。
+    // PBM 严格使用双方图表的专属落点表；无匹配落点才用安全/距离次序，且会在轨迹中
+    // 落到具体 JP06/AP12 PBM 节点，不再伪装成通用 reaction 排序。
+    const chartScore=movingPiece&&source!==undefined?erasmus_pbm_target_score(hex,faction,movingPiece,source):null
+    if(chartScore)return chartScore
     const controlled = is_space_controlled(hex, faction)
-    return [eu.count > 0 ? 2 : (controlled ? 0 : 1), eu.count, hex]
+    return [20,eu.count > 0 ? 2 : (controlled ? 0 : 1),eu.count,source===undefined?0:get_distance(source,hex),hex]
 }
 
 function headless_score_lt(a, b) {
@@ -1076,11 +1131,11 @@ function headless_score_lt(a, b) {
 function headless_advance_has_candidates(kind) {
     for (const u of L.movable_units) {
         const p = pieces[u]
-        if (!p || p.class === "air") continue
+        if (!p || (p.class === "air" && kind !== "pbm")) continue
         const h = G.location[u]
         if (!(h >= 0 && h <= LAST_BOARD_HEX)) continue
         if (kind === "attack") return true
-        if (kind === "pbm" && !could_unit_stop_here(u)) return true
+        if (kind === "pbm" && (p.class === "air" || !could_unit_stop_here(u))) return true
         if (kind === "reaction" && !set_has(G.offensive.battle_hexes, h)) return true
     }
     return false
@@ -1092,24 +1147,34 @@ function headless_advance_one(self, kind) {
     if (G.active_stack.length) return { type: "decline" }
     const need = u => {
         const p = pieces[u]
-        if (!p || p.class === "air") return false
+        if (!p || (p.class === "air" && kind !== "pbm")) return false
         const h = G.location[u]
         if (!(h >= 0 && h <= LAST_BOARD_HEX)) return false
         if (kind === "attack") return true
-        if (kind === "pbm") return !could_unit_stop_here(u)
+        if (kind === "pbm") return p.class === "air" || !could_unit_stop_here(u)
         if (kind === "reaction") return !set_has(G.offensive.battle_hexes, h)
         return false
     }
-    let loc = -1
+    let loc = -1, lead = -1, leadScore = null
     for (const u of L.movable_units) {
         if (!need(u)) continue
         const h = G.location[u]
-        if (loc < 0 || h < loc) loc = h
+        const p=pieces[u]
+        // PBM 按图表 A/B/C：航空先、海上次、失败两栖地面最后；航空同类先处理最强单位。
+        const cls=kind==="pbm"?(p.class==="air"?0:p.class==="naval"?1:2):0
+        const strength=Number(p.cf)||0
+        const score=[cls,kind==="pbm"&&p.class==="air"?-strength:0,h,u]
+        if(leadScore===null||headless_score_lt(score,leadScore)){leadScore=score;loc=h;lead=u}
     }
     if (loc < 0) return { type: "none" }
+    const leadPiece=pieces[lead]
     const group = L.movable_units.filter(u => {
         const p = pieces[u]
-        return p && p.class !== "air" && G.location[u] === loc
+        if(!p||G.location[u]!==loc)return false
+        // 航空 PBM 每机场最多一机，逐个移动；海军/失败地面仍按同格同类编组。
+        if(kind==="pbm"&&leadPiece.class==="air")return u===lead
+        if(kind==="pbm")return p.class===leadPiece.class
+        return p.class!=="air"
     })
     if (!group.length) return { type: "none" }
     // 逐个真实选入(获得 organic 配对/移动路径语义, 并从 movable 移除以保证单窗只走一次)
@@ -1121,7 +1186,7 @@ function headless_advance_one(self, kind) {
     const steer = kind === "attack" && group.some(u => pieces[u] && pieces[u].class === "naval")
     let best = null, bestScore = null
     map_for_each(L.allowed_hexes, (h) => {
-        const sc = headless_target_score(h, hasGround, G.active, kind, steer)
+        const sc = headless_target_score(h, hasGround, G.active, kind, steer, leadPiece, loc)
         if (!sc) return
         if (!best || headless_score_lt(sc, bestScore)) {
             bestScore = sc

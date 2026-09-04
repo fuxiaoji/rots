@@ -250,13 +250,13 @@
     },
     {
       "id": "JP05-S-AIR",
-      "type": "action",
+      "type": "process",
       "strategy": "JP_AIR_STRIKE",
       "label_zh": "航空打击",
       "edges": [
         {
           "when": "always",
-          "to": "JP05-END"
+          "to": "JP05-S-TARGET"
         }
       ],
       "confidence": "confirmed",
@@ -271,13 +271,13 @@
     },
     {
       "id": "JP05-S-AIR-GROUND",
-      "type": "action",
+      "type": "process",
       "strategy": "JP_AIR_SUPPORT_GROUND",
       "label_zh": "带航空支援地面攻击",
       "edges": [
         {
           "when": "always",
-          "to": "JP05-END"
+          "to": "JP05-S-TARGET"
         }
       ],
       "confidence": "confirmed",
@@ -292,13 +292,13 @@
     },
     {
       "id": "JP05-S-AIRSEA-GROUND",
-      "type": "action",
+      "type": "process",
       "strategy": "JP_AIR_SEA_GROUND",
       "label_zh": "带航空/海上支援地面攻击",
       "edges": [
         {
           "when": "always",
-          "to": "JP05-END"
+          "to": "JP05-S-TARGET"
         }
       ],
       "confidence": "confirmed",
@@ -313,13 +313,13 @@
     },
     {
       "id": "JP05-S-SEA-LANDING",
-      "type": "action",
+      "type": "process",
       "strategy": "JP_SEA_SUPPORT_LANDING",
       "label_zh": "带海上支援登陆",
       "edges": [
         {
           "when": "always",
-          "to": "JP05-END"
+          "to": "JP05-S-TARGET"
         }
       ],
       "confidence": "confirmed",
@@ -334,13 +334,13 @@
     },
     {
       "id": "JP05-S-AIRSEA-LANDING",
-      "type": "action",
+      "type": "process",
       "strategy": "JP_AIR_SEA_LANDING",
       "label_zh": "带航空/海上支援登陆",
       "edges": [
         {
           "when": "always",
-          "to": "JP05-END"
+          "to": "JP05-S-TARGET"
         }
       ],
       "confidence": "confirmed",
@@ -355,13 +355,13 @@
     },
     {
       "id": "JP05-S-UNSUPPORTED-LANDING",
-      "type": "action",
+      "type": "process",
       "strategy": "JP_UNSUPPORTED_LANDING",
       "label_zh": "无支援登陆",
       "edges": [
         {
           "when": "always",
-          "to": "JP05-END"
+          "to": "JP05-S-TARGET"
         }
       ],
       "confidence": "confirmed",

@@ -15,12 +15,12 @@
 | AP11-D2 | condition / TARGET_EMPTY | true→AP11-G；false→AP11-H |
 | AP11-G | condition / TARGET_IS_SR | true→AP11-H；false→AP11-S-UNSUPPORTED-LANDING |
 | AP11-H | condition / ENEMY_AIR_OR_CARRIER_CAN_REACT | true→AP11-S-AIRSEA-LANDING；false→AP11-S-SEA-LANDING |
-| AP11-S-AIR | action | always→AP11-END |
-| AP11-S-AIR-GROUND | action | always→AP11-END |
-| AP11-S-AIRSEA-GROUND | action | always→AP11-END |
-| AP11-S-SEA-LANDING | action | always→AP11-END |
-| AP11-S-AIRSEA-LANDING | action | always→AP11-END |
-| AP11-S-UNSUPPORTED-LANDING | action | always→AP11-END |
+| AP11-S-AIR | process | always→AP11-S-TARGET |
+| AP11-S-AIR-GROUND | process | always→AP11-S-TARGET |
+| AP11-S-AIRSEA-GROUND | process | always→AP11-S-TARGET |
+| AP11-S-SEA-LANDING | process | always→AP11-S-TARGET |
+| AP11-S-AIRSEA-LANDING | process | always→AP11-S-TARGET |
+| AP11-S-UNSUPPORTED-LANDING | process | always→AP11-S-TARGET |
 | AP11-S-TARGET | action | always→AP11-ACTIVATE |
 | AP11-ACTIVATE | action | always→AP11-I |
 | AP11-I | condition / FORCE_MEETS_BATTLE_SUPPORT_STANDARD | true→AP11-J；false→AP11-S-WEAKEST |

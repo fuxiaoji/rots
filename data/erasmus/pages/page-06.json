@@ -480,8 +480,8 @@
     },
     {
       "id": "JP06-S-PBM",
-      "type": "action",
-      "strategy": "JP_PBM",
+      "type": "process",
+      "label_zh": "如果可以的话执行PBM",
       "edges": [
         {
           "when": "always",
@@ -682,7 +682,6 @@
     "JP_REACTION_FORCE",
     "JP_KAMIKAZE_REACTION",
     "JP_SUBMARINE_ATTACK",
-    "JP_PBM",
     "JP_PBM_AIR",
     "JP_PBM_SEA",
     "JP_PBM_AA"

@@ -203,7 +203,7 @@ function create_view() {
     const aiState = String(L.P || "")
     const aiStage = G.offensive ? G.offensive.stage : EVENT_STAGE
     const aiWindow = aiStage === POST_BATTLE_STAGE ? "pbm"
-        : aiStage === REACTION_STAGE || /reaction|intelligence|disengagement/.test(aiState) ? "reaction"
+        : aiStage === REACTION_STAGE || /reaction|intelligence|disengagement|submarine|retreat/.test(aiState) ? "reaction"
         : aiState === "offensive_segment" ? "card-selection"
         : aiStage === ATTACK_STAGE && /choose_hq|activate_units|move_|declare_battle|choose_attack|confirm_bh|commit_offensive/.test(aiState) ? "task-force"
         : "decision-axis"
@@ -218,7 +218,7 @@ function create_view() {
     const aiFocusData = aiFocus !== null && aiFocus !== undefined ? get_map_data(aiFocus) : null
     const aiFocusMeta = aiFocus !== null && aiFocus !== undefined && typeof eop_target_meta === "function" ? eop_target_meta(ROLES[R], aiFocus) : null
     const publicUnits=[]
-    for(let u=1;u<pieces.length;++u){const h=G.location[u],p=pieces[u];if(h>=0&&h<=LAST_BOARD_HEX)publicUnits.push({id:u,faction:p.faction,class:p.class,type:p.type||null,cf:Number(p.cf)||0,rcf:Number(p.rcf)||0,lf:Number(p.lf)||0,br:Number(p.br)||0,ebr:Number(p.ebr)||0,asp:!!p.asp,stratMove:!!p.strat_move,reduced:!!(G.reduced&&set_has(G.reduced,u)),location:h})}
+    for(let u=1;u<pieces.length;++u){const h=G.location[u],p=pieces[u];if(h>=0&&h<=LAST_BOARD_HEX)publicUnits.push({id:u,name:p.name||p.id||String(u),faction:p.faction,class:p.class,type:p.type||null,service:p.service||null,cf:Number(p.cf)||0,rcf:Number(p.rcf)||0,lf:Number(p.lf)||0,br:Number(p.br)||0,ebr:Number(p.ebr)||0,cr:Number(p.cr)||0,cm:Number(p.cm)||0,asp:!!p.asp,stratMove:!!p.strat_move,reduced:!!(G.reduced&&set_has(G.reduced,u)),location:h})}
     V.ai = { state:aiState, stage:aiStage, windowKind:aiWindow, focus:aiFocus, ownCards:ownCardMeta, units:publicUnits,
         focusControlledBy: aiFocus === null || aiFocus === undefined ? null : (is_space_controlled(aiFocus, R) ? ROLES[R] : ROLES[1-R]),
         predicates: {
@@ -279,9 +279,41 @@ function create_view() {
     V.ai.predicates.BATTLE_IN_HQ_RANGE_AND_REACTION_CARD = aiBattle && ownCardMeta.some(c=>c.reaction||c.intelligence!==undefined)
     V.ai.predicates.HAS_SUBMARINE_CARD_AND_TARGET = V.ai.predicates.HAS_SUBMARINE_CARD && aiBattle
     V.ai.predicates.HAS_INTEL_COUNTER_OR_AMBUSH = V.ai.predicates.HAS_INTELLIGENCE_REACTION_CARD || V.ai.predicates.HAS_COUNTEROFFENSIVE_REACTION_CARD || V.ai.predicates.HAS_AMBUSH_REACTION_CARD
-    V.ai.predicates.PBM_AIR_REQUIRED = aiStage===POST_BATTLE_STAGE && publicUnits.some(u=>u.faction===R&&u.class==="air")
-    V.ai.predicates.PBM_SEA_REQUIRED = aiStage===POST_BATTLE_STAGE && publicUnits.some(u=>u.faction===R&&u.class==="naval")
-    V.ai.predicates.PBM_AA_FAILED = aiStage===POST_BATTLE_STAGE && !!(G.offensive.landing_hexes&&G.offensive.landing_hexes.length)
+    const focusEnemies=aiFocus===null||aiFocus===undefined?[]:publicUnits.filter(u=>u.location===aiFocus&&u.faction!==R)
+    V.ai.predicates.TARGET_ONLY_ENEMY_NAVAL=focusEnemies.length>0&&focusEnemies.every(u=>u.class==="naval")
+    V.ai.predicates.GROUND_CAN_ENTER_EXIT=aiStage===ATTACK_STAGE&&publicUnits.some(u=>u.faction===R&&u.class==="ground")
+    V.ai.predicates.TARGET_EMPTY_OR_NAVAL_AND_GROUND_CAN_EXIT=V.ai.predicates.TARGET_EMPTY||(V.ai.predicates.TARGET_ONLY_ENEMY_NAVAL&&V.ai.predicates.GROUND_CAN_ENTER_EXIT)
+    const activeMine=(G.offensive?.active_units?.[R]||[]).map(u=>publicUnits.find(x=>x.id===u)).filter(Boolean)
+    const activeEnemy=(G.offensive?.active_units?.[1-R]||[]).map(u=>publicUnits.find(x=>x.id===u)).filter(Boolean)
+    const combat=u=>u.reduced?(u.rcf||Math.ceil(u.cf/2)):u.cf
+    const fEval=aiFocus===null||aiFocus===undefined?null:evaluateTargetFeasibility(aiFocus,null,null,V)
+    const ownGround=activeMine.filter(u=>u.class==="ground").reduce((s,u)=>s+combat(u),0)
+    const ownAirSea=activeMine.filter(u=>u.class==="air"||u.class==="naval").reduce((s,u)=>s+combat(u),0)
+    V.ai.predicates.FORCE_MEETS_BATTLE_SUPPORT_STANDARD=!!fEval&&((fEval.requiresOccupation&&ownGround>=fEval.requiredGroundMath)||(!fEval.requiresOccupation&&ownAirSea>=fEval.requiredAirSeaMath))
+    V.ai.predicates.TARGET_DAMAGE_LEVEL_MET=V.ai.predicates.DAMAGE_LEVEL_MET=V.ai.predicates.FORCE_MEETS_BATTLE_SUPPORT_STANDARD
+    const chain=typeof eop_axis_chain==="function"?eop_axis_chain(ROLES[R]):[]
+    const unresolved=chain.filter(h=>!is_space_controlled(h,R))
+    V.ai.predicates.IS_LAST_TARGET=aiFocus!==null&&aiFocus!==undefined&&unresolved.length===1&&unresolved[0]===aiFocus
+    V.ai.reaction={enemyActivatedCount:activeEnemy.length,surprise:G.offensive?.intelligence===SURPRISE,battleHexes:(G.offensive?.battle_hexes||[]).slice()}
+    const suppliedBit=R===JP?JP_SUPPLIED_HEX:AP_SUPPLIED_HEX
+    const suppliedHq=publicUnits.filter(u=>u.faction===R&&u.class==="hq"&&(G.supply_cache[u.location]&suppliedBit))
+    V.ai.predicates.BATTLE_IN_SUPPLIED_HQ_RANGE=(G.offensive?.battle_hexes||[]).some(h=>suppliedHq.some(q=>get_distance(q.location,h)<=q.cr))
+    V.ai.predicates.BATTLE_IN_HQ_RANGE_AND_REACTION_CARD=V.ai.predicates.BATTLE_IN_SUPPLIED_HQ_RANGE&&ownCardMeta.some(c=>c.reaction||c.intelligence!==undefined)
+    const ownAS=activeMine.filter(u=>u.class==="air"||u.class==="naval").reduce((s,u)=>s+combat(u),0)
+    const enemyAS=activeEnemy.filter(u=>u.class==="air"||u.class==="naval").reduce((s,u)=>s+combat(u),0)
+    V.ai.predicates.REACTION_FORCE_STANDARD_MET=aiBattle&&ownAS>=enemyAS&&activeMine.filter(u=>u.class==="air").length>=activeEnemy.filter(u=>u.class==="air").length
+    V.ai.predicates.HAS_VALID_SUBMARINE_TARGET=aiBattle&&activeEnemy.some(u=>u.class==="naval")
+    V.ai.predicates.HAS_SUBMARINE_CARD_AND_TARGET=V.ai.predicates.HAS_SUBMARINE_CARD&&V.ai.predicates.HAS_VALID_SUBMARINE_TARGET
+    V.ai.predicates.AP_HAND_GE_3_AND_JP_CONTROLS_COUNTERATTACK_TARGET=ownHand.length>=3&&V.ai.predicates.JP_CONTROLS_COUNTERATTACK_TARGET
+    const pbmActive = aiStage===POST_BATTLE_STAGE && G.offensive && Array.isArray(G.offensive.active_units?.[R])
+        ? G.offensive.active_units[R].filter(u=>unit_on_board(u)) : []
+    // PBM A/B/C 只检查本次攻势实际参与且仍需处理的单位；此前扫描全地图会让 A 永远为真，
+    // 海上与失败两栖分支永远不可达。ground_pbm 是引擎在登陆失败/地面败退时写入的权威集合。
+    V.ai.pbm = { activeUnits:pbmActive.slice(), failedAAUnits:pbmActive.filter(u=>set_has(G.offensive.ground_pbm||[],u)) }
+    V.ai.predicates.PBM_AIR_REQUIRED = pbmActive.some(u=>pieces[u]?.class==="air")
+    V.ai.predicates.PBM_SEA_REQUIRED = !V.ai.predicates.PBM_AIR_REQUIRED && pbmActive.some(u=>pieces[u]?.class==="naval")
+    V.ai.predicates.PBM_AA_FAILED = !V.ai.predicates.PBM_AIR_REQUIRED && !V.ai.predicates.PBM_SEA_REQUIRED
+        && pbmActive.some(u=>pieces[u]?.class==="ground"&&set_has(G.offensive.ground_pbm||[],u))
     if (G.offensive.battle.battle_hex) {
         set_add(V.offensive.battle_hexes, G.offensive.battle.battle_hex)
     }

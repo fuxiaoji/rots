@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "policy_version": "erasmus-v2.0-zh.11",
+  "policy_version": "erasmus-v2.0-zh.12",
   "source": "伊拉斯谟v2.0_图表汉化 (1).pdf",
   "charts": [
     {
@@ -1335,8 +1335,7 @@
         },
         {
           "id": "JP04-CLASSIFY",
-          "type": "action",
-          "strategy": "JP_CLASSIFY_CARDS",
+          "type": "process",
           "label_zh": "卡牌分类",
           "edges": [
             {
@@ -1804,7 +1803,6 @@
         }
       ],
       "strategies": [
-        "JP_CLASSIFY_CARDS",
         "JP_FIRST_STRIKE_EVENT_CARD",
         "JP_UNRESTRICTED_EVENT_CARD",
         "JP_RESTRICTED_EVENT_CARD",
@@ -2072,13 +2070,13 @@
         },
         {
           "id": "JP05-S-AIR",
-          "type": "action",
+          "type": "process",
           "strategy": "JP_AIR_STRIKE",
           "label_zh": "航空打击",
           "edges": [
             {
               "when": "always",
-              "to": "JP05-END"
+              "to": "JP05-S-TARGET"
             }
           ],
           "confidence": "confirmed",
@@ -2093,13 +2091,13 @@
         },
         {
           "id": "JP05-S-AIR-GROUND",
-          "type": "action",
+          "type": "process",
           "strategy": "JP_AIR_SUPPORT_GROUND",
           "label_zh": "带航空支援地面攻击",
           "edges": [
             {
               "when": "always",
-              "to": "JP05-END"
+              "to": "JP05-S-TARGET"
             }
           ],
           "confidence": "confirmed",
@@ -2114,13 +2112,13 @@
         },
         {
           "id": "JP05-S-AIRSEA-GROUND",
-          "type": "action",
+          "type": "process",
           "strategy": "JP_AIR_SEA_GROUND",
           "label_zh": "带航空/海上支援地面攻击",
           "edges": [
             {
               "when": "always",
-              "to": "JP05-END"
+              "to": "JP05-S-TARGET"
             }
           ],
           "confidence": "confirmed",
@@ -2135,13 +2133,13 @@
         },
         {
           "id": "JP05-S-SEA-LANDING",
-          "type": "action",
+          "type": "process",
           "strategy": "JP_SEA_SUPPORT_LANDING",
           "label_zh": "带海上支援登陆",
           "edges": [
             {
               "when": "always",
-              "to": "JP05-END"
+              "to": "JP05-S-TARGET"
             }
           ],
           "confidence": "confirmed",
@@ -2156,13 +2154,13 @@
         },
         {
           "id": "JP05-S-AIRSEA-LANDING",
-          "type": "action",
+          "type": "process",
           "strategy": "JP_AIR_SEA_LANDING",
           "label_zh": "带航空/海上支援登陆",
           "edges": [
             {
               "when": "always",
-              "to": "JP05-END"
+              "to": "JP05-S-TARGET"
             }
           ],
           "confidence": "confirmed",
@@ -2177,13 +2175,13 @@
         },
         {
           "id": "JP05-S-UNSUPPORTED-LANDING",
-          "type": "action",
+          "type": "process",
           "strategy": "JP_UNSUPPORTED_LANDING",
           "label_zh": "无支援登陆",
           "edges": [
             {
               "when": "always",
-              "to": "JP05-END"
+              "to": "JP05-S-TARGET"
             }
           ],
           "confidence": "confirmed",
@@ -3044,8 +3042,8 @@
         },
         {
           "id": "JP06-S-PBM",
-          "type": "action",
-          "strategy": "JP_PBM",
+          "type": "process",
+          "label_zh": "如果可以的话执行PBM",
           "edges": [
             {
               "when": "always",
@@ -3246,7 +3244,6 @@
         "JP_REACTION_FORCE",
         "JP_KAMIKAZE_REACTION",
         "JP_SUBMARINE_ATTACK",
-        "JP_PBM",
         "JP_PBM_AIR",
         "JP_PBM_SEA",
         "JP_PBM_AA"
@@ -4816,8 +4813,7 @@
         },
         {
           "id": "AP10-CLASSIFY",
-          "type": "action",
-          "strategy": "AP_CLASSIFY_CARDS",
+          "type": "process",
           "label_zh": "卡牌分类",
           "edges": [
             {
@@ -5333,7 +5329,6 @@
         }
       ],
       "strategies": [
-        "AP_CLASSIFY_CARDS",
         "AP_CHINA_EVENT_CARD",
         "AP_FIRST_STRIKE_EVENT_CARD",
         "AP_UNRESTRICTED_EVENT_CARD",
@@ -5602,13 +5597,13 @@
         },
         {
           "id": "AP11-S-AIR",
-          "type": "action",
+          "type": "process",
           "strategy": "AP_AIR_STRIKE",
           "label_zh": "航空打击",
           "edges": [
             {
               "when": "always",
-              "to": "AP11-END"
+              "to": "AP11-S-TARGET"
             }
           ],
           "confidence": "confirmed",
@@ -5623,13 +5618,13 @@
         },
         {
           "id": "AP11-S-AIR-GROUND",
-          "type": "action",
+          "type": "process",
           "strategy": "AP_AIR_SUPPORT_GROUND",
           "label_zh": "带航空支援地面攻击",
           "edges": [
             {
               "when": "always",
-              "to": "AP11-END"
+              "to": "AP11-S-TARGET"
             }
           ],
           "confidence": "confirmed",
@@ -5644,13 +5639,13 @@
         },
         {
           "id": "AP11-S-AIRSEA-GROUND",
-          "type": "action",
+          "type": "process",
           "strategy": "AP_AIR_SEA_GROUND",
           "label_zh": "带航空/海上支援地面攻击",
           "edges": [
             {
               "when": "always",
-              "to": "AP11-END"
+              "to": "AP11-S-TARGET"
             }
           ],
           "confidence": "confirmed",
@@ -5665,13 +5660,13 @@
         },
         {
           "id": "AP11-S-SEA-LANDING",
-          "type": "action",
+          "type": "process",
           "strategy": "AP_SEA_SUPPORT_LANDING",
           "label_zh": "带海上支援登陆",
           "edges": [
             {
               "when": "always",
-              "to": "AP11-END"
+              "to": "AP11-S-TARGET"
             }
           ],
           "confidence": "confirmed",
@@ -5686,13 +5681,13 @@
         },
         {
           "id": "AP11-S-AIRSEA-LANDING",
-          "type": "action",
+          "type": "process",
           "strategy": "AP_AIR_SEA_LANDING",
           "label_zh": "带航空/海上支援登陆",
           "edges": [
             {
               "when": "always",
-              "to": "AP11-END"
+              "to": "AP11-S-TARGET"
             }
           ],
           "confidence": "confirmed",
@@ -5707,13 +5702,13 @@
         },
         {
           "id": "AP11-S-UNSUPPORTED-LANDING",
-          "type": "action",
+          "type": "process",
           "strategy": "AP_UNSUPPORTED_LANDING",
           "label_zh": "无支援登陆",
           "edges": [
             {
               "when": "always",
-              "to": "AP11-END"
+              "to": "AP11-S-TARGET"
             }
           ],
           "confidence": "confirmed",
@@ -6478,8 +6473,8 @@
         },
         {
           "id": "AP12-S-PBM",
-          "type": "action",
-          "strategy": "AP_PBM",
+          "type": "process",
+          "label_zh": "如果可以的话执行PBM",
           "edges": [
             {
               "when": "always",
@@ -6678,7 +6673,6 @@
         "AP_INTELLIGENCE_ROLL",
         "AP_REACTION_FORCE",
         "AP_SUBMARINE_ATTACK",
-        "AP_PBM",
         "AP_PBM_AIR",
         "AP_PBM_SEA",
         "AP_PBM_AA"

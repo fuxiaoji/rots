@@ -8,7 +8,7 @@
 |---|---|---|
 | AP10-START | start | always→AP10-A |
 | AP10-A | condition / AP_CARD_ALREADY_PLAYED | true→AP10-LM；false→AP10-CLASSIFY |
-| AP10-CLASSIFY | action | always→AP10-LM |
+| AP10-CLASSIFY | process | always→AP10-LM |
 | AP10-LM | condition / AP_CHINA_WITHIN_2_AND_EVENT_AVAILABLE | true→AP10-S-CHINA；false→AP10-B |
 | AP10-S-CHINA | action | always→AP10-END |
 | AP10-B | condition / AP_HAND_GT_2 | true→AP10-C；false→AP10-H |

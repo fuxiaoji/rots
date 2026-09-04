@@ -384,8 +384,8 @@
     },
     {
       "id": "AP12-S-PBM",
-      "type": "action",
-      "strategy": "AP_PBM",
+      "type": "process",
+      "label_zh": "如果可以的话执行PBM",
       "edges": [
         {
           "when": "always",
@@ -584,7 +584,6 @@
     "AP_INTELLIGENCE_ROLL",
     "AP_REACTION_FORCE",
     "AP_SUBMARINE_ATTACK",
-    "AP_PBM",
     "AP_PBM_AIR",
     "AP_PBM_SEA",
     "AP_PBM_AA"

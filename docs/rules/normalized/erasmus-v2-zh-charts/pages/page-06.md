@@ -24,7 +24,7 @@
 | JP06-S-KAMIKAZE | action | always→JP06-END |
 | JP06-KL | condition / HAS_SUBMARINE_CARD_AND_TARGET | true→JP06-S-SUB；false→JP06-S-PBM |
 | JP06-S-SUB | action | always→JP06-END |
-| JP06-S-PBM | action | always→JP06-PBM-A |
+| JP06-S-PBM | process | always→JP06-PBM-A |
 | JP06-PBM-A | condition / PBM_AIR_REQUIRED | true→JP06-S-PBM-AIR；false→JP06-PBM-B |
 | JP06-PBM-B | condition / PBM_SEA_REQUIRED | true→JP06-S-PBM-SEA；false→JP06-PBM-C |
 | JP06-PBM-C | condition / PBM_AA_FAILED | true→JP06-S-PBM-AA；false→JP06-END |

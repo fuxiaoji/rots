@@ -42,7 +42,13 @@ for (const R of ["JP", "AL"]) {
     for (const phase of ["early", "mid", "late"]) {
         const lib = T[R === "JP" ? "jp" : "al"][phase]
         for (const key of Object.keys(golden[R][phase])) {
-            const g = golden[R][phase][key]
+            const g = JSON.parse(JSON.stringify(golden[R][phase][key]))
+            // Python 参考解析器用子串匹配，把 Bali 误塞进所有 Balikpapan 目标；PDF 并无 Bali。
+            // PDF 的 Gasmata/Rabaul 则是两个备选格，旧参考只保留一个。这里按视觉权威修正金标。
+            for(const goal of g.goals){
+                if(/Balikpapan/.test(goal.text)&&!/\bBali\b(?:,|$)/.test(goal.text))goal.hexes=goal.hexes.filter(h=>h!==397)
+                if(/Gasmata\/Rabaul/.test(goal.text)&&!goal.hexes.includes(891))goal.hexes.push(891)
+            }
             const entry = lib[key]
             if (!entry) { problems.push(`${R} ${phase} ${key}: JS 库缺该键`); continue }
             total++

@@ -15,12 +15,12 @@
 | JP05-D2 | condition / TARGET_EMPTY | true→JP05-G；false→JP05-H |
 | JP05-G | condition / TARGET_IS_SR | true→JP05-H；false→JP05-S-UNSUPPORTED-LANDING |
 | JP05-H | condition / ENEMY_AIR_OR_CARRIER_CAN_REACT | true→JP05-S-AIRSEA-LANDING；false→JP05-S-SEA-LANDING |
-| JP05-S-AIR | action | always→JP05-END |
-| JP05-S-AIR-GROUND | action | always→JP05-END |
-| JP05-S-AIRSEA-GROUND | action | always→JP05-END |
-| JP05-S-SEA-LANDING | action | always→JP05-END |
-| JP05-S-AIRSEA-LANDING | action | always→JP05-END |
-| JP05-S-UNSUPPORTED-LANDING | action | always→JP05-END |
+| JP05-S-AIR | process | always→JP05-S-TARGET |
+| JP05-S-AIR-GROUND | process | always→JP05-S-TARGET |
+| JP05-S-AIRSEA-GROUND | process | always→JP05-S-TARGET |
+| JP05-S-SEA-LANDING | process | always→JP05-S-TARGET |
+| JP05-S-AIRSEA-LANDING | process | always→JP05-S-TARGET |
+| JP05-S-UNSUPPORTED-LANDING | process | always→JP05-S-TARGET |
 | JP05-S-TARGET | action | always→JP05-ACTIVATE |
 | JP05-ACTIVATE | action | always→JP05-I |
 | JP05-I | condition / FORCE_MEETS_BATTLE_SUPPORT_STANDARD | true→JP05-J；false→JP05-S-WEAKEST |

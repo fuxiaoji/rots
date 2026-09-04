@@ -2,7 +2,7 @@
 /** import server/erasmus_data.js*/
 /** import server/erasmus_state.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.11"
+const ERASMUS_VERSION = "erasmus-v2.0-zh.12"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "delay", "unit", "hex", "strat_move", "ground_move", "roll", "eliminate", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
@@ -47,7 +47,12 @@ function legal_actions(view) {
     })
 }
 
-function predicate_value(view, id) {
+function predicate_value(view, id, context, nodeId) {
+    if(id==="WEATHER_STANDARD_MET"){
+        const raw=erasmus_hash(`${context.seed}:${context.actionOrdinal}:${nodeId}:WEATHER-D10`)%10
+        const modified=raw-(view?.ai?.reaction?.surprise?2:0)
+        return modified<Number(view?.ai?.reaction?.enemyActivatedCount||0)*2
+    }
     if (view.ai && view.ai.predicates && Object.prototype.hasOwnProperty.call(view.ai.predicates, id))
         return !!view.ai.predicates[id]
     const turn = Number(view.turn || 0)
@@ -136,7 +141,7 @@ function pick_argument(value, seedText, action, view) {
 // 目标聚焦 (操作层, 见 erasmus_ops.js): 当该方有“主轴/焦点”时, 把选目标格
 // (action_hex) 与选进攻单位 (unit) 的散打改为沿主轴线行动——先打当前最优先
 // 未夺目标, 目标不可达时打离焦点最近的格/单位, 逐步向主轴推进。
-function target_argument(action, value, seedText, role, view) {
+function target_argument(action, value, seedText, role, view, strategy) {
     const prompt = String(view?.prompt || "")
     // 通用: unit 候选里若混入“已选/将被撤销”的 unselect 单位(unselect_unit 塞进来的),
     // 选它只会 toggle 撤销当前选择 → 死循环。先在入口统一剔除, 只留“可新增/可前进”的单位;
@@ -157,6 +162,25 @@ function target_argument(action, value, seedText, role, view) {
     if (esm_gate_on() && action === "unit" && /choose unit to reinforce/i.test(prompt)) {
         const picked = esm_pick_replacement_unit(value, role)
         return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
+    }
+    if ((action === "action_hex" || action === "hex") && view?.ai?.windowKind === "pbm") {
+        const picked = planPostBattleMovement(view,value,action,role)
+        return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
+    }
+    if(action==="unit"&&Array.isArray(value)&&/Assign hits|Submarine attack\. Apply hits|Reduce one step|Remove overstacked units/i.test(prompt)){
+        const byId=new Map((view?.ai?.units||[]).map(u=>[u.id,u])),cf=u=>u?(u.reduced?(u.rcf||Math.ceil(u.cf/2)):u.cf||0):0
+        if(/Remove overstacked/i.test(prompt))return value.slice().sort((a,b)=>cf(byId.get(a))-cf(byId.get(b))||(byId.get(a)?.lf||0)-(byId.get(b)?.lf||0)||a-b)[0]
+        // 第6/12页执行注释：两步损失按 CV→BB→CA→DD；同类选防御力最高者。
+        const navalRank=u=>{const t=String(u?.type||u?.name||"").toUpperCase();return /CV/.test(t)?0:/BB/.test(t)?1:/CA/.test(t)?2:/DD/.test(t)?3:4}
+        return value.slice().sort((a,b)=>navalRank(byId.get(a))-navalRank(byId.get(b))||(byId.get(b)?.lf||0)-(byId.get(a)?.lf||0)||a-b)[0]
+    }
+    if(action==="unit"&&Array.isArray(value)&&/Choose HQ/i.test(prompt)){
+        const picked=selectOperationalHq(view,value,role)
+        return picked!==undefined?picked:pick_argument(value,seedText,action,view)
+    }
+    if ((action === "action_hex" || action === "hex" || action === "card") && view?.ai?.windowKind === "reaction") {
+        const picked=planReaction(view,value,action,role,strategy)
+        return picked!==undefined?picked:pick_argument(value,seedText,action,view)
     }
     if (action === "action_hex") {
         const picked = eop_pick_action_hex(value, role)
@@ -184,13 +208,17 @@ function target_argument(action, value, seedText, role, view) {
         if (!esm_gate_on()) pickValue = pickValue.filter(u => { try { return pieces[u] && pieces[u].class !== "air" } catch (e) { return true } })
         // 已激活单位(含本窗已选)传给 eop_pick_unit, 用于两栖登陆护航判定: 敌占港需 ≥1 海军护航。
         const activeUnits = Array.isArray(view?.offensive?.active_units) ? view.offensive.active_units.flat() : []
+        if(view?.ai?.windowKind==="reaction"){
+            const picked=planReaction(view,pickValue,action,role,strategy)
+            return picked!==undefined?picked:pick_argument(pickValue,seedText,action,view)
+        }
         const planned = composeTaskForce(eop_focus(role), null, null, view, pickValue, role)
         const picked = planned && planned.unit !== undefined && planned.unit !== null ? planned.unit : eop_pick_unit(pickValue, role, activeUnits)
         return picked !== undefined ? picked : pick_argument(pickValue, seedText, action, view)
     }
-    if (action === "unit" && /Declare battle hexes|Confirm declared battle hexes|Assign units to battle/i.test(prompt)) {
-        const picked = view?.ai?.windowKind === "pbm" ? planPostBattleMovement(view,value)
-            : view?.ai?.windowKind === "reaction" ? planReaction(view,value) : eop_pick_unit(value, role)
+    if (action === "unit" && (view?.ai?.windowKind === "pbm" || /Declare battle hexes|Confirm declared battle hexes|Assign units to battle/i.test(prompt))) {
+        const picked = view?.ai?.windowKind === "pbm" ? planPostBattleMovement(view,value,action,role)
+            : view?.ai?.windowKind === "reaction" ? planReaction(view,value,action,role,strategy) : eop_pick_unit(value, role)
         return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
     }
     return pick_argument(value, seedText, action, view)
@@ -230,9 +258,56 @@ function evaluateChart(chart, view, context) {
         }
         throw new Error("ERASMUS has no legal action")
     }
+    // 第6/12页策略进入引擎后产生的多步反应窗口。它们必须继承真实图表节点，而不能因
+    // 入口条件已在前一步消耗而重新求值到 terminal/fallback。
+    const reactionPrompt=String(view.prompt||"")
+    let reactionStep=null
+    if(/Play reaction cards|Apply reaction cards/i.test(reactionPrompt))reactionStep={suffix:"S-INTEL-CARD",strategy:`${context.role==="Japan"?"JP":"AP"}_REACTION_CARD_PRIORITY`,preferred:["card","done"]}
+    else if(/Roll for submarine warfare/i.test(reactionPrompt))reactionStep={suffix:"S-SUB",strategy:`${context.role==="Japan"?"JP":"AP"}_SUBMARINE_ATTACK`,preferred:["roll","done"]}
+    else if(/Submarine attack\. Apply hits/i.test(reactionPrompt))reactionStep={suffix:"S-SUB",strategy:`${context.role==="Japan"?"JP":"AP"}_SUBMARINE_ATTACK`,preferred:["unit","done"]}
+    else if(/Choose (unit|space) to retreat|Confirm retreat/i.test(reactionPrompt))reactionStep={suffix:"S-REACTION",strategy:`${context.role==="Japan"?"JP":"AP"}_REACTION_RETREAT`,preferred:["unit","action_hex","done"]}
+    else if(/roll for special reaction/i.test(reactionPrompt))reactionStep={suffix:"S-SR",strategy:`${context.role==="Japan"?"JP":"AP"}_ROLL_EACH_SR`,preferred:["action_hex","roll","pass","done"]}
+    if(reactionStep){
+        const side=context.role==="Japan"?"JP06":"AP12",node=`${side}-${reactionStep.suffix}`
+        const action=reactionStep.preferred.find(a=>legal.includes(a))
+        if(action){
+            const seedText=`${context.seed}:${context.actionOrdinal}:${chart.id}:${node}:reaction-step`
+            const argument=target_argument(action,view.actions[action],seedText,context.role,view,reactionStep.strategy)
+            const base={policy:ERASMUS_VERSION,chart:chart.id,node,nodePath:[node],role:context.role,conditions:[],strategy:reactionStep.strategy,
+                action,argument,dice:null,fallback:false,inferred:false,engineStage:view?.ai?.stage,windowKind:view?.ai?.windowKind,
+                explanation:"执行第6/12页已选反应策略的后续规则窗口。"}
+            return {action,argument,publicTrace:base,privateTrace:{...base,legalActions:legal}}
+        }
+    }
+    // 这些是规则引擎在图表策略已经执行完之后产生的强制整理/确认窗，不是图表无解。
+    // 旧代码让 terminal 节点落入 FALLBACK，导致完整局出现数百次“隐式 fallback”。
+    // 只对明确枚举的行政窗口生效；会战损失、选牌、目标、反应等有判断意义的窗口不在此列。
+    const adminPrompt=String(view.prompt||"")
+    if(/Confirm post battle move|Remove overstacked units|Review overstacked units|move disengaging unit|Change intelligence condition|Yamato run/i.test(adminPrompt)){
+        const adminAction=["next","done","unit","skip","continue"].find(a=>legal.includes(a))
+        if(adminAction){
+            const n=chart.nodes.find(x=>x.type==="terminal")?.id||chart.nodes.find(x=>x.type==="start")?.id||chart.id
+            const seedText=`${context.seed}:${context.actionOrdinal}:${chart.id}:${n}:admin`
+            const argument=target_argument(adminAction,view.actions[adminAction],seedText,context.role,view,"ENGINE_ADMIN_TRANSITION")
+            const base={policy:ERASMUS_VERSION,chart:chart.id,node:n,nodePath:[n],role:context.role,conditions:[],strategy:"ENGINE_ADMIN_TRANSITION",
+                action:adminAction,argument,dice:null,fallback:false,inferred:false,engineStage:view?.ai?.stage,windowKind:view?.ai?.windowKind,
+                explanation:"图表策略执行后的规则引擎强制整理/确认步骤。"}
+            return {action:adminAction,argument,publicTrace:base,privateTrace:{...base,legalActions:legal}}
+        }
+    }
     const nodes = new Map(chart.nodes.map(item => [item.id, item]))
     const prefix = chart.chart_id || chart.id
     let current = chart.nodes.find(item => item.type === "start")
+    // 第5/11页跨越多个引擎窗口。后续窗口应从对应的真实图表步骤恢复，而不是每次都
+    // 重走 A-H 后停在“选择目标”。
+    if(chart.kind==="task-force"){
+        const state=String(view?.ai?.state||"")
+        const prefix=context.role==="Japan"?"JP05":"AP11"
+        const resume=/activate_units/.test(state)?`${prefix}-ACTIVATE`
+            :/move_offensive_units/.test(state)?`${prefix}-I`
+            :/declare_battle|choose_attack|confirm_bh/.test(state)?`${prefix}-S-MOVE`:null
+        if(resume&&nodes.has(resume))current=nodes.get(resume)
+    }
     const conditions = []
     const nodePath = []
     const diceRolls = []
@@ -241,8 +316,12 @@ function evaluateChart(chart, view, context) {
         if (++guard > chart.nodes.length + 2) throw new Error(`chart cycle: ${chart.id}`)
         nodePath.push(current.id)
         if (current.type === "condition") {
-            const result = predicate_value(view, current.predicate?.id)
-            conditions.push({ nodeId: current.id, predicate: current.predicate?.id, result })
+            const result = predicate_value(view, current.predicate?.id, context, current.id)
+            const evidence=current.predicate?.id==="WEATHER_STANDARD_MET"?{
+                raw:erasmus_hash(`${context.seed}:${context.actionOrdinal}:${current.id}:WEATHER-D10`)%10,
+                surpriseModifier:view?.ai?.reaction?.surprise?-2:0,
+                threshold:Number(view?.ai?.reaction?.enemyActivatedCount||0)*2}:undefined
+            conditions.push({ nodeId: current.id, predicate: current.predicate?.id, result, ...(evidence?{evidence}:{}) })
             const edge = current.edges.find(item => item.when === result) || current.edges.find(item => item.when === "always")
             current = nodes.get(edge?.to)
         } else if (current.type === "dice") {
@@ -288,7 +367,9 @@ function evaluateChart(chart, view, context) {
             .filter(u => !unsel.has(u))
             .filter(u => { try { return esm_gate_on() || !pieces[u] || pieces[u].class !== "air" } catch (e) { return true } })
         const selected = progress ? Number(progress[1]) : (view.offensive?.active_units?.flat?.().length || 0)
-        const limit = progress ? Number(progress[2]) : selected + addable.length
+        // HQ 加成可因新激活单位的军种/区域而下降。提示“2 of 3 (2 + 1)”中的括号前值
+        // 才是不会随下一次选择反噬的稳定上限；达到它就结束，避免 2/3→3/2→撤销 的循环。
+        const limit = volatileBonus ? Number(volatileBonus[2]) : progress ? Number(progress[2]) : selected + addable.length
         activationPlan = Object.assign({}, forcePlan || {}, { selected, limit, remaining: Math.max(0, limit - selected),
             mode: forcePlan?.complete ? "后续目标/前线调动" : "补足当前目标编队" })
         // 用户确认的运用原则：EC 当前目标达到最低标准后，不立即浪费剩余激活量；继续按
@@ -373,7 +454,7 @@ function evaluateChart(chart, view, context) {
     const nodeId = fallback ? fallbackId : (current?.id || fallbackId)
     const seedText = `${context.seed}:${context.actionOrdinal}:${chart.id}:${nodeId}`
     const dice = diceRolls.length ? diceRolls : null
-    const argument = target_argument(action, view.actions[action], `${seedText}:${action}`, context.role, view)
+    const argument = target_argument(action, view.actions[action], `${seedText}:${action}`, context.role, view, strategy)
     const selectedUnit = action === "unit" && view.ai && Array.isArray(view.ai.units) ? view.ai.units.find(u=>u.id===argument) : null
     const forceSummary = selectedUnit ? { unit:selectedUnit.id, class:selectedUnit.class, type:selectedUnit.type,
         combat:selectedUnit.reduced ? (selectedUnit.rcf || Math.ceil(selectedUnit.cf/2)) : selectedUnit.cf, defense:selectedUnit.lf,
@@ -419,7 +500,7 @@ function erasmus_sm_decision(strategy, pick, view, context) {
         engineStage: runtime.engineStage, windowKind: runtime.windowKind, action: pick.action, argument: arg,
         dice: strategy.d10Rolls && strategy.d10Rolls.length ? strategy.d10Rolls : null, fallback: false, inferred: false,
         ...(pick.via ? { via: pick.via } : {}),
-        explanation: `状态机(zh.11): ${strategy.phase}阶段逐牌评估「${strategy.name}」。${(strategy.notes || []).join(" ")}`,
+        explanation: `状态机(zh.12): ${strategy.phase}阶段逐牌评估「${strategy.name}」。${(strategy.notes || []).join(" ")}`,
     }
     return { action: pick.action, argument: pick.argument, publicTrace: base,
         privateTrace: { ...base, sm: smPrivate, argument: pick.argument, legalActions: Object.keys(view.actions || {}) } }

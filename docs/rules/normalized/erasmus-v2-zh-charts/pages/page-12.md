@@ -20,7 +20,7 @@
 | AP12-S-REACTION | action | always→AP12-END |
 | AP12-HI | condition / HAS_SUBMARINE_CARD_AND_TARGET | true→AP12-S-SUB；false→AP12-S-PBM |
 | AP12-S-SUB | action | always→AP12-END |
-| AP12-S-PBM | action | always→AP12-PBM-A |
+| AP12-S-PBM | process | always→AP12-PBM-A |
 | AP12-PBM-A | condition / PBM_AIR_REQUIRED | true→AP12-S-PBM-AIR；false→AP12-PBM-B |
 | AP12-PBM-B | condition / PBM_SEA_REQUIRED | true→AP12-S-PBM-SEA；false→AP12-PBM-C |
 | AP12-PBM-C | condition / PBM_AA_FAILED | true→AP12-S-PBM-AA；false→AP12-END |

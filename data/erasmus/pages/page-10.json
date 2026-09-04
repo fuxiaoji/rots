@@ -61,8 +61,7 @@
     },
     {
       "id": "AP10-CLASSIFY",
-      "type": "action",
-      "strategy": "AP_CLASSIFY_CARDS",
+      "type": "process",
       "label_zh": "卡牌分类",
       "edges": [
         {
@@ -578,7 +577,6 @@
     }
   ],
   "strategies": [
-    "AP_CLASSIFY_CARDS",
     "AP_CHINA_EVENT_CARD",
     "AP_FIRST_STRIKE_EVENT_CARD",
     "AP_UNRESTRICTED_EVENT_CARD",
