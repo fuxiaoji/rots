@@ -486,10 +486,49 @@ function victory_1944() {
     return result
 }
 
+// 伊拉斯谟图表 09「原子弹战略标准」。STRAT_BOMBING_CAMPAIGN 保存当前连续
+// 成功轰炸序列的起始回合：从第 9 回合到当前回合每回合至少成功一次时，其值恒为 9；
+// 任一回合失败/未轰炸会清零，之后再成功则会以更晚回合重新起算。
+//
+// 此函数是引擎和机器人共用的唯一判据，避免 bot 缓存与存档/回放结算发生分歧。
+function atomic_bomb_strategy_status() {
+    var campaign_start = is_event_active(events.STRAT_BOMBING_CAMPAIGN) || 0
+    var bombing_required = G.turn >= 9
+    var no_strategic_bombing_failure = !bombing_required || campaign_start === 9
+    var soviet_occurred = !!(G.removed && G.removed[AP] && set_has(G.removed[AP], SOVIET_INVADE))
+    var soviet_in_hand = !!(G.hand && G.hand[AP] && set_has(G.hand[AP], SOVIET_INVADE))
+    var soviet_playable = false
+    if (!soviet_occurred && soviet_in_hand) {
+        try { soviet_playable = !!cards[SOVIET_INVADE].can_play() } catch (e) { /* false */ }
+    }
+    // get_victory() 会临时按补给重算控制。原子弹图表使用棋盘上实际控制权，因此结算期间
+    // 必须读取重算前保存在 G.original_control 的状态，才能与回合内 AI 谓词完全一致。
+    var jp_controls = h => G.original_control ? is_space_controlled_originally(h, JP) : is_space_controlled(h, JP)
+    var jp_resource_hexes = RESOURCE_HEX.filter(h => jp_controls(h) && get_map_data(h).resource)
+    var jp_resources = jp_resource_hexes.length
+    var resource_limit = soviet_occurred ? 3 : 5
+    var soviet_ready = soviet_occurred || soviet_playable
+    return {
+        met: no_strategic_bombing_failure && soviet_ready && jp_resources <= resource_limit,
+        turn: G.turn,
+        noStrategicBombingFailure: no_strategic_bombing_failure,
+        bombingCampaignStart: campaign_start,
+        bombingRequiredFromTurn: 9,
+        sovietOccurred: soviet_occurred,
+        sovietCardId: SOVIET_INVADE,
+        sovietInHand: soviet_in_hand,
+        sovietPlayable: soviet_playable,
+        sovietReady: soviet_ready,
+        jpResources: jp_resources,
+        jpResourceHexes: jp_resource_hexes,
+        resourceLimit: resource_limit,
+        resourcesSatisfied: jp_resources <= resource_limit,
+    }
+}
+
 function victory_1945() {
-    var japan_surrenders = is_event_active(events.STRAT_BOMBING_CAMPAIGN) > 0 && is_event_active(events.STRAT_BOMBING_CAMPAIGN) <= 9
-        && get_jp_resources() <= 1 && (get_distance(G.location[B_29_1], TOKYO) <= 6 || G.location[B_29_1] === CHINA_BOX
-            || get_distance(G.location[B_29_2], TOKYO) <= 6 || G.location[B_29_2] === CHINA_BOX)
+    var atomic = atomic_bomb_strategy_status()
+    var japan_surrenders = atomic.met
     var result = {
         vp: 0,
         text: [],
@@ -498,8 +537,8 @@ function victory_1945() {
     }
     if (japan_surrenders) {
         result.won_side = "Allies"
-        result.won_text = `Japan surrenders by strategic bombing campaign`
-        finish("Allies", "Japan surrenders by strategic bombing campaign")
+        result.won_text = `Japan surrenders by atomic bomb strategy`
+        finish("Allies", "Japan surrenders by atomic bomb strategy")
     } else {
         result.won_side = "Japan"
         result.won_text = `Japan did not surrender`

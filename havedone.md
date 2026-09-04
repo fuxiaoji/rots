@@ -315,3 +315,13 @@
 - **Bad move path 兜底**（`offensive.js headless_advance_one`）：`compute_ground_naval_move_hexes` 为算海运路径临时移除地面单位重算供应，使陆路路径在"单位不在场"时按畅通道路算出更短距离，`move_units` 用单位在场供应校验距离超限抛 "Bad move path"；try/catch 捕获后 `pop_undo` 还原半程 paths 并 decline 该组，不再整局崩溃。seed20260920 因此从 turn12 崩溃改为正常完赛。
 - 验证：1942 完整剧本 headless audit 50 局（seeds 20260903–20260952）**0 error / 0 action-limit / 0 setup-error**，50 局全部 `complete`；4 个曾报错种子（20260916/20260918/20260920/20260921）逐一复跑均 `complete`。胜负仍日本 50 / 盟军 0 —— 盟军胜利仍属上一节 D1-D5 的"资源线归零 + 轰炸基地成型"执行强度边界，非本批稳定性修复目标。
 - 产物：`js/server/erasmus_ops.js`、`js/server/bots/erasmus.js`、`js/server/offensive.js`、`js/client/update.js`（`G.active` 角色名/阵营号修正）、根 `rules.js` + `play.js`（inline 重建）。单主题提交 `edd5296`。
+
+### zh.8 原子弹战略标准 + RTT 战略日志 + 50 局复测
+
+- 按用户最新裁定，把图表 09 三项标准实现为引擎/状态机共用的 `atomic_bomb_strategy_status()`：T9 起每回合至少一次成功战略轰炸；苏联入侵满洲已发生或盟军持有且可作为事件打出；日本资源 ≤3（未发生但可打时 ≤5）。`victory_1945` 改按该谓词触发 `Japan surrenders by atomic bomb strategy`。此为用户裁定，明确区别于规则 16.2 原文的资源 ≤1 口径。
+- 修复四个导致状态机无法真实走到原子弹轴的映射错误：(1) `can_play()` 返回事件回合号，旧 `=== true` 令“苏联牌可打”恒假；(2) 战略轰炸基地误限“港口机场”，现为东京 8 格内任何盟军机场；(3) “地图上所有 B29”误把尚未增援的第二架也计入；(4) F 条件误限港口，现为东京 8 格内任何盟军控制格。
+- `data/erasmus/pages/page-09.json` 的 G 节点已结构化三项合取条件并修正为 true→`AP_ATOMIC_VICTORY`、false→`AP_INVade_JAPAN`；同步修复生成器，重建 `data/erasmus/charts.json`、`js/server/erasmus_data.js`、`rules.js`/`play.js`。
+- AI trace 新增前 12 个有序战略目标（优先级、hex、名称、控制方、距东京、完成状态）、最近盟军单位/控制格/B29 距东京和完整原子弹条件；公开 trace 去除未发生前的苏联手牌可打细节，私有 trace 保留。RTT `server.js` 新增 `AI STRATEGY` 单行 JSON 日志，每回合钉选时打印阶段/战略/动作/焦点/前五未完成目标/推进距离/原子弹账本。
+- 同种子 50 局（20260903–20260952，完整缩短剧本，headless）结果：50 complete，0 error/setup-error/action-limit；日本 48、盟军 2（4%），两胜均为原子弹战略投降（seed 20260908 T9、20260946 T11 状态）。旧基线为日本 50、盟军 0。
+- 推进指标：最近盟军单位到东京最小 3、平均最小 7.04 格；最近盟军控制格最小 3、平均 6.92；在图 B29 最小 3、平均 7.78。日本胜局的首个未满足条件：苏联条件 39、轰炸连续性 6、资源 3；22 局仍提前条约败。
+- 验证：原子弹标准 3 个边界用例、state-fidelity 59/59、goal-fidelity 39/39、event-strategy 8/8、图表/确定性测试通过；最终数据 `tests/results/audit50-1942-1945-The-Shortened-Campaign-50-20260903-headless-atomic-zh8-final.json`，报告 `research/erasmus-atomic-zh8-50game-report.md`。

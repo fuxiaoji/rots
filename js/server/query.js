@@ -5,6 +5,9 @@ function on_query(q, params, b) {
     if (q === "original_control") {
         return scenario_data().original_control
     }
+    if (q === "atomic_bomb_strategy_status") {
+        return atomic_bomb_strategy_status()
+    }
 }
 
 function vp_query() {

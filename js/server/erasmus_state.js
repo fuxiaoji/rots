@@ -90,18 +90,20 @@ function esm_idx(token) {
 function esm_geo() {
     const sid = G.sid
     if (ESM_PREP[sid]) return ESM_PREP[sid]
-    const g = { portsWithin8Tokyo: [], airfieldsWithin5: [], deiPorts: [], ngPorts: [], resourceHexes: [], allNamed: {} }
+    const g = { portsWithin8Tokyo: [], controlledHexesWithin8Tokyo: [], airfieldsWithin8Tokyo: [], airfieldsWithin5: [], deiPorts: [], ngPorts: [], resourceHexes: [], allNamed: {} }
     const isDEI = r => r === "DEI" || r === "Java" || r === "Sumatra" || r === "Borneo" || r === "Celebes"
     for (let i = 0; i <= LAST_BOARD_HEX; i++) {
         const md = get_map_data(i)
         if (!md) continue
         if (md.resource) g.resourceHexes.push(i)
+        if (is_controllable_hex(i) && md.region !== "China" && get_distance(i, TOKYO) <= 8) g.controlledHexesWithin8Tokyo.push(i)
         if (md.port) {
             if (md.region === "Philippines") { /* no op */ }
             if (isDEI(md.region)) g.deiPorts.push(i)
             if (md.region === "Guinea") g.ngPorts.push(i)
             if (md.region !== "China" && get_distance(i, TOKYO) <= 8) g.portsWithin8Tokyo.push(i)
         }
+        if (md.airfield && md.region !== "China" && get_distance(i, TOKYO) <= 8) g.airfieldsWithin8Tokyo.push(i)
         if (md.airfield && !md.port && md.region !== "China" && get_distance(i, TOKYO) <= 5) g.airfieldsWithin5.push(i)
         if (md.name) g.allNamed[String(md.name).toLowerCase()] = i
     }
@@ -120,7 +122,7 @@ function esm_clear_cross_game() {
     if (typeof eop_clear_all_chains === "function") { try { eop_clear_all_chains() } catch (e) { /* ignore */ } }
 }
 function esm_new_lock(seed, ord) {
-    const e = { turn: G.turn, role: { Japan: null, Allies: null }, seenOrd: ord || 0, bombFail: false, lastOrdTurn: 0 }
+    const e = { turn: G.turn, role: { Japan: null, Allies: null }, seenOrd: ord || 0, lastOrdTurn: 0 }
     esm_clear_cross_game()
     return e
 }
@@ -206,7 +208,7 @@ function esm_soviet_occurred() {
 }
 function esm_soviet_playable() {
     if (!(G.hand && G.hand[AP]) || !set_has(G.hand[AP], SOVIET_INVADE)) return false
-    try { return cards[SOVIET_INVADE].can_play() === true } catch (e) { return false }
+    try { return !!cards[SOVIET_INVADE].can_play() } catch (e) { return false }
 }
 
 // ===========================================================================
@@ -350,6 +352,44 @@ function esm_jp_resource_hexes() {
         return RESOURCE_HEX.filter(h => h >= 0 && h <= LAST_BOARD_HEX && is_space_controlled(h, JP))
     } catch (e) { return [] }
 }
+function esm_hex_trace(h, role) {
+    try {
+        const md = get_map_data(h) || {}
+        return {
+            hex: h,
+            id: md.id,
+            name: md.name || null,
+            region: md.region || null,
+            resource: !!md.resource,
+            controlledBy: is_space_controlled(h, AP) ? "Allies" : "Japan",
+            achieved: is_space_controlled(h, esm_role_faction(role)),
+            distanceToTokyo: get_distance(h, TOKYO),
+        }
+    } catch (e) { return { hex: h } }
+}
+function esm_advance_metrics() {
+    try {
+        let unit = null, controlled = null, b29 = null
+        for (let u = 1; u < pieces.length; ++u) {
+            const p = pieces[u], h = G.location[u]
+            if (!p || p.faction !== AP || !(h >= 0 && h <= LAST_BOARD_HEX)) continue
+            const d = get_distance(h, TOKYO)
+            if (!unit || d < unit.distance || d === unit.distance && h < unit.hex) unit = { unit: u, hex: h, distance: d }
+            if (p.b29 !== undefined && (!b29 || d < b29.distance)) b29 = { unit: u, hex: h, distance: d }
+        }
+        for (let h = 0; h <= LAST_BOARD_HEX; ++h) {
+            if (!is_controllable_hex(h) || !is_space_controlled(h, AP)) continue
+            const d = get_distance(h, TOKYO)
+            if (!controlled || d < controlled.distance || d === controlled.distance && h < controlled.hex)
+                controlled = { hex: h, distance: d, name: (get_map_data(h) || {}).name || null }
+        }
+        return { closestAlliedUnit: unit, closestAlliedControlledHex: controlled, closestB29: b29 }
+    } catch (e) { return {} }
+}
+function esm_strategy_targets(strategy) {
+    const chain = strategy && Array.isArray(strategy.chain) ? strategy.chain : []
+    return chain.slice(0, 12).map((h, index) => Object.assign({ priority: index + 1 }, esm_hex_trace(h, strategy.role)))
+}
 function esm_build_ctx(role, lock, seedText) {
     const ctx = {
         cards_in_hand: (G.hand && G.hand[esm_role_faction(role)]) ? G.hand[esm_role_faction(role)].length : 5,
@@ -461,20 +501,21 @@ function esm_build_ctx(role, lock, seedText) {
         // 晚期
         ctx.al_L_B_is_turn_12 = G.turn === 12
         ctx.al_L_D_has_strategic_bombing_base = (() => {
-            try { return esm_geo().portsWithin8Tokyo.some(h => is_space_controlled(h, AP) && get_map_data(h).airfield) } catch (e) { return false }
+            try { return esm_geo().airfieldsWithin8Tokyo.some(h => is_space_controlled(h, AP)) } catch (e) { return false }
         })()
         ctx.al_L_E_all_b29_on_base = (() => {
             try {
-                const onBase = u => { const loc = G.location[u]; return (loc >= 0 && loc <= LAST_BOARD_HEX && is_space_controlled(loc, AP) && get_map_data(loc).airfield && get_distance(loc, TOKYO) <= 8) || loc === CHINA_BOX }
-                // 两机均未被替换(重锤标记按 piece.b29=0/1 分位); 当回合"已投弹"不作为基地判据。
-                const replacedAll = !!(G.b29u & B29_REPLACED) || !!(G.b29u & (B29_REPLACED << 1))
-                return !replacedAll && onBase(B_29_1) && onBase(B_29_2)
+                const onMap = [B_29_1, B_29_2].filter(u => G.location[u] >= 0 && G.location[u] <= LAST_BOARD_HEX)
+                const onBase = u => { const loc = G.location[u]; return is_space_controlled(loc, AP) && get_map_data(loc).airfield && get_distance(loc, TOKYO) <= 8 }
+                // 图表原文是“地图上所有的 B29”：尚未增援/已进补员轨的 B29 不参与全称判断；
+                // 中国空军盒虽可执行规则 12.3 轰炸，但不是图表定义的“东京 8 格内盟军机场”。
+                return onMap.length > 0 && onMap.every(onBase)
             } catch (e) { return false }
         })()
         ctx.al_L_F_controls_hex_within_8_tokyo = (() => {
-            try { return esm_geo().portsWithin8Tokyo.some(h => is_space_controlled(h, AP)) } catch (e) { return false }
+            try { return esm_geo().controlledHexesWithin8Tokyo.some(h => is_space_controlled(h, AP)) } catch (e) { return false }
         })()
-        ctx.al_L_G_meets_atomic_bomb_criteria = esm_atomic_met(lock)
+        ctx.al_L_G_meets_atomic_bomb_criteria = esm_atomic_met()
     }
     // D5 诊断(仅 trace 用, 不进决策): 钉选时刻的引擎权威账本 —— PoW 银行/G.pow/JP 资源/
     // 轰炸战役标记/JP 手里的资源格 —— 供审计"为何条约败/离胜利线多远"。
@@ -484,23 +525,17 @@ function esm_build_ctx(role, lock, seedText) {
             jpRes: (typeof get_jp_resources === "function") ? get_jp_resources() : -1,
             marker: (G.events && events && events.STRAT_BOMBING_CAMPAIGN) ? (G.events[events.STRAT_BOMBING_CAMPAIGN.id] || 0) : -1,
             resHexes: (typeof RESOURCE_HEX !== "undefined") ? RESOURCE_HEX.filter(h => h >= 0 && h <= LAST_BOARD_HEX && is_space_controlled(h, JP)) : [],
+            advance: esm_advance_metrics(),
+            atomic: (typeof atomic_bomb_strategy_status === "function") ? atomic_bomb_strategy_status() : null,
         }
     } catch (e) { /* 无 G 时不设 */ }
     return ctx
 }
 
 // 原子弹判据(口径=图表 09 + 脚注[7] + 规则 16): 逐字三条件。
-function esm_atomic_met(lock) {
+function esm_atomic_met() {
     try {
-        // 1. 无战略轰炸失败: 引擎侧凡"轰炸失败/无单位可炸"都把 STRAT_BOMBING_CAMPAIGN 置 0。
-        //    本模块逐回合记录: 观察到置 0 即记一次失败(lock.bombFail)。无失败 = 记录为空。
-        if (lock && lock.bombFail) return false
-        // 2. 苏联入侵满洲已发生 或 盟军持有且能作事件打出。
-        const soviet = esm_soviet_occurred() || esm_soviet_playable()
-        if (!soviet) return false
-        // 3. 日本控资源格 <= (已打苏联? 3 : 5)
-        const jpRes = get_jp_resources()
-        return jpRes <= (esm_soviet_occurred() ? 3 : 5)
+        return atomic_bomb_strategy_status().met
     } catch (e) { return false }
 }
 
@@ -845,19 +880,6 @@ function esm_pin_strategy(view, context) {
     const lock = esm_lock(context.seed, ord)
     if (typeof context.seed !== "undefined" && context.seed !== null) lock.seenOrd = ord
 
-    // 记录战略轰炸失败(引擎把 STRAT_BOMBING_CAMPAIGN 置 0 = 本回合无成功轰炸)。
-    // 仅在“曾进入轰炸战役(lastBombActive)”后观测到置 0 才记为失败, 避免与尚未开始混淆。
-    if (lock && !lock.bombFail && G.events) {
-        try {
-            const marker = G.events[events.STRAT_BOMBING_CAMPAIGN.id] || 0
-            if (marker > 0) lock.lastBombActive = G.turn
-            else if (lock.lastBombActive && G.turn > lock.lastBombActive && lock.lastBombFailCheck !== G.turn) {
-                lock.lastBombFailCheck = G.turn
-                if ((G.strategic_warfare || 0) > 0 || G.turn >= 10) lock.bombFail = true
-            }
-        } catch (e) { /* ignore */ }
-    }
-
     const faction = esm_role_faction(role)
     const cached = lock.role[role]
     const thisIsFirstCard = esm_is_card_window(view) && (!cached || cached.turn !== G.turn)
@@ -1078,15 +1100,23 @@ function esm_atomic_event_pick(strategy, hand) {
 }
 
 // 对外 trace: 供 erasmus.js publicTrace 附加
-function esm_trace_of(strategy) {
+function esm_trace_of(strategy, privateDetails) {
     if (!strategy) return null
     const goalKinds = (strategy.goals || []).map(g => g.kind)
+    let diag = strategy.ctx && strategy.ctx._diag ? JSON.parse(JSON.stringify(strategy.ctx._diag)) : undefined
+    if (diag && diag.atomic && !privateDetails) {
+        delete diag.atomic.sovietInHand
+        delete diag.atomic.sovietPlayable
+        delete diag.atomic.sovietReady
+        delete diag.atomic.met
+    }
     return { axis: strategy.role + "/" + strategy.phase + "/" + strategy.name, kind: strategy.kind, phase: strategy.phase,
         strategy: strategy.name, chainHead: strategy.chain[0] !== undefined ? strategy.chain[0] : null,
         focus: eop_focus(strategy.role), chainLen: strategy.chain.length,
+        priorityTargets: esm_strategy_targets(strategy),
         goals: goalKinds.length ? goalKinds : undefined,
         ...(strategy.eventPhase ? { eventPhase: strategy.eventPhase } : {}),
-        ...(strategy.ctx && strategy.ctx._diag ? { diag: strategy.ctx._diag } : {}) }
+        ...(diag ? { diag } : {}) }
 }
 
 // ===========================================================================

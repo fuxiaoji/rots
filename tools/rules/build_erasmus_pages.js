@@ -20,7 +20,7 @@ const pages = [
 	[6, "Japan", "all", "reaction", ["WEATHER_CARD_AVAILABLE", "WEATHER_STANDARD_MET", "ISR_REACTION", "HAS_BATTLE", "HQ_IN_RANGE", "HAS_JN25", "ATTACK_REACTION_AVAILABLE", "DEI_COMPLETE", "FOREIGN_DEFENSE_TARGET", "NUKE_TARGET", "PBM_AIR_REQUIRED", "PBM_SEA_REQUIRED", "PBM_AA_FAILED"], ["JP_WEATHER_REACTION", "JP_NUKE_REACTION", "JP_INTEL_REACTION", "JP_COUNTERATTACK_REACTION", "JP_PBM_AIR", "JP_PBM_SEA", "JP_PBM_AA"]],
 	[7, "Allies", "early", "decision-axis", ["AP_HAS_3_CARDS", "AP_HQ_SUPPLY_AVAILABLE", "AP_RABAUL_CONTROLLED", "AP_CBI_BUILT", "AP_HAS_PASS", "AP_LAST_CARD", "AP_THIRD_TURN", "AP_PHILIPPINES_NOT_SURRENDERED", "AP_ABDA_HQ_READY"], ["AP_PHILIPPINES", "AP_MALAYA", "AP_ABDA", "AP_CBI", "AP_ORANGE_PLAN", "AP_EVENT", "AP_PASS", "AP_DEI_DEFENSE"]],
 	[8, "Allies", "middle", "decision-axis", ["AP_HAS_PASS", "AP_NEEDS_PROGRESS", "AP_HAS_3_CARDS", "JP_TARGET_CONTROLLED", "AP_PORT_TARGET", "AP_AIRFIELD_TARGET", "AP_HAS_ASP", "AP_CAN_ATTACK", "AP_CARD_GROUP_ROLL"], ["AP_PASS", "AP_COUNTEROFFENSIVE", "AP_SOUTH_PACIFIC", "AP_CBI", "AP_DEI", "AP_EVENT"]],
-	[9, "Allies", "end", "decision-axis", ["AP_HAS_PASS", "IS_FINAL_TURN", "AP_HAS_3_CARDS", "AP_STRATEGIC_BASE", "AP_B29_TARGET", "AP_CAN_ATOMIC_VICTORY"], ["AP_PASS", "AP_EVENT", "AP_CAPTURE_STRATEGIC_BASE", "AP_PUSH_B29", "AP_REDEPLOY", "AP_INVade_JAPAN", "AP_ATOMIC_VICTORY"]],
+	[9, "Allies", "end", "decision-axis", ["AP_HAS_PASS", "IS_FINAL_TURN", "AP_HAS_3_CARDS", "AP_STRATEGIC_BASE", "AP_B29_TARGET", "AP_MEETS_ATOMIC_BOMB_STRATEGY_CRITERIA"], ["AP_PASS", "AP_EVENT", "AP_CAPTURE_STRATEGIC_BASE", "AP_PUSH_B29", "AP_REDEPLOY", "AP_INVade_JAPAN", "AP_ATOMIC_VICTORY"]],
 	[10, "Allies", "all", "card-selection", ["AP_FO_ACTIVE", "AP_HAND_GT_2", "AP_FIRST_CARD", "AP_HAS_FISSION", "AP_HAS_EVENT_CARD", "AP_HAS_LIMITED_EVENT", "AP_ALL_EVENTS_LIMITED", "AP_CBI_COMPLETE", "AP_CHINA_EVENT_AVAILABLE"], ["AP_FUTURE_OFFENSIVE_CARD", "AP_LIMITED_EVENT_CARD", "AP_UNLIMITED_EVENT_CARD", "AP_LIMITED_OPS_CARD", "AP_UNLIMITED_OPS_CARD", "AP_CHINA_EVENT_CARD", "AP_EVENT_CARD", "AP_PASS"]],
 	[11, "Allies", "all", "task-force", ["TARGET_IS_SEACOAST_OR_ISLAND", "CAN_GROUND_ADVANCE", "TARGET_EMPTY", "TARGET_ONLY_ENEMY_NAVAL", "GROUND_CAN_ENTER_EXIT", "TARGET_IS_SR", "ENEMY_AIR_CAN_REACT", "HAS_SUPPORT_POINTS", "DAMAGE_LEVEL_MET", "ENEMY_NAVAL_GROUND_CAN_REACT", "IS_EC_OFFENSIVE", "IS_LAST_TARGET"], ["AP_AIR_STRIKE", "AP_AIR_SUPPORT_GROUND", "AP_AIR_SEA_GROUND", "AP_SEA_SUPPORT_LANDING", "AP_AIR_SEA_LANDING", "AP_GROUND_ADVANCE", "AP_UNSUPPORTED_LANDING"]],
 	[12, "Allies", "all", "reaction", ["ISR_REACTION", "HAS_BATTLE", "HQ_IN_RANGE", "ATTACK_REACTION_AVAILABLE", "DEI_COMPLETE", "NUKE_TARGET", "PBM_AIR_REQUIRED", "PBM_SEA_REQUIRED", "PBM_AA_FAILED"], ["AP_INTEL_REACTION", "AP_COUNTERATTACK_REACTION", "AP_PBM_AIR", "AP_PBM_SEA", "AP_PBM_AA"]],
@@ -39,6 +39,25 @@ function pageFile(page) {
 
 function node(id, type, extra = {}) {
 	return { id, type, confidence: extra.confidence || "inferred", source_page: extra.source_page, ...extra }
+}
+
+function applyConfirmedPageOverrides(page, nodes) {
+	if (page !== 9) return
+	const condition = nodes.find(n => n.id === "ERASMUS-AP-09-C06")
+	condition.confidence = "confirmed"
+	condition.label_zh = "盟军是否满足原子弹战略标准？"
+	condition.source_lines = [60, 69, 139, 150]
+	condition.predicate = {
+		id: "AP_MEETS_ATOMIC_BOMB_STRATEGY_CRITERIA",
+		all: [
+			{ id: "AP_STRATEGIC_BOMBING_SUCCEEDED_EVERY_TURN_SINCE_9", source_note: 7 },
+			{ any: [{ id: "AP_SOVIET_INVADE_MANCHURIA_OCCURRED" }, { id: "AP_HOLDS_PLAYABLE_SOVIET_INVADE_MANCHURIA" }] },
+			{ id: "JP_RESOURCE_HEXES_WITHIN_ATOMIC_LIMIT", limit_when_soviet_occurred: 3, limit_when_soviet_not_occurred: 5 },
+		],
+	}
+	condition.edges = [{ when: true, to: "ERASMUS-AP-09-S07" }, { when: false, to: "ERASMUS-AP-09-S06" }]
+	for (const id of ["ERASMUS-AP-09-S06", "ERASMUS-AP-09-S07"])
+		nodes.find(n => n.id === id).confidence = "confirmed"
 }
 
 function buildChart([page, role, phase, kind, predicates, strategies]) {
@@ -80,6 +99,7 @@ function buildChart([page, role, phase, kind, predicates, strategies]) {
 		source_page: page,
 	}))
 	nodes.push(node(`${id}-END`, "terminal", { source_page: page, confidence: "confirmed" }))
+	applyConfirmedPageOverrides(page, nodes)
 	const sourceText = fs.readFileSync(path.join(sourceDir, source), "utf8")
 	return {
 		schema_version: 2,
@@ -114,6 +134,11 @@ for (const chart of charts) {
 		const predicate = item.predicate ? ` predicate=${item.predicate.id}` : ""
 		return `| ${item.id} | ${item.type}${predicate} | ${item.confidence} | ${edgeText || "-"} |`
 	}).join("\n")
+	const atomicCriteria = chart.source_page === 9 ? [
+		"## 原子弹战略标准（PDF 第 9 页，原文第 60–69、139–150 行）", "",
+		"`ERASMUS-AP-09-C06` 的三个合取条件：第 9 回合起每回合至少一次战略轰炸成功（脚注 [7]）；苏联入侵满洲已发生或盟军持有且可作为事件打出；日本资源格不超过 3（苏联事件未发生但可打时不超过 5）。", "",
+		"条件为真进入 `AP_ATOMIC_VICTORY`，为假进入 `AP_INVade_JAPAN`。引擎与决策树共用 `atomic_bomb_strategy_status()`。", "",
+	] : []
 	const markdown = [
 		`# ${chart.id}（第 ${chart.source_page} 页）`, "",
 		`- 阵营：${chart.role}`, `- 阶段：${chart.phase}`, `- 类型：${chart.kind}`,
@@ -121,6 +146,7 @@ for (const chart of charts) {
 		`- 机器文档：data/erasmus/pages/page-${String(chart.source.page).padStart(2, "0")}.json`, "",
 		"## 节点与边", "", "| 节点 | 类型/谓词 | 置信度 | 出边 |", "| --- | --- | --- | --- |", lines, "",
 		"## 策略出口", "", chart.strategies.map((item, index) => `${index + 1}. **${item}**`).join("\n"), "",
+		...atomicCriteria,
 		"## 审校", "", "本页节点中的 inferred 表示依据 PDF 视觉内容与规则语义推断，必须在黄金路径测试中复核。",
 	].join("\n") + "\n"
 	fs.writeFileSync(path.join(outputDir, `page-${chart.source.page.toString().padStart(2, "0")}.md`), markdown)

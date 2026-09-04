@@ -12,6 +12,7 @@ const scenario = String(process.argv[2] || "1942-1945 (The Shortened Campaign)")
 const gameCount = Number(process.argv[3] || 50)
 const baseSeed = Number(process.argv[4] || 20260903)
 const maxActions = Number(process.argv[5] || 60000)
+const outputTag = String(process.argv[6] || "").replace(/[^\w-]+/g, "-").replace(/^-|-$/g, "")
 
 // EOTS_HEADLESS_MOVES=1 开启服务端无头推进(js/server/offensive.js advance)。
 // 默认关闭; 关闭时决策与旧基线逐位一致。
@@ -46,7 +47,8 @@ function play(seed) {
         return { seed, status: "setup-error", winner: null, error: error.message }
     }
     const g = { seed, status: "error", winner: null, actions: 0, turn: Number(state.turn || 0), fallback: 0,
-        noBattleHex: 0, role: empty(), context: null }
+        noBattleHex: 0, role: empty(), context: null, strategyLog: [],
+        closestAdvance: { alliedUnit: null, alliedControlledHex: null, b29: null }, atomicBest: null }
     g.groundMove = 0
     g.capturedAP = 0
     g.capturedJP = 0
@@ -65,6 +67,27 @@ function play(seed) {
             r.byKind[kindOf(chart)]++
             if (decision.action === "advance") r.advance++
             if (decision.publicTrace.fallback) g.fallback++
+            const sm = decision.privateTrace?.sm || decision.publicTrace?.sm
+            if (sm?.pinnedNow) {
+                g.strategyLog.push({ turn: Number(view.turn || 0), role, phase: sm.phase, strategy: sm.strategy,
+                    action: decision.action, focus: sm.focus,
+                    priorityTargets: (sm.priorityTargets || []).filter(x => !x.achieved).slice(0, 5)
+                        .map(x => ({ priority: x.priority, hex: x.hex, id: x.id, name: x.name, distanceToTokyo: x.distanceToTokyo })) })
+                const advance = sm.diag?.advance || {}
+                const keepClosest = (key, item) => {
+                    if (!item || !Number.isFinite(item.distance)) return
+                    if (!g.closestAdvance[key] || item.distance < g.closestAdvance[key].distance)
+                        g.closestAdvance[key] = { ...item, turn: Number(view.turn || 0) }
+                }
+                keepClosest("alliedUnit", advance.closestAlliedUnit)
+                keepClosest("alliedControlledHex", advance.closestAlliedControlledHex)
+                keepClosest("b29", advance.closestB29)
+                if (sm.diag?.atomic) {
+                    const a = sm.diag.atomic
+                    if (!g.atomicBest || Number(a.jpResources) < Number(g.atomicBest.jpResources))
+                        g.atomicBest = { ...a, turn: Number(view.turn || 0) }
+                }
+            }
             if (/Declare battle hexes/.test(String(view.prompt || ""))) {
                 if (decision.action === "unit") r.airStrikeUnits++
                 else if (decision.action === "action_hex") r.airStrikeHexes++
@@ -98,9 +121,12 @@ function play(seed) {
         }
     }
     const winner = state.result?.won_side || state.result || null
+    let finalAtomic = null
+    try { finalAtomic = rules.query(state, "Allies", "atomic_bomb_strategy_status") } catch (e) { /* diagnostic only */ }
     return { seed, status: "complete", winner, actions: g.actions, turn: g.turn, fallback: g.fallback,
         noBattleHex: g.noBattleHex, groundMove: g.groundMove, capturedAP: g.capturedAP, capturedJP: g.capturedJP,
-        role: g.role, won_text: state.result?.won_text || null }
+        role: g.role, won_text: state.result?.won_text || state.L?.message || null, closestAdvance: g.closestAdvance,
+        atomicBest: g.atomicBest, finalAtomic, strategyLog: g.strategyLog }
 }
 
 const games = []
@@ -122,7 +148,7 @@ const tally = { policy: policy.version, scenario, gameCount, baseSeed, maxAction
     setupErrors: games.filter(x => x.status === "setup-error").length,
     actionLimit: games.filter(x => x.status === "action-limit").length,
     fallback: games.reduce((s, x) => s + (x.fallback || 0), 0),
-    groundMove: 0, capturedAP: 0, capturedJP: 0,
+    groundMove: 0, capturedAP: 0, capturedJP: 0, atomicBombWins: 0,
     role: empty(),
     noBattleHex: 0 }
 completed.forEach(g => {
@@ -137,18 +163,22 @@ completed.forEach(g => {
     tally.groundMove += g.groundMove
     tally.capturedAP += g.capturedAP
     tally.capturedJP += g.capturedJP
+    if (/atomic bomb strategy/i.test(String(g.won_text || ""))) tally.atomicBombWins++
 })
 
 const output = { generatedAt: new Date().toISOString(), tally,
     perGame: completed.map(g => ({ seed: g.seed, winner: g.winner, actions: g.actions, turn: g.turn, fallback: g.fallback,
-        noBattleHex: g.noBattleHex, groundMove: g.groundMove, capturedAP: g.capturedAP, capturedJP: g.capturedJP, role: g.role })),
+        noBattleHex: g.noBattleHex, groundMove: g.groundMove, capturedAP: g.capturedAP, capturedJP: g.capturedJP,
+        role: g.role, won_text: g.won_text, closestAdvance: g.closestAdvance, atomicBest: g.atomicBest,
+        finalAtomic: g.finalAtomic, strategyLog: g.strategyLog })),
     errors: games.filter(x => x.status === "error").map(g => ({ seed: g.seed, error: g.error, actions: g.actions, context: g.context })) }
 const slug = scenario.replace(/[^\w]+/g, "-").replace(/^-|-$/g, "")
-const outputPath = path.join(__dirname, "results", `audit50-${slug}-${gameCount}-${baseSeed}${headlessMoves ? "-headless" : ""}.json`)
+const outputPath = path.join(__dirname, "results", `audit50-${slug}-${gameCount}-${baseSeed}${headlessMoves ? "-headless" : ""}${outputTag ? `-${outputTag}` : ""}.json`)
 fs.mkdirSync(path.dirname(outputPath), { recursive: true })
 fs.writeFileSync(outputPath, JSON.stringify(output, null, 2) + "\n")
 console.log(JSON.stringify({ complete: tally.complete, errors: tally.errors, setupErrors: tally.setupErrors,
     actionLimit: tally.actionLimit, japanWins: tally.japanWins, alliesWins: tally.alliesWins, otherWins: tally.otherWins,
     fallback: tally.fallback, headless_moves: tally.headless_moves, groundMove: tally.groundMove,
-    capturedAP: tally.capturedAP, capturedJP: tally.capturedJP, role: tally.role }, null, 1))
+    capturedAP: tally.capturedAP, capturedJP: tally.capturedJP, atomicBombWins: tally.atomicBombWins,
+    role: tally.role }, null, 1))
 console.log(outputPath)

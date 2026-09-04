@@ -2,7 +2,7 @@
 /** import server/erasmus_data.js*/
 /** import server/erasmus_state.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.7"
+const ERASMUS_VERSION = "erasmus-v2.0-zh.8"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "unit", "hex", "strat_move", "ground_move", "roll", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
@@ -367,7 +367,8 @@ function erasmus_sm_decision(strategy, pick, view, context) {
     const node = `${page}-SM-${strategy.name}`
     const arg = pick.action === "card" ? "[出牌后公开]" : pick.argument
     // 决策 trace 附加 isPin: 本窗是否即“钉选”事件(每方每回合首卡), 沿用窗为 false。
-    const sm = Object.assign(esm_trace_of(strategy) || {}, { pinnedNow: isPin })
+    const sm = Object.assign(esm_trace_of(strategy, false) || {}, { pinnedNow: isPin })
+    const smPrivate = Object.assign(esm_trace_of(strategy, true) || {}, { pinnedNow: isPin })
     const base = {
         policy: ERASMUS_VERSION, chart: page, node, role: context.role,
         conditions: [], strategy: strategy.name, sm, action: pick.action, argument: arg,
@@ -375,7 +376,8 @@ function erasmus_sm_decision(strategy, pick, view, context) {
         ...(pick.via ? { via: pick.via } : {}),
         explanation: `状态机(zh.7): ${strategy.phase}阶段选轴「${strategy.name}」钉住整回合. ${(strategy.notes || []).join(" ")}`,
     }
-    return { action: pick.action, argument: pick.argument, publicTrace: base, privateTrace: { ...base, argument: pick.argument, legalActions: Object.keys(view.actions || {}) } }
+    return { action: pick.action, argument: pick.argument, publicTrace: base,
+        privateTrace: { ...base, sm: smPrivate, argument: pick.argument, legalActions: Object.keys(view.actions || {}) } }
 }
 
 var EOTS_BOTS = {
@@ -412,8 +414,10 @@ var EOTS_BOTS = {
             if (!chart) throw new Error(`No Erasmus chart for ${context.role}`)
             const res = evaluateChart(chart, view, context)
             if (sm && res && res.publicTrace) {
-                const t = esm_trace_of(sm)
+                const t = esm_trace_of(sm, false)
+                const tPrivate = esm_trace_of(sm, true)
                 res.publicTrace.sm = t
+                if (res.privateTrace) res.privateTrace.sm = tPrivate
                 if (!res.publicTrace.axis) res.publicTrace.axis = t ? t.axis : null
             }
             return res
