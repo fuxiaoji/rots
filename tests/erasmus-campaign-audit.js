@@ -7,6 +7,8 @@ const fs = require("fs")
 const path = require("path")
 const rules = require("../rules.js")
 const policy = rules.bots["erasmus-v2"]
+const chartDocument = JSON.parse(fs.readFileSync(path.join(__dirname,"..","data","erasmus","charts.json"),"utf8"))
+const chartNodes = new Map(chartDocument.charts.map(c=>[c.id,new Set(c.nodes.map(n=>n.id))]))
 
 const scenario = String(process.argv[2] || "1942-1945 (The Shortened Campaign)")
 const gameCount = Number(process.argv[3] || 50)
@@ -47,7 +49,7 @@ function play(seed) {
         return { seed, status: "setup-error", winner: null, error: error.message }
     }
     const g = { seed, status: "error", winner: null, actions: 0, turn: Number(state.turn || 0), fallback: 0,
-        noBattleHex: 0, role: empty(), context: null, strategyLog: [],
+        noBattleHex: 0, unexplainedNoBattle:0, traceNodeMissing:0, role: empty(), context: null, strategyLog: [], strategyCounts:{},
         closestAdvance: { alliedUnit: null, alliedControlledHex: null, b29: null }, atomicBest: null }
     g.groundMove = 0
     g.capturedAP = 0
@@ -62,6 +64,9 @@ function play(seed) {
             if (!view.actions || !(decision.action in view.actions))
                 throw new Error(`illegal policy action ${decision.action} @ ${view.prompt}`)
             const chart = String((decision.publicTrace || {}).chart || "")
+            const pathNodes = decision.publicTrace?.nodePath || (decision.publicTrace?.node ? [decision.publicTrace.node] : [])
+            const known = chartNodes.get(chart)
+            if (!known || pathNodes.some(n=>!known.has(n))) g.traceNodeMissing++
             const r = g.role[role]
             r.decisions++
             r.byKind[kindOf(chart)]++
@@ -69,6 +74,7 @@ function play(seed) {
             if (decision.publicTrace.fallback) g.fallback++
             const sm = decision.privateTrace?.sm || decision.publicTrace?.sm
             if (sm?.pinnedNow) {
+                const sk=`${role}/${sm.phase}/${sm.strategy}`; g.strategyCounts[sk]=(g.strategyCounts[sk]||0)+1
                 g.strategyLog.push({ turn: Number(view.turn || 0), role, phase: sm.phase, strategy: sm.strategy,
                     action: decision.action, focus: sm.focus,
                     priorityTargets: (sm.priorityTargets || []).filter(x => !x.achieved).slice(0, 5)
@@ -112,6 +118,7 @@ function play(seed) {
             if (side) g.role[side].fire++
         } else if (/No battle hexes declared/.test(line)) {
             g.noBattleHex++
+            if (!/: (?:no active unit can reach|chart candidate units and targets were exhausted)/.test(line)) g.unexplainedNoBattle++
         } else if (/moved to .*\(Ground move\)\./.test(line)) {
             g.groundMove++
         } else if (/^AP captured /.test(line)) {
@@ -124,7 +131,8 @@ function play(seed) {
     let finalAtomic = null
     try { finalAtomic = rules.query(state, "Allies", "atomic_bomb_strategy_status") } catch (e) { /* diagnostic only */ }
     return { seed, status: "complete", winner, actions: g.actions, turn: g.turn, fallback: g.fallback,
-        noBattleHex: g.noBattleHex, groundMove: g.groundMove, capturedAP: g.capturedAP, capturedJP: g.capturedJP,
+        noBattleHex: g.noBattleHex, unexplainedNoBattle:g.unexplainedNoBattle, traceNodeMissing:g.traceNodeMissing, strategyCounts:g.strategyCounts,
+        groundMove: g.groundMove, capturedAP: g.capturedAP, capturedJP: g.capturedJP,
         role: g.role, won_text: state.result?.won_text || state.L?.message || null, closestAdvance: g.closestAdvance,
         atomicBest: g.atomicBest, finalAtomic, strategyLog: g.strategyLog }
 }
@@ -150,7 +158,7 @@ const tally = { policy: policy.version, scenario, gameCount, baseSeed, maxAction
     fallback: games.reduce((s, x) => s + (x.fallback || 0), 0),
     groundMove: 0, capturedAP: 0, capturedJP: 0, atomicBombWins: 0,
     role: empty(),
-    noBattleHex: 0 }
+    noBattleHex: 0, unexplainedNoBattle:0, traceNodeMissing:0, strategyCounts:{} }
 completed.forEach(g => {
     for (const side of ["Japan", "Allies"]) {
         const r = g.role[side], t = tally.role[side]
@@ -160,6 +168,9 @@ completed.forEach(g => {
         t.fire += r.fire; t.advance += r.advance
     }
     tally.noBattleHex += g.noBattleHex
+    tally.unexplainedNoBattle += g.unexplainedNoBattle
+    tally.traceNodeMissing += g.traceNodeMissing
+    for(const [k,v] of Object.entries(g.strategyCounts||{})) tally.strategyCounts[k]=(tally.strategyCounts[k]||0)+v
     tally.groundMove += g.groundMove
     tally.capturedAP += g.capturedAP
     tally.capturedJP += g.capturedJP
@@ -168,7 +179,8 @@ completed.forEach(g => {
 
 const output = { generatedAt: new Date().toISOString(), tally,
     perGame: completed.map(g => ({ seed: g.seed, winner: g.winner, actions: g.actions, turn: g.turn, fallback: g.fallback,
-        noBattleHex: g.noBattleHex, groundMove: g.groundMove, capturedAP: g.capturedAP, capturedJP: g.capturedJP,
+        noBattleHex: g.noBattleHex, unexplainedNoBattle:g.unexplainedNoBattle, traceNodeMissing:g.traceNodeMissing, strategyCounts:g.strategyCounts,
+        groundMove: g.groundMove, capturedAP: g.capturedAP, capturedJP: g.capturedJP,
         role: g.role, won_text: g.won_text, closestAdvance: g.closestAdvance, atomicBest: g.atomicBest,
         finalAtomic: g.finalAtomic, strategyLog: g.strategyLog })),
     errors: games.filter(x => x.status === "error").map(g => ({ seed: g.seed, error: g.error, actions: g.actions, context: g.context })) }
@@ -178,7 +190,8 @@ fs.mkdirSync(path.dirname(outputPath), { recursive: true })
 fs.writeFileSync(outputPath, JSON.stringify(output, null, 2) + "\n")
 console.log(JSON.stringify({ complete: tally.complete, errors: tally.errors, setupErrors: tally.setupErrors,
     actionLimit: tally.actionLimit, japanWins: tally.japanWins, alliesWins: tally.alliesWins, otherWins: tally.otherWins,
-    fallback: tally.fallback, headless_moves: tally.headless_moves, groundMove: tally.groundMove,
+    fallback: tally.fallback, unexplainedNoBattle:tally.unexplainedNoBattle, traceNodeMissing:tally.traceNodeMissing,
+    headless_moves: tally.headless_moves, groundMove: tally.groundMove,
     capturedAP: tally.capturedAP, capturedJP: tally.capturedJP, atomicBombWins: tally.atomicBombWins,
     role: tally.role }, null, 1))
 console.log(outputPath)
