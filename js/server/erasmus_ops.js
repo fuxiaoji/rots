@@ -107,7 +107,7 @@ function eop_axis(role) {
     if (ov && ((ov.tokens && ov.tokens.length) || (Array.isArray(ov.chain) && ov.chain.length))) {
         return { id: ov.name || (role + "_AXIS"), role: role,
             note: ov.note ? `${ov.name} — ${ov.note}` : (ov.name || role + "轴"),
-            tokens: ov.tokens || [], chain: ov.chain || [] }
+            tokens: ov.tokens || [], chain: ov.chain || [], targetMeta: ov.targetMeta || [] }
     }
     if (role === "Allies") return EOP_AXES.AP
     // 日本: 控制资源 < 13 时抢南方资源; 达标后转入防守, 不再无谓远征。
@@ -301,17 +301,25 @@ function eop_trace(role) {
     return { axis: axis ? axis.id : null, axis_note: axis ? axis.note : null, focus: eop_focus(role) }
 }
 
+function eop_target_meta(role, hex) {
+    const axis = eop_axis(role)
+    return axis && Array.isArray(axis.targetMeta) ? axis.targetMeta.find(target => target.hex === hex) || null : null
+}
+
 // Public-view planning interfaces used by the chart executor. They deliberately
 // consume view.ai/public legal candidates rather than the mutable game state.
 function evaluateTargetFeasibility(target, card, hq, view) {
     const units=Array.isArray(view?.ai?.units)?view.ai.units:[], roleFaction=view?.active === "Allies" ? AP : JP
-    const defenders=units.filter(u=>u.location===target&&u.faction!==roleFaction)
+    const meta=eop_target_meta(view?.active,target)
+    const allDefenders=units.filter(u=>u.location===target&&u.faction!==roleFaction)
+    const defenders=meta?.kind==="SUPPRESS_HQ"?allDefenders.filter(u=>u.class==="air"||u.class==="naval"):allDefenders
     const defense=defenders.reduce((s,u)=>s+(u.reduced?Math.ceil(u.cf/2):u.cf),0)
     const md=(target!==null&&target!==undefined&&typeof get_map_data==="function")?get_map_data(target):null
-    return {target,legal:target!==null&&target!==undefined,coastal:!!(md&&(md.port||md.island)),defense,
+    const damageLevel=meta?.damageLevel||0.5
+    return {target,meta,damageLevel,legal:target!==null&&target!==undefined,coastal:!!(md&&(md.port||md.island)),defense,
         groundDefense:defenders.filter(u=>u.class==="ground").reduce((s,u)=>s+(u.reduced?Math.ceil(u.cf/2):u.cf),0),
         potentialReaction:!!view?.ai?.predicates?.ENEMY_NAVAL_GROUND_CAN_REACT,
-        requiredGroundMath:Math.max(1,defense),requiredAirSeaMath:Math.max(1,Math.ceil(defense/2))}
+        requiredGroundMath:Math.max(1,defense),requiredAirSeaMath:Math.max(1,Math.ceil(defense/damageLevel))}
 }
 function composeTaskForce(target, card, hq, view, candidates, role) {
     const units=Array.isArray(view?.ai?.units)?view.ai.units:[], byId=new Map(units.map(u=>[u.id,u]))

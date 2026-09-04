@@ -19977,7 +19977,7 @@ function eop_axis(role) {
     if (ov && ((ov.tokens && ov.tokens.length) || (Array.isArray(ov.chain) && ov.chain.length))) {
         return { id: ov.name || (role + "_AXIS"), role: role,
             note: ov.note ? `${ov.name} — ${ov.note}` : (ov.name || role + "轴"),
-            tokens: ov.tokens || [], chain: ov.chain || [] }
+            tokens: ov.tokens || [], chain: ov.chain || [], targetMeta: ov.targetMeta || [] }
     }
     if (role === "Allies") return EOP_AXES.AP
     // 日本: 控制资源 < 13 时抢南方资源; 达标后转入防守, 不再无谓远征。
@@ -20171,17 +20171,25 @@ function eop_trace(role) {
     return { axis: axis ? axis.id : null, axis_note: axis ? axis.note : null, focus: eop_focus(role) }
 }
 
+function eop_target_meta(role, hex) {
+    const axis = eop_axis(role)
+    return axis && Array.isArray(axis.targetMeta) ? axis.targetMeta.find(target => target.hex === hex) || null : null
+}
+
 // Public-view planning interfaces used by the chart executor. They deliberately
 // consume view.ai/public legal candidates rather than the mutable game state.
 function evaluateTargetFeasibility(target, card, hq, view) {
     const units=Array.isArray(view?.ai?.units)?view.ai.units:[], roleFaction=view?.active === "Allies" ? AP : JP
-    const defenders=units.filter(u=>u.location===target&&u.faction!==roleFaction)
+    const meta=eop_target_meta(view?.active,target)
+    const allDefenders=units.filter(u=>u.location===target&&u.faction!==roleFaction)
+    const defenders=meta?.kind==="SUPPRESS_HQ"?allDefenders.filter(u=>u.class==="air"||u.class==="naval"):allDefenders
     const defense=defenders.reduce((s,u)=>s+(u.reduced?Math.ceil(u.cf/2):u.cf),0)
     const md=(target!==null&&target!==undefined&&typeof get_map_data==="function")?get_map_data(target):null
-    return {target,legal:target!==null&&target!==undefined,coastal:!!(md&&(md.port||md.island)),defense,
+    const damageLevel=meta?.damageLevel||0.5
+    return {target,meta,damageLevel,legal:target!==null&&target!==undefined,coastal:!!(md&&(md.port||md.island)),defense,
         groundDefense:defenders.filter(u=>u.class==="ground").reduce((s,u)=>s+(u.reduced?Math.ceil(u.cf/2):u.cf),0),
         potentialReaction:!!view?.ai?.predicates?.ENEMY_NAVAL_GROUND_CAN_REACT,
-        requiredGroundMath:Math.max(1,defense),requiredAirSeaMath:Math.max(1,Math.ceil(defense/2))}
+        requiredGroundMath:Math.max(1,defense),requiredAirSeaMath:Math.max(1,Math.ceil(defense/damageLevel))}
 }
 function composeTaskForce(target, card, hq, view, candidates, role) {
     const units=Array.isArray(view?.ai?.units)?view.ai.units:[], byId=new Map(units.map(u=>[u.id,u]))
@@ -20644,7 +20652,27 @@ function esm_advance_metrics() {
 }
 function esm_strategy_targets(strategy) {
     const chain = strategy && Array.isArray(strategy.chain) ? strategy.chain : []
-    return chain.slice(0, 12).map((h, index) => Object.assign({ priority: index + 1 }, esm_hex_trace(h, strategy.role)))
+    const dynamic = strategy && Array.isArray(strategy.dynamicTargets) ? strategy.dynamicTargets : []
+    const byHex = new Map(dynamic.map(target => [target.hex, target]))
+    return chain.slice(0, 12).map((h, index) => Object.assign({ priority: index + 1 }, esm_hex_trace(h, strategy.role), byHex.get(h) || {}))
+}
+
+// 图表第1页的“压制盟军HQ”不是固定地图地名，而是三个会移动的 HQ 当前所在格。
+// 仅仍在地图且有补给的 HQ 是待压制目标；已经断补或离图即视为该项完成。
+function esm_jp_hq_suppression_targets() {
+    const specs = [
+        { unit: HQ_SOUTH_WEST, objective: "压制菲律宾HQ", damageLevel: 0.25 },
+        { unit: HQ_MALAYA, objective: "压制新加坡HQ", damageLevel: 0.5 },
+        { unit: HQ_ABDA, objective: "压制ABDA HQ", damageLevel: 0.5 },
+    ]
+    const targets = []
+    for (const spec of specs) {
+        const h = G.location[spec.unit]
+        if (!(h >= 0 && h <= LAST_BOARD_HEX)) continue
+        if (G.oos && set_has(G.oos, spec.unit)) continue
+        targets.push({ hex: h, unit: spec.unit, objective: spec.objective, damageLevel: spec.damageLevel, kind: "SUPPRESS_HQ" })
+    }
+    return targets
 }
 function esm_build_ctx(role, lock, seedText) {
     const ctx = {
@@ -21174,11 +21202,15 @@ function esm_pin_strategy(view, context) {
     const isEventStrat = name === "事件战略"
     const entry = esm_bind_strategy_entry(role, phase, name)
     const contentPhase = isEventStrat ? "early" : phase
-    let goals = [], chain = []
+    let goals = [], chain = [], dynamicTargets = []
     if (entry) {
         // 忠实 parse_goals: 有序 Goal(kind+hex+region) + 指针/资源/落底展开。
         try { goals = esm_parse_entry(entry, role, contentPhase) } catch (e) { goals = [] }
         chain = esm_chain_of(goals)
+    }
+    if (role === "Japan" && (name === "保守的空优战略" || name === "激进的南方资源战略")) {
+        dynamicTargets = esm_jp_hq_suppression_targets()
+        chain = dynamicTargets.map(target => target.hex).concat(chain.filter(h => !dynamicTargets.some(target => target.hex === h)))
     }
     // D4: ABSTRACT 自身无 hex 链(纯文本目标), 落到可执行回退链, 让 eop 焦点层在"推进B29/
     // 原子弹胜利"钉住期间仍有可打的主攻方向:
@@ -21199,7 +21231,7 @@ function esm_pin_strategy(view, context) {
     }
     const strategy = entry ? {
         name, nameFull: entry.name, kind: entry.kind, notes: entry.notes, targets: entry.targets,
-        phase, role, seed: seedText, ord, pinnedNow: true, goals, chain, ctx,
+        phase, role, seed: seedText, ord, pinnedNow: true, goals, chain, dynamicTargets, ctx,
         nodePath: (ctx._nodePath || []).slice(), conditions: (ctx._conditions || []).slice(), d10Rolls: (ctx._dice || []).slice(),
         eventPhase: isEventStrat ? "early" : undefined,
     } : {
@@ -21726,7 +21758,7 @@ function target_argument(action, value, seedText, role, view) {
         if (!esm_gate_on()) pickValue = pickValue.filter(u => { try { return pieces[u] && pieces[u].class !== "air" } catch (e) { return true } })
         // 已激活单位(含本窗已选)传给 eop_pick_unit, 用于两栖登陆护航判定: 敌占港需 ≥1 海军护航。
         const activeUnits = Array.isArray(view?.offensive?.active_units) ? view.offensive.active_units.flat() : []
-        const planned = composeTaskForce(view?.ai?.focus, null, null, view, pickValue, role)
+        const planned = composeTaskForce(eop_focus(role), null, null, view, pickValue, role)
         const picked = planned && planned.unit !== undefined && planned.unit !== null ? planned.unit : eop_pick_unit(pickValue, role, activeUnits)
         return picked !== undefined ? picked : pick_argument(pickValue, seedText, action, view)
     }
@@ -21967,7 +21999,7 @@ var EOTS_BOTS = {
                 if (esm_gate_on()) {
                     sm = esm_pin_strategy(view, context)
                     // 忠实目标链: chain = parse_goals 有序 idx; goals = 每行 Goal(kind/text)
-                    if (sm) eop_set_strategy_chain(context.role, { name: sm.name, kind: sm.kind, note: (sm.notes || []).join("; "), goals: sm.goals, chain: sm.chain })
+                    if (sm) eop_set_strategy_chain(context.role, { name: sm.name, kind: sm.kind, note: (sm.notes || []).join("; "), goals: sm.goals, chain: sm.chain, targetMeta: sm.dynamicTargets })
                 } else {
                     eop_clear_all_chains()   // 防同进程跨剧本串台
                 }

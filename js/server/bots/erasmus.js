@@ -184,7 +184,7 @@ function target_argument(action, value, seedText, role, view) {
         if (!esm_gate_on()) pickValue = pickValue.filter(u => { try { return pieces[u] && pieces[u].class !== "air" } catch (e) { return true } })
         // 已激活单位(含本窗已选)传给 eop_pick_unit, 用于两栖登陆护航判定: 敌占港需 ≥1 海军护航。
         const activeUnits = Array.isArray(view?.offensive?.active_units) ? view.offensive.active_units.flat() : []
-        const planned = composeTaskForce(view?.ai?.focus, null, null, view, pickValue, role)
+        const planned = composeTaskForce(eop_focus(role), null, null, view, pickValue, role)
         const picked = planned && planned.unit !== undefined && planned.unit !== null ? planned.unit : eop_pick_unit(pickValue, role, activeUnits)
         return picked !== undefined ? picked : pick_argument(pickValue, seedText, action, view)
     }
@@ -425,7 +425,7 @@ var EOTS_BOTS = {
                 if (esm_gate_on()) {
                     sm = esm_pin_strategy(view, context)
                     // 忠实目标链: chain = parse_goals 有序 idx; goals = 每行 Goal(kind/text)
-                    if (sm) eop_set_strategy_chain(context.role, { name: sm.name, kind: sm.kind, note: (sm.notes || []).join("; "), goals: sm.goals, chain: sm.chain })
+                    if (sm) eop_set_strategy_chain(context.role, { name: sm.name, kind: sm.kind, note: (sm.notes || []).join("; "), goals: sm.goals, chain: sm.chain, targetMeta: sm.dynamicTargets })
                 } else {
                     eop_clear_all_chains()   // 防同进程跨剧本串台
                 }

@@ -439,7 +439,27 @@ function esm_advance_metrics() {
 }
 function esm_strategy_targets(strategy) {
     const chain = strategy && Array.isArray(strategy.chain) ? strategy.chain : []
-    return chain.slice(0, 12).map((h, index) => Object.assign({ priority: index + 1 }, esm_hex_trace(h, strategy.role)))
+    const dynamic = strategy && Array.isArray(strategy.dynamicTargets) ? strategy.dynamicTargets : []
+    const byHex = new Map(dynamic.map(target => [target.hex, target]))
+    return chain.slice(0, 12).map((h, index) => Object.assign({ priority: index + 1 }, esm_hex_trace(h, strategy.role), byHex.get(h) || {}))
+}
+
+// 图表第1页的“压制盟军HQ”不是固定地图地名，而是三个会移动的 HQ 当前所在格。
+// 仅仍在地图且有补给的 HQ 是待压制目标；已经断补或离图即视为该项完成。
+function esm_jp_hq_suppression_targets() {
+    const specs = [
+        { unit: HQ_SOUTH_WEST, objective: "压制菲律宾HQ", damageLevel: 0.25 },
+        { unit: HQ_MALAYA, objective: "压制新加坡HQ", damageLevel: 0.5 },
+        { unit: HQ_ABDA, objective: "压制ABDA HQ", damageLevel: 0.5 },
+    ]
+    const targets = []
+    for (const spec of specs) {
+        const h = G.location[spec.unit]
+        if (!(h >= 0 && h <= LAST_BOARD_HEX)) continue
+        if (G.oos && set_has(G.oos, spec.unit)) continue
+        targets.push({ hex: h, unit: spec.unit, objective: spec.objective, damageLevel: spec.damageLevel, kind: "SUPPRESS_HQ" })
+    }
+    return targets
 }
 function esm_build_ctx(role, lock, seedText) {
     const ctx = {
@@ -969,11 +989,15 @@ function esm_pin_strategy(view, context) {
     const isEventStrat = name === "事件战略"
     const entry = esm_bind_strategy_entry(role, phase, name)
     const contentPhase = isEventStrat ? "early" : phase
-    let goals = [], chain = []
+    let goals = [], chain = [], dynamicTargets = []
     if (entry) {
         // 忠实 parse_goals: 有序 Goal(kind+hex+region) + 指针/资源/落底展开。
         try { goals = esm_parse_entry(entry, role, contentPhase) } catch (e) { goals = [] }
         chain = esm_chain_of(goals)
+    }
+    if (role === "Japan" && (name === "保守的空优战略" || name === "激进的南方资源战略")) {
+        dynamicTargets = esm_jp_hq_suppression_targets()
+        chain = dynamicTargets.map(target => target.hex).concat(chain.filter(h => !dynamicTargets.some(target => target.hex === h)))
     }
     // D4: ABSTRACT 自身无 hex 链(纯文本目标), 落到可执行回退链, 让 eop 焦点层在"推进B29/
     // 原子弹胜利"钉住期间仍有可打的主攻方向:
@@ -994,7 +1018,7 @@ function esm_pin_strategy(view, context) {
     }
     const strategy = entry ? {
         name, nameFull: entry.name, kind: entry.kind, notes: entry.notes, targets: entry.targets,
-        phase, role, seed: seedText, ord, pinnedNow: true, goals, chain, ctx,
+        phase, role, seed: seedText, ord, pinnedNow: true, goals, chain, dynamicTargets, ctx,
         nodePath: (ctx._nodePath || []).slice(), conditions: (ctx._conditions || []).slice(), d10Rolls: (ctx._dice || []).slice(),
         eventPhase: isEventStrat ? "early" : undefined,
     } : {

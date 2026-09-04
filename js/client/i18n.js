@@ -106,6 +106,7 @@ function eots_render_ai_current(panel, row) {
 			if (target.resource) flags.push("资源格")
 			if (target.controlledBy) flags.push(`控制：${eots_t(target.controlledBy)}`)
 			if (target.distanceToTokyo !== undefined) flags.push(`距东京 ${target.distanceToTokyo} 格`)
+			if (target.objective) flags.unshift(`${target.objective}${target.damageLevel ? " · 伤害标准 " + target.damageLevel + "x" : ""}`)
 			item.textContent = `${target.priority || index + 1}. ${target.name || target.id || "Hex " + target.hex}${target.id ? " [" + target.id + "]" : ""}${flags.length ? " · " + flags.join(" · ") : ""}`
 			list.appendChild(item)
 		})
