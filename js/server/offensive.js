@@ -1043,6 +1043,21 @@ function headless_target_score(hex, hasGround, faction, kind, steer) {
     }
     if (kind === "reaction") {
         // 反应: 支援会战(格内是敌人进攻部队); 选我方风险最低的会战格。
+        // 落点必须能被后续 choose_attack_hex 真正分配, 否则反应阶段不自动收尾, 分配窗仅剩 undo 卡死:
+        //  1) 航母编成(extended_battle_range>0): 落点须在某会战格 battle_range 内可达, 或直接进会战格。
+        //  2) 纯护航(无航母海军): 只能进会战格自动投入(escort 窗靠"同格已投入航母"才给格,
+        //     无航母时不进会战格就没有合法分配格)。
+        // 地面反应维持原"就近"推进(mark_ground_reaction_hexes 本身就是非会战格)。
+        const inBattle = set_has(G.offensive.battle_hexes, hex)
+        const range = (L.move_data && L.move_data.extended_battle_range) || 0
+        if (range) {
+            // 用与 compute_air_commit_hexes 相同的收尾口径判可达: in_range_on_map 在西南象限 sw 格
+            // 走 slow_in_range 按真实地图邻接 BFS, 而非 get_distance 的理想六角距离(会漏判)。
+            const reachable = inBattle || in_range_on_map(hex, range, G.offensive.battle_hexes, G.active).length > 0
+            if (!reachable) return null
+        } else if (L.move_data && L.move_data.is_naval_present && !L.move_data.is_ground_present) {
+            if (!inBattle) return null
+        }
         return [eu.count, eu.ground, hex]
     }
     // pbm: 战后不许新开战/进敌占(引擎已排除), 优选己方控制空格的“安全落脚”。
@@ -1143,7 +1158,20 @@ function headless_advance_one(self, kind) {
     L.allowed_hexes = []
     G.offensive.organic = G.offensive.organic.filter(u => !set_has(group, u))
     push_undo()
-    self.move(path)
+    try {
+        self.move(path)
+    } catch (e) {
+        // 地面/海军"离海"路径距离被低估: compute_ground_naval_move_hexes 为算海运路径会临时
+        // 移除地面单位重算供应, 使陆路路径在"单位不在场"时按畅通道路算出更短距离; 而 move_units
+        // 用单位在场供应校验, 距离超限 → "Bad move path"。此时放弃该组(单位留在原地, 同 decline),
+        // 避免无头推进整局崩溃。pop_undo 还原 move_units 已写入的半程 paths 与临时供应。
+        pop_undo()
+        G.offensive.organic = G.offensive.organic.filter(u => !set_has(group, u))
+        G.active_stack = []
+        L.allowed_hexes = []
+        L.move_data = {}
+        return { type: "decline" }
+    }
     return { type: "move" }
 }
 

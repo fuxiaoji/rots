@@ -11533,6 +11533,21 @@ function headless_target_score(hex, hasGround, faction, kind, steer) {
     }
     if (kind === "reaction") {
         // 反应: 支援会战(格内是敌人进攻部队); 选我方风险最低的会战格。
+        // 落点必须能被后续 choose_attack_hex 真正分配, 否则反应阶段不自动收尾, 分配窗仅剩 undo 卡死:
+        //  1) 航母编成(extended_battle_range>0): 落点须在某会战格 battle_range 内可达, 或直接进会战格。
+        //  2) 纯护航(无航母海军): 只能进会战格自动投入(escort 窗靠"同格已投入航母"才给格,
+        //     无航母时不进会战格就没有合法分配格)。
+        // 地面反应维持原"就近"推进(mark_ground_reaction_hexes 本身就是非会战格)。
+        const inBattle = set_has(G.offensive.battle_hexes, hex)
+        const range = (L.move_data && L.move_data.extended_battle_range) || 0
+        if (range) {
+            // 用与 compute_air_commit_hexes 相同的收尾口径判可达: in_range_on_map 在西南象限 sw 格
+            // 走 slow_in_range 按真实地图邻接 BFS, 而非 get_distance 的理想六角距离(会漏判)。
+            const reachable = inBattle || in_range_on_map(hex, range, G.offensive.battle_hexes, G.active).length > 0
+            if (!reachable) return null
+        } else if (L.move_data && L.move_data.is_naval_present && !L.move_data.is_ground_present) {
+            if (!inBattle) return null
+        }
         return [eu.count, eu.ground, hex]
     }
     // pbm: 战后不许新开战/进敌占(引擎已排除), 优选己方控制空格的“安全落脚”。
@@ -11633,7 +11648,20 @@ function headless_advance_one(self, kind) {
     L.allowed_hexes = []
     G.offensive.organic = G.offensive.organic.filter(u => !set_has(group, u))
     push_undo()
-    self.move(path)
+    try {
+        self.move(path)
+    } catch (e) {
+        // 地面/海军"离海"路径距离被低估: compute_ground_naval_move_hexes 为算海运路径会临时
+        // 移除地面单位重算供应, 使陆路路径在"单位不在场"时按畅通道路算出更短距离; 而 move_units
+        // 用单位在场供应校验, 距离超限 → "Bad move path"。此时放弃该组(单位留在原地, 同 decline),
+        // 避免无头推进整局崩溃。pop_undo 还原 move_units 已写入的半程 paths 与临时供应。
+        pop_undo()
+        G.offensive.organic = G.offensive.organic.filter(u => !set_has(group, u))
+        G.active_stack = []
+        L.allowed_hexes = []
+        L.move_data = {}
+        return { type: "decline" }
+    }
     return { type: "move" }
 }
 
@@ -19885,12 +19913,43 @@ function eop_min_dist(hex, locs) {
 // 而非空跑一整轮又无会战可报), 次键 = 到焦点距离(保留战略方向)。此前只按"距焦点最近"
 // 挑单位, 而焦点(如拉包尔)常远在战线后方, 挑出的单位离任何敌军都远 → 移动后够不着敌格
 // → ~半攻势"Confirm offensive"直接跳过会战 → 每回合夺格数远低于 PoW 所需 4。
-function eop_pick_unit(candidates, role) {
+function eop_pick_unit(candidates, role, activeUnits) {
     if (!Array.isArray(candidates) || candidates.length === 0) return undefined
     const focus = eop_focus(role)
     if (typeof G === "undefined" || !G || !G.location) return undefined
     const mine = role === "Japan" ? JP : AP
     const enemyLocs = eop_enemy_locs(mine)
+    const activated = Array.isArray(activeUnits) ? activeUnits : []
+    // 两栖登陆护航 (TF_FORMATIONS「带海上/带航空海上支援的登陆」至少 1 海军单位):
+    // 敌占港口/岛屿格的两栖夺控若不带海军护航, 引擎 broken_aa 会
+    // “Amphibious Assault failed due to lack of naval escort” 把登陆部队打回吃损失。
+    // 只在激活窗启用(调用方传入 activeUnits), 且仅完整全图剧本(gate on) —— SP/Burma
+    // 子图剧本保持 zh.6 行为不变(golden 不动)。
+    const mdFocus = (focus !== null && typeof get_map_data === "function") ? get_map_data(focus) : null
+    // 敌占或空敌控港口都算"需两栖登陆": 即使当前格无敌军, 敌方反应(Intercept)仍可能
+    // 把海军调进来, 无护航的登陆照样在会战判 "Amphibious Assault failed"。故只在
+    // "未控制港口"即触发护航, 不要求格内有敌军。
+    const landing = Array.isArray(activeUnits) && focus !== null && !is_space_controlled(focus, mine)
+        && mdFocus && mdFocus.port
+        && (typeof esm_gate_on === "function" ? esm_gate_on() : false)
+    const actNaval = activated.find(u => pieces[u] && pieces[u].class === "naval")
+    const groundCandLocs = new Set()
+    for (const u of candidates) { const p = pieces[u]; if (p && p.class === "ground") groundCandLocs.add(G.location[u]) }
+
+    // 1) 先补海军护航: 只补与地面候选同格的海军(无头推进把同格海陆编成同组一起上岛)。
+    //    非同格海军补了也白补 —— 无头推进按“同格编组”, 非同格海军会单独一组, 而纯海军组
+    //    只能攻“敌海军格”(headless_target_score), 够不着只守地面的敌港, 地面仍无护航吃失败。
+    if (landing && !actNaval) {
+        let best = null
+        for (const u of candidates) {
+            const p = pieces[u]
+            if (p && p.class === "naval" && groundCandLocs.has(G.location[u])) {
+                if (best === null || u < best) best = u
+            }
+        }
+        if (best !== null) return best
+    }
+
     const fd = h => (focus === null ? 99 : (typeof get_distance === "function") ? get_distance(h, focus) : Math.abs(h - focus))
     const scored = []
     for (const u of candidates) {
@@ -19900,7 +19959,7 @@ function eop_pick_unit(candidates, role) {
     }
     if (!scored.length) return undefined
     scored.sort((a, b) => a[1] - b[1] || a[2] - b[2] || a[0] - b[0])
-    // B: 焦点是敌占格(需“夺占”而非纯消耗)时, 若候选里有"到最近敌军距离"不比最优单位远太多的
+    // B: 焦点是敌占格(需“夺占”而非纯消耗)时, 若候选里有“到最近敌军距离”不比最优单位远太多的
     // 两栖地面(海军陆战队 asp / 可战略海运 strat_move), 优先选它组成登陆力量 —— 否则每次
     // 攻势总挑最近敌军的纯空/海军, 只会对岛屿做远距空袭, 永远无法登岛占格。
     // 只在 node 端用环境开关做 A/B; 浏览器 PvE(process 未定义)时默认开启该偏置。
@@ -19908,14 +19967,52 @@ function eop_pick_unit(candidates, role) {
     if (biasOn && focus !== null && !is_space_controlled(focus, mine)) {
         const refD = scored[0][1]
         const cap = Math.max(3, refD + 3)
-        const pick = scored.find(([u, ed]) => {
-            if (ed > cap) return false
-            const p = pieces[u]
-            return p && p.class === "ground" && (p.asp || p.strat_move)
-        })
+        const isGroundLanding = u => { const p = pieces[u]; return p && p.class === "ground" && (p.asp || p.strat_move) }
+        // 登陆且已有海军护航时, 优先选与任一已激活海军同格的地面(编成同组一起上岛),
+        // 避免海陆分处两格导致地面单独硬登陆。
+        let pick = null
+        if (landing && actNaval) {
+            const escortLocs = new Set()
+            for (const u of activated) { const p = pieces[u]; if (p && p.class === "naval") escortLocs.add(G.location[u]) }
+            pick = scored.find(([u, ed]) => ed <= cap && escortLocs.has(G.location[u]) && isGroundLanding(u))
+        }
+        if (!pick) pick = scored.find(([u, ed]) => ed <= cap && isGroundLanding(u))
         if (pick) return pick[0]
     }
     return scored[0][0]
+}
+
+// 两栖登陆无护航可用 → 阻断硬登陆 (TF_FORMATIONS「无支援登陆」仅限空目标且无敌方反应;
+// 敌占/敌控港口的两栖夺控若本窗既无已激活海军、待激活候选里也无海军, 继续激活两栖地面
+// 只会被 broken_aa 判 "Amphibious Assault failed" 吃损失)。返回 true 让选牌窗在尚未激活
+// 任何单位时提前 done 收尾(空攻势, 不耗单位)。仅完整全图剧本(gate on)。
+function eop_landing_no_escort(role, view) {
+    if (typeof esm_gate_on !== "function" || !esm_gate_on()) return false
+    if (!view || !view.offensive) return false
+    const mine = role === "Japan" ? JP : AP
+    const focus = eop_focus(role)
+    if (focus === null) return false
+    const md = (typeof get_map_data === "function") ? get_map_data(focus) : null
+    if (!md || !md.port) return false
+    if (is_space_controlled(focus, mine)) return false
+    // 可新增单位(去已激活、去空中)里, 是否存在"海军与两栖地面同格"的护航编成?
+    // 无头推进按“同格编组”, 只有同格的海陆才能一起上岛(带海上支援登陆); 非同格海军
+    // 会单独一组, 够不着只守地面的敌港。故只看“同格海陆”是否可用。
+    const cand = Array.isArray(view.actions && view.actions.unit) ? view.actions.unit : []
+    const unsel = new Set(Array.isArray(view.unselect) ? view.unselect : [])
+    const navalLocs = new Set(), groundLocs = new Set()
+    for (const u of cand) {
+        if (unsel.has(u)) continue
+        let p = null
+        try { p = pieces[u] } catch (e) {}
+        if (!p || p.class === "air") continue
+        const loc = G.location[u]
+        if (p.class === "naval") navalLocs.add(loc)
+        else if (p.class === "ground" && (p.asp || p.strat_move)) groundLocs.add(loc)
+    }
+    if (groundLocs.size === 0) return false   // 无两栖地面可激活 → 不会发生无护航登陆
+    for (const loc of groundLocs) if (navalLocs.has(loc)) return false
+    return true
 }
 
 // ---- 引擎无头推进就近转向 ------------------------------------------------
@@ -21347,7 +21444,9 @@ function target_argument(action, value, seedText, role, view) {
         // 空中单位不参与常规攻势夺格, 且无头引擎对其移动支持有缺口(攻击→turn_box 退场、
         // 反应→死窗); 激活只选地面/海军(由 advance 推进夺格), 空中单位留在原地继续 ZOI/防守。
         pickValue = pickValue.filter(u => { try { return pieces[u] && pieces[u].class !== "air" } catch (e) { return true } })
-        const picked = eop_pick_unit(pickValue, role)
+        // 已激活单位(含本窗已选)传给 eop_pick_unit, 用于两栖登陆护航判定: 敌占港需 ≥1 海军护航。
+        const activeUnits = Array.isArray(view?.offensive?.active_units) ? view.offensive.active_units.flat() : []
+        const picked = eop_pick_unit(pickValue, role, activeUnits)
         return picked !== undefined ? picked : pick_argument(pickValue, seedText, action, view)
     }
     if (action === "unit" && /Declare battle hexes|Confirm declared battle hexes|Assign units to battle/i.test(prompt)) {
@@ -21359,6 +21458,18 @@ function target_argument(action, value, seedText, role, view) {
 
 function evaluateChart(chart, view, context) {
     const legal = legal_actions(view)
+    // 日本"海军飞机航程优势"(jp_cv_reassign) 是可选的战后效应: 损伤己方航母换射程,
+    // 再经"修复"往返回补。无头 bot 不参与这套往返 —— 引擎在阶段1"Chosen: N 且 to_repair
+    // 已空"时会只剩 undo(合法动作集为空)卡死。故在阶段0(hits=0, 有 skip)直接 skip 放弃
+    // 该可选效应, 换取稳定推进; 阶段1不应再出现(因阶段0已 skip)。
+    if (/range advantage/i.test(String(view.prompt || "")) && view.actions && view.actions.skip !== undefined) {
+        const base = { policy: ERASMUS_VERSION, chart: chart.chart_id || chart.id,
+            node: `${chart.chart_id || chart.id}-RANGE-ADV`, role: context.role,
+            conditions: [], strategy: "SKIP_RANGE_ADVANTAGE", action: "skip", argument: undefined,
+            dice: null, fallback: false, inferred: false,
+            explanation: "日本航程优势为可选效应, 无头跳过以避免损伤/修复往返卡死。" }
+        return { action: "skip", argument: undefined, publicTrace: base, privateTrace: { ...base, legalActions: legal } }
+    }
     if (!legal.length) {
         // 窗口只有 awaiting(如无头地面推进触发的 disengagement 确认窗, 引擎仅给
         // 这一个按钮): 无其它动作可选, 必须确认继续; 其余 undo/redo/awaiting 被过滤。
@@ -21416,6 +21527,12 @@ function evaluateChart(chart, view, context) {
             .filter(u => !unsel.has(u))
             .filter(u => { try { return pieces[u] && pieces[u].class !== "air" } catch (e) { return true } })
         if (addable.length === 0) action = "done"
+        // 两栖登陆无护航可用: 在本窗尚未激活任何单位时提前 done(空攻势), 避免把两栖地面
+        // 送去敌占/敌控港口硬登陆吃 "Amphibious Assault failed"。已有已激活单位时不再阻断
+        // (那些单位已注定走无头推进, 由 eop_pick_unit 的护航逻辑尽量补海军)。
+        else if (typeof eop_landing_no_escort === "function"
+            && !(view.offensive?.active_units?.flat?.().length > 0)
+            && eop_landing_no_escort(context.role, view)) action = "done"
     }
     // “Declare battle hexes.”窗口的 unit 是选择可打击的已激活空中单位(随后用
     // action_hex 指向目标格并 create_battle_hex), 并非追加激活单位, 因此该窗口

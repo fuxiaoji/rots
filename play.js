@@ -12575,7 +12575,13 @@ function on_update() {
     if (G.actions && G.actions.move) {
         L.allowed_hexes = []
         L.move_type = G.move_type
+        // G.active is the role name ("Japan"/"Allies") on the client, but move.js
+        // (get_move_data / get_asp_limit) indexes G.asp[] and compares against
+        // G.offensive.attacker by faction index. Use R (this player's index).
+        var view_active = G.active
+        G.active = R
         update_move_hex()
+        G.active = view_active
         if (!G.actions.action_hex) {
             G.actions.action_hex = []
         }

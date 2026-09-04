@@ -177,7 +177,9 @@ function target_argument(action, value, seedText, role, view) {
         // 空中单位不参与常规攻势夺格, 且无头引擎对其移动支持有缺口(攻击→turn_box 退场、
         // 反应→死窗); 激活只选地面/海军(由 advance 推进夺格), 空中单位留在原地继续 ZOI/防守。
         pickValue = pickValue.filter(u => { try { return pieces[u] && pieces[u].class !== "air" } catch (e) { return true } })
-        const picked = eop_pick_unit(pickValue, role)
+        // 已激活单位(含本窗已选)传给 eop_pick_unit, 用于两栖登陆护航判定: 敌占港需 ≥1 海军护航。
+        const activeUnits = Array.isArray(view?.offensive?.active_units) ? view.offensive.active_units.flat() : []
+        const picked = eop_pick_unit(pickValue, role, activeUnits)
         return picked !== undefined ? picked : pick_argument(pickValue, seedText, action, view)
     }
     if (action === "unit" && /Declare battle hexes|Confirm declared battle hexes|Assign units to battle/i.test(prompt)) {
@@ -189,6 +191,18 @@ function target_argument(action, value, seedText, role, view) {
 
 function evaluateChart(chart, view, context) {
     const legal = legal_actions(view)
+    // 日本"海军飞机航程优势"(jp_cv_reassign) 是可选的战后效应: 损伤己方航母换射程,
+    // 再经"修复"往返回补。无头 bot 不参与这套往返 —— 引擎在阶段1"Chosen: N 且 to_repair
+    // 已空"时会只剩 undo(合法动作集为空)卡死。故在阶段0(hits=0, 有 skip)直接 skip 放弃
+    // 该可选效应, 换取稳定推进; 阶段1不应再出现(因阶段0已 skip)。
+    if (/range advantage/i.test(String(view.prompt || "")) && view.actions && view.actions.skip !== undefined) {
+        const base = { policy: ERASMUS_VERSION, chart: chart.chart_id || chart.id,
+            node: `${chart.chart_id || chart.id}-RANGE-ADV`, role: context.role,
+            conditions: [], strategy: "SKIP_RANGE_ADVANTAGE", action: "skip", argument: undefined,
+            dice: null, fallback: false, inferred: false,
+            explanation: "日本航程优势为可选效应, 无头跳过以避免损伤/修复往返卡死。" }
+        return { action: "skip", argument: undefined, publicTrace: base, privateTrace: { ...base, legalActions: legal } }
+    }
     if (!legal.length) {
         // 窗口只有 awaiting(如无头地面推进触发的 disengagement 确认窗, 引擎仅给
         // 这一个按钮): 无其它动作可选, 必须确认继续; 其余 undo/redo/awaiting 被过滤。
@@ -246,6 +260,12 @@ function evaluateChart(chart, view, context) {
             .filter(u => !unsel.has(u))
             .filter(u => { try { return pieces[u] && pieces[u].class !== "air" } catch (e) { return true } })
         if (addable.length === 0) action = "done"
+        // 两栖登陆无护航可用: 在本窗尚未激活任何单位时提前 done(空攻势), 避免把两栖地面
+        // 送去敌占/敌控港口硬登陆吃 "Amphibious Assault failed"。已有已激活单位时不再阻断
+        // (那些单位已注定走无头推进, 由 eop_pick_unit 的护航逻辑尽量补海军)。
+        else if (typeof eop_landing_no_escort === "function"
+            && !(view.offensive?.active_units?.flat?.().length > 0)
+            && eop_landing_no_escort(context.role, view)) action = "done"
     }
     // “Declare battle hexes.”窗口的 unit 是选择可打击的已激活空中单位(随后用
     // action_hex 指向目标格并 create_battle_hex), 并非追加激活单位, 因此该窗口
