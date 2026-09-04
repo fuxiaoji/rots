@@ -301,3 +301,17 @@
 ### 产物
 
 - `js/server/erasmus_state.js`（D1 跨局清理、D2 同轴延续、D3 al_M_B/D 信号、D4 ABSTRACT 回退链、D5 资源剥夺链 + ctx._diag 账本）、`js/server/game.js` + `js/server/cycle.js`（D5 战略轰炸段计数，引擎胜利线修复）、根 `rules.js`（inline 重建）；探针 `tests/_dbg_d5.js`（账本 runner，未跟踪）。
+
+## 2026-09-04
+
+### 无头自对弈稳定性修复（两栖护航 + 反应分配可达性 + Bad move path）
+
+- 目标：消除 escort 改动引入的 4 个 audit 报错（3× `ERASMUS has no legal action` 反应分配卡死 + 1× `Bad move path`），使 1942 完整剧本 headless 50 局 0 error 跑通。
+- **两栖登陆护航**（`erasmus_ops.js` + `erasmus.js`）：`eop_pick_unit` 在登陆窗先补"与地面候选同格"的海军护航；`eop_landing_no_escort` 在无可用同格海陆编成时提前收尾，避免 `broken_aa` 的 "Amphibious Assault failed due to lack of naval escort" 吃损失。仅完整全图剧本（gate on）启用。
+- **反应分配可达性**（`offensive.js headless_target_score` reaction 分支）：反应落点必须能被后续 `choose_attack_hex` 真正分配，否则反应阶段不自动收尾、分配窗仅剩 undo 卡死。两个口径修复：
+  1. **航母编成**：可达性判据从 `get_distance`（理想六角距离）改为 `in_range_on_map`（西南象限 sw 格走 `slow_in_range` 真实地图邻接 BFS）。根因：seed20260916 航母(unit87, br=2)移到 hex63，`get_distance(63,122)=2` 判"可达"，但 63/122 同处 sw 象限、真实邻接 BFS 不连通 → `compute_air_commit_hexes` 收尾 `in_range_on_map` 返回空 → 卡死。
+  2. **纯护航编成**（无航母海军）：只能进会战格自动投入（escort 窗靠"同格已投入航母"才给格），否则返回空卡死。seed20260921 护航 unit18(br=null) 被就近打分引导到非会战空格 → 卡死。
+  - 地面反应维持原"就近"推进（`mark_ground_reaction_hexes` 本就非会战格），不受影响。
+- **Bad move path 兜底**（`offensive.js headless_advance_one`）：`compute_ground_naval_move_hexes` 为算海运路径临时移除地面单位重算供应，使陆路路径在"单位不在场"时按畅通道路算出更短距离，`move_units` 用单位在场供应校验距离超限抛 "Bad move path"；try/catch 捕获后 `pop_undo` 还原半程 paths 并 decline 该组，不再整局崩溃。seed20260920 因此从 turn12 崩溃改为正常完赛。
+- 验证：1942 完整剧本 headless audit 50 局（seeds 20260903–20260952）**0 error / 0 action-limit / 0 setup-error**，50 局全部 `complete`；4 个曾报错种子（20260916/20260918/20260920/20260921）逐一复跑均 `complete`。胜负仍日本 50 / 盟军 0 —— 盟军胜利仍属上一节 D1-D5 的"资源线归零 + 轰炸基地成型"执行强度边界，非本批稳定性修复目标。
+- 产物：`js/server/erasmus_ops.js`、`js/server/bots/erasmus.js`、`js/server/offensive.js`、`js/client/update.js`（`G.active` 角色名/阵营号修正）、根 `rules.js` + `play.js`（inline 重建）。单主题提交 `edd5296`。
