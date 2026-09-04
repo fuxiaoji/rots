@@ -523,7 +523,8 @@ function esm_build_ctx(role, lock, seedText) {
             } catch (e) { return false }
         })()
         // 中期
-        ctx.jp_E_us_will_lt_4 = (G.wie !== undefined ? G.wie : 8) < 4
+        // JP02-E 原文是“美国政治意志<4”，不是欧洲战事状态。
+        ctx.jp_E_us_will_lt_4 = Number(G.political_will) < 4
         ctx.jp_F_burma_surrendered = (typeof nations !== "undefined") ? surr(nations.BURMA.id) : false
         ctx.jp_G_logistics_ge_15 = logistics >= 15
         ctx.jp_H_has_gandhi = (() => {
@@ -1082,6 +1083,16 @@ function esm_card_window_action(strategy, view, context) {
     const wantEvent = strategy.kind === "EVENT"
     if (strategy.kind === "PASS" && legal.includes("pass")) return { action: "pass", argument: undefined, via: strategy.name }
 
+    // AP09 注释：占领战略轰炸基地必须使用当前最大的有效攻势卡。
+    // 先选可作为 EC 的军事事件（按 LV），没有时才选最大 OC。
+    if(strategy.role==="Allies"&&strategy.name==="占领战略轰炸基地"){
+        const classified=classifyCards(hand,strategy.role)
+        const ec=classified.filter(c=>c.military&&c.eventPlayable).sort((a,b)=>b.lv-a.lv||b.ops-a.ops||a.id-b.id)
+        const oc=classified.filter(c=>c.opsPlayable).sort((a,b)=>b.ops-a.ops||a.id-b.id)
+        const chosen=ec[0]||oc[0]
+        if(chosen)return esm_set_card_pick(strategy,chosen,ec[0]?"event":"ops","AP10-S-MAX-OFFENSIVE","占领战略轰炸基地:最大有效攻势卡")
+    }
+
     // 第4/10页是每次出牌都必须重走的独立决策树，不能被当前决策轴的 CONQUEST/EVENT
     // 类型短路。返回 null 才表示图表没有给出可执行牌，继续使用战略轴的事件清单。
     const chartPick = esm_card_selection_tree(strategy, hand)
@@ -1167,9 +1178,13 @@ function esm_set_card_pick(strategy, card, intent, node, label) {
 
 function esm_card_selection_tree(strategy, hand) {
     const side=strategy.role==="Japan"?"JP":"AP", prefix=side==="JP"?"JP04":"AP10"
-    const c=classifyCards(hand,strategy.role)
+    let c=classifyCards(hand,strategy.role)
     if(!c.length)return null
-    const sortEvent=(a,b)=>b.lv-a.lv||b.ops-a.ops||a.id-b.id
+    // JP04 注释：Operation MI 除非仍在早期且执行中太平洋/外围防御，或它是唯一可用牌，否则不纳入评估。
+    if(side==="JP"&&c.length>1&&!(strategy.phase==="early"&&/中太平洋|外围防御/.test(strategy.name)))
+        c=c.filter(x=>!/^operation mi$/i.test(x.name))
+    const bonusRank=x=>x.reinforcementBonus?0:x.otherBonus?1:2
+    const sortEvent=(a,b)=>b.lv-a.lv||bonusRank(a)-bonusRank(b)||b.ops-a.ops||a.id-b.id
     const sortOps=(a,b)=>Number(a.military)-Number(b.military)||b.ops-a.ops||a.id-b.id
     const event=c.filter(x=>x.eventPlayable), ops=c.filter(x=>x.opsPlayable)
     const unres=event.filter(x=>x.unrestricted), restricted=c.filter(x=>x.restricted)
@@ -1229,9 +1244,12 @@ function classifyCards(ownHand, role) {
         else if (ownRivalry && card.isr_agreement) eventRank=3
         else if (!foeRivalry && card.isr_rivalry) eventRank=4
         else if (card.china) eventRank=5
+        const reinforcementBonus=!!(card.reinforcements||card.replacements||/reinforcement|replacement/i.test(name))
+        const otherBonus=!!(card.draw||card.logistic_alt||card.bonus)
         return {id,name,type:card.type,ops:Number(card.ops)||0,lv:Number(card.logistic)||0,
             military,restricted,unrestricted:military&&!restricted,allowed,eventPlayable:allowed.includes("event"),
-            opsPlayable:allowed.includes("ops"),futurePlayable:G.turn!==12&&allowed.includes("future_offensive"),eventRank}
+            opsPlayable:allowed.includes("ops"),futurePlayable:G.turn!==12&&allowed.includes("future_offensive"),eventRank,
+            reinforcementBonus,otherBonus}
     })
 }
 
@@ -1258,14 +1276,28 @@ function esm_event_strategy_card_pick(strategy, hand) {
     const foeRiv = (G.inter_service && G.inter_service[foe]) === 1
     const meta = c => cards[c] || {}
     const eventCapable = c => { try { return (get_allowed_actions(c) || []).includes("event") } catch (e) { return false } }
-    const pool = (hand || []).filter(eventCapable)
-    if (!pool.length) return null
+    const all = (hand || []).map(id=>({id,card:meta(id),allowed:(()=>{try{return get_allowed_actions(id)||[]}catch(e){return[]}})()}))
+    const pool = all.filter(x=>x.allowed.includes("event")).map(x=>x.id)
+    if (!all.length) return null
     const own = f => pool.filter(c => meta(c).faction === mine && f(meta(c)))
+    const choose=(ids,intent,line,i)=>{
+        if(!ids||!ids.length)return null
+        const sorted=ids.slice().sort((a,b)=>(Number(meta(a).ops)||0)-(Number(meta(b).ops)||0)||a-b)
+        return {action:"card",argument:sorted[0],intent,via:`${strategy.name}:清单#${i+1}「${line}」:${intent}`}
+    }
     for (let i = 0; i < list.length; i++) {
         const line = list[i]
         let hit = null
-        if (/结束.*ISR|ISR.*(?:结束|清除|消除)/.test(line)) {
+        let intent="event"
+        if (/欧战|欧洲战事|War in Europe/i.test(line)) {
+            const ids=all.filter(x=>x.card.wie).map(x=>x.id)
+            intent=Number(G.wie)>0?"event":"future_offensive"
+            hit=ids.filter(id=>all.find(x=>x.id===id)?.allowed.includes(intent))
+        } else if (/补员|增援|replacement|reinforcement/i.test(line)) {
+            hit=pool.filter(c=>/replacement|reinforcement/i.test(String(meta(c).name||""))||meta(c).replacements||meta(c).reinforcements)
+        } else if (/结束.*ISR|ISR.*(?:结束|清除|消除)/.test(line)) {
             if (ownRiv) hit = own(m => m.isr_agreement)            // 己方 ISR 激活时才值得打和解牌
+            else { intent="future_offensive"; hit=all.filter(x=>x.card.faction===mine&&x.card.isr_agreement&&x.allowed.includes(intent)).map(x=>x.id) }
         } else if (/造成.*ISR|引发.*ISR/.test(line)) {
             if (!foeRiv) hit = own(m => m.isr_rivalry)             // 敌方已 ISR 则重复施加无效
         } else if (/东京玫瑰|Tokyo Rose/i.test(line)) {
@@ -1275,14 +1307,19 @@ function esm_event_strategy_card_pick(strategy, hand) {
         } else if (/巴丹|Bataan|Battan/i.test(line)) {
             hit = pool.filter(c => /battan death march|bataan death march/i.test(meta(c).name))
         } else if (/天气|weather/i.test(line)) {
-            hit = pool.filter(c => /^weather$/i.test(meta(c).name))
+            const wx=all.filter(x=>/^weather$/i.test(x.card.name||""))
+            intent="future_offensive";hit=wx.filter(x=>x.allowed.includes(intent)).map(x=>x.id)
+        } else if (/东条.*1OC/i.test(line)) {
+            const tj=all.filter(x=>/tojo/i.test(x.card.name||"")); intent="ops"; hit=tj.filter(x=>x.allowed.includes(intent)).map(x=>x.id)
+        } else if (/其他.*(?:未来攻势|FOQ)|其他放牌/i.test(line)) {
+            intent="future_offensive";hit=all.filter(x=>x.allowed.includes(intent)).map(x=>x.id)
         } else {
-            hit = null    // 无可稳定判定的执行信号 -> 顺延(其他放牌等由通用兜底覆盖)
+            hit = null
         }
         if (!hit || !hit.length) continue
-        const ov = c => Number(meta(c).ops) || 0
-        const best = hit.slice().sort((a, b) => { const d = ov(a) - ov(b); return d === 0 ? a - b : d })[0]
-        return { action: "card", argument: best, via: `${strategy.name}:清单#${i + 1}「${line}」` }
+        const picked=choose(hit,intent,line,i)
+        strategy.cardIntent=intent;strategy.selectedCard=picked.argument;strategy.cardTreeNode=strategy.role==="Japan"?"JP04-S-EVENT":"AP10-S-EVENT"
+        return picked
     }
     return null
 }

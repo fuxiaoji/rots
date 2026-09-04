@@ -334,7 +334,8 @@ function evaluateTargetFeasibility(target, card, hq, view) {
     // 航空/海军，并计入其中最强一支，避免把一架飞机对现有守军刚好达标误判为完整编队。
     const reactionPool=units.filter(u=>u.faction!==roleFaction&&u.location!==target&&(u.class==="air"||u.class==="naval")
         && typeof get_distance==="function"&&get_distance(u.location,target)<=Math.max(1,Number(u.br)||Number(u.ebr)||1))
-    const potentialReactionStrength=reactionPool.reduce((m,u)=>Math.max(m,cf(u)),0)
+    // 提示板要求把所有能够反应到目标的敌军纳入伤害等级，而不是只取最强一支。
+    const potentialReactionStrength=reactionPool.reduce((s,u)=>s+cf(u),0)
     const relevantDefense=defense+potentialReactionStrength
     return {target,meta,damageLevel,legal:target!==null&&target!==undefined,coastal,defense,suppress,requiresOccupation,
         groundDefense:defenders.filter(u=>u.class==="ground").reduce((s,u)=>s+cf(u),0),
@@ -357,7 +358,18 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
     if(compositionMet&&math>=need)return {complete:true,required:need,strength:math,unit:null,
         formation:landing?"supported-amphibious-assault":f.suppress?"air-sea-strike":"minimum-sufficient",
         groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength}
-    const pool=(candidates||[]).map(id=>byId.get(id)).filter(Boolean)
+    let pool=(candidates||[]).map(id=>byId.get(id)).filter(Boolean)
+    // 第5/11页脚注：非本土/非印度 HQ 与地面单位同格时，至少保留一个未激活地面单位守卫 HQ。
+    pool=pool.filter(u=>{
+        if(u.class!=="ground")return true
+        const at=units.filter(x=>x.location===u.location&&x.faction===u.faction)
+        const hq=at.some(x=>x.class==="hq"), region=typeof get_map_data==="function"?String(get_map_data(u.location)?.region||""):""
+        if(!hq)return true
+        if(role==="Japan"&&/Japan/i.test(region))return true
+        if(role==="Allies"&&/India/i.test(region))return true
+        const unactivated=at.filter(x=>x.class==="ground"&&!active.has(x.id))
+        return unactivated.length>1
+    })
     let amphibiousPick
     if(landing&&typeof eop_pick_unit==="function")amphibiousPick=eop_pick_unit((candidates||[]),role,[...active])
     const classRank=u=>f.suppress?({air:0,naval:1,ground:2}[u.class]??3)

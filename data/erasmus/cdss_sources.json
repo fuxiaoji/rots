@@ -1,0 +1,3436 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "role": "Japan",
+      "path": "D:/downloads/日军cdss提示版翻译.docx",
+      "sha256": "02f402f20c167cab76fd18edc09a826654d9d75fbb556b957cee0f6303fd6899",
+      "paragraph_count": 259,
+      "paragraphs": [
+        {
+          "paragraph": 1,
+          "section": "page-01",
+          "text": "日本卡面1（早期阶段）"
+        },
+        {
+          "paragraph": 2,
+          "section": "page-01",
+          "text": "列表条件："
+        },
+        {
+          "paragraph": 3,
+          "section": "page-01",
+          "text": "盟军hq是否在菲律宾、马来亚和东印度，且是否断补"
+        },
+        {
+          "paragraph": 4,
+          "section": "page-01",
+          "text": "东印度投降格是否被占领"
+        },
+        {
+          "paragraph": 5,
+          "section": "page-01",
+          "text": "日本现有卡牌数是否大于等于3"
+        },
+        {
+          "paragraph": 6,
+          "section": "page-01",
+          "text": "日本控制的资源格是否小于13"
+        },
+        {
+          "paragraph": 7,
+          "section": "page-01",
+          "text": "日本控制的资源格是否大于等于13"
+        },
+        {
+          "paragraph": 8,
+          "section": "page-01",
+          "text": "后勤指数是否大于等于20"
+        },
+        {
+          "paragraph": 9,
+          "section": "page-01",
+          "text": "目前是不是第三回合或者之后"
+        },
+        {
+          "paragraph": 10,
+          "section": "page-01",
+          "text": "后勤指数是否小于等于19"
+        },
+        {
+          "paragraph": 11,
+          "section": "page-01",
+          "text": "日本的AZOI是否覆盖全部的东印度港口"
+        },
+        {
+          "paragraph": 12,
+          "section": "page-01",
+          "text": "日本是否控制Rabaul和Guadalcanal"
+        },
+        {
+          "paragraph": 13,
+          "section": "page-01",
+          "text": "日本是否控制或者有AZOI覆盖4到6个新几内亚港口"
+        },
+        {
+          "paragraph": 14,
+          "section": "page-01",
+          "text": "马来亚、菲律宾或者东印度是否有一个尚未被征服"
+        },
+        {
+          "paragraph": 15,
+          "section": "page-01",
+          "text": "周边战略防御目标1是否达成"
+        },
+        {
+          "paragraph": 16,
+          "section": "page-01",
+          "text": "图文流程"
+        },
+        {
+          "paragraph": 17,
+          "section": "page-01",
+          "text": "Aggressive air superiority strategy：激进的空军战略"
+        },
+        {
+          "paragraph": 18,
+          "section": "page-01",
+          "text": "Conservative air superiority strategy：保守的空军战略"
+        },
+        {
+          "paragraph": 19,
+          "section": "page-01",
+          "text": "Aggressive southern resource strategy：激进的南方资源战略"
+        },
+        {
+          "paragraph": 20,
+          "section": "page-01",
+          "text": "Conservative southern resource strategy：保守的南方资源战略"
+        },
+        {
+          "paragraph": 21,
+          "section": "page-01",
+          "text": "Defense perimeter strategy：周边防御战略"
+        },
+        {
+          "paragraph": 22,
+          "section": "page-01",
+          "text": "Central pacific strategy：中太平洋战略"
+        },
+        {
+          "paragraph": 23,
+          "section": "page-01",
+          "text": "CBI strategy：中缅印战略"
+        },
+        {
+          "paragraph": 24,
+          "section": "page-01",
+          "text": "Event strategy：事件战略"
+        },
+        {
+          "paragraph": 25,
+          "section": "page-01",
+          "text": "图文解释"
+        },
+        {
+          "paragraph": 26,
+          "section": "page-01",
+          "text": "Aggressive air superiority strategy：1、中和盟军hq  2、东印度投降 3、马来亚投降"
+        },
+        {
+          "paragraph": 27,
+          "section": "page-01",
+          "text": "Aggressive southern resource strategy：1、东印度投降 2、马来亚投降 3、菲律宾投降 4、1d10"
+        },
+        {
+          "paragraph": 28,
+          "section": "page-01",
+          "text": "CBIstrategy：1、缅甸投降 2、中国投降"
+        },
+        {
+          "paragraph": 29,
+          "section": "page-01",
+          "text": "Central pacific strategy：1、西北新几内亚 2、Attu/Kiska 3、防御马绍尔群岛 4、中途岛"
+        },
+        {
+          "paragraph": 30,
+          "section": "page-01",
+          "text": "Conservative air superiority strategy：1、中和盟军hq 2、东印度中和"
+        },
+        {
+          "paragraph": 31,
+          "section": "page-01",
+          "text": "Conservative southern resource strategy：1、东印度中和 2、马来亚投降 3、菲律宾投降 4、1d10"
+        },
+        {
+          "paragraph": 32,
+          "section": "page-01",
+          "text": "Defense perimeter strategy：1、澳大利亚委任地 2、新几内亚"
+        },
+        {
+          "paragraph": 33,
+          "section": "page-01",
+          "text": "Event strategy：1、使用欧洲战事如果欧洲战事为正数，否则做未来攻势 2、使用结束对立如果日本处于对立，否则做未来攻势 3、使用对立如果美国战略一致，否则做未来攻势 4、东京玫瑰做未来攻势 5、补员做未来攻势 6、天气牌做未来攻势 7、东条英机作为1oc牌使用除非打出事能使美国意志为0 8、其他事件卡在没有未来攻势卡的前提下，做未来攻势"
+        },
+        {
+          "paragraph": 34,
+          "section": "page-01",
+          "text": "澳大利亚委任地：1、Rabaul如果该地处于盟军控制 2、Guadalcanal"
+        },
+        {
+          "paragraph": 35,
+          "section": "page-01",
+          "text": "缅甸投降：1、Rangoon 2、Mandalay  3、Lashio  4、Myityina"
+        },
+        {
+          "paragraph": 36,
+          "section": "page-01",
+          "text": "中国投降：1、Lashio 2、中国攻势 3、中国事件"
+        },
+        {
+          "paragraph": 37,
+          "section": "page-01",
+          "text": "防御马绍尔群岛：1、Wake 2、Tarawa"
+        },
+        {
+          "paragraph": 38,
+          "section": "page-01",
+          "text": "东印度中和： 1、jolo 2、makassar 3、teloekbetoeng 4、bandjermasin"
+        },
+        {
+          "paragraph": 39,
+          "section": "page-01",
+          "text": "马来亚投降：1、kuantan 2、singapore"
+        },
+        {
+          "paragraph": 40,
+          "section": "page-01",
+          "text": "新几内亚：1、hollandia 2、lae 3、buna 4、biak 5、vogelkop 6、wewal 7、gili-gili 8、port Moresby"
+        },
+        {
+          "paragraph": 41,
+          "section": "page-01",
+          "text": "中立盟军hq：1、菲律宾 2、新加坡 3、ABDA"
+        },
+        {
+          "paragraph": 42,
+          "section": "page-01",
+          "text": "西北新几内亚：1、sarong 2、vogelkop 3、biak"
+        },
+        {
+          "paragraph": 43,
+          "section": "page-01",
+          "text": "菲律宾投降：1、马尼拉 2、davao"
+        },
+        {
+          "paragraph": 44,
+          "section": "page-01",
+          "text": "重要注释"
+        },
+        {
+          "paragraph": 45,
+          "section": "page-01",
+          "text": "激活必须使盟军hq失去补给"
+        },
+        {
+          "paragraph": 46,
+          "section": "page-01",
+          "text": "在能够保证存活的情况下使用一个地面单位执行两栖登录对目标格"
+        },
+        {
+          "paragraph": 47,
+          "section": "page-01",
+          "text": "如果卡牌条件允许，按照指示使用卡牌"
+        },
+        {
+          "paragraph": 48,
+          "section": "page-01",
+          "text": "战后移动一个飞机到当地如有可能，不然移动一个航母过去"
+        },
+        {
+          "paragraph": 49,
+          "section": "page-01",
+          "text": "如果欧洲战事为正数，且可用自动事件，否则按指示投骰"
+        },
+        {
+          "paragraph": 50,
+          "section": "page-01",
+          "text": "如果已被控制，则用至少3step的地面单位加固这里，其他情况则忽视该条"
+        },
+        {
+          "paragraph": 51,
+          "section": "page-01",
+          "text": "以足够的海空军力量执行作战，以消灭能AZOI覆盖敌方hq上空的海空军单位。如有必要，则占领一个基地在战后移动时可以把AZOI覆盖至敌方hq"
+        },
+        {
+          "paragraph": 52,
+          "section": "page-02",
+          "text": "日本卡面2（中期阶段）"
+        },
+        {
+          "paragraph": 53,
+          "section": "page-02",
+          "text": "当马来亚、菲律宾和东印度都投降时，或者游戏进行到第4回合或之后，使用该面流程进行游戏"
+        },
+        {
+          "paragraph": 54,
+          "section": "page-02",
+          "text": "条件列表"
+        },
+        {
+          "paragraph": 55,
+          "section": "page-02",
+          "text": "日本卡牌是否至少有3涨"
+        },
+        {
+          "paragraph": 56,
+          "section": "page-02",
+          "text": "日本是否能够进行pass"
+        },
+        {
+          "paragraph": 57,
+          "section": "page-02",
+          "text": "日本是否控制了少于13个资源格"
+        },
+        {
+          "paragraph": 58,
+          "section": "page-02",
+          "text": "后勤指数是否大于等于20"
+        },
+        {
+          "paragraph": 59,
+          "section": "page-02",
+          "text": "美国意志是否小于4"
+        },
+        {
+          "paragraph": 60,
+          "section": "page-02",
+          "text": "缅甸是否投降"
+        },
+        {
+          "paragraph": 61,
+          "section": "page-02",
+          "text": "后勤指数是否大于等于15"
+        },
+        {
+          "paragraph": 62,
+          "section": "page-02",
+          "text": "甘地牌是否能够使用"
+        },
+        {
+          "paragraph": 63,
+          "section": "page-02",
+          "text": "日本是否有比盟军更多的大军力地面单位在缅甸和北印度境内"
+        },
+        {
+          "paragraph": 64,
+          "section": "page-02",
+          "text": "后勤指数是否大于等于18"
+        },
+        {
+          "paragraph": 65,
+          "section": "page-02",
+          "text": "图文流程"
+        },
+        {
+          "paragraph": 66,
+          "section": "page-02",
+          "text": "Event strategy：事件战略"
+        },
+        {
+          "paragraph": 67,
+          "section": "page-02",
+          "text": "Resource strategy：资源战略"
+        },
+        {
+          "paragraph": 68,
+          "section": "page-02",
+          "text": "Central pacific strategy: 中太平洋战略"
+        },
+        {
+          "paragraph": 69,
+          "section": "page-02",
+          "text": "CBI strategy：中国缅甸印度战略"
+        },
+        {
+          "paragraph": 70,
+          "section": "page-02",
+          "text": "India strategy：印度战略"
+        },
+        {
+          "paragraph": 71,
+          "section": "page-02",
+          "text": "Defense perimeter strategy：周边防御战略"
+        },
+        {
+          "paragraph": 72,
+          "section": "page-02",
+          "text": "图文解释"
+        },
+        {
+          "paragraph": 73,
+          "section": "page-02",
+          "text": "CBI strategy：1、缅甸投降 2、中国投降 3、加强港口 4、印度投降 5、事件战略"
+        },
+        {
+          "paragraph": 74,
+          "section": "page-02",
+          "text": "Central pacific strategy：1、Attu/Kiska 2、wake island 3、midway 4、attack us fleet"
+        },
+        {
+          "paragraph": 75,
+          "section": "page-02",
+          "text": "Defense perimeter strategy：1、南太平洋侧翼 2、中国投降 3、加强港口 4、CBI strategy"
+        },
+        {
+          "paragraph": 76,
+          "section": "page-02",
+          "text": "Event strategy：1、使用欧洲战事如果欧洲战事为正数，否则做未来攻势 2、使用结束对立如果日本处于对立，否则做未来攻势 3、使用对立如果美国战略一致，否则做未来攻势 4、东京玫瑰做未来攻势 5、补员做未来攻势 6、天气牌做未来攻势 7、东条英机作为1oc牌使用除非打出事能使美国意志为0 8、其他事件卡在没有未来攻势卡的前提下，做未来攻势"
+        },
+        {
+          "paragraph": 77,
+          "section": "page-02",
+          "text": "India strategy：1、印度投降  2、中国投降   3、加强港口"
+        },
+        {
+          "paragraph": 78,
+          "section": "page-02",
+          "text": "Resouerce strategy：1、夺取资源格  2、新几内亚投降  3、缅甸投降  4、中国投降  5、加强港口"
+        },
+        {
+          "paragraph": 79,
+          "section": "page-02",
+          "text": "Burma surrender：1、rangoon 2、mandalay 3、lashio 4、myitkyina"
+        },
+        {
+          "paragraph": 80,
+          "section": "page-02",
+          "text": "China surrender：1、lashio 2、china offensive 3、china event"
+        },
+        {
+          "paragraph": 81,
+          "section": "page-02",
+          "text": "India surrender：1、akyab 2、imphal 3、dimasur 4、jarhat 5、ledo 6、dacca"
+        },
+        {
+          "paragraph": 82,
+          "section": "page-02",
+          "text": "New guinea surrender：1、biak 2、vogelkop 3、hollandia 4、lae 5、buna 6、wewak 7、gili-gili 8、port Moresby"
+        },
+        {
+          "paragraph": 83,
+          "section": "page-02",
+          "text": "Reinforce port：1、truk 2、rabaul 3、saipan 4、davao 5、saigon 6、eniwetok 7、kawjalein 8、palau islands 9、timor 10、kendari 11、soerabja 12、balikpapan 13、tarakan 14、rangoon 15、mandalay 16、lashio"
+        },
+        {
+          "paragraph": 84,
+          "section": "page-02",
+          "text": "Resource capture：1、seoul 2、manila 3、kuantan 4、all DEI resources 5、vogelkop 6、rangoon"
+        },
+        {
+          "paragraph": 85,
+          "section": "page-02",
+          "text": "South pacific flank：1、hollandia  2、lae  3、buna  4、biak  5、wewak 6、buin"
+        },
+        {
+          "paragraph": 86,
+          "section": "page-02",
+          "text": "Large army ground steps：只有防御大于等于12的地面单位的step才被称之为大军力地面单位step"
+        },
+        {
+          "paragraph": 87,
+          "section": "page-02",
+          "text": "注释："
+        },
+        {
+          "paragraph": 88,
+          "section": "page-02",
+          "text": "如果条件允许，按照指示顺序执行卡牌事件"
+        },
+        {
+          "paragraph": 89,
+          "section": "page-02",
+          "text": "在能够保证存活的情况下使用一个地面单位执行两栖登录对目标格"
+        },
+        {
+          "paragraph": 90,
+          "section": "page-02",
+          "text": "尽可能夺取资源格直到日本至少控制13个。按照一下优先级顺序夺取资源格：无敌军的资源格；只有海空军占据的资源格；如果有陆军占据的资源各，先打战斗力弱的，最后打战斗力强的。"
+        },
+        {
+          "paragraph": 91,
+          "section": "page-02",
+          "text": "如有可能，用AZOI覆盖这些目标。如果有些不可能，则跳过。直到所有目标被AZOI覆盖或者覆盖完能够覆盖的。"
+        },
+        {
+          "paragraph": 92,
+          "section": "page-02",
+          "text": "在指定地区放置至少一个地面单位step或者空军单位step。优先选空军，如有可能则两者都放置。"
+        },
+        {
+          "paragraph": 93,
+          "section": "page-03",
+          "text": "日本卡面3（结束阶段）"
+        },
+        {
+          "paragraph": 94,
+          "section": "page-03",
+          "text": "仅当盟军控制一个距离东京只有8格的港口时使用该卡面"
+        },
+        {
+          "paragraph": 95,
+          "section": "page-03",
+          "text": "条件列表"
+        },
+        {
+          "paragraph": 96,
+          "section": "page-03",
+          "text": "日本卡牌是至少为3"
+        },
+        {
+          "paragraph": 97,
+          "section": "page-03",
+          "text": "是否所有东京8格内的非中国港口都有驻军"
+        },
+        {
+          "paragraph": 98,
+          "section": "page-03",
+          "text": "是否所有东京5格内的空军基地（无港口）都有驻军"
+        },
+        {
+          "paragraph": 99,
+          "section": "page-03",
+          "text": "日本能否使用pass0"
+        },
+        {
+          "paragraph": 100,
+          "section": "page-03",
+          "text": "盟军是否有地面单位在本州岛"
+        },
+        {
+          "paragraph": 101,
+          "section": "page-03",
+          "text": "图文流程"
+        },
+        {
+          "paragraph": 102,
+          "section": "page-03",
+          "text": "Event strategy：事件战略"
+        },
+        {
+          "paragraph": 103,
+          "section": "page-03",
+          "text": "Final perimeter strategy：最后周边战略"
+        },
+        {
+          "paragraph": 104,
+          "section": "page-03",
+          "text": "Final defense strategy：最后防御战略"
+        },
+        {
+          "paragraph": 105,
+          "section": "page-03",
+          "text": "图文解释"
+        },
+        {
+          "paragraph": 106,
+          "section": "page-03",
+          "text": "Event strategy：1、资源 2、使用对立事件如果美军战略一致 3、使用结束对立事件如果日本isr 4、使用东京玫瑰事件 5、东条英机作为强制事件使用  6、如果不是最后一回合，天气卡作为未来攻势。 7、其他情况，如果没有未来攻势牌，则放置一张牌做未来攻势"
+        },
+        {
+          "paragraph": 107,
+          "section": "page-03",
+          "text": "Final defense strategy：1、集结军队  2、海空军支援  3、一亿玉碎"
+        },
+        {
+          "paragraph": 108,
+          "section": "page-03",
+          "text": "Final perimeter strategy：1、驻军港口 2、驻军空军基地 3、驻军日本国内港口"
+        },
+        {
+          "paragraph": 109,
+          "section": "page-03",
+          "text": "Garrison airbase：1、iwo jima 2、kyoto"
+        },
+        {
+          "paragraph": 110,
+          "section": "page-03",
+          "text": "Garrison port：1、okinawa 2、seoul 3、pusan 4、tainan 5、saipan/tinian"
+        },
+        {
+          "paragraph": 111,
+          "section": "page-03",
+          "text": "Garrison japan port：1、sasebo 2、kure 3、tokyo 4、osaka 5、nagoya 6、ominato 7、hakodate"
+        },
+        {
+          "paragraph": 112,
+          "section": "page-03",
+          "text": "注释"
+        },
+        {
+          "paragraph": 113,
+          "section": "page-03",
+          "text": "如果满足条件，按照指示顺序执行事件。如果在第12回合，绝不把牌当作未来攻势用"
+        },
+        {
+          "paragraph": 114,
+          "section": "page-03",
+          "text": "只考虑日本控制的地方去驻军"
+        },
+        {
+          "paragraph": 115,
+          "section": "page-03",
+          "text": "放置任意空军或者用海军替代在本州岛。用空军单位的AZOI去维持一条从本州岛日本hq岛日本控制的资源格的连接线"
+        },
+        {
+          "paragraph": 116,
+          "section": "page-03",
+          "text": "移动日军地面单位到盟军地面单位在本州岛格临近的格子，直到所有的临近格都被日军地面单位占据"
+        },
+        {
+          "paragraph": 117,
+          "section": "page-03",
+          "text": "尽可能在本州岛每一个可能被登录的格子里去放置1个空军或者海军单位"
+        },
+        {
+          "paragraph": 118,
+          "section": "page-03",
+          "text": "如果在本州岛的盟军地面单位的所有临近格都被日军地面单位占据，则用尽可能多的单位去进攻该盟军。如有选择，则使用战力最大可能的选择"
+        },
+        {
+          "paragraph": 119,
+          "section": "page-03",
+          "text": "在所有发生在本州岛的登陆战中，如有可能则派一个能够到达该登陆战格的海军或者空军去参加战斗。"
+        },
+        {
+          "paragraph": 120,
+          "section": "page-03",
+          "text": "战斗至最后一刻。"
+        },
+        {
+          "paragraph": 121,
+          "section": "page-04",
+          "text": "日军卡面4（卡牌抉择）"
+        },
+        {
+          "paragraph": 122,
+          "section": "page-04",
+          "text": "条件列表"
+        },
+        {
+          "paragraph": 123,
+          "section": "page-04",
+          "text": "是否有任何牌被打出在这个攻势阶段"
+        },
+        {
+          "paragraph": 124,
+          "section": "page-04",
+          "text": "现在卡牌数是否大于等于2"
+        },
+        {
+          "paragraph": 125,
+          "section": "page-04",
+          "text": "这是这场游戏要被打出的第一张牌吗"
+        },
+        {
+          "paragraph": 126,
+          "section": "page-04",
+          "text": "手上是否有“operartion igo”或者“2nd operational phase”这两张军事卡中的一张"
+        },
+        {
+          "paragraph": 127,
+          "section": "page-04",
+          "text": "是否有不受限制的军事卡事件可以被执行"
+        },
+        {
+          "paragraph": 128,
+          "section": "page-04",
+          "text": "是否有有限制的军事卡事件可以被执行"
+        },
+        {
+          "paragraph": 129,
+          "section": "page-04",
+          "text": "是否所有能被执行的军事事件卡都是有限制的且阻止对目标格的攻击或者夺取"
+        },
+        {
+          "paragraph": 130,
+          "section": "page-04",
+          "text": "是否已经选择了一张牌作未来攻势卡"
+        },
+        {
+          "paragraph": 131,
+          "section": "page-04",
+          "text": "是否东印度目标格都完成了（只在早期战略中可用）"
+        },
+        {
+          "paragraph": 132,
+          "section": "page-04",
+          "text": "是否只剩1张卡"
+        },
+        {
+          "paragraph": 133,
+          "section": "page-04",
+          "text": "仅存的能够被执行的卡是否是反应卡"
+        },
+        {
+          "paragraph": 134,
+          "section": "page-04",
+          "text": "图文流程"
+        },
+        {
+          "paragraph": 135,
+          "section": "page-04",
+          "text": "Sort cards：卡牌排序ay cards as FO：把卡牌当作未来攻势卡"
+        },
+        {
+          "paragraph": 136,
+          "section": "page-04",
+          "text": "First strike EC strategy：先手打击战略"
+        },
+        {
+          "paragraph": 137,
+          "section": "page-04",
+          "text": "Unrestricted event EC strategy：无限制EC事件战略"
+        },
+        {
+          "paragraph": 138,
+          "section": "page-04",
+          "text": "Restricted event EC strategy：有限制EC事件战略"
+        },
+        {
+          "paragraph": 139,
+          "section": "page-04",
+          "text": "Non-military event OC strategy：无军事事件OC战略"
+        },
+        {
+          "paragraph": 140,
+          "section": "page-04",
+          "text": "Restricted event OC strategy：有限制事件OC战略"
+        },
+        {
+          "paragraph": 141,
+          "section": "page-04",
+          "text": "Event strategy：事件战略"
+        },
+        {
+          "paragraph": 142,
+          "section": "page-04",
+          "text": "图文解释："
+        },
+        {
+          "paragraph": 143,
+          "section": "page-04",
+          "text": "First strike EC strategy：按照以下优先级打出能够被执行的事件 1、operation I-GO 2、2nd operation phase"
+        },
+        {
+          "paragraph": 144,
+          "section": "page-04",
+          "text": "Unrestricted event EC strategy：挑选LV最高的卡牌去执行，如果在此前提下其中混有奖励事件，那么优先选择伞兵奖励事件，然后选择非伞兵奖励事件，最后选择无奖励事件"
+        },
+        {
+          "paragraph": 145,
+          "section": "page-04",
+          "text": "Restricted event EC strategy：挑选LV最高的卡牌去执行，如果在此前提下其中混有奖励事件，优先选择奖励事件，然后选择无奖励事件。如果都是相同的有无奖励，则随机选择"
+        },
+        {
+          "paragraph": 146,
+          "section": "page-04",
+          "text": "Event strategy：按照以下优先级执行能够被执行的事件。1、欧洲战事  2、补员事件  3、结束isr事件 4、美军isr事件  5、其他事件（随机）"
+        },
+        {
+          "paragraph": 147,
+          "section": "page-04",
+          "text": "Non-military event OC strategy：挑选最高OC值的卡牌执行"
+        },
+        {
+          "paragraph": 148,
+          "section": "page-04",
+          "text": "Restricted event OC strategy：挑选最高OC值的卡牌去执行，除非剩下的都是军事牌已经没有非军事牌可以选择，这种情况下随机选择OC牌"
+        },
+        {
+          "paragraph": 149,
+          "section": "page-04",
+          "text": "Unrestricted military event：一张军事卡没有海空军数量的激活限制，也没有战斗格场地限制。对hq的激活限制不包括在内"
+        },
+        {
+          "paragraph": 150,
+          "section": "page-04",
+          "text": "Restricted military event：一张军事卡有海军陆激活数量的限制，或者有对战斗格有场地限制。对hq的激活限制不包括在内"
+        },
+        {
+          "paragraph": 151,
+          "section": "page-04",
+          "text": "注释："
+        },
+        {
+          "paragraph": 152,
+          "section": "page-04",
+          "text": "按照从左到右的顺序排序卡牌：军事牌，反应牌，资源牌，政治牌。最好再挑选出2张最好的事件按照以下顺序，东京玫瑰，东条英机，欧洲战事，结束日本isr，开始美国isr，补员牌，天气牌。对于其他的事件则随机选择。"
+        },
+        {
+          "paragraph": 153,
+          "section": "page-04",
+          "text": "对于这些评估的目的，operation MI 不应该在被选择的范围内，除非日本仍处于早期阶段以及日军战略为中太平洋战略或者周边防御战略，或者前面都不是，而是这是仅剩的最后一张能被打出的牌去实现目标要求。"
+        },
+        {
+          "paragraph": 154,
+          "section": "page-04",
+          "text": "使用按照攻势阶段开始时卡牌排序后的第一张牌。"
+        },
+        {
+          "paragraph": 155,
+          "section": "page-05",
+          "text": "日本卡面5（任务部队的组成）"
+        },
+        {
+          "paragraph": 156,
+          "section": "page-05",
+          "text": "条件列表"
+        },
+        {
+          "paragraph": 157,
+          "section": "page-05",
+          "text": "这是海军空对该目标格的攻击吗"
+        },
+        {
+          "paragraph": 158,
+          "section": "page-05",
+          "text": "该目标格是否为海岸或者岛屿"
+        },
+        {
+          "paragraph": 159,
+          "section": "page-05",
+          "text": "能否通过地面进攻夺取该目标格"
+        },
+        {
+          "paragraph": 160,
+          "section": "page-05",
+          "text": "该目标格是否没有敌方单位"
+        },
+        {
+          "paragraph": 161,
+          "section": "page-05",
+          "text": "该目标格是否只有敌方的海军单位"
+        },
+        {
+          "paragraph": 162,
+          "section": "page-05",
+          "text": "地面单位是否有可能进入并另开该目标格"
+        },
+        {
+          "paragraph": 163,
+          "section": "page-05",
+          "text": "该目标格是否是一个潜在的SR格"
+        },
+        {
+          "paragraph": 164,
+          "section": "page-05",
+          "text": "敌方空军或者航母有可能对该目标格做出反应吗"
+        },
+        {
+          "paragraph": 165,
+          "section": "page-05",
+          "text": "是否有足够的激活点数去满足战斗支援的标准（Battle Support Criteria）"
+        },
+        {
+          "paragraph": 166,
+          "section": "page-05",
+          "text": "该目标格的伤害等级达到了吗"
+        },
+        {
+          "paragraph": 167,
+          "section": "page-05",
+          "text": "敌人的海军或者地面部队能对该目标格做出反应吗"
+        },
+        {
+          "paragraph": 168,
+          "section": "page-05",
+          "text": "这是一个EC攻势吗"
+        },
+        {
+          "paragraph": 169,
+          "section": "page-05",
+          "text": "这是最后一个投降格吗"
+        },
+        {
+          "paragraph": 170,
+          "section": "page-05",
+          "text": "图文流程"
+        },
+        {
+          "paragraph": 171,
+          "section": "page-05",
+          "text": "Air Raid：空袭"
+        },
+        {
+          "paragraph": 172,
+          "section": "page-05",
+          "text": "Ground attack with air support：有空军支援的地面单位进攻"
+        },
+        {
+          "paragraph": 173,
+          "section": "page-05",
+          "text": "March into the target：进入该目标格"
+        },
+        {
+          "paragraph": 174,
+          "section": "page-05",
+          "text": "Ground attack with air/naval support：有海空军支援的地面单位进攻"
+        },
+        {
+          "paragraph": 175,
+          "section": "page-05",
+          "text": "Unsupported invasion：无支援入侵"
+        },
+        {
+          "paragraph": 176,
+          "section": "page-05",
+          "text": "Invasion with naval support：有海军支援的入侵"
+        },
+        {
+          "paragraph": 177,
+          "section": "page-05",
+          "text": "Invasion with air/naval support：有海空军支援的入侵"
+        },
+        {
+          "paragraph": 178,
+          "section": "page-05",
+          "text": "Active units for the target：为目标格激活单位"
+        },
+        {
+          "paragraph": 179,
+          "section": "page-05",
+          "text": "Execute air/naval attack against weakest stack：执行最弱战斗里的海空军进攻"
+        },
+        {
+          "paragraph": 180,
+          "section": "page-05",
+          "text": "Move activated units to the target：移动激活单位去目标格"
+        },
+        {
+          "paragraph": 181,
+          "section": "page-05",
+          "text": "Consider performing a smothering attack（see CDSS）：考虑执行窒息攻势（详情参见CDSS）"
+        },
+        {
+          "paragraph": 182,
+          "section": "page-05",
+          "text": "Activate more units with extra activations：用额外的激活点数激活更多的单位"
+        },
+        {
+          "paragraph": 183,
+          "section": "page-05",
+          "text": "Create a new force for the next target：为下一个目标格创造任务部队"
+        },
+        {
+          "paragraph": 184,
+          "section": "page-05",
+          "text": "图文解释"
+        },
+        {
+          "paragraph": 185,
+          "section": "page-05",
+          "text": "Air raid：由空军、海军、航母组成。当挑选单位时，尽量使空军与非空军相等"
+        },
+        {
+          "paragraph": 186,
+          "section": "page-05",
+          "text": "Ground attack with air support：由陆军、空军、航母组成（要在能够支援的范围内）"
+        },
+        {
+          "paragraph": 187,
+          "section": "page-05",
+          "text": "Ground attack with air/naval support：由陆军、海军、空军、航母组成"
+        },
+        {
+          "paragraph": 188,
+          "section": "page-05",
+          "text": "Invasion with air/naval support:由空军、海军、陆军两栖作战部队、航母组成"
+        },
+        {
+          "paragraph": 189,
+          "section": "page-05",
+          "text": "Invasion with naval support：由海军、陆军两栖作战部队、航母组成"
+        },
+        {
+          "paragraph": 190,
+          "section": "page-05",
+          "text": "Unsupported invasion：由陆军两栖作战部队组成"
+        },
+        {
+          "paragraph": 191,
+          "section": "page-05",
+          "text": "Overland advance/AA rules：潜在的地面进攻部队必须有足够的战斗力，以1倍伤战斗结果夺取目标格以及在敌人打出2倍伤的前提下能至少存活1step的地面单位。敌人潜在的两栖登陆反应和来自陆地足够mp移动反应的敌方的地面战斗部队也被计算在内。"
+        },
+        {
+          "paragraph": 192,
+          "section": "page-05",
+          "text": "Damage level：战斗力乘倍数，即损伤敌方在目标格的战斗部队。一个1倍伤的结果表明你需要大于等于以至于1倍伤的结果就能消灭敌方部队的部队。地面战斗请看（Overland advance/AA rules）。如果没有指明目标格的数值，则使用地面战斗使用1倍伤，海空军战斗使用0.5倍伤"
+        },
+        {
+          "paragraph": 193,
+          "section": "page-05",
+          "text": "Battle support criteria：air raid，不需要啥条件，自动视作成功；ground attacks，至少要一个空军单位或者海军单位；naval invasion，至少一个海军单位；air/naval invasion，至少要一个空军单位再搭配一个海军单位，或者就一个航母也可"
+        },
+        {
+          "paragraph": 194,
+          "section": "page-05",
+          "text": "注释"
+        },
+        {
+          "paragraph": 195,
+          "section": "page-05",
+          "text": "为每一个因为AoD表被选择的目标格创造任务部队。如果OC攻势和1格战斗格已经被指定，只考虑未被占领的目标格，然后两张牌的组合能够放置更多的陆空军单位，海军单位则移动去能够接近下一个最高优先级目标格的格子"
+        },
+        {
+          "paragraph": 196,
+          "section": "page-05",
+          "text": "激活一个地面单位去经过这个格子。如果敌方海军单位占据了这个格子，则地面单位进入目标格后再离开该格以避免形成战斗格。注意，如有必要，这个地面单位是可以再次使用的，如果有足够的mp用以地面进攻（overland advance）夺取其他目标格。"
+        },
+        {
+          "paragraph": 197,
+          "section": "page-05",
+          "text": "按照所选策略的任务部队种类，激活目标范围内能达成伤害等级（Damage level）条件的最小数量单位。如果敌人可以进行反应，还需要考虑敌方可能的反应部队，并把其计算在伤害等级条件中"
+        },
+        {
+          "paragraph": 198,
+          "section": "page-05",
+          "text": "对于占据非日本的岛屿的hq格上的地面单位，他们至少有一个不能被激活，因为他们需要保护hq"
+        },
+        {
+          "paragraph": 199,
+          "section": "page-05",
+          "text": "激活一个地面单位通过两栖登陆去入侵目标格。如果可以的话，使用海上战略运输，以这种方式激活一个伴随的海军单位，如果不行则使用ASP。如果没有ASP点数可用了，则跳过该目标。"
+        },
+        {
+          "paragraph": 200,
+          "section": "page-05",
+          "text": "夺取（capture）在这里的意思是指通过在指定的战斗中能对对方造成的step损失多于对方对自己造成的step损失而达成胜利，将对方击退而自己占领该目标格。这意味着根据这个Erasmus表格，进攻方投骰的结果要大于等于上述的条件，而防御方的投骰结果要小于等于上述的条件"
+        },
+        {
+          "paragraph": 201,
+          "section": "page-05",
+          "text": "如果按照Erasmus表格必须让对方单位撤退，那么将按照相应的撤退规则进行，其撤退的顺序是先从最弱的开始，最后是最强的。"
+        },
+        {
+          "paragraph": 202,
+          "section": "page-05",
+          "text": "如果反应有可能，轮流按照海军、空军的顺序增加其单位到每个AoD表格最高优先级的投降格。否则则激活空军去进攻敌人的空军，然后是海军，最后是陆军。"
+        },
+        {
+          "paragraph": 203,
+          "section": "page-06",
+          "text": "日本卡面6（反应和战后移动）"
+        },
+        {
+          "paragraph": 204,
+          "section": "page-06",
+          "text": "反应"
+        },
+        {
+          "paragraph": 205,
+          "section": "page-06",
+          "text": "条件列表："
+        },
+        {
+          "paragraph": 206,
+          "section": "page-06",
+          "text": "是否有能过执行的天气牌"
+        },
+        {
+          "paragraph": 207,
+          "section": "page-06",
+          "text": "是否满足天气牌的条件（weather card criteria）"
+        },
+        {
+          "paragraph": 208,
+          "section": "page-06",
+          "text": "是否存在SR情况"
+        },
+        {
+          "paragraph": 209,
+          "section": "page-06",
+          "text": "是否有战斗格"
+        },
+        {
+          "paragraph": 210,
+          "section": "page-06",
+          "text": "战斗格是否在有补给的HQ的指挥范围内"
+        },
+        {
+          "paragraph": 211,
+          "section": "page-06",
+          "text": "能否使用JN-25这张反应牌"
+        },
+        {
+          "paragraph": 212,
+          "section": "page-06",
+          "text": "是否有反攻反应卡可以使用"
+        },
+        {
+          "paragraph": 213,
+          "section": "page-06",
+          "text": "是否至少满足一个战斗格的反应部队条件（reaction force criteria）"
+        },
+        {
+          "paragraph": 214,
+          "section": "page-06",
+          "text": "东印度和防御战略投降格是否满足（仅适用日本早期阶段）"
+        },
+        {
+          "paragraph": 215,
+          "section": "page-06",
+          "text": "是否有神风特攻队这张牌以及满足神风特攻的条件（kamikaze attack criteria）"
+        },
+        {
+          "paragraph": 216,
+          "section": "page-06",
+          "text": "潜艇攻击卡可以使用吗"
+        },
+        {
+          "paragraph": 217,
+          "section": "page-06",
+          "text": "是否至少有一个敌军单位可以满足潜艇攻击卡的具体条件"
+        },
+        {
+          "paragraph": 218,
+          "section": "page-06",
+          "text": "图文流程"
+        },
+        {
+          "paragraph": 219,
+          "section": "page-06",
+          "text": "Roll for each SR：为每个SR进行投骰"
+        },
+        {
+          "paragraph": 220,
+          "section": "page-06",
+          "text": "Play weather reaction card：使用天气反应卡"
+        },
+        {
+          "paragraph": 221,
+          "section": "page-06",
+          "text": "Play intel-CO reaction card：使用情报反应卡"
+        },
+        {
+          "paragraph": 222,
+          "section": "page-06",
+          "text": "Play kamikaze attack card：使用神风特攻队卡"
+        },
+        {
+          "paragraph": 223,
+          "section": "page-06",
+          "text": "Reaction strategy：反应战略"
+        },
+        {
+          "paragraph": 224,
+          "section": "page-06",
+          "text": "Play submarine attack card：使用潜艇攻击卡"
+        },
+        {
+          "paragraph": 225,
+          "section": "page-06",
+          "text": "Excute PBM if applicable：如果适用，则执行战后移动"
+        },
+        {
+          "paragraph": 226,
+          "section": "page-06",
+          "text": "图文解释"
+        },
+        {
+          "paragraph": 227,
+          "section": "page-06",
+          "text": "Reaction strategy：反应部队到战斗格，满足以下优先级排序。日本hq；资源格；港口；空军基地；其他"
+        },
+        {
+          "paragraph": 228,
+          "section": "page-06",
+          "text": "Recation force criteria：在满足以下条件下，激活最少的单位去反应。海空军联合兵力是敌人的1倍或者以上；我方空军单位数量要等于对方空军单位的数量；投1d10，如果为0到4，地面单位则在2倍伤的结果之下能够消灭敌方地面单位，如果结果为5到9则无条件限制"
+        },
+        {
+          "paragraph": 229,
+          "section": "page-06",
+          "text": "Kamikaze attack criteria：如果有一个战斗格能够使用神风特攻队卡，在满足以下条件的情况下可用。至少一个盟军的BB和CV可以被击中；可以损失非不可补员的空军单位的step"
+        },
+        {
+          "paragraph": 230,
+          "section": "page-06",
+          "text": "Weather card criteria：投1d10，如果结果小于盟军激活数量的两倍，则使用天气卡。如果攻势卡是一个奇袭（surprise）卡，骰点结果减2"
+        },
+        {
+          "paragraph": 231,
+          "section": "page-06",
+          "text": "战后移动（PBM）"
+        },
+        {
+          "paragraph": 232,
+          "section": "page-06",
+          "text": "条件列表"
+        },
+        {
+          "paragraph": 233,
+          "section": "page-06",
+          "text": "空军单位能否PBM"
+        },
+        {
+          "paragraph": 234,
+          "section": "page-06",
+          "text": "海军单位能否PBM"
+        },
+        {
+          "paragraph": 235,
+          "section": "page-06",
+          "text": "失败的两栖作战地面单位能否PBM"
+        },
+        {
+          "paragraph": 236,
+          "section": "page-06",
+          "text": "图文流程"
+        },
+        {
+          "paragraph": 237,
+          "section": "page-06",
+          "text": "Air PBM strategy：空军战后移动战略"
+        },
+        {
+          "paragraph": 238,
+          "section": "page-06",
+          "text": "Naval PBM strategy：海军战后移动战略"
+        },
+        {
+          "paragraph": 239,
+          "section": "page-06",
+          "text": "AA PBM strategy：两栖作战后移动退战略"
+        },
+        {
+          "paragraph": 240,
+          "section": "page-06",
+          "text": "图文解释"
+        },
+        {
+          "paragraph": 241,
+          "section": "page-06",
+          "text": "Air PBM strategy：撤退到我方的空军基地以产生AZOI覆盖来满足以下优先级：1、没有AZOI覆盖的处在非日本岛的日军HQ；2、盟军HQ；3、有盟军AZOI覆盖的日军的港口；4、被盟军AZOI覆盖的日军空军基地；5、被盟军AZOI覆盖的日军地面单位；6、最近的资源格（不管是日军控制还是盟军控制）"
+        },
+        {
+          "paragraph": 242,
+          "section": "page-06",
+          "text": "Naval PBM strategy：按照以下优先级移动海军到我方控制的港口。1、如果南海HQ指挥范围内没有海军单位的话，则移动到其指挥范围内的港口；2、仅有陆军单位的港口格；3、最近的港口"
+        },
+        {
+          "paragraph": 243,
+          "section": "page-06",
+          "text": "AA PBM strategy：按照以下优先级移动两栖作战失败的地面单位到我方控制的港口格。1、有海军单位的港口格；2、最近的港口"
+        },
+        {
+          "paragraph": 244,
+          "section": "page-06",
+          "text": "注释"
+        },
+        {
+          "paragraph": 245,
+          "section": "page-06",
+          "text": "如果有选择，先使用JN-25情报牌，再使用反攻卡"
+        },
+        {
+          "paragraph": 246,
+          "section": "page-06",
+          "text": "如果有多个敌方单位可选，则按照CV、BB、CA、DD的顺序选择，然后在同类型中选择防御力最高的。"
+        },
+        {
+          "paragraph": 247,
+          "section": "page-06",
+          "text": "如果多个战斗格可被选择，使用反应战略（reaction strategy）的优先级顺序去选择一个战斗格"
+        },
+        {
+          "paragraph": 248,
+          "section": "page-06",
+          "text": "在计算2step损失时，按照CV、BB、CA、DD的顺序执行损失。然后在同类型中，选择防御力最高的"
+        },
+        {
+          "paragraph": 249,
+          "section": "page-06",
+          "text": "如果有多个具有相同优先级的战斗格可选，则随机选择以确定顺序"
+        },
+        {
+          "paragraph": 250,
+          "section": "page-06",
+          "text": "在满足第二优先级前先要满足第一优先级，在满足第三优先级前要满足第二优先级，一次类推"
+        },
+        {
+          "paragraph": 251,
+          "section": "page-06",
+          "text": "如果不可能满足特定战斗格的条件，则跳过，看下一个优先级的战斗格知道没有更多的战斗格可以被反应"
+        },
+        {
+          "paragraph": 252,
+          "section": "page-06",
+          "text": "“Avaible”意思是除了手里拥有这张牌之外，还必须没有达到一回合最多抓3张牌的奖励限制"
+        },
+        {
+          "paragraph": 253,
+          "section": "page-06",
+          "text": "如果存在特定战略的PMB（在应用这个表之前），先应用特定战略的PMB"
+        },
+        {
+          "paragraph": 254,
+          "section": "page-06",
+          "text": "如果一个优先级里的可选项都被日军AZOI所覆盖，则跳过该优先级看下一个"
+        },
+        {
+          "paragraph": 255,
+          "section": "page-06",
+          "text": "如果有很多可用的空军基地，则优先选择能尽可能完成多格优先级任务的空军基地格"
+        },
+        {
+          "paragraph": 256,
+          "section": "page-06",
+          "text": "每个空军基地不超过一个空军单位"
+        },
+        {
+          "paragraph": 257,
+          "section": "page-06",
+          "text": "选择最强的空军单位"
+        },
+        {
+          "paragraph": 258,
+          "section": "page-06",
+          "text": "如果有多个资源格可选，优先选择最近的资源格，然后按照从近到远的顺序选择"
+        },
+        {
+          "paragraph": 259,
+          "section": "page-06",
+          "text": "如果反应卡有抓牌奖励加成，则骰点减4"
+        }
+      ]
+    },
+    {
+      "role": "Allies",
+      "path": "D:/downloads/盟军cdss提示板翻译.docx",
+      "sha256": "1db2fa688cbe75ba0af375589ed81f5d6875a180385fd8f56c9c2d9b958548e2",
+      "paragraph_count": 424,
+      "paragraphs": [
+        {
+          "paragraph": 1,
+          "section": "page-12",
+          "text": "盟军伊拉斯谟机器人（早期阶段决策轴）"
+        },
+        {
+          "paragraph": 2,
+          "section": "page-12",
+          "text": "条件列表："
+        },
+        {
+          "paragraph": 3,
+          "section": "page-12",
+          "text": "盟军是否拥有大于等于3的卡牌数量？"
+        },
+        {
+          "paragraph": 4,
+          "section": "page-12",
+          "text": "盟军在菲律宾[4]是否拥有有补给的指挥部？"
+        },
+        {
+          "paragraph": 5,
+          "section": "page-12",
+          "text": "盟军在马来亚[4]是否拥有有补给的指挥部？"
+        },
+        {
+          "paragraph": 6,
+          "section": "page-12",
+          "text": "阿卡迪亚会议#4是否已经作为事件打出？"
+        },
+        {
+          "paragraph": 7,
+          "section": "page-12",
+          "text": "是否已经建立起了中缅印防御措施？"
+        },
+        {
+          "paragraph": 8,
+          "section": "page-12",
+          "text": "盟军是否拥有大于等于1的跳过？"
+        },
+        {
+          "paragraph": 9,
+          "section": "page-12",
+          "text": "盟军是否只剩下一张卡牌？"
+        },
+        {
+          "paragraph": 10,
+          "section": "page-12",
+          "text": "这是否是本回合打出的最后一张盟军卡牌？"
+        },
+        {
+          "paragraph": 11,
+          "section": "page-12",
+          "text": "本回合是否是3回合或之后？"
+        },
+        {
+          "paragraph": 12,
+          "section": "page-12",
+          "text": "菲律宾是否尚未投降？"
+        },
+        {
+          "paragraph": 13,
+          "section": "page-12",
+          "text": "盟军内部军种是否处于战略一致状态？"
+        },
+        {
+          "paragraph": 14,
+          "section": "page-12",
+          "text": "盟军是否在地图上拥有着两支及以上的航空母舰舰队？"
+        },
+        {
+          "paragraph": 15,
+          "section": "page-12",
+          "text": "盟军是否拥有着一支在已控制的菲律宾港口15格范围以内的与一支航空母舰舰队堆叠的美国陆军单位？"
+        },
+        {
+          "paragraph": 16,
+          "section": "page-12",
+          "text": "澳大利亚与莫尔兹比港是否免受日本地面单位的攻击？"
+        },
+        {
+          "paragraph": 17,
+          "section": "page-12",
+          "text": "荷兰东印度群岛是否尚未投降？"
+        },
+        {
+          "paragraph": 18,
+          "section": "page-12",
+          "text": "ABDA指挥部是否已经部署并且有补给？"
+        },
+        {
+          "paragraph": 19,
+          "section": "page-12",
+          "text": "图例详解："
+        },
+        {
+          "paragraph": 20,
+          "section": "page-12",
+          "text": "CBI Defense Enhancement[3]：增强中缅印防御措施[3]"
+        },
+        {
+          "paragraph": 21,
+          "section": "page-12",
+          "text": "1 Ind Corp 前往仰光(Rangoo)"
+        },
+        {
+          "paragraph": 22,
+          "section": "page-12",
+          "text": "B Ind Div 前往阿恰布(Akyab)"
+        },
+        {
+          "paragraph": 23,
+          "section": "page-12",
+          "text": "66 Army 前往腊戍(Lashio)"
+        },
+        {
+          "paragraph": 24,
+          "section": "page-12",
+          "text": "6 Army 前往曼德勒(Mandalay)"
+        },
+        {
+          "paragraph": 25,
+          "section": "page-12",
+          "text": "5 Army 前往密支那(Myitkyina)"
+        },
+        {
+          "paragraph": 26,
+          "section": "page-12",
+          "text": "Burma Division 前往英帕尔(Imphal)"
+        },
+        {
+          "paragraph": 27,
+          "section": "page-12",
+          "text": "DEI Defense：荷兰东印度群岛防御措施"
+        },
+        {
+          "paragraph": 28,
+          "section": "page-12",
+          "text": "派遣一支英联邦或美国的陆军前往ABDA指挥部所占据的港口"
+        },
+        {
+          "paragraph": 29,
+          "section": "page-12",
+          "text": "Establish ABDA Command[1]：建立ABDA指挥部[1]"
+        },
+        {
+          "paragraph": 30,
+          "section": "page-12",
+          "text": "芝拉札(Tjilatjap)"
+        },
+        {
+          "paragraph": 31,
+          "section": "page-12",
+          "text": "肯达里(Kendari)"
+        },
+        {
+          "paragraph": 32,
+          "section": "page-12",
+          "text": "巴厘巴板(Balikpapan)"
+        },
+        {
+          "paragraph": 33,
+          "section": "page-12",
+          "text": "苏腊巴亚(Soerabaja)"
+        },
+        {
+          "paragraph": 34,
+          "section": "page-12",
+          "text": "打拉根(Tarakan)"
+        },
+        {
+          "paragraph": 35,
+          "section": "page-12",
+          "text": "Evacuate Malaya：疏散马来亚军队"
+        },
+        {
+          "paragraph": 36,
+          "section": "page-12",
+          "text": "8 Aus Div 前往肯达里(Kendari)"
+        },
+        {
+          "paragraph": 37,
+          "section": "page-12",
+          "text": "MA air 前往巴邻旁(Palembang)"
+        },
+        {
+          "paragraph": 38,
+          "section": "page-12",
+          "text": "Evacuate the Philippines：疏散菲律宾军队"
+        },
+        {
+          "paragraph": 39,
+          "section": "page-12",
+          "text": "P Bde 前往比亚克(Biak)"
+        },
+        {
+          "paragraph": 40,
+          "section": "page-12",
+          "text": "R Corps 前往肯达里(Kendari)"
+        },
+        {
+          "paragraph": 41,
+          "section": "page-12",
+          "text": "[SL] Corps 前往马尼拉(Manila)"
+        },
+        {
+          "paragraph": 42,
+          "section": "page-12",
+          "text": "[FEAF] 前往马尼拉(Manila)"
+        },
+        {
+          "paragraph": 43,
+          "section": "page-12",
+          "text": "[19 LRB] 前往帝汶(Timor)"
+        },
+        {
+          "paragraph": 44,
+          "section": "page-12",
+          "text": "Event Strategy[2]：事件战略[2]"
+        },
+        {
+          "paragraph": 45,
+          "section": "page-12",
+          "text": "作为事件打出欧洲战事。"
+        },
+        {
+          "paragraph": 46,
+          "section": "page-12",
+          "text": "如果盟军处于内部军种对立状态，打出结束内部军种对立的事件卡，否则用作未来攻势卡。"
+        },
+        {
+          "paragraph": 47,
+          "section": "page-12",
+          "text": "任何时间打出开始日军内部军种对立事件卡用以抽牌。"
+        },
+        {
+          "paragraph": 48,
+          "section": "page-12",
+          "text": "杜立特空袭。"
+        },
+        {
+          "paragraph": 49,
+          "section": "page-12",
+          "text": "如果能够触发效果则打出巴丹死亡行军，否则用作未来攻势卡。"
+        },
+        {
+          "paragraph": 50,
+          "section": "page-12",
+          "text": "其他：如果没有未来攻势卡则将一张当下无法触发效果的事件牌用作未来事件卡。"
+        },
+        {
+          "paragraph": 51,
+          "section": "page-12",
+          "text": "发动攻势。"
+        },
+        {
+          "paragraph": 52,
+          "section": "page-12",
+          "text": "Plan Orange：橙色计划"
+        },
+        {
+          "paragraph": 53,
+          "section": "page-12",
+          "text": "通过战略移动将一支有航空母舰护航的美国陆军军团派往莱特岛(Leyte)。航空母舰停留在港口中。"
+        },
+        {
+          "paragraph": 54,
+          "section": "page-12",
+          "text": "如果莱特岛(Leyte)被日军控制则通过战略移动将一支有航空母舰护航的美国陆军军团派往马尼拉(Manila)。"
+        },
+        {
+          "paragraph": 55,
+          "section": "page-12",
+          "text": "Offensive Attack：发动攻势"
+        },
+        {
+          "paragraph": 56,
+          "section": "page-12",
+          "text": "如果没有战略目标可以被达成，则发动一次海空战以1x的伤害水平进攻最弱的日军单位。单位优先级先是空军，然后是空军及海军，最后是海军。"
+        },
+        {
+          "paragraph": 57,
+          "section": "page-12",
+          "text": "如果日军反应能够消灭最后的航空母舰单位（或者是海军单位，如果已经没有航母了），就使一支航空母舰单位（或海军单位）脱离发动的攻势。"
+        },
+        {
+          "paragraph": 58,
+          "section": "page-12",
+          "text": "CBI Defense Criteria：中缅印防御措施标准"
+        },
+        {
+          "paragraph": 59,
+          "section": "page-12",
+          "text": "当所有增强中缅印防御措施战略中的单位已经被移动到他们的防御位置时，视作中缅印防御措施已经被建立起来。忽略已经被消灭的单位。"
+        },
+        {
+          "paragraph": 60,
+          "section": "page-12",
+          "text": "注释："
+        },
+        {
+          "paragraph": 61,
+          "section": "page-12",
+          "text": "打出阿卡迪亚会议#4，然后将ABDA指挥部放置在表格中首个有效港口上。"
+        },
+        {
+          "paragraph": 62,
+          "section": "page-12",
+          "text": "如果卡牌和情况都存在，以列表顺序打出事件牌。（Wie = War in Europe欧陆战事, ISR = Inter Service Rivalry内部军种对立, FoQ = Future Offensives Queue未来攻势队列）"
+        },
+        {
+          "paragraph": 63,
+          "section": "page-12",
+          "text": "以优先级顺序激活指定单位前往目标地点直到用尽单位移动力或激活点数。"
+        },
+        {
+          "paragraph": 64,
+          "section": "page-12",
+          "text": "如果所有的单位都被移动到他们的目的地，则判定这个条件为否。"
+        },
+        {
+          "paragraph": 65,
+          "section": "page-12",
+          "text": "盟军伊拉斯谟机器人（中期阶段决策轴）"
+        },
+        {
+          "paragraph": 66,
+          "section": "page-12",
+          "text": "（这张表只适用于于回合4到回合8并且塞班岛没有被占领的情况，否则使用早期阶段表）"
+        },
+        {
+          "paragraph": 67,
+          "section": "page-12",
+          "text": "条件表格："
+        },
+        {
+          "paragraph": 68,
+          "section": "page-12",
+          "text": "盟军是否拥有一个可以使用的pass？"
+        },
+        {
+          "paragraph": 69,
+          "section": "page-12",
+          "text": "盟军是否需要满足战争进程要求？"
+        },
+        {
+          "paragraph": 70,
+          "section": "page-12",
+          "text": "盟军是否拥有大于等于3的卡牌数量？"
+        },
+        {
+          "paragraph": 71,
+          "section": "page-12",
+          "text": "日军是否控制着至少一个反攻目标？"
+        },
+        {
+          "paragraph": 72,
+          "section": "page-12",
+          "text": "图例详解："
+        },
+        {
+          "paragraph": 73,
+          "section": "page-12",
+          "text": "South Pacific Strategy：南太平洋战略"
+        },
+        {
+          "paragraph": 74,
+          "section": "page-12",
+          "text": "指挥部：如果英联邦需要完成一个战略目标，使用ANZAC，否则使用SW指挥部。"
+        },
+        {
+          "paragraph": 75,
+          "section": "page-12",
+          "text": "瓜达尔卡纳尔(Guadalcanal)"
+        },
+        {
+          "paragraph": 76,
+          "section": "page-12",
+          "text": "吉利吉利(Gili-Gili)"
+        },
+        {
+          "paragraph": 77,
+          "section": "page-12",
+          "text": "莫尔兹比港(Port Moresby)"
+        },
+        {
+          "paragraph": 78,
+          "section": "page-12",
+          "text": "布纳(Buna)"
+        },
+        {
+          "paragraph": 79,
+          "section": "page-12",
+          "text": "莱城(Lae)"
+        },
+        {
+          "paragraph": 80,
+          "section": "page-12",
+          "text": "新乔治亚(New Georgia)"
+        },
+        {
+          "paragraph": 81,
+          "section": "page-12",
+          "text": "布干维尔(Bougainville)"
+        },
+        {
+          "paragraph": 82,
+          "section": "page-12",
+          "text": "加斯马塔(Gasmata)或拉包尔[6](Rabaul)"
+        },
+        {
+          "paragraph": 83,
+          "section": "page-12",
+          "text": "马当(Madang)"
+        },
+        {
+          "paragraph": 84,
+          "section": "page-12",
+          "text": "威瓦克(Wewak)"
+        },
+        {
+          "paragraph": 85,
+          "section": "page-12",
+          "text": "艾塔佩(Aitape)"
+        },
+        {
+          "paragraph": 86,
+          "section": "page-12",
+          "text": "阿德米勒尔蒂群岛(Admiralty Islands)"
+        },
+        {
+          "paragraph": 87,
+          "section": "page-12",
+          "text": "荷兰迪亚(Hollandia)"
+        },
+        {
+          "paragraph": 88,
+          "section": "page-12",
+          "text": "比亚克(Biak)"
+        },
+        {
+          "paragraph": 89,
+          "section": "page-12",
+          "text": "索龙(Sarong)"
+        },
+        {
+          "paragraph": 90,
+          "section": "page-12",
+          "text": "鸟头半岛(Vogelkop)"
+        },
+        {
+          "paragraph": 91,
+          "section": "page-12",
+          "text": "Counter-Offensive Strategy：反攻战略"
+        },
+        {
+          "paragraph": 92,
+          "section": "page-12",
+          "text": "反攻目标。按列表顺序占领所有目标。"
+        },
+        {
+          "paragraph": 93,
+          "section": "page-12",
+          "text": "有些目标可能被指定只能通过陆地移动来占领（不将有效的两栖运输点数纳入考虑）。其他目标可能被指定了占领倾向，但也允许其它供替代的选择。"
+        },
+        {
+          "paragraph": 94,
+          "section": "page-12",
+          "text": "使用特遣部队编成表来判定一个目标可否被占领（也就是，是否有足够的两栖登陆点数或相邻的陆地单位来满足一场攻势的标准）。否则这个目标将无法达成[3]。"
+        },
+        {
+          "paragraph": 95,
+          "section": "page-12",
+          "text": "如果无法攻击任何一个日军控制的列表上的目标，将单位转移至能够发动攻势来攻击列表上优先度最高目标的位置。"
+        },
+        {
+          "paragraph": 96,
+          "section": "page-12",
+          "text": "所有多余的激活点数用来激活盟军空军单位攻击日军空军单位，确保战斗效果判定为1x时至少能造成1点损失。"
+        },
+        {
+          "paragraph": 97,
+          "section": "page-12",
+          "text": "Event Strategy：事件战略[4]"
+        },
+        {
+          "paragraph": 98,
+          "section": "page-12",
+          "text": "作为事件[7]打出欧洲战事。"
+        },
+        {
+          "paragraph": 99,
+          "section": "page-12",
+          "text": "如果盟军处于内部军种对立状态，打出结束内部军种对立的事件卡，否则用作未来攻势卡。"
+        },
+        {
+          "paragraph": 100,
+          "section": "page-12",
+          "text": "任何时间打出开始日军内部军种对立事件卡用以抽牌。"
+        },
+        {
+          "paragraph": 101,
+          "section": "page-12",
+          "text": "杜立特空袭。"
+        },
+        {
+          "paragraph": 102,
+          "section": "page-12",
+          "text": "如果能够触发效果则打出巴丹死亡行军，否则用作未来攻势卡。"
+        },
+        {
+          "paragraph": 103,
+          "section": "page-12",
+          "text": "其他：如果没有未来攻势卡则将一张当下无法触发效果的事件牌用作未来事件卡。"
+        },
+        {
+          "paragraph": 104,
+          "section": "page-12",
+          "text": "使用卡牌用作OC攻势。"
+        },
+        {
+          "paragraph": 105,
+          "section": "page-12",
+          "text": "DEI Strategy：荷兰东印度群岛战略"
+        },
+        {
+          "paragraph": 106,
+          "section": "page-12",
+          "text": "指挥部：如果英联邦需要完成一个战略目标，使用ANZAC，否则使用SW指挥部。"
+        },
+        {
+          "paragraph": 107,
+          "section": "page-12",
+          "text": "帝汶(Timor)"
+        },
+        {
+          "paragraph": 108,
+          "section": "page-12",
+          "text": "肯达里(Kendari)"
+        },
+        {
+          "paragraph": 109,
+          "section": "page-12",
+          "text": "苏腊巴亚(Soerabaja)"
+        },
+        {
+          "paragraph": 110,
+          "section": "page-12",
+          "text": "巴厘巴板(Balikpapan)"
+        },
+        {
+          "paragraph": 111,
+          "section": "page-12",
+          "text": "打拉根(Tarakan)"
+        },
+        {
+          "paragraph": 112,
+          "section": "page-12",
+          "text": "CBI Strategy：中缅印战略"
+        },
+        {
+          "paragraph": 113,
+          "section": "page-12",
+          "text": "指挥部：SEAC（如果SEAC指挥部不位于印度，使用任何联合指挥部）"
+        },
+        {
+          "paragraph": 114,
+          "section": "page-12",
+          "text": "达卡Dacca"
+        },
+        {
+          "paragraph": 115,
+          "section": "page-12",
+          "text": "阿恰布Akyab"
+        },
+        {
+          "paragraph": 116,
+          "section": "page-12",
+          "text": "迪马布尔Dimasur"
+        },
+        {
+          "paragraph": 117,
+          "section": "page-12",
+          "text": "乔尔哈特Jarhat"
+        },
+        {
+          "paragraph": 118,
+          "section": "page-12",
+          "text": "英帕尔/科希马Imphal/Kohima"
+        },
+        {
+          "paragraph": 119,
+          "section": "page-12",
+          "text": "雷多Ledo"
+        },
+        {
+          "paragraph": 120,
+          "section": "page-12",
+          "text": "密支那Myitkyina"
+        },
+        {
+          "paragraph": 121,
+          "section": "page-12",
+          "text": "腊戍Lashio"
+        },
+        {
+          "paragraph": 122,
+          "section": "page-12",
+          "text": "曼德勒Mandalay"
+        },
+        {
+          "paragraph": 123,
+          "section": "page-12",
+          "text": "仰光Rangoon"
+        },
+        {
+          "paragraph": 124,
+          "section": "page-12",
+          "text": "Central Pacific Strategy：中太平洋战略"
+        },
+        {
+          "paragraph": 125,
+          "section": "page-12",
+          "text": "指挥部：如果用来占领目标的必要单位在指挥范围内则优先使用Cen Pac指挥部，否则选择SW Pac指挥部。"
+        },
+        {
+          "paragraph": 126,
+          "section": "page-12",
+          "text": "威克岛Wake"
+        },
+        {
+          "paragraph": 127,
+          "section": "page-12",
+          "text": "塔拉瓦Tarawa"
+        },
+        {
+          "paragraph": 128,
+          "section": "page-12",
+          "text": "夸贾林环礁Kwajalein"
+        },
+        {
+          "paragraph": 129,
+          "section": "page-12",
+          "text": "恩尼威托克岛Eniwetok"
+        },
+        {
+          "paragraph": 130,
+          "section": "page-12",
+          "text": "帕劳Palau"
+        },
+        {
+          "paragraph": 131,
+          "section": "page-12",
+          "text": "乌利西环礁Uluthi"
+        },
+        {
+          "paragraph": 132,
+          "section": "page-12",
+          "text": "塞班岛Saipan（切换尾声阶段表）"
+        },
+        {
+          "paragraph": 133,
+          "section": "page-12",
+          "text": "Counter-Offensive：反攻目标"
+        },
+        {
+          "paragraph": 134,
+          "section": "page-12",
+          "text": "中途岛Midway"
+        },
+        {
+          "paragraph": 135,
+          "section": "page-12",
+          "text": "荷兰港Dutch Harbor"
+        },
+        {
+          "paragraph": 136,
+          "section": "page-12",
+          "text": "达卡Dacca(只陆地移动)"
+        },
+        {
+          "paragraph": 137,
+          "section": "page-12",
+          "text": "迪马布尔Dimasur"
+        },
+        {
+          "paragraph": 138,
+          "section": "page-12",
+          "text": "乔尔哈特Jarhat"
+        },
+        {
+          "paragraph": 139,
+          "section": "page-12",
+          "text": "雷多Ledo"
+        },
+        {
+          "paragraph": 140,
+          "section": "page-12",
+          "text": "英帕尔Imphal/科希马Kohima"
+        },
+        {
+          "paragraph": 141,
+          "section": "page-12",
+          "text": "澳大利亚港口Australian Ports（如果允许的话陆地移动，否则两栖移动）[1]"
+        },
+        {
+          "paragraph": 142,
+          "section": "page-12",
+          "text": "澳大利亚机场Australian Airbase（如果允许的话陆地移动，否则两栖移动）[1]"
+        },
+        {
+          "paragraph": 143,
+          "section": "page-12",
+          "text": "瓜达尔卡纳尔Guadalcanal"
+        },
+        {
+          "paragraph": 144,
+          "section": "page-12",
+          "text": "阿图岛/基斯卡岛Attu/Kiska[8]"
+        },
+        {
+          "paragraph": 145,
+          "section": "page-12",
+          "text": "莫尔兹比港Port Moresby[2]"
+        },
+        {
+          "paragraph": 146,
+          "section": "page-12",
+          "text": "Gili-Gili（只陆地移动）[2]"
+        },
+        {
+          "paragraph": 147,
+          "section": "page-12",
+          "text": "新赫布里底群岛New Hebrides（通过两栖登陆）"
+        },
+        {
+          "paragraph": 148,
+          "section": "page-12",
+          "text": "努米亚Noumea（如果可以的话通过两栖登陆，否则陆地移动）[2]"
+        },
+        {
+          "paragraph": 149,
+          "section": "page-12",
+          "text": "使用 Roll 1d10[5][9]"
+        },
+        {
+          "paragraph": 150,
+          "section": "page-12",
+          "text": "Offensive Card Grouping：攻势卡牌分组"
+        },
+        {
+          "paragraph": 151,
+          "section": "page-12",
+          "text": "将卡牌按照以下条件分组。"
+        },
+        {
+          "paragraph": 152,
+          "section": "page-12",
+          "text": "限制于单个指挥部的军事事件卡。"
+        },
+        {
+          "paragraph": 153,
+          "section": "page-12",
+          "text": "限制于两个指挥部的军事事件卡。"
+        },
+        {
+          "paragraph": 154,
+          "section": "page-12",
+          "text": "激活一个特定指挥部将会给予奖励的军事事件卡。"
+        },
+        {
+          "paragraph": 155,
+          "section": "page-12",
+          "text": "能够激活任何指挥部的军事事件卡。"
+        },
+        {
+          "paragraph": 156,
+          "section": "page-12",
+          "text": "作为OC使用的非军事事件卡。"
+        },
+        {
+          "paragraph": 157,
+          "section": "page-12",
+          "text": "注释："
+        },
+        {
+          "paragraph": 158,
+          "section": "page-12",
+          "text": "使用一个存在澳军控制的港口来船运单位，然后通过陆地移动军队进攻。如果这是无法达成的，就只能执行一次直接入侵。"
+        },
+        {
+          "paragraph": 159,
+          "section": "page-12",
+          "text": "如果盟军没有控制着一个能允许己方地面单位通过陆地移动占领目标的港口，则他们必须在己方AZOI覆盖下尽可能在接近目标的地方登陆，以便己方军队能够进行陆地移动直到可以发动攻击。"
+        },
+        {
+          "paragraph": 160,
+          "section": "page-12",
+          "text": "对于岛屿目标而言，这意味着将军队移往更加接近目标的基地，如果没有足够的两栖运输点数或者单位来进行占领，就进行列表下一个目标。对于陆地目标而言，移动空军单位与地面单位到更加接近目标的基地，然后移动陆地单位前往与目标格相邻或更接近目标的格子。"
+        },
+        {
+          "paragraph": 161,
+          "section": "page-12",
+          "text": "如果卡牌和情况都存在，以列表顺序打出事件牌。"
+        },
+        {
+          "paragraph": 162,
+          "section": "page-12",
+          "text": "如果你完成了攻势卡牌分组然后投骰子选择了一个战略，决定一个指挥部和战略目标，以优先级顺序从1-5卡牌组中选择第一张有效卡牌（符合已经选择指挥部的那一张）来替代正常的卡牌选择阶段。执行攻势来占领一个战争进程目标格。当没有战争进程目标格能被占领，使用OC攻势来建立未来EC攻势，从而占领战争进程目标格。"
+        },
+        {
+          "paragraph": 163,
+          "section": "page-12",
+          "text": "仅当没有被两个或以上的日军陆军地面军力占领时。（#日军旅团在这种情况下点数无关紧要）。"
+        },
+        {
+          "paragraph": 164,
+          "section": "page-12",
+          "text": "仅当欧陆战事位于0或更少时（在这种情况下将这张卡与将来的卡用作之后OC攻势的候选卡）"
+        },
+        {
+          "paragraph": 165,
+          "section": "page-12",
+          "text": "如果美军正处于内部军种对立状态则跳过该目标，没有航空母舰在范围内并且有效的地面单位也在十格之外。"
+        },
+        {
+          "paragraph": 166,
+          "section": "page-12",
+          "text": "如果投骰判定后根据卡牌没有可执行的战略，则重新投骰以得到一个新的战略（或者挑一个）。"
+        },
+        {
+          "paragraph": 167,
+          "section": "page-12",
+          "text": "盟军伊拉斯谟机器人（尾声阶段决策轴）"
+        },
+        {
+          "paragraph": 168,
+          "section": "page-12",
+          "text": "（该表只适用于盟军已经控制塞班岛或当前回合处于第9回合或之后的情况，否则使用中期阶段表）"
+        },
+        {
+          "paragraph": 169,
+          "section": "page-12",
+          "text": "条件表格："
+        },
+        {
+          "paragraph": 170,
+          "section": "page-12",
+          "text": "盟军是否拥有一个可以使用的pass？"
+        },
+        {
+          "paragraph": 171,
+          "section": "page-12",
+          "text": "这是否是最后的游戏回合（第12回合）？"
+        },
+        {
+          "paragraph": 172,
+          "section": "page-12",
+          "text": "盟军是否拥有大于等于3的卡牌数量？"
+        },
+        {
+          "paragraph": 173,
+          "section": "page-12",
+          "text": "盟军是否拥有一个战略轰炸机基地？"
+        },
+        {
+          "paragraph": 174,
+          "section": "page-12",
+          "text": "地图上所有的B29单位是否都处于战略轰炸机基地？"
+        },
+        {
+          "paragraph": 175,
+          "section": "page-12",
+          "text": "盟军是否控制着一个在东京8格范围以内的格子？"
+        },
+        {
+          "paragraph": 176,
+          "section": "page-12",
+          "text": "盟军最近是否满足了原子弹战略标准？"
+        },
+        {
+          "paragraph": 177,
+          "section": "page-12",
+          "text": "图例详解："
+        },
+        {
+          "paragraph": 178,
+          "section": "page-12",
+          "text": "Capture Strategic Bomber Base：占领战略轰炸机基地"
+        },
+        {
+          "paragraph": 179,
+          "section": "page-12",
+          "text": "使用最大的有效攻势卡来占领一个战略轰炸机基地，如果有多个选择，则按以下优先级："
+        },
+        {
+          "paragraph": 180,
+          "section": "page-12",
+          "text": "塞班岛Saipan"
+        },
+        {
+          "paragraph": 181,
+          "section": "page-12",
+          "text": "关岛Guam"
+        },
+        {
+          "paragraph": 182,
+          "section": "page-12",
+          "text": "马库斯岛Marcus Island"
+        },
+        {
+          "paragraph": 183,
+          "section": "page-12",
+          "text": "硫磺岛Iwo Jima"
+        },
+        {
+          "paragraph": 184,
+          "section": "page-12",
+          "text": "冲绳Okinawa"
+        },
+        {
+          "paragraph": 185,
+          "section": "page-12",
+          "text": "台南[3]Tainan"
+        },
+        {
+          "paragraph": 186,
+          "section": "page-12",
+          "text": "台北[3]Taihoku"
+        },
+        {
+          "paragraph": 187,
+          "section": "page-12",
+          "text": "Alternate Strategies：替换策略"
+        },
+        {
+          "paragraph": 188,
+          "section": "page-12",
+          "text": "如果这是你第一次投骰来选择战略，在返还菲律宾和跳岛作战中随机选择一个战略。"
+        },
+        {
+          "paragraph": 189,
+          "section": "page-12",
+          "text": "否则，如果先前打出卡牌时执行过其他任意一种战略，则选择一个新的战略。"
+        },
+        {
+          "paragraph": 190,
+          "section": "page-12",
+          "text": "Event Strategy[1]：事件战略"
+        },
+        {
+          "paragraph": 191,
+          "section": "page-12",
+          "text": "作为事件[2]打出欧洲战事。"
+        },
+        {
+          "paragraph": 192,
+          "section": "page-12",
+          "text": "苏联入侵满洲"
+        },
+        {
+          "paragraph": 193,
+          "section": "page-12",
+          "text": "如果盟军处于内部军种对立状态，打出结束内部军种对立的事件卡，否则用作未来攻势卡。"
+        },
+        {
+          "paragraph": 194,
+          "section": "page-12",
+          "text": "任何时间打出开始日军内部军种对立事件卡用以抽牌。"
+        },
+        {
+          "paragraph": 195,
+          "section": "page-12",
+          "text": "杜立特空袭。"
+        },
+        {
+          "paragraph": 196,
+          "section": "page-12",
+          "text": "如果能够触发效果则打出巴丹死亡行军，否则用作未来攻势卡。"
+        },
+        {
+          "paragraph": 197,
+          "section": "page-12",
+          "text": "其他：如果没有未来攻势卡则将一张当下无法触发效果的事件牌用作未来事件卡。"
+        },
+        {
+          "paragraph": 198,
+          "section": "page-12",
+          "text": "发动攻势"
+        },
+        {
+          "paragraph": 199,
+          "section": "page-12",
+          "text": "Advance B29s：推进B29轰炸机"
+        },
+        {
+          "paragraph": 200,
+          "section": "page-12",
+          "text": "使用一张有足够OC的攻势卡来创造足够的移动步数来激活并移动任何B29轰炸机前往战略轰炸机基地。如果不能到达轰炸机基地，使用激活点数将B29轰炸机放置在回合轨上，使其能够作为下一回合的增援部署到战略基地上（查询CDSS表）。"
+        },
+        {
+          "paragraph": 201,
+          "section": "page-12",
+          "text": "使用多余的激活点数去攻击在激活指挥部指挥范围内的日军空军和航空母舰单位。"
+        },
+        {
+          "paragraph": 202,
+          "section": "page-12",
+          "text": "Return to the Philippines[4]：返还菲律宾"
+        },
+        {
+          "paragraph": 203,
+          "section": "page-12",
+          "text": "占领能够连接SW Pacific指挥部并且相距莱特岛(Leyte)四格的基地。"
+        },
+        {
+          "paragraph": 204,
+          "section": "page-12",
+          "text": "莱特岛Leyte"
+        },
+        {
+          "paragraph": 205,
+          "section": "page-12",
+          "text": "达沃Davao"
+        },
+        {
+          "paragraph": 206,
+          "section": "page-12",
+          "text": "2912格（与马尼拉相邻）"
+        },
+        {
+          "paragraph": 207,
+          "section": "page-12",
+          "text": "马尼拉Manila"
+        },
+        {
+          "paragraph": 208,
+          "section": "page-12",
+          "text": "解放荷兰东印度群岛DEI（查询13.1与13.42）"
+        },
+        {
+          "paragraph": 209,
+          "section": "page-12",
+          "text": "解放马来亚Malaya（查询13.1与13.32）"
+        },
+        {
+          "paragraph": 210,
+          "section": "page-12",
+          "text": "Island Hopping Campaign[5][6]：跳岛作战"
+        },
+        {
+          "paragraph": 211,
+          "section": "page-12",
+          "text": "夸贾林环礁Kwajalein"
+        },
+        {
+          "paragraph": 212,
+          "section": "page-12",
+          "text": "恩尼威托克岛Eniwetok"
+        },
+        {
+          "paragraph": 213,
+          "section": "page-12",
+          "text": "塞班岛Saipan"
+        },
+        {
+          "paragraph": 214,
+          "section": "page-12",
+          "text": "硫磺岛Iwo Jima"
+        },
+        {
+          "paragraph": 215,
+          "section": "page-12",
+          "text": "冲绳Okinawa"
+        },
+        {
+          "paragraph": 216,
+          "section": "page-12",
+          "text": "入侵日本本土"
+        },
+        {
+          "paragraph": 217,
+          "section": "page-12",
+          "text": "Atomic Bomb Victory：原子弹胜利"
+        },
+        {
+          "paragraph": 218,
+          "section": "page-12",
+          "text": "如果可能，作为事件打出苏联入侵满洲。"
+        },
+        {
+          "paragraph": 219,
+          "section": "page-12",
+          "text": "在日本剩下的资源格中占领两个资源格。"
+        },
+        {
+          "paragraph": 220,
+          "section": "page-12",
+          "text": "Invasion of Japan：入侵日本本土"
+        },
+        {
+          "paragraph": 221,
+          "section": "page-12",
+          "text": "佐世保Sasebo"
+        },
+        {
+          "paragraph": 222,
+          "section": "page-12",
+          "text": "东京Tokyo"
+        },
+        {
+          "paragraph": 223,
+          "section": "page-12",
+          "text": "大凑Ominato"
+        },
+        {
+          "paragraph": 224,
+          "section": "page-12",
+          "text": "3606格"
+        },
+        {
+          "paragraph": 225,
+          "section": "page-12",
+          "text": "名古屋Nagoya"
+        },
+        {
+          "paragraph": 226,
+          "section": "page-12",
+          "text": "京都Kyoto"
+        },
+        {
+          "paragraph": 227,
+          "section": "page-12",
+          "text": "吴港Kure"
+        },
+        {
+          "paragraph": 228,
+          "section": "page-12",
+          "text": "大阪Osaka"
+        },
+        {
+          "paragraph": 229,
+          "section": "page-12",
+          "text": "Strategic Bomber Base：战略轰炸机基地"
+        },
+        {
+          "paragraph": 230,
+          "section": "page-12",
+          "text": "这是一个在东京8格范围内的盟军空军基地"
+        },
+        {
+          "paragraph": 231,
+          "section": "page-12",
+          "text": "Atomic Bomb Strategy Criteria：原子弹战略标准"
+        },
+        {
+          "paragraph": 232,
+          "section": "page-12",
+          "text": "满足原子弹战略标准需要达成以下目标："
+        },
+        {
+          "paragraph": 233,
+          "section": "page-12",
+          "text": "没有战略轰炸失败[7]"
+        },
+        {
+          "paragraph": 234,
+          "section": "page-12",
+          "text": "苏联入侵满洲事件已经发生或者盟军拥有苏联入侵满洲事件卡并能够作为事件打出之。"
+        },
+        {
+          "paragraph": 235,
+          "section": "page-12",
+          "text": "日本控制着小于等于3个的资源格（或在盟军尚未打出苏联入侵满洲时控制着小于等于5个的资源格）"
+        },
+        {
+          "paragraph": 236,
+          "section": "page-12",
+          "text": "注释："
+        },
+        {
+          "paragraph": 237,
+          "section": "page-12",
+          "text": "如果卡牌和情况都存在，以列表顺序打出事件牌。如果当前回合是12回合，永远不要将卡牌用为未来攻势卡。"
+        },
+        {
+          "paragraph": 238,
+          "section": "page-12",
+          "text": "仅当欧陆战事位于0或更少时（在这种情况下将这张卡与将来的卡用作之后OC攻势的候选卡）。"
+        },
+        {
+          "paragraph": 239,
+          "section": "page-12",
+          "text": "仅当菲律宾己经被解放时。"
+        },
+        {
+          "paragraph": 240,
+          "section": "page-12",
+          "text": "优先使用SW Pacific指挥部来激活单位。当需要时可以切换为SEAC指挥部或联合指挥部。"
+        },
+        {
+          "paragraph": 241,
+          "section": "page-12",
+          "text": "优先使用Cen Pacific指挥部来激活单位。"
+        },
+        {
+          "paragraph": 242,
+          "section": "page-12",
+          "text": "在最高优先级的目标达成前，不去理会下一个目标。"
+        },
+        {
+          "paragraph": 243,
+          "section": "page-12",
+          "text": "为进一步解释清楚，这意味着自第9回合以来盟军每回合至少成功战略轰炸了日本一次。（查看16.2）"
+        },
+        {
+          "paragraph": 244,
+          "section": "page-12",
+          "text": "盟军伊拉斯谟机器人（全阶段卡牌选择）"
+        },
+        {
+          "paragraph": 245,
+          "section": "page-12",
+          "text": "条件列表："
+        },
+        {
+          "paragraph": 246,
+          "section": "page-12",
+          "text": "在这个攻势阶段是否已经使用过了卡牌？"
+        },
+        {
+          "paragraph": 247,
+          "section": "page-12",
+          "text": "手牌数量是否大于2张？"
+        },
+        {
+          "paragraph": 248,
+          "section": "page-12",
+          "text": "这是否是本场游戏将要打出的第一张卡[2]？"
+        },
+        {
+          "paragraph": 249,
+          "section": "page-12",
+          "text": "手牌中是否有燧发枪行动或脚指甲行动军事事件牌[4]？"
+        },
+        {
+          "paragraph": 250,
+          "section": "page-12",
+          "text": "是否有可以使用的无限制军事事件牌？"
+        },
+        {
+          "paragraph": 251,
+          "section": "page-12",
+          "text": "是否有可以使用的有限制军事事件牌？"
+        },
+        {
+          "paragraph": 252,
+          "section": "page-12",
+          "text": "所有有效的军事事件卡是否都因为限制条件而无法达成进攻或者占领战略目标？"
+        },
+        {
+          "paragraph": 253,
+          "section": "page-12",
+          "text": "这个回合你是否已经选择并设置了一张未来攻势卡？"
+        },
+        {
+          "paragraph": 254,
+          "section": "page-12",
+          "text": "中缅印防御措施是否已经建立（仅限早期阶段决策轴）？"
+        },
+        {
+          "paragraph": 255,
+          "section": "page-12",
+          "text": "是否只剩下一张手牌？"
+        },
+        {
+          "paragraph": 256,
+          "section": "page-12",
+          "text": "仅剩的可以打出的事件牌是否是反应牌？"
+        },
+        {
+          "paragraph": 257,
+          "section": "page-12",
+          "text": "中国状态距离中国崩溃是否小于等于2格？"
+        },
+        {
+          "paragraph": 258,
+          "section": "page-12",
+          "text": "是否有可以使用的中国事件牌？"
+        },
+        {
+          "paragraph": 259,
+          "section": "page-12",
+          "text": "图例详解："
+        },
+        {
+          "paragraph": 260,
+          "section": "page-12",
+          "text": "Sort Cards[1]：将卡牌分类"
+        },
+        {
+          "paragraph": 261,
+          "section": "page-12",
+          "text": "Play China Event Card：打出中国事件牌"
+        },
+        {
+          "paragraph": 262,
+          "section": "page-12",
+          "text": "Play Card as Future Offensive：将卡牌用作未来攻势"
+        },
+        {
+          "paragraph": 263,
+          "section": "page-12",
+          "text": "First Strike Strategy：先发制人战略"
+        },
+        {
+          "paragraph": 264,
+          "section": "page-12",
+          "text": "根据以下优先级选择其中一张有效的卡牌："
+        },
+        {
+          "paragraph": 265,
+          "section": "page-12",
+          "text": "燧发枪行动"
+        },
+        {
+          "paragraph": 266,
+          "section": "page-12",
+          "text": "脚指甲行动"
+        },
+        {
+          "paragraph": 267,
+          "section": "page-12",
+          "text": "Unrestricted Military Event EC Strategy：无限制军事事件牌EC战略"
+        },
+        {
+          "paragraph": 268,
+          "section": "page-12",
+          "text": "标准：挑选后勤值LV最高的卡牌，如果卡牌中有攻势奖励的，则按以下优先级选择卡牌："
+        },
+        {
+          "paragraph": 269,
+          "section": "page-12",
+          "text": "增援奖励"
+        },
+        {
+          "paragraph": 270,
+          "section": "page-12",
+          "text": "其他奖励"
+        },
+        {
+          "paragraph": 271,
+          "section": "page-12",
+          "text": "无奖励"
+        },
+        {
+          "paragraph": 272,
+          "section": "page-12",
+          "text": "Restricted Military Event EC Strategy：有限制军事事件牌EC战略"
+        },
+        {
+          "paragraph": 273,
+          "section": "page-12",
+          "text": "标准：挑选后勤值LV最高的卡牌，优先选择绑定有攻势奖励的卡牌，其次是没有奖励的卡牌。否则，随机挑选。"
+        },
+        {
+          "paragraph": 274,
+          "section": "page-12",
+          "text": "Restricted Military Event OC Strategy：有限制军事事件牌OC战略"
+        },
+        {
+          "paragraph": 275,
+          "section": "page-12",
+          "text": "标准：挑选OC值最高的卡牌，除非这是一张军事事件牌并且已经没有其他非军事事件牌的选择了（任何后勤点数），在此情况下随机挑选OC卡牌。"
+        },
+        {
+          "paragraph": 276,
+          "section": "page-12",
+          "text": "Non-Military Event OC Strategy[3]：非军事事件牌OC战略"
+        },
+        {
+          "paragraph": 277,
+          "section": "page-12",
+          "text": "标准：选择OC值最高的卡牌。"
+        },
+        {
+          "paragraph": 278,
+          "section": "page-12",
+          "text": "Event strategy：事件牌战略"
+        },
+        {
+          "paragraph": 279,
+          "section": "page-12",
+          "text": "按以下优先级执行事件卡："
+        },
+        {
+          "paragraph": 280,
+          "section": "page-12",
+          "text": "欧陆战事"
+        },
+        {
+          "paragraph": 281,
+          "section": "page-12",
+          "text": "增援"
+        },
+        {
+          "paragraph": 282,
+          "section": "page-12",
+          "text": "结束美军内部军种对立"
+        },
+        {
+          "paragraph": 283,
+          "section": "page-12",
+          "text": "开启日军内部军种对立"
+        },
+        {
+          "paragraph": 284,
+          "section": "page-12",
+          "text": "其他（随机选择）"
+        },
+        {
+          "paragraph": 285,
+          "section": "page-12",
+          "text": "Unrestricted Military Event：无限制军事事件"
+        },
+        {
+          "paragraph": 286,
+          "section": "page-12",
+          "text": "这是一张没有激活限制（限定地面单位，空军或海军）的军事事件牌，并且没有战斗格的限制，该条不包括指挥部的限制。"
+        },
+        {
+          "paragraph": 287,
+          "section": "page-12",
+          "text": "Restricted Military Event：有限制军事事件"
+        },
+        {
+          "paragraph": 288,
+          "section": "page-12",
+          "text": "这是一张具有激活限制（限定地面单位，空军或海军）的军事事件牌，或者具有战斗格的限制，该条不包括指挥部的限制。"
+        },
+        {
+          "paragraph": 289,
+          "section": "page-12",
+          "text": "注释："
+        },
+        {
+          "paragraph": 290,
+          "section": "page-12",
+          "text": "将手牌按照如下顺序进行排列：军事事件牌，反应事件牌，资源事件牌，政治事件牌。对于最后两张牌按照以下顺序选择最优的两张事件牌：杜立特空袭，巴丹死亡行军，欧陆战事，结束美军内部军种对立，开启日军内部军种对立，第二张欧陆战事，反应牌。如果有其他卡牌则随机选择。"
+        },
+        {
+          "paragraph": 291,
+          "section": "page-12",
+          "text": "这个情况意味着伊拉斯谟在1943年剧本或1944年剧本扮演美军首先行动。"
+        },
+        {
+          "paragraph": 292,
+          "section": "page-12",
+          "text": "使用攻势阶段开始时你为手牌排序后序列中的第一张卡牌。"
+        },
+        {
+          "paragraph": 293,
+          "section": "page-12",
+          "text": "如果燧发枪行动和脚指甲行动这两张事件卡都因为没有足够的激活点数或因为没有足够的攻势移动力（OC值）而导致无法执行战略，则将D条件判定为否，而非是。"
+        },
+        {
+          "paragraph": 294,
+          "section": "page-12",
+          "text": "盟军伊拉斯谟机器人（全阶段特遣部队编成）"
+        },
+        {
+          "paragraph": 295,
+          "section": "page-12",
+          "text": "条件列表："
+        },
+        {
+          "paragraph": 296,
+          "section": "page-12",
+          "text": "这是否是对目标格发动的一次海空战？"
+        },
+        {
+          "paragraph": 297,
+          "section": "page-12",
+          "text": "目标格是否是一个沿海或岛屿格？"
+        },
+        {
+          "paragraph": 298,
+          "section": "page-12",
+          "text": "你是否能够通过陆地移动占领目标格？"
+        },
+        {
+          "paragraph": 299,
+          "section": "page-12",
+          "text": "目标格是否处于未被占据状态？"
+        },
+        {
+          "paragraph": 300,
+          "section": "page-12",
+          "text": "目标格是否只存在敌军海军单位？"
+        },
+        {
+          "paragraph": 301,
+          "section": "page-12",
+          "text": "是否允许一个地面单位能够进入并离开目标格？"
+        },
+        {
+          "paragraph": 302,
+          "section": "page-12",
+          "text": "目标格是否是一个潜在的可供敌方进行特殊反应的格子？"
+        },
+        {
+          "paragraph": 303,
+          "section": "page-12",
+          "text": "敌方海军或航空母舰单位是否能够反应移动至这个格子？"
+        },
+        {
+          "paragraph": 304,
+          "section": "page-12",
+          "text": "是否有足够的激活点数来满足作战支援标准？"
+        },
+        {
+          "paragraph": 305,
+          "section": "page-12",
+          "text": "是否已经达到对目标格进攻的伤害水平？"
+        },
+        {
+          "paragraph": 306,
+          "section": "page-12",
+          "text": "敌军海军或地面单位是否能够通过反应移动到达目标格？"
+        },
+        {
+          "paragraph": 307,
+          "section": "page-12",
+          "text": "这是否是一次EC攻势？"
+        },
+        {
+          "paragraph": 308,
+          "section": "page-12",
+          "text": "这是否是最后一个目标？"
+        },
+        {
+          "paragraph": 309,
+          "section": "page-12",
+          "text": "图例详解："
+        },
+        {
+          "paragraph": 310,
+          "section": "page-12",
+          "text": "March into the Target：移动至目标格"
+        },
+        {
+          "paragraph": 311,
+          "section": "page-12",
+          "text": "Activate Units for current Target：为最近的目标格激活单位"
+        },
+        {
+          "paragraph": 312,
+          "section": "page-12",
+          "text": "Execute Air/Naval Attack against weakest stack：执行海空战进攻最弱的堆叠"
+        },
+        {
+          "paragraph": 313,
+          "section": "page-12",
+          "text": "Move activated units to the Target：将激活的单位移动至目标格"
+        },
+        {
+          "paragraph": 314,
+          "section": "page-12",
+          "text": "Activate more units with extra activations：用额外的激活点数激活更多单位"
+        },
+        {
+          "paragraph": 315,
+          "section": "page-12",
+          "text": "Consider Performing a Smothering Attack：考虑执行压制攻击（查看CDSS）"
+        },
+        {
+          "paragraph": 316,
+          "section": "page-12",
+          "text": "Create a new Force for the next Target：为下个目标构建新的特遣部队"
+        },
+        {
+          "paragraph": 317,
+          "section": "page-12",
+          "text": "Air raid：空袭"
+        },
+        {
+          "paragraph": 318,
+          "section": "page-12",
+          "text": "特遣部队编成：空军，海军和航空母舰单位"
+        },
+        {
+          "paragraph": 319,
+          "section": "page-12",
+          "text": "当选择单位时，尽量挑选足够的单位以达成空中力量均势。"
+        },
+        {
+          "paragraph": 320,
+          "section": "page-12",
+          "text": "Ground Attack with Air Support：有空军支援的地面进攻"
+        },
+        {
+          "paragraph": 321,
+          "section": "page-12",
+          "text": "特遣部队编成：地面单位，空军和航空母舰单位（在范围内的）。"
+        },
+        {
+          "paragraph": 322,
+          "section": "page-12",
+          "text": "Ground Attack with Air/Naval Support：有空军/海军支援的地面进攻"
+        },
+        {
+          "paragraph": 323,
+          "section": "page-12",
+          "text": "特遣部队编成：地面单位，海军，空军和航空母舰单位。"
+        },
+        {
+          "paragraph": 324,
+          "section": "page-12",
+          "text": "Invasion with Air/Naval Support：有空军/海军支援的两栖入侵"
+        },
+        {
+          "paragraph": 325,
+          "section": "page-12",
+          "text": "特遣部队编成：空军，海军，具有两栖突击能力的地面单位和航空母舰单位。"
+        },
+        {
+          "paragraph": 326,
+          "section": "page-12",
+          "text": "Invasion with Naval Support：有海军支援的两栖入侵"
+        },
+        {
+          "paragraph": 327,
+          "section": "page-12",
+          "text": "特遣部队编成：海军，具有两栖突击能力的地面单位和航空母舰单位。"
+        },
+        {
+          "paragraph": 328,
+          "section": "page-12",
+          "text": "Unsupported Invasion：无支援两栖入侵"
+        },
+        {
+          "paragraph": 329,
+          "section": "page-12",
+          "text": "特遣部队编成：具有两栖突击能力的地面单位。"
+        },
+        {
+          "paragraph": 330,
+          "section": "page-12",
+          "text": "Overland Advance/AA Rules：陆地移动/两栖入侵规则"
+        },
+        {
+          "paragraph": 331,
+          "section": "page-12",
+          "text": "潜在的地面进攻或者两栖入侵必须拥有足够的战斗力来进攻[6][7]目标格的敌军，确保地面进攻能在战斗效果值为1x的情况下夺取目标格，并且能够在敌军出现2x的战斗效果值后幸存至少一点军力。"
+        },
+        {
+          "paragraph": 332,
+          "section": "page-12",
+          "text": "潜在的两栖反应移动以及在目标格相邻并拥有足够移动力的单位也需要纳入考虑。"
+        },
+        {
+          "paragraph": 333,
+          "section": "page-12",
+          "text": "Damage Level：伤害等级"
+        },
+        {
+          "paragraph": 334,
+          "section": "page-12",
+          "text": "部队战斗力乘以能够消灭目标格敌军的伤害结果。一个1x的伤害等级意味着你必须拥有大于等于一定数值的战斗力才能发起进攻，而这个数值是在战斗结果为1x时你能够消灭目标格敌军的战斗力。地面战请查看陆地移动/两栖入侵规则。"
+        },
+        {
+          "paragraph": 335,
+          "section": "page-12",
+          "text": "如果没有明确指出进攻目标格的伤害等级要求，则地面战使用1x，海空战使用0.5x。"
+        },
+        {
+          "paragraph": 336,
+          "section": "page-12",
+          "text": "Battle Support Criteria：作战支援标准"
+        },
+        {
+          "paragraph": 337,
+          "section": "page-12",
+          "text": "Air Raid空袭：没有要求，自动通过判定。"
+        },
+        {
+          "paragraph": 338,
+          "section": "page-12",
+          "text": "Ground Attacks地面进攻：至少一个空军或海军单位。"
+        },
+        {
+          "paragraph": 339,
+          "section": "page-12",
+          "text": "Naval Invasion海军入侵：至少一个海军单位。"
+        },
+        {
+          "paragraph": 340,
+          "section": "page-12",
+          "text": "Air/Naval Invasion海空军入侵：至少一个空军单位和海军单位，或者一个航空母舰单位。"
+        },
+        {
+          "paragraph": 341,
+          "section": "page-12",
+          "text": "注释："
+        },
+        {
+          "paragraph": 342,
+          "section": "page-12",
+          "text": "为每一个被决策轴表选中的目标格创建一支特遣部队，如果已指定进行OC攻势并选择了一个目标格，那么只去考虑未被占领的目标格，之后可以组合两张卡牌将更多地面单位，空军单位随后是海军单位移动到更靠近下一个最高优先级的目标格处。"
+        },
+        {
+          "paragraph": 343,
+          "section": "page-12",
+          "text": "激活一个地面单位移动至这个格子。如果敌方海军单位占据着目标格，则移动地面单位离开目标格以避免创造一个战斗格。注意如果必要的话这个地面单位是可以再次通过地面移动占领更多目标格的。"
+        },
+        {
+          "paragraph": 344,
+          "section": "page-12",
+          "text": "按照选定战略的特遣部队编成种类，为目标格激活其范围内能够达到伤害等级标准的最小数量的单位（试过无法满足这一条件，就激活尽可能多的单位）。如果敌军有可能进行反应移动，就需要将能够反应移动至目标格的敌军加入伤害等级计算中。"
+        },
+        {
+          "paragraph": 345,
+          "section": "page-12",
+          "text": "对于一个有非印度指挥部与地面单位堆叠的格子而言，必须要有一个地面单位在格子内保持未激活状态来守卫指挥部。"
+        },
+        {
+          "paragraph": 346,
+          "section": "page-12",
+          "text": "激活一个地面单位通过两栖移动入侵目标格。如果没有两栖运输点数则跳过此目标。"
+        },
+        {
+          "paragraph": 347,
+          "section": "page-12",
+          "text": "“占领”（Capture）在这里意味着通过在指定了战斗结果的战斗中对防御方造成了更多伤害来赢得战斗，这意味着伊拉斯谟（Erasmus）投出了大于等于战斗结果的点数的同时防御方投出了小于等于战斗结果的点数。"
+        },
+        {
+          "paragraph": 348,
+          "section": "page-12",
+          "text": "假如伊拉斯谟必须令敌方单位执行撤退，则按照撤退规则从最弱的防御单位到最强的防御单位来进行。"
+        },
+        {
+          "paragraph": 349,
+          "section": "page-12",
+          "text": "如果敌军能够进行反应移动，则按照先海军后空军的顺序额外添加单位到决策轴表中每一个最高优先级的目标中去。"
+        },
+        {
+          "paragraph": 350,
+          "section": "page-12",
+          "text": "盟军伊拉斯谟机器人（全阶段反应和战后移动）"
+        },
+        {
+          "paragraph": 351,
+          "section": "page-12",
+          "text": "反应行动"
+        },
+        {
+          "paragraph": 352,
+          "section": "page-12",
+          "text": "条件列表："
+        },
+        {
+          "paragraph": 353,
+          "section": "page-12",
+          "text": "是否存在特殊反应的情况？"
+        },
+        {
+          "paragraph": 354,
+          "section": "page-12",
+          "text": "是否存在战斗格？"
+        },
+        {
+          "paragraph": 355,
+          "section": "page-12",
+          "text": "是否有战斗格在有补给的指挥部范围内？"
+        },
+        {
+          "paragraph": 356,
+          "section": "page-12",
+          "text": "是否拥有一张可使用的情报反应牌？"
+        },
+        {
+          "paragraph": 357,
+          "section": "page-12",
+          "text": "是否拥有一张可使用的反攻反应牌？"
+        },
+        {
+          "paragraph": 358,
+          "section": "page-12",
+          "text": "是否拥有一张伏击牌并且能够满足伏击标准？"
+        },
+        {
+          "paragraph": 359,
+          "section": "page-12",
+          "text": "是否能够为至少一个战斗格满足反应部队标准？"
+        },
+        {
+          "paragraph": 360,
+          "section": "page-12",
+          "text": "是否拥有一张可使用的潜艇攻击牌？"
+        },
+        {
+          "paragraph": 361,
+          "section": "page-12",
+          "text": "是否至少有一个敌方单位能够满足潜艇攻击牌的特殊条件？"
+        },
+        {
+          "paragraph": 362,
+          "section": "page-12",
+          "text": "图例详解："
+        },
+        {
+          "paragraph": 363,
+          "section": "page-12",
+          "text": "Roll for each SR：为每一个特殊反应投骰子"
+        },
+        {
+          "paragraph": 364,
+          "section": "page-12",
+          "text": "If possible, roll for Intelligence：如果可能，进行情报投骰"
+        },
+        {
+          "paragraph": 365,
+          "section": "page-12",
+          "text": "Play intel-CO Reaction Card[1]：打出情报反应卡"
+        },
+        {
+          "paragraph": 366,
+          "section": "page-12",
+          "text": "Play Submarine Attack Card[2]：打出潜艇攻击卡"
+        },
+        {
+          "paragraph": 367,
+          "section": "page-12",
+          "text": "Execute PBM if applicable：如果可以，执行战后移动"
+        },
+        {
+          "paragraph": 368,
+          "section": "page-12",
+          "text": "Reaction Strategy：反应策略"
+        },
+        {
+          "paragraph": 369,
+          "section": "page-12",
+          "text": "按优先级反应移动至包含以下内容的格子[5][6][7]："
+        },
+        {
+          "paragraph": 370,
+          "section": "page-12",
+          "text": "盟军指挥部"
+        },
+        {
+          "paragraph": 371,
+          "section": "page-12",
+          "text": "资源格"
+        },
+        {
+          "paragraph": 372,
+          "section": "page-12",
+          "text": "港口"
+        },
+        {
+          "paragraph": 373,
+          "section": "page-12",
+          "text": "空军基地"
+        },
+        {
+          "paragraph": 374,
+          "section": "page-12",
+          "text": "其他"
+        },
+        {
+          "paragraph": 375,
+          "section": "page-12",
+          "text": "Reaction Force Criteria：反应部队标准"
+        },
+        {
+          "paragraph": 376,
+          "section": "page-12",
+          "text": "在满足以下条件的情况下，激活最小数量的单位进行反应："
+        },
+        {
+          "paragraph": 377,
+          "section": "page-12",
+          "text": "海空军的联合战斗力是敌军海空军战斗力的一倍及以上。"
+        },
+        {
+          "paragraph": 378,
+          "section": "page-12",
+          "text": "己方空军数量等同于敌方空军数量。"
+        },
+        {
+          "paragraph": 379,
+          "section": "page-12",
+          "text": "投1d10，以下结果："
+        },
+        {
+          "paragraph": 380,
+          "section": "page-12",
+          "text": "0-4：地面单位战斗力在2x战斗效果值的情况下能够消灭敌方地面单位。"
+        },
+        {
+          "paragraph": 381,
+          "section": "page-12",
+          "text": "5-9：无限制标准。"
+        },
+        {
+          "paragraph": 382,
+          "section": "page-12",
+          "text": "Ambush Criteria：伏击标准"
+        },
+        {
+          "paragraph": 383,
+          "section": "page-12",
+          "text": "卡牌#12：如果日军在一场海空战[14]中投入了一艘或更多航空母舰单位（仅限正航），则盟军能以1x的伤害等级进行反应。"
+        },
+        {
+          "paragraph": 384,
+          "section": "page-12",
+          "text": "卡牌#26：如果日军进行的是地面战[15]，则盟军能以1x的伤害等级进行反应，或是用以反应日军的军事事件牌#3辻政信。"
+        },
+        {
+          "paragraph": 385,
+          "section": "page-12",
+          "text": "战后移动（PBM）"
+        },
+        {
+          "paragraph": 386,
+          "section": "page-12",
+          "text": "条件列表："
+        },
+        {
+          "paragraph": 387,
+          "section": "page-12",
+          "text": "是否有空军单位需要进行战后移动？"
+        },
+        {
+          "paragraph": 388,
+          "section": "page-12",
+          "text": "是否有海军单位需要进行战后移动？"
+        },
+        {
+          "paragraph": 389,
+          "section": "page-12",
+          "text": "是否有两栖入侵失败的单位需要进行战后移动？"
+        },
+        {
+          "paragraph": 390,
+          "section": "page-12",
+          "text": "图例详解："
+        },
+        {
+          "paragraph": 391,
+          "section": "page-12",
+          "text": "Air PBM Strategy：空军单位战后移动策略"
+        },
+        {
+          "paragraph": 392,
+          "section": "page-12",
+          "text": "按以下优先级战后移动至己方空军基地以放置AZOI[9][10][11]："
+        },
+        {
+          "paragraph": 393,
+          "section": "page-12",
+          "text": "未覆盖AZOI的盟军指挥部"
+        },
+        {
+          "paragraph": 394,
+          "section": "page-12",
+          "text": "日军指挥部[12]"
+        },
+        {
+          "paragraph": 395,
+          "section": "page-12",
+          "text": "被日军AZOI覆盖的盟军港口"
+        },
+        {
+          "paragraph": 396,
+          "section": "page-12",
+          "text": "被日军AZOI覆盖的盟军空军基地"
+        },
+        {
+          "paragraph": 397,
+          "section": "page-12",
+          "text": "被日军AZOI覆盖的盟军地面单位"
+        },
+        {
+          "paragraph": 398,
+          "section": "page-12",
+          "text": "最近的资源格（日军或盟军的）[13]"
+        },
+        {
+          "paragraph": 399,
+          "section": "page-12",
+          "text": "Naval PBM Strategy：海军单位战后移动策略"
+        },
+        {
+          "paragraph": 400,
+          "section": "page-12",
+          "text": "按以下优先级战后移动海军单位至己方港口："
+        },
+        {
+          "paragraph": 401,
+          "section": "page-12",
+          "text": "没有可以被启动的海军单位在指挥范围内的指挥部。"
+        },
+        {
+          "paragraph": 402,
+          "section": "page-12",
+          "text": "只存在地面单位的港口"
+        },
+        {
+          "paragraph": 403,
+          "section": "page-12",
+          "text": "最近的港口。"
+        },
+        {
+          "paragraph": 404,
+          "section": "page-12",
+          "text": "AA PBM Strategy：两栖突击单位战后移动策略"
+        },
+        {
+          "paragraph": 405,
+          "section": "page-12",
+          "text": "按以下优先级战后移动两栖突击的地面单位至己方港口："
+        },
+        {
+          "paragraph": 406,
+          "section": "page-12",
+          "text": "有己方海军单位的港口"
+        },
+        {
+          "paragraph": 407,
+          "section": "page-12",
+          "text": "最近的港口"
+        },
+        {
+          "paragraph": 408,
+          "section": "page-12",
+          "text": "注释："
+        },
+        {
+          "paragraph": 409,
+          "section": "page-12",
+          "text": "如果有选择的话，先打出情报反应卡，然后是反攻反应卡，最后是伏击反应卡。"
+        },
+        {
+          "paragraph": 410,
+          "section": "page-12",
+          "text": "如果有多个有效目标，按照以下类型进行优先级排列：CV，BB，CA，DD。在同类型中选择防御值最高的单位。"
+        },
+        {
+          "paragraph": 411,
+          "section": "page-12",
+          "text": "如果有多个有效的战斗格，选择反应策略中优先级最高的战斗格。"
+        },
+        {
+          "paragraph": 412,
+          "section": "page-12",
+          "text": "在分配两点军力损失时，按以下类型的顺序进行分配：CV，BB，CA，DD。在同类型中选择防御值最高的单位。"
+        },
+        {
+          "paragraph": 413,
+          "section": "page-12",
+          "text": "如果有多个战斗格拥有相同的优先度，则随机确定顺序。"
+        },
+        {
+          "paragraph": 414,
+          "section": "page-12",
+          "text": "查看反应部队标准时要先达成第一优先级，随后是第二优先级，在进行第三优先级前要先达成第二优先级，以此类推。"
+        },
+        {
+          "paragraph": 415,
+          "section": "page-12",
+          "text": "假设对于一个特定的战斗格无法满足反应标准，则跳转至下一优先级的战斗格，直到没有更多的战斗格可供反应。"
+        },
+        {
+          "paragraph": 416,
+          "section": "page-12",
+          "text": "如果有一个特定战略的战后移动要求存在，则跳过此表格优先处理战后移动。"
+        },
+        {
+          "paragraph": 417,
+          "section": "page-12",
+          "text": "如果所有的格子都已经覆盖了盟军AZOI，则跳过此优先级目标。"
+        },
+        {
+          "paragraph": 418,
+          "section": "page-12",
+          "text": "如果有多个可用的空军基地，优先选择能够满足更多优先级的空军基地。"
+        },
+        {
+          "paragraph": 419,
+          "section": "page-12",
+          "text": "每个空军基地不超过一个空军单位。"
+        },
+        {
+          "paragraph": 420,
+          "section": "page-12",
+          "text": "选择可用的最强空军单位。"
+        },
+        {
+          "paragraph": 421,
+          "section": "page-12",
+          "text": "如果有多个资源格，优先选择最近的，然后是较远的，以此类推。"
+        },
+        {
+          "paragraph": 422,
+          "section": "page-12",
+          "text": "这个战斗格是日军航空母舰范围内或正位于格内进攻的格子。"
+        },
+        {
+          "paragraph": 423,
+          "section": "page-12",
+          "text": "这个战斗格是无视先前海空战结果后即将发生的地面战格子。"
+        },
+        {
+          "paragraph": 424,
+          "section": "page-12",
+          "text": "如果反应卡有一个额外奖励，为投骰添加一个-4DRM的修正。如果是伏击反应，同样为投骰添加一个-4DRM的修正。如果是卡牌#12，则在战斗中每有一支日军航空母舰单位就为投骰添加一个-1DRM的修正。如果是卡牌#26，则战斗中每有一点日军陆军军力点数就为投骰添加一个-1DRM的修正。"
+        }
+      ]
+    }
+  ]
+}
