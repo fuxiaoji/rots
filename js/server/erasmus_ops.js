@@ -128,6 +128,14 @@ function eop_focus(role) {
     const mine = faction === JP ? JP : AP
     for (const idx of eop_axis_chain(mine === JP ? "Japan" : "Allies")) {
         if (idx < 0 || idx > LAST_BOARD_HEX) continue
+        const meta = eop_target_meta(mine === JP ? "Japan" : "Allies", idx)
+        // 压制目标的完成条件是敌方 AZOI 不再覆盖该格，并非必须夺取控制权。
+        // 因此 Jolo 即便仍由盟军控制，只要覆盖它的航空/航母 ZOI 已被消灭，就应顺延
+        // 到 Makassar；夺占类目标仍严格以控制权为完成条件。
+        if (meta && (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ")) {
+            if (typeof has_zoi === "function" && has_zoi(idx, 1 - mine)) return idx
+            continue
+        }
         if (!is_space_controlled(idx, mine)) return idx
     }
     return null
@@ -261,6 +269,8 @@ function eop_landing_no_escort(role, view) {
     const mine = role === "Japan" ? JP : AP
     const focus = eop_focus(role)
     if (focus === null) return false
+    const meta = eop_target_meta(role, focus)
+    if (!meta || !meta.requiresOccupation) return false
     const md = (typeof get_map_data === "function") ? get_map_data(focus) : null
     if (!md || !md.port) return false
     if (is_space_controlled(focus, mine)) return false

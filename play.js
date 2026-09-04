@@ -11458,6 +11458,10 @@ function eots_render_ai_current(panel, row) {
 	field("正在执行", `${trace.action || "—"}${trace.argument === undefined ? "" : " → " + trace.argument}`)
 	field("当前首要目标", current ? `${current.name || current.id || "Hex " + current.hex}${current.id ? "（" + current.id + "）" : ""}` : "本战略没有地图目标", "ai_trace_focus")
 	field("图表节点", `${trace.chart || "—"} / ${trace.node || "—"}`)
+	if (trace.activationPlan) {
+		field("激活量使用", `${trace.activationPlan.selected}/${trace.activationPlan.limit}，剩余 ${trace.activationPlan.remaining}；${trace.activationPlan.mode}`)
+		field("编队标准", `需求 ${trace.activationPlan.required ?? "—"}，当前 ${trace.activationPlan.strength ?? 0}${trace.activationPlan.potentialReactionStrength ? "，潜在反应 " + trace.activationPlan.potentialReactionStrength : ""}`)
+	}
 	card.appendChild(grid)
 
 	var targetBox = document.createElement("div")
@@ -11477,6 +11481,8 @@ function eots_render_ai_current(panel, row) {
 			if (!target.achieved && index === 0) flags.push("当前首位")
 			if (target.achieved) flags.push("已完成")
 			if (target.resource) flags.push("资源格")
+			if (target.kind === "SUPPRESS" || target.kind === "SUPPRESS_HQ") flags.push("压制目标（不要求占领）")
+			if (target.requiresOccupation) flags.push("夺占目标（需要地面部队）")
 			if (target.controlledBy) flags.push(`控制：${eots_t(target.controlledBy)}`)
 			if (target.distanceToTokyo !== undefined) flags.push(`距东京 ${target.distanceToTokyo} 格`)
 			if (target.objective) flags.unshift(`${target.objective}${target.damageLevel ? " · 伤害标准 " + target.damageLevel + "x" : ""}`)

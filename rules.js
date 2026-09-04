@@ -17686,6 +17686,7 @@ function create_view() {
     const aiBattle = !!(G.offensive && (G.offensive.battle_hexes || []).length)
     const aiFocus = typeof eop_focus === "function" ? eop_focus(ROLES[R]) : null
     const aiFocusData = aiFocus !== null && aiFocus !== undefined ? get_map_data(aiFocus) : null
+    const aiFocusMeta = aiFocus !== null && aiFocus !== undefined && typeof eop_target_meta === "function" ? eop_target_meta(ROLES[R], aiFocus) : null
     const publicUnits=[]
     for(let u=1;u<pieces.length;++u){const h=G.location[u],p=pieces[u];if(h>=0&&h<=LAST_BOARD_HEX)publicUnits.push({id:u,faction:p.faction,class:p.class,type:p.type||null,cf:Number(p.cf)||0,rcf:Number(p.rcf)||0,lf:Number(p.lf)||0,br:Number(p.br)||0,ebr:Number(p.ebr)||0,asp:!!p.asp,stratMove:!!p.strat_move,reduced:!!(G.reduced&&set_has(G.reduced,u)),location:h})}
     V.ai = { state:aiState, stage:aiStage, windowKind:aiWindow, focus:aiFocus, ownCards:ownCardMeta, units:publicUnits,
@@ -17726,7 +17727,7 @@ function create_view() {
         "AP_CARD_ALREADY_PLAYED","AP_FIRST_GAME_CARD","AP_HAS_FLINTLOCK_OR_SHOESTRING","AP_HAS_UNRESTRICTED_MILITARY_EVENT",
         "AP_HAS_RESTRICTED_MILITARY_EVENT","AP_ALL_MILITARY_EVENTS_RESTRICTED","AP_FO_SELECTED","AP_LAST_CARD",
         "AP_LAST_PLAYABLE_IS_REACTION","AP_CHINA_WITHIN_2_OF_COLLAPSE","AP_HAS_PLAYABLE_CHINA_EVENT",
-        "AP_CHINA_WITHIN_2_AND_EVENT_AVAILABLE","JP_EARLY_DEI_TARGET_OCCUPIED","IS_AIR_STRIKE",
+            "AP_CHINA_WITHIN_2_AND_EVENT_AVAILABLE","JP_EARLY_DEI_TARGET_OCCUPIED","IS_AIR_STRIKE",
         "TARGET_EMPTY_OR_NAVAL_AND_GROUND_CAN_EXIT","ENEMY_AIR_OR_CARRIER_CAN_REACT",
         "FORCE_MEETS_BATTLE_SUPPORT_STANDARD","TARGET_DAMAGE_LEVEL_MET","ENEMY_CAN_REACT_AND_IS_EC",
         "BATTLE_IN_HQ_RANGE_AND_REACTION_CARD","EARLY_DEFENSE_DONE_AND_KAMIKAZE_STANDARD",
@@ -17739,7 +17740,8 @@ function create_view() {
     V.ai.predicates.AP_FO_SELECTED = G.future_offensive[AP] > 0
     V.ai.predicates.JP_LAST_CARD = V.ai.predicates.AP_LAST_CARD = ownHand.length === 1
     V.ai.predicates.JP_HAS_UNRESTRICTED_MILITARY_EVENT = V.ai.predicates.AP_HAS_UNRESTRICTED_MILITARY_EVENT = ownCardMeta.some(c=>c.military)
-    V.ai.predicates.IS_AIR_STRIKE = /declare_battle|choose_attack/.test(aiState)
+    V.ai.predicates.IS_AIR_STRIKE = aiFocusMeta && (aiFocusMeta.kind === "SUPPRESS" || aiFocusMeta.kind === "SUPPRESS_HQ")
+        || /declare_battle|choose_attack/.test(aiState)
     V.ai.predicates.TARGET_EMPTY_OR_NAVAL_AND_GROUND_CAN_EXIT = V.ai.predicates.TARGET_EMPTY || V.ai.predicates.TARGET_ONLY_ENEMY_NAVAL
     V.ai.predicates.ENEMY_AIR_OR_CARRIER_CAN_REACT = aiBattle
     V.ai.predicates.FORCE_MEETS_BATTLE_SUPPORT_STANDARD = aiBattle
@@ -19999,6 +20001,14 @@ function eop_focus(role) {
     const mine = faction === JP ? JP : AP
     for (const idx of eop_axis_chain(mine === JP ? "Japan" : "Allies")) {
         if (idx < 0 || idx > LAST_BOARD_HEX) continue
+        const meta = eop_target_meta(mine === JP ? "Japan" : "Allies", idx)
+        // 压制目标的完成条件是敌方 AZOI 不再覆盖该格，并非必须夺取控制权。
+        // 因此 Jolo 即便仍由盟军控制，只要覆盖它的航空/航母 ZOI 已被消灭，就应顺延
+        // 到 Makassar；夺占类目标仍严格以控制权为完成条件。
+        if (meta && (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ")) {
+            if (typeof has_zoi === "function" && has_zoi(idx, 1 - mine)) return idx
+            continue
+        }
         if (!is_space_controlled(idx, mine)) return idx
     }
     return null
@@ -20132,6 +20142,8 @@ function eop_landing_no_escort(role, view) {
     const mine = role === "Japan" ? JP : AP
     const focus = eop_focus(role)
     if (focus === null) return false
+    const meta = eop_target_meta(role, focus)
+    if (!meta || !meta.requiresOccupation) return false
     const md = (typeof get_map_data === "function") ? get_map_data(focus) : null
     if (!md || !md.port) return false
     if (is_space_controlled(focus, mine)) return false
@@ -20680,7 +20692,15 @@ function esm_strategy_targets(strategy) {
     const chain = strategy && Array.isArray(strategy.chain) ? strategy.chain : []
     const targetMeta = strategy && Array.isArray(strategy.targetMeta) ? strategy.targetMeta : []
     const byHex = new Map(targetMeta.map(target => [target.hex, target]))
-    return chain.slice(0, 12).map((h, index) => Object.assign({ priority: index + 1 }, esm_hex_trace(h, strategy.role), byHex.get(h) || {}))
+    return chain.slice(0, 12).map((h, index) => {
+        const meta = byHex.get(h) || {}
+        const target = Object.assign({ priority: index + 1 }, esm_hex_trace(h, strategy.role), meta)
+        if (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ") {
+            const mine = esm_role_faction(strategy.role)
+            try { target.achieved = !has_zoi(h, 1 - mine) } catch (e) { target.achieved = false }
+        }
+        return target
+    })
 }
 
 // 第5/11页编队器需要知道一个地图目标究竟是“压制”还是“夺占”。此前仅动态 HQ
@@ -21647,7 +21667,7 @@ function esm_pick_replacement_unit(candidates, role) {
 }
 /** import server/erasmus_state.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.10"
+const ERASMUS_VERSION = "erasmus-v2.0-zh.11"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "delay", "unit", "hex", "strat_move", "ground_move", "roll", "eliminate", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
@@ -21906,6 +21926,7 @@ function evaluateChart(chart, view, context) {
     let action = null
     let attempted = []
     let fallback = false
+    let activationPlan = null
     if (current?.type === "priority") {
         const chosen = first_executable_strategy(current.strategies, legal, view)
         attempted = chosen.attempts
@@ -21923,20 +21944,27 @@ function evaluateChart(chart, view, context) {
     if (volatileBonus && Number(volatileBonus[1]) >= Number(volatileBonus[2]) && legal.includes("done")) action = "done"
     // “Activate units”窗口: 当 unit 候选里已无可新增单位(全部是已激活的 unselect 单位, 或
     // 只剩空中单位)时, 继续选 unit 只会 toggle 撤销或触发无头移动死窗; 此时必须 done 收尾。
-    if (action !== "done" && /activate units/i.test(String(view.prompt || "")) && legal.includes("done") && legal.includes("unit")) {
+    if (/activate units/i.test(String(view.prompt || "")) && legal.includes("done") && legal.includes("unit")) {
         const unsel = new Set(Array.isArray(view?.unselect) ? view.unselect : [])
         const forcePlan = composeTaskForce(view?.ai?.focus, null, null, view,
             Array.isArray(view.actions.unit) ? view.actions.unit.filter(u=>!unsel.has(u)) : [], context.role)
-        if (forcePlan && forcePlan.complete) action = "done"
         // 若过滤后为空(只剩已激活单位), 则 done 收尾。
         const addable = (Array.isArray(view.actions.unit) ? view.actions.unit : [])
             .filter(u => !unsel.has(u))
             .filter(u => { try { return esm_gate_on() || !pieces[u] || pieces[u].class !== "air" } catch (e) { return true } })
-        if (addable.length === 0) action = "done"
+        const selected = progress ? Number(progress[1]) : (view.offensive?.active_units?.flat?.().length || 0)
+        const limit = progress ? Number(progress[2]) : selected + addable.length
+        activationPlan = Object.assign({}, forcePlan || {}, { selected, limit, remaining: Math.max(0, limit - selected),
+            mode: forcePlan?.complete ? "后续目标/前线调动" : "补足当前目标编队" })
+        // 用户确认的运用原则：EC 当前目标达到最低标准后，不立即浪费剩余激活量；继续按
+        // 战略链选择后续目标兵力，再把仍可激活的后方部队向前线调动。只有达到上限或
+        // 没有新增合法候选时才结束。本规则不改变引擎给出的合法单位集合。
+        if (selected < limit && addable.length > 0) action = "unit"
+        else action = "done"
         // 两栖登陆无护航可用: 在本窗尚未激活任何单位时提前 done(空攻势), 避免把两栖地面
         // 送去敌占/敌控港口硬登陆吃 "Amphibious Assault failed"。已有已激活单位时不再阻断
         // (那些单位已注定走无头推进, 由 eop_pick_unit 的护航逻辑尽量补海军)。
-        else if (typeof eop_landing_no_escort === "function"
+        if (typeof eop_landing_no_escort === "function"
             && !(view.offensive?.active_units?.flat?.().length > 0)
             && eop_landing_no_escort(context.role, view)) action = "done"
     }
@@ -22018,11 +22046,12 @@ function evaluateChart(chart, view, context) {
     const focusInfo = eop_trace(context.role)
     const publicTrace = {
         policy: ERASMUS_VERSION, chart: chart.id, node: nodeId, nodePath, role: context.role, conditions,
-        attempted: attempted.length ? attempted : undefined, forceSummary,
+        attempted: attempted.length ? attempted : undefined, forceSummary, activationPlan,
         strategy, action, argument: action === "card" ? "[出牌后公开]" : argument, dice, fallback,
         axis: focusInfo.axis, focus: focusInfo.focus,
         inferred: chart.qa?.inferred_nodes?.includes(nodeId) || false,
         explanation: fallback ? "图表优先策略在本窗口均不可执行(no_candidate)，执行图表声明的保护出口。"
+            : activationPlan ? `当前目标编队${activationPlan.complete ? "已达标；继续利用剩余激活量执行后续目标或前推。" : "尚未达标；继续补足兵力。"}`
             : "沿图表条件分支和策略优先级迭代候选(candidate_found)后选择。",
     }
     return { action, argument, publicTrace, privateTrace: { ...publicTrace, argument, legalActions: legal, candidates: view.actions[action] } }
@@ -22055,7 +22084,7 @@ function erasmus_sm_decision(strategy, pick, view, context) {
         engineStage: runtime.engineStage, windowKind: runtime.windowKind, action: pick.action, argument: arg,
         dice: strategy.d10Rolls && strategy.d10Rolls.length ? strategy.d10Rolls : null, fallback: false, inferred: false,
         ...(pick.via ? { via: pick.via } : {}),
-        explanation: `状态机(zh.10): ${strategy.phase}阶段逐牌评估「${strategy.name}」。${(strategy.notes || []).join(" ")}`,
+        explanation: `状态机(zh.11): ${strategy.phase}阶段逐牌评估「${strategy.name}」。${(strategy.notes || []).join(" ")}`,
     }
     return { action: pick.action, argument: pick.argument, publicTrace: base,
         privateTrace: { ...base, sm: smPrivate, argument: pick.argument, legalActions: Object.keys(view.actions || {}) } }

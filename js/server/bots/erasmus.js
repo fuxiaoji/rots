@@ -2,7 +2,7 @@
 /** import server/erasmus_data.js*/
 /** import server/erasmus_state.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.10"
+const ERASMUS_VERSION = "erasmus-v2.0-zh.11"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "delay", "unit", "hex", "strat_move", "ground_move", "roll", "eliminate", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
@@ -261,6 +261,7 @@ function evaluateChart(chart, view, context) {
     let action = null
     let attempted = []
     let fallback = false
+    let activationPlan = null
     if (current?.type === "priority") {
         const chosen = first_executable_strategy(current.strategies, legal, view)
         attempted = chosen.attempts
@@ -278,20 +279,27 @@ function evaluateChart(chart, view, context) {
     if (volatileBonus && Number(volatileBonus[1]) >= Number(volatileBonus[2]) && legal.includes("done")) action = "done"
     // “Activate units”窗口: 当 unit 候选里已无可新增单位(全部是已激活的 unselect 单位, 或
     // 只剩空中单位)时, 继续选 unit 只会 toggle 撤销或触发无头移动死窗; 此时必须 done 收尾。
-    if (action !== "done" && /activate units/i.test(String(view.prompt || "")) && legal.includes("done") && legal.includes("unit")) {
+    if (/activate units/i.test(String(view.prompt || "")) && legal.includes("done") && legal.includes("unit")) {
         const unsel = new Set(Array.isArray(view?.unselect) ? view.unselect : [])
         const forcePlan = composeTaskForce(view?.ai?.focus, null, null, view,
             Array.isArray(view.actions.unit) ? view.actions.unit.filter(u=>!unsel.has(u)) : [], context.role)
-        if (forcePlan && forcePlan.complete) action = "done"
         // 若过滤后为空(只剩已激活单位), 则 done 收尾。
         const addable = (Array.isArray(view.actions.unit) ? view.actions.unit : [])
             .filter(u => !unsel.has(u))
             .filter(u => { try { return esm_gate_on() || !pieces[u] || pieces[u].class !== "air" } catch (e) { return true } })
-        if (addable.length === 0) action = "done"
+        const selected = progress ? Number(progress[1]) : (view.offensive?.active_units?.flat?.().length || 0)
+        const limit = progress ? Number(progress[2]) : selected + addable.length
+        activationPlan = Object.assign({}, forcePlan || {}, { selected, limit, remaining: Math.max(0, limit - selected),
+            mode: forcePlan?.complete ? "后续目标/前线调动" : "补足当前目标编队" })
+        // 用户确认的运用原则：EC 当前目标达到最低标准后，不立即浪费剩余激活量；继续按
+        // 战略链选择后续目标兵力，再把仍可激活的后方部队向前线调动。只有达到上限或
+        // 没有新增合法候选时才结束。本规则不改变引擎给出的合法单位集合。
+        if (selected < limit && addable.length > 0) action = "unit"
+        else action = "done"
         // 两栖登陆无护航可用: 在本窗尚未激活任何单位时提前 done(空攻势), 避免把两栖地面
         // 送去敌占/敌控港口硬登陆吃 "Amphibious Assault failed"。已有已激活单位时不再阻断
         // (那些单位已注定走无头推进, 由 eop_pick_unit 的护航逻辑尽量补海军)。
-        else if (typeof eop_landing_no_escort === "function"
+        if (typeof eop_landing_no_escort === "function"
             && !(view.offensive?.active_units?.flat?.().length > 0)
             && eop_landing_no_escort(context.role, view)) action = "done"
     }
@@ -373,11 +381,12 @@ function evaluateChart(chart, view, context) {
     const focusInfo = eop_trace(context.role)
     const publicTrace = {
         policy: ERASMUS_VERSION, chart: chart.id, node: nodeId, nodePath, role: context.role, conditions,
-        attempted: attempted.length ? attempted : undefined, forceSummary,
+        attempted: attempted.length ? attempted : undefined, forceSummary, activationPlan,
         strategy, action, argument: action === "card" ? "[出牌后公开]" : argument, dice, fallback,
         axis: focusInfo.axis, focus: focusInfo.focus,
         inferred: chart.qa?.inferred_nodes?.includes(nodeId) || false,
         explanation: fallback ? "图表优先策略在本窗口均不可执行(no_candidate)，执行图表声明的保护出口。"
+            : activationPlan ? `当前目标编队${activationPlan.complete ? "已达标；继续利用剩余激活量执行后续目标或前推。" : "尚未达标；继续补足兵力。"}`
             : "沿图表条件分支和策略优先级迭代候选(candidate_found)后选择。",
     }
     return { action, argument, publicTrace, privateTrace: { ...publicTrace, argument, legalActions: legal, candidates: view.actions[action] } }
@@ -410,7 +419,7 @@ function erasmus_sm_decision(strategy, pick, view, context) {
         engineStage: runtime.engineStage, windowKind: runtime.windowKind, action: pick.action, argument: arg,
         dice: strategy.d10Rolls && strategy.d10Rolls.length ? strategy.d10Rolls : null, fallback: false, inferred: false,
         ...(pick.via ? { via: pick.via } : {}),
-        explanation: `状态机(zh.10): ${strategy.phase}阶段逐牌评估「${strategy.name}」。${(strategy.notes || []).join(" ")}`,
+        explanation: `状态机(zh.11): ${strategy.phase}阶段逐牌评估「${strategy.name}」。${(strategy.notes || []).join(" ")}`,
     }
     return { action: pick.action, argument: pick.argument, publicTrace: base,
         privateTrace: { ...base, sm: smPrivate, argument: pick.argument, legalActions: Object.keys(view.actions || {}) } }

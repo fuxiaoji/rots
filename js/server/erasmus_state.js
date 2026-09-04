@@ -441,7 +441,15 @@ function esm_strategy_targets(strategy) {
     const chain = strategy && Array.isArray(strategy.chain) ? strategy.chain : []
     const targetMeta = strategy && Array.isArray(strategy.targetMeta) ? strategy.targetMeta : []
     const byHex = new Map(targetMeta.map(target => [target.hex, target]))
-    return chain.slice(0, 12).map((h, index) => Object.assign({ priority: index + 1 }, esm_hex_trace(h, strategy.role), byHex.get(h) || {}))
+    return chain.slice(0, 12).map((h, index) => {
+        const meta = byHex.get(h) || {}
+        const target = Object.assign({ priority: index + 1 }, esm_hex_trace(h, strategy.role), meta)
+        if (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ") {
+            const mine = esm_role_faction(strategy.role)
+            try { target.achieved = !has_zoi(h, 1 - mine) } catch (e) { target.achieved = false }
+        }
+        return target
+    })
 }
 
 // 第5/11页编队器需要知道一个地图目标究竟是“压制”还是“夺占”。此前仅动态 HQ

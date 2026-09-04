@@ -216,6 +216,7 @@ function create_view() {
     const aiBattle = !!(G.offensive && (G.offensive.battle_hexes || []).length)
     const aiFocus = typeof eop_focus === "function" ? eop_focus(ROLES[R]) : null
     const aiFocusData = aiFocus !== null && aiFocus !== undefined ? get_map_data(aiFocus) : null
+    const aiFocusMeta = aiFocus !== null && aiFocus !== undefined && typeof eop_target_meta === "function" ? eop_target_meta(ROLES[R], aiFocus) : null
     const publicUnits=[]
     for(let u=1;u<pieces.length;++u){const h=G.location[u],p=pieces[u];if(h>=0&&h<=LAST_BOARD_HEX)publicUnits.push({id:u,faction:p.faction,class:p.class,type:p.type||null,cf:Number(p.cf)||0,rcf:Number(p.rcf)||0,lf:Number(p.lf)||0,br:Number(p.br)||0,ebr:Number(p.ebr)||0,asp:!!p.asp,stratMove:!!p.strat_move,reduced:!!(G.reduced&&set_has(G.reduced,u)),location:h})}
     V.ai = { state:aiState, stage:aiStage, windowKind:aiWindow, focus:aiFocus, ownCards:ownCardMeta, units:publicUnits,
@@ -256,7 +257,7 @@ function create_view() {
         "AP_CARD_ALREADY_PLAYED","AP_FIRST_GAME_CARD","AP_HAS_FLINTLOCK_OR_SHOESTRING","AP_HAS_UNRESTRICTED_MILITARY_EVENT",
         "AP_HAS_RESTRICTED_MILITARY_EVENT","AP_ALL_MILITARY_EVENTS_RESTRICTED","AP_FO_SELECTED","AP_LAST_CARD",
         "AP_LAST_PLAYABLE_IS_REACTION","AP_CHINA_WITHIN_2_OF_COLLAPSE","AP_HAS_PLAYABLE_CHINA_EVENT",
-        "AP_CHINA_WITHIN_2_AND_EVENT_AVAILABLE","JP_EARLY_DEI_TARGET_OCCUPIED","IS_AIR_STRIKE",
+            "AP_CHINA_WITHIN_2_AND_EVENT_AVAILABLE","JP_EARLY_DEI_TARGET_OCCUPIED","IS_AIR_STRIKE",
         "TARGET_EMPTY_OR_NAVAL_AND_GROUND_CAN_EXIT","ENEMY_AIR_OR_CARRIER_CAN_REACT",
         "FORCE_MEETS_BATTLE_SUPPORT_STANDARD","TARGET_DAMAGE_LEVEL_MET","ENEMY_CAN_REACT_AND_IS_EC",
         "BATTLE_IN_HQ_RANGE_AND_REACTION_CARD","EARLY_DEFENSE_DONE_AND_KAMIKAZE_STANDARD",
@@ -269,7 +270,8 @@ function create_view() {
     V.ai.predicates.AP_FO_SELECTED = G.future_offensive[AP] > 0
     V.ai.predicates.JP_LAST_CARD = V.ai.predicates.AP_LAST_CARD = ownHand.length === 1
     V.ai.predicates.JP_HAS_UNRESTRICTED_MILITARY_EVENT = V.ai.predicates.AP_HAS_UNRESTRICTED_MILITARY_EVENT = ownCardMeta.some(c=>c.military)
-    V.ai.predicates.IS_AIR_STRIKE = /declare_battle|choose_attack/.test(aiState)
+    V.ai.predicates.IS_AIR_STRIKE = aiFocusMeta && (aiFocusMeta.kind === "SUPPRESS" || aiFocusMeta.kind === "SUPPRESS_HQ")
+        || /declare_battle|choose_attack/.test(aiState)
     V.ai.predicates.TARGET_EMPTY_OR_NAVAL_AND_GROUND_CAN_EXIT = V.ai.predicates.TARGET_EMPTY || V.ai.predicates.TARGET_ONLY_ENEMY_NAVAL
     V.ai.predicates.ENEMY_AIR_OR_CARRIER_CAN_REACT = aiBattle
     V.ai.predicates.FORCE_MEETS_BATTLE_SUPPORT_STANDARD = aiBattle
