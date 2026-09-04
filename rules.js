@@ -14126,17 +14126,8 @@ P.strategic_bombing = {
     },
     roll() {
         var close_air_base = TOKYO_AIR_BASES.filter(h => is_space_controlled(h, AP) && (G.supply_cache[h] & AP_SUPPLY_AIRFIELD)).length > 0
-        var campaign = events.STRAT_BOMBING_CAMPAIGN
-        var ok = G.active_stack.map(u => bombing(u, close_air_base)).reduce((a, b) => a || b, false)
-        // D5 对账: 战略轰炸战役标记改为“连续成功的战役段计数”(1..9 封顶), 逐回合只 +1 一次
-        // (不再走 check_event 存 G.turn)。victory_1945 判 1<=标记<=9; 原语义下标记=首次成功
-        // 轰炸发生的回合号, 而 B29 在 1942-45 等 12 回合剧本第 9 回合才增援、最早第 10 回合
-        // 才能首炸 → 标记恒 ≥10, “日本因战略轰炸投降”在规则层面永不可达(实测多种子 mk=10,
-        // res 降到 3 也不投降)。按段计数后, res<=1 且战役在 9 段内即触发盟军胜利。
-        if (ok) {
-            G.events[campaign.id] = Math.min((G.events[campaign.id] || 0) + 1, 9)
-        } else {
-            G.events[campaign.id] = 0
+        if (!G.active_stack.map(u => bombing(u, close_air_base)).reduce((a, b) => a || b, false)) {
+            G.events[events.STRAT_BOMBING_CAMPAIGN.id] = 0
         }
         G.active_stack = []
         clear_undo()
@@ -18154,6 +18145,7 @@ function bombing(u, close_air_base) {
     if (success) {
         G.strategic_warfare++
         check_event(events.STRAT_BOMBING)
+        check_event(events.STRAT_BOMBING_CAMPAIGN)
     }
     clear_undo()
     return success
@@ -21013,6 +21005,146 @@ function esm_trace_of(strategy) {
         ...(strategy.eventPhase ? { eventPhase: strategy.eventPhase } : {}),
         ...(strategy.ctx && strategy.ctx._diag ? { diag: strategy.ctx._diag } : {}) }
 }
+
+// ===========================================================================
+// CDSS「增援或补员阶段」落位 (顺序 L157-187) —— zh.7 补全
+// 此前增援/补员落位走通用 action_hex/unit 散打(就近焦点或随机散打), 未实现 CDSS
+// 优先级, 是盟军迟迟无法集中兵力/把 B29 摆进轰炸基地的主因之一。核心原则(L159):
+// 单位"尽可能靠近敌人"; 指挥部有指定母港; B29 有专门基地规则(L187)。
+// 本区只读引擎状态(G/pieces/map), 不触碰 RNG, 纯确定性打分。
+// ===========================================================================
+
+// 增援/补员窗口识别 -> "reinf"(增援落位) | "repl_unit"(选补员单位) | "repl_place"(补员落位) | null
+function esm_reinf_window(view) {
+    const p = String((view && view.prompt) || "")
+    if (/as a reinforcement/i.test(p)) return "reinf"
+    if (/choose unit to reinforce/i.test(p)) return "repl_unit"
+    if (/choose hex to place/i.test(p)) return "repl_place"
+    return null
+}
+
+// 一次性收集"敌方单位落点"(地面/任意), 供就近打分; for_each_unit_on_map 不可用时回空。
+function esm_enemy_locs(faction) {
+    const enemy = 1 - faction
+    const ground = [], any = []
+    try {
+        for_each_unit_on_map((u, piece, loc) => {
+            if (piece.faction === enemy) {
+                any.push(loc)
+                if (piece.class === "ground") ground.push(loc)
+            }
+        })
+    } catch (e) { /* 引擎未提供该迭代器时退化为无敌方信息 */ }
+    return { ground, any }
+}
+
+function esm_min_dist(hex, locs) {
+    let best = 999
+    for (let i = 0; i < locs.length; i++) {
+        const d = get_distance(hex, locs[i])
+        if (d < best) best = d
+    }
+    return best
+}
+
+// 在 candidates 内取 scoreFn 最小者(并列取小 hex), 无候选回 undefined。
+function esm_pick_nearest(candidates, scoreFn) {
+    let best = null, bestS = Infinity
+    for (let i = 0; i < candidates.length; i++) {
+        const h = candidates[i]
+        const s = scoreFn(h)
+        if (s < bestS || (s === bestS && (best === null || h < best))) { bestS = s; best = h }
+    }
+    return best
+}
+
+// 盟军指挥部 CDSS 母港(L179): SWPac->澳大利亚, CPac->瓦胡岛, ANZAC->莫尔兹比港/澳,
+// SPac( Ghormley/Halsey )->新几内亚/肯达里/努美阿, SEAC->加尔各答。日军回 null(用最近东京)。
+// 马来亚/ABDA 不在此列(notreplaceable 原地)。
+function esm_hq_home(piece) {
+    const homes = {
+        hq_ap_c: ["Oahu"],
+        hq_ap_sw: ["Townsville", "Darwin"],            // 澳大利亚(东北澳港)
+        hq_ap_sg: ["Port Moresby", "Kendari"],         // 南太平洋(新几内亚/肯达里)
+        hq_ap_sh: ["Port Moresby", "Kendari"],
+        hq_ap_anzac: ["Port Moresby", "Townsville"],   // 莫尔兹比港/澳大利亚
+        hq_ap_seac: ["Calcutta"],
+    }
+    const names = homes[piece.id]
+    if (!names) return null
+    for (let i = 0; i < names.length; i++) {
+        const idx = eop_resolve_token(names[i])
+        if (idx !== null) return idx
+    }
+    return null
+}
+
+// CDSS 落位打分: 对候选格 h 给越小越优的分值。
+function esm_placement_score(h, piece, enemy) {
+    const md = get_map_data(h)
+    const isPort = !!(md && md.port)
+    const isAirfield = !!(md && md.airfield)
+    if (piece.class === "ground") {
+        // L171/184: 地面 -> 离敌人(地面)最近的港口(候选已被引擎滤成港口)。
+        const d = enemy.ground.length ? esm_min_dist(h, enemy.ground) : (enemy.any.length ? esm_min_dist(h, enemy.any) : 0)
+        return (isPort ? 0 : 50) * 1000 + d * 10
+    }
+    if (piece.class === "air") {
+        // L169/183: 空中 -> 离敌 AZOI(用离敌任意单位近似)最近的港口, 后机场。
+        const d = enemy.any.length ? esm_min_dist(h, enemy.any) : 0
+        return (isPort ? 0 : isAirfield ? 1 : 50) * 1000 + d * 10
+    }
+    if (piece.class === "naval") {
+        // L182: 海军 -> 港口, 靠近指挥部(用离敌最近近似 = 前线)。
+        const d = enemy.any.length ? esm_min_dist(h, enemy.any) : 0
+        return (isPort ? 0 : 50) * 1000 + d * 10
+    }
+    const d = enemy.any.length ? esm_min_dist(h, enemy.any) : 0
+    return d * 10
+}
+
+// CDSS 增援/补员落位入口: 在 candidates(引擎已滤成合法落点)内挑 CDSS 优先级最优者。
+function esm_pick_placement(candidates, role, unit, piece) {
+    if (!Array.isArray(candidates) || !candidates.length) return undefined
+    if (!piece) return esm_pick_nearest(candidates, h => h)   // 无单位信息: 回最小 hex(稳定)
+    const faction = piece.faction === JP ? JP : AP
+
+    // B29 (盟军优先#5 / L187): 距东京<=8 港口/机场 -> 中国盒 -> 最近东京港口/机场。
+    if (piece.b29) {
+        return esm_pick_nearest(candidates, h => {
+            if (h === CHINA_BOX) return 100
+            const md = get_map_data(h)
+            const base = !!(md && (md.airfield || md.port))
+            const d = get_distance(h, TOKYO)
+            if (base && d <= 8) return d          // 最优: 距东京<=8 基地
+            if (base) return 200 + d               // 次优: 最近基地
+            return 400 + d                         // 兜底: 无基地
+        })
+    }
+
+    // 指挥部: 盟军 -> 指定母港; 日军 -> 最近东京(初始位置近似)。
+    if (piece.class === "hq") {
+        const home = esm_hq_home(piece)
+        const ref = home !== null ? home : TOKYO
+        return esm_pick_nearest(candidates, h => get_distance(h, ref))
+    }
+
+    const enemy = esm_enemy_locs(faction)
+    return esm_pick_nearest(candidates, h => esm_placement_score(h, piece, enemy))
+}
+
+// CDSS 补员选择(L161,185-186): 优先恢复被消灭部队(放回地图), 再翻正减损; 同类选最强战力。
+function esm_pick_replacement_unit(candidates, role) {
+    if (!Array.isArray(candidates) || !candidates.length) return undefined
+    const cf = u => { try { const p = pieces[u]; return Number((p && (p.cf || p.lf || p.rcf)) || 0) } catch (e) { return 0 } }
+    const isElim = u => { try { return G.location[u] === ELIMINATED_BOX } catch (e) { return false } }
+    const isReduced = u => { try { return set_has(G.reduced, u) } catch (e) { return false } }
+    const score = u => {
+        const cat = isElim(u) ? 0 : isReduced(u) ? 1 : 2
+        return cat * 100000 - cf(u) * 100 + u   // 类别优先; 同类内战力高(负号→大到小), u 作稳定 tie
+    }
+    return candidates.slice().sort((a, b) => score(a) - score(b))[0]
+}
 /** import server/erasmus_state.js*/
 
 const ERASMUS_VERSION = "erasmus-v2.0-zh.7"
@@ -21027,6 +21159,23 @@ const FAMILY_ACTION_PRIORITY = {
     pass: ["pass", "skip", "done", "next", "roll"],
     ground: ["action_hex", "unit", "hex", "event", "ops", "done"],
     reaction: ["roll", "event", "unit", "action_hex", "done"],
+}
+
+// 无头移动窗里这些“按钮”不会真正完成移动, bot 永不把它们当作最终动作:
+//  - move: 无路径参数的残按钮(move(undefined) 直接崩溃)。
+//  - avoid_zoi/amphibious/barges/extended_air/advanced_move/no_organic: 只切 L.move_type
+//    或改编成后重渲染(期望玩家再点目标格), 无头下只会重落到 move 崩溃或死窗。
+// 真正的移动由 advance 经 self.move(path) 完成, 或由 done/turn_box/no_move/stop 收尾。
+const HEADLESS_MOVE_NOOP = new Set(["move", "avoid_zoi", "amphibious", "barges", "extended_air", "advanced_move", "no_organic"])
+
+// 在“移动窗里单位已被选中(active_stack 非空, 表现为 unselect 非空且无 advance)”时, 唯一
+// 能回到可控状态的合法动作就是撤销选择(unit) —— 回空栈后 advance/done/turn_box 重新接管。
+// 其余按钮(avoid_zoi/strat_move/ground_move/... / move)要么切模式要么崩溃, 不可作为收尾。
+function move_window_should_deselect(view, legal) {
+    return /move units/i.test(String(view.prompt || ""))
+        && !legal.includes("advance")
+        && legal.includes("unit")
+        && Array.isArray(view.unselect) && view.unselect.length > 0
 }
 
 function erasmus_hash(text) {
@@ -21129,11 +21278,54 @@ function pick_argument(value, seedText, action, view) {
 // 未夺目标, 目标不可达时打离焦点最近的格/单位, 逐步向主轴推进。
 function target_argument(action, value, seedText, role, view) {
     const prompt = String(view?.prompt || "")
+    // 通用: unit 候选里若混入“已选/将被撤销”的 unselect 单位(unselect_unit 塞进来的),
+    // 选它只会 toggle 撤销当前选择 → 死循环。先在入口统一剔除, 只留“可新增/可前进”的单位;
+    // 若剔除后为空, 交 evaluateChart 的动作级兜底跳过 unit(见 isActivateWindow 上方的通用兜底)。
+    if (action === "unit" && Array.isArray(value) && Array.isArray(view?.unselect) && view.unselect.length) {
+        const unsel = new Set(view.unselect)
+        const avail = value.filter(u => !unsel.has(u))
+        if (avail.length) value = avail
+    }
+    // CDSS「增援或补员阶段」落位/补员选择 (zh.7 补全): 按优先级落位, 而非散打(随机/就近焦点)。
+    // 仅完整全图剧本启用(gate on), 保持 SP/Burma 子图剧本行为不变(golden 不动)。
+    if (esm_gate_on() && action === "action_hex" && /as a reinforcement|choose hex to place/i.test(prompt)) {
+        const u = (typeof G !== "undefined" && G && G.active_stack && G.active_stack[0]) || -1
+        const piece = (u >= 0 && typeof pieces !== "undefined" && pieces[u]) ? pieces[u] : null
+        const picked = esm_pick_placement(value, role, u, piece)
+        return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
+    }
+    if (esm_gate_on() && action === "unit" && /choose unit to reinforce/i.test(prompt)) {
+        const picked = esm_pick_replacement_unit(value, role)
+        return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
+    }
     if (action === "action_hex") {
         const picked = eop_pick_action_hex(value, role)
         return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
     }
-    if (action === "unit" && /Activate units|Declare battle hexes|Confirm declared battle hexes|Assign units to battle/i.test(prompt)) {
+    if (action === "unit" && /activate units/i.test(prompt)) {
+        // 超限(hq_bonus 随激活动态变化, 可能先“5 of 6”再激活第 6 个后变“6 of 5 Too many”):
+        // 此时没有 done 按钮, 必须撤销已激活单位回到上限。从 view.unselect(已激活)里逐个撤销
+        // (取最大 id, 确定性), 直到 ≤ 上限后 progress 逻辑自然 done。
+        if (/Too many units selected/i.test(prompt)) {
+            const unsel = Array.isArray(view?.unselect) ? view.unselect : []
+            if (unsel.length) return unsel[unsel.length - 1]
+            return pick_argument(value, seedText, action, view)
+        }
+        // 正常激活: unit 候选同时含“待激活单位”(action_unit)与“已激活单位”(unselect_unit
+        // 塞进来并记入 view.unselect)。误选已激活单位会被 toggle 撤销 → 死循环, 故先剔除已激活。
+        let pickValue = value
+        if (Array.isArray(view?.unselect) && view.unselect.length) {
+            const unsel = new Set(view.unselect)
+            const avail = value.filter(u => !unsel.has(u))
+            if (avail.length) pickValue = avail
+        }
+        // 空中单位不参与常规攻势夺格, 且无头引擎对其移动支持有缺口(攻击→turn_box 退场、
+        // 反应→死窗); 激活只选地面/海军(由 advance 推进夺格), 空中单位留在原地继续 ZOI/防守。
+        pickValue = pickValue.filter(u => { try { return pieces[u] && pieces[u].class !== "air" } catch (e) { return true } })
+        const picked = eop_pick_unit(pickValue, role)
+        return picked !== undefined ? picked : pick_argument(pickValue, seedText, action, view)
+    }
+    if (action === "unit" && /Declare battle hexes|Confirm declared battle hexes|Assign units to battle/i.test(prompt)) {
         const picked = eop_pick_unit(value, role)
         return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
     }
@@ -21189,15 +21381,33 @@ function evaluateChart(chart, view, context) {
     }
     const progress = String(view.prompt || "").match(/(\d+)\s+of\s+(\d+)/i)
     if (progress && Number(progress[1]) >= Number(progress[2]) && legal.includes("done")) action = "done"
+    // “Activate units”窗口: 当 unit 候选里已无可新增单位(全部是已激活的 unselect 单位, 或
+    // 只剩空中单位)时, 继续选 unit 只会 toggle 撤销或触发无头移动死窗; 此时必须 done 收尾。
+    if (action !== "done" && /activate units/i.test(String(view.prompt || "")) && legal.includes("done") && legal.includes("unit")) {
+        const unsel = new Set(Array.isArray(view?.unselect) ? view.unselect : [])
+        // 空中单位不算“可新增”(不参与常规攻势夺格且无头移动有缺口), 全部过滤;
+        // 若过滤后为空(只剩空中/已激活单位), 则 done 收尾。
+        const addable = (Array.isArray(view.actions.unit) ? view.actions.unit : [])
+            .filter(u => !unsel.has(u))
+            .filter(u => { try { return pieces[u] && pieces[u].class !== "air" } catch (e) { return true } })
+        if (addable.length === 0) action = "done"
+    }
     // “Declare battle hexes.”窗口的 unit 是选择可打击的已激活空中单位(随后用
     // action_hex 指向目标格并 create_battle_hex), 并非追加激活单位, 因此该窗口
     // 不能强制按 done 跳过——否则攻势永远零会战(有射程内敌格也不会申报)。
     // 激活/移动窗口仍由上一行逻辑收尾(done), 行为不变。
+    // “Activate units: X of Y”窗口的 unit 是逐个激活进攻单位(done 才收尾), 若在已激活
+    // 1 个单位后就强制 done, 则每个攻势只激活 1 个单位 → 会战几乎为零 → 无法夺格/PoW。
+    // 该窗口必须豁免“强制 done”, 让 bot 反复 unit 直到 hit 上限, 由上一行 progress 逻辑收尾。
     const isDeclareHexesWindow = /declare battle hexes|confirm declared battle hexes/i.test(String(view.prompt || ""))
-    if (!isDeclareHexesWindow && legal.includes("done") && legal.includes("unit") && view.offensive?.active_units?.flat?.().length > 0) action = "done"
+    const isActivateWindow = /activate units/i.test(String(view.prompt || ""))
+    if (!isDeclareHexesWindow && !isActivateWindow && legal.includes("done") && legal.includes("unit") && view.offensive?.active_units?.flat?.().length > 0) action = "done"
     if (fallback) {
         const fallbackNode = nodes.get(`${prefix}-FALLBACK`)
-        action = (fallbackNode?.allowed_actions || []).find(item => legal.includes(item)) || legal.slice().sort()[0]
+        // 保护出口绝不能选中“切换 move_type/无路径 move”这类无头残按钮(会崩溃/死窗)。
+        const safeLegal = legal.filter(a => !HEADLESS_MOVE_NOOP.has(a))
+        action = (fallbackNode?.allowed_actions || []).find(item => legal.includes(item) && !HEADLESS_MOVE_NOOP.has(item))
+            || safeLegal.slice().sort()[0]
     }
     // 无头自对打: advance 只在 headless_moves 攻击方 ATTACK_STAGE 空栈移动窗出现(引擎端
     // 唯一来源), 表示该窗应把一组地面/海军沿合法格推进向敌而不是直接 done。它必须覆盖
@@ -21206,6 +21416,39 @@ function evaluateChart(chart, view, context) {
         action = "advance"
         fallback = false
         strategy = "HEADLESS_ADVANCE"
+    }
+    // “Move units”窗口 + 已选中空中单位(纯空/无地面海军的攻势, 无 advance): 空中单位
+    // “就地待命”应走 turn_box(退到回合轨、下回合返场), 而非 no_move——no_move 会触发
+    // move_to 原地落子, 在反应/纯空场景下落入无合法动作的死窗。地面/海军由 advance 处理。
+    if (/move units/i.test(String(view.prompt || "")) && legal.includes("turn_box") && !legal.includes("advance")) {
+        action = "turn_box"
+    }
+    // 通用防 toggle 死循环: 引擎里 unselect_unit 会把“已选/将被撤销”的单位也塞进 unit 候选
+    // (记入 view.unselect)。若此刻 unit 的每个候选都是 unselect, 选 unit 只会撤销当前选择 →
+    // 在“Move units (0/1)↔(1/1)”这类窗口原地打转。此时跳过 unit, 改取下一个可执行动作
+    // (move/no_move/done 等), 让移动/收尾真正发生。
+    if (action === "unit" && Array.isArray(view.actions.unit) && view.actions.unit.length > 0) {
+        const unsel = new Set(Array.isArray(view?.unselect) ? view.unselect : [])
+        const addable = view.actions.unit.filter(u => !unsel.has(u))
+        if (addable.length === 0) {
+            if (move_window_should_deselect(view, legal)) {
+                // 移动窗 + 已选中单位(如撤退/会战把单位重选回来 spec_move=1): 选 unit 是
+                // 撤销选择回空栈, 让 advance/done/turn_box 重新接管并推进, 不是 toggle 死循环。
+                action = "unit"
+            } else {
+                // 激活/申报窗: unit 候选只剩已激活单位, 选它=撤销激活回退, 才是死循环; 跳过。
+                action = ACTION_PRIORITY.find(a => a !== "unit" && legal.includes(a) && !HEADLESS_MOVE_NOOP.has(a))
+                    || legal.find(a => a !== "unit" && !HEADLESS_MOVE_NOOP.has(a))
+                    || "unit"
+            }
+        }
+    }
+    // 最终安全网: 无头下绝不把“切 move_type/无路径 move”当最终动作 —— 它们只会崩溃或重落到
+    // 死窗。真到这一步(上面各分支已规避, 属兜底), 退回可控收尾/撤销动作, 让窗口推进而非卡死。
+    if (HEADLESS_MOVE_NOOP.has(action)) {
+        action = ["advance", "done", "turn_box", "unit", "no_move", "stop", "cancel", "skip", "pass", "continue", "next"]
+            .find(a => legal.includes(a))
+            || legal.filter(a => !HEADLESS_MOVE_NOOP.has(a)).slice().sort()[0]
     }
     const nodeId = fallback ? `${prefix}-FALLBACK` : (current?.id || `${prefix}-FALLBACK`)
     const seedText = `${context.seed}:${context.actionOrdinal}:${chart.id}:${nodeId}`
