@@ -217,8 +217,9 @@ function create_view() {
     const aiFocus = typeof eop_focus === "function" ? eop_focus(ROLES[R]) : null
     const aiFocusData = aiFocus !== null && aiFocus !== undefined ? get_map_data(aiFocus) : null
     const publicUnits=[]
-    for(let u=1;u<pieces.length;++u){const h=G.location[u],p=pieces[u];if(h>=0&&h<=LAST_BOARD_HEX)publicUnits.push({id:u,faction:p.faction,class:p.class,type:p.type||null,cf:Number(p.cf)||0,lf:Number(p.lf)||0,reduced:!!(G.reduced&&set_has(G.reduced,u)),location:h})}
+    for(let u=1;u<pieces.length;++u){const h=G.location[u],p=pieces[u];if(h>=0&&h<=LAST_BOARD_HEX)publicUnits.push({id:u,faction:p.faction,class:p.class,type:p.type||null,cf:Number(p.cf)||0,rcf:Number(p.rcf)||0,lf:Number(p.lf)||0,br:Number(p.br)||0,ebr:Number(p.ebr)||0,asp:!!p.asp,stratMove:!!p.strat_move,reduced:!!(G.reduced&&set_has(G.reduced,u)),location:h})}
     V.ai = { state:aiState, stage:aiStage, windowKind:aiWindow, focus:aiFocus, ownCards:ownCardMeta, units:publicUnits,
+        focusControlledBy: aiFocus === null || aiFocus === undefined ? null : (is_space_controlled(aiFocus, R) ? ROLES[R] : ROLES[1-R]),
         predicates: {
             TARGET_IS_SEACOAST_OR_ISLAND: !!(aiFocusData && (aiFocusData.port || aiFocusData.island)),
             CAN_GROUND_ADVANCE: aiStage === ATTACK_STAGE,

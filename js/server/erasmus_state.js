@@ -439,9 +439,26 @@ function esm_advance_metrics() {
 }
 function esm_strategy_targets(strategy) {
     const chain = strategy && Array.isArray(strategy.chain) ? strategy.chain : []
-    const dynamic = strategy && Array.isArray(strategy.dynamicTargets) ? strategy.dynamicTargets : []
-    const byHex = new Map(dynamic.map(target => [target.hex, target]))
+    const targetMeta = strategy && Array.isArray(strategy.targetMeta) ? strategy.targetMeta : []
+    const byHex = new Map(targetMeta.map(target => [target.hex, target]))
     return chain.slice(0, 12).map((h, index) => Object.assign({ priority: index + 1 }, esm_hex_trace(h, strategy.role), byHex.get(h) || {}))
+}
+
+// 第5/11页编队器需要知道一个地图目标究竟是“压制”还是“夺占”。此前仅动态 HQ
+// 带元数据，普通目标全部退化为无类型 hex，导致敌控岛屿也可能被一架飞机视为完成。
+function esm_goal_target_meta(goals) {
+    const out = [], seen = new Set()
+    for (const goal of goals || []) {
+        for (const hex of goal.hexes || []) {
+            if (seen.has(hex)) continue
+            seen.add(hex)
+            const suppress = goal.kind === "SUPPRESS"
+            out.push({ hex, kind: goal.kind, objective: goal.text,
+                damageLevel: suppress ? 0.5 : 1,
+                requiresOccupation: goal.kind === "CONQUEST" || goal.kind === "INVADE_JAPAN" })
+        }
+    }
+    return out
 }
 
 // 图表第1页的“压制盟军HQ”不是固定地图地名，而是三个会移动的 HQ 当前所在格。
@@ -989,15 +1006,18 @@ function esm_pin_strategy(view, context) {
     const isEventStrat = name === "事件战略"
     const entry = esm_bind_strategy_entry(role, phase, name)
     const contentPhase = isEventStrat ? "early" : phase
-    let goals = [], chain = [], dynamicTargets = []
+    let goals = [], chain = [], dynamicTargets = [], targetMeta = []
     if (entry) {
         // 忠实 parse_goals: 有序 Goal(kind+hex+region) + 指针/资源/落底展开。
         try { goals = esm_parse_entry(entry, role, contentPhase) } catch (e) { goals = [] }
         chain = esm_chain_of(goals)
+        targetMeta = esm_goal_target_meta(goals)
     }
     if (role === "Japan" && (name === "保守的空优战略" || name === "激进的南方资源战略")) {
         dynamicTargets = esm_jp_hq_suppression_targets()
         chain = dynamicTargets.map(target => target.hex).concat(chain.filter(h => !dynamicTargets.some(target => target.hex === h)))
+        const dynamicHexes = new Set(dynamicTargets.map(target => target.hex))
+        targetMeta = dynamicTargets.concat(targetMeta.filter(target => !dynamicHexes.has(target.hex)))
     }
     // D4: ABSTRACT 自身无 hex 链(纯文本目标), 落到可执行回退链, 让 eop 焦点层在"推进B29/
     // 原子弹胜利"钉住期间仍有可打的主攻方向:
@@ -1012,18 +1032,19 @@ function esm_pin_strategy(view, context) {
                     const fbGoals = esm_parse_entry(fb, role, "late")
                     goals = fbGoals
                     chain = esm_chain_of(fbGoals)
+                    targetMeta = esm_goal_target_meta(fbGoals)
                 } catch (e) { /* 保持空链 */ }
             }
         }
     }
     const strategy = entry ? {
         name, nameFull: entry.name, kind: entry.kind, notes: entry.notes, targets: entry.targets,
-        phase, role, seed: seedText, ord, pinnedNow: true, goals, chain, dynamicTargets, ctx,
+        phase, role, seed: seedText, ord, pinnedNow: true, goals, chain, dynamicTargets, targetMeta, ctx,
         nodePath: (ctx._nodePath || []).slice(), conditions: (ctx._conditions || []).slice(), d10Rolls: (ctx._dice || []).slice(),
         eventPhase: isEventStrat ? "early" : undefined,
     } : {
         name, nameFull: name, kind: "EVENT", notes: [], targets: [], phase, role, ord,
-        pinnedNow: true, goals: [], chain: [], ctx,
+        pinnedNow: true, goals: [], chain: [], targetMeta: [], ctx,
         nodePath: (ctx._nodePath || []).slice(), conditions: (ctx._conditions || []).slice(), d10Rolls: (ctx._dice || []).slice(),
     }
     // D2: 记录本轴连续运行起点的回合与链上控格数(供下一回合的延续/停滞判定)。
@@ -1045,6 +1066,25 @@ function esm_card_window_action(strategy, view, context) {
     const wantOps = strategy.kind === "CONQUEST" || strategy.kind === "ABSTRACT"
     const wantEvent = strategy.kind === "EVENT"
     if (strategy.kind === "PASS" && legal.includes("pass")) return { action: "pass", argument: undefined, via: strategy.name }
+
+    // 日本第4页：手牌多于2张时，C/D 未命中后先检查 E“可执行的无限制军事事件”。
+    // 旧实现按决策轴战略类型直接挑 OC，完全绕过本页，因而会把反应牌当 OC，同时留下
+    // 高后勤军事事件。命中 E 时按图表的 EC 选择标准取后勤值最高者，并把用途意图带到
+    // 下一“Select action”窗口。
+    if (strategy.role === "Japan") {
+        const classified = classifyCards(hand, strategy.role)
+        if (classified.length > 2) {
+            const unrestricted = classified.filter(c => c.unrestricted && c.eventPlayable)
+            if (unrestricted.length) {
+                unrestricted.sort((a, b) => b.lv - a.lv || b.ops - a.ops || a.id - b.id)
+                const chosen = unrestricted[0]
+                strategy.cardIntent = "event"
+                strategy.selectedCard = chosen.id
+                strategy.cardTreeNode = "JP04-S-UNRESTRICTED-EC"
+                return { action: "card", argument: chosen.id, via: `日本卡牌选择:E→无限制军事事件EC(LV ${chosen.lv})` }
+            }
+        }
+    }
     if (strategy.kind === "GARRISON" || strategy.kind === "DEFEND") {
         // v1 有界近似: 国防圈/最终防御 -> 事件微执行(打事件/低值牌), 保留大 OC 卡。
         return esm_choose_card(hand, "event", legal, strategy)
@@ -1178,6 +1218,11 @@ function esm_event_strategy_card_pick(strategy, hand) {
 // 选行动窗("C{idx}: Select action."): 按已钉战略选 ops/event 等。
 function esm_card_action_window_action(strategy, view, context) {
     const legal = Object.keys(view.actions || {}).filter(a => { const v = view.actions[a]; return Array.isArray(v) ? v.length > 0 : Boolean(v) })
+    if (strategy.cardIntent && legal.includes(strategy.cardIntent)) {
+        const intent = strategy.cardIntent
+        strategy.cardIntent = null
+        return { action: intent, argument: undefined, via: `${strategy.cardTreeNode || strategy.name}:${intent}` }
+    }
     const wantEvent = strategy.kind === "EVENT" || strategy.kind === "GARRISON" || strategy.kind === "DEFEND"
     const wantOps = strategy.kind === "CONQUEST" || strategy.kind === "ABSTRACT"   // D4: ABSTRACT 走 OPS
     if (wantOps && legal.includes("ops")) return { action: "ops", argument: undefined, via: strategy.name + ":ops" }

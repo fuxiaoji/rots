@@ -344,3 +344,10 @@
 - 推进指标：最近盟军单位到东京最小 3、平均最小 7.04 格；最近盟军控制格最小 3、平均 6.92；在图 B29 最小 3、平均 7.78。日本胜局的首个未满足条件：苏联条件 39、轰炸连续性 6、资源 3；22 局仍提前条约败。
 - 验证：原子弹标准 3 个边界用例、state-fidelity 59/59、goal-fidelity 39/39、event-strategy 8/8、图表/确定性测试通过；最终数据 `tests/results/audit50-1942-1945-The-Shortened-Campaign-50-20260903-headless-atomic-zh8-final.json`，报告 `research/erasmus-atomic-zh8-50game-report.md`。
 - 版本记录：游戏引擎/状态机/审计提交 `555a2f0`；RTT 战略日志提交 `9a2d311`。
+
+### zh.10 卡牌选择与两栖编队热修
+
+- game 16 根因：完整战役的选牌窗以战略 `kind` 直接调用通用 OC 排序，绕过第4页 E“可执行无限制军事事件”节点，因此把 Operation Sho-Go（反应牌）作为 OC，同时保留 VADM Kondo / Central Force 等可执行军事事件。
+- 修复日本第4页 E 出口：手牌多于2张时优先最高后勤值的可执行无限制军事事件，并把 `event` 意图传到下一动作窗；轨迹显示 `ERASMUS-JP-04/JP04-S-UNRESTRICTED-EC`。
+- 修复第5/11页编队过早完成：所有目标携带压制/夺占元数据；精确使用 `rcf`；压制战力加入战斗航程内最强潜在反应单位；夺占必须有地面单位，敌控港口/岛屿必须同时有海军护航。
+- 新增 `tests/erasmus-card-force-hotfix.test.js`，覆盖反应牌不再抢占 EC、EC 意图传递、潜在反应兵力、一架飞机不提前结束、海军护航后补地面单位及完整两栖编队。

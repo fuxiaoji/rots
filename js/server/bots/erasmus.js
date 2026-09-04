@@ -2,7 +2,7 @@
 /** import server/erasmus_data.js*/
 /** import server/erasmus_state.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.9"
+const ERASMUS_VERSION = "erasmus-v2.0-zh.10"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "delay", "unit", "hex", "strat_move", "ground_move", "roll", "eliminate", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
@@ -368,7 +368,7 @@ function evaluateChart(chart, view, context) {
     const argument = target_argument(action, view.actions[action], `${seedText}:${action}`, context.role, view)
     const selectedUnit = action === "unit" && view.ai && Array.isArray(view.ai.units) ? view.ai.units.find(u=>u.id===argument) : null
     const forceSummary = selectedUnit ? { unit:selectedUnit.id, class:selectedUnit.class, type:selectedUnit.type,
-        combat:selectedUnit.reduced ? Math.ceil(selectedUnit.cf/2) : selectedUnit.cf, defense:selectedUnit.lf,
+        combat:selectedUnit.reduced ? (selectedUnit.rcf || Math.ceil(selectedUnit.cf/2)) : selectedUnit.cf, defense:selectedUnit.lf,
         formation: selectedUnit.class === "air" ? "air-support-or-strike" : selectedUnit.class === "naval" ? "naval-support" : "ground-or-amphibious" } : null
     const focusInfo = eop_trace(context.role)
     const publicTrace = {
@@ -394,9 +394,11 @@ function erasmus_sm_page(strategy, isPin) {
 // 钉住/沿用战略时, 构造 decision trace(字段与 evaluateChart 兼容)。
 function erasmus_sm_decision(strategy, pick, view, context) {
     const isPin = Number(strategy.ord) === Number(context.actionOrdinal || 0)
-    const page = erasmus_sm_page(strategy, isPin)
-    const nodePath = Array.isArray(strategy.nodePath) && strategy.nodePath.length ? strategy.nodePath : [`${page}-START`]
-    const node = nodePath[nodePath.length - 1]
+    const cardTree = !!strategy.cardTreeNode
+    const page = cardTree ? (strategy.role === "Japan" ? "ERASMUS-JP-04" : "ERASMUS-AP-10") : erasmus_sm_page(strategy, isPin)
+    const nodePath = cardTree ? [strategy.role === "Japan" ? "JP04-START" : "AP10-START", strategy.cardTreeNode]
+        : Array.isArray(strategy.nodePath) && strategy.nodePath.length ? strategy.nodePath : [`${page}-START`]
+    const node = cardTree ? strategy.cardTreeNode : nodePath[nodePath.length - 1]
     const arg = pick.action === "card" ? "[出牌后公开]" : pick.argument
     // 决策 trace 附加 isPin: 本窗是否即“钉选”事件(每方每回合首卡), 沿用窗为 false。
     const runtime = view && view.ai ? { engineStage: view.ai.stage, windowKind: view.ai.windowKind } : {}
@@ -408,7 +410,7 @@ function erasmus_sm_decision(strategy, pick, view, context) {
         engineStage: runtime.engineStage, windowKind: runtime.windowKind, action: pick.action, argument: arg,
         dice: strategy.d10Rolls && strategy.d10Rolls.length ? strategy.d10Rolls : null, fallback: false, inferred: false,
         ...(pick.via ? { via: pick.via } : {}),
-        explanation: `状态机(zh.9): ${strategy.phase}阶段逐牌评估「${strategy.name}」。${(strategy.notes || []).join(" ")}`,
+        explanation: `状态机(zh.10): ${strategy.phase}阶段逐牌评估「${strategy.name}」。${(strategy.notes || []).join(" ")}`,
     }
     return { action: pick.action, argument: pick.argument, publicTrace: base,
         privateTrace: { ...base, sm: smPrivate, argument: pick.argument, legalActions: Object.keys(view.actions || {}) } }
@@ -425,7 +427,7 @@ var EOTS_BOTS = {
                 if (esm_gate_on()) {
                     sm = esm_pin_strategy(view, context)
                     // 忠实目标链: chain = parse_goals 有序 idx; goals = 每行 Goal(kind/text)
-                    if (sm) eop_set_strategy_chain(context.role, { name: sm.name, kind: sm.kind, note: (sm.notes || []).join("; "), goals: sm.goals, chain: sm.chain, targetMeta: sm.dynamicTargets })
+                    if (sm) eop_set_strategy_chain(context.role, { name: sm.name, kind: sm.kind, note: (sm.notes || []).join("; "), goals: sm.goals, chain: sm.chain, targetMeta: sm.targetMeta })
                 } else {
                     eop_clear_all_chains()   // 防同进程跨剧本串台
                 }

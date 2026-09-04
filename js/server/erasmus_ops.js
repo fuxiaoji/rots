@@ -311,27 +311,52 @@ function eop_target_meta(role, hex) {
 function evaluateTargetFeasibility(target, card, hq, view) {
     const units=Array.isArray(view?.ai?.units)?view.ai.units:[], roleFaction=view?.active === "Allies" ? AP : JP
     const meta=eop_target_meta(view?.active,target)
+    const cf=u=>u.reduced?(Number(u.rcf)||Math.ceil((Number(u.cf)||0)/2)):(Number(u.cf)||0)
     const allDefenders=units.filter(u=>u.location===target&&u.faction!==roleFaction)
     const defenders=meta?.kind==="SUPPRESS_HQ"?allDefenders.filter(u=>u.class==="air"||u.class==="naval"):allDefenders
-    const defense=defenders.reduce((s,u)=>s+(u.reduced?Math.ceil(u.cf/2):u.cf),0)
+    const defense=defenders.reduce((s,u)=>s+cf(u),0)
     const md=(target!==null&&target!==undefined&&typeof get_map_data==="function")?get_map_data(target):null
     const damageLevel=meta?.damageLevel||0.5
-    return {target,meta,damageLevel,legal:target!==null&&target!==undefined,coastal:!!(md&&(md.port||md.island)),defense,
-        groundDefense:defenders.filter(u=>u.class==="ground").reduce((s,u)=>s+(u.reduced?Math.ceil(u.cf/2):u.cf),0),
-        potentialReaction:!!view?.ai?.predicates?.ENEMY_NAVAL_GROUND_CAN_REACT,
-        requiredGroundMath:Math.max(1,defense),requiredAirSeaMath:Math.max(1,Math.ceil(defense/damageLevel))}
+    const suppress=meta?.kind==="SUPPRESS"||meta?.kind==="SUPPRESS_HQ"
+    const requiresOccupation=!!meta?.requiresOccupation
+    const coastal=!!(md&&(md.port||md.island))
+    // 第5/11页：兵力标准须把可能反应的敌军计入。以公开单位的战斗航程筛出能到目标的
+    // 航空/海军，并计入其中最强一支，避免把一架飞机对现有守军刚好达标误判为完整编队。
+    const reactionPool=units.filter(u=>u.faction!==roleFaction&&u.location!==target&&(u.class==="air"||u.class==="naval")
+        && typeof get_distance==="function"&&get_distance(u.location,target)<=Math.max(1,Number(u.br)||Number(u.ebr)||1))
+    const potentialReactionStrength=reactionPool.reduce((m,u)=>Math.max(m,cf(u)),0)
+    const relevantDefense=defense+potentialReactionStrength
+    return {target,meta,damageLevel,legal:target!==null&&target!==undefined,coastal,defense,suppress,requiresOccupation,
+        groundDefense:defenders.filter(u=>u.class==="ground").reduce((s,u)=>s+cf(u),0),
+        potentialReaction:potentialReactionStrength>0,potentialReactionStrength,
+        requiredGroundMath:Math.max(1,defenders.filter(u=>u.class==="ground").reduce((s,u)=>s+cf(u),0)),
+        requiredAirSeaMath:Math.max(1,Math.ceil(relevantDefense/damageLevel))}
 }
 function composeTaskForce(target, card, hq, view, candidates, role) {
     const units=Array.isArray(view?.ai?.units)?view.ai.units:[], byId=new Map(units.map(u=>[u.id,u]))
     const active=new Set((view?.offensive?.active_units||[]).flat()), f=evaluateTargetFeasibility(target,card,hq,view)
     const committed=[...active].map(id=>byId.get(id)).filter(Boolean)
-    const strength=committed.reduce((s,u)=>s+(u.reduced?Math.ceil(u.cf/2):u.cf),0)
-    const need=f.groundDefense>0?f.requiredGroundMath:f.requiredAirSeaMath
-    if(strength>=need)return {complete:true,required:need,strength,unit:null,formation:"minimum-sufficient"}
+    const cf=u=>u.reduced?(Number(u.rcf)||Math.ceil((Number(u.cf)||0)/2)):(Number(u.cf)||0)
+    const strikeStrength=committed.filter(u=>u.class==="air"||u.class==="naval").reduce((s,u)=>s+cf(u),0)
+    const groundStrength=committed.filter(u=>u.class==="ground").reduce((s,u)=>s+cf(u),0)
+    const hasGround=committed.some(u=>u.class==="ground"),hasNaval=committed.some(u=>u.class==="naval")
+    const landing=f.requiresOccupation&&f.coastal&&view?.ai?.focusControlledBy!==view?.active
+    const need=f.suppress?f.requiredAirSeaMath:f.requiresOccupation?f.requiredGroundMath:(f.groundDefense>0?f.requiredGroundMath:f.requiredAirSeaMath)
+    const math=f.suppress?strikeStrength:f.requiresOccupation?groundStrength:Math.max(groundStrength,strikeStrength)
+    const compositionMet=(!f.requiresOccupation||hasGround)&&(!landing||hasNaval)
+    if(compositionMet&&math>=need)return {complete:true,required:need,strength:math,unit:null,
+        formation:landing?"supported-amphibious-assault":f.suppress?"air-sea-strike":"minimum-sufficient",
+        groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength}
     const pool=(candidates||[]).map(id=>byId.get(id)).filter(Boolean)
-    const classRank=u=>f.groundDefense>0?({ground:0,naval:1,air:2}[u.class]??3):({air:0,naval:1,ground:2}[u.class]??3)
-    pool.sort((a,b)=>classRank(a)-classRank(b)||(b.reduced?Math.ceil(b.cf/2):b.cf)-(a.reduced?Math.ceil(a.cf/2):a.cf)||a.id-b.id)
-    return {complete:false,required:need,strength,unit:pool[0]?.id,formation:f.groundDefense>0?"ground-with-support":"air-sea-strike"}
+    let amphibiousPick
+    if(landing&&typeof eop_pick_unit==="function")amphibiousPick=eop_pick_unit((candidates||[]),role,[...active])
+    const classRank=u=>f.suppress?({air:0,naval:1,ground:2}[u.class]??3)
+        :f.requiresOccupation?(!hasGround?({ground:0,naval:1,air:2}[u.class]??3):(!hasNaval&&landing?({naval:0,air:1,ground:2}[u.class]??3):({air:0,naval:1,ground:2}[u.class]??3)))
+        :({air:0,naval:1,ground:2}[u.class]??3)
+    pool.sort((a,b)=>classRank(a)-classRank(b)||cf(b)-cf(a)||a.id-b.id)
+    return {complete:false,required:need,strength:math,unit:amphibiousPick??pool[0]?.id,
+        formation:landing?"supported-amphibious-assault":f.requiresOccupation?"ground-with-support":"air-sea-strike",
+        groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength}
 }
 function planReaction(view,candidates){const units=Array.isArray(view?.ai?.units)?view.ai.units:[],byId=new Map(units.map(u=>[u.id,u]));return (candidates||[]).slice().sort((a,b)=>(byId.get(b)?.lf||0)-(byId.get(a)?.lf||0)||a-b)[0]}
 function planPostBattleMovement(view,candidates){return planReaction(view,candidates)}
