@@ -21930,11 +21930,13 @@ function erasmus_sm_decision(strategy, pick, view, context) {
     const node = nodePath[nodePath.length - 1]
     const arg = pick.action === "card" ? "[出牌后公开]" : pick.argument
     // 决策 trace 附加 isPin: 本窗是否即“钉选”事件(每方每回合首卡), 沿用窗为 false。
-    const sm = Object.assign(esm_trace_of(strategy, false) || {}, { pinnedNow: isPin })
-    const smPrivate = Object.assign(esm_trace_of(strategy, true) || {}, { pinnedNow: isPin })
+    const runtime = view && view.ai ? { engineStage: view.ai.stage, windowKind: view.ai.windowKind } : {}
+    const sm = Object.assign(esm_trace_of(strategy, false) || {}, runtime, { pinnedNow: isPin })
+    const smPrivate = Object.assign(esm_trace_of(strategy, true) || {}, runtime, { pinnedNow: isPin })
     const base = {
         policy: ERASMUS_VERSION, chart: page, node, role: context.role,
-        nodePath, conditions: strategy.conditions || [], strategy: strategy.name, sm, action: pick.action, argument: arg,
+        nodePath, conditions: strategy.conditions || [], strategy: strategy.name, sm,
+        engineStage: runtime.engineStage, windowKind: runtime.windowKind, action: pick.action, argument: arg,
         dice: strategy.d10Rolls && strategy.d10Rolls.length ? strategy.d10Rolls : null, fallback: false, inferred: false,
         ...(pick.via ? { via: pick.via } : {}),
         explanation: `状态机(zh.9): ${strategy.phase}阶段逐牌评估「${strategy.name}」。${(strategy.notes || []).join(" ")}`,
@@ -21979,6 +21981,18 @@ var EOTS_BOTS = {
             if (sm && res && res.publicTrace) {
                 const t = esm_trace_of(sm, false)
                 const tPrivate = esm_trace_of(sm, true)
+                if (view && view.ai) {
+                    t.engineStage = view.ai.stage
+                    t.windowKind = view.ai.windowKind
+                    tPrivate.engineStage = view.ai.stage
+                    tPrivate.windowKind = view.ai.windowKind
+                    res.publicTrace.engineStage = view.ai.stage
+                    res.publicTrace.windowKind = view.ai.windowKind
+                    if (res.privateTrace) {
+                        res.privateTrace.engineStage = view.ai.stage
+                        res.privateTrace.windowKind = view.ai.windowKind
+                    }
+                }
                 res.publicTrace.sm = t
                 if (res.privateTrace) res.privateTrace.sm = tPrivate
                 if (!res.publicTrace.axis) res.publicTrace.axis = t ? t.axis : null

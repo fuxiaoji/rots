@@ -741,5 +741,20 @@ body.south_pacific #mapwrap.cn-map #map {
 
 #ai_trace_panel { padding: 8px; border-bottom: 1px solid #777; }
 #ai_trace_panel summary { cursor: pointer; font-weight: bold; }
-#ai_trace { max-height: 28vh; overflow: auto; font-size: 12px; }
+#ai_trace { max-height: 44vh; overflow: auto; font-size: 12px; }
 #ai_trace p { margin: 6px 0; }
+.ai_trace_current { margin-top: 7px; padding: 7px; border: 1px solid #8b704c; background: #fffaf0; color: #211a12; }
+.ai_trace_title { margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid #c8b48e; font-weight: bold; font-size: 13px; }
+.ai_trace_grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 8px; }
+.ai_trace_field { min-width: 0; }
+.ai_trace_label { color: #695b4b; font-size: 10px; }
+.ai_trace_value { overflow-wrap: anywhere; font-weight: 600; }
+.ai_trace_strategy, .ai_trace_focus { grid-column: 1 / -1; padding: 4px; background: #f2e6cd; }
+.ai_trace_subtitle { margin-top: 8px; font-weight: bold; }
+.ai_trace_targets ol { margin: 4px 0 0; padding-left: 20px; }
+.ai_trace_targets li { margin: 3px 0; padding: 2px; }
+.ai_trace_targets li.current { background: #ffe7a6; border-left: 3px solid #b45f06; font-weight: bold; }
+.ai_trace_targets li.achieved { color: #777; text-decoration: line-through; }
+.ai_trace_empty { margin-top: 3px; color: #695b4b; }
+.ai_trace_history { margin-top: 7px; }
+.ai_trace_history p { padding-bottom: 4px; border-bottom: 1px dotted #aaa; }
