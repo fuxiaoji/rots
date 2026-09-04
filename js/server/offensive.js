@@ -1225,7 +1225,11 @@ P.choose_attack_hex = {
         L.allowed_hexes = get_air_attack_hex()
         if (G.offensive.stage === REACTION_STAGE && set_has(G.offensive.battle_hexes, path[2])) {
             this.attack_hex(path[2])
-        } else if (L.allowed_hexes.length <= 0 && G.offensive.stage !== REACTION_STAGE) {
+        } else if (L.allowed_hexes.length <= 0) {
+            // A reaction unit that cannot reach any declared battle hex cannot
+            // satisfy the chart's reaction-force requirement. Return it to the
+            // reaction pool and continue with the next candidate instead of
+            // producing an undo-only dead window.
             G.active_stack = []
             end()
         }
@@ -1733,7 +1737,7 @@ P.declare_battle_hexes = {
             .forEach(h => log(`Battle ${String.fromCharCode(65 + G.offensive.battle_names.indexOf(h))} declared in ${hex_get_log_str(h)}.`))
         compute_possible_battle_hexes()
         if (L.possible_units.length <= 0 && G.offensive.battle_hexes.length <= 0) {
-            log("No battle hexes declared.")
+            log("No battle hexes declared: no active unit can reach a legal enemy battle hex.")
             end()
         }
     },
@@ -1776,11 +1780,17 @@ P.declare_battle_hexes = {
         var piece = pieces[G.active_stack[0]]
         var range = piece.parenthetical ? piece.br : piece.ebr
         L.actual_hexes = in_range_on_map(location, range, L.possible_hexes, G.active)
+        if (L.actual_hexes.length === 0) {
+            // A stale candidate may lose every legal target after another
+            // battle assignment. Discard that candidate and keep scanning.
+            G.active_stack = []
+            if (L.possible_units.length === 0) end()
+        }
     },
     done() {
         push_undo()
         if (G.offensive.battle_hexes.length <= 0) {
-            log("No battle hexes declared.")
+            log("No battle hexes declared: chart candidate units and targets were exhausted.")
         }
         end()
     },

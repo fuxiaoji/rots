@@ -2,8 +2,8 @@
 /** import server/erasmus_data.js*/
 /** import server/erasmus_state.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.8"
-const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "unit", "hex", "strat_move", "ground_move", "roll", "continue", "next", "done", "skip", "pass", "cancel"]
+const ERASMUS_VERSION = "erasmus-v2.0-zh.9"
+const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "delay", "unit", "hex", "strat_move", "ground_move", "roll", "eliminate", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
     ops: ["ops", "event", "card", "play_card", "action_hex", "unit", "hex", "strat_move", "ground_move", "roll", "continue", "next", "done", "skip", "pass"],
@@ -13,7 +13,7 @@ const FAMILY_ACTION_PRIORITY = {
     fo: ["card", "event", "ops", "play_card", "future_offensive", "roll", "continue", "next", "done", "skip", "pass"],
     pass: ["pass", "skip", "done", "next", "roll"],
     ground: ["action_hex", "unit", "hex", "event", "ops", "done"],
-    reaction: ["roll", "event", "unit", "action_hex", "done"],
+    reaction: ["roll", "event", "unit", "action_hex", "eliminate", "done"],
 }
 
 // 无头移动窗里这些“按钮”不会真正完成移动, bot 永不把它们当作最终动作:
@@ -48,6 +48,8 @@ function legal_actions(view) {
 }
 
 function predicate_value(view, id) {
+    if (view.ai && view.ai.predicates && Object.prototype.hasOwnProperty.call(view.ai.predicates, id))
+        return !!view.ai.predicates[id]
     const turn = Number(view.turn || 0)
     const prompt = String(view.prompt || "").toLowerCase()
     const has = action => Object.prototype.hasOwnProperty.call(view.actions || {}, action)
@@ -56,28 +58,31 @@ function predicate_value(view, id) {
         JP_HAND_GE_3: hand(0) >= 3, AP_HAND_GE_3: hand(1) >= 3,
         JP_HAND_GT_2: hand(0) > 2, AP_HAND_GT_2: hand(1) > 2,
         JP_LOGISTICS_GTE_20: Number(view.logistics?.[0] || view.logistic?.[0] || 0) >= 20,
+        JP_LOGISTICS_GTE_15: Number(view.logistics?.[0] || view.logistic?.[0] || 0) >= 15,
         JP_RESOURCES_LTE_13: Number(view.resources?.[0] || 99) <= 13,
         JP_RESOURCES_GE_13: Number(view.resources?.[0] || 0) >= 13,
         AP_WAR_ENTHUSIASM_LE_4: Number(view.wie || 99) <= 4,
         AP_HAS_PASS: Number(view.passes?.[1] || 0) > 0, JP_HAS_PASS: Number(view.passes?.[0] || 0) > 0,
-        TURN_GE_3: turn >= 3, TURN_GE_5: turn >= 5, IS_FINAL_TURN: turn >= 10,
+        AP_CAN_PASS: Number(view.passes?.[1] || 0) > 0, JP_CAN_PASS: Number(view.passes?.[0] || 0) > 0,
+        TURN_GE_3: turn >= 3, TURN_GE_5: turn >= 5, TURN_12: turn === 12, IS_FINAL_TURN: turn >= 10,
         JP_FO_ACTIVE: Number(view.future_offensive?.[0] || 0) > 0, AP_FO_ACTIVE: Number(view.future_offensive?.[1] || 0) > 0,
         HAS_BATTLE: prompt.includes("battle") || prompt.includes("战斗"),
         WEATHER_CARD_AVAILABLE: has("card") || has("event"), ISR_REACTION: prompt.includes("reaction") || prompt.includes("情报"),
         HAS_SUPPORT_POINTS: has("unit") || has("action_hex"),
     }
     if (Object.prototype.hasOwnProperty.call(values, id)) return values[id]
-    if (id.startsWith("TARGET_") || id.startsWith("ENEMY_") || id.startsWith("CAN_") || id.startsWith("GROUND_") || id.startsWith("DAMAGE_") || id.startsWith("IS_") || id.startsWith("HAS_")) return false
-    return false
+    throw new Error(`ERASMUS_UNKNOWN_PREDICATE:${id}`)
 }
 
 function select_chart(role, view) {
     const side = role === "Japan" ? "JP" : "AP"
     const turn = Number(view.turn || 0)
-    const prompt = String(view.prompt || "").toLowerCase()
     const actions = Object.keys(view.actions || {})
-    const kind = actions.some(a => ["card", "event", "ops"].includes(a)) ? "card-selection"
-        : prompt.includes("reaction") || prompt.includes("intelligence") || prompt.includes("反应") ? "reaction"
+    const windowKind = view.ai && view.ai.windowKind
+    const kind = windowKind === "pbm" || windowKind === "reaction" ? "reaction"
+        : windowKind === "card-selection" ? "card-selection"
+        : windowKind === "task-force" ? "task-force"
+        : actions.some(a => ["card", "event", "ops"].includes(a)) ? "card-selection"
             : actions.some(a => ["unit", "hex", "action_hex"].includes(a)) ? "task-force" : "decision-axis"
     const phase = kind === "decision-axis" ? (turn >= 10 ? "end" : turn >= 5 ? "middle" : "early") : "all"
     return ERASMUS_CHARTS.find(chart => chart.role === role && chart.phase === phase && chart.kind === kind)
@@ -174,16 +179,18 @@ function target_argument(action, value, seedText, role, view) {
             const avail = value.filter(u => !unsel.has(u))
             if (avail.length) pickValue = avail
         }
-        // 空中单位不参与常规攻势夺格, 且无头引擎对其移动支持有缺口(攻击→turn_box 退场、
-        // 反应→死窗); 激活只选地面/海军(由 advance 推进夺格), 空中单位留在原地继续 ZOI/防守。
-        pickValue = pickValue.filter(u => { try { return pieces[u] && pieces[u].class !== "air" } catch (e) { return true } })
+        // 完整战役恢复航空兵（航空打击/地面支援所必需）。South Pacific
+        // 仍是兼容启发式配置，其交互移动窗没有无头路径参数，继续排除空军。
+        if (!esm_gate_on()) pickValue = pickValue.filter(u => { try { return pieces[u] && pieces[u].class !== "air" } catch (e) { return true } })
         // 已激活单位(含本窗已选)传给 eop_pick_unit, 用于两栖登陆护航判定: 敌占港需 ≥1 海军护航。
         const activeUnits = Array.isArray(view?.offensive?.active_units) ? view.offensive.active_units.flat() : []
-        const picked = eop_pick_unit(pickValue, role, activeUnits)
+        const planned = composeTaskForce(view?.ai?.focus, null, null, view, pickValue, role)
+        const picked = planned && planned.unit !== undefined && planned.unit !== null ? planned.unit : eop_pick_unit(pickValue, role, activeUnits)
         return picked !== undefined ? picked : pick_argument(pickValue, seedText, action, view)
     }
     if (action === "unit" && /Declare battle hexes|Confirm declared battle hexes|Assign units to battle/i.test(prompt)) {
-        const picked = eop_pick_unit(value, role)
+        const picked = view?.ai?.windowKind === "pbm" ? planPostBattleMovement(view,value)
+            : view?.ai?.windowKind === "reaction" ? planReaction(view,value) : eop_pick_unit(value, role)
         return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
     }
     return pick_argument(value, seedText, action, view)
@@ -191,13 +198,19 @@ function target_argument(action, value, seedText, role, view) {
 
 function evaluateChart(chart, view, context) {
     const legal = legal_actions(view)
+    if (/press delay/i.test(String(view.prompt||"")) && legal.includes("delay")) {
+        const n=chart.nodes.find(x=>x.type==="start")?.id||chart.id
+        const base={policy:ERASMUS_VERSION,chart:chart.id,node:n,nodePath:[n],role:context.role,conditions:[],strategy:"DELAY_UNPLACEABLE_REINFORCEMENT",action:"delay",argument:undefined,dice:null,fallback:false,inferred:false,explanation:"增援没有合法落位；按引擎明确提供的 delay 出口处理下一单位。"}
+        return {action:"delay",argument:undefined,publicTrace:base,privateTrace:{...base,legalActions:legal}}
+    }
     // 日本"海军飞机航程优势"(jp_cv_reassign) 是可选的战后效应: 损伤己方航母换射程,
     // 再经"修复"往返回补。无头 bot 不参与这套往返 —— 引擎在阶段1"Chosen: N 且 to_repair
     // 已空"时会只剩 undo(合法动作集为空)卡死。故在阶段0(hits=0, 有 skip)直接 skip 放弃
     // 该可选效应, 换取稳定推进; 阶段1不应再出现(因阶段0已 skip)。
     if (/range advantage/i.test(String(view.prompt || "")) && view.actions && view.actions.skip !== undefined) {
+        const traceNode = chart.nodes.find(n=>n.type==="start")?.id || chart.id
         const base = { policy: ERASMUS_VERSION, chart: chart.chart_id || chart.id,
-            node: `${chart.chart_id || chart.id}-RANGE-ADV`, role: context.role,
+            node: traceNode, nodePath:[traceNode], role: context.role,
             conditions: [], strategy: "SKIP_RANGE_ADVANTAGE", action: "skip", argument: undefined,
             dice: null, fallback: false, inferred: false,
             explanation: "日本航程优势为可选效应, 无头跳过以避免损伤/修复往返卡死。" }
@@ -208,8 +221,8 @@ function evaluateChart(chart, view, context) {
         // 这一个按钮): 无其它动作可选, 必须确认继续; 其余 undo/redo/awaiting 被过滤。
         if (view.actions && view.actions.awaiting !== undefined) {
             const chartId = (chart && (chart.chart_id || chart.id)) || "NO-CHART"
-            const nodeId = `${chartId}-START`
-            const base = { policy: ERASMUS_VERSION, chart: chartId, node: nodeId, role: context.role,
+            const nodeId = chart.nodes.find(n=>n.type==="start")?.id || chartId
+            const base = { policy: ERASMUS_VERSION, chart: chartId, node: nodeId, nodePath:[nodeId], role: context.role,
                 conditions: [], strategy: "HEADLESS_AWAIT", action: "awaiting", argument: undefined,
                 dice: null, fallback: false, inferred: false,
                 explanation: "窗口只提供 awaiting(确认继续), 无其它合法动作。" }
@@ -219,18 +232,29 @@ function evaluateChart(chart, view, context) {
     }
     const nodes = new Map(chart.nodes.map(item => [item.id, item]))
     const prefix = chart.chart_id || chart.id
-    let current = nodes.get(`${prefix}-START`)
+    let current = chart.nodes.find(item => item.type === "start")
     const conditions = []
+    const nodePath = []
+    const diceRolls = []
     let guard = 0
     while (current && !["action", "priority", "fallback", "terminal"].includes(current.type)) {
         if (++guard > chart.nodes.length + 2) throw new Error(`chart cycle: ${chart.id}`)
+        nodePath.push(current.id)
         if (current.type === "condition") {
             const result = predicate_value(view, current.predicate?.id)
             conditions.push({ nodeId: current.id, predicate: current.predicate?.id, result })
             const edge = current.edges.find(item => item.when === result) || current.edges.find(item => item.when === "always")
             current = nodes.get(edge?.to)
+        } else if (current.type === "dice") {
+            const roll = erasmus_hash(`${context.seed}:${context.actionOrdinal}:${chart.id}:${current.id}:${current.table_id || "D10"}`) % Number(current.sides || 10)
+            const range = (current.ranges || []).find(r => roll >= r.min && roll <= r.max)
+            if (!range) throw new Error(`ERASMUS_DICE_GAP:${current.id}:${roll}`)
+            diceRolls.push({ nodeId: current.id, tableId: current.table_id, sides: current.sides || 10, result: roll, range: `${range.min}-${range.max}` })
+            const edge = (current.edges || []).find(e => e.when === range.result || e.when === roll || e.when === String(roll))
+            current = nodes.get(edge?.to || range.to)
         } else current = nodes.get(current.edges?.find(item => item.when === "always")?.to)
     }
+    if (current) nodePath.push(current.id)
     // 策略解析: 单出口 action 节点直接取该策略; priority(SELECT)节点按图中
     // candidate_found/no_candidate 语义迭代候选,而不是只取 strategies[0]。
     let strategy = null
@@ -250,15 +274,19 @@ function evaluateChart(chart, view, context) {
     }
     const progress = String(view.prompt || "").match(/(\d+)\s+of\s+(\d+)/i)
     if (progress && Number(progress[1]) >= Number(progress[2]) && legal.includes("done")) action = "done"
+    const volatileBonus = String(view.prompt || "").match(/(\d+)\s+of\s+\d+\s*\((\d+)\s*\+\s*\d+\)/i)
+    if (volatileBonus && Number(volatileBonus[1]) >= Number(volatileBonus[2]) && legal.includes("done")) action = "done"
     // “Activate units”窗口: 当 unit 候选里已无可新增单位(全部是已激活的 unselect 单位, 或
     // 只剩空中单位)时, 继续选 unit 只会 toggle 撤销或触发无头移动死窗; 此时必须 done 收尾。
     if (action !== "done" && /activate units/i.test(String(view.prompt || "")) && legal.includes("done") && legal.includes("unit")) {
         const unsel = new Set(Array.isArray(view?.unselect) ? view.unselect : [])
-        // 空中单位不算“可新增”(不参与常规攻势夺格且无头移动有缺口), 全部过滤;
-        // 若过滤后为空(只剩空中/已激活单位), 则 done 收尾。
+        const forcePlan = composeTaskForce(view?.ai?.focus, null, null, view,
+            Array.isArray(view.actions.unit) ? view.actions.unit.filter(u=>!unsel.has(u)) : [], context.role)
+        if (forcePlan && forcePlan.complete) action = "done"
+        // 若过滤后为空(只剩已激活单位), 则 done 收尾。
         const addable = (Array.isArray(view.actions.unit) ? view.actions.unit : [])
             .filter(u => !unsel.has(u))
-            .filter(u => { try { return pieces[u] && pieces[u].class !== "air" } catch (e) { return true } })
+            .filter(u => { try { return esm_gate_on() || !pieces[u] || pieces[u].class !== "air" } catch (e) { return true } })
         if (addable.length === 0) action = "done"
         // 两栖登陆无护航可用: 在本窗尚未激活任何单位时提前 done(空攻势), 避免把两栖地面
         // 送去敌占/敌控港口硬登陆吃 "Amphibious Assault failed"。已有已激活单位时不再阻断
@@ -278,7 +306,7 @@ function evaluateChart(chart, view, context) {
     const isActivateWindow = /activate units/i.test(String(view.prompt || ""))
     if (!isDeclareHexesWindow && !isActivateWindow && legal.includes("done") && legal.includes("unit") && view.offensive?.active_units?.flat?.().length > 0) action = "done"
     if (fallback) {
-        const fallbackNode = nodes.get(`${prefix}-FALLBACK`)
+        const fallbackNode = chart.nodes.find(item => item.type === "fallback")
         // 保护出口绝不能选中“切换 move_type/无路径 move”这类无头残按钮(会崩溃/死窗)。
         const safeLegal = legal.filter(a => !HEADLESS_MOVE_NOOP.has(a))
         action = (fallbackNode?.allowed_actions || []).find(item => legal.includes(item) && !HEADLESS_MOVE_NOOP.has(item))
@@ -333,15 +361,19 @@ function evaluateChart(chart, view, context) {
             .find(a => legal.includes(a))
             || legal.filter(a => !HEADLESS_MOVE_NOOP.has(a)).slice().sort()[0]
     }
-    const nodeId = fallback ? `${prefix}-FALLBACK` : (current?.id || `${prefix}-FALLBACK`)
+    const fallbackId = chart.nodes.find(item => item.type === "fallback")?.id || `${prefix}-FALLBACK`
+    const nodeId = fallback ? fallbackId : (current?.id || fallbackId)
     const seedText = `${context.seed}:${context.actionOrdinal}:${chart.id}:${nodeId}`
-    const diceTable = chart.dice_tables?.[0]
-    const dice = diceTable ? { id: diceTable.id, sides: diceTable.sides, result: erasmus_hash(`${seedText}:dice`) % diceTable.sides + 1 } : null
+    const dice = diceRolls.length ? diceRolls : null
     const argument = target_argument(action, view.actions[action], `${seedText}:${action}`, context.role, view)
+    const selectedUnit = action === "unit" && view.ai && Array.isArray(view.ai.units) ? view.ai.units.find(u=>u.id===argument) : null
+    const forceSummary = selectedUnit ? { unit:selectedUnit.id, class:selectedUnit.class, type:selectedUnit.type,
+        combat:selectedUnit.reduced ? Math.ceil(selectedUnit.cf/2) : selectedUnit.cf, defense:selectedUnit.lf,
+        formation: selectedUnit.class === "air" ? "air-support-or-strike" : selectedUnit.class === "naval" ? "naval-support" : "ground-or-amphibious" } : null
     const focusInfo = eop_trace(context.role)
     const publicTrace = {
-        policy: ERASMUS_VERSION, chart: chart.id, node: nodeId, role: context.role, conditions,
-        attempted: attempted.length ? attempted : undefined,
+        policy: ERASMUS_VERSION, chart: chart.id, node: nodeId, nodePath, role: context.role, conditions,
+        attempted: attempted.length ? attempted : undefined, forceSummary,
         strategy, action, argument: action === "card" ? "[出牌后公开]" : argument, dice, fallback,
         axis: focusInfo.axis, focus: focusInfo.focus,
         inferred: chart.qa?.inferred_nodes?.includes(nodeId) || false,
@@ -355,26 +387,26 @@ function evaluateChart(chart, view, context) {
 // 其余同回合选牌窗记选牌图页(JP-04/AP-10)。
 function erasmus_sm_page(strategy, isPin) {
     const rolePage = strategy.role === "Japan" ? "JP" : "AP"
-    const axis = { early: 1, mid: 2, late: 3 }
-    if (isPin) return `${rolePage}-0${axis[strategy.phase] || 1}`
-    return rolePage === "JP" ? "JP-04" : "AP-10"
+    const axis = rolePage === "JP" ? { early:1, mid:2, late:3 } : { early:7, mid:8, late:9 }
+    return `ERASMUS-${rolePage}-0${axis[strategy.phase] || (rolePage === "JP" ? 1 : 7)}`
 }
 
 // 钉住/沿用战略时, 构造 decision trace(字段与 evaluateChart 兼容)。
 function erasmus_sm_decision(strategy, pick, view, context) {
     const isPin = Number(strategy.ord) === Number(context.actionOrdinal || 0)
     const page = erasmus_sm_page(strategy, isPin)
-    const node = `${page}-SM-${strategy.name}`
+    const nodePath = Array.isArray(strategy.nodePath) && strategy.nodePath.length ? strategy.nodePath : [`${page}-START`]
+    const node = nodePath[nodePath.length - 1]
     const arg = pick.action === "card" ? "[出牌后公开]" : pick.argument
     // 决策 trace 附加 isPin: 本窗是否即“钉选”事件(每方每回合首卡), 沿用窗为 false。
     const sm = Object.assign(esm_trace_of(strategy, false) || {}, { pinnedNow: isPin })
     const smPrivate = Object.assign(esm_trace_of(strategy, true) || {}, { pinnedNow: isPin })
     const base = {
         policy: ERASMUS_VERSION, chart: page, node, role: context.role,
-        conditions: [], strategy: strategy.name, sm, action: pick.action, argument: arg,
-        dice: null, fallback: false, inferred: false,
+        nodePath, conditions: strategy.conditions || [], strategy: strategy.name, sm, action: pick.action, argument: arg,
+        dice: strategy.d10Rolls && strategy.d10Rolls.length ? strategy.d10Rolls : null, fallback: false, inferred: false,
         ...(pick.via ? { via: pick.via } : {}),
-        explanation: `状态机(zh.7): ${strategy.phase}阶段选轴「${strategy.name}」钉住整回合. ${(strategy.notes || []).join(" ")}`,
+        explanation: `状态机(zh.9): ${strategy.phase}阶段逐牌评估「${strategy.name}」。${(strategy.notes || []).join(" ")}`,
     }
     return { action: pick.action, argument: pick.argument, publicTrace: base,
         privateTrace: { ...base, sm: smPrivate, argument: pick.argument, legalActions: Object.keys(view.actions || {}) } }
@@ -396,8 +428,8 @@ var EOTS_BOTS = {
                     eop_clear_all_chains()   // 防同进程跨剧本串台
                 }
             } catch (e) {
-                sm = null   // 任何 SM 异常不阻断游戏: 退回原路径(等同 zh.6)
                 if (typeof eop_clear_all_chains === "function") eop_clear_all_chains()
+                throw new Error(`ERASMUS_STATE_MACHINE_PAUSED:${e && e.message ? e.message : e}`)
             }
             if (sm) {
                 // 选牌窗 / “Select action.” 窗: 按钉住战略的 kind 决定 PASS/OC/事件。

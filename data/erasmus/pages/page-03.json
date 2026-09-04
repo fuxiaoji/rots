@@ -1,266 +1,271 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "id": "ERASMUS-JP-03",
   "chart_id": "ERASMUS-JP-03",
   "role": "Japan",
   "phase": "end",
   "kind": "decision-axis",
-  "action_family": "strategy",
   "source_page": 3,
   "source": {
-    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "pdf": "伊拉斯谟v2.0_图表汉化 (1).pdf",
+    "absolute_path": "D:/downloads/伊拉斯谟v2.0_图表汉化 (1).pdf",
     "page": 3,
-    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/03-日本-终局阶段决策轴.md"
+    "sha256": "5c362b4af6306b03baf959f80273942a80418bf985dac2faee61eb953a1dab2f"
   },
-  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/03-日本-终局阶段决策轴.md",
-  "rules": [
-    "EOTS-5",
-    "EOTS-7"
-  ],
   "nodes": [
     {
-      "id": "ERASMUS-JP-03-START",
+      "id": "JP03-START",
       "type": "start",
-      "confidence": "confirmed",
-      "source_page": 3,
       "edges": [
         {
           "when": "always",
-          "to": "ERASMUS-JP-03-C01"
+          "to": "JP03-A"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 3,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-03-C01",
+      "id": "JP03-A",
       "type": "condition",
-      "confidence": "inferred",
-      "source_page": 3,
       "predicate": {
         "id": "JP_HAND_GE_3"
       },
-      "label_zh": "JP_HAND_GE_3",
+      "label_zh": "手牌≥3？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-JP-03-S01"
+          "to": "JP03-BC"
         },
         {
           "when": false,
-          "to": "ERASMUS-JP-03-C02"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-03-C02",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 3,
-      "predicate": {
-        "id": "JP_PORT_WITHIN_TOKYO_8"
-      },
-      "label_zh": "JP_PORT_WITHIN_TOKYO_8",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-03-S02"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-03-C03"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-03-C03",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 3,
-      "predicate": {
-        "id": "JP_AIRFIELD_WITHIN_TOKYO_5"
-      },
-      "label_zh": "JP_AIRFIELD_WITHIN_TOKYO_5",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-03-S03"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-03-C04"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-03-C04",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 3,
-      "predicate": {
-        "id": "JP_HAS_PASS"
-      },
-      "label_zh": "JP_HAS_PASS",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-03-S04"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-03-C05"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-03-C05",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 3,
-      "predicate": {
-        "id": "JP_MAINLAND_FORT"
-      },
-      "label_zh": "JP_MAINLAND_FORT",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-03-S01"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-03-SELECT"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-03-S01",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 3,
-      "strategy": "JP_EVENT",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-03-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-03-S02",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 3,
-      "strategy": "JP_FINAL_EMPIRE",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-03-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-03-S03",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 3,
-      "strategy": "JP_FINAL_DEFENSE",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-03-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-03-S04",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 3,
-      "strategy": "JP_PASS",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-03-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-03-SELECT",
-      "type": "priority",
-      "confidence": "inferred",
-      "source_page": 3,
-      "family": "strategy",
-      "strategies": [
-        {
-          "id": "JP_EVENT",
-          "priority": 1,
-          "actionTag": "JP_EVENT"
-        },
-        {
-          "id": "JP_FINAL_EMPIRE",
-          "priority": 2,
-          "actionTag": "JP_FINAL_EMPIRE"
-        },
-        {
-          "id": "JP_FINAL_DEFENSE",
-          "priority": 3,
-          "actionTag": "JP_FINAL_DEFENSE"
-        },
-        {
-          "id": "JP_PASS",
-          "priority": 4,
-          "actionTag": "JP_PASS"
+          "to": "JP03-S-EVENT"
         }
       ],
-      "edges": [
-        {
-          "when": "candidate_found",
-          "to": "ERASMUS-JP-03-END"
-        },
-        {
-          "when": "no_candidate",
-          "to": "ERASMUS-JP-03-FALLBACK"
-        }
-      ]
+      "confidence": "confirmed",
+      "source_page": 3,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-03-FALLBACK",
-      "type": "fallback",
-      "confidence": "inferred",
+      "id": "JP03-BC",
+      "type": "condition",
+      "predicate": {
+        "id": "TOKYO_8_PORTS_AND_TOKYO_5_AIRFIELDS_GARRISONED"
+      },
+      "label_zh": "东京8格港口和5格机场均有驻军？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP03-D"
+        },
+        {
+          "when": false,
+          "to": "JP03-S-FINAL-PERIMETER"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 3,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP03-D",
+      "type": "condition",
+      "predicate": {
+        "id": "JP_CAN_PASS"
+      },
+      "label_zh": "可以PASS？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP03-S-PASS"
+        },
+        {
+          "when": false,
+          "to": "JP03-E"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 3,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP03-E",
+      "type": "condition",
+      "predicate": {
+        "id": "ALLIED_GROUND_ON_HONSHU"
+      },
+      "label_zh": "盟军地面单位在本州？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP03-S-FINAL-DEFENSE"
+        },
+        {
+          "when": false,
+          "to": "JP03-S-EVENT"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 3,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP03-S-EVENT",
+      "type": "action",
+      "strategy": "JP_EVENT",
+      "label_zh": "事件",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP03-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 3,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP03-S-FINAL-PERIMETER",
+      "type": "action",
+      "strategy": "JP_FINAL_DEFENSE_PERIMETER",
+      "label_zh": "最终国防圈",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP03-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 3,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP03-S-PASS",
+      "type": "action",
+      "strategy": "JP_PASS",
+      "label_zh": "PASS",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP03-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 3,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP03-S-FINAL-DEFENSE",
+      "type": "action",
+      "strategy": "JP_FINAL_DEFENSE",
+      "label_zh": "最终防御",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP03-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 3,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP03-FALLBACK",
+      "type": "fallback",
       "allowed_actions": [
         "pass",
         "skip"
       ],
-      "reason": "chart candidates are not legal in current view"
+      "reason": "图表出口均不合法",
+      "confidence": "confirmed",
+      "source_page": 3,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-03-END",
+      "id": "JP03-END",
       "type": "terminal",
       "confidence": "confirmed",
-      "source_page": 3
+      "source_page": 3,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     }
   ],
   "strategies": [
     "JP_EVENT",
-    "JP_FINAL_EMPIRE",
-    "JP_FINAL_DEFENSE",
-    "JP_PASS"
+    "JP_FINAL_DEFENSE_PERIMETER",
+    "JP_PASS",
+    "JP_FINAL_DEFENSE"
   ],
   "dice_tables": [],
   "qa": {
-    "inferred_nodes": [
-      "ERASMUS-JP-03-C01",
-      "ERASMUS-JP-03-C02",
-      "ERASMUS-JP-03-C03",
-      "ERASMUS-JP-03-C04",
-      "ERASMUS-JP-03-C05",
-      "ERASMUS-JP-03-S01",
-      "ERASMUS-JP-03-S02",
-      "ERASMUS-JP-03-S03",
-      "ERASMUS-JP-03-S04",
-      "ERASMUS-JP-03-SELECT",
-      "ERASMUS-JP-03-FALLBACK"
-    ],
-    "visual_review_required": true,
-    "source_line_count": 94
+    "inferred_nodes": [],
+    "visual_review_required": false,
+    "verified_from_visual": true
   }
 }

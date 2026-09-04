@@ -11,9 +11,9 @@ const files = fs.readdirSync(pageDir).filter(name => /^page-\d\d\.json$/.test(na
 const charts = files.map(filename => JSON.parse(fs.readFileSync(path.join(pageDir, filename), "utf8")))
 
 const document = {
-	schema_version: 2,
-	policy_version: "erasmus-v2.0-zh.2",
-	source: "伊拉斯谟v2.0_图表汉化.pdf",
+	schema_version: 3,
+	policy_version: "erasmus-v2.0-zh.9",
+	source: "伊拉斯谟v2.0_图表汉化 (1).pdf",
 	charts,
 }
 fs.mkdirSync(path.dirname(output), { recursive: true })

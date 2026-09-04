@@ -1,390 +1,429 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "id": "ERASMUS-AP-08",
   "chart_id": "ERASMUS-AP-08",
   "role": "Allies",
   "phase": "middle",
   "kind": "decision-axis",
-  "action_family": "strategy",
   "source_page": 8,
   "source": {
-    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "pdf": "伊拉斯谟v2.0_图表汉化 (1).pdf",
+    "absolute_path": "D:/downloads/伊拉斯谟v2.0_图表汉化 (1).pdf",
     "page": 8,
-    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/08-盟军-中期阶段决策轴.md"
+    "sha256": "5c362b4af6306b03baf959f80273942a80418bf985dac2faee61eb953a1dab2f"
   },
-  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/08-盟军-中期阶段决策轴.md",
-  "rules": [
-    "EOTS-5",
-    "EOTS-7"
-  ],
   "nodes": [
     {
-      "id": "ERASMUS-AP-08-START",
+      "id": "AP08-START",
       "type": "start",
-      "confidence": "confirmed",
-      "source_page": 8,
       "edges": [
         {
           "when": "always",
-          "to": "ERASMUS-AP-08-C01"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-08-C01",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 8,
-      "predicate": {
-        "id": "AP_HAS_PASS"
-      },
-      "label_zh": "AP_HAS_PASS",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-08-S01"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-08-C02"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-08-C02",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 8,
-      "predicate": {
-        "id": "AP_NEEDS_PROGRESS"
-      },
-      "label_zh": "AP_NEEDS_PROGRESS",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-08-S02"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-08-C03"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-08-C03",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 8,
-      "predicate": {
-        "id": "AP_HAS_3_CARDS"
-      },
-      "label_zh": "AP_HAS_3_CARDS",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-08-S03"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-08-C04"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-08-C04",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 8,
-      "predicate": {
-        "id": "JP_TARGET_CONTROLLED"
-      },
-      "label_zh": "JP_TARGET_CONTROLLED",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-08-S04"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-08-C05"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-08-C05",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 8,
-      "predicate": {
-        "id": "AP_PORT_TARGET"
-      },
-      "label_zh": "AP_PORT_TARGET",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-08-S05"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-08-C06"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-08-C06",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 8,
-      "predicate": {
-        "id": "AP_AIRFIELD_TARGET"
-      },
-      "label_zh": "AP_AIRFIELD_TARGET",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-08-S06"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-08-C07"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-08-C07",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 8,
-      "predicate": {
-        "id": "AP_HAS_ASP"
-      },
-      "label_zh": "AP_HAS_ASP",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-08-S01"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-08-C08"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-08-C08",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 8,
-      "predicate": {
-        "id": "AP_CAN_ATTACK"
-      },
-      "label_zh": "AP_CAN_ATTACK",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-08-S02"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-08-C09"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-08-C09",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 8,
-      "predicate": {
-        "id": "AP_CARD_GROUP_ROLL"
-      },
-      "label_zh": "AP_CARD_GROUP_ROLL",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-08-S03"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-08-SELECT"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-08-S01",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 8,
-      "strategy": "AP_PASS",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-08-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-08-S02",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 8,
-      "strategy": "AP_COUNTEROFFENSIVE",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-08-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-08-S03",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 8,
-      "strategy": "AP_SOUTH_PACIFIC",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-08-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-08-S04",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 8,
-      "strategy": "AP_CBI",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-08-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-08-S05",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 8,
-      "strategy": "AP_DEI",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-08-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-08-S06",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 8,
-      "strategy": "AP_EVENT",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-08-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-08-SELECT",
-      "type": "priority",
-      "confidence": "inferred",
-      "source_page": 8,
-      "family": "strategy",
-      "strategies": [
-        {
-          "id": "AP_PASS",
-          "priority": 1,
-          "actionTag": "AP_PASS"
-        },
-        {
-          "id": "AP_COUNTEROFFENSIVE",
-          "priority": 2,
-          "actionTag": "AP_COUNTEROFFENSIVE"
-        },
-        {
-          "id": "AP_SOUTH_PACIFIC",
-          "priority": 3,
-          "actionTag": "AP_SOUTH_PACIFIC"
-        },
-        {
-          "id": "AP_CBI",
-          "priority": 4,
-          "actionTag": "AP_CBI"
-        },
-        {
-          "id": "AP_DEI",
-          "priority": 5,
-          "actionTag": "AP_DEI"
-        },
-        {
-          "id": "AP_EVENT",
-          "priority": 6,
-          "actionTag": "AP_EVENT"
+          "to": "AP08-A"
         }
       ],
-      "edges": [
-        {
-          "when": "candidate_found",
-          "to": "ERASMUS-AP-08-END"
-        },
-        {
-          "when": "no_candidate",
-          "to": "ERASMUS-AP-08-FALLBACK"
-        }
-      ]
+      "confidence": "confirmed",
+      "source_page": 8,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-08-FALLBACK",
-      "type": "fallback",
-      "confidence": "inferred",
+      "id": "AP08-A",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_CAN_PASS"
+      },
+      "label_zh": "可以PASS？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP08-S-PASS"
+        },
+        {
+          "when": false,
+          "to": "AP08-B"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 8,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP08-B",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_NEEDS_PROGRESS_OF_WAR"
+      },
+      "label_zh": "需要满足战争进程？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP08-C"
+        },
+        {
+          "when": false,
+          "to": "AP08-C"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 8,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP08-C",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_HAND_GE_3"
+      },
+      "label_zh": "手牌≥3？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP08-D"
+        },
+        {
+          "when": false,
+          "to": "AP08-S-EVENT"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 8,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP08-D",
+      "type": "condition",
+      "predicate": {
+        "id": "JP_CONTROLS_COUNTERATTACK_TARGET"
+      },
+      "label_zh": "日本控制反攻目标？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP08-S-COUNTEROFFENSIVE"
+        },
+        {
+          "when": false,
+          "to": "AP08-D10"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 8,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP08-D10",
+      "type": "dice",
+      "table_id": "AP08-D10-TABLE",
+      "sides": 10,
+      "ranges": [
+        {
+          "min": 0,
+          "max": 4,
+          "result": "0-4",
+          "to": "AP08-S-SOUTH-PACIFIC"
+        },
+        {
+          "min": 5,
+          "max": 7,
+          "result": "5-7",
+          "to": "AP08-S-CENTRAL-PACIFIC"
+        },
+        {
+          "min": 8,
+          "max": 8,
+          "result": "8",
+          "to": "AP08-S-DEI"
+        },
+        {
+          "min": 9,
+          "max": 9,
+          "result": "9",
+          "to": "AP08-S-CBI"
+        }
+      ],
+      "label_zh": "掷D10；不可执行则重掷",
+      "edges": [
+        {
+          "when": "0-4",
+          "to": "AP08-S-SOUTH-PACIFIC"
+        },
+        {
+          "when": "5-7",
+          "to": "AP08-S-CENTRAL-PACIFIC"
+        },
+        {
+          "when": "8",
+          "to": "AP08-S-DEI"
+        },
+        {
+          "when": "9",
+          "to": "AP08-S-CBI"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 8,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP08-S-PASS",
+      "type": "action",
+      "strategy": "AP_PASS",
+      "label_zh": "PASS",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP08-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 8,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP08-S-EVENT",
+      "type": "action",
+      "strategy": "AP_EVENT",
+      "label_zh": "事件",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP08-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 8,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP08-S-COUNTEROFFENSIVE",
+      "type": "action",
+      "strategy": "AP_COUNTEROFFENSIVE",
+      "label_zh": "反攻",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP08-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 8,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP08-S-SOUTH-PACIFIC",
+      "type": "action",
+      "strategy": "AP_SOUTH_PACIFIC",
+      "label_zh": "南太平洋",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP08-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 8,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP08-S-CENTRAL-PACIFIC",
+      "type": "action",
+      "strategy": "AP_CENTRAL_PACIFIC",
+      "label_zh": "中太平洋",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP08-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 8,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP08-S-DEI",
+      "type": "action",
+      "strategy": "AP_DEI",
+      "label_zh": "DEI",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP08-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 8,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP08-S-CBI",
+      "type": "action",
+      "strategy": "AP_CBI",
+      "label_zh": "CBI",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP08-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 8,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP08-FALLBACK",
+      "type": "fallback",
       "allowed_actions": [
         "pass",
         "skip"
       ],
-      "reason": "chart candidates are not legal in current view"
+      "reason": "图表出口均不合法",
+      "confidence": "confirmed",
+      "source_page": 8,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-08-END",
+      "id": "AP08-END",
       "type": "terminal",
       "confidence": "confirmed",
-      "source_page": 8
+      "source_page": 8,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     }
   ],
   "strategies": [
     "AP_PASS",
+    "AP_EVENT",
     "AP_COUNTEROFFENSIVE",
     "AP_SOUTH_PACIFIC",
-    "AP_CBI",
+    "AP_CENTRAL_PACIFIC",
     "AP_DEI",
-    "AP_EVENT"
+    "AP_CBI"
   ],
-  "dice_tables": [],
+  "dice_tables": [
+    {
+      "id": "AP08-D10-TABLE",
+      "sides": 10,
+      "ranges": [
+        {
+          "min": 0,
+          "max": 4,
+          "result": "0-4",
+          "to": "AP08-S-SOUTH-PACIFIC"
+        },
+        {
+          "min": 5,
+          "max": 7,
+          "result": "5-7",
+          "to": "AP08-S-CENTRAL-PACIFIC"
+        },
+        {
+          "min": 8,
+          "max": 8,
+          "result": "8",
+          "to": "AP08-S-DEI"
+        },
+        {
+          "min": 9,
+          "max": 9,
+          "result": "9",
+          "to": "AP08-S-CBI"
+        }
+      ],
+      "source_page": 8
+    }
+  ],
   "qa": {
-    "inferred_nodes": [
-      "ERASMUS-AP-08-C01",
-      "ERASMUS-AP-08-C02",
-      "ERASMUS-AP-08-C03",
-      "ERASMUS-AP-08-C04",
-      "ERASMUS-AP-08-C05",
-      "ERASMUS-AP-08-C06",
-      "ERASMUS-AP-08-C07",
-      "ERASMUS-AP-08-C08",
-      "ERASMUS-AP-08-C09",
-      "ERASMUS-AP-08-S01",
-      "ERASMUS-AP-08-S02",
-      "ERASMUS-AP-08-S03",
-      "ERASMUS-AP-08-S04",
-      "ERASMUS-AP-08-S05",
-      "ERASMUS-AP-08-S06",
-      "ERASMUS-AP-08-SELECT",
-      "ERASMUS-AP-08-FALLBACK"
-    ],
-    "visual_review_required": true,
-    "source_line_count": 166
+    "inferred_nodes": [],
+    "visual_review_required": false,
+    "verified_from_visual": true
   }
 }

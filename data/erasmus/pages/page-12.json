@@ -1,398 +1,637 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "id": "ERASMUS-AP-12",
   "chart_id": "ERASMUS-AP-12",
   "role": "Allies",
   "phase": "all",
   "kind": "reaction",
-  "action_family": "reaction",
   "source_page": 12,
   "source": {
-    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "pdf": "伊拉斯谟v2.0_图表汉化 (1).pdf",
+    "absolute_path": "D:/downloads/伊拉斯谟v2.0_图表汉化 (1).pdf",
     "page": 12,
-    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/12-盟军-全阶段反应.md"
+    "sha256": "5c362b4af6306b03baf959f80273942a80418bf985dac2faee61eb953a1dab2f"
   },
-  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/12-盟军-全阶段反应.md",
-  "rules": [
-    "EOTS-5",
-    "EOTS-7"
-  ],
   "nodes": [
     {
-      "id": "ERASMUS-AP-12-START",
+      "id": "AP12-START",
       "type": "start",
-      "confidence": "confirmed",
-      "source_page": 12,
       "edges": [
         {
           "when": "always",
-          "to": "ERASMUS-AP-12-C01"
+          "to": "AP12-A"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-12-C01",
+      "id": "AP12-A",
       "type": "condition",
-      "confidence": "inferred",
-      "source_page": 12,
       "predicate": {
-        "id": "ISR_REACTION"
+        "id": "IS_STRATEGIC_REDEPLOYMENT"
       },
-      "label_zh": "ISR_REACTION",
+      "label_zh": "有SR？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-AP-12-S01"
+          "to": "AP12-S-SR"
         },
         {
           "when": false,
-          "to": "ERASMUS-AP-12-C02"
+          "to": "AP12-B"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-12-C02",
-      "type": "condition",
-      "confidence": "inferred",
+      "id": "AP12-S-SR",
+      "type": "action",
+      "strategy": "AP_ROLL_EACH_SR",
+      "label_zh": "为每处SR掷骰",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP12-END"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-B",
+      "type": "condition",
       "predicate": {
         "id": "HAS_BATTLE"
       },
-      "label_zh": "HAS_BATTLE",
+      "label_zh": "有战斗格？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-AP-12-S02"
+          "to": "AP12-C"
         },
         {
           "when": false,
-          "to": "ERASMUS-AP-12-C03"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-12-C03",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 12,
-      "predicate": {
-        "id": "HQ_IN_RANGE"
-      },
-      "label_zh": "HQ_IN_RANGE",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-12-S03"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-12-C04"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-12-C04",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 12,
-      "predicate": {
-        "id": "ATTACK_REACTION_AVAILABLE"
-      },
-      "label_zh": "ATTACK_REACTION_AVAILABLE",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-12-S04"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-12-C05"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-12-C05",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 12,
-      "predicate": {
-        "id": "DEI_COMPLETE"
-      },
-      "label_zh": "DEI_COMPLETE",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-12-S05"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-12-C06"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-12-C06",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 12,
-      "predicate": {
-        "id": "NUKE_TARGET"
-      },
-      "label_zh": "NUKE_TARGET",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-12-S01"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-12-C07"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-12-C07",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 12,
-      "predicate": {
-        "id": "PBM_AIR_REQUIRED"
-      },
-      "label_zh": "PBM_AIR_REQUIRED",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-12-S02"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-12-C08"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-12-C08",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 12,
-      "predicate": {
-        "id": "PBM_SEA_REQUIRED"
-      },
-      "label_zh": "PBM_SEA_REQUIRED",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-12-S03"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-12-C09"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-12-C09",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 12,
-      "predicate": {
-        "id": "PBM_AA_FAILED"
-      },
-      "label_zh": "PBM_AA_FAILED",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-12-S04"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-12-SELECT"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-12-S01",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 12,
-      "strategy": "AP_INTEL_REACTION",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-12-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-12-S02",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 12,
-      "strategy": "AP_COUNTERATTACK_REACTION",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-12-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-12-S03",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 12,
-      "strategy": "AP_PBM_AIR",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-12-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-12-S04",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 12,
-      "strategy": "AP_PBM_SEA",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-12-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-12-S05",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 12,
-      "strategy": "AP_PBM_AA",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-12-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-12-SELECT",
-      "type": "priority",
-      "confidence": "inferred",
-      "source_page": 12,
-      "family": "reaction",
-      "strategies": [
-        {
-          "id": "AP_INTEL_REACTION",
-          "priority": 1,
-          "actionTag": "AP_INTEL_REACTION"
-        },
-        {
-          "id": "AP_COUNTERATTACK_REACTION",
-          "priority": 2,
-          "actionTag": "AP_COUNTERATTACK_REACTION"
-        },
-        {
-          "id": "AP_PBM_AIR",
-          "priority": 3,
-          "actionTag": "AP_PBM_AIR"
-        },
-        {
-          "id": "AP_PBM_SEA",
-          "priority": 4,
-          "actionTag": "AP_PBM_SEA"
-        },
-        {
-          "id": "AP_PBM_AA",
-          "priority": 5,
-          "actionTag": "AP_PBM_AA"
+          "to": "AP12-HI"
         }
       ],
-      "edges": [
-        {
-          "when": "candidate_found",
-          "to": "ERASMUS-AP-12-END"
-        },
-        {
-          "when": "no_candidate",
-          "to": "ERASMUS-AP-12-FALLBACK"
-        }
-      ]
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-12-DICE-01",
-      "type": "dice",
-      "confidence": "inferred",
+      "id": "AP12-C",
+      "type": "condition",
+      "predicate": {
+        "id": "BATTLE_IN_SUPPLIED_HQ_RANGE"
+      },
+      "label_zh": "补给HQ范围内有战斗格？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP12-DEF"
+        },
+        {
+          "when": false,
+          "to": "AP12-S-INTEL-ROLL"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 12,
-      "table_id": "ERASMUS-AP-12-D10",
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-DEF",
+      "type": "condition",
+      "predicate": {
+        "id": "HAS_INTEL_COUNTER_OR_AMBUSH"
+      },
+      "label_zh": "D或E或F？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP12-D10"
+        },
+        {
+          "when": false,
+          "to": "AP12-S-INTEL-ROLL"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-D10",
+      "type": "dice",
+      "table_id": "AP12-D10-TABLE",
       "sides": 10,
       "ranges": [
         {
           "min": 0,
-          "max": 3,
-          "result": "low"
+          "max": 0,
+          "result": "0",
+          "to": "AP12-S-INTEL-CARD"
         },
         {
-          "min": 4,
+          "min": 1,
           "max": 9,
-          "result": "high"
+          "result": "1-9",
+          "to": "AP12-S-INTEL-ROLL"
         }
       ],
-      "inference_basis": "PDF reaction/PBM Roll 1d10 branches"
+      "label_zh": "情报判定",
+      "edges": [
+        {
+          "when": "0",
+          "to": "AP12-S-INTEL-CARD"
+        },
+        {
+          "when": "1-9",
+          "to": "AP12-S-INTEL-ROLL"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-12-FALLBACK",
-      "type": "fallback",
-      "confidence": "inferred",
+      "id": "AP12-S-INTEL-CARD",
+      "type": "action",
+      "strategy": "AP_INTELLIGENCE_REACTION",
+      "label_zh": "打出情报反应牌",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP12-END"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-S-INTEL-ROLL",
+      "type": "action",
+      "strategy": "AP_INTELLIGENCE_ROLL",
+      "edges": [
+        {
+          "when": "pass",
+          "to": "AP12-G"
+        },
+        {
+          "when": "fail",
+          "to": "AP12-HI"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-G",
+      "type": "condition",
+      "predicate": {
+        "id": "REACTION_FORCE_STANDARD_MET"
+      },
+      "label_zh": "满足反应部队标准？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP12-RF-D10"
+        },
+        {
+          "when": false,
+          "to": "AP12-HI"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-RF-D10",
+      "type": "dice",
+      "table_id": "AP12-RF-D10-TABLE",
+      "sides": 10,
+      "ranges": [
+        {
+          "min": 0,
+          "max": 4,
+          "result": "0-4",
+          "to": "AP12-S-REACTION"
+        },
+        {
+          "min": 5,
+          "max": 9,
+          "result": "5-9",
+          "to": "AP12-S-REACTION"
+        }
+      ],
+      "label_zh": "盟军反应兵力D10",
+      "edges": [
+        {
+          "when": "0-4",
+          "to": "AP12-S-REACTION"
+        },
+        {
+          "when": "5-9",
+          "to": "AP12-S-REACTION"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-S-REACTION",
+      "type": "action",
+      "strategy": "AP_REACTION_FORCE",
+      "label_zh": "反应战略",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP12-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-HI",
+      "type": "condition",
+      "predicate": {
+        "id": "HAS_SUBMARINE_CARD_AND_TARGET"
+      },
+      "label_zh": "H+I？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP12-S-SUB"
+        },
+        {
+          "when": false,
+          "to": "AP12-S-PBM"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-S-SUB",
+      "type": "action",
+      "strategy": "AP_SUBMARINE_ATTACK",
+      "label_zh": "潜艇攻击",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP12-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-S-PBM",
+      "type": "action",
+      "strategy": "AP_PBM",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP12-PBM-A"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-PBM-A",
+      "type": "condition",
+      "predicate": {
+        "id": "PBM_AIR_REQUIRED"
+      },
+      "label_zh": "空中单位需要PBM？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP12-S-PBM-AIR"
+        },
+        {
+          "when": false,
+          "to": "AP12-PBM-B"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-PBM-B",
+      "type": "condition",
+      "predicate": {
+        "id": "PBM_SEA_REQUIRED"
+      },
+      "label_zh": "海上单位需要PBM？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP12-S-PBM-SEA"
+        },
+        {
+          "when": false,
+          "to": "AP12-PBM-C"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-PBM-C",
+      "type": "condition",
+      "predicate": {
+        "id": "PBM_AA_FAILED"
+      },
+      "label_zh": "失败两栖单位需要PBM？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP12-S-PBM-AA"
+        },
+        {
+          "when": false,
+          "to": "AP12-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-S-PBM-AIR",
+      "type": "action",
+      "strategy": "AP_PBM_AIR",
+      "label_zh": "航空PBM",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP12-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-S-PBM-SEA",
+      "type": "action",
+      "strategy": "AP_PBM_SEA",
+      "label_zh": "海上PBM",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP12-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-S-PBM-AA",
+      "type": "action",
+      "strategy": "AP_PBM_AA",
+      "label_zh": "AA失败PBM",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP12-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP12-FALLBACK",
+      "type": "fallback",
       "allowed_actions": [
         "pass",
         "skip"
       ],
-      "reason": "chart candidates are not legal in current view"
+      "reason": "图表出口均不合法",
+      "confidence": "confirmed",
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-12-END",
+      "id": "AP12-END",
       "type": "terminal",
       "confidence": "confirmed",
-      "source_page": 12
+      "source_page": 12,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     }
   ],
   "strategies": [
-    "AP_INTEL_REACTION",
-    "AP_COUNTERATTACK_REACTION",
+    "AP_ROLL_EACH_SR",
+    "AP_INTELLIGENCE_REACTION",
+    "AP_INTELLIGENCE_ROLL",
+    "AP_REACTION_FORCE",
+    "AP_SUBMARINE_ATTACK",
+    "AP_PBM",
     "AP_PBM_AIR",
     "AP_PBM_SEA",
     "AP_PBM_AA"
   ],
   "dice_tables": [
     {
-      "id": "ERASMUS-AP-12-D10",
+      "id": "AP12-D10-TABLE",
       "sides": 10,
+      "ranges": [
+        {
+          "min": 0,
+          "max": 0,
+          "result": "0",
+          "to": "AP12-S-INTEL-CARD"
+        },
+        {
+          "min": 1,
+          "max": 9,
+          "result": "1-9",
+          "to": "AP12-S-INTEL-ROLL"
+        }
+      ],
+      "source_page": 12
+    },
+    {
+      "id": "AP12-RF-D10-TABLE",
+      "sides": 10,
+      "ranges": [
+        {
+          "min": 0,
+          "max": 4,
+          "result": "0-4",
+          "to": "AP12-S-REACTION"
+        },
+        {
+          "min": 5,
+          "max": 9,
+          "result": "5-9",
+          "to": "AP12-S-REACTION"
+        }
+      ],
       "source_page": 12
     }
   ],
   "qa": {
-    "inferred_nodes": [
-      "ERASMUS-AP-12-C01",
-      "ERASMUS-AP-12-C02",
-      "ERASMUS-AP-12-C03",
-      "ERASMUS-AP-12-C04",
-      "ERASMUS-AP-12-C05",
-      "ERASMUS-AP-12-C06",
-      "ERASMUS-AP-12-C07",
-      "ERASMUS-AP-12-C08",
-      "ERASMUS-AP-12-C09",
-      "ERASMUS-AP-12-S01",
-      "ERASMUS-AP-12-S02",
-      "ERASMUS-AP-12-S03",
-      "ERASMUS-AP-12-S04",
-      "ERASMUS-AP-12-S05",
-      "ERASMUS-AP-12-SELECT",
-      "ERASMUS-AP-12-DICE-01",
-      "ERASMUS-AP-12-FALLBACK"
-    ],
-    "visual_review_required": true,
-    "source_line_count": 190
+    "inferred_nodes": [],
+    "visual_review_required": false,
+    "verified_from_visual": true
   }
 }

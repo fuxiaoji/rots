@@ -1,388 +1,553 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "id": "ERASMUS-JP-01",
   "chart_id": "ERASMUS-JP-01",
   "role": "Japan",
   "phase": "early",
   "kind": "decision-axis",
-  "action_family": "strategy",
   "source_page": 1,
   "source": {
-    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "pdf": "伊拉斯谟v2.0_图表汉化 (1).pdf",
+    "absolute_path": "D:/downloads/伊拉斯谟v2.0_图表汉化 (1).pdf",
     "page": 1,
-    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/01-日本-早期阶段决策轴.md"
+    "sha256": "5c362b4af6306b03baf959f80273942a80418bf985dac2faee61eb953a1dab2f"
   },
-  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/01-日本-早期阶段决策轴.md",
-  "rules": [
-    "EOTS-5",
-    "EOTS-7"
-  ],
   "nodes": [
     {
-      "id": "ERASMUS-JP-01-START",
+      "id": "JP01-START",
       "type": "start",
-      "confidence": "confirmed",
-      "source_page": 1,
       "edges": [
         {
           "when": "always",
-          "to": "ERASMUS-JP-01-C01"
+          "to": "JP01-A"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-01-C01",
+      "id": "JP01-A",
       "type": "condition",
-      "confidence": "inferred",
-      "source_page": 1,
       "predicate": {
-        "id": "JP_PHI_RESOURCES"
+        "id": "AP_HQ_OOS_PHI_DEI_MALAYA"
       },
-      "label_zh": "JP_PHI_RESOURCES",
+      "label_zh": "菲律宾、东印度或马来亚的盟军HQ断补？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-JP-01-S01"
+          "to": "JP01-B"
         },
         {
           "when": false,
-          "to": "ERASMUS-JP-01-C02"
+          "to": "JP01-CD"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-01-C02",
+      "id": "JP01-B",
       "type": "condition",
-      "confidence": "inferred",
-      "source_page": 1,
       "predicate": {
-        "id": "JP_RESOURCES_LTE_13"
+        "id": "DEI_SURRENDER_HEXES_ALL_OCCUPIED"
       },
-      "label_zh": "JP_RESOURCES_LTE_13",
+      "label_zh": "东印度投降格全部占领？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-JP-01-S02"
+          "to": "JP01-CEHI"
         },
         {
           "when": false,
-          "to": "ERASMUS-JP-01-C03"
+          "to": "JP01-G"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-01-C03",
+      "id": "JP01-CD",
       "type": "condition",
-      "confidence": "inferred",
+      "predicate": {
+        "id": "JP_HAND_GE_3_AND_RES_LT_13"
+      },
+      "label_zh": "C+D？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP01-F"
+        },
+        {
+          "when": false,
+          "to": "JP01-S-CONSERVATIVE-AIR"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP01-F",
+      "type": "condition",
       "predicate": {
         "id": "JP_LOGISTICS_GTE_20"
       },
-      "label_zh": "JP_LOGISTICS_GTE_20",
+      "label_zh": "后勤值≥20？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-JP-01-S03"
+          "to": "JP01-S-AGGRESSIVE-AIR"
         },
         {
           "when": false,
-          "to": "ERASMUS-JP-01-C04"
+          "to": "JP01-S-CONSERVATIVE-AIR"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-01-C04",
+      "id": "JP01-G",
       "type": "condition",
-      "confidence": "inferred",
-      "source_page": 1,
       "predicate": {
         "id": "TURN_GE_3"
       },
-      "label_zh": "TURN_GE_3",
+      "label_zh": "第3回合或以后？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-JP-01-S04"
+          "to": "JP01-S-AGGRESSIVE-RESOURCE"
         },
         {
           "when": false,
-          "to": "ERASMUS-JP-01-C05"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-01-C05",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 1,
-      "predicate": {
-        "id": "JP_AZOI_COMPLETE"
-      },
-      "label_zh": "JP_AZOI_COMPLETE",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-01-S05"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-01-C06"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-01-C06",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 1,
-      "predicate": {
-        "id": "JP_RABAUL_CONTROLLED"
-      },
-      "label_zh": "JP_RABAUL_CONTROLLED",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-01-S06"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-01-C07"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-01-C07",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 1,
-      "predicate": {
-        "id": "JP_TARGET_LIST_FALLBACK"
-      },
-      "label_zh": "JP_TARGET_LIST_FALLBACK",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-01-S07"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-01-SELECT"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-01-S01",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 1,
-      "strategy": "JP_SOUTHWEST_RESOURCE",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-01-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-01-S02",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 1,
-      "strategy": "JP_EVENT",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-01-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-01-S03",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 1,
-      "strategy": "JP_PRESSURE_INDIA",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-01-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-01-S04",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 1,
-      "strategy": "JP_PRESSURE_HQ",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-01-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-01-S05",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 1,
-      "strategy": "JP_CENTRAL_PACIFIC",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-01-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-01-S06",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 1,
-      "strategy": "JP_CHINA",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-01-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-01-S07",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 1,
-      "strategy": "JP_NEW_GUINEA",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-01-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-01-S08",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 1,
-      "strategy": "JP_PHILIPPINES",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-01-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-01-SELECT",
-      "type": "priority",
-      "confidence": "inferred",
-      "source_page": 1,
-      "family": "strategy",
-      "strategies": [
-        {
-          "id": "JP_SOUTHWEST_RESOURCE",
-          "priority": 1,
-          "actionTag": "JP_SOUTHWEST_RESOURCE"
-        },
-        {
-          "id": "JP_EVENT",
-          "priority": 2,
-          "actionTag": "JP_EVENT"
-        },
-        {
-          "id": "JP_PRESSURE_INDIA",
-          "priority": 3,
-          "actionTag": "JP_PRESSURE_INDIA"
-        },
-        {
-          "id": "JP_PRESSURE_HQ",
-          "priority": 4,
-          "actionTag": "JP_PRESSURE_HQ"
-        },
-        {
-          "id": "JP_CENTRAL_PACIFIC",
-          "priority": 5,
-          "actionTag": "JP_CENTRAL_PACIFIC"
-        },
-        {
-          "id": "JP_CHINA",
-          "priority": 6,
-          "actionTag": "JP_CHINA"
-        },
-        {
-          "id": "JP_NEW_GUINEA",
-          "priority": 7,
-          "actionTag": "JP_NEW_GUINEA"
-        },
-        {
-          "id": "JP_PHILIPPINES",
-          "priority": 8,
-          "actionTag": "JP_PHILIPPINES"
+          "to": "JP01-ACD"
         }
       ],
-      "edges": [
-        {
-          "when": "candidate_found",
-          "to": "ERASMUS-JP-01-END"
-        },
-        {
-          "when": "no_candidate",
-          "to": "ERASMUS-JP-01-FALLBACK"
-        }
-      ]
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-01-FALLBACK",
-      "type": "fallback",
-      "confidence": "inferred",
+      "id": "JP01-ACD",
+      "type": "condition",
+      "predicate": {
+        "id": "A_AND_HAND_GE_3_AND_RES_LT_13"
+      },
+      "label_zh": "A+C+D？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP01-S-AGGRESSIVE-RESOURCE"
+        },
+        {
+          "when": false,
+          "to": "JP01-S-EVENT"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP01-CEHI",
+      "type": "condition",
+      "predicate": {
+        "id": "HAND_GE_3_AND_RES_GE_13_OR_LOGISTICS_LE_19_AND_DEI_AZOI"
+      },
+      "label_zh": "C+(E或H+I)？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP01-S-PERIMETER"
+        },
+        {
+          "when": false,
+          "to": "JP01-CJEBIK"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP01-CJEBIK",
+      "type": "condition",
+      "predicate": {
+        "id": "HAND_GE_3_AND_RABAUL_GUADALCANAL_AND_RES_GE_13_AND_DEI_OR_NG"
+      },
+      "label_zh": "C+J+E+(B或I或K)？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP01-D10"
+        },
+        {
+          "when": false,
+          "to": "JP01-CL"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP01-CL",
+      "type": "condition",
+      "predicate": {
+        "id": "HAND_GE_3_AND_MAL_PHI_DEI_INCOMPLETE"
+      },
+      "label_zh": "C+L？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP01-S-AGGRESSIVE-RESOURCE"
+        },
+        {
+          "when": false,
+          "to": "JP01-M"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP01-M",
+      "type": "condition",
+      "predicate": {
+        "id": "PERIMETER_TARGET_1_COMPLETE"
+      },
+      "label_zh": "外围防御目标1完成？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP01-D10"
+        },
+        {
+          "when": false,
+          "to": "JP01-S-PERIMETER"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP01-D10",
+      "type": "dice",
+      "table_id": "JP01-D10-TABLE",
+      "sides": 10,
+      "ranges": [
+        {
+          "min": 0,
+          "max": 2,
+          "result": "0-2",
+          "to": "JP01-S-EVENT"
+        },
+        {
+          "min": 3,
+          "max": 6,
+          "result": "3-6",
+          "to": "JP01-S-AGGRESSIVE-RESOURCE"
+        },
+        {
+          "min": 7,
+          "max": 9,
+          "result": "7-9",
+          "to": "JP01-S-CENTRAL-PACIFIC"
+        }
+      ],
+      "label_zh": "掷D10",
+      "edges": [
+        {
+          "when": "0-2",
+          "to": "JP01-S-EVENT"
+        },
+        {
+          "when": "3-6",
+          "to": "JP01-S-AGGRESSIVE-RESOURCE"
+        },
+        {
+          "when": "7-9",
+          "to": "JP01-S-CENTRAL-PACIFIC"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP01-S-AGGRESSIVE-AIR",
+      "type": "action",
+      "strategy": "JP_AGGRESSIVE_AIR_SUPERIORITY",
+      "label_zh": "激进空优",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP01-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP01-S-CONSERVATIVE-AIR",
+      "type": "action",
+      "strategy": "JP_CONSERVATIVE_AIR_SUPERIORITY",
+      "label_zh": "保守空优",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP01-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP01-S-AGGRESSIVE-RESOURCE",
+      "type": "action",
+      "strategy": "JP_AGGRESSIVE_SOUTHERN_RESOURCE",
+      "label_zh": "激进南方资源",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP01-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP01-S-PERIMETER",
+      "type": "action",
+      "strategy": "JP_PERIMETER_DEFENSE",
+      "label_zh": "外围防御",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP01-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP01-S-EVENT",
+      "type": "action",
+      "strategy": "JP_EVENT",
+      "label_zh": "事件",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP01-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP01-S-CENTRAL-PACIFIC",
+      "type": "action",
+      "strategy": "JP_CENTRAL_PACIFIC",
+      "label_zh": "中太平洋",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP01-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP01-FALLBACK",
+      "type": "fallback",
       "allowed_actions": [
         "pass",
         "skip"
       ],
-      "reason": "chart candidates are not legal in current view"
+      "reason": "图表出口均不合法",
+      "confidence": "confirmed",
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-01-END",
+      "id": "JP01-END",
       "type": "terminal",
       "confidence": "confirmed",
-      "source_page": 1
+      "source_page": 1,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     }
   ],
   "strategies": [
-    "JP_SOUTHWEST_RESOURCE",
+    "JP_AGGRESSIVE_AIR_SUPERIORITY",
+    "JP_CONSERVATIVE_AIR_SUPERIORITY",
+    "JP_AGGRESSIVE_SOUTHERN_RESOURCE",
+    "JP_PERIMETER_DEFENSE",
     "JP_EVENT",
-    "JP_PRESSURE_INDIA",
-    "JP_PRESSURE_HQ",
-    "JP_CENTRAL_PACIFIC",
-    "JP_CHINA",
-    "JP_NEW_GUINEA",
-    "JP_PHILIPPINES"
+    "JP_CENTRAL_PACIFIC"
   ],
-  "dice_tables": [],
+  "dice_tables": [
+    {
+      "id": "JP01-D10-TABLE",
+      "sides": 10,
+      "ranges": [
+        {
+          "min": 0,
+          "max": 2,
+          "result": "0-2",
+          "to": "JP01-S-EVENT"
+        },
+        {
+          "min": 3,
+          "max": 6,
+          "result": "3-6",
+          "to": "JP01-S-AGGRESSIVE-RESOURCE"
+        },
+        {
+          "min": 7,
+          "max": 9,
+          "result": "7-9",
+          "to": "JP01-S-CENTRAL-PACIFIC"
+        }
+      ],
+      "source_page": 1
+    }
+  ],
   "qa": {
-    "inferred_nodes": [
-      "ERASMUS-JP-01-C01",
-      "ERASMUS-JP-01-C02",
-      "ERASMUS-JP-01-C03",
-      "ERASMUS-JP-01-C04",
-      "ERASMUS-JP-01-C05",
-      "ERASMUS-JP-01-C06",
-      "ERASMUS-JP-01-C07",
-      "ERASMUS-JP-01-S01",
-      "ERASMUS-JP-01-S02",
-      "ERASMUS-JP-01-S03",
-      "ERASMUS-JP-01-S04",
-      "ERASMUS-JP-01-S05",
-      "ERASMUS-JP-01-S06",
-      "ERASMUS-JP-01-S07",
-      "ERASMUS-JP-01-S08",
-      "ERASMUS-JP-01-SELECT",
-      "ERASMUS-JP-01-FALLBACK"
-    ],
-    "visual_review_required": true,
-    "source_line_count": 210
+    "inferred_nodes": [],
+    "visual_review_required": false,
+    "verified_from_visual": true
   }
 }

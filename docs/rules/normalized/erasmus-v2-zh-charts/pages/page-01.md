@@ -1,0 +1,28 @@
+# ERASMUS-JP-01
+
+- 来源：伊拉斯谟v2.0_图表汉化 (1).pdf，第 1 页
+- SHA-256：5c362b4af6306b03baf959f80273942a80418bf985dac2faee61eb953a1dab2f
+- 状态：逐页视觉确认（2026-09-04）
+
+| 节点 | 类型/谓词 | 出边 |
+|---|---|---|
+| JP01-START | start | always→JP01-A |
+| JP01-A | condition / AP_HQ_OOS_PHI_DEI_MALAYA | true→JP01-B；false→JP01-CD |
+| JP01-B | condition / DEI_SURRENDER_HEXES_ALL_OCCUPIED | true→JP01-CEHI；false→JP01-G |
+| JP01-CD | condition / JP_HAND_GE_3_AND_RES_LT_13 | true→JP01-F；false→JP01-S-CONSERVATIVE-AIR |
+| JP01-F | condition / JP_LOGISTICS_GTE_20 | true→JP01-S-AGGRESSIVE-AIR；false→JP01-S-CONSERVATIVE-AIR |
+| JP01-G | condition / TURN_GE_3 | true→JP01-S-AGGRESSIVE-RESOURCE；false→JP01-ACD |
+| JP01-ACD | condition / A_AND_HAND_GE_3_AND_RES_LT_13 | true→JP01-S-AGGRESSIVE-RESOURCE；false→JP01-S-EVENT |
+| JP01-CEHI | condition / HAND_GE_3_AND_RES_GE_13_OR_LOGISTICS_LE_19_AND_DEI_AZOI | true→JP01-S-PERIMETER；false→JP01-CJEBIK |
+| JP01-CJEBIK | condition / HAND_GE_3_AND_RABAUL_GUADALCANAL_AND_RES_GE_13_AND_DEI_OR_NG | true→JP01-D10；false→JP01-CL |
+| JP01-CL | condition / HAND_GE_3_AND_MAL_PHI_DEI_INCOMPLETE | true→JP01-S-AGGRESSIVE-RESOURCE；false→JP01-M |
+| JP01-M | condition / PERIMETER_TARGET_1_COMPLETE | true→JP01-D10；false→JP01-S-PERIMETER |
+| JP01-D10 | dice | 0-2→JP01-S-EVENT；3-6→JP01-S-AGGRESSIVE-RESOURCE；7-9→JP01-S-CENTRAL-PACIFIC |
+| JP01-S-AGGRESSIVE-AIR | action | always→JP01-END |
+| JP01-S-CONSERVATIVE-AIR | action | always→JP01-END |
+| JP01-S-AGGRESSIVE-RESOURCE | action | always→JP01-END |
+| JP01-S-PERIMETER | action | always→JP01-END |
+| JP01-S-EVENT | action | always→JP01-END |
+| JP01-S-CENTRAL-PACIFIC | action | always→JP01-END |
+| JP01-FALLBACK | fallback | - |
+| JP01-END | terminal | - |

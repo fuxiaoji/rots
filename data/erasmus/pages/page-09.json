@@ -1,343 +1,495 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "id": "ERASMUS-AP-09",
   "chart_id": "ERASMUS-AP-09",
   "role": "Allies",
   "phase": "end",
   "kind": "decision-axis",
-  "action_family": "strategy",
   "source_page": 9,
   "source": {
-    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "pdf": "伊拉斯谟v2.0_图表汉化 (1).pdf",
+    "absolute_path": "D:/downloads/伊拉斯谟v2.0_图表汉化 (1).pdf",
     "page": 9,
-    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/09-盟军-终局阶段决策轴.md"
+    "sha256": "5c362b4af6306b03baf959f80273942a80418bf985dac2faee61eb953a1dab2f"
   },
-  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/09-盟军-终局阶段决策轴.md",
-  "rules": [
-    "EOTS-5",
-    "EOTS-7"
-  ],
   "nodes": [
     {
-      "id": "ERASMUS-AP-09-START",
+      "id": "AP09-START",
       "type": "start",
-      "confidence": "confirmed",
-      "source_page": 9,
       "edges": [
         {
           "when": "always",
-          "to": "ERASMUS-AP-09-C01"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-09-C01",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 9,
-      "predicate": {
-        "id": "AP_HAS_PASS"
-      },
-      "label_zh": "AP_HAS_PASS",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-09-S01"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-09-C02"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-09-C02",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 9,
-      "predicate": {
-        "id": "IS_FINAL_TURN"
-      },
-      "label_zh": "IS_FINAL_TURN",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-09-S02"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-09-C03"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-09-C03",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 9,
-      "predicate": {
-        "id": "AP_HAS_3_CARDS"
-      },
-      "label_zh": "AP_HAS_3_CARDS",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-09-S03"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-09-C04"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-09-C04",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 9,
-      "predicate": {
-        "id": "AP_STRATEGIC_BASE"
-      },
-      "label_zh": "AP_STRATEGIC_BASE",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-09-S04"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-09-C05"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-09-C05",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 9,
-      "predicate": {
-        "id": "AP_B29_TARGET"
-      },
-      "label_zh": "AP_B29_TARGET",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-09-S05"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-09-C06"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-09-C06",
-      "type": "condition",
-      "confidence": "confirmed",
-      "source_page": 9,
-      "predicate": {
-        "id": "AP_MEETS_ATOMIC_BOMB_STRATEGY_CRITERIA",
-        "all": [
-          {
-            "id": "AP_STRATEGIC_BOMBING_SUCCEEDED_EVERY_TURN_SINCE_9",
-            "source_note": 7
-          },
-          {
-            "any": [
-              {
-                "id": "AP_SOVIET_INVADE_MANCHURIA_OCCURRED"
-              },
-              {
-                "id": "AP_HOLDS_PLAYABLE_SOVIET_INVADE_MANCHURIA"
-              }
-            ]
-          },
-          {
-            "id": "JP_RESOURCE_HEXES_WITHIN_ATOMIC_LIMIT",
-            "limit_when_soviet_occurred": 3,
-            "limit_when_soviet_not_occurred": 5
-          }
-        ]
-      },
-      "label_zh": "盟军是否满足原子弹战略标准？",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-09-S07"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-09-S06"
+          "to": "AP09-A"
         }
       ],
-      "source_lines": [
-        60,
-        69,
-        139,
-        150
-      ]
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-09-S01",
-      "type": "action",
-      "confidence": "inferred",
+      "id": "AP09-A",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_CAN_PASS"
+      },
+      "label_zh": "可以PASS？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP09-S-PASS"
+        },
+        {
+          "when": false,
+          "to": "AP09-B"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP09-B",
+      "type": "condition",
+      "predicate": {
+        "id": "TURN_12"
+      },
+      "label_zh": "第12回合？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP09-C"
+        },
+        {
+          "when": false,
+          "to": "AP09-C"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP09-C",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_HAND_GE_3"
+      },
+      "label_zh": "手牌≥3？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP09-D"
+        },
+        {
+          "when": false,
+          "to": "AP09-S-EVENT"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP09-D",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_HAS_STRATEGIC_BOMBING_BASE"
+      },
+      "label_zh": "拥有战略轰炸基地？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP09-E"
+        },
+        {
+          "when": false,
+          "to": "AP09-S-CAPTURE-BOMBING-BASE"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP09-E",
+      "type": "condition",
+      "predicate": {
+        "id": "ALL_MAP_B29_ON_BASE"
+      },
+      "label_zh": "地图上所有B-29均在基地？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP09-F"
+        },
+        {
+          "when": false,
+          "to": "AP09-S-PUSH-B29"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP09-F",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_CONTROLS_HEX_WITHIN_TOKYO_8"
+      },
+      "label_zh": "控制东京8格内格？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP09-G"
+        },
+        {
+          "when": false,
+          "to": "AP09-D10"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP09-D10",
+      "type": "dice",
+      "table_id": "AP09-D10-TABLE",
+      "sides": 10,
+      "ranges": [
+        {
+          "min": 0,
+          "max": 2,
+          "result": "0-2",
+          "to": "AP09-S-RETURN-PHILIPPINES"
+        },
+        {
+          "min": 3,
+          "max": 5,
+          "result": "3-5",
+          "to": "AP09-S-ISLAND-HOPPING"
+        },
+        {
+          "min": 6,
+          "max": 9,
+          "result": "6-9",
+          "to": "AP09-S-ALTERNATE"
+        }
+      ],
+      "label_zh": "掷D10",
+      "edges": [
+        {
+          "when": "0-2",
+          "to": "AP09-S-RETURN-PHILIPPINES"
+        },
+        {
+          "when": "3-5",
+          "to": "AP09-S-ISLAND-HOPPING"
+        },
+        {
+          "when": "6-9",
+          "to": "AP09-S-ALTERNATE"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP09-G",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_MEETS_ATOMIC_BOMB_STRATEGY_CRITERIA"
+      },
+      "label_zh": "满足原子弹战略标准？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP09-S-ATOMIC"
+        },
+        {
+          "when": false,
+          "to": "AP09-S-INVADE-JAPAN"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP09-S-PASS",
+      "type": "action",
       "strategy": "AP_PASS",
+      "label_zh": "PASS",
       "edges": [
         {
           "when": "always",
-          "to": "ERASMUS-AP-09-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-09-S02",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 9,
-      "strategy": "AP_EVENT",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-09-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-09-S03",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 9,
-      "strategy": "AP_CAPTURE_STRATEGIC_BASE",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-09-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-09-S04",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 9,
-      "strategy": "AP_PUSH_B29",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-09-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-09-S05",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 9,
-      "strategy": "AP_REDEPLOY",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-09-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-09-S06",
-      "type": "action",
-      "confidence": "confirmed",
-      "source_page": 9,
-      "strategy": "AP_INVade_JAPAN",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-09-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-09-S07",
-      "type": "action",
-      "confidence": "confirmed",
-      "source_page": 9,
-      "strategy": "AP_ATOMIC_VICTORY",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-09-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-09-SELECT",
-      "type": "priority",
-      "confidence": "inferred",
-      "source_page": 9,
-      "family": "strategy",
-      "strategies": [
-        {
-          "id": "AP_PASS",
-          "priority": 1,
-          "actionTag": "AP_PASS"
-        },
-        {
-          "id": "AP_EVENT",
-          "priority": 2,
-          "actionTag": "AP_EVENT"
-        },
-        {
-          "id": "AP_CAPTURE_STRATEGIC_BASE",
-          "priority": 3,
-          "actionTag": "AP_CAPTURE_STRATEGIC_BASE"
-        },
-        {
-          "id": "AP_PUSH_B29",
-          "priority": 4,
-          "actionTag": "AP_PUSH_B29"
-        },
-        {
-          "id": "AP_REDEPLOY",
-          "priority": 5,
-          "actionTag": "AP_REDEPLOY"
-        },
-        {
-          "id": "AP_INVade_JAPAN",
-          "priority": 6,
-          "actionTag": "AP_INVade_JAPAN"
-        },
-        {
-          "id": "AP_ATOMIC_VICTORY",
-          "priority": 7,
-          "actionTag": "AP_ATOMIC_VICTORY"
+          "to": "AP09-END"
         }
       ],
-      "edges": [
-        {
-          "when": "candidate_found",
-          "to": "ERASMUS-AP-09-END"
-        },
-        {
-          "when": "no_candidate",
-          "to": "ERASMUS-AP-09-FALLBACK"
-        }
-      ]
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-09-FALLBACK",
-      "type": "fallback",
-      "confidence": "inferred",
+      "id": "AP09-S-EVENT",
+      "type": "action",
+      "strategy": "AP_EVENT",
+      "label_zh": "事件",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP09-END"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP09-S-CAPTURE-BOMBING-BASE",
+      "type": "action",
+      "strategy": "AP_CAPTURE_STRATEGIC_BASE",
+      "label_zh": "占领轰炸基地",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP09-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP09-S-PUSH-B29",
+      "type": "action",
+      "strategy": "AP_PUSH_B29",
+      "label_zh": "推进B-29",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP09-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP09-S-RETURN-PHILIPPINES",
+      "type": "action",
+      "strategy": "AP_RETURN_PHILIPPINES",
+      "label_zh": "重返菲律宾",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP09-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP09-S-ISLAND-HOPPING",
+      "type": "action",
+      "strategy": "AP_ISLAND_HOPPING",
+      "label_zh": "跳岛",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP09-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP09-S-ALTERNATE",
+      "type": "action",
+      "strategy": "AP_ALTERNATE",
+      "label_zh": "轮流",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP09-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP09-S-ATOMIC",
+      "type": "action",
+      "strategy": "AP_ATOMIC_VICTORY",
+      "label_zh": "原子弹胜利",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP09-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP09-S-INVADE-JAPAN",
+      "type": "action",
+      "strategy": "AP_INVADE_JAPAN",
+      "label_zh": "登陆日本",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP09-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP09-FALLBACK",
+      "type": "fallback",
       "allowed_actions": [
         "pass",
         "skip"
       ],
-      "reason": "chart candidates are not legal in current view"
+      "reason": "图表出口均不合法",
+      "confidence": "confirmed",
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-09-END",
+      "id": "AP09-END",
       "type": "terminal",
       "confidence": "confirmed",
-      "source_page": 9
+      "source_page": 9,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     }
   ],
   "strategies": [
@@ -345,27 +497,42 @@
     "AP_EVENT",
     "AP_CAPTURE_STRATEGIC_BASE",
     "AP_PUSH_B29",
-    "AP_REDEPLOY",
-    "AP_INVade_JAPAN",
-    "AP_ATOMIC_VICTORY"
+    "AP_RETURN_PHILIPPINES",
+    "AP_ISLAND_HOPPING",
+    "AP_ALTERNATE",
+    "AP_ATOMIC_VICTORY",
+    "AP_INVADE_JAPAN"
   ],
-  "dice_tables": [],
+  "dice_tables": [
+    {
+      "id": "AP09-D10-TABLE",
+      "sides": 10,
+      "ranges": [
+        {
+          "min": 0,
+          "max": 2,
+          "result": "0-2",
+          "to": "AP09-S-RETURN-PHILIPPINES"
+        },
+        {
+          "min": 3,
+          "max": 5,
+          "result": "3-5",
+          "to": "AP09-S-ISLAND-HOPPING"
+        },
+        {
+          "min": 6,
+          "max": 9,
+          "result": "6-9",
+          "to": "AP09-S-ALTERNATE"
+        }
+      ],
+      "source_page": 9
+    }
+  ],
   "qa": {
-    "inferred_nodes": [
-      "ERASMUS-AP-09-C01",
-      "ERASMUS-AP-09-C02",
-      "ERASMUS-AP-09-C03",
-      "ERASMUS-AP-09-C04",
-      "ERASMUS-AP-09-C05",
-      "ERASMUS-AP-09-S01",
-      "ERASMUS-AP-09-S02",
-      "ERASMUS-AP-09-S03",
-      "ERASMUS-AP-09-S04",
-      "ERASMUS-AP-09-S05",
-      "ERASMUS-AP-09-SELECT",
-      "ERASMUS-AP-09-FALLBACK"
-    ],
-    "visual_review_required": true,
-    "source_line_count": 152
+    "inferred_nodes": [],
+    "visual_review_required": false,
+    "verified_from_visual": true
   }
 }

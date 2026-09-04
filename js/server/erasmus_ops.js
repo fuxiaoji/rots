@@ -300,3 +300,30 @@ function eop_trace(role) {
     const axis = eop_axis(role)
     return { axis: axis ? axis.id : null, axis_note: axis ? axis.note : null, focus: eop_focus(role) }
 }
+
+// Public-view planning interfaces used by the chart executor. They deliberately
+// consume view.ai/public legal candidates rather than the mutable game state.
+function evaluateTargetFeasibility(target, card, hq, view) {
+    const units=Array.isArray(view?.ai?.units)?view.ai.units:[], roleFaction=view?.active === "Allies" ? AP : JP
+    const defenders=units.filter(u=>u.location===target&&u.faction!==roleFaction)
+    const defense=defenders.reduce((s,u)=>s+(u.reduced?Math.ceil(u.cf/2):u.cf),0)
+    const md=(target!==null&&target!==undefined&&typeof get_map_data==="function")?get_map_data(target):null
+    return {target,legal:target!==null&&target!==undefined,coastal:!!(md&&(md.port||md.island)),defense,
+        groundDefense:defenders.filter(u=>u.class==="ground").reduce((s,u)=>s+(u.reduced?Math.ceil(u.cf/2):u.cf),0),
+        potentialReaction:!!view?.ai?.predicates?.ENEMY_NAVAL_GROUND_CAN_REACT,
+        requiredGroundMath:Math.max(1,defense),requiredAirSeaMath:Math.max(1,Math.ceil(defense/2))}
+}
+function composeTaskForce(target, card, hq, view, candidates, role) {
+    const units=Array.isArray(view?.ai?.units)?view.ai.units:[], byId=new Map(units.map(u=>[u.id,u]))
+    const active=new Set((view?.offensive?.active_units||[]).flat()), f=evaluateTargetFeasibility(target,card,hq,view)
+    const committed=[...active].map(id=>byId.get(id)).filter(Boolean)
+    const strength=committed.reduce((s,u)=>s+(u.reduced?Math.ceil(u.cf/2):u.cf),0)
+    const need=f.groundDefense>0?f.requiredGroundMath:f.requiredAirSeaMath
+    if(strength>=need)return {complete:true,required:need,strength,unit:null,formation:"minimum-sufficient"}
+    const pool=(candidates||[]).map(id=>byId.get(id)).filter(Boolean)
+    const classRank=u=>f.groundDefense>0?({ground:0,naval:1,air:2}[u.class]??3):({air:0,naval:1,ground:2}[u.class]??3)
+    pool.sort((a,b)=>classRank(a)-classRank(b)||(b.reduced?Math.ceil(b.cf/2):b.cf)-(a.reduced?Math.ceil(a.cf/2):a.cf)||a.id-b.id)
+    return {complete:false,required:need,strength,unit:pool[0]?.id,formation:f.groundDefense>0?"ground-with-support":"air-sea-strike"}
+}
+function planReaction(view,candidates){const units=Array.isArray(view?.ai?.units)?view.ai.units:[],byId=new Map(units.map(u=>[u.id,u]));return (candidates||[]).slice().sort((a,b)=>(byId.get(b)?.lf||0)-(byId.get(a)?.lf||0)||a-b)[0]}
+function planPostBattleMovement(view,candidates){return planReaction(view,candidates)}

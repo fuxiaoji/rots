@@ -1,430 +1,597 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "id": "ERASMUS-AP-10",
   "chart_id": "ERASMUS-AP-10",
   "role": "Allies",
   "phase": "all",
   "kind": "card-selection",
-  "action_family": "card",
   "source_page": 10,
   "source": {
-    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "pdf": "伊拉斯谟v2.0_图表汉化 (1).pdf",
+    "absolute_path": "D:/downloads/伊拉斯谟v2.0_图表汉化 (1).pdf",
     "page": 10,
-    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/10-盟军-全阶段卡牌选择.md"
+    "sha256": "5c362b4af6306b03baf959f80273942a80418bf985dac2faee61eb953a1dab2f"
   },
-  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/10-盟军-全阶段卡牌选择.md",
-  "rules": [
-    "EOTS-5",
-    "EOTS-7"
-  ],
   "nodes": [
     {
-      "id": "ERASMUS-AP-10-START",
+      "id": "AP10-START",
       "type": "start",
-      "confidence": "confirmed",
-      "source_page": 10,
       "edges": [
         {
           "when": "always",
-          "to": "ERASMUS-AP-10-C01"
+          "to": "AP10-A"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-10-C01",
+      "id": "AP10-A",
       "type": "condition",
-      "confidence": "inferred",
-      "source_page": 10,
       "predicate": {
-        "id": "AP_FO_ACTIVE"
+        "id": "AP_CARD_ALREADY_PLAYED"
       },
-      "label_zh": "AP_FO_ACTIVE",
+      "label_zh": "攻势阶段有打出过牌？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-AP-10-S01"
+          "to": "AP10-LM"
         },
         {
           "when": false,
-          "to": "ERASMUS-AP-10-C02"
+          "to": "AP10-CLASSIFY"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-10-C02",
-      "type": "condition",
-      "confidence": "inferred",
+      "id": "AP10-CLASSIFY",
+      "type": "action",
+      "strategy": "AP_CLASSIFY_CARDS",
+      "label_zh": "卡牌分类",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP10-LM"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-LM",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_CHINA_WITHIN_2_AND_EVENT_AVAILABLE"
+      },
+      "label_zh": "中国距崩溃≤2且有可用中国事件？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP10-S-CHINA"
+        },
+        {
+          "when": false,
+          "to": "AP10-B"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-S-CHINA",
+      "type": "action",
+      "strategy": "AP_CHINA_EVENT_CARD",
+      "label_zh": "打出中国事件牌",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP10-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-B",
+      "type": "condition",
       "predicate": {
         "id": "AP_HAND_GT_2"
       },
-      "label_zh": "AP_HAND_GT_2",
+      "label_zh": "当前手牌大于2张？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-AP-10-S02"
+          "to": "AP10-C"
         },
         {
           "when": false,
-          "to": "ERASMUS-AP-10-C03"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-10-C03",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 10,
-      "predicate": {
-        "id": "AP_FIRST_CARD"
-      },
-      "label_zh": "AP_FIRST_CARD",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-10-S03"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-10-C04"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-10-C04",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 10,
-      "predicate": {
-        "id": "AP_HAS_FISSION"
-      },
-      "label_zh": "AP_HAS_FISSION",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-10-S04"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-10-C05"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-10-C05",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 10,
-      "predicate": {
-        "id": "AP_HAS_EVENT_CARD"
-      },
-      "label_zh": "AP_HAS_EVENT_CARD",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-10-S05"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-10-C06"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-10-C06",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 10,
-      "predicate": {
-        "id": "AP_HAS_LIMITED_EVENT"
-      },
-      "label_zh": "AP_HAS_LIMITED_EVENT",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-10-S06"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-10-C07"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-10-C07",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 10,
-      "predicate": {
-        "id": "AP_ALL_EVENTS_LIMITED"
-      },
-      "label_zh": "AP_ALL_EVENTS_LIMITED",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-10-S07"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-10-C08"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-10-C08",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 10,
-      "predicate": {
-        "id": "AP_CBI_COMPLETE"
-      },
-      "label_zh": "AP_CBI_COMPLETE",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-10-S08"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-10-C09"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-10-C09",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 10,
-      "predicate": {
-        "id": "AP_CHINA_EVENT_AVAILABLE"
-      },
-      "label_zh": "AP_CHINA_EVENT_AVAILABLE",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-10-S01"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-10-SELECT"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-10-S01",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 10,
-      "strategy": "AP_FUTURE_OFFENSIVE_CARD",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-10-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-10-S02",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 10,
-      "strategy": "AP_LIMITED_EVENT_CARD",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-10-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-10-S03",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 10,
-      "strategy": "AP_UNLIMITED_EVENT_CARD",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-10-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-10-S04",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 10,
-      "strategy": "AP_LIMITED_OPS_CARD",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-10-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-10-S05",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 10,
-      "strategy": "AP_UNLIMITED_OPS_CARD",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-10-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-10-S06",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 10,
-      "strategy": "AP_CHINA_EVENT_CARD",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-10-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-10-S07",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 10,
-      "strategy": "AP_EVENT_CARD",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-10-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-10-S08",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 10,
-      "strategy": "AP_PASS",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-10-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-10-SELECT",
-      "type": "priority",
-      "confidence": "inferred",
-      "source_page": 10,
-      "family": "card",
-      "strategies": [
-        {
-          "id": "AP_FUTURE_OFFENSIVE_CARD",
-          "priority": 1,
-          "actionTag": "AP_FUTURE_OFFENSIVE_CARD"
-        },
-        {
-          "id": "AP_LIMITED_EVENT_CARD",
-          "priority": 2,
-          "actionTag": "AP_LIMITED_EVENT_CARD"
-        },
-        {
-          "id": "AP_UNLIMITED_EVENT_CARD",
-          "priority": 3,
-          "actionTag": "AP_UNLIMITED_EVENT_CARD"
-        },
-        {
-          "id": "AP_LIMITED_OPS_CARD",
-          "priority": 4,
-          "actionTag": "AP_LIMITED_OPS_CARD"
-        },
-        {
-          "id": "AP_UNLIMITED_OPS_CARD",
-          "priority": 5,
-          "actionTag": "AP_UNLIMITED_OPS_CARD"
-        },
-        {
-          "id": "AP_CHINA_EVENT_CARD",
-          "priority": 6,
-          "actionTag": "AP_CHINA_EVENT_CARD"
-        },
-        {
-          "id": "AP_EVENT_CARD",
-          "priority": 7,
-          "actionTag": "AP_EVENT_CARD"
-        },
-        {
-          "id": "AP_PASS",
-          "priority": 8,
-          "actionTag": "AP_PASS"
+          "to": "AP10-H"
         }
       ],
-      "edges": [
-        {
-          "when": "candidate_found",
-          "to": "ERASMUS-AP-10-END"
-        },
-        {
-          "when": "no_candidate",
-          "to": "ERASMUS-AP-10-FALLBACK"
-        }
-      ]
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-10-FALLBACK",
-      "type": "fallback",
-      "confidence": "inferred",
+      "id": "AP10-C",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_FIRST_GAME_CARD"
+      },
+      "label_zh": "本场第一张牌？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP10-D"
+        },
+        {
+          "when": false,
+          "to": "AP10-E"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-D",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_HAS_FLINTLOCK_OR_SHOESTRING"
+      },
+      "label_zh": "有先发打击牌？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP10-S-FIRST"
+        },
+        {
+          "when": false,
+          "to": "AP10-E"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-E",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_HAS_UNRESTRICTED_MILITARY_EVENT"
+      },
+      "label_zh": "有可执行的不受限军事事件？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP10-S-UNRESTRICTED-EC"
+        },
+        {
+          "when": false,
+          "to": "AP10-F"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-F",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_HAS_RESTRICTED_MILITARY_EVENT"
+      },
+      "label_zh": "有可执行的受限军事事件？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP10-G"
+        },
+        {
+          "when": false,
+          "to": "AP10-S-NONMIL-OC"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-G",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_ALL_MILITARY_EVENTS_RESTRICTED"
+      },
+      "label_zh": "所有有效军事事件均因限制不能达成目标？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP10-S-RESTRICTED-OC"
+        },
+        {
+          "when": false,
+          "to": "AP10-S-RESTRICTED-EC"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-H",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_FO_SELECTED"
+      },
+      "label_zh": "本回合已选择未来攻势？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP10-S-NONMIL-OC"
+        },
+        {
+          "when": false,
+          "to": "AP10-I"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-I",
+      "type": "condition",
+      "predicate": {
+        "id": "CBI_DEFENSE_COMPLETE"
+      },
+      "label_zh": "早期CBI防御完成？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP10-J"
+        },
+        {
+          "when": false,
+          "to": "AP10-S-NONMIL-OC"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-J",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_LAST_CARD"
+      },
+      "label_zh": "只剩1张牌？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP10-S-FO"
+        },
+        {
+          "when": false,
+          "to": "AP10-K"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-K",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_LAST_PLAYABLE_IS_REACTION"
+      },
+      "label_zh": "剩下可用事件牌是反应牌？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP10-S-NONMIL-OC"
+        },
+        {
+          "when": false,
+          "to": "AP10-S-EVENT"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-S-FIRST",
+      "type": "action",
+      "strategy": "AP_FIRST_STRIKE_EVENT_CARD",
+      "label_zh": "先发打击EC",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP10-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-S-UNRESTRICTED-EC",
+      "type": "action",
+      "strategy": "AP_UNRESTRICTED_EVENT_CARD",
+      "label_zh": "无限制军事事件EC",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP10-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-S-RESTRICTED-EC",
+      "type": "action",
+      "strategy": "AP_RESTRICTED_EVENT_CARD",
+      "label_zh": "受限军事事件EC",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP10-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-S-RESTRICTED-OC",
+      "type": "action",
+      "strategy": "AP_RESTRICTED_OPS_CARD",
+      "label_zh": "受限军事事件OC",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP10-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-S-NONMIL-OC",
+      "type": "action",
+      "strategy": "AP_NONMILITARY_OC_CARD",
+      "label_zh": "无军事事件OC",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP10-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-S-FO",
+      "type": "action",
+      "strategy": "AP_FUTURE_OFFENSIVE_CARD",
+      "label_zh": "未来攻势",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP10-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-S-EVENT",
+      "type": "action",
+      "strategy": "AP_EVENT_CARD",
+      "label_zh": "事件战略",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP10-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP10-FALLBACK",
+      "type": "fallback",
       "allowed_actions": [
         "pass",
         "skip"
       ],
-      "reason": "chart candidates are not legal in current view"
+      "reason": "图表出口均不合法",
+      "confidence": "confirmed",
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-10-END",
+      "id": "AP10-END",
       "type": "terminal",
       "confidence": "confirmed",
-      "source_page": 10
+      "source_page": 10,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     }
   ],
   "strategies": [
-    "AP_FUTURE_OFFENSIVE_CARD",
-    "AP_LIMITED_EVENT_CARD",
-    "AP_UNLIMITED_EVENT_CARD",
-    "AP_LIMITED_OPS_CARD",
-    "AP_UNLIMITED_OPS_CARD",
+    "AP_CLASSIFY_CARDS",
     "AP_CHINA_EVENT_CARD",
-    "AP_EVENT_CARD",
-    "AP_PASS"
+    "AP_FIRST_STRIKE_EVENT_CARD",
+    "AP_UNRESTRICTED_EVENT_CARD",
+    "AP_RESTRICTED_EVENT_CARD",
+    "AP_RESTRICTED_OPS_CARD",
+    "AP_NONMILITARY_OC_CARD",
+    "AP_FUTURE_OFFENSIVE_CARD",
+    "AP_EVENT_CARD"
   ],
   "dice_tables": [],
   "qa": {
-    "inferred_nodes": [
-      "ERASMUS-AP-10-C01",
-      "ERASMUS-AP-10-C02",
-      "ERASMUS-AP-10-C03",
-      "ERASMUS-AP-10-C04",
-      "ERASMUS-AP-10-C05",
-      "ERASMUS-AP-10-C06",
-      "ERASMUS-AP-10-C07",
-      "ERASMUS-AP-10-C08",
-      "ERASMUS-AP-10-C09",
-      "ERASMUS-AP-10-S01",
-      "ERASMUS-AP-10-S02",
-      "ERASMUS-AP-10-S03",
-      "ERASMUS-AP-10-S04",
-      "ERASMUS-AP-10-S05",
-      "ERASMUS-AP-10-S06",
-      "ERASMUS-AP-10-S07",
-      "ERASMUS-AP-10-S08",
-      "ERASMUS-AP-10-SELECT",
-      "ERASMUS-AP-10-FALLBACK"
-    ],
-    "visual_review_required": true,
-    "source_line_count": 146
+    "inferred_nodes": [],
+    "visual_review_required": false,
+    "verified_from_visual": true
   }
 }

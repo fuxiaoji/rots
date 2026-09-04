@@ -1,388 +1,445 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "id": "ERASMUS-JP-02",
   "chart_id": "ERASMUS-JP-02",
   "role": "Japan",
   "phase": "middle",
   "kind": "decision-axis",
-  "action_family": "strategy",
   "source_page": 2,
   "source": {
-    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "pdf": "伊拉斯谟v2.0_图表汉化 (1).pdf",
+    "absolute_path": "D:/downloads/伊拉斯谟v2.0_图表汉化 (1).pdf",
     "page": 2,
-    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/02-日本-中期阶段决策轴.md"
+    "sha256": "5c362b4af6306b03baf959f80273942a80418bf985dac2faee61eb953a1dab2f"
   },
-  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/02-日本-中期阶段决策轴.md",
-  "rules": [
-    "EOTS-5",
-    "EOTS-7"
-  ],
   "nodes": [
     {
-      "id": "ERASMUS-JP-02-START",
+      "id": "JP02-START",
       "type": "start",
-      "confidence": "confirmed",
-      "source_page": 2,
       "edges": [
         {
           "when": "always",
-          "to": "ERASMUS-JP-02-C01"
+          "to": "JP02-A"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-02-C01",
+      "id": "JP02-A",
       "type": "condition",
-      "confidence": "inferred",
-      "source_page": 2,
-      "predicate": {
-        "id": "JP_HAS_PASS"
-      },
-      "label_zh": "JP_HAS_PASS",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-02-S01"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-02-C02"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-02-C02",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 2,
       "predicate": {
         "id": "JP_HAND_GE_3"
       },
-      "label_zh": "JP_HAND_GE_3",
+      "label_zh": "手牌≥3？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-JP-02-S02"
+          "to": "JP02-C"
         },
         {
           "when": false,
-          "to": "ERASMUS-JP-02-C03"
+          "to": "JP02-B"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-02-C03",
+      "id": "JP02-B",
       "type": "condition",
-      "confidence": "inferred",
-      "source_page": 2,
       "predicate": {
-        "id": "JP_RESOURCES_GE_13"
+        "id": "JP_CAN_PASS"
       },
-      "label_zh": "JP_RESOURCES_GE_13",
+      "label_zh": "可以PASS？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-JP-02-S03"
+          "to": "JP02-S-PASS"
         },
         {
           "when": false,
-          "to": "ERASMUS-JP-02-C04"
+          "to": "JP02-S-EVENT"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-02-C04",
+      "id": "JP02-C",
       "type": "condition",
-      "confidence": "inferred",
+      "predicate": {
+        "id": "JP_RESOURCE_COUNT_LT_13"
+      },
+      "label_zh": "资源格<13？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP02-S-RESOURCE"
+        },
+        {
+          "when": false,
+          "to": "JP02-D"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP02-D",
+      "type": "condition",
       "predicate": {
         "id": "JP_LOGISTICS_GTE_20"
       },
-      "label_zh": "JP_LOGISTICS_GTE_20",
+      "label_zh": "后勤值≥20？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-JP-02-S04"
+          "to": "JP02-E"
         },
         {
           "when": false,
-          "to": "ERASMUS-JP-02-C05"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-02-C05",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 2,
-      "predicate": {
-        "id": "AP_WAR_ENTHUSIASM_LE_4"
-      },
-      "label_zh": "AP_WAR_ENTHUSIASM_LE_4",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-02-S05"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-02-C06"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-02-C06",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 2,
-      "predicate": {
-        "id": "AP_CBI_HAS_FORT"
-      },
-      "label_zh": "AP_CBI_HAS_FORT",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-02-S06"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-02-C07"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-02-C07",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 2,
-      "predicate": {
-        "id": "TURN_GE_5"
-      },
-      "label_zh": "TURN_GE_5",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-02-S07"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-02-SELECT"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-02-S01",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 2,
-      "strategy": "JP_CENTRAL_PACIFIC",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-02-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-02-S02",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 2,
-      "strategy": "JP_RESOURCE",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-02-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-02-S03",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 2,
-      "strategy": "JP_INDIA",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-02-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-02-S04",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 2,
-      "strategy": "JP_NEW_GUINEA",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-02-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-02-S05",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 2,
-      "strategy": "JP_CHINA",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-02-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-02-S06",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 2,
-      "strategy": "JP_FOREIGN_DEFENSE",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-02-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-02-S07",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 2,
-      "strategy": "JP_EVENT",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-02-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-02-S08",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 2,
-      "strategy": "JP_PASS",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-02-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-02-SELECT",
-      "type": "priority",
-      "confidence": "inferred",
-      "source_page": 2,
-      "family": "strategy",
-      "strategies": [
-        {
-          "id": "JP_CENTRAL_PACIFIC",
-          "priority": 1,
-          "actionTag": "JP_CENTRAL_PACIFIC"
-        },
-        {
-          "id": "JP_RESOURCE",
-          "priority": 2,
-          "actionTag": "JP_RESOURCE"
-        },
-        {
-          "id": "JP_INDIA",
-          "priority": 3,
-          "actionTag": "JP_INDIA"
-        },
-        {
-          "id": "JP_NEW_GUINEA",
-          "priority": 4,
-          "actionTag": "JP_NEW_GUINEA"
-        },
-        {
-          "id": "JP_CHINA",
-          "priority": 5,
-          "actionTag": "JP_CHINA"
-        },
-        {
-          "id": "JP_FOREIGN_DEFENSE",
-          "priority": 6,
-          "actionTag": "JP_FOREIGN_DEFENSE"
-        },
-        {
-          "id": "JP_EVENT",
-          "priority": 7,
-          "actionTag": "JP_EVENT"
-        },
-        {
-          "id": "JP_PASS",
-          "priority": 8,
-          "actionTag": "JP_PASS"
+          "to": "JP02-G"
         }
       ],
-      "edges": [
-        {
-          "when": "candidate_found",
-          "to": "ERASMUS-JP-02-END"
-        },
-        {
-          "when": "no_candidate",
-          "to": "ERASMUS-JP-02-FALLBACK"
-        }
-      ]
+      "confidence": "confirmed",
+      "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-02-FALLBACK",
-      "type": "fallback",
-      "confidence": "inferred",
+      "id": "JP02-E",
+      "type": "condition",
+      "predicate": {
+        "id": "US_POLITICAL_WILL_LT_4"
+      },
+      "label_zh": "美国政治意志<4？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP02-S-CENTRAL-PACIFIC"
+        },
+        {
+          "when": false,
+          "to": "JP02-F"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP02-G",
+      "type": "condition",
+      "predicate": {
+        "id": "JP_LOGISTICS_GTE_15"
+      },
+      "label_zh": "后勤值≥15？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP02-F"
+        },
+        {
+          "when": false,
+          "to": "JP02-S-PERIMETER"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP02-F",
+      "type": "condition",
+      "predicate": {
+        "id": "BURMA_SURRENDERED"
+      },
+      "label_zh": "缅甸投降？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP02-HIJ"
+        },
+        {
+          "when": false,
+          "to": "JP02-S-CBI"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP02-HIJ",
+      "type": "condition",
+      "predicate": {
+        "id": "GANDHI_OR_MORE_LARGE_STEPS_AND_LOGISTICS_GTE_18"
+      },
+      "label_zh": "甘地或缅甸大军力步数优势，且后勤≥18？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP02-S-INDIA"
+        },
+        {
+          "when": false,
+          "to": "JP02-S-PERIMETER"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP02-S-PASS",
+      "type": "action",
+      "strategy": "JP_PASS",
+      "label_zh": "PASS",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP02-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP02-S-EVENT",
+      "type": "action",
+      "strategy": "JP_EVENT",
+      "label_zh": "事件",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP02-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP02-S-RESOURCE",
+      "type": "action",
+      "strategy": "JP_RESOURCE",
+      "label_zh": "资源",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP02-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP02-S-CENTRAL-PACIFIC",
+      "type": "action",
+      "strategy": "JP_CENTRAL_PACIFIC",
+      "label_zh": "中太平洋",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP02-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP02-S-CBI",
+      "type": "action",
+      "strategy": "JP_CBI",
+      "label_zh": "中缅印",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP02-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP02-S-INDIA",
+      "type": "action",
+      "strategy": "JP_INDIA",
+      "label_zh": "印度",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP02-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP02-S-PERIMETER",
+      "type": "action",
+      "strategy": "JP_PERIMETER_DEFENSE",
+      "label_zh": "外围防御",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP02-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP02-FALLBACK",
+      "type": "fallback",
       "allowed_actions": [
         "pass",
         "skip"
       ],
-      "reason": "chart candidates are not legal in current view"
+      "reason": "图表出口均不合法",
+      "confidence": "confirmed",
+      "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-02-END",
+      "id": "JP02-END",
       "type": "terminal",
       "confidence": "confirmed",
-      "source_page": 2
+      "source_page": 2,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     }
   ],
   "strategies": [
-    "JP_CENTRAL_PACIFIC",
-    "JP_RESOURCE",
-    "JP_INDIA",
-    "JP_NEW_GUINEA",
-    "JP_CHINA",
-    "JP_FOREIGN_DEFENSE",
+    "JP_PASS",
     "JP_EVENT",
-    "JP_PASS"
+    "JP_RESOURCE",
+    "JP_CENTRAL_PACIFIC",
+    "JP_CBI",
+    "JP_INDIA",
+    "JP_PERIMETER_DEFENSE"
   ],
   "dice_tables": [],
   "qa": {
-    "inferred_nodes": [
-      "ERASMUS-JP-02-C01",
-      "ERASMUS-JP-02-C02",
-      "ERASMUS-JP-02-C03",
-      "ERASMUS-JP-02-C04",
-      "ERASMUS-JP-02-C05",
-      "ERASMUS-JP-02-C06",
-      "ERASMUS-JP-02-C07",
-      "ERASMUS-JP-02-S01",
-      "ERASMUS-JP-02-S02",
-      "ERASMUS-JP-02-S03",
-      "ERASMUS-JP-02-S04",
-      "ERASMUS-JP-02-S05",
-      "ERASMUS-JP-02-S06",
-      "ERASMUS-JP-02-S07",
-      "ERASMUS-JP-02-S08",
-      "ERASMUS-JP-02-SELECT",
-      "ERASMUS-JP-02-FALLBACK"
-    ],
-    "visual_review_required": true,
-    "source_line_count": 200
+    "inferred_nodes": [],
+    "visual_review_required": false,
+    "verified_from_visual": true
   }
 }

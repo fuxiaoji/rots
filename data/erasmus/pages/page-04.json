@@ -1,410 +1,548 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "id": "ERASMUS-JP-04",
   "chart_id": "ERASMUS-JP-04",
   "role": "Japan",
   "phase": "all",
   "kind": "card-selection",
-  "action_family": "card",
   "source_page": 4,
   "source": {
-    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "pdf": "伊拉斯谟v2.0_图表汉化 (1).pdf",
+    "absolute_path": "D:/downloads/伊拉斯谟v2.0_图表汉化 (1).pdf",
     "page": 4,
-    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/04-日本-全阶段卡牌选择.md"
+    "sha256": "5c362b4af6306b03baf959f80273942a80418bf985dac2faee61eb953a1dab2f"
   },
-  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/04-日本-全阶段卡牌选择.md",
-  "rules": [
-    "EOTS-5",
-    "EOTS-7"
-  ],
   "nodes": [
     {
-      "id": "ERASMUS-JP-04-START",
+      "id": "JP04-START",
       "type": "start",
-      "confidence": "confirmed",
-      "source_page": 4,
       "edges": [
         {
           "when": "always",
-          "to": "ERASMUS-JP-04-C01"
+          "to": "JP04-A"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-04-C01",
+      "id": "JP04-A",
       "type": "condition",
-      "confidence": "inferred",
-      "source_page": 4,
       "predicate": {
-        "id": "JP_FO_ACTIVE"
+        "id": "JP_CARD_ALREADY_PLAYED"
       },
-      "label_zh": "JP_FO_ACTIVE",
+      "label_zh": "攻势阶段有打出过牌？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-JP-04-S01"
+          "to": "JP04-B"
         },
         {
           "when": false,
-          "to": "ERASMUS-JP-04-C02"
+          "to": "JP04-CLASSIFY"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-04-C02",
-      "type": "condition",
-      "confidence": "inferred",
+      "id": "JP04-CLASSIFY",
+      "type": "action",
+      "strategy": "JP_CLASSIFY_CARDS",
+      "label_zh": "卡牌分类",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP04-B"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-B",
+      "type": "condition",
       "predicate": {
         "id": "JP_HAND_GT_2"
       },
-      "label_zh": "JP_HAND_GT_2",
+      "label_zh": "当前手牌大于2张？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-JP-04-S02"
+          "to": "JP04-C"
         },
         {
           "when": false,
-          "to": "ERASMUS-JP-04-C03"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-04-C03",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 4,
-      "predicate": {
-        "id": "JP_FIRST_CARD"
-      },
-      "label_zh": "JP_FIRST_CARD",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-04-S03"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-04-C04"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-04-C04",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 4,
-      "predicate": {
-        "id": "JP_HAS_IMPERIAL_INTERVENTION"
-      },
-      "label_zh": "JP_HAS_IMPERIAL_INTERVENTION",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-04-S04"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-04-C05"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-04-C05",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 4,
-      "predicate": {
-        "id": "JP_HAS_EVENT_CARD"
-      },
-      "label_zh": "JP_HAS_EVENT_CARD",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-04-S05"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-04-C06"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-04-C06",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 4,
-      "predicate": {
-        "id": "JP_HAS_LIMITED_EVENT"
-      },
-      "label_zh": "JP_HAS_LIMITED_EVENT",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-04-S06"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-04-C07"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-04-C07",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 4,
-      "predicate": {
-        "id": "JP_ALL_EVENTS_LIMITED"
-      },
-      "label_zh": "JP_ALL_EVENTS_LIMITED",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-04-S07"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-04-C08"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-04-C08",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 4,
-      "predicate": {
-        "id": "JP_ISR_TARGET"
-      },
-      "label_zh": "JP_ISR_TARGET",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-04-S01"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-04-C09"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-04-C09",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 4,
-      "predicate": {
-        "id": "JP_FUTURE_OFFENSIVE"
-      },
-      "label_zh": "JP_FUTURE_OFFENSIVE",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-JP-04-S02"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-JP-04-SELECT"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-04-S01",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 4,
-      "strategy": "JP_FUTURE_OFFENSIVE_CARD",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-04-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-04-S02",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 4,
-      "strategy": "JP_LIMITED_EVENT_CARD",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-04-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-04-S03",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 4,
-      "strategy": "JP_UNLIMITED_EVENT_CARD",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-04-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-04-S04",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 4,
-      "strategy": "JP_LIMITED_OPS_CARD",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-04-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-04-S05",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 4,
-      "strategy": "JP_UNLIMITED_OPS_CARD",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-04-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-04-S06",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 4,
-      "strategy": "JP_EVENT_CARD",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-04-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-04-S07",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 4,
-      "strategy": "JP_PASS",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-JP-04-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-JP-04-SELECT",
-      "type": "priority",
-      "confidence": "inferred",
-      "source_page": 4,
-      "family": "card",
-      "strategies": [
-        {
-          "id": "JP_FUTURE_OFFENSIVE_CARD",
-          "priority": 1,
-          "actionTag": "JP_FUTURE_OFFENSIVE_CARD"
-        },
-        {
-          "id": "JP_LIMITED_EVENT_CARD",
-          "priority": 2,
-          "actionTag": "JP_LIMITED_EVENT_CARD"
-        },
-        {
-          "id": "JP_UNLIMITED_EVENT_CARD",
-          "priority": 3,
-          "actionTag": "JP_UNLIMITED_EVENT_CARD"
-        },
-        {
-          "id": "JP_LIMITED_OPS_CARD",
-          "priority": 4,
-          "actionTag": "JP_LIMITED_OPS_CARD"
-        },
-        {
-          "id": "JP_UNLIMITED_OPS_CARD",
-          "priority": 5,
-          "actionTag": "JP_UNLIMITED_OPS_CARD"
-        },
-        {
-          "id": "JP_EVENT_CARD",
-          "priority": 6,
-          "actionTag": "JP_EVENT_CARD"
-        },
-        {
-          "id": "JP_PASS",
-          "priority": 7,
-          "actionTag": "JP_PASS"
+          "to": "JP04-H"
         }
       ],
-      "edges": [
-        {
-          "when": "candidate_found",
-          "to": "ERASMUS-JP-04-END"
-        },
-        {
-          "when": "no_candidate",
-          "to": "ERASMUS-JP-04-FALLBACK"
-        }
-      ]
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-04-FALLBACK",
-      "type": "fallback",
-      "confidence": "inferred",
+      "id": "JP04-C",
+      "type": "condition",
+      "predicate": {
+        "id": "JP_FIRST_GAME_CARD"
+      },
+      "label_zh": "本场第一张牌？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP04-D"
+        },
+        {
+          "when": false,
+          "to": "JP04-E"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-D",
+      "type": "condition",
+      "predicate": {
+        "id": "JP_HAS_FIRST_STRIKE_EVENT"
+      },
+      "label_zh": "有先发打击牌？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP04-S-FIRST"
+        },
+        {
+          "when": false,
+          "to": "JP04-E"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-E",
+      "type": "condition",
+      "predicate": {
+        "id": "JP_HAS_UNRESTRICTED_MILITARY_EVENT"
+      },
+      "label_zh": "有可执行的不受限军事事件？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP04-S-UNRESTRICTED-EC"
+        },
+        {
+          "when": false,
+          "to": "JP04-F"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-F",
+      "type": "condition",
+      "predicate": {
+        "id": "JP_HAS_RESTRICTED_MILITARY_EVENT"
+      },
+      "label_zh": "有可执行的受限军事事件？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP04-G"
+        },
+        {
+          "when": false,
+          "to": "JP04-S-NONMIL-OC"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-G",
+      "type": "condition",
+      "predicate": {
+        "id": "JP_ALL_MILITARY_EVENTS_RESTRICTED"
+      },
+      "label_zh": "所有有效军事事件均因限制不能达成目标？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP04-S-RESTRICTED-OC"
+        },
+        {
+          "when": false,
+          "to": "JP04-S-RESTRICTED-EC"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-H",
+      "type": "condition",
+      "predicate": {
+        "id": "JP_FO_SELECTED"
+      },
+      "label_zh": "本回合已选择未来攻势？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP04-S-NONMIL-OC"
+        },
+        {
+          "when": false,
+          "to": "JP04-I"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-I",
+      "type": "condition",
+      "predicate": {
+        "id": "JP_EARLY_DEI_TARGET_OCCUPIED"
+      },
+      "label_zh": "早期东印度目标都占领？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP04-J"
+        },
+        {
+          "when": false,
+          "to": "JP04-S-NONMIL-OC"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-J",
+      "type": "condition",
+      "predicate": {
+        "id": "JP_LAST_CARD"
+      },
+      "label_zh": "只剩1张牌？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP04-S-FO"
+        },
+        {
+          "when": false,
+          "to": "JP04-K"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-K",
+      "type": "condition",
+      "predicate": {
+        "id": "JP_LAST_PLAYABLE_IS_REACTION"
+      },
+      "label_zh": "剩下可用事件牌是反应牌？",
+      "edges": [
+        {
+          "when": true,
+          "to": "JP04-S-NONMIL-OC"
+        },
+        {
+          "when": false,
+          "to": "JP04-S-EVENT"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-S-FIRST",
+      "type": "action",
+      "strategy": "JP_FIRST_STRIKE_EVENT_CARD",
+      "label_zh": "先发打击EC",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP04-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-S-UNRESTRICTED-EC",
+      "type": "action",
+      "strategy": "JP_UNRESTRICTED_EVENT_CARD",
+      "label_zh": "无限制军事事件EC",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP04-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-S-RESTRICTED-EC",
+      "type": "action",
+      "strategy": "JP_RESTRICTED_EVENT_CARD",
+      "label_zh": "受限军事事件EC",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP04-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-S-RESTRICTED-OC",
+      "type": "action",
+      "strategy": "JP_RESTRICTED_OPS_CARD",
+      "label_zh": "受限军事事件OC",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP04-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-S-NONMIL-OC",
+      "type": "action",
+      "strategy": "JP_NONMILITARY_OC_CARD",
+      "label_zh": "无军事事件OC",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP04-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-S-FO",
+      "type": "action",
+      "strategy": "JP_FUTURE_OFFENSIVE_CARD",
+      "label_zh": "未来攻势",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP04-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-S-EVENT",
+      "type": "action",
+      "strategy": "JP_EVENT_CARD",
+      "label_zh": "事件战略",
+      "edges": [
+        {
+          "when": "always",
+          "to": "JP04-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "JP04-FALLBACK",
+      "type": "fallback",
       "allowed_actions": [
         "pass",
         "skip"
       ],
-      "reason": "chart candidates are not legal in current view"
+      "reason": "图表出口均不合法",
+      "confidence": "confirmed",
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-JP-04-END",
+      "id": "JP04-END",
       "type": "terminal",
       "confidence": "confirmed",
-      "source_page": 4
+      "source_page": 4,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     }
   ],
   "strategies": [
+    "JP_CLASSIFY_CARDS",
+    "JP_FIRST_STRIKE_EVENT_CARD",
+    "JP_UNRESTRICTED_EVENT_CARD",
+    "JP_RESTRICTED_EVENT_CARD",
+    "JP_RESTRICTED_OPS_CARD",
+    "JP_NONMILITARY_OC_CARD",
     "JP_FUTURE_OFFENSIVE_CARD",
-    "JP_LIMITED_EVENT_CARD",
-    "JP_UNLIMITED_EVENT_CARD",
-    "JP_LIMITED_OPS_CARD",
-    "JP_UNLIMITED_OPS_CARD",
-    "JP_EVENT_CARD",
-    "JP_PASS"
+    "JP_EVENT_CARD"
   ],
   "dice_tables": [],
   "qa": {
-    "inferred_nodes": [
-      "ERASMUS-JP-04-C01",
-      "ERASMUS-JP-04-C02",
-      "ERASMUS-JP-04-C03",
-      "ERASMUS-JP-04-C04",
-      "ERASMUS-JP-04-C05",
-      "ERASMUS-JP-04-C06",
-      "ERASMUS-JP-04-C07",
-      "ERASMUS-JP-04-C08",
-      "ERASMUS-JP-04-C09",
-      "ERASMUS-JP-04-S01",
-      "ERASMUS-JP-04-S02",
-      "ERASMUS-JP-04-S03",
-      "ERASMUS-JP-04-S04",
-      "ERASMUS-JP-04-S05",
-      "ERASMUS-JP-04-S06",
-      "ERASMUS-JP-04-S07",
-      "ERASMUS-JP-04-SELECT",
-      "ERASMUS-JP-04-FALLBACK"
-    ],
-    "visual_review_required": true,
-    "source_line_count": 138
+    "inferred_nodes": [],
+    "visual_review_required": false,
+    "verified_from_visual": true
   }
 }

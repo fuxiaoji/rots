@@ -1,437 +1,701 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "id": "ERASMUS-AP-11",
   "chart_id": "ERASMUS-AP-11",
   "role": "Allies",
   "phase": "all",
   "kind": "task-force",
-  "action_family": "task-force",
   "source_page": 11,
   "source": {
-    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "pdf": "伊拉斯谟v2.0_图表汉化 (1).pdf",
+    "absolute_path": "D:/downloads/伊拉斯谟v2.0_图表汉化 (1).pdf",
     "page": 11,
-    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/11-盟军-全阶段任务部队编成.md"
+    "sha256": "5c362b4af6306b03baf959f80273942a80418bf985dac2faee61eb953a1dab2f"
   },
-  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/11-盟军-全阶段任务部队编成.md",
-  "rules": [
-    "EOTS-7",
-    "EOTS-8",
-    "EOTS-9"
-  ],
   "nodes": [
     {
-      "id": "ERASMUS-AP-11-START",
+      "id": "AP11-START",
       "type": "start",
-      "confidence": "confirmed",
-      "source_page": 11,
       "edges": [
         {
           "when": "always",
-          "to": "ERASMUS-AP-11-C01"
+          "to": "AP11-A"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-11-C01",
+      "id": "AP11-A",
       "type": "condition",
-      "confidence": "inferred",
+      "predicate": {
+        "id": "IS_AIR_STRIKE"
+      },
+      "label_zh": "对目标的海空攻击？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP11-S-AIR"
+        },
+        {
+          "when": false,
+          "to": "AP11-B"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP11-B",
+      "type": "condition",
       "predicate": {
         "id": "TARGET_IS_SEACOAST_OR_ISLAND"
       },
-      "label_zh": "TARGET_IS_SEACOAST_OR_ISLAND",
+      "label_zh": "目标沿岸或岛屿？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-AP-11-S01"
+          "to": "AP11-C"
         },
         {
           "when": false,
-          "to": "ERASMUS-AP-11-C02"
+          "to": "AP11-D1"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-11-C02",
+      "id": "AP11-C",
       "type": "condition",
-      "confidence": "inferred",
-      "source_page": 11,
       "predicate": {
         "id": "CAN_GROUND_ADVANCE"
       },
-      "label_zh": "CAN_GROUND_ADVANCE",
+      "label_zh": "能否地面推进占领？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-AP-11-S02"
+          "to": "AP11-DOR-EF"
         },
         {
           "when": false,
-          "to": "ERASMUS-AP-11-C03"
+          "to": "AP11-D2"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-11-C03",
+      "id": "AP11-DOR-EF",
       "type": "condition",
-      "confidence": "inferred",
+      "predicate": {
+        "id": "TARGET_EMPTY_OR_NAVAL_AND_GROUND_CAN_EXIT"
+      },
+      "label_zh": "D或(E+F)？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP11-S-TARGET"
+        },
+        {
+          "when": false,
+          "to": "AP11-S-AIRSEA-GROUND"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP11-D1",
+      "type": "condition",
       "predicate": {
         "id": "TARGET_EMPTY"
       },
-      "label_zh": "TARGET_EMPTY",
+      "label_zh": "目标为空？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-AP-11-S03"
+          "to": "AP11-G"
         },
         {
           "when": false,
-          "to": "ERASMUS-AP-11-C04"
+          "to": "AP11-S-AIR-GROUND"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-11-C04",
+      "id": "AP11-D2",
       "type": "condition",
-      "confidence": "inferred",
-      "source_page": 11,
       "predicate": {
-        "id": "TARGET_ONLY_ENEMY_NAVAL"
+        "id": "TARGET_EMPTY"
       },
-      "label_zh": "TARGET_ONLY_ENEMY_NAVAL",
+      "label_zh": "目标为空？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-AP-11-S04"
+          "to": "AP11-G"
         },
         {
           "when": false,
-          "to": "ERASMUS-AP-11-C05"
+          "to": "AP11-H"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-11-C05",
+      "id": "AP11-G",
       "type": "condition",
-      "confidence": "inferred",
-      "source_page": 11,
-      "predicate": {
-        "id": "GROUND_CAN_ENTER_EXIT"
-      },
-      "label_zh": "GROUND_CAN_ENTER_EXIT",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-11-S05"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-11-C06"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-11-C06",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 11,
       "predicate": {
         "id": "TARGET_IS_SR"
       },
-      "label_zh": "TARGET_IS_SR",
+      "label_zh": "潜在SR格？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-AP-11-S06"
+          "to": "AP11-H"
         },
         {
           "when": false,
-          "to": "ERASMUS-AP-11-C07"
+          "to": "AP11-S-UNSUPPORTED-LANDING"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-11-C07",
+      "id": "AP11-H",
       "type": "condition",
-      "confidence": "inferred",
-      "source_page": 11,
       "predicate": {
-        "id": "ENEMY_AIR_CAN_REACT"
+        "id": "ENEMY_AIR_OR_CARRIER_CAN_REACT"
       },
-      "label_zh": "ENEMY_AIR_CAN_REACT",
+      "label_zh": "敌空军或航母可反应？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-AP-11-S07"
+          "to": "AP11-S-AIRSEA-LANDING"
         },
         {
           "when": false,
-          "to": "ERASMUS-AP-11-C08"
+          "to": "AP11-S-SEA-LANDING"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-11-C08",
-      "type": "condition",
-      "confidence": "inferred",
+      "id": "AP11-S-AIR",
+      "type": "action",
+      "strategy": "AP_AIR_STRIKE",
+      "label_zh": "航空打击",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP11-END"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP11-S-AIR-GROUND",
+      "type": "action",
+      "strategy": "AP_AIR_SUPPORT_GROUND",
+      "label_zh": "带航空支援地面攻击",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP11-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP11-S-AIRSEA-GROUND",
+      "type": "action",
+      "strategy": "AP_AIR_SEA_GROUND",
+      "label_zh": "带航空/海上支援地面攻击",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP11-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP11-S-SEA-LANDING",
+      "type": "action",
+      "strategy": "AP_SEA_SUPPORT_LANDING",
+      "label_zh": "带海上支援登陆",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP11-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP11-S-AIRSEA-LANDING",
+      "type": "action",
+      "strategy": "AP_AIR_SEA_LANDING",
+      "label_zh": "带航空/海上支援登陆",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP11-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP11-S-UNSUPPORTED-LANDING",
+      "type": "action",
+      "strategy": "AP_UNSUPPORTED_LANDING",
+      "label_zh": "无支援登陆",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP11-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP11-S-TARGET",
+      "type": "action",
+      "strategy": "AP_SELECT_TARGET",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP11-ACTIVATE"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP11-ACTIVATE",
+      "type": "action",
+      "strategy": "AP_ACTIVATE_MINIMUM_SUFFICIENT_FORCE",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP11-I"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP11-I",
+      "type": "condition",
       "predicate": {
-        "id": "HAS_SUPPORT_POINTS"
+        "id": "FORCE_MEETS_BATTLE_SUPPORT_STANDARD"
       },
-      "label_zh": "HAS_SUPPORT_POINTS",
+      "label_zh": "激活点满足战斗支援标准？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-AP-11-S01"
+          "to": "AP11-J"
         },
         {
           "when": false,
-          "to": "ERASMUS-AP-11-C09"
+          "to": "AP11-S-WEAKEST"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-11-C09",
+      "id": "AP11-J",
       "type": "condition",
-      "confidence": "inferred",
-      "source_page": 11,
       "predicate": {
-        "id": "DAMAGE_LEVEL_MET"
+        "id": "TARGET_DAMAGE_LEVEL_MET"
       },
-      "label_zh": "DAMAGE_LEVEL_MET",
+      "label_zh": "目标伤害等级达到？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-AP-11-S02"
+          "to": "AP11-S-MOVE"
         },
         {
           "when": false,
-          "to": "ERASMUS-AP-11-C10"
+          "to": "AP11-D10"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-11-C10",
-      "type": "condition",
-      "confidence": "inferred",
+      "id": "AP11-D10",
+      "type": "dice",
+      "table_id": "AP11-D10-TABLE",
+      "sides": 10,
+      "ranges": [
+        {
+          "min": 0,
+          "max": 3,
+          "result": "0-3",
+          "to": "AP11-S-MOVE"
+        },
+        {
+          "min": 4,
+          "max": 9,
+          "result": "4-9",
+          "to": "AP11-S-WEAKEST"
+        }
+      ],
+      "label_zh": "掷D10",
+      "edges": [
+        {
+          "when": "0-3",
+          "to": "AP11-S-MOVE"
+        },
+        {
+          "when": "4-9",
+          "to": "AP11-S-WEAKEST"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP11-S-WEAKEST",
+      "type": "action",
+      "strategy": "AP_ATTACK_WEAKEST_STACK",
+      "label_zh": "攻击最弱堆叠",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP11-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP11-S-MOVE",
+      "type": "action",
+      "strategy": "AP_MOVE_TO_TARGET",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP11-KL"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP11-KL",
+      "type": "condition",
       "predicate": {
-        "id": "ENEMY_NAVAL_GROUND_CAN_REACT"
+        "id": "ENEMY_CAN_REACT_AND_IS_EC"
       },
-      "label_zh": "ENEMY_NAVAL_GROUND_CAN_REACT",
+      "label_zh": "K+L？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-AP-11-S03"
+          "to": "AP11-S-SUPPRESS"
         },
         {
           "when": false,
-          "to": "ERASMUS-AP-11-C11"
+          "to": "AP11-M"
         }
-      ]
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-11-C11",
+      "id": "AP11-M",
       "type": "condition",
-      "confidence": "inferred",
-      "source_page": 11,
-      "predicate": {
-        "id": "IS_EC_OFFENSIVE"
-      },
-      "label_zh": "IS_EC_OFFENSIVE",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-11-S04"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-11-C12"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-11-C12",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 11,
       "predicate": {
         "id": "IS_LAST_TARGET"
       },
-      "label_zh": "IS_LAST_TARGET",
+      "label_zh": "最后目标？",
       "edges": [
         {
           "when": true,
-          "to": "ERASMUS-AP-11-S05"
+          "to": "AP11-S-EXTRA"
         },
         {
           "when": false,
-          "to": "ERASMUS-AP-11-SELECT"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-11-S01",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 11,
-      "strategy": "AP_AIR_STRIKE",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-11-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-11-S02",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 11,
-      "strategy": "AP_AIR_SUPPORT_GROUND",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-11-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-11-S03",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 11,
-      "strategy": "AP_AIR_SEA_GROUND",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-11-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-11-S04",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 11,
-      "strategy": "AP_SEA_SUPPORT_LANDING",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-11-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-11-S05",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 11,
-      "strategy": "AP_AIR_SEA_LANDING",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-11-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-11-S06",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 11,
-      "strategy": "AP_GROUND_ADVANCE",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-11-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-11-S07",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 11,
-      "strategy": "AP_UNSUPPORTED_LANDING",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-11-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-11-SELECT",
-      "type": "priority",
-      "confidence": "inferred",
-      "source_page": 11,
-      "family": "task-force",
-      "strategies": [
-        {
-          "id": "AP_AIR_STRIKE",
-          "priority": 1,
-          "actionTag": "AP_AIR_STRIKE"
-        },
-        {
-          "id": "AP_AIR_SUPPORT_GROUND",
-          "priority": 2,
-          "actionTag": "AP_AIR_SUPPORT_GROUND"
-        },
-        {
-          "id": "AP_AIR_SEA_GROUND",
-          "priority": 3,
-          "actionTag": "AP_AIR_SEA_GROUND"
-        },
-        {
-          "id": "AP_SEA_SUPPORT_LANDING",
-          "priority": 4,
-          "actionTag": "AP_SEA_SUPPORT_LANDING"
-        },
-        {
-          "id": "AP_AIR_SEA_LANDING",
-          "priority": 5,
-          "actionTag": "AP_AIR_SEA_LANDING"
-        },
-        {
-          "id": "AP_GROUND_ADVANCE",
-          "priority": 6,
-          "actionTag": "AP_GROUND_ADVANCE"
-        },
-        {
-          "id": "AP_UNSUPPORTED_LANDING",
-          "priority": 7,
-          "actionTag": "AP_UNSUPPORTED_LANDING"
+          "to": "AP11-S-NEXT"
         }
       ],
-      "edges": [
-        {
-          "when": "candidate_found",
-          "to": "ERASMUS-AP-11-END"
-        },
-        {
-          "when": "no_candidate",
-          "to": "ERASMUS-AP-11-FALLBACK"
-        }
-      ]
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-11-FALLBACK",
-      "type": "fallback",
-      "confidence": "inferred",
+      "id": "AP11-S-SUPPRESS",
+      "type": "action",
+      "strategy": "AP_SUPPRESSION_ATTACK",
+      "label_zh": "考虑压制攻击",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP11-END"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP11-S-EXTRA",
+      "type": "action",
+      "strategy": "AP_ACTIVATE_EXTRA_UNITS",
+      "label_zh": "用额外激活点激活更多单位",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP11-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP11-S-NEXT",
+      "type": "action",
+      "strategy": "AP_NEXT_TARGET_TASK_FORCE",
+      "label_zh": "为下一目标编成新任务部队",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP11-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP11-FALLBACK",
+      "type": "fallback",
       "allowed_actions": [
         "pass",
         "skip"
       ],
-      "reason": "chart candidates are not legal in current view"
+      "reason": "图表出口均不合法",
+      "confidence": "confirmed",
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-11-END",
+      "id": "AP11-END",
       "type": "terminal",
       "confidence": "confirmed",
-      "source_page": 11
+      "source_page": 11,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     }
   ],
   "strategies": [
@@ -440,35 +704,39 @@
     "AP_AIR_SEA_GROUND",
     "AP_SEA_SUPPORT_LANDING",
     "AP_AIR_SEA_LANDING",
-    "AP_GROUND_ADVANCE",
-    "AP_UNSUPPORTED_LANDING"
+    "AP_UNSUPPORTED_LANDING",
+    "AP_SELECT_TARGET",
+    "AP_ACTIVATE_MINIMUM_SUFFICIENT_FORCE",
+    "AP_ATTACK_WEAKEST_STACK",
+    "AP_MOVE_TO_TARGET",
+    "AP_SUPPRESSION_ATTACK",
+    "AP_ACTIVATE_EXTRA_UNITS",
+    "AP_NEXT_TARGET_TASK_FORCE"
   ],
-  "dice_tables": [],
+  "dice_tables": [
+    {
+      "id": "AP11-D10-TABLE",
+      "sides": 10,
+      "ranges": [
+        {
+          "min": 0,
+          "max": 3,
+          "result": "0-3",
+          "to": "AP11-S-MOVE"
+        },
+        {
+          "min": 4,
+          "max": 9,
+          "result": "4-9",
+          "to": "AP11-S-WEAKEST"
+        }
+      ],
+      "source_page": 11
+    }
+  ],
   "qa": {
-    "inferred_nodes": [
-      "ERASMUS-AP-11-C01",
-      "ERASMUS-AP-11-C02",
-      "ERASMUS-AP-11-C03",
-      "ERASMUS-AP-11-C04",
-      "ERASMUS-AP-11-C05",
-      "ERASMUS-AP-11-C06",
-      "ERASMUS-AP-11-C07",
-      "ERASMUS-AP-11-C08",
-      "ERASMUS-AP-11-C09",
-      "ERASMUS-AP-11-C10",
-      "ERASMUS-AP-11-C11",
-      "ERASMUS-AP-11-C12",
-      "ERASMUS-AP-11-S01",
-      "ERASMUS-AP-11-S02",
-      "ERASMUS-AP-11-S03",
-      "ERASMUS-AP-11-S04",
-      "ERASMUS-AP-11-S05",
-      "ERASMUS-AP-11-S06",
-      "ERASMUS-AP-11-S07",
-      "ERASMUS-AP-11-SELECT",
-      "ERASMUS-AP-11-FALLBACK"
-    ],
-    "visual_review_required": true,
-    "source_line_count": 188
+    "inferred_nodes": [],
+    "visual_review_required": false,
+    "verified_from_visual": true
   }
 }

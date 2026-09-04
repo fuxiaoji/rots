@@ -1,13 +1,7 @@
 "use strict"
 
-// 保真自测: 把 py 参考引擎 erasmus_complete_ai_execution_engine.py 决策树
-// (L583-743) 的布尔 ctx 黄金用例搬来, 断言 JS 纯决策树(js/server/erasmus_state.js)
-// 在相同 ctx 下返回相同策略名 —— "1:1" 转译的硬证据。
-//
-// 来源:
-//   - py self-test (L1326-1374): JP early->马绍尔防御 / JP end->事件战略 / PASS
-//   - 本文件补充的 roll-free 全分支用例由 py 决策树代码逐行手推
-//   - 需掷骰的分支传显式 d10(映射同 py: 见各树 roll<=k 阈值)
+// 六张决策轴黄金路径。2026-09-04 起以 PDF 实际箭头为权威，
+// 不再用旧 Python 近似实现反向证明自身正确。
 
 const assert = require("assert")
 const fs = require("fs")
@@ -36,7 +30,7 @@ const defaults = () => ({
     jp_I_more_steps_in_burma: false, jp_J_logistics_ge_18: false,
     jp_L_B_garrisons_within_8: false, jp_L_C_airfields_within_5: false,
     jp_L_E_allied_on_honshu: false,
-    al_B_hq_supplied_phil: true, al_C_hq_supplied_malaya: true,
+    al_B_hq_supplied_phil: false, al_C_hq_supplied_malaya: false,
     al_D_arcadia_played: false, al_E_cbi_def_established: false,
     al_F_has_passes: false, al_G_only_1_card_left: false,
     al_J_phil_not_surrendered: true, al_K_service_agreement: false,
@@ -57,21 +51,16 @@ function eq(fn, patch, expected, note, d10) {
     count++
 }
 
-// ---- JP 早期 (页1 / py evaluate_early L583-617) -----------------------------
+// ---- JP 早期（PDF 第1页实际箭头） ------------------------------------------
 const jpE = T.jp_early
-eq(jpE, { jp_A: true, jp_D_res_lt_13: true }, "激进的空优战略", "A&cards>=3&D(res<13)")
-eq(jpE, { jp_A: true, current_turn: 4, jp_F_logistics_ge_20: true }, "中太平洋战略", "A turn>=3 F(E=res>=13 恒真) -> 中太平洋")
-eq(jpE, { jp_A: true, current_turn: 4, jp_F_logistics_ge_20: false, jp_H_logistics_le_19: true, jp_J_controls_rabaul_guadalcanal: true }, "中太平洋战略", "(H or I) and J")
-eq(jpE, { jp_A: true, current_turn: 4, jp_H_logistics_le_19: true, jp_J_controls_rabaul_guadalcanal: false, jp_M_perimeter_target_1_complete: true }, "马绍尔防御", "py self-test 黄金用例")
-eq(jpE, { jp_A: true, current_turn: 4, jp_J_controls_rabaul_guadalcanal: false, jp_M_perimeter_target_1_complete: false }, "外围防御战略", "M=false")
-eq(jpE, { jp_A: true, cards_in_hand: 2 }, "激进的南方资源战略", "cards<3")
-eq(jpE, { jp_A: true, current_turn: 1, cards_in_hand: 5 }, "外围防御战略", "turn<3")
-eq(jpE, { jp_B_dei_surrender_hexes_occupied: true }, "保守的空优战略", "B (A=false)")
-eq(jpE, { cards_in_hand: 2, jp_L_mal_phil_dei_not_conquered: true }, "事件战略", "roll 分支 cards<3")
-eq(jpE, { cards_in_hand: 5, jp_L_mal_phil_dei_not_conquered: false }, "事件战略", "roll 分支 L=false")
-eq(jpE, { cards_in_hand: 5, jp_L_mal_phil_dei_not_conquered: true }, "事件战略", "roll<=2", 1)
-eq(jpE, { cards_in_hand: 5, jp_L_mal_phil_dei_not_conquered: true }, "激进的南方资源战略", "roll 3..6", 4)
-eq(jpE, { cards_in_hand: 5, jp_L_mal_phil_dei_not_conquered: true }, "外围防御战略", "roll>=7", 8)
+eq(jpE, { jp_A:false, jp_D_res_lt_13:true, jp_F_logistics_ge_20:true }, "激进的空优战略", "A否，C+D真，F真")
+eq(jpE, { jp_A:false, jp_D_res_lt_13:true, jp_F_logistics_ge_20:false }, "保守的空优战略", "A否，C+D真，F否")
+eq(jpE, { jp_A:true, jp_B_dei_surrender_hexes_occupied:false, current_turn:4 }, "激进的南方资源战略", "A真，B否，G真")
+eq(jpE, { jp_A:true, jp_B_dei_surrender_hexes_occupied:false, current_turn:1, jp_D_res_lt_13:true }, "激进的南方资源战略", "G否，A+C+D真")
+eq(jpE, { jp_A:true, jp_B_dei_surrender_hexes_occupied:true, jp_H_logistics_le_19:true, jp_I_azoi_covers_dei_ports:true }, "外围防御战略", "C+(E或H+I)")
+eq(jpE, { jp_A:true, jp_B_dei_surrender_hexes_occupied:true, cards_in_hand:2, jp_M_perimeter_target_1_complete:true }, "事件战略", "M后D10 0-2", 1)
+eq(jpE, { jp_A:true, jp_B_dei_surrender_hexes_occupied:true, cards_in_hand:2, jp_M_perimeter_target_1_complete:true }, "激进的南方资源战略", "M后D10 3-6", 4)
+eq(jpE, { jp_A:true, jp_B_dei_surrender_hexes_occupied:true, cards_in_hand:2, jp_M_perimeter_target_1_complete:true }, "中太平洋战略", "M后D10 7-9", 8)
 
 // ---- JP 中期 (页2 / py evaluate_mid L619-644) -------------------------------
 const jpM = T.jp_mid
@@ -89,17 +78,17 @@ eq(jpM, { jp_F_logistics_ge_20: false, jp_G_logistics_ge_15: false }, "外围防
 // ---- JP 晚期 (页3 / py evaluate_late L646-660) ------------------------------
 const jpL = T.jp_late
 eq(jpL, { cards_in_hand: 2 }, "事件战略", "py self-test: 手牌不足")
-eq(jpL, { cards_in_hand: 5, can_pass: true }, "PASS", "py self-test: 可 PASS")
-eq(jpL, { jp_L_B_garrisons_within_8: true, jp_L_C_airfields_within_5: true, can_pass: true }, "最终国防圈战略", "驻军判在 can_pass 之前")
-eq(jpL, { jp_L_E_allied_on_honshu: true }, "最终防御战略", "E 盟军在本州")
-eq(jpL, {}, "事件战略", "默认(无驻军/无 PASS/无本州)")
+eq(jpL, { cards_in_hand:5, can_pass:true }, "最终国防圈战略", "驻军未完成先补国防圈")
+eq(jpL, { jp_L_B_garrisons_within_8:true, jp_L_C_airfields_within_5:true, can_pass:true }, "PASS", "驻军完成后可PASS")
+eq(jpL, { jp_L_B_garrisons_within_8:true, jp_L_C_airfields_within_5:true, jp_L_E_allied_on_honshu:true }, "最终防御战略", "驻军完成且盟军在本州")
+eq(jpL, { jp_L_B_garrisons_within_8:true, jp_L_C_airfields_within_5:true }, "事件战略", "驻军完成默认事件")
 
 // ---- AL 早期 (页7 / py evaluate_early L670-699) -----------------------------
 const alE = T.al_early
 eq(alE, { cards_in_hand: 2 }, "事件战略", "cards<3")
-eq(alE, { al_B_hq_supplied_phil: false }, "撤离菲律宾", "B HQ 断补")
-eq(alE, { al_B_hq_supplied_phil: true, al_C_hq_supplied_malaya: false }, "撤离马来亚", "C HQ 断补")
-eq(alE, { al_B_hq_supplied_phil: true, al_C_hq_supplied_malaya: true, al_D_arcadia_played: false }, "建立ABDA", "D 未打 ARCADIA")
+eq(alE, { al_B_hq_supplied_phil: true }, "撤离菲律宾", "B 菲律宾有补给HQ")
+eq(alE, { al_B_hq_supplied_phil:false, al_C_hq_supplied_malaya:true }, "撤离马来亚", "C 马来亚有补给HQ")
+eq(alE, { al_B_hq_supplied_phil:false, al_C_hq_supplied_malaya:false, al_D_arcadia_played:false }, "建立ABDA", "D 未打 ARCADIA")
 eq(alE, { al_D_arcadia_played: true, al_E_cbi_def_established: false }, "增强CBI防御", "E CBI 未立")
 eq(alE, { al_D_arcadia_played: true, al_E_cbi_def_established: true, al_F_has_passes: true, al_G_only_1_card_left: true }, "PASS", "F&G")
 eq(alE, { al_D_arcadia_played: true, al_E_cbi_def_established: true, al_K_service_agreement: true, al_L_has_2_carriers: true, al_M_us_corps_near_carrier: true }, "橙色计划", "J..N 全真")
@@ -136,4 +125,4 @@ for (const [name, fn] of [["jp_early", T.jp_early], ["jp_mid", T.jp_mid], ["jp_l
     count++
 }
 
-console.log(`ERASMUS state-machine decision-tree fidelity: ${count} cases passed (vs py golden)`)
+console.log(`ERASMUS PDF decision-axis golden paths: ${count} cases passed`)

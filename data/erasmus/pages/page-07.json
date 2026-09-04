@@ -1,430 +1,489 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "id": "ERASMUS-AP-07",
   "chart_id": "ERASMUS-AP-07",
   "role": "Allies",
   "phase": "early",
   "kind": "decision-axis",
-  "action_family": "strategy",
   "source_page": 7,
   "source": {
-    "pdf": "伊拉斯谟v2.0_图表汉化.pdf",
+    "pdf": "伊拉斯谟v2.0_图表汉化 (1).pdf",
+    "absolute_path": "D:/downloads/伊拉斯谟v2.0_图表汉化 (1).pdf",
     "page": 7,
-    "markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/07-盟军-早期阶段决策轴.md"
+    "sha256": "5c362b4af6306b03baf959f80273942a80418bf985dac2faee61eb953a1dab2f"
   },
-  "source_markdown": "docs/rules/normalized/erasmus-v2-zh-charts/charts/07-盟军-早期阶段决策轴.md",
-  "rules": [
-    "EOTS-5",
-    "EOTS-7"
-  ],
   "nodes": [
     {
-      "id": "ERASMUS-AP-07-START",
+      "id": "AP07-START",
       "type": "start",
-      "confidence": "confirmed",
-      "source_page": 7,
       "edges": [
         {
           "when": "always",
-          "to": "ERASMUS-AP-07-C01"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-C01",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 7,
-      "predicate": {
-        "id": "AP_HAS_3_CARDS"
-      },
-      "label_zh": "AP_HAS_3_CARDS",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-07-S01"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-07-C02"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-C02",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 7,
-      "predicate": {
-        "id": "AP_HQ_SUPPLY_AVAILABLE"
-      },
-      "label_zh": "AP_HQ_SUPPLY_AVAILABLE",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-07-S02"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-07-C03"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-C03",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 7,
-      "predicate": {
-        "id": "AP_RABAUL_CONTROLLED"
-      },
-      "label_zh": "AP_RABAUL_CONTROLLED",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-07-S03"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-07-C04"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-C04",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 7,
-      "predicate": {
-        "id": "AP_CBI_BUILT"
-      },
-      "label_zh": "AP_CBI_BUILT",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-07-S04"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-07-C05"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-C05",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 7,
-      "predicate": {
-        "id": "AP_HAS_PASS"
-      },
-      "label_zh": "AP_HAS_PASS",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-07-S05"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-07-C06"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-C06",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 7,
-      "predicate": {
-        "id": "AP_LAST_CARD"
-      },
-      "label_zh": "AP_LAST_CARD",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-07-S06"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-07-C07"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-C07",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 7,
-      "predicate": {
-        "id": "AP_THIRD_TURN"
-      },
-      "label_zh": "AP_THIRD_TURN",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-07-S07"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-07-C08"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-C08",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 7,
-      "predicate": {
-        "id": "AP_PHILIPPINES_NOT_SURRENDERED"
-      },
-      "label_zh": "AP_PHILIPPINES_NOT_SURRENDERED",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-07-S08"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-07-C09"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-C09",
-      "type": "condition",
-      "confidence": "inferred",
-      "source_page": 7,
-      "predicate": {
-        "id": "AP_ABDA_HQ_READY"
-      },
-      "label_zh": "AP_ABDA_HQ_READY",
-      "edges": [
-        {
-          "when": true,
-          "to": "ERASMUS-AP-07-S01"
-        },
-        {
-          "when": false,
-          "to": "ERASMUS-AP-07-SELECT"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-S01",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 7,
-      "strategy": "AP_PHILIPPINES",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-07-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-S02",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 7,
-      "strategy": "AP_MALAYA",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-07-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-S03",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 7,
-      "strategy": "AP_ABDA",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-07-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-S04",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 7,
-      "strategy": "AP_CBI",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-07-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-S05",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 7,
-      "strategy": "AP_ORANGE_PLAN",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-07-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-S06",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 7,
-      "strategy": "AP_EVENT",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-07-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-S07",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 7,
-      "strategy": "AP_PASS",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-07-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-S08",
-      "type": "action",
-      "confidence": "inferred",
-      "source_page": 7,
-      "strategy": "AP_DEI_DEFENSE",
-      "edges": [
-        {
-          "when": "always",
-          "to": "ERASMUS-AP-07-END"
-        }
-      ]
-    },
-    {
-      "id": "ERASMUS-AP-07-SELECT",
-      "type": "priority",
-      "confidence": "inferred",
-      "source_page": 7,
-      "family": "strategy",
-      "strategies": [
-        {
-          "id": "AP_PHILIPPINES",
-          "priority": 1,
-          "actionTag": "AP_PHILIPPINES"
-        },
-        {
-          "id": "AP_MALAYA",
-          "priority": 2,
-          "actionTag": "AP_MALAYA"
-        },
-        {
-          "id": "AP_ABDA",
-          "priority": 3,
-          "actionTag": "AP_ABDA"
-        },
-        {
-          "id": "AP_CBI",
-          "priority": 4,
-          "actionTag": "AP_CBI"
-        },
-        {
-          "id": "AP_ORANGE_PLAN",
-          "priority": 5,
-          "actionTag": "AP_ORANGE_PLAN"
-        },
-        {
-          "id": "AP_EVENT",
-          "priority": 6,
-          "actionTag": "AP_EVENT"
-        },
-        {
-          "id": "AP_PASS",
-          "priority": 7,
-          "actionTag": "AP_PASS"
-        },
-        {
-          "id": "AP_DEI_DEFENSE",
-          "priority": 8,
-          "actionTag": "AP_DEI_DEFENSE"
+          "to": "AP07-A"
         }
       ],
-      "edges": [
-        {
-          "when": "candidate_found",
-          "to": "ERASMUS-AP-07-END"
-        },
-        {
-          "when": "no_candidate",
-          "to": "ERASMUS-AP-07-FALLBACK"
-        }
-      ]
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-07-FALLBACK",
-      "type": "fallback",
-      "confidence": "inferred",
+      "id": "AP07-A",
+      "type": "condition",
+      "predicate": {
+        "id": "AP_HAND_GE_3"
+      },
+      "label_zh": "手牌≥3？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP07-B"
+        },
+        {
+          "when": false,
+          "to": "AP07-S-EVENT"
+        }
+      ],
+      "confidence": "confirmed",
       "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-B",
+      "type": "condition",
+      "predicate": {
+        "id": "SUPPLIED_HQ_IN_PHILIPPINES"
+      },
+      "label_zh": "菲律宾有补给HQ？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP07-S-EVAC-PHILIPPINES"
+        },
+        {
+          "when": false,
+          "to": "AP07-C"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-C",
+      "type": "condition",
+      "predicate": {
+        "id": "SUPPLIED_HQ_IN_MALAYA"
+      },
+      "label_zh": "马来亚有补给HQ？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP07-S-EVAC-MALAYA"
+        },
+        {
+          "when": false,
+          "to": "AP07-D"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-D",
+      "type": "condition",
+      "predicate": {
+        "id": "ARCADIA_PLAYED"
+      },
+      "label_zh": "Arcadia已打出？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP07-E"
+        },
+        {
+          "when": false,
+          "to": "AP07-S-ABDA"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-E",
+      "type": "condition",
+      "predicate": {
+        "id": "CBI_DEFENSE_COMPLETE"
+      },
+      "label_zh": "CBI防御完成？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP07-FG"
+        },
+        {
+          "when": false,
+          "to": "AP07-S-CBI"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-FG",
+      "type": "condition",
+      "predicate": {
+        "id": "HAS_PASS_AND_ONE_CARD_LEFT"
+      },
+      "label_zh": "有PASS且只剩一张牌？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP07-S-PASS"
+        },
+        {
+          "when": false,
+          "to": "AP07-JKLMN"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-JKLMN",
+      "type": "condition",
+      "predicate": {
+        "id": "ORANGE_PLAN_CRITERIA"
+      },
+      "label_zh": "橙色计划条件全部满足？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP07-S-ORANGE"
+        },
+        {
+          "when": false,
+          "to": "AP07-OP"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-OP",
+      "type": "condition",
+      "predicate": {
+        "id": "DEI_NOT_SURRENDERED_AND_ABDA_SUPPLIED"
+      },
+      "label_zh": "DEI未投降且ABDA有补给？",
+      "edges": [
+        {
+          "when": true,
+          "to": "AP07-S-DEI"
+        },
+        {
+          "when": false,
+          "to": "AP07-S-OFFENSIVE"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-S-EVENT",
+      "type": "action",
+      "strategy": "AP_EVENT",
+      "label_zh": "事件",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP07-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-S-EVAC-PHILIPPINES",
+      "type": "action",
+      "strategy": "AP_EVACUATE_PHILIPPINES",
+      "label_zh": "撤离菲律宾",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP07-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-S-EVAC-MALAYA",
+      "type": "action",
+      "strategy": "AP_EVACUATE_MALAYA",
+      "label_zh": "撤离马来亚",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP07-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-S-ABDA",
+      "type": "action",
+      "strategy": "AP_ESTABLISH_ABDA",
+      "label_zh": "建立ABDA",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP07-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-S-CBI",
+      "type": "action",
+      "strategy": "AP_BUILD_CBI_DEFENSE",
+      "label_zh": "增强CBI防御",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP07-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-S-PASS",
+      "type": "action",
+      "strategy": "AP_PASS",
+      "label_zh": "PASS",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP07-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-S-ORANGE",
+      "type": "action",
+      "strategy": "AP_ORANGE_PLAN",
+      "label_zh": "橙色计划",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP07-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-S-DEI",
+      "type": "action",
+      "strategy": "AP_DEI_DEFENSE",
+      "label_zh": "DEI防御",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP07-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-S-OFFENSIVE",
+      "type": "action",
+      "strategy": "AP_OFFENSIVE_ATTACK",
+      "label_zh": "攻势进攻",
+      "edges": [
+        {
+          "when": "always",
+          "to": "AP07-END"
+        }
+      ],
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
+    },
+    {
+      "id": "AP07-FALLBACK",
+      "type": "fallback",
       "allowed_actions": [
         "pass",
         "skip"
       ],
-      "reason": "chart candidates are not legal in current view"
+      "reason": "图表出口均不合法",
+      "confidence": "confirmed",
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     },
     {
-      "id": "ERASMUS-AP-07-END",
+      "id": "AP07-END",
       "type": "terminal",
       "confidence": "confirmed",
-      "source_page": 7
+      "source_page": 7,
+      "visual_region": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1,
+        "units": "page_fraction"
+      }
     }
   ],
   "strategies": [
-    "AP_PHILIPPINES",
-    "AP_MALAYA",
-    "AP_ABDA",
-    "AP_CBI",
-    "AP_ORANGE_PLAN",
     "AP_EVENT",
+    "AP_EVACUATE_PHILIPPINES",
+    "AP_EVACUATE_MALAYA",
+    "AP_ESTABLISH_ABDA",
+    "AP_BUILD_CBI_DEFENSE",
     "AP_PASS",
-    "AP_DEI_DEFENSE"
+    "AP_ORANGE_PLAN",
+    "AP_DEI_DEFENSE",
+    "AP_OFFENSIVE_ATTACK"
   ],
   "dice_tables": [],
   "qa": {
-    "inferred_nodes": [
-      "ERASMUS-AP-07-C01",
-      "ERASMUS-AP-07-C02",
-      "ERASMUS-AP-07-C03",
-      "ERASMUS-AP-07-C04",
-      "ERASMUS-AP-07-C05",
-      "ERASMUS-AP-07-C06",
-      "ERASMUS-AP-07-C07",
-      "ERASMUS-AP-07-C08",
-      "ERASMUS-AP-07-C09",
-      "ERASMUS-AP-07-S01",
-      "ERASMUS-AP-07-S02",
-      "ERASMUS-AP-07-S03",
-      "ERASMUS-AP-07-S04",
-      "ERASMUS-AP-07-S05",
-      "ERASMUS-AP-07-S06",
-      "ERASMUS-AP-07-S07",
-      "ERASMUS-AP-07-S08",
-      "ERASMUS-AP-07-SELECT",
-      "ERASMUS-AP-07-FALLBACK"
-    ],
-    "visual_review_required": true,
-    "source_line_count": 160
+    "inferred_nodes": [],
+    "visual_review_required": false,
+    "verified_from_visual": true
   }
 }
