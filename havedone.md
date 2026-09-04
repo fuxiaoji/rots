@@ -325,3 +325,4 @@
 - 同种子 50 局（20260903–20260952，完整缩短剧本，headless）结果：50 complete，0 error/setup-error/action-limit；日本 48、盟军 2（4%），两胜均为原子弹战略投降（seed 20260908 T9、20260946 T11 状态）。旧基线为日本 50、盟军 0。
 - 推进指标：最近盟军单位到东京最小 3、平均最小 7.04 格；最近盟军控制格最小 3、平均 6.92；在图 B29 最小 3、平均 7.78。日本胜局的首个未满足条件：苏联条件 39、轰炸连续性 6、资源 3；22 局仍提前条约败。
 - 验证：原子弹标准 3 个边界用例、state-fidelity 59/59、goal-fidelity 39/39、event-strategy 8/8、图表/确定性测试通过；最终数据 `tests/results/audit50-1942-1945-The-Shortened-Campaign-50-20260903-headless-atomic-zh8-final.json`，报告 `research/erasmus-atomic-zh8-50game-report.md`。
+- 版本记录：游戏引擎/状态机/审计提交 `555a2f0`；RTT 战略日志提交 `9a2d311`。
