@@ -382,3 +382,11 @@
 - 编队脚注增加全部潜在反应海空军战力求和，并在非日本/非印度 HQ 格保留至少一个未激活地面单位。
 - 回归：全部 Erasmus 单元/黄金/保存恢复测试通过；固定种子 20 局 20/20 完赛，53,908 动作，0 fallback、0 缺失轨迹节点，双方六条 PBM 路径均有覆盖。
 - 未冒充完成：最终防御、一亿玉碎、精确 2x 生存判定、伏击 DRM 和反应 D10 对地面投入的差异仍需下一批逐条实现。
+
+### 节点实现索引、自然语言编译规范与启动指南
+
+- 新增自动生成器 `tools/rules/build_erasmus_implementation_map.js`，将 12 张图表的 258 个节点映射到战略轴、选牌、编队、反应/PBM、通用图遍历和确定性骰表入口。
+- 生成机器可读 `data/erasmus/node-implementation-map.json` 与人工审计版 `docs/architecture/erasmus-node-implementation-map.md`；明确“调用路径存在”不等于“纸面语义已证明正确”。
+- 新增映射一致性测试，校验策略版本、节点一一对应、无重复且每个节点都有实现入口。
+- 新增 `docs/architecture/erasmus-natural-language-to-code.md`，固定来源原文→节点/谓词→阵营视图→策略规划→合法动作→回放轨迹的落地流程。
+- 新增 `docs/setup/rtt-startup-guide.md`，记录 Windows 下构建、8080 启停、健康检查、日志与常见故障处理。
