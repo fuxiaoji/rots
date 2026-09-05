@@ -390,3 +390,4 @@
 - 新增映射一致性测试，校验策略版本、节点一一对应、无重复且每个节点都有实现入口。
 - 新增 `docs/architecture/erasmus-natural-language-to-code.md`，固定来源原文→节点/谓词→阵营视图→策略规划→合法动作→回放轨迹的落地流程。
 - 新增 `docs/setup/rtt-startup-guide.md`，记录 Windows 下构建、8080 启停、健康检查、日志与常见故障处理。
+- 新增 `tools/start-rtt.ps1` 一键脚本，提供启动、停止、重启、状态检查和重建选项；启动前校验 Junction，停止前核对监听进程命令行。

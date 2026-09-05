@@ -34,6 +34,35 @@ $node = 'C:\Users\fwj\tools\node-v22.23.2-win-x64\node.exe'
 
 这会同步逐页文档、`data\erasmus\charts.json`、运行时图表数据、节点实现映射以及根目录 `rules.js`/`play.js`。
 
+## 推荐：使用启动脚本
+
+在 PowerShell 中运行：
+
+```powershell
+Set-Location 'D:\desktop\rots'
+
+# 启动（默认动作）
+.\tools\start-rtt.ps1
+
+# 查看状态
+.\tools\start-rtt.ps1 -Action Status
+
+# 停止或重启
+.\tools\start-rtt.ps1 -Action Stop
+.\tools\start-rtt.ps1 -Action Restart
+
+# 先重建规则/图表，再重启
+.\tools\start-rtt.ps1 -Action Restart -Rebuild
+```
+
+脚本会检查 Node、运行目录和游戏目录 Junction，后台启动服务器，等待 8080 端口并执行 HTTP 健康检查。日志写入 `D:\desktop\rots-runtime-pve\rtt-stdout.log` 和 `rtt-stderr.log`。停止时只处理实际占用 8080 且命令行为本项目 `server.js` 的进程。
+
+如果系统执行策略阻止 `.ps1`，可以仅对本次进程放行：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\start-rtt.ps1
+```
+
 ## 前台启动（便于看日志）
 
 ```powershell
