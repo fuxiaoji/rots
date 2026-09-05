@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "policy_version": "erasmus-v2.0-zh.16",
+  "policy_version": "erasmus-v2.0-zh.18",
   "generated_from": "data/erasmus/charts.json",
   "note": "这是逻辑实现映射，不是 PDF 视觉坐标。视觉坐标由 node-regions.csv 人工回填。",
   "summary": {

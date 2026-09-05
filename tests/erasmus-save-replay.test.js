@@ -12,5 +12,10 @@ let first=advance(rules.setup(seed,scenario,{headless_moves:true}),0,300),saved=
 const actions=[],runA=advance(JSON.parse(saved),first.ordinal,250,actions)
 let replay=JSON.parse(saved)
 for(const [role,action,argument] of actions){const view=rules.view(replay,role);assert(action in view.actions,`replay legal ${action}`);replay=rules.action(replay,role,action,argument)}
-assert.equal(JSON.stringify(runA.state),JSON.stringify(replay),"save/restore replay state")
+const actual=JSON.stringify(runA.state),expected=JSON.stringify(replay)
+if(actual!==expected){
+ const at=[...Array(Math.min(actual.length,expected.length)).keys()].find(i=>actual[i]!==expected[i])??Math.min(actual.length,expected.length)
+ console.error(`save/replay first diff @${at}\nA=${actual.slice(Math.max(0,at-160),at+320)}\nB=${expected.slice(Math.max(0,at-160),at+320)}`)
+}
+assert.equal(actual,expected,"save/restore replay state")
 console.log(`Erasmus save/restore action replay passed (${actions.length} actions)`)

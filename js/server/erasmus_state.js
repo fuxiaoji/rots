@@ -513,7 +513,10 @@ function esm_jp_final_defense_targets() {
 // 仅仍在地图且有补给的 HQ 是待压制目标；已经断补或离图即视为该项完成。
 function esm_jp_hq_suppression_targets() {
     const specs = [
-        { unit: HQ_SOUTH_WEST, objective: "压制菲律宾HQ", damageLevel: 0.25 },
+        // 开局菲律宾 HQ 位于马尼拉。图表脚注允许通过占领基地来切断/覆盖 HQ；
+        // 若只把它当作一次空袭，地面军会在同一攻势里改去次要目标，菲律宾守军
+        // 随后反复获得反应机会。第2回合因此把马尼拉标为“压制且优先夺占”。
+        { unit: HQ_SOUTH_WEST, objective: "压制菲律宾HQ（开局优先夺占马尼拉）", damageLevel: 0.25, openingCapture: true },
         { unit: HQ_MALAYA, objective: "压制新加坡HQ", damageLevel: 0.5 },
         { unit: HQ_ABDA, objective: "压制ABDA HQ", damageLevel: 0.5 },
     ]
@@ -522,7 +525,9 @@ function esm_jp_hq_suppression_targets() {
         const h = G.location[spec.unit]
         if (!(h >= 0 && h <= LAST_BOARD_HEX)) continue
         if (G.oos && set_has(G.oos, spec.unit)) continue
-        targets.push({ hex: h, unit: spec.unit, objective: spec.objective, damageLevel: spec.damageLevel, kind: "SUPPRESS_HQ" })
+        targets.push({ hex: h, unit: spec.unit, objective: spec.objective, damageLevel: spec.damageLevel,
+            kind: "SUPPRESS_HQ", rangedSupport: true,
+            requiresOccupation: !!(spec.openingCapture && G.turn === 2) })
     }
     return targets
 }
@@ -1259,9 +1264,17 @@ function esm_card_selection_tree(strategy, hand) {
     const bonusRank=x=>x.reinforcementBonus?0:x.otherBonus?1:2
     const sortEvent=(a,b)=>b.lv-a.lv||bonusRank(a)-bonusRank(b)||b.ops-a.ops||a.id-b.id
     const sortOps=(a,b)=>Number(a.military)-Number(b.military)||b.ops-a.ops||a.id-b.id
-    const event=c.filter(x=>x.eventPlayable), ops=c.filter(x=>x.opsPlayable)
+    // 第5页注释要求“为每个目标编成任务部队”。开局菲律宾/东印度是夺占
+    // 目标：EC 若限定在错误 HQ，或事件过滤掉地面/海军之一，就不能形成
+    // 地面占领 + 海军护航（航空/航母可从格外参战）的完整编成。这样的牌
+    // 保留 OC 用法，不能因牌面 LV 高就浪费为无效事件。
+    const openingOccupation=side==="JP"&&Number(G.turn)===2&&
+        (strategy.targetMeta||[]).some(t=>t&&t.requiresOccupation)
+    const event=c.filter(x=>x.eventPlayable&&(!openingOccupation||x.openingOccupationCompatible))
+    const ops=c.filter(x=>x.opsPlayable)
     const unres=event.filter(x=>x.unrestricted), restricted=c.filter(x=>x.restricted)
-    const restrictedEvent=restricted.filter(x=>x.eventPlayable)
+    const eligibleEventIds=new Set(event.map(x=>x.id))
+    const restrictedEvent=restricted.filter(x=>eligibleEventIds.has(x.id))
     const nonMilitaryOps=ops.filter(x=>!x.military)
     const played=!!(G.offensive&&G.offensive.active_cards&&G.offensive.active_cards.length)
     // AP L+M：每次非首张攻势牌前，若中国距投降≤2且有可用中国事件，立即打出。
@@ -1298,8 +1311,74 @@ function esm_card_selection_tree(strategy, hand) {
     return null
 }
 
+// 在真正打牌前做一次只读的启动能力预检。引擎的精确启动区由
+// get_activatable_units() 在攻势建立后计算；此处不能调用它（会改写 L 与
+// supply_cache），所以按牌面限定 HQ、HQ 指挥范围、补给类型和 OOS 排除
+// 明显的“事件可点击、但选完 HQ 后没有任何单位可启动”的空攻势。
+// null 表示测试沙箱缺少地图对象，此时保持原有行为，避免把未知当作零。
+function esm_card_activation_classes(card) {
+    const source=String(card?.before_unit_activation||"")
+    let ground=true,naval=true,air=true
+    if(/piece\.class\s*===\s*["']air["']/.test(source)){ground=false;naval=false}
+    if(/piece\.class\s*===\s*["']naval["']/.test(source)){ground=false;air=false}
+    if(/piece\.class\s*===\s*["']ground["']/.test(source)){naval=false;air=false}
+    if(/piece\.class\s*!==\s*["']ground["']/.test(source)&&
+        !/piece\.class\s*!==\s*["']ground["']\s*\|\|/.test(source))ground=false
+    if(/piece\.class\s*!==\s*["']naval["']/.test(source))naval=false
+    return {ground,naval,air}
+}
+
+function esm_card_activation_capacity(card, role, useEventHq) {
+    if (typeof pieces === "undefined" || typeof HQ_LIST === "undefined" ||
+        !G || !Array.isArray(G.location) || typeof get_distance !== "function") return null
+    const mine=esm_role_faction(role)
+    let hqs=(useEventHq&&Array.isArray(card?.hq)&&card.hq.length?card.hq:HQ_LIST).filter(id=>{
+        const h=pieces[id],loc=G.location[id]
+        return h&&h.class==="hq"&&h.faction===mine&&Number.isFinite(loc)&&
+            (typeof LAST_BOARD_HEX==="undefined"||loc<=LAST_BOARD_HEX)&&
+            (!(G.oos&&set_has(G.oos,id))||card===cards[GENERAL_ADACHI])
+    })
+    if(!hqs.length)return 0
+    const classes=useEventHq?esm_card_activation_classes(card):{ground:true,naval:true,air:true}
+    const source=String(card?.before_unit_activation||"")
+    // Operation Z 一类事件显式重建全图候选，不受普通 HQ 启动区预检约束。
+    if(useEventHq&&/for_each_unit_on_map/.test(source))
+        return pieces.filter((u,id)=>id>0&&u&&u.faction===mine&&u.class!=="hq"&&G.location[id]<=LAST_BOARD_HEX).length
+    let best=0
+    const exact=typeof mark_activation_zone==="function"&&typeof HEX_TEMP_FLAG3!=="undefined"&&Array.isArray(G.supply_cache)
+    const savedCache=exact?G.supply_cache.slice():null
+    const hadLSupply=typeof L!=="undefined"&&Object.prototype.hasOwnProperty.call(L,"supply")
+    const savedLSupply=typeof L!=="undefined"?L.supply:undefined
+    try{
+        if(exact&&typeof check_supply==="function")check_supply()
+        for(const hqId of hqs){
+            const hq=pieces[hqId],range=Math.max(0,Number(hq.cr)||0),supply=Number(hq.supply)||0
+            if(exact)mark_activation_zone(hqId)
+            let count=0
+            for(let id=1;id<pieces.length;id++){
+                const u=pieces[id],loc=G.location[id]
+                if(!u||u.faction!==mine||u.class==="hq"||!Number.isFinite(loc))continue
+                if(classes[u.class]===false)continue
+                if(typeof LAST_BOARD_HEX!=="undefined"&&loc>LAST_BOARD_HEX)continue
+                if(supply&&Number(u.supply)&&!(Number(u.supply)&supply))continue
+                if(G.oos&&set_has(G.oos,id)&&card!==cards[GENERAL_ADACHI])continue
+                if(exact?!!(G.supply_cache[loc]&HEX_TEMP_FLAG3):get_distance(G.location[hqId],loc)<=range)count++
+            }
+            if(count>best)best=count
+        }
+    }finally{
+        if(savedCache)G.supply_cache=savedCache
+        if(typeof L!=="undefined"){
+            if(hadLSupply)L.supply=savedLSupply
+            else delete L.supply
+        }
+    }
+    return best
+}
+
 // 第4/10页共用卡牌分类器。只读取己方手牌；allowed 是引擎对当前
-// 状态计算出的可用方式，因此受限军事事件不会被误当作可执行事件。
+// 状态计算出的可用方式。牌面限定 HQ 也是“受限军事事件”，不能只检查
+// 回调字段，否则会把限定舰队/HQ 的牌误列进无限制军事事件池。
 function classifyCards(ownHand, role) {
     const mine = esm_role_faction(role)
     const ownRivalry = !!(G.inter_service && G.inter_service[mine])
@@ -1309,7 +1388,22 @@ function classifyCards(ownHand, role) {
         let allowed=[]
         try { allowed=get_allowed_actions(id)||[] } catch(e) { allowed=[] }
         const military=card.type===MILITARY
-        const restricted=military && (!!card.before_unit_activation || !!card.before_commit_offensive)
+        const restricted=military && (!!card.before_unit_activation || !!card.before_commit_offensive ||
+            (Array.isArray(card.hq)&&card.hq.length>0))
+        const eventActivationCapacity=military?esm_card_activation_capacity(card,role,true):null
+        const opsActivationCapacity=esm_card_activation_capacity(card,role,false)
+        // 开局占领战至少要求能启动两个单位；仅一单位的军事攻势既无法组成
+        // 地面+护航，也无法落实格外航空/航母支援，留作 OC/FO 比空耗 EC 合理。
+        const openingMin=role==="Japan"&&Number(G.turn)===2?2:1
+        const eventHasForce=eventActivationCapacity===null||eventActivationCapacity>=openingMin
+        const opsHasForce=opsActivationCapacity===null||opsActivationCapacity>=openingMin
+        const activationClasses=esm_card_activation_classes(card)
+        const supportsGround=activationClasses.ground,supportsNaval=activationClasses.naval
+        const southIds=[]
+        if(typeof HQ_JP_SOUTH!=="undefined")southIds.push(HQ_JP_SOUTH)
+        if(typeof HQ_SOUTH_SEAS!=="undefined")southIds.push(HQ_SOUTH_SEAS)
+        const openingHqCompatible=!Array.isArray(card.hq)||!card.hq.length||card.hq.some(id=>southIds.includes(id))
+        const openingOccupationCompatible=openingHqCompatible&&supportsGround&&supportsNaval
         const name=String(card.name||"")
         let eventRank=50
         if (card.wie) eventRank=1
@@ -1320,8 +1414,12 @@ function classifyCards(ownHand, role) {
         const reinforcementBonus=!!(card.reinforcements||card.replacements||/reinforcement|replacement/i.test(name))
         const otherBonus=!!(card.draw||card.logistic_alt||card.bonus)
         return {id,name,type:card.type,ops:Number(card.ops)||0,lv:Number(card.logistic)||0,
-            military,restricted,unrestricted:military&&!restricted,allowed,eventPlayable:allowed.includes("event"),
-            opsPlayable:allowed.includes("ops"),futurePlayable:G.turn!==12&&allowed.includes("future_offensive"),eventRank,
+            military,restricted,unrestricted:military&&!restricted,allowed,
+            eventPlayable:allowed.includes("event")&&eventHasForce,
+            opsPlayable:allowed.includes("ops")&&opsHasForce,
+            eventActivationCapacity,opsActivationCapacity,
+            supportsGround,supportsNaval,openingOccupationCompatible,
+            futurePlayable:G.turn!==12&&allowed.includes("future_offensive"),eventRank,
             reinforcementBonus,otherBonus}
     })
 }

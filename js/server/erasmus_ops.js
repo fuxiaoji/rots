@@ -135,6 +135,9 @@ function eop_focus(role) {
         // 因此 Jolo 即便仍由盟军控制，只要覆盖它的航空/航母 ZOI 已被消灭，就应顺延
         // 到 Makassar；夺占类目标仍严格以控制权为完成条件。
         if (meta && (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ")) {
+            // 开局马尼拉采用图表脚注允许的“占领基地以压制 HQ”。在真正夺占前
+            // 不能仅因某一编队进入/临时消除 AZOI 就把整支任务部队切到下一目标。
+            if (meta.requiresOccupation && !is_space_controlled(idx, mine)) return idx
             if (typeof has_zoi === "function" && has_zoi(idx, 1 - mine)) return idx
             continue
         }
@@ -260,6 +263,12 @@ function eop_pick_unit(candidates, role, activeUnits) {
             }
         }
         if (best !== null) return best
+        // 海军不必与登陆军出发时同格：它可以从另一基地移动到同一战斗格提供
+        // 护航/海上支援。无头执行器会分别移动编队，再在同一格合并会战。
+        const naval = candidates.filter(u => pieces[u] && pieces[u].class === "naval")
+        naval.sort((a, b) => get_distance(G.location[a], focus) - get_distance(G.location[b], focus)
+            || (Number(pieces[b].cf) || 0) - (Number(pieces[a].cf) || 0) || a - b)
+        if (naval.length) return naval[0]
     }
 
     const fd = h => (focus === null ? 99 : (typeof get_distance === "function") ? get_distance(h, focus) : Math.abs(h - focus))
@@ -355,6 +364,35 @@ function eop_target_meta(role, hex) {
     return axis && Array.isArray(axis.targetMeta) ? axis.targetMeta.find(target => target.hex === hex) || null : null
 }
 
+// 一张 EC 可为多个目标分别编成任务部队。当前首要目标已经建立战斗格后，
+// 后续“有地面占领能力”的编队应沿同一图表链转向下一未完成且尚未宣战的
+// 目标；航空兵/航母的格外远程投入仍由 choose_attack_hex 优先支援首要格。
+function eop_next_focus_faction(faction, excludedHexes, recordedPlan) {
+    const role=faction===JP?"Japan":"Allies"
+    const axis=recordedPlan&&Array.isArray(recordedPlan.chain)
+        ?{chain:recordedPlan.chain,targetMeta:recordedPlan.targetMeta||[]}:eop_axis(role)
+    if(!axis||!Array.isArray(axis.chain))return null
+    const excluded=new Set(Array.isArray(excludedHexes)?excludedHexes:[])
+    const current=recordedPlan&&Number.isInteger(recordedPlan.focus)?recordedPlan.focus:eop_focus(role)
+    const start=Math.max(-1,axis.chain.indexOf(current))
+    for(let i=start+1;i<axis.chain.length;i++){
+        const h=axis.chain[i],meta=Array.isArray(axis.targetMeta)
+            ?axis.targetMeta.find(x=>x.hex===h)||null:eop_target_meta(role,h)
+        if(excluded.has(h))continue
+        if(meta?.kind==="GARRISON"){
+            if(!is_space_controlled(h,faction))continue
+            const cls=meta.garrisonClass||"ground"
+            let present=false
+            for(let u=1;u<pieces.length;u++)if(pieces[u]&&pieces[u].faction===faction&&pieces[u].class===cls&&G.location[u]===h){present=true;break}
+            if(present)continue
+        }else if(meta?.kind==="SUPPRESS"||meta?.kind==="SUPPRESS_HQ"){
+            try{if(!has_zoi(h,1-faction))continue}catch(e){}
+        }else if(is_space_controlled(h,faction))continue
+        return {hex:h,meta}
+    }
+    return null
+}
+
 // 已在东京 8 格内盟军机场待命的 B29 是战略轰炸胜利链的必要资产。普通攻势若再次
 // 激活它，无头移动层只能把纯航空编成送回下一回合轨，导致下一战略轰炸阶段缺席。
 // 因此把“已就位且格内无日军”的 B29 从普通激活候选中保护起来。
@@ -389,10 +427,12 @@ function evaluateTargetFeasibility(target, card, hq, view) {
         && typeof get_distance==="function"&&get_distance(u.location,target)<=Math.max(1,Number(u.br)||Number(u.ebr)||1))
     // 提示板要求把所有能够反应到目标的敌军纳入伤害等级，而不是只取最强一支。
     const potentialReactionStrength=reactionPool.reduce((s,u)=>s+cf(u),0)
-    const relevantDefense=defense+potentialReactionStrength
+    const airSeaDefense=defenders.filter(u=>u.class==="air"||u.class==="naval").reduce((s,u)=>s+cf(u),0)
+    const relevantDefense=(requiresOccupation?airSeaDefense:defense)+potentialReactionStrength
     return {target,meta,damageLevel,legal:target!==null&&target!==undefined,coastal,defense,suppress,requiresOccupation,
         garrisonClass:meta?.garrisonClass||null,
         groundDefense:defenders.filter(u=>u.class==="ground").reduce((s,u)=>s+cf(u),0),
+        airSeaDefense,
         potentialReaction:potentialReactionStrength>0,potentialReactionStrength,
         requiredGroundMath:Math.max(1,defenders.filter(u=>u.class==="ground").reduce((s,u)=>s+cf(u),0)),
         requiredAirSeaMath:Math.max(1,Math.ceil(relevantDefense/damageLevel))}
@@ -405,6 +445,7 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
     const strikeStrength=committed.filter(u=>u.class==="air"||u.class==="naval").reduce((s,u)=>s+cf(u),0)
     const groundStrength=committed.filter(u=>u.class==="ground").reduce((s,u)=>s+cf(u),0)
     const hasGround=committed.some(u=>u.class==="ground"),hasNaval=committed.some(u=>u.class==="naval")
+    const hasRangedSupport=committed.some(u=>u.class==="air"||(u.class==="naval"&&Number(u.br)>0))
     if(f.meta?.kind==="GARRISON"){
         const required=f.garrisonClass||"ground"
         const already=units.some(u=>u.faction===(role==="Japan"?JP:AP)&&u.location===target&&u.class===required)
@@ -419,10 +460,15 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
     const landing=f.requiresOccupation&&f.coastal&&view?.ai?.focusControlledBy!==view?.active
     const need=f.suppress?f.requiredAirSeaMath:f.requiresOccupation?f.requiredGroundMath:(f.groundDefense>0?f.requiredGroundMath:f.requiredAirSeaMath)
     const math=f.suppress?strikeStrength:f.requiresOccupation?groundStrength:Math.max(groundStrength,strikeStrength)
-    const compositionMet=(!f.requiresOccupation||hasGround)&&(!landing||hasNaval)
+    // 占领军不仅要有地面与登陆护航；只要目标上有空海兵力或可能发生
+    // 空海反应，还必须补足图表伤害等级所需的空海战力。航空兵/航母可在
+    // 战斗格外投入，故这里只要求其加入任务部队，不要求移动进目标格。
+    const supportRequired=f.requiresOccupation
+    const supportMet=!supportRequired||(hasRangedSupport&&strikeStrength>=f.requiredAirSeaMath)
+    const compositionMet=(!f.requiresOccupation||hasGround)&&(!landing||hasNaval)&&supportMet
     if(compositionMet&&math>=need)return {complete:true,required:need,strength:math,unit:null,
         formation:landing?"supported-amphibious-assault":f.suppress?"air-sea-strike":"minimum-sufficient",
-        groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength}
+        groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
     let pool=(candidates||[]).map(id=>byId.get(id)).filter(Boolean)
     // 第5/11页脚注：非本土/非印度 HQ 与地面单位同格时，至少保留一个未激活地面单位守卫 HQ。
     pool=pool.filter(u=>{
@@ -447,7 +493,7 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
     pool.sort((a,b)=>classRank(a)-classRank(b)||distance(a)-distance(b)||cf(b)-cf(a)||a.id-b.id)
     return {complete:false,required:need,strength:math,unit:amphibiousPick??pool[0]?.id,
         formation:landing?"supported-amphibious-assault":f.requiresOccupation?"ground-with-support":"air-sea-strike",
-        groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength}
+        groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
 }
 
 function selectOperationalHq(view,candidates,role){
@@ -456,8 +502,18 @@ function selectOperationalHq(view,candidates,role){
     const axis=eop_axis(role),name=String(axis?.id||axis?.note||"").toLowerCase()
     const preferred=role==="Allies"?(name.includes("cbi")?/seac/i:name.includes("dei")||name.includes("philipp")?/south west/i:name.includes("south pacific")?/south pacific/i:/central pacific/i)
         :(name.includes("cbi")||name.includes("india")?/south hq/i:name.includes("central")?/combined fleet/i:/south hq|south seas/i)
+    const mine=role==="Japan"?JP:AP
+    const commandable=id=>{const hq=byId.get(id);if(!hq)return 0
+        const range=Math.max(0,Number(hq.cr)||0)
+        return (view?.ai?.units||[]).filter(u=>u.faction===mine&&u.class!=="hq"&&u.location>=0
+            &&(!(Number(hq.supply)||0)||((Number(u.supply)||0)&Number(hq.supply)))
+            &&typeof get_distance==="function"&&get_distance(hq.location,u.location)<=range).length}
     const score=id=>{const u=byId.get(id),d=u&&focus!==null&&focus!==undefined&&typeof get_distance==="function"?get_distance(u.location,focus):99
-        return [u&&preferred.test(String(u.name||""))?0:1,d,-(u?.cm||0),-(u?.cr||0),id]}
+        const preview=typeof erasmus_preview_activatable_units==="function"?erasmus_preview_activatable_units(id):null
+        const n=Array.isArray(preview)?preview.length:commandable(id)
+        // 先排除“名义上符合战略、实际上范围内没有任何兵力”的 HQ；多个可用 HQ
+        // 再按图表指定 HQ、目标距离和效能排序。
+        return [n>0?0:1,u&&preferred.test(String(u.name||""))?0:1,-n,d,-(u?.cm||0),-(u?.cr||0),id]}
     return candidates.slice().sort((a,b)=>{const x=score(a),y=score(b);for(let i=0;i<x.length;i++)if(x[i]!==y[i])return x[i]-y[i];return 0})[0]
 }
 function planReaction(view,candidates,action,role,strategy){

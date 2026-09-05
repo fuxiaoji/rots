@@ -28,6 +28,29 @@ const vm = require("vm")
     assert.equal(use.action, "event", "下一窗口必须按 EC 打出")
 }
 
+// 开局夺占目标：限定在错误 HQ、或事件效果不能同时提供地面与海军的 EC，
+// 必须保留为 OC；否则会出现高 LV 牌打出后没有单位/没有登陆护航。
+{
+    const sandbox = {
+        JP: 0, AP: 1, MILITARY: 1, LAST_BOARD_HEX: 100,
+        HQ_JP_SOUTH: 7, HQ_SOUTH_SEAS: 8,
+        G: { turn: 2, inter_service: [0, 0] }, cards: [],
+        get_allowed_actions() { return ["event", "ops"] },
+    }
+    sandbox.cards[10] = { name: "Fleet-only event", type: 1, ops: 3, logistic: 7, hq: [5] }
+    sandbox.cards[11] = { name: "Ground-only event", type: 1, ops: 2, logistic: 6, hq: [7],
+        before_unit_activation() { filter_activation_units((u, piece) => piece.class !== "naval", 0) } }
+    sandbox.cards[12] = { name: "Flexible operations", type: 3, ops: 3 }
+    vm.createContext(sandbox)
+    const source = fs.readFileSync(path.join(__dirname, "..", "js", "server", "erasmus_state.js"), "utf8")
+    vm.runInContext(source + ";this.api={pick:esm_card_window_action};", sandbox)
+    const strategy = { role: "Japan", phase: "early", kind: "CONQUEST", name: "激进的南方资源战略",
+        targetMeta: [{ hex: 50, kind: "CONQUEST", requiresOccupation: true }] }
+    const selected = sandbox.api.pick(strategy, { actions: { card: [10, 11, 12] } }, {})
+    assert.equal(selected.argument, 12)
+    assert.match(selected.via, /受限事件OC/)
+}
+
 // 胜负规则前视：PW≤2 且本回合 PoW 尚差命名格时，盟军最后一张牌不能设置 FO/弃牌，
 // 必须把最大可用牌用于当前图表轴的攻势；目标轴和合法动作本身不被改写。
 {
@@ -110,14 +133,14 @@ const vm = require("vm")
     const pieces = []
     pieces[1] = { faction: 0, class: "air", cf: 22 }
     pieces[2] = { faction: 0, class: "air", cf: 30 }
-    pieces[3] = { faction: 0, class: "naval", cf: 18 }
+    pieces[3] = { faction: 0, class: "naval", cf: 18, br: 3 }
     pieces[4] = { faction: 0, class: "ground", cf: 12, asp: true }
     const sandbox = {
         JP: 0, AP: 1, LAST_BOARD_HEX: 100,
         pieces, G: { location: [0, 1, 2, 5, 5] },
         get_map_data(hex) { return { port: hex === 10 || hex === 20, island: hex === 20 } },
         get_distance(a, b) { return Math.abs(a - b) },
-        is_space_controlled(hex, faction) { return !(hex === 20 && faction === 0) },
+        is_space_controlled(hex, faction) { return !((hex === 20 || hex === 30) && faction === 0) },
         esm_gate_on() { return true },
     }
     vm.createContext(sandbox)
@@ -138,7 +161,7 @@ const vm = require("vm")
 
     sandbox.api.set("Japan", { name: "登陆", chain: [20], targetMeta: [{ hex: 20, kind: "CONQUEST", damageLevel: 1, requiresOccupation: true }] })
     const landingBase = { active: "Japan", ai: { focusControlledBy: "Allies", units: [
-        { id: 3, faction: 0, class: "naval", cf: 18, location: 5 },
+        { id: 3, faction: 0, class: "naval", cf: 18, br: 3, location: 5 },
         { id: 4, faction: 0, class: "ground", cf: 12, location: 5 },
     ] } }
     const escort = sandbox.api.compose(20, null, null, { ...landingBase, offensive: { active_units: [] } }, [3, 4], "Japan")
@@ -150,6 +173,43 @@ const vm = require("vm")
     const ready = sandbox.api.compose(20, null, null, { ...landingBase, offensive: { active_units: [[3, 4]] } }, [], "Japan")
     assert.equal(ready.complete, true)
     assert.equal(ready.formation, "supported-amphibious-assault")
+}
+
+// 两栖护航可以从另一基地加入同一战斗格，不能因海陆出发地不同而完全不激活海军。
+// 同时 HQ 选择必须优先实际指挥范围内有兵力者，避免打出攻势后“没有单位被启动”。
+{
+    const pieces = []
+    pieces[1] = { faction: 0, class: "naval", cf: 12 }
+    pieces[2] = { faction: 0, class: "ground", cf: 9, asp: true }
+    const sandbox = {
+        JP: 0, AP: 1, LAST_BOARD_HEX: 100,
+        pieces, G: { location: [0, 4, 8], supply_cache: {} },
+        get_map_data(hex) { return { port: hex === 20 } },
+        get_distance(a, b) { return Math.abs(a - b) },
+        is_space_controlled(hex, faction) { return !((hex === 20 || hex === 30) && faction === 0) },
+        esm_gate_on() { return true },
+    }
+    vm.createContext(sandbox)
+    const source = fs.readFileSync(path.join(__dirname, "..", "js", "server", "erasmus_ops.js"), "utf8")
+    vm.runInContext(source + ";this.api={set:eop_set_strategy_chain,pick:eop_pick_unit,hq:selectOperationalHq,next:eop_next_focus_faction};", sandbox)
+    sandbox.api.set("Japan", { name: "开局马尼拉", chain: [20],
+        targetMeta: [{ hex: 20, kind: "SUPPRESS_HQ", requiresOccupation: true }] })
+    assert.equal(sandbox.api.pick([1, 2], "Japan", []), 1,
+        "登陆军与海军不在同格时也应先激活可用护航")
+
+    const hqView = { ai: { focus: 20, units: [
+        { id: 10, name: "Preferred empty HQ", faction: 0, class: "hq", location: 18, cr: 1, cm: 3 },
+        { id: 11, name: "Other usable HQ", faction: 0, class: "hq", location: 5, cr: 4, cm: 2 },
+        { id: 12, name: "Army", faction: 0, class: "ground", location: 7, cf: 9 },
+    ] } }
+    assert.equal(sandbox.api.hq(hqView, [10, 11], "Japan"), 11,
+        "范围内没有兵力的 HQ 不得压过可实际启动单位的 HQ")
+    sandbox.api.set("Japan", { name: "多目标", chain: [20, 30], targetMeta: [
+        { hex: 20, kind: "CONQUEST", requiresOccupation: true },
+        { hex: 30, kind: "CONQUEST", requiresOccupation: true },
+    ] })
+    assert.equal(sandbox.api.next(0, [20]).hex, 30,
+        "首要目标已宣战后，下一任务部队必须沿图表链转向第二目标")
 }
 
 console.log("Erasmus card-tree and task-force hotfix tests passed")

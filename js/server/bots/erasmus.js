@@ -2,7 +2,7 @@
 /** import server/erasmus_data.js*/
 /** import server/erasmus_state.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.16"
+const ERASMUS_VERSION = "erasmus-v2.0-zh.18"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "delay", "unit", "hex", "strat_move", "ground_move", "roll", "eliminate", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
@@ -148,11 +148,14 @@ function target_argument(action, value, seedText, role, view, strategy) {
     if (action === "advance" && esm_gate_on()) {
         const focus = eop_focus(role)
         const meta = focus === null ? null : eop_target_meta(role, focus)
+        const axis = eop_axis(role)
         return {
             focus,
             kind: meta?.kind || null,
             requiresOccupation: !!meta?.requiresOccupation,
-            axisKind: eop_axis(role)?.kind || null,
+            axisKind: axis?.kind || null,
+            chain: Array.isArray(axis?.chain) ? axis.chain.slice() : [],
+            targetMeta: Array.isArray(axis?.targetMeta) ? axis.targetMeta.map(x=>({...x})) : [],
         }
     }
     // 通用: unit 候选里若混入“已选/将被撤销”的 unselect 单位(unselect_unit 塞进来的),

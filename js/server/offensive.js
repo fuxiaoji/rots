@@ -326,6 +326,36 @@ function get_activatable_units(hq, hq_supply_type) {
     return result
 }
 
+// AI 选 HQ 时的精确只读预检。此时 P.choose_hq._begin 已完成 check_supply，
+// 因而可以复用真正的 activation-zone 与事件牌过滤逻辑。所有临时缓存和
+// 牌面修正随后恢复；人类选择流程不会调用本函数。
+function erasmus_preview_activatable_units(hq) {
+    if (!hq || !pieces[hq] || !G.offensive) return []
+    const supplyCache=Array.isArray(G.supply_cache)?G.supply_cache.slice():G.supply_cache
+    const lKeys=["possible_units","reaction_able_units","asp_ground_units","cv_reaction_hex_map",
+        "air_reaction_hex_map","move_data","hq_bonus","kwai","supply"]
+    const lSaved={}
+    for(const key of lKeys)lSaved[key]={had:Object.prototype.hasOwnProperty.call(L,key),value:L[key]}
+    const oKeys=["logistic","naval_move_distance","ground_move_distance","air_move_distance"]
+    const oSaved={}
+    for(const key of oKeys)oSaved[key]=G.offensive[key]
+    const oldHq=G.offensive.active_hq[G.active]
+    try {
+        G.offensive.active_hq[G.active]=hq
+        L.possible_units=get_activatable_units(hq,pieces[hq].supply)
+        trigger_event("before_unit_activation")
+        return Array.isArray(L.possible_units)?L.possible_units.slice():[]
+    } finally {
+        G.offensive.active_hq[G.active]=oldHq
+        G.supply_cache=supplyCache
+        for(const key of oKeys)G.offensive[key]=oSaved[key]
+        for(const key of lKeys){
+            if(lSaved[key].had)L[key]=lSaved[key].value
+            else delete L[key]
+        }
+    }
+}
+
 function is_b29_bombed(piece) {
     return piece.b29 && (G.b29u & (B29_BOMBED << piece.b29)) && !is_faction_units(G.location[piece.u], JP)
 }
@@ -1097,6 +1127,15 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
             strategicAxis = eop_axis(faction === JP ? "Japan" : "Allies")
         } catch (e) { strategicFocus = strategicMeta = strategicAxis = null }
     }
+    // 第5/11页任务部队注释：EC 为每个目标各编一支任务部队。首要目标已经
+    // 宣告会战时，后续移动组按图表链寻找下一目标，避免所有启动点重复堆入
+    // 同一战斗格。远程航空/航母在稍后的 choose_attack_hex 窗仍可选择并支援
+    // 已宣告的首要战斗格，不要求进入该格。
+    if(kind==="attack"&&strategicFocus!==null&&G.offensive&&
+        set_has(G.offensive.battle_hexes,strategicFocus)&&typeof eop_next_focus_faction==="function"){
+        const next=eop_next_focus_faction(faction,G.offensive.battle_hexes,targetPlan)
+        if(next){strategicFocus=next.hex;strategicMeta=next.meta}
+    }
     const approach = steer && strategicFocus !== null
         ? get_distance(hex, strategicFocus)
         : steer && typeof eop_advance_tiebreak === "function" ? eop_advance_tiebreak(hex, faction) : -1
@@ -1123,7 +1162,15 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
         // 马尼拉可达时仍把登陆编队送往守军更弱的婆罗洲/小岛。占领目标必须有地面
         // 单位；压制目标则允许空海编队。其余可达目标只在当前编队到不了焦点时接手。
         if (strategicMeta && hex === strategicFocus) {
-            if (strategicMeta.requiresOccupation && !hasGround) return null
+            if (strategicMeta.requiresOccupation && !hasGround) {
+                // 登陆军与护航舰队可以从不同基地出发。若本攻势已经激活地面登陆军，
+                // 允许纯海军编队进入同一目标格，最终合并会战，避免错误的“无护航”。
+                const active=(G.offensive&&G.offensive.active_units&&G.offensive.active_units[faction])||[]
+                const ids=typeof active.flat==="function"?active.flat():active
+                const hasLandingGround=ids.some(u=>pieces[u]&&pieces[u].class==="ground")
+                if (!(movingPiece && movingPiece.class === "naval" && hasLandingGround)) return null
+                return [-3, eu.naval, eu.count, hex]
+            }
             return [-2, eu.ground, eu.count, hex]
         }
         if (eu.count > 0) {
