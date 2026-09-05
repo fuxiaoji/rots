@@ -1136,7 +1136,31 @@ function esm_card_window_action(strategy, view, context) {
         const ec=classified.filter(c=>c.military&&c.eventPlayable).sort((a,b)=>b.lv-a.lv||b.ops-a.ops||a.id-b.id)
         const oc=classified.filter(c=>c.opsPlayable).sort((a,b)=>b.ops-a.ops||a.id-b.id)
         const chosen=ec[0]||oc[0]
-        if(chosen)return esm_set_card_pick(strategy,chosen,ec[0]?"event":"ops","AP10-S-MAX-OFFENSIVE","占领战略轰炸基地:最大有效攻势卡")
+        if(chosen){
+            const node=ec[0]?(chosen.restricted?"AP10-S-RESTRICTED-EC":"AP10-S-UNRESTRICTED-EC")
+                :(chosen.military&&chosen.restricted?"AP10-S-RESTRICTED-OC":"AP10-S-NONMIL-OC")
+            return esm_set_card_pick(strategy,chosen,ec[0]?"event":"ops",node,"占领战略轰炸基地:最大有效攻势卡")
+        }
+    }
+
+    // 条约谈判生存约束：政治意志仅剩 1–2 且本回合 PoW 尚未达标时，设置 FO、PASS 或
+    // 弃牌会在政治阶段直接输掉对局。此时不改变决策轴及目标顺序，只把第10页本可留作
+    // FO/低优先事件的牌改为当前最大有效攻势，以执行该轴的下一个合法目标。
+    // 这是对胜负规则的前视约束，不凭空增加目标、战力或合法动作。
+    if (strategy.role === "Allies" && Number(G.political_will) <= 2 && Number(G.pow) > esm_pow_bank()) {
+        const classified = classifyCards(hand, strategy.role)
+        const ec = classified.filter(c => c.military && c.eventPlayable)
+            .sort((a,b)=>b.lv-a.lv||b.ops-a.ops||a.id-b.id)
+        const oc = classified.filter(c => c.opsPlayable)
+            .sort((a,b)=>b.ops-a.ops||Number(a.military)-Number(b.military)||a.id-b.id)
+        const chosen = ec[0] || oc[0]
+        if (chosen) {
+            strategy.powEmergency = { politicalWill: Number(G.political_will), required: Number(G.pow), bank: esm_pow_bank() }
+            const node=ec[0]?(chosen.restricted?"AP10-S-RESTRICTED-EC":"AP10-S-UNRESTRICTED-EC")
+                :(chosen.military&&chosen.restricted?"AP10-S-RESTRICTED-OC":"AP10-S-NONMIL-OC")
+            return esm_set_card_pick(strategy, chosen, ec[0] ? "event" : "ops", node,
+                `盟军PoW紧急攻势:${esm_pow_bank()}/${G.pow}，政治意志${G.political_will}`)
+        }
     }
 
     // 第4/10页是每次出牌都必须重走的独立决策树，不能被当前决策轴的 CONQUEST/EVENT
@@ -1422,6 +1446,7 @@ function esm_trace_of(strategy, privateDetails) {
         focus: eop_focus(strategy.role), chainLen: strategy.chain.length,
         priorityTargets: esm_strategy_targets(strategy),
         goals: goalKinds.length ? goalKinds : undefined,
+        ...(strategy.powEmergency ? { powEmergency: strategy.powEmergency } : {}),
         ...(strategy.eventPhase ? { eventPhase: strategy.eventPhase } : {}),
         ...(diag ? { diag } : {}) }
 }

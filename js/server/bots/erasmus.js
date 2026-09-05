@@ -2,7 +2,7 @@
 /** import server/erasmus_data.js*/
 /** import server/erasmus_state.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.14"
+const ERASMUS_VERSION = "erasmus-v2.0-zh.16"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "delay", "unit", "hex", "strat_move", "ground_move", "roll", "eliminate", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
@@ -143,6 +143,18 @@ function pick_argument(value, seedText, action, view) {
 // 未夺目标, 目标不可达时打离焦点最近的格/单位, 逐步向主轴推进。
 function target_argument(action, value, seedText, role, view, strategy) {
     const prompt = String(view?.prompt || "")
+    // advance 不是无参数的“随便走一步”：把当下图表焦点及目标类型写入回放参数，
+    // 使无头移动在保存/恢复/复盘时不依赖进程内 EOP_OVERRIDE 的瞬时值。
+    if (action === "advance" && esm_gate_on()) {
+        const focus = eop_focus(role)
+        const meta = focus === null ? null : eop_target_meta(role, focus)
+        return {
+            focus,
+            kind: meta?.kind || null,
+            requiresOccupation: !!meta?.requiresOccupation,
+            axisKind: eop_axis(role)?.kind || null,
+        }
+    }
     // 通用: unit 候选里若混入“已选/将被撤销”的 unselect 单位(unselect_unit 塞进来的),
     // 选它只会 toggle 撤销当前选择 → 死循环。先在入口统一剔除, 只留“可新增/可前进”的单位;
     // 若剔除后为空, 交 evaluateChart 的动作级兜底跳过 unit(见 isActivateWindow 上方的通用兜底)。
@@ -206,6 +218,8 @@ function target_argument(action, value, seedText, role, view, strategy) {
         // 完整战役恢复航空兵（航空打击/地面支援所必需）。South Pacific
         // 仍是兼容启发式配置，其交互移动窗没有无头路径参数，继续排除空军。
         if (!esm_gate_on()) pickValue = pickValue.filter(u => { try { return pieces[u] && pieces[u].class !== "air" } catch (e) { return true } })
+        if (role === "Allies" && typeof eop_preserve_ready_b29 === "function")
+            pickValue = pickValue.filter(u => !eop_preserve_ready_b29(u, role))
         // 已激活单位(含本窗已选)传给 eop_pick_unit, 用于两栖登陆护航判定: 敌占港需 ≥1 海军护航。
         const activeUnits = Array.isArray(view?.offensive?.active_units) ? view.offensive.active_units.flat() : []
         if(view?.ai?.windowKind==="reaction"){
@@ -366,6 +380,7 @@ function evaluateChart(chart, view, context) {
         const addable = (Array.isArray(view.actions.unit) ? view.actions.unit : [])
             .filter(u => !unsel.has(u))
             .filter(u => { try { return esm_gate_on() || !pieces[u] || pieces[u].class !== "air" } catch (e) { return true } })
+            .filter(u => { try { return typeof eop_preserve_ready_b29 !== "function" || !eop_preserve_ready_b29(u, context.role) } catch (e) { return true } })
         const selected = progress ? Number(progress[1]) : (view.offensive?.active_units?.flat?.().length || 0)
         // HQ 加成可因新激活单位的军种/区域而下降。提示“2 of 3 (2 + 1)”中的括号前值
         // 才是不会随下一次选择反噬的稳定上限；达到它就结束，避免 2/3→3/2→撤销 的循环。

@@ -1,7 +1,7 @@
 "use strict"
 const assert=require("assert"),fs=require("fs"),path=require("path"),crypto=require("crypto")
 const root=path.resolve(__dirname,".."), doc=JSON.parse(fs.readFileSync(path.join(root,"data/erasmus/charts.json"),"utf8"))
-assert.equal(doc.schema_version,3);assert.equal(doc.policy_version,"erasmus-v2.0-zh.14");assert.equal(doc.charts.length,12)
+assert.equal(doc.schema_version,3);assert.equal(doc.policy_version,"erasmus-v2.0-zh.16");assert.equal(doc.charts.length,12)
 const pdf="D:/downloads/伊拉斯谟v2.0_图表汉化 (1).pdf"
 const hash=crypto.createHash("sha256").update(fs.readFileSync(pdf)).digest("hex")
 for(const c of doc.charts){

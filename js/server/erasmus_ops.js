@@ -270,7 +270,11 @@ function eop_pick_unit(candidates, role, activeUnits) {
         scored.push([u, eop_min_dist(loc, enemyLocs), fd(loc)])
     }
     if (!scored.length) return undefined
-    scored.sort((a, b) => a[1] - b[1] || a[2] - b[2] || a[0] - b[0])
+    // 图表已经给出当前目标时，编队必须先围绕该目标组织；旧排序把“离任意敌军最近”
+    // 放在首键，导致马尼拉为焦点时仍不断激活靠近婆罗洲小据点的单位。只有无明确
+    // 目标（事件/一般前推）时才采用最近敌军排序。
+    if (focusMeta) scored.sort((a, b) => a[2] - b[2] || a[1] - b[1] || a[0] - b[0])
+    else scored.sort((a, b) => a[1] - b[1] || a[2] - b[2] || a[0] - b[0])
     // B: 焦点是敌占格(需“夺占”而非纯消耗)时, 若候选里有“到最近敌军距离”不比最优单位远太多的
     // 两栖地面(海军陆战队 asp / 可战略海运 strat_move), 优先选它组成登陆力量 —— 否则每次
     // 攻势总挑最近敌军的纯空/海军, 只会对岛屿做远距空袭, 永远无法登岛占格。
@@ -278,7 +282,7 @@ function eop_pick_unit(candidates, role, activeUnits) {
     const biasOn = (typeof process === "undefined") || process.env.B_BIAS !== "0"
     if (biasOn && focus !== null && !is_space_controlled(focus, mine)) {
         const refD = scored[0][1]
-        const cap = Math.max(3, refD + 3)
+        const cap = focusMeta ? Infinity : Math.max(3, refD + 3)
         const isGroundLanding = u => { const p = pieces[u]; return p && p.class === "ground" && (p.asp || p.strat_move) }
         // 登陆且已有海军护航时, 优先选与任一已激活海军同格的地面(编成同组一起上岛),
         // 避免海陆分处两格导致地面单独硬登陆。
@@ -349,6 +353,20 @@ function eop_trace(role) {
 function eop_target_meta(role, hex) {
     const axis = eop_axis(role)
     return axis && Array.isArray(axis.targetMeta) ? axis.targetMeta.find(target => target.hex === hex) || null : null
+}
+
+// 已在东京 8 格内盟军机场待命的 B29 是战略轰炸胜利链的必要资产。普通攻势若再次
+// 激活它，无头移动层只能把纯航空编成送回下一回合轨，导致下一战略轰炸阶段缺席。
+// 因此把“已就位且格内无日军”的 B29 从普通激活候选中保护起来。
+function eop_preserve_ready_b29(u, role) {
+    if (role !== "Allies") return false
+    const p = pieces[u], h = G.location[u]
+    if (!p || !p.b29 || !(h >= 0 && h <= LAST_BOARD_HEX)) return false
+    const md = get_map_data(h)
+    if (!md || !md.airfield || !is_space_controlled(h, AP) || get_distance(h, TOKYO) > 8) return false
+    for (let x = 1; x < pieces.length; ++x)
+        if (pieces[x] && pieces[x].faction === JP && G.location[x] === h) return false
+    return true
 }
 
 // Public-view planning interfaces used by the chart executor. They deliberately
@@ -422,7 +440,11 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
     const classRank=u=>f.suppress?({air:0,naval:1,ground:2}[u.class]??3)
         :f.requiresOccupation?(!hasGround?({ground:0,naval:1,air:2}[u.class]??3):(!hasNaval&&landing?({naval:0,air:1,ground:2}[u.class]??3):({air:0,naval:1,ground:2}[u.class]??3)))
         :({air:0,naval:1,ground:2}[u.class]??3)
-    pool.sort((a,b)=>classRank(a)-classRank(b)||cf(b)-cf(a)||a.id-b.id)
+    // 同一兵种先选最靠近当前图表目标者，再比较战力；否则会从本土抽一个高战力但
+    // 本攻势根本到不了菲律宾的陆军，最终形成“高激活、零会战”。
+    const distance=u=>typeof get_distance==="function"&&target!==null&&target!==undefined
+        ?get_distance(u.location,target):99
+    pool.sort((a,b)=>classRank(a)-classRank(b)||distance(a)-distance(b)||cf(b)-cf(a)||a.id-b.id)
     return {complete:false,required:need,strength:math,unit:amphibiousPick??pool[0]?.id,
         formation:landing?"supported-amphibious-assault":f.requiresOccupation?"ground-with-support":"air-sea-strike",
         groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength}

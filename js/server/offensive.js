@@ -937,12 +937,12 @@ P.move_offensive_units = {
     no_move() {
         call("move_to", {hex: G.location[G.active_stack[0]]})
     },
-    advance() {
+    advance(targetPlan) {
         const kind = G.headless_moves && G.active_stack.length === 0 ? headless_stage_kind() : null
         if (!kind) {
             return
         }
-        const r = headless_advance_one(this, kind)
+        const r = headless_advance_one(this, kind, targetPlan)
         if (r.type === "none") {
             this.done()
         }
@@ -1041,10 +1041,14 @@ function headless_units_at(hex, faction) {
 // 第6/12页航空 PBM 六级目标、海上 PBM 三级目标、AA PBM 两级目标。
 // 这里的 candidates 已经过引擎 update_move_hex() 合法性过滤，因此评分只决定图表优先级，
 // 不会绕过航程、地形、控制、叠放或移动规则。
-function erasmus_pbm_target_score(hex, faction, piece, source) {
+function erasmus_pbm_target_score(hex, faction, piece, source, targetPlan) {
     const md=get_map_data(hex), own=headless_units_at(hex,faction), enemy=headless_units_at(hex,1-faction)
     const enemyZoi=typeof has_zoi === "function" && has_zoi(hex,1-faction)
     const dist=typeof get_distance === "function" ? get_distance(source,hex) : Math.abs(source-hex)
+    const hasRecordedPlan=!!targetPlan&&Object.prototype.hasOwnProperty.call(targetPlan,"focus")
+    let focus=targetPlan&&Number.isInteger(targetPlan.focus)?targetPlan.focus:null
+    if(!hasRecordedPlan&&focus===null&&typeof eop_focus_faction==="function")try{focus=eop_focus_faction(faction)}catch(e){focus=null}
+    const goalDist=focus!==null&&typeof get_distance==="function"?get_distance(hex,focus):99
     if (piece.class === "air") {
         if (!md.airfield) return null
         // 脚注[12]/[11]：每机场不超过一个空中单位；当前移动单位原地不计为冲突。
@@ -1059,7 +1063,9 @@ function erasmus_pbm_target_score(hex, faction, piece, source) {
         if (enemyZoi) return [3,-(Number(piece.cf)||0),dist,hex]
         if (own.ground>0 && enemyZoi) return [4,-(Number(piece.cf)||0),dist,hex]
         if (md.resource) return [5,dist,hex]
-        return [6,dist,hex]
+        // 六级表均不命中时才用战略前推作为平分键，避免参战航空每次 PBM 都退回
+        // 最近后方机场；图表列明的 HQ/敌 HQ/AZOI/资源优先级仍严格在它之前。
+        return [6,goalDist,dist,hex]
     }
     if (piece.class === "naval") {
         if (!md.port) return null
@@ -1067,7 +1073,7 @@ function erasmus_pbm_target_score(hex, faction, piece, source) {
         const hqPriority=own.hq>0 && (faction===AP || (md.name||"").toLowerCase().includes("south"))
         if (hqPriority && own.naval-(hex===source?1:0)<=0) return [0,dist,hex]
         if (own.ground>0 && own.naval-(hex===source?1:0)<=0 && own.air===0) return [1,dist,hex]
-        return [2,dist,hex]
+        return [2,goalDist,dist,hex]
     }
     if (piece.class === "ground") {
         if (!md.port) return null
@@ -1077,17 +1083,23 @@ function erasmus_pbm_target_score(hex, faction, piece, source) {
     return null
 }
 
-function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece, source) {
+function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece, source, targetPlan) {
     const eu = headless_enemy_units_at(hex, 1 - faction)
     let strategicFocus = null, strategicMeta = null, strategicAxis = null
-    if (typeof eop_focus_faction === "function") {
+    if (targetPlan && Object.prototype.hasOwnProperty.call(targetPlan,"focus")) {
+        strategicFocus = Number.isInteger(targetPlan.focus) ? targetPlan.focus : null
+        strategicMeta = strategicFocus === null ? null : targetPlan
+        strategicAxis = { kind: targetPlan.axisKind || null }
+    } else if (typeof eop_focus_faction === "function") {
         try {
             strategicFocus = eop_focus_faction(faction)
             strategicMeta = strategicFocus === null ? null : eop_target_meta(faction === JP ? "Japan" : "Allies", strategicFocus)
             strategicAxis = eop_axis(faction === JP ? "Japan" : "Allies")
         } catch (e) { strategicFocus = strategicMeta = strategicAxis = null }
     }
-    const approach = steer && typeof eop_advance_tiebreak === "function" ? eop_advance_tiebreak(hex, faction) : -1
+    const approach = steer && strategicFocus !== null
+        ? get_distance(hex, strategicFocus)
+        : steer && typeof eop_advance_tiebreak === "function" ? eop_advance_tiebreak(hex, faction) : -1
     const nearKey = hex => approach >= 0 ? approach : headless_nearest_enemy_dist(hex, 1 - faction)
     if (kind === "attack") {
         // 最终国防圈不是进攻目标表：只向己控驻军焦点移动；不可达时仅在己控格内
@@ -1107,6 +1119,13 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
         }
         // GARRISON/DEFEND 显式战略即使暂时无焦点，也不得使用通用远征目标。
         if (strategicAxis && (strategicAxis.kind === "GARRISON" || strategicAxis.kind === "DEFEND")) return null
+        // 决策轴的当前目标是硬优先级，不是距离平分键。旧逻辑先比较守军数量，导致
+        // 马尼拉可达时仍把登陆编队送往守军更弱的婆罗洲/小岛。占领目标必须有地面
+        // 单位；压制目标则允许空海编队。其余可达目标只在当前编队到不了焦点时接手。
+        if (strategicMeta && hex === strategicFocus) {
+            if (strategicMeta.requiresOccupation && !hasGround) return null
+            return [-2, eu.ground, eu.count, hex]
+        }
         if (eu.count > 0) {
             if (hasGround) return [0, eu.ground, eu.count, nearKey(hex), hex]
             if (eu.naval > 0) return [0, eu.naval, eu.count, nearKey(hex), hex]
@@ -1139,7 +1158,7 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
     }
     // PBM 严格使用双方图表的专属落点表；无匹配落点才用安全/距离次序，且会在轨迹中
     // 落到具体 JP06/AP12 PBM 节点，不再伪装成通用 reaction 排序。
-    const chartScore=movingPiece&&source!==undefined?erasmus_pbm_target_score(hex,faction,movingPiece,source):null
+    const chartScore=movingPiece&&source!==undefined?erasmus_pbm_target_score(hex,faction,movingPiece,source,targetPlan):null
     if(chartScore)return chartScore
     const controlled = is_space_controlled(hex, faction)
     return [20,eu.count > 0 ? 2 : (controlled ? 0 : 1),eu.count,source===undefined?0:get_distance(source,hex),hex]
@@ -1168,7 +1187,7 @@ function headless_advance_has_candidates(kind) {
 
 // 尝试推进/收拢一个编成(同一格未移动、非空中可移动单位)。调用方在空 active_stack 下进入。
 // 返回 {type:"move"} 已排定一次移动(子窗随后运行), {type:"decline"} 放弃一组单位, {type:"none"} 无候选。
-function headless_advance_one(self, kind) {
+function headless_advance_one(self, kind, targetPlan) {
     if (G.active_stack.length) return { type: "decline" }
     const need = u => {
         const p = pieces[u]
@@ -1207,11 +1226,13 @@ function headless_advance_one(self, kind) {
     L.move_data = get_move_data()
     update_move_hex()
     const hasGround = group.some(u => pieces[u] && pieces[u].class === "ground")
-    // 仅攻击阶段、且该编成含 naval(能海运/两栖)时才朝主轴焦点转向; 纯地面走原就近逻辑。
-    const steer = kind === "attack" && group.some(u => pieces[u] && pieces[u].class === "naval")
+    // 记录在 advance 参数中的明确图表目标同样约束纯地面前推（例如仰光/印度陆路）。
+    // 没有显式目标时仍仅让可跨海编成使用旧主轴转向，避免普通地面部队无目的横穿大陆。
+    const steer = kind === "attack" && ((targetPlan && Number.isInteger(targetPlan.focus))
+        || group.some(u => pieces[u] && pieces[u].class === "naval"))
     let best = null, bestScore = null
     map_for_each(L.allowed_hexes, (h) => {
-        const sc = headless_target_score(h, hasGround, G.active, kind, steer, leadPiece, loc)
+        const sc = headless_target_score(h, hasGround, G.active, kind, steer, leadPiece, loc, targetPlan)
         if (!sc) return
         if (!best || headless_score_lt(sc, bestScore)) {
             bestScore = sc
@@ -1224,7 +1245,9 @@ function headless_advance_one(self, kind) {
         // 格)时, 原实现直接放弃该组 → 海军陆战队永远停在原地, 无法把跨洋远征拉近目标;
         // 这里改向“离焦点最近的合法落点”移动一格(逐激活/逐回合推进), 使登岛链条得以闭合。
         let foc = null
-        if (typeof eop_focus_faction === "function") { try { foc = eop_focus_faction(G.active) } catch (e) { foc = null } }
+        if (targetPlan && Object.prototype.hasOwnProperty.call(targetPlan,"focus"))
+            foc = Number.isInteger(targetPlan.focus) ? targetPlan.focus : null
+        else if (typeof eop_focus_faction === "function") { try { foc = eop_focus_faction(G.active) } catch (e) { foc = null } }
         if (foc !== null && foc >= 0 && foc <= LAST_BOARD_HEX && typeof get_distance === "function") {
             let appr = null, apprD = Infinity
             map_for_each(L.allowed_hexes, (h) => {

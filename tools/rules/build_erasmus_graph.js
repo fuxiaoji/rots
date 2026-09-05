@@ -12,7 +12,7 @@ const charts = files.map(filename => JSON.parse(fs.readFileSync(path.join(pageDi
 
 const document = {
 	schema_version: 3,
-	policy_version: "erasmus-v2.0-zh.14",
+	policy_version: "erasmus-v2.0-zh.16",
 	source: "伊拉斯谟v2.0_图表汉化 (1).pdf",
 	charts,
 }
