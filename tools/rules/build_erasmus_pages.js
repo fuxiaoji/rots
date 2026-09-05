@@ -89,9 +89,19 @@ for(const d of defs.sort((a,b)=>a.page-b.page)){
  const nodes=[{id:`${d.prefix}-START`,type:"start",edges:[{when:"always",to:d.nodes[0].id}]},...d.nodes,{id:`${d.prefix}-FALLBACK`,type:"fallback",allowed_actions:["pass","skip"],reason:"图表出口均不合法"},{id:`${d.prefix}-END`,type:"terminal"}]
  for(const n of nodes){n.confidence="confirmed";n.source_page=d.page;n.visual_region={x:0,y:0,width:1,height:1,units:"page_fraction"};for(const e of n.edges||[]){if(e.to==="END")e.to=`${d.prefix}-END`;if(e.to==="FALLBACK")e.to=`${d.prefix}-FALLBACK`}}
  const chart={schema_version:3,id:d.id,chart_id:d.id,role:d.role,phase:d.phase,kind:d.kind,source_page:d.page,source:{pdf:path.basename(pdf),absolute_path:pdf,page:d.page,sha256:sha},nodes,strategies:[...new Set(nodes.flatMap(n=>n.strategy?[n.strategy]:(n.strategies||[]).map(x=>x.id)))],dice_tables:nodes.filter(n=>n.type==="dice").map(n=>({id:n.table_id,sides:n.sides,ranges:n.ranges,source_page:d.page})),qa:{inferred_nodes:[],visual_review_required:false,verified_from_visual:true}}
+ if(d.page===1){
+  const resource=chart.nodes.find(n=>n.id==="JP01-S-AGGRESSIVE-RESOURCE")
+  resource.execution={strategy_name_zh:"激进的南方资源战略",target_tables:{dei_surrender:{label_zh:"东印度投降",groups:[
+   {priority:1,targets:["Balikpapan","Tarakan"]},
+   {priority:2,targets:["Batavia"],condition:"NO_OTHER_JP_GROUND_ON_JAVA",note_zh:"如果爪哇岛上没有其他日本地面部队，则占领[6]"},
+   {priority:3,targets:["Tjilatjap","Soerabaja"]},
+   {priority:4,targets:["Bangka","Palembang","Medan"]},
+  ]}}}
+ }
  fs.writeFileSync(path.join(out,`page-${String(d.page).padStart(2,"0")}.json`),JSON.stringify(chart,null,2)+"\n")
  const rows=nodes.map(n=>`| ${n.id} | ${n.type}${n.predicate?` / ${n.predicate.id}`:""} | ${(n.edges||[]).map(e=>`${e.when}→${e.to}`).join("；")||"-"} |`).join("\n")
- fs.writeFileSync(path.join(docs,`page-${String(d.page).padStart(2,"0")}.md`),`# ${d.id}\n\n- 来源：${path.basename(pdf)}，第 ${d.page} 页\n- SHA-256：${sha||"SOURCE_NOT_PRESENT"}\n- 状态：逐页视觉确认（2026-09-04）\n\n| 节点 | 类型/谓词 | 出边 |\n|---|---|---|\n${rows}\n`)
+ const page1Targets=d.page===1?`\n## 激进的南方资源战略：东印度投降\n\n1. Balikpapan、Tarakan\n2. Batavia（爪哇岛没有其他日本地面部队时才占领，[6]）\n3. Tjilatjap、Soerabaja\n4. Bangka、Palembang、Medan\n\n本表与“压制东印度（Jolo、Makassar、Teloekbetoeng、Bandjermasin）”是两个不同目标表，不得混用。\n`:""
+ fs.writeFileSync(path.join(docs,`page-${String(d.page).padStart(2,"0")}.md`),`# ${d.id}\n\n- 来源：${path.basename(pdf)}，第 ${d.page} 页\n- SHA-256：${sha||"SOURCE_NOT_PRESENT"}\n- 状态：逐页视觉确认（2026-09-04）\n\n| 节点 | 类型/谓词 | 出边 |\n|---|---|---|\n${rows}\n${page1Targets}`)
 }
 fs.writeFileSync(path.join(out,"README.md"),`# 伊拉斯谟 v2.0 权威逐页数据\n\n12 页均由 PDF 视觉逐页核验；运行时不得从提示文本重建图表。PDF SHA-256：${sha||"SOURCE_NOT_PRESENT"}\n`)
 console.log(`Generated ${defs.length} verified Erasmus charts`)

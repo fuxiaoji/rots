@@ -1141,6 +1141,12 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
         : steer && typeof eop_advance_tiebreak === "function" ? eop_advance_tiebreak(hex, faction) : -1
     const nearKey = hex => approach >= 0 ? approach : headless_nearest_enemy_dist(hex, 1 - faction)
     if (kind === "attack") {
+        // 盟军开局的事件/撤退战略可能没有地图焦点。旧的通用“最近敌军”退化会让
+        // 夏威夷舰机跨海选择日本本土，形成图表外自杀攻势。只有当前实际战略焦点
+        // 本身位于日本区域时，盟军才可把日本本土列为战斗格。
+        const targetMd = get_map_data(hex)
+        const focusMd = strategicFocus !== null ? get_map_data(strategicFocus) : null
+        if (faction === AP && targetMd && targetMd.region === "Japan" && (!focusMd || focusMd.region !== "Japan")) return null
         // 航空单位可从战斗格外参战。若后方基地不在目标战斗航程内，本次攻势先把
         // 它移动到更靠前的合法机场；到达后 choose_attack_hex 仍按 br/ebr 决定能否
         // 承诺到会战，不绕过任何移动或战斗航程检查。

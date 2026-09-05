@@ -96,6 +96,55 @@ const vm = require("vm")
     assert.equal(sandbox.api.preserve(5, "Japan"), false)
 }
 
+// 盟军远后方 HQ 上的航空兵若连“移动一次+战斗航程”都够不到当前目标，不得为凑满
+// 激活上限反复出动再 PBM 回原地；目标进入两倍扩展航程后应恢复为合法候选。
+{
+    const pieces = []
+    pieces[1] = { faction: 1, class: "air", ebr: 4 }
+    pieces[2] = { faction: 1, class: "hq" }
+    const sandbox = {
+        JP: 0, AP: 1, LAST_BOARD_HEX: 100, pieces,
+        G: { location: [0, 10, 10] },
+        get_distance(a,b) { return Math.abs(a-b) },
+    }
+    vm.createContext(sandbox)
+    const source = fs.readFileSync(path.join(__dirname, "..", "js", "server", "erasmus_ops.js"), "utf8")
+    vm.runInContext(source + ";this.api={rear:eop_preserve_rear_air};", sandbox)
+    assert.equal(sandbox.api.rear(1, "Allies", 30), true)
+    assert.equal(sandbox.api.rear(1, "Allies", 18), false)
+    assert.equal(sandbox.api.rear(1, "Japan", 30), false)
+}
+
+// 美国舰队补员不应被缅甸地面战线吸到仰光；非 CBI 战略有合法太平洋港时应放在
+// 当前图表焦点附近。战争进程前视也只能使用当前图表链，不得扫描全图制造目标。
+{
+    const pieces = []
+    pieces[1] = { faction: 1, class: "naval", rptype: "us_navy" }
+    const map = {
+        10: { name: "Rangoon", region: "Burma", port: true },
+        40: { name: "Noumea", region: "Pacific", port: true },
+        50: { name: "Guadalcanal", region: "Pacific", port: true },
+        60: { name: "Harbin", region: "Manchuria", resource: true },
+    }
+    const sandbox = {
+        JP: 0, AP: 1, LAST_BOARD_HEX: 100, TOKYO: 90, CHINA_BOX: 101, pieces,
+        G: { turn: 6, pow: 4, capture: [], location: [0, 1] },
+        get_map_data(h) { return map[h] || {} },
+        get_distance(a,b) { return Math.abs(a-b) },
+        is_space_controlled(h,f) { return f === 0 && (h === 50 || h === 60) },
+        is_controllable_hex(h) { return h === 50 || h === 60 },
+        eop_focus() { return 50 },
+        esm_pow_bank() { return 2 },
+    }
+    vm.createContext(sandbox)
+    const source = fs.readFileSync(path.join(__dirname, "..", "js", "server", "erasmus_state.js"), "utf8")
+    vm.runInContext(source + ";this.api={place:esm_pick_placement,progress:esm_ap_progress_targets};", sandbox)
+    assert.equal(sandbox.api.place([10, 40], "Allies", 1, pieces[1]), 40,
+        "美国舰队应去太平洋焦点附近，而非被仰光吸走")
+    assert.deepEqual(Array.from(sandbox.api.progress([50], [{ hex: 50, objective: "图表夺岛" }])).map(x=>x.hex), [50],
+        "PoW 前视不得把全图哈尔滨等非图表目标插入队首")
+}
+
 // 明确图表目标必须压过“离任意敌军最近”的通用偏好。马尼拉为焦点时，应选更靠近
 // 马尼拉的两栖地面，而不是靠近婆罗洲弱敌的远方单位。
 {
@@ -204,12 +253,28 @@ const vm = require("vm")
     ] } }
     assert.equal(sandbox.api.hq(hqView, [10, 11], "Japan"), 11,
         "范围内没有兵力的 HQ 不得压过可实际启动单位的 HQ")
+
+    const alliedHqView = { ai: { focus: 20, units: [
+        { id: 20, name: "Central Pacific HQ", faction: 1, class: "hq", location: 2, cr: 25, cm: 3 },
+        { id: 21, name: "South West Pacific HQ", faction: 1, class: "hq", location: 3, cr: 20, cm: 2 },
+        { id: 22, name: "US Army", faction: 1, class: "ground", location: 5, cf: 9 },
+    ] } }
+    sandbox.api.set("Allies", { name: "重返菲律宾", chain: [20], targetMeta: [{ hex: 20, kind: "CONQUEST" }] })
+    assert.equal(sandbox.api.hq(alliedHqView, [20, 21], "Allies"), 21,
+        "中文战略名必须正确选择图表指定的 SW Pacific HQ")
     sandbox.api.set("Japan", { name: "多目标", chain: [20, 30], targetMeta: [
         { hex: 20, kind: "CONQUEST", requiresOccupation: true },
         { hex: 30, kind: "CONQUEST", requiresOccupation: true },
     ] })
     assert.equal(sandbox.api.next(0, [20]).hex, 30,
         "首要目标已宣战后，下一任务部队必须沿图表链转向第二目标")
+}
+
+// 无图表日本本土目标时，盟军通用攻击排序必须禁止开局自杀式远征。
+{
+    const source = fs.readFileSync(path.join(__dirname, "..", "js", "server", "offensive.js"), "utf8")
+    assert.match(source, /faction === AP && targetMd && targetMd\.region === "Japan"/)
+    assert.match(source, /focusMd\.region !== "Japan"/)
 }
 
 console.log("Erasmus card-tree and task-force hotfix tests passed")

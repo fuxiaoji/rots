@@ -413,6 +413,46 @@
         "width": 1,
         "height": 1,
         "units": "page_fraction"
+      },
+      "execution": {
+        "strategy_name_zh": "激进的南方资源战略",
+        "target_tables": {
+          "dei_surrender": {
+            "label_zh": "东印度投降",
+            "groups": [
+              {
+                "priority": 1,
+                "targets": [
+                  "Balikpapan",
+                  "Tarakan"
+                ]
+              },
+              {
+                "priority": 2,
+                "targets": [
+                  "Batavia"
+                ],
+                "condition": "NO_OTHER_JP_GROUND_ON_JAVA",
+                "note_zh": "如果爪哇岛上没有其他日本地面部队，则占领[6]"
+              },
+              {
+                "priority": 3,
+                "targets": [
+                  "Tjilatjap",
+                  "Soerabaja"
+                ]
+              },
+              {
+                "priority": 4,
+                "targets": [
+                  "Bangka",
+                  "Palembang",
+                  "Medan"
+                ]
+              }
+            ]
+          }
+        }
       }
     },
     {

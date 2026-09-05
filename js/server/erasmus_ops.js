@@ -426,6 +426,27 @@ function eop_preserve_ready_b29(u, role) {
     return true
 }
 
+// 防止“夏威夷航空兵折返跑”。若一支盟军航空兵仍在有 HQ 的远后方基地，而当前
+// 图表目标超出它本次移动后仍可投入战斗的范围，激活它不会给当前任务部队增加
+// 战力；移动器随后只能把它送回原基地，白白消耗激活点。这里仅排除这种不可达
+// 候选，不阻止它在目标进入可达范围后出击，也不影响 B29 专用保护。
+function eop_preserve_rear_air(u, role, target) {
+    if (role !== "Allies" || !Number.isInteger(target)) return false
+    const p = pieces[u], h = G.location[u]
+    if (!p || p.class !== "air" || !(h >= 0 && h <= LAST_BOARD_HEX)) return false
+    let hasHq = false
+    for (let x = 1; x < pieces.length; ++x) {
+        if (pieces[x] && pieces[x].faction === AP && pieces[x].class === "hq" && G.location[x] === h) {
+            hasHq = true
+            break
+        }
+    }
+    if (!hasHq) return false
+    const extended = Math.max(1, Number(p.ebr) || Number(p.br) || 1)
+    // 一次航空移动最多把距离缩短 extended；随后还须在 extended 内支援会战。
+    return get_distance(h, target) > extended * 2
+}
+
 // Public-view planning interfaces used by the chart executor. They deliberately
 // consume view.ai/public legal candidates rather than the mutable game state.
 function evaluateTargetFeasibility(target, card, hq, view) {
@@ -489,6 +510,9 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
         formation:landing?"supported-amphibious-assault":f.suppress?"air-sea-strike":"minimum-sufficient",
         groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
     let pool=(candidates||[]).map(id=>byId.get(id)).filter(Boolean)
+    pool=pool.filter(u=>{
+        try{return typeof eop_preserve_rear_air!=="function"||!eop_preserve_rear_air(u.id,role,target)}catch(e){return true}
+    })
     // 第5/11页脚注：非本土/非印度 HQ 与地面单位同格时，至少保留一个未激活地面单位守卫 HQ。
     pool=pool.filter(u=>{
         if(u.class!=="ground")return true
@@ -519,7 +543,14 @@ function selectOperationalHq(view,candidates,role){
     if(!Array.isArray(candidates)||!candidates.length)return undefined
     const byId=new Map((view?.ai?.units||[]).map(u=>[u.id,u])),focus=view?.ai?.focus
     const axis=eop_axis(role),name=String(axis?.id||axis?.note||"").toLowerCase()
-    const preferred=role==="Allies"?(name.includes("cbi")?/seac/i:name.includes("dei")||name.includes("philipp")?/south west/i:name.includes("south pacific")?/south pacific/i:/central pacific/i)
+    // axis.id 主要是中文战略名。旧代码只识别英文，结果除 CBI/DEI 等英文偶合外
+    // 几乎总落入 Central Pacific HQ，令其它 HQ 闲置、兵力看似“指挥部太后”。
+    const preferred=role==="Allies"?(
+        /(cbi|中缅印)/i.test(name)?/seac/i:
+        /(dei|东印度|菲律宾|重返)/i.test(name)?/south west/i:
+        /(南太平洋)/i.test(name)?/(south pacific|anzac|south west)/i:
+        /(中太平洋|跳岛|轰炸|b29|登陆日本)/i.test(name)?/central pacific/i:
+        /(印度|缅甸)/i.test(name)?/seac/i:/central pacific|south west/i)
         :(name.includes("cbi")||name.includes("india")?/south hq/i:name.includes("central")?/combined fleet/i:/south hq|south seas/i)
     const mine=role==="Japan"?JP:AP
     const commandable=id=>{const hq=byId.get(id);if(!hq)return 0

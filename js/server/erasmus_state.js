@@ -536,6 +536,42 @@ function esm_jp_hq_suppression_targets() {
     return targets
 }
 
+// 第1页“激进的南方资源战略”中的东印度投降目标不是“压制东印度”目标表。
+// 两者过去都被扁平化成一串 hex，日志很难证明层级，而且 Batavia 的脚注[6]
+// 没有执行。这里保存图表的四级顺序，并把条件证据写入目标元数据。
+function esm_jp_dei_surrender_targets() {
+    const groupNames = [
+        ["Balikpapan", "Tarakan"],
+        ["Batavia"],
+        ["Tjilatjap", "Soerabaja"],
+        ["Bangka", "Palembang", "Medan"],
+    ]
+    const batavia = esm_idx("Batavia")
+    let otherJapaneseGroundOnJava = false
+    for (let u = 1; u < pieces.length; ++u) {
+        const h = G.location[u], p = pieces[u]
+        if (!p || p.faction !== JP || p.class !== "ground" || h === batavia || !(h >= 0 && h <= LAST_BOARD_HEX)) continue
+        const md = get_map_data(h)
+        if (md && md.region === "Java") { otherJapaneseGroundOnJava = true; break }
+    }
+    const out = []
+    for (let group = 0; group < groupNames.length; ++group) {
+        for (const name of groupNames[group]) {
+            const hex = esm_idx(name)
+            if (!Number.isInteger(hex) || !(hex >= 0 && hex <= LAST_BOARD_HEX)) continue
+            const conditional = name === "Batavia"
+            if (conditional && otherJapaneseGroundOnJava) continue
+            out.push({ hex, kind: "CONQUEST", requiresOccupation: true, damageLevel: 1,
+                objective: `${group + 1}. 东印度投降：${groupNames[group].join(", ")}`,
+                targetGroup: group + 1, targetInGroup: groupNames[group].indexOf(name) + 1,
+                condition: conditional ? "NO_OTHER_JP_GROUND_ON_JAVA" : null,
+                conditionResult: conditional ? !otherJapaneseGroundOnJava : true,
+                ruleNote: conditional ? "[6] 爪哇岛没有其他日本地面部队时才占领 Batavia" : null })
+        }
+    }
+    return out
+}
+
 function esm_front_distance(hex, faction) {
     let best = 99
     for (let u = 1; u < pieces.length; ++u) {
@@ -589,9 +625,13 @@ function esm_ap_progress_targets(existingChain, existingMeta) {
         return h >= 0 && h <= LAST_BOARD_HEX && is_space_controlled(h, JP) && is_controllable_hex(h) &&
             !!(md && (md.name || md.resource || md.port || md.airfield))
     }
+    // 16.47 只规定盟军必须取得战争进程，并不授权 CDSS 脱离当前决策轴去全图
+    // 搜索“最近/最弱”的任意计分格。旧实现的第二个循环会把哈尔滨、奉天、仰光
+    // 甚至日本近海随机岛屿插入中太平洋/南太平洋链，直接造成兵力分散。进程前视
+    // 现在只能重排本次图表已经列出的目标；没有轴目标时保持空，让选牌/事件流程
+    // 正常结束，而不是制造一个图表外攻势。
     const candidates = []
-    for (const h of existingChain || []) if (eligible(h)) candidates.push(h)
-    for (let h = 0; h <= LAST_BOARD_HEX; ++h) if (eligible(h) && !candidates.includes(h)) candidates.push(h)
+    for (const h of existingChain || []) if (eligible(h) && !candidates.includes(h)) candidates.push(h)
     const defense = h => {
         let n = 0
         for (let u = 1; u < pieces.length; ++u) if (pieces[u] && pieces[u].faction === JP && G.location[u] === h)
@@ -604,8 +644,7 @@ function esm_ap_progress_targets(existingChain, existingMeta) {
         // 可到达的近程计分格，否则“高优先级但不可达”会连续耗牌并导致条约谈判败。
         Number(esm_front_distance(a, AP) > 6) - Number(esm_front_distance(b, AP) > 6)
         || (G.turn >= 9 ? Number(!get_map_data(a).resource) - Number(!get_map_data(b).resource) : 0)
-        // PoW 生存前视只能在当前决策轴内重排可执行目标；旧排序先挑全图最弱空岛，
-        // 把中太平洋/DEI/CBI 主攻群拆散。图表链目标必须先于补充计分格。
+        // 候选已严格限定在当前图表链；chainSet 保留为审计防线。
         || Number(!chainSet.has(a)) - Number(!chainSet.has(b))
         || defense(a) - defense(b)
         || esm_front_distance(a, AP) - esm_front_distance(b, AP) || a - b)
@@ -1173,6 +1212,18 @@ function esm_pin_strategy(view, context) {
         chain = dynamicTargets.map(target => target.hex).concat(chain.filter(h => !dynamicTargets.some(target => target.hex === h)))
         const dynamicHexes = new Set(dynamicTargets.map(target => target.hex))
         targetMeta = dynamicTargets.concat(targetMeta.filter(target => !dynamicHexes.has(target.hex)))
+    }
+    if (role === "Japan" && name === "激进的南方资源战略") {
+        const allDeiNames = ["Balikpapan", "Tarakan", "Batavia", "Tjilatjap", "Soerabaja", "Bangka", "Palembang", "Medan"]
+        const allDei = new Set(allDeiNames.map(esm_idx).filter(Number.isInteger))
+        const exactDei = esm_jp_dei_surrender_targets()
+        const first = chain.findIndex(h => allDei.has(h))
+        const withoutDei = chain.filter(h => !allDei.has(h))
+        const at = first < 0 ? withoutDei.length : Math.min(first, withoutDei.length)
+        chain = withoutDei.slice(0, at).concat(exactDei.map(x => x.hex), withoutDei.slice(at))
+        targetMeta = targetMeta.filter(x => !allDei.has(x.hex)).concat(exactDei)
+        const order = new Map(chain.map((h, i) => [h, i]))
+        targetMeta.sort((a, b) => (order.get(a.hex) ?? 9999) - (order.get(b.hex) ?? 9999))
     }
     // 投降完成度只做审计，不覆盖第1页实际选出的空优、资源或事件战略。
     const openingSurrenderPlan = role === "Japan" && G.turn <= 4 ? {
@@ -1838,6 +1889,21 @@ function esm_placement_score(h, piece, enemy) {
     return d * 10
 }
 
+function esm_ap_forward_focus() {
+    try {
+        if (typeof eop_focus === "function") {
+            const h = eop_focus("Allies")
+            if (Number.isInteger(h) && h >= 0 && h <= LAST_BOARD_HEX) return h
+        }
+    } catch (e) { /* 无已钉住战略时沿用通常落位 */ }
+    return null
+}
+
+function esm_is_cbi_hex(h) {
+    const md = get_map_data(h) || {}
+    return /^(India|Burma|China)$/i.test(String(md.region || ""))
+}
+
 // CDSS 增援/补员落位入口: 在 candidates(引擎已滤成合法落点)内挑 CDSS 优先级最优者。
 function esm_pick_placement(candidates, role, unit, piece) {
     if (!Array.isArray(candidates) || !candidates.length) return undefined
@@ -1865,6 +1931,21 @@ function esm_pick_placement(candidates, role, unit, piece) {
     }
 
     const enemy = esm_enemy_locs(faction)
+    // 美国海军补员过去按“离任意敌军最近的港口”落位。缅甸地面战线密集，导致
+    // 航母群被吸到仰光，既不符合中/南太平洋 CDSS 主轴，也很难再参与夺岛。
+    // 美国海军只在当前战略确实以 CBI 为焦点时进入 CBI；其余时候优先当前图表
+    // 焦点附近的非 CBI 港。英联邦舰队仍可按原规则支援印度/缅甸。
+    if (faction === AP && piece.class === "naval" && piece.rptype === "us_navy") {
+        const focus = esm_ap_forward_focus()
+        const focusIsCbi = focus !== null && esm_is_cbi_hex(focus)
+        return esm_pick_nearest(candidates, h => {
+            const md = get_map_data(h) || {}
+            const theaterPenalty = !focusIsCbi && esm_is_cbi_hex(h) ? 100000 : 0
+            const portPenalty = md.port ? 0 : 50000
+            const focusDistance = focus !== null ? get_distance(h, focus) : esm_min_dist(h, enemy.any)
+            return theaterPenalty + portPenalty + focusDistance * 100 + h
+        })
+    }
     return esm_pick_nearest(candidates, h => esm_placement_score(h, piece, enemy))
 }
 

@@ -1,0 +1,2410 @@
+{
+  "generatedAt": "2026-09-05T13:13:12.809Z",
+  "tally": {
+    "policy": "erasmus-v2.0-zh.22",
+    "scenario": "1942-1945 (The Shortened Campaign)",
+    "gameCount": 1,
+    "baseSeed": 20260903,
+    "maxActions": 60000,
+    "headless_moves": true,
+    "complete": 1,
+    "japanWins": 1,
+    "alliesWins": 0,
+    "otherWins": 0,
+    "errors": 0,
+    "setupErrors": 0,
+    "actionLimit": 0,
+    "fallback": 0,
+    "groundMove": 12,
+    "capturedAP": 4,
+    "capturedJP": 3,
+    "atomicBombWins": 0,
+    "role": {
+      "Japan": {
+        "decisions": 929,
+        "byKind": {
+          "axis": 95,
+          "card": 74,
+          "taskforce": 458,
+          "reaction": 302,
+          "?": 0
+        },
+        "airStrikeUnits": 1,
+        "airStrikeHexes": 1,
+        "fire": 62,
+        "advance": 177,
+        "hqActivations": 0
+      },
+      "Allies": {
+        "decisions": 1151,
+        "byKind": {
+          "axis": 68,
+          "card": 96,
+          "taskforce": 646,
+          "reaction": 341,
+          "?": 0
+        },
+        "airStrikeUnits": 8,
+        "airStrikeHexes": 8,
+        "fire": 71,
+        "advance": 212,
+        "hqActivations": 0
+      }
+    },
+    "noBattleHex": 30,
+    "unexplainedNoBattle": 0,
+    "traceNodeMissing": 0,
+    "strategyCounts": {
+      "Japan/early/保守的空优战略": 7,
+      "Allies/early/撤离马来亚": 2,
+      "Allies/early/建立ABDA": 4,
+      "Allies/early/事件战略": 2,
+      "Japan/early/激进的空优战略": 2,
+      "Japan/late/最终国防圈战略": 14,
+      "Allies/late/PASS": 1,
+      "Allies/late/推进B29": 26,
+      "Japan/late/事件战略": 14,
+      "Allies/late/事件战略": 13
+    },
+    "victoryPlanCounts": {}
+  },
+  "perGame": [
+    {
+      "seed": 20260903,
+      "winner": "Japan",
+      "actions": 2080,
+      "turn": 8,
+      "fallback": 0,
+      "noBattleHex": 30,
+      "unexplainedNoBattle": 0,
+      "traceNodeMissing": 0,
+      "strategyCounts": {
+        "Japan/early/保守的空优战略": 7,
+        "Allies/early/撤离马来亚": 2,
+        "Allies/early/建立ABDA": 4,
+        "Allies/early/事件战略": 2,
+        "Japan/early/激进的空优战略": 2,
+        "Japan/late/最终国防圈战略": 14,
+        "Allies/late/PASS": 1,
+        "Allies/late/推进B29": 26,
+        "Japan/late/事件战略": 14,
+        "Allies/late/事件战略": 13
+      },
+      "victoryPlanCounts": {},
+      "groundMove": 12,
+      "capturedAP": 4,
+      "capturedJP": 3,
+      "politicalWill": 0,
+      "powRequired": 4,
+      "powBank": 0,
+      "surrender": {
+        "philippines": true,
+        "malaya": true,
+        "dei": false,
+        "burma": false,
+        "japan": false
+      },
+      "role": {
+        "Japan": {
+          "decisions": 929,
+          "byKind": {
+            "axis": 95,
+            "card": 74,
+            "taskforce": 458,
+            "reaction": 302,
+            "?": 0
+          },
+          "airStrikeUnits": 1,
+          "airStrikeHexes": 1,
+          "fire": 62,
+          "advance": 177,
+          "hqActivations": 0
+        },
+        "Allies": {
+          "decisions": 1151,
+          "byKind": {
+            "axis": 68,
+            "card": 96,
+            "taskforce": 646,
+            "reaction": 341,
+            "?": 0
+          },
+          "airStrikeUnits": 8,
+          "airStrikeHexes": 8,
+          "fire": 71,
+          "advance": 212,
+          "hqActivations": 0
+        }
+      },
+      "won_text": "Japanese Victory by Treaty Negotiations",
+      "closestAdvance": {
+        "alliedUnit": {
+          "unit": 118,
+          "hex": 909,
+          "distance": 6,
+          "turn": 4
+        },
+        "alliedControlledHex": {
+          "hex": 909,
+          "distance": 6,
+          "name": "Marcus",
+          "turn": 4
+        },
+        "b29": null
+      },
+      "atomicBest": {
+        "met": false,
+        "turn": 2,
+        "noStrategicBombingFailure": true,
+        "bombingCampaignStart": 0,
+        "bombingRequiredFromTurn": 9,
+        "sovietOccurred": false,
+        "sovietCardId": 79,
+        "sovietInHand": false,
+        "sovietPlayable": false,
+        "sovietReady": false,
+        "jpResources": 4,
+        "jpResourceHexes": [
+          669,
+          670,
+          672,
+          421
+        ],
+        "resourceLimit": 5,
+        "resourcesSatisfied": true
+      },
+      "finalAtomic": {
+        "met": false,
+        "turn": 8,
+        "noStrategicBombingFailure": true,
+        "bombingCampaignStart": 0,
+        "bombingRequiredFromTurn": 9,
+        "sovietOccurred": false,
+        "sovietCardId": 79,
+        "sovietInHand": false,
+        "sovietPlayable": false,
+        "sovietReady": false,
+        "jpResources": 7,
+        "jpResourceHexes": [
+          304,
+          669,
+          670,
+          672,
+          535,
+          245,
+          421
+        ],
+        "resourceLimit": 5,
+        "resourcesSatisfied": false
+      },
+      "strategyLog": [
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离马来亚",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离马来亚",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "建立ABDA",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "激进的空优战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "建立ABDA",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "激进的空优战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "建立ABDA",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "建立ABDA",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 647,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 3,
+              "hex": 673,
+              "id": 3306,
+              "name": "Pusan",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 4,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 6,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 7,
+              "hex": 731,
+              "id": 3506,
+              "name": "Kyoto",
+              "distanceToTokyo": 2
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 672,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 672,
+              "id": 3305,
+              "name": "Seoul",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 6,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 7,
+              "hex": 731,
+              "id": 3506,
+              "name": "Kyoto",
+              "distanceToTokyo": 2
+            },
+            {
+              "priority": 8,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 9,
+              "hex": 703,
+              "id": 3407,
+              "name": "Kure",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 792,
+          "priorityTargets": [
+            {
+              "priority": 6,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 7,
+              "hex": 731,
+              "id": 3506,
+              "name": "Kyoto",
+              "distanceToTokyo": 2
+            },
+            {
+              "priority": 8,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 9,
+              "hex": 703,
+              "id": 3407,
+              "name": "Kure",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 11,
+              "hex": 732,
+              "id": 3507,
+              "name": "Osaka",
+              "distanceToTokyo": 2
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 909,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 647,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 7,
+              "hex": 731,
+              "id": 3506,
+              "name": "Kyoto",
+              "distanceToTokyo": 2
+            },
+            {
+              "priority": 8,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 9,
+              "hex": 703,
+              "id": 3407,
+              "name": "Kure",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 909,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 4,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 5,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 673,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 673,
+              "id": 3306,
+              "name": "Pusan",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 6,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 7,
+              "hex": 731,
+              "id": 3506,
+              "name": "Kyoto",
+              "distanceToTokyo": 2
+            },
+            {
+              "priority": 8,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 9,
+              "hex": 703,
+              "id": 3407,
+              "name": "Kure",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 909,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 4,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 5,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 792,
+          "priorityTargets": [
+            {
+              "priority": 6,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 7,
+              "hex": 731,
+              "id": 3506,
+              "name": "Kyoto",
+              "distanceToTokyo": 2
+            },
+            {
+              "priority": 8,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 9,
+              "hex": 703,
+              "id": 3407,
+              "name": "Kure",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 11,
+              "hex": 732,
+              "id": 3507,
+              "name": "Osaka",
+              "distanceToTokyo": 2
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 2,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 3,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 7,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 673,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 673,
+              "id": 3306,
+              "name": "Pusan",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 6,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 7,
+              "hex": 731,
+              "id": 3506,
+              "name": "Kyoto",
+              "distanceToTokyo": 2
+            },
+            {
+              "priority": 8,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 9,
+              "hex": 703,
+              "id": 3407,
+              "name": "Kure",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 2,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 3,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 7,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 2,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 3,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 672,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 672,
+              "id": 3305,
+              "name": "Seoul",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 6,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 7,
+              "hex": 731,
+              "id": 3506,
+              "name": "Kyoto",
+              "distanceToTokyo": 2
+            },
+            {
+              "priority": 8,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 9,
+              "hex": 703,
+              "id": 3407,
+              "name": "Kure",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 2,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 3,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 673,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 673,
+              "id": 3306,
+              "name": "Pusan",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 6,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 7,
+              "hex": 731,
+              "id": 3506,
+              "name": "Kyoto",
+              "distanceToTokyo": 2
+            },
+            {
+              "priority": 8,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 9,
+              "hex": 703,
+              "id": 3407,
+              "name": "Kure",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 2,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 3,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 4,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 2,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 3,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 4,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 2,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 3,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 4,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 672,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 672,
+              "id": 3305,
+              "name": "Seoul",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 3,
+              "hex": 673,
+              "id": 3306,
+              "name": "Pusan",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 4,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 6,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 7,
+              "hex": 731,
+              "id": 3506,
+              "name": "Kyoto",
+              "distanceToTokyo": 2
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 560,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 4,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 5,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 647,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 3,
+              "hex": 673,
+              "id": 3306,
+              "name": "Pusan",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 4,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 6,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 7,
+              "hex": 731,
+              "id": 3506,
+              "name": "Kyoto",
+              "distanceToTokyo": 2
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 589,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 589,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 589,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 589,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 589,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 672,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 672,
+              "id": 3305,
+              "name": "Seoul",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 6,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 7,
+              "hex": 731,
+              "id": 3506,
+              "name": "Kyoto",
+              "distanceToTokyo": 2
+            },
+            {
+              "priority": 8,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 9,
+              "hex": 703,
+              "id": 3407,
+              "name": "Kure",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 589,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 5,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 589,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 5,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 589,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 5,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 589,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 5,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 589,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 4,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 647,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 7,
+              "hex": 731,
+              "id": 3506,
+              "name": "Kyoto",
+              "distanceToTokyo": 2
+            },
+            {
+              "priority": 8,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 9,
+              "hex": 703,
+              "id": 3407,
+              "name": "Kure",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 589,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 792,
+          "priorityTargets": [
+            {
+              "priority": 6,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 7,
+              "hex": 731,
+              "id": 3506,
+              "name": "Kyoto",
+              "distanceToTokyo": 2
+            },
+            {
+              "priority": 8,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 9,
+              "hex": 703,
+              "id": 3407,
+              "name": "Kure",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 11,
+              "hex": 732,
+              "id": 3507,
+              "name": "Osaka",
+              "distanceToTokyo": 2
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 589,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 5,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 589,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 5,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 589,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 589,
+              "id": 3009,
+              "name": "Taihoku",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 4,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 5,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

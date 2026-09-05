@@ -2,7 +2,7 @@
 /** import server/erasmus_data.js*/
 /** import server/erasmus_state.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.21"
+const ERASMUS_VERSION = "erasmus-v2.0-zh.22"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "delay", "unit", "hex", "strat_move", "ground_move", "roll", "eliminate", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
@@ -233,6 +233,10 @@ function target_argument(action, value, seedText, role, view, strategy) {
         }
         const activationFocus = typeof eop_activation_focus_faction === "function"
             ? eop_activation_focus_faction(role === "Japan" ? JP : AP, activeUnits.length) : eop_focus(role)
+        if (role === "Allies" && typeof eop_preserve_rear_air === "function") {
+            const reachable = pickValue.filter(u => !eop_preserve_rear_air(u, role, activationFocus))
+            if (reachable.length) pickValue = reachable
+        }
         const planned = composeTaskForce(activationFocus, null, null, view, pickValue, role)
         const picked = planned && planned.unit !== undefined && planned.unit !== null
             ? planned.unit : eop_pick_unit(pickValue, role, activeUnits, activationFocus)
@@ -390,6 +394,7 @@ function evaluateChart(chart, view, context) {
             .filter(u => { try { return !pieces[u] || pieces[u].class !== "hq" } catch (e) { return true } })
             .filter(u => { try { return esm_gate_on() || !pieces[u] || pieces[u].class !== "air" } catch (e) { return true } })
             .filter(u => { try { return typeof eop_preserve_ready_b29 !== "function" || !eop_preserve_ready_b29(u, context.role) } catch (e) { return true } })
+            .filter(u => { try { return typeof eop_preserve_rear_air !== "function" || !eop_preserve_rear_air(u, context.role, view?.ai?.focus) } catch (e) { return true } })
         const selected = progress ? Number(progress[1]) : (view.offensive?.active_units?.flat?.().length || 0)
         // HQ 加成可因新激活单位的军种/区域而下降。提示“2 of 3 (2 + 1)”中的括号前值
         // 才是不会随下一次选择反噬的稳定上限；达到它就结束，避免 2/3→3/2→撤销 的循环。

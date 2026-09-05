@@ -26,3 +26,12 @@
 | JP01-S-CENTRAL-PACIFIC | action | always→JP01-END |
 | JP01-FALLBACK | fallback | - |
 | JP01-END | terminal | - |
+
+## 激进的南方资源战略：东印度投降
+
+1. Balikpapan、Tarakan
+2. Batavia（爪哇岛没有其他日本地面部队时才占领，[6]）
+3. Tjilatjap、Soerabaja
+4. Bangka、Palembang、Medan
+
+本表与“压制东印度（Jolo、Makassar、Teloekbetoeng、Bandjermasin）”是两个不同目标表，不得混用。
