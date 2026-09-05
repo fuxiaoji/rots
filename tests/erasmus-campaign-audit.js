@@ -34,7 +34,7 @@ function kindOf(chart) {
 }
 
 const emptyRole = () => ({ decisions: 0, byKind: { axis: 0, card: 0, taskforce: 0, reaction: 0, "?": 0 },
-    airStrikeUnits: 0, airStrikeHexes: 0, fire: 0, advance: 0 })
+    airStrikeUnits: 0, airStrikeHexes: 0, fire: 0, advance: 0, hqActivations: 0 })
 const empty = () => ({ Japan: emptyRole(), Allies: emptyRole() })
 
 function activeRole(state) {
@@ -49,7 +49,7 @@ function play(seed) {
         return { seed, status: "setup-error", winner: null, error: error.message }
     }
     const g = { seed, status: "error", winner: null, actions: 0, turn: Number(state.turn || 0), fallback: 0,
-        noBattleHex: 0, unexplainedNoBattle:0, traceNodeMissing:0, role: empty(), context: null, strategyLog: [], strategyCounts:{},
+        noBattleHex: 0, unexplainedNoBattle:0, traceNodeMissing:0, role: empty(), context: null, strategyLog: [], strategyCounts:{}, victoryPlanCounts:{},
         closestAdvance: { alliedUnit: null, alliedControlledHex: null, b29: null }, atomicBest: null }
     g.groundMove = 0
     g.capturedAP = 0
@@ -71,6 +71,10 @@ function play(seed) {
             r.decisions++
             r.byKind[kindOf(chart)]++
             if (decision.action === "advance") r.advance++
+            if (decision.action === "unit" && /activate units/i.test(String(view.prompt || ""))) {
+                const picked = (view.ai?.units || []).find(u => u.id === decision.argument)
+                if (picked?.class === "hq") r.hqActivations++
+            }
             if (decision.publicTrace.fallback) g.fallback++
             const sm = decision.privateTrace?.sm || decision.publicTrace?.sm
             if (sm?.pinnedNow) {
@@ -92,6 +96,10 @@ function play(seed) {
                     const a = sm.diag.atomic
                     if (!g.atomicBest || Number(a.jpResources) < Number(g.atomicBest.jpResources))
                         g.atomicBest = { ...a, turn: Number(view.turn || 0) }
+                }
+                if (sm.victoryPreparation?.type) {
+                    const vk = `${role}/${sm.victoryPreparation.type}`
+                    g.victoryPlanCounts[vk] = (g.victoryPlanCounts[vk] || 0) + 1
                 }
             }
             if (/Declare battle hexes/.test(String(view.prompt || ""))) {
@@ -136,7 +144,7 @@ function play(seed) {
         burma: !!state.surrender[3], japan: !!state.surrender[12],
     } : null
     return { seed, status: "complete", winner, actions: g.actions, turn: g.turn, fallback: g.fallback,
-        noBattleHex: g.noBattleHex, unexplainedNoBattle:g.unexplainedNoBattle, traceNodeMissing:g.traceNodeMissing, strategyCounts:g.strategyCounts,
+        noBattleHex: g.noBattleHex, unexplainedNoBattle:g.unexplainedNoBattle, traceNodeMissing:g.traceNodeMissing, strategyCounts:g.strategyCounts, victoryPlanCounts:g.victoryPlanCounts,
         groundMove: g.groundMove, capturedAP: g.capturedAP, capturedJP: g.capturedJP,
         politicalWill: Number(state.political_will || 0), powRequired: Number(state.pow || 0), powBank, surrender,
         role: g.role, won_text: state.result?.won_text || state.L?.message || null, closestAdvance: g.closestAdvance,
@@ -164,7 +172,7 @@ const tally = { policy: policy.version, scenario, gameCount, baseSeed, maxAction
     fallback: games.reduce((s, x) => s + (x.fallback || 0), 0),
     groundMove: 0, capturedAP: 0, capturedJP: 0, atomicBombWins: 0,
     role: empty(),
-    noBattleHex: 0, unexplainedNoBattle:0, traceNodeMissing:0, strategyCounts:{} }
+    noBattleHex: 0, unexplainedNoBattle:0, traceNodeMissing:0, strategyCounts:{}, victoryPlanCounts:{} }
 completed.forEach(g => {
     for (const side of ["Japan", "Allies"]) {
         const r = g.role[side], t = tally.role[side]
@@ -172,11 +180,13 @@ completed.forEach(g => {
         for (const k of Object.keys(t.byKind)) t.byKind[k] += r.byKind[k]
         t.airStrikeUnits += r.airStrikeUnits; t.airStrikeHexes += r.airStrikeHexes
         t.fire += r.fire; t.advance += r.advance
+        t.hqActivations += r.hqActivations
     }
     tally.noBattleHex += g.noBattleHex
     tally.unexplainedNoBattle += g.unexplainedNoBattle
     tally.traceNodeMissing += g.traceNodeMissing
     for(const [k,v] of Object.entries(g.strategyCounts||{})) tally.strategyCounts[k]=(tally.strategyCounts[k]||0)+v
+    for(const [k,v] of Object.entries(g.victoryPlanCounts||{})) tally.victoryPlanCounts[k]=(tally.victoryPlanCounts[k]||0)+v
     tally.groundMove += g.groundMove
     tally.capturedAP += g.capturedAP
     tally.capturedJP += g.capturedJP
@@ -185,7 +195,7 @@ completed.forEach(g => {
 
 const output = { generatedAt: new Date().toISOString(), tally,
     perGame: completed.map(g => ({ seed: g.seed, winner: g.winner, actions: g.actions, turn: g.turn, fallback: g.fallback,
-        noBattleHex: g.noBattleHex, unexplainedNoBattle:g.unexplainedNoBattle, traceNodeMissing:g.traceNodeMissing, strategyCounts:g.strategyCounts,
+        noBattleHex: g.noBattleHex, unexplainedNoBattle:g.unexplainedNoBattle, traceNodeMissing:g.traceNodeMissing, strategyCounts:g.strategyCounts, victoryPlanCounts:g.victoryPlanCounts,
         groundMove: g.groundMove, capturedAP: g.capturedAP, capturedJP: g.capturedJP,
         politicalWill:g.politicalWill,powRequired:g.powRequired,powBank:g.powBank,surrender:g.surrender,
         role: g.role, won_text: g.won_text, closestAdvance: g.closestAdvance, atomicBest: g.atomicBest,

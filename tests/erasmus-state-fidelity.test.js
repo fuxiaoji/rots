@@ -108,7 +108,7 @@ eq(alM, { al_M_B_needs_war_progress: false }, "CBI战略", "roll==9", 9)
 // ---- AL 晚期 (页9 / py evaluate_late L720-743) ------------------------------
 const alL = T.al_late
 eq(alL, { can_pass: true }, "PASS", "can_pass")
-eq(alL, { al_L_B_is_turn_12: true, cards_in_hand: 2 }, "事件战略", "终局第12回合手牌不足")
+eq(alL, { al_L_B_is_turn_12: true, cards_in_hand: 2, al_L_F_controls_hex_within_8_tokyo: false }, "重返菲律宾", "第12回合直接跳到F", 2)
 eq(alL, { al_L_D_has_strategic_bombing_base: false }, "占领轰炸基地", "无轰炸基地")
 eq(alL, { al_L_D_has_strategic_bombing_base: true, al_L_E_all_b29_on_base: false }, "推进B29", "B29 未全在基地")
 eq(alL, { al_L_D_has_strategic_bombing_base: true, al_L_E_all_b29_on_base: true, al_L_F_controls_hex_within_8_tokyo: false }, "重返菲律宾", "距东京8内无控制 roll<=2", 2)

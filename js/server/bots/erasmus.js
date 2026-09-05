@@ -2,7 +2,7 @@
 /** import server/erasmus_data.js*/
 /** import server/erasmus_state.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.20"
+const ERASMUS_VERSION = "erasmus-v2.0-zh.21"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "delay", "unit", "hex", "strat_move", "ground_move", "roll", "eliminate", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
@@ -223,6 +223,8 @@ function target_argument(action, value, seedText, role, view, strategy) {
         if (!esm_gate_on()) pickValue = pickValue.filter(u => { try { return pieces[u] && pieces[u].class !== "air" } catch (e) { return true } })
         if (role === "Allies" && typeof eop_preserve_ready_b29 === "function")
             pickValue = pickValue.filter(u => !eop_preserve_ready_b29(u, role))
+        // 指挥部只在专用 Choose HQ 窗参与决策；进攻激活 HQ 不会产生移动或战斗力。
+        pickValue = pickValue.filter(u => { try { return !pieces[u] || pieces[u].class !== "hq" } catch (e) { return true } })
         // 已激活单位(含本窗已选)传给 eop_pick_unit, 用于两栖登陆护航判定: 敌占港需 ≥1 海军护航。
         const activeUnits = Array.isArray(view?.offensive?.active_units) ? view.offensive.active_units.flat() : []
         if(view?.ai?.windowKind==="reaction"){
@@ -385,6 +387,7 @@ function evaluateChart(chart, view, context) {
         // 若过滤后为空(只剩已激活单位), 则 done 收尾。
         const addable = (Array.isArray(view.actions.unit) ? view.actions.unit : [])
             .filter(u => !unsel.has(u))
+            .filter(u => { try { return !pieces[u] || pieces[u].class !== "hq" } catch (e) { return true } })
             .filter(u => { try { return esm_gate_on() || !pieces[u] || pieces[u].class !== "air" } catch (e) { return true } })
             .filter(u => { try { return typeof eop_preserve_ready_b29 !== "function" || !eop_preserve_ready_b29(u, context.role) } catch (e) { return true } })
         const selected = progress ? Number(progress[1]) : (view.offensive?.active_units?.flat?.().length || 0)

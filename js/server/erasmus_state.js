@@ -382,10 +382,14 @@ function esm_al_eval_mid(ctx, d10) {
 function esm_al_eval_late(ctx, d10) {
     ctx._nodePath = ["AP09-START"]; ctx._conditions = []; ctx._dice = []
     if (esm_trace_pred(ctx, "AP09-A", "AP_CAN_PASS", ctx.can_pass)) return esm_trace_action(ctx, "AP09-S-PASS", "PASS")
-    esm_trace_pred(ctx, "AP09-B", "TURN_12", ctx.al_L_B_is_turn_12)
-    if (!esm_trace_pred(ctx, "AP09-C", "AP_HAND_GE_3", ctx.cards_in_hand >= 3)) return esm_trace_action(ctx, "AP09-S-EVENT", "事件战略")
-    if (!esm_trace_pred(ctx, "AP09-D", "AP_HAS_STRATEGIC_BOMBING_BASE", ctx.al_L_D_has_strategic_bombing_base)) return esm_trace_action(ctx, "AP09-S-CAPTURE-BOMBING-BASE", "占领轰炸基地")
-    if (!esm_trace_pred(ctx, "AP09-E", "ALL_MAP_B29_ON_BASE", ctx.al_L_E_all_b29_on_base)) return esm_trace_action(ctx, "AP09-S-PUSH-B29", "推进B29")
+    const finalTurn = esm_trace_pred(ctx, "AP09-B", "TURN_12", ctx.al_L_B_is_turn_12)
+    // 图表第9页：B=YES 直接进入 F。最后一回合跳过手牌数、基地和 B29 就位检查，
+    // 也与脚注[1]“第12回合永远不要把卡牌作为 FO”一致。
+    if (!finalTurn) {
+        if (!esm_trace_pred(ctx, "AP09-C", "AP_HAND_GE_3", ctx.cards_in_hand >= 3)) return esm_trace_action(ctx, "AP09-S-EVENT", "事件战略")
+        if (!esm_trace_pred(ctx, "AP09-D", "AP_HAS_STRATEGIC_BOMBING_BASE", ctx.al_L_D_has_strategic_bombing_base)) return esm_trace_action(ctx, "AP09-S-CAPTURE-BOMBING-BASE", "占领轰炸基地")
+        if (!esm_trace_pred(ctx, "AP09-E", "ALL_MAP_B29_ON_BASE", ctx.al_L_E_all_b29_on_base)) return esm_trace_action(ctx, "AP09-S-PUSH-B29", "推进B29")
+    }
     if (!esm_trace_pred(ctx, "AP09-F", "AP_CONTROLS_HEX_WITHIN_TOKYO_8", ctx.al_L_F_controls_hex_within_8_tokyo)) {
         const roll = esm_trace_d10(ctx, "AP09-D10", d10, ":al-late")
         if (roll <= 2) return esm_trace_action(ctx, "AP09-S-RETURN-PHILIPPINES", "重返菲律宾")
@@ -542,6 +546,37 @@ function esm_front_distance(hex, faction) {
     return best
 }
 
+// 日本本土连续三个国势阶段无法向资源格追溯路径时，盟军按基础规则封锁获胜。
+// 这是第9页 G=NO 后的规则胜利约束，不伪装成图表节点。海路追溯由 supply.js 的
+// check_japan_resource_trace() 判定；夺港后仍需航空驻军产生未被中和的盟军 AZOI。
+function esm_ap_blockade_targets() {
+    const specs = [
+        ["Shanghai", "北方资源线：占领上海并建立航空封锁"],
+        ["Tsingtao", "北方资源线：占领青岛并建立航空封锁"],
+        ["Port Arthur", "北方资源线：占领旅顺并建立航空封锁"],
+        ["Tainan", "南方资源线：夺取台南机场并建立AZOI"],
+        ["Taihoku", "南方资源线：夺取台北机场并建立AZOI"],
+        ["Okinawa", "南方资源线：夺取冲绳并建立AZOI"],
+        ["Iwo Jima", "南方资源线：夺取硫磺岛并建立AZOI"],
+        ["Saipan", "南方资源线：夺取塞班并建立AZOI"],
+        ["Guam", "南方资源线：夺取关岛并建立AZOI"],
+    ]
+    const targets = []
+    for (const [name, objective] of specs) {
+        const hex = esm_idx(name)
+        if (!(hex >= 0 && hex <= LAST_BOARD_HEX)) continue
+        if (is_space_controlled(hex, JP)) {
+            targets.push({ hex, kind: "CONQUEST", objective, damageLevel: 1,
+                requiresOccupation: true, victoryConstraint: "JAPAN_RESOURCE_BLOCKADE" })
+        } else if (is_space_controlled(hex, AP) && get_map_data(hex).airfield && !esm_has_class_at(hex, AP, "air")) {
+            targets.push({ hex, kind: "GARRISON", garrisonClass: "air",
+                objective: `${objective}：部署盟军航空兵`,
+                victoryConstraint: "JAPAN_RESOURCE_BLOCKADE_AZOI" })
+        }
+    }
+    return targets
+}
+
 // 规则 16.47 是盟军每回合必须满足的生存条件。图表决定战区，本函数只把该战区
 // 内能计入 G.capture 的未占目标提到前面；不足时再补入最近、守军较弱的合法计分格。
 // 它不改变控制权或战力，只防止 AI 有可夺目标却把整手牌耗在不计 PoW 的移动上。
@@ -564,7 +599,11 @@ function esm_ap_progress_targets(existingChain, existingMeta) {
         return n
     }
     const chainSet = new Set(existingChain || [])
-    candidates.sort((a, b) => (G.turn >= 9 ? Number(!get_map_data(a).resource) - Number(!get_map_data(b).resource) : 0)
+    candidates.sort((a, b) =>
+        // 胜利前置链可能包含尚距前线十余格的塞班/上海。PoW 已亏空时必须先夺本牌
+        // 可到达的近程计分格，否则“高优先级但不可达”会连续耗牌并导致条约谈判败。
+        Number(esm_front_distance(a, AP) > 6) - Number(esm_front_distance(b, AP) > 6)
+        || (G.turn >= 9 ? Number(!get_map_data(a).resource) - Number(!get_map_data(b).resource) : 0)
         // PoW 生存前视只能在当前决策轴内重排可执行目标；旧排序先挑全图最弱空岛，
         // 把中太平洋/DEI/CBI 主攻群拆散。图表链目标必须先于补充计分格。
         || Number(!chainSet.has(a)) - Number(!chainSet.has(b))
@@ -1148,9 +1187,9 @@ function esm_pin_strategy(view, context) {
     // D4: ABSTRACT 自身无 hex 链(纯文本目标), 落到可执行回退链, 让 eop 焦点层在"推进B29/
     // 原子弹胜利"钉住期间仍有可打的主攻方向:
     //   推进B29   -> 占领轰炸基地(把基地前推到距东京 ≤8, B29 才谈得上就位/轰炸);
-    //   原子弹胜利 -> 重返菲律宾(夺回莱特/马尼拉/DEI/马来亚, 压低 get_jp_resources)。
+    //   原子弹胜利 -> 精确选择两个仍由日本控制的资源格。
     if (entry && entry.kind === "ABSTRACT" && !chain.length) {
-        const fbName = name === "推进B29" ? "占领轰炸基地" : (name === "原子弹胜利" ? "重返菲律宾" : null)
+        const fbName = name === "推进B29" ? "占领轰炸基地" : null
         if (fbName) {
             const fb = esm_strategy_entry(role, "late", fbName)
             if (fb) {
@@ -1160,6 +1199,40 @@ function esm_pin_strategy(view, context) {
                     chain = esm_chain_of(fbGoals)
                     targetMeta = esm_goal_target_meta(fbGoals)
                 } catch (e) { /* 保持空链 */ }
+            }
+        }
+        if (name === "原子弹胜利" && typeof atomic_bomb_strategy_status === "function") {
+            const atomic = atomic_bomb_strategy_status()
+            const resourceTargets = atomic.jpResourceHexes.map(hex => ({ hex, kind: "CONQUEST",
+                objective: "原子弹胜利：占领两个剩余日本资源格", damageLevel: 1,
+                requiresOccupation: true, victoryConstraint: "ATOMIC_CAPTURE_TWO_RESOURCES" }))
+                .sort((a, b) => esm_front_distance(a.hex, AP) - esm_front_distance(b.hex, AP) || a.hex - b.hex)
+                .slice(0, 2)
+            chain = resourceTargets.map(x => x.hex)
+            targetMeta = resourceTargets
+            dynamicTargets = resourceTargets
+        }
+    }
+    // B29 在第9回合进入；若到第9回合才开始找基地，战略轰炸链必然滞后。中期后半段
+    // 仍保留决策轴选出的战区/战略名称，但以明确的规则胜利前视把图表已有“占领战略
+    // 轰炸基地”链放到执行队首。PoW 亏空会在下一段再次前插，故政治意志生存仍优先。
+    let victoryApproach = null
+    if (role === "Allies" && phase === "mid" && G.turn >= 6) {
+        const bombingEntry = esm_strategy_entry("Allies", "late", "占领轰炸基地")
+        if (bombingEntry) {
+            let approach = []
+            try { approach = esm_goal_target_meta(esm_parse_entry(bombingEntry, "Allies", "late")) } catch (e) { approach = [] }
+            approach = approach.filter(x => x.hex >= 0 && x.hex <= LAST_BOARD_HEX && !is_space_controlled(x.hex, AP))
+                .map(x => ({ ...x, kind: "CONQUEST", requiresOccupation: true,
+                    objective: `B29前置夺岛：${get_map_data(x.hex).name || x.hex}`,
+                    victoryConstraint: "B29_BASE_APPROACH" }))
+            if (approach.length) {
+                const hs = new Set(approach.map(x => x.hex))
+                chain = approach.map(x => x.hex).concat(chain.filter(h => !hs.has(h)))
+                targetMeta = approach.concat(targetMeta.filter(x => !hs.has(x.hex)))
+                dynamicTargets = approach.concat(dynamicTargets.filter(x => !hs.has(x.hex)))
+                victoryApproach = { type: "B29_BASE_APPROACH", source: "RULE_VICTORY_OVERLAY",
+                    turn: G.turn, remaining: approach.map(x => x.hex) }
             }
         }
     }
@@ -1174,7 +1247,7 @@ function esm_pin_strategy(view, context) {
             progressPlan = { required: Number(G.pow || 0), bank: esm_pow_bank(), remaining: progress.map(x => x.hex) }
         }
     }
-    let victoryPreparation = null
+    let victoryPreparation = victoryApproach
     if (role === "Allies" && phase === "late" && name === "登陆日本" && typeof atomic_bomb_strategy_status === "function") {
         const atomic = atomic_bomb_strategy_status()
         if (atomic.noStrategicBombingFailure && atomic.sovietReady && !atomic.resourcesSatisfied) {
@@ -1188,6 +1261,18 @@ function esm_pin_strategy(view, context) {
             dynamicTargets = resourceTargets.concat(dynamicTargets.filter(x => !resourceHexes.has(x.hex)))
             victoryPreparation = { type: "ATOMIC_RESOURCE_LIMIT", current: atomic.jpResources,
                 limit: atomic.resourceLimit, remaining: resourceTargets.map(x => x.hex) }
+        } else {
+            const blockadeTargets = esm_ap_blockade_targets()
+            const blockadeHexes = new Set(blockadeTargets.map(x => x.hex))
+            chain = blockadeTargets.map(x => x.hex).concat(chain.filter(h => !blockadeHexes.has(h)))
+            targetMeta = blockadeTargets.concat(targetMeta.filter(x => !blockadeHexes.has(x.hex)))
+            dynamicTargets = blockadeTargets.concat(dynamicTargets.filter(x => !blockadeHexes.has(x.hex)))
+            let connected = null
+            try { connected = !!check_japan_resource_trace() } catch (e) { /* 仅诊断 */ }
+            victoryPreparation = { type: "JAPAN_RESOURCE_BLOCKADE", source: "RULE_VICTORY_OVERLAY",
+                connected, timerStart: is_event_active(events.JAPAN_TRACE_RESOURCES) || 0,
+                remaining: blockadeTargets.map(x => x.hex),
+                note: "夺取北方港口与南方岛链机场，部署航空AZOI并清除日军航空，维持连续三个国势阶段断线" }
         }
     }
     const strategy = entry ? {

@@ -8,7 +8,7 @@
 |---|---|---|
 | AP09-START | start | always→AP09-A |
 | AP09-A | condition / AP_CAN_PASS | true→AP09-S-PASS；false→AP09-B |
-| AP09-B | condition / TURN_12 | true→AP09-C；false→AP09-C |
+| AP09-B | condition / TURN_12 | true→AP09-F；false→AP09-C |
 | AP09-C | condition / AP_HAND_GE_3 | true→AP09-D；false→AP09-S-EVENT |
 | AP09-D | condition / AP_HAS_STRATEGIC_BOMBING_BASE | true→AP09-E；false→AP09-S-CAPTURE-BOMBING-BASE |
 | AP09-E | condition / ALL_MAP_B29_ON_BASE | true→AP09-F；false→AP09-S-PUSH-B29 |
