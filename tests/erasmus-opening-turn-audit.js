@@ -1,13 +1,16 @@
 "use strict"
 
-// 只运行 1942 缩短战役的开局回合（Turn 2），用于审计日本菲律宾/东印度攻势。
-// 统计的是规则日志，不以最终胜负代替开局任务部队正确性。
+// 运行 1942 缩短战役的开局阶段，用于审计日本菲律宾/东印度攻势。
+// 第 5 个参数可指定审计截止回合（默认 Turn 2；传 3 可检查整个早期窗口）。
+// 规则 13.22/13.42 的硬验收：国家状态阶段必须实际写入菲律宾与荷属东印度
+// 投降；“占了马尼拉/任一资源格”只保留为诊断，不再算开局成功。
 const rules = require("../rules.js")
 const bot = rules.bots["erasmus-v2"]
 
 const count = Number(process.argv[2] || 20)
 const baseSeed = Number(process.argv[3] || 20260903)
 const maxActions = Number(process.argv[4] || 5000)
+const throughTurn = Number(process.argv[5] || 2)
 
 function activeRole(state) {
     return Array.isArray(state.active) ? state.active.slice().sort()[0] : state.active
@@ -17,7 +20,7 @@ function play(seed) {
     let state = rules.setup(seed, "1942-1945 (The Shortened Campaign)", { headless_moves: true })
     let actions = 0
     let rangedAirCommitments = 0, rangedCarrierCommitments = 0
-    while (state.active !== "None" && Number(state.turn || 0) <= 2 && actions < maxActions) {
+    while (state.active !== "None" && Number(state.turn || 0) <= throughTurn && actions < maxActions) {
         const role = activeRole(state)
         const view = rules.view(state, role)
         const decision = bot.decide(view, { role, seed, actionOrdinal: actions + 1 })
@@ -54,6 +57,9 @@ function play(seed) {
     const deiCaptures = [...new Set(dei)].filter(captured)
     return {
         seed, actions, turn: state.turn,
+        philippinesSurrendered: !!state.surrender?.[0],
+        deiSurrendered: !!state.surrender?.[2],
+        openingSurrenderComplete: !!state.surrender?.[0] && !!state.surrender?.[2],
         manilaCaptured: captured(535),
         balikpapanCaptured: captured(452),
         tarakanCaptured: captured(480),
@@ -62,6 +68,8 @@ function play(seed) {
         jpNoUnits, apNoUnits, zeroActivationCards,
         rangedAirCommitments,rangedCarrierCommitments,
         manilaBattles: log.filter(line => /Battle [A-Z] declared in H535/.test(line)).length,
+        jpCaptured: log.filter(line => /JP captured H\d+\.$/.test(String(line))),
+        surrenderLog: log.filter(line => /(?:Philippines|Dutch East India) (?:surrender|liberated)\./.test(String(line))),
     }
 }
 
@@ -70,8 +78,12 @@ for (let i = 0; i < count; ++i) games.push(play(baseSeed + i))
 const sum = key => games.reduce((n, g) => n + Number(g[key] || 0), 0)
 const report = {
     policy: bot.version,
+    throughTurn,
     seeds: [baseSeed, baseSeed + count - 1],
     games: count,
+    philippinesSurrenderedGames: games.filter(g => g.philippinesSurrendered).length,
+    deiSurrenderedGames: games.filter(g => g.deiSurrendered).length,
+    openingSurrenderCompleteGames: games.filter(g => g.openingSurrenderComplete).length,
     manilaCapturedGames: games.filter(g => g.manilaCaptured).length,
     balikpapanCapturedGames: games.filter(g => g.balikpapanCaptured).length,
     tarakanCapturedGames: games.filter(g => g.tarakanCaptured).length,

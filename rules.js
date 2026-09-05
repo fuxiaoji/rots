@@ -11671,6 +11671,16 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
         : steer && typeof eop_advance_tiebreak === "function" ? eop_advance_tiebreak(hex, faction) : -1
     const nearKey = hex => approach >= 0 ? approach : headless_nearest_enemy_dist(hex, 1 - faction)
     if (kind === "attack") {
+        // 航空单位可从战斗格外参战。若后方基地不在目标战斗航程内，本次攻势先把
+        // 它移动到更靠前的合法机场；到达后 choose_attack_hex 仍按 br/ebr 决定能否
+        // 承诺到会战，不绕过任何移动或战斗航程检查。
+        if (movingPiece && movingPiece.class === "air") {
+            const md = get_map_data(hex)
+            if (!md || !md.airfield || !is_space_controlled(hex, faction) || eu.count > 0) return null
+            const range = Math.max(1, Number(movingPiece.br) || Number(movingPiece.ebr) || 1)
+            const d = strategicFocus !== null ? get_distance(hex, strategicFocus) : headless_nearest_enemy_dist(hex, 1 - faction)
+            return [strategicFocus !== null && d <= range ? -4 : 3, d, get_distance(source, hex), hex]
+        }
         // 最终国防圈不是进攻目标表：只向己控驻军焦点移动；不可达时仅在己控格内
         // 向焦点靠近。禁止纯海军落回“最近敌舰”而从本土远征南方资源区。
         if (strategicMeta && strategicMeta.kind === "GARRISON") {
@@ -11752,9 +11762,15 @@ function headless_score_lt(a, b) {
 function headless_advance_has_candidates(kind) {
     for (const u of L.movable_units) {
         const p = pieces[u]
-        if (!p || (p.class === "air" && kind !== "pbm")) continue
+        if (!p || (p.class === "air" && kind !== "pbm" && kind !== "attack")) continue
         const h = G.location[u]
         if (!(h >= 0 && h <= LAST_BOARD_HEX)) continue
+        if (kind === "attack" && p.class === "air" && typeof eop_focus_faction === "function") {
+            let f = null
+            try { f = eop_focus_faction(G.active) } catch (e) { f = null }
+            const br = p.parenthetical ? Number(p.br) : Number(p.ebr || p.br)
+            if (f !== null && get_distance(h, f) <= Math.max(1, br || 1)) continue
+        }
         if (kind === "attack") return true
         if (kind === "pbm" && (p.class === "air" || !could_unit_stop_here(u))) return true
         if (kind === "reaction" && !set_has(G.offensive.battle_hexes, h)) return true
@@ -11768,9 +11784,17 @@ function headless_advance_one(self, kind, targetPlan) {
     if (G.active_stack.length) return { type: "decline" }
     const need = u => {
         const p = pieces[u]
-        if (!p || (p.class === "air" && kind !== "pbm")) return false
+        if (!p || (p.class === "air" && kind !== "pbm" && kind !== "attack")) return false
         const h = G.location[u]
         if (!(h >= 0 && h <= LAST_BOARD_HEX)) return false
+        if (kind === "attack" && p.class === "air") {
+            let f = targetPlan && Number.isInteger(targetPlan.focus) ? targetPlan.focus : null
+            if (f === null && typeof eop_focus_faction === "function") {
+                try { f = eop_focus_faction(G.active) } catch (e) { f = null }
+            }
+            const br = p.parenthetical ? Number(p.br) : Number(p.ebr || p.br)
+            if (f !== null && get_distance(h, f) <= Math.max(1, br || 1)) return false
+        }
         if (kind === "attack") return true
         if (kind === "pbm") return p.class === "air" || !could_unit_stop_here(u)
         if (kind === "reaction") return !set_has(G.offensive.battle_hexes, h)
@@ -11793,7 +11817,7 @@ function headless_advance_one(self, kind, targetPlan) {
         const p = pieces[u]
         if(!p||G.location[u]!==loc)return false
         // 航空 PBM 每机场最多一机，逐个移动；海军/失败地面仍按同格同类编组。
-        if(kind==="pbm"&&leadPiece.class==="air")return u===lead
+        if((kind==="pbm"||kind==="attack")&&leadPiece.class==="air")return u===lead
         if(kind==="pbm")return p.class===leadPiece.class
         return p.class!=="air"
     })
@@ -11802,6 +11826,32 @@ function headless_advance_one(self, kind, targetPlan) {
     group.forEach(u => self.unit(u))
     L.move_data = get_move_data()
     update_move_hex()
+    // 后方前推：只使用引擎本来会显示的扩展航程/战略移动资格。扩展航程用于无法以
+    // 正常战斗航程接近当前轴的括号航空单位；战略移动用于距目标很远、且引擎判定
+    // sm_possible 的非航空编队。两者都通过原 update_move_hex 重新计算合法落点。
+    let plannedMoveType = ANY_MOVE
+    let plannedFocus = targetPlan && Number.isInteger(targetPlan.focus) ? targetPlan.focus : null
+    if (plannedFocus === null && typeof eop_focus_faction === "function") {
+        try { plannedFocus = eop_focus_faction(G.active) } catch (e) { plannedFocus = null }
+    }
+    const focusDistance = plannedFocus !== null ? get_distance(loc, plannedFocus) : 0
+    const farFromFocus = plannedFocus !== null && focusDistance > 8
+    if (kind === "attack" && leadPiece.class === "air" && leadPiece.parenthetical && farFromFocus) {
+        plannedMoveType = AIR_EXTENDED_MOVE
+    } else if (kind === "attack" && leadPiece.class !== "air" && L.move_data.sm_possible && focusDistance > 12) {
+        plannedMoveType = STRAT_MOVE
+    }
+    if (plannedMoveType !== ANY_MOVE) {
+        L.move_type = plannedMoveType
+        L.move_data = get_move_data()
+        update_move_hex()
+        if (!L.allowed_hexes.length) {
+            plannedMoveType = ANY_MOVE
+            L.move_type = ANY_MOVE
+            L.move_data = get_move_data()
+            update_move_hex()
+        }
+    }
     const hasGround = group.some(u => pieces[u] && pieces[u].class === "ground")
     // 记录在 advance 参数中的明确图表目标同样约束纯地面前推（例如仰光/印度陆路）。
     // 没有显式目标时仍仅让可跨海编成使用旧主轴转向，避免普通地面部队无目的横穿大陆。
@@ -11842,6 +11892,7 @@ function headless_advance_one(self, kind, targetPlan) {
         G.active_stack = []
         L.allowed_hexes = []
         L.move_data = {}
+        L.move_type = ANY_MOVE
         return { type: "decline" }
     }
     const path = object_copy(map_get(L.allowed_hexes, best))
@@ -20273,9 +20324,9 @@ function eop_min_dist(hex, locs) {
 // 而非空跑一整轮又无会战可报), 次键 = 到焦点距离(保留战略方向)。此前只按"距焦点最近"
 // 挑单位, 而焦点(如拉包尔)常远在战线后方, 挑出的单位离任何敌军都远 → 移动后够不着敌格
 // → ~半攻势"Confirm offensive"直接跳过会战 → 每回合夺格数远低于 PoW 所需 4。
-function eop_pick_unit(candidates, role, activeUnits) {
+function eop_pick_unit(candidates, role, activeUnits, focusOverride) {
     if (!Array.isArray(candidates) || candidates.length === 0) return undefined
-    const focus = eop_focus(role)
+    const focus = Number.isInteger(focusOverride) ? focusOverride : eop_focus(role)
     if (typeof G === "undefined" || !G || !G.location) return undefined
     const mine = role === "Japan" ? JP : AP
     const axis = eop_axis(role)
@@ -20387,24 +20438,22 @@ function eop_landing_no_escort(role, view) {
     const md = (typeof get_map_data === "function") ? get_map_data(focus) : null
     if (!md || !md.port) return false
     if (is_space_controlled(focus, mine)) return false
-    // 可新增单位(去已激活、去空中)里, 是否存在"海军与两栖地面同格"的护航编成?
-    // 无头推进按“同格编组”, 只有同格的海陆才能一起上岛(带海上支援登陆); 非同格海军
-    // 会单独一组, 够不着只守地面的敌港。故只看“同格海陆”是否可用。
+    // 可新增单位里是否同时存在海军和两栖地面。护航舰不要求与登陆军从同一港口
+    // 出发；引擎只在会战结算时检查目标格内是否有进攻方海军。旧的“必须同格出发”
+    // 预检会错误取消台湾陆军 + 南海舰队这类合法编成，制造空攻势。
     const cand = Array.isArray(view.actions && view.actions.unit) ? view.actions.unit : []
     const unsel = new Set(Array.isArray(view.unselect) ? view.unselect : [])
-    const navalLocs = new Set(), groundLocs = new Set()
+    let hasNaval = false, hasGround = false
     for (const u of cand) {
         if (unsel.has(u)) continue
         let p = null
         try { p = pieces[u] } catch (e) {}
         if (!p || p.class === "air") continue
-        const loc = G.location[u]
-        if (p.class === "naval") navalLocs.add(loc)
-        else if (p.class === "ground" && (p.asp || p.strat_move)) groundLocs.add(loc)
+        if (p.class === "naval") hasNaval = true
+        else if (p.class === "ground" && (p.asp || p.strat_move)) hasGround = true
     }
-    if (groundLocs.size === 0) return false   // 无两栖地面可激活 → 不会发生无护航登陆
-    for (const loc of groundLocs) if (navalLocs.has(loc)) return false
-    return true
+    if (!hasGround) return false   // 无两栖地面可激活 → 不会发生无护航登陆
+    return !hasNaval
 }
 
 // ---- 引擎无头推进就近转向 ------------------------------------------------
@@ -20422,6 +20471,27 @@ function eop_advance_tiebreak(hex, faction) {
 function eop_trace(role) {
     const axis = eop_axis(role)
     return { axis: axis ? axis.id : null, axis_note: axis ? axis.note : null, focus: eop_focus(role) }
+}
+
+// 激活上限较高时，第5/11页要求“为每个目标编成一个任务部队”。激活窗尚未宣告
+// 战斗格，不能依赖 battle_hexes 轮换；按每 4 个激活单位（至少两支地面、护航、
+// 空海支援）预分配到下一个未完成目标，使 8/9 点事件形成两个独立且不过薄的编队。
+function eop_activation_focus_faction(faction, selectedCount) {
+    const role = faction === JP ? "Japan" : "Allies"
+    const axis = eop_axis(role)
+    if (!axis || !Array.isArray(axis.chain)) return eop_focus(role)
+    const pending = []
+    for (const h of axis.chain) {
+        const meta = eop_target_meta(role, h)
+        if (meta && (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ")) {
+            if (meta.requiresOccupation && !is_space_controlled(h, faction)) pending.push(h)
+            else { try { if (has_zoi(h, 1 - faction)) pending.push(h) } catch (e) {} }
+        } else if (!is_space_controlled(h, faction)) pending.push(h)
+    }
+    if (!pending.length) return null
+    // 第5/11页的典型最小编队由地面占领、海军护航、空海支援及一支余量构成。
+    // 每4个激活点才转向下一个目标；目标链顺序仍是硬优先，未列入链的岛不会插队。
+    return pending[Math.min(pending.length - 1, Math.floor(Math.max(0, Number(selectedCount) || 0) / 4))]
 }
 
 function eop_target_meta(role, hex) {
@@ -21182,6 +21252,52 @@ function esm_jp_hq_suppression_targets() {
     }
     return targets
 }
+
+function esm_front_distance(hex, faction) {
+    let best = 99
+    for (let u = 1; u < pieces.length; ++u) {
+        const p = pieces[u], loc = G.location[u]
+        if (!p || p.faction !== faction || p.class !== "ground" || !(loc >= 0 && loc <= LAST_BOARD_HEX)) continue
+        best = Math.min(best, get_distance(loc, hex))
+    }
+    return best
+}
+
+// 规则 16.47 是盟军每回合必须满足的生存条件。图表决定战区，本函数只把该战区
+// 内能计入 G.capture 的未占目标提到前面；不足时再补入最近、守军较弱的合法计分格。
+// 它不改变控制权或战力，只防止 AI 有可夺目标却把整手牌耗在不计 PoW 的移动上。
+function esm_ap_progress_targets(existingChain, existingMeta) {
+    const deficit = Math.max(0, Number(G.pow || 0) - esm_pow_bank())
+    if (G.turn < 4 || deficit <= 0) return []
+    const byHex = new Map((existingMeta || []).map(x => [x.hex, x]))
+    const eligible = h => {
+        const md = get_map_data(h)
+        return h >= 0 && h <= LAST_BOARD_HEX && is_space_controlled(h, JP) && is_controllable_hex(h) &&
+            !!(md && (md.name || md.resource || md.port || md.airfield))
+    }
+    const candidates = []
+    for (const h of existingChain || []) if (eligible(h)) candidates.push(h)
+    for (let h = 0; h <= LAST_BOARD_HEX; ++h) if (eligible(h) && !candidates.includes(h)) candidates.push(h)
+    const defense = h => {
+        let n = 0
+        for (let u = 1; u < pieces.length; ++u) if (pieces[u] && pieces[u].faction === JP && G.location[u] === h)
+            n += Number((G.reduced && set_has(G.reduced, u) ? pieces[u].rcf : pieces[u].cf) || 0)
+        return n
+    }
+    const chainSet = new Set(existingChain || [])
+    candidates.sort((a, b) => (G.turn >= 9 ? Number(!get_map_data(a).resource) - Number(!get_map_data(b).resource) : 0)
+        // PoW 生存前视只能在当前决策轴内重排可执行目标；旧排序先挑全图最弱空岛，
+        // 把中太平洋/DEI/CBI 主攻群拆散。图表链目标必须先于补充计分格。
+        || Number(!chainSet.has(a)) - Number(!chainSet.has(b))
+        || defense(a) - defense(b)
+        || esm_front_distance(a, AP) - esm_front_distance(b, AP) || a - b)
+    return candidates.slice(0, Math.max(deficit + 2, 4)).map((hex, i) => ({
+        ...(byHex.get(hex) || {}), hex, kind: "CONQUEST", requiresOccupation: true,
+        damageLevel: (byHex.get(hex) || {}).damageLevel || 1,
+        objective: (byHex.get(hex) || {}).objective || `战争进程计分目标 ${i + 1}`,
+        victoryConstraint: "PROGRESS_OF_WAR",
+    }))
+}
 function esm_build_ctx(role, lock, seedText) {
     const ctx = {
         cards_in_hand: (G.hand && G.hand[esm_role_faction(role)]) ? G.hand[esm_role_faction(role)].length : 5,
@@ -21326,6 +21442,14 @@ function esm_build_ctx(role, lock, seedText) {
             resHexes: (typeof RESOURCE_HEX !== "undefined") ? RESOURCE_HEX.filter(h => h >= 0 && h <= LAST_BOARD_HEX && is_space_controlled(h, JP)) : [],
             advance: esm_advance_metrics(),
             atomic: (typeof atomic_bomb_strategy_status === "function") ? atomic_bomb_strategy_status() : null,
+            openingSurrender: (typeof nations !== "undefined") ? {
+                philippines: !!G.surrender[nations.PHILIPPINES.id],
+                dei: !!G.surrender[nations.DEI.id],
+                philippinesKeysHeld: nations.PHILIPPINES.keys.filter(k => is_space_controlled(hex_to_int(k), JP)).length,
+                philippinesKeysRequired: nations.PHILIPPINES.keys.length,
+                deiKeysHeld: nations.DEI.keys.filter(k => is_space_controlled(hex_to_int(k), JP)).length,
+                deiKeysRequired: nations.DEI.keys.length,
+            } : undefined,
         }
     } catch (e) { /* 无 G 时不设 */ }
     return ctx
@@ -21732,6 +21856,11 @@ function esm_pin_strategy(view, context) {
         const dynamicHexes = new Set(dynamicTargets.map(target => target.hex))
         targetMeta = dynamicTargets.concat(targetMeta.filter(target => !dynamicHexes.has(target.hex)))
     }
+    // 投降完成度只做审计，不覆盖第1页实际选出的空优、资源或事件战略。
+    const openingSurrenderPlan = role === "Japan" && G.turn <= 4 ? {
+        philippinesComplete: !!G.surrender[nations.PHILIPPINES.id],
+        deiComplete: !!G.surrender[nations.DEI.id], diagnosticOnly: true,
+    } : null
     if (role === "Japan" && name === "最终防御战略") {
         dynamicTargets = esm_jp_final_defense_targets()
         chain = dynamicTargets.map(target => target.hex)
@@ -21755,11 +21884,39 @@ function esm_pin_strategy(view, context) {
             }
         }
     }
+    let progressPlan = null
+    if (role === "Allies") {
+        const progress = esm_ap_progress_targets(chain, targetMeta)
+        if (progress.length) {
+            const progressHexes = new Set(progress.map(x => x.hex))
+            chain = progress.map(x => x.hex).concat(chain.filter(h => !progressHexes.has(h)))
+            targetMeta = progress.concat(targetMeta.filter(x => !progressHexes.has(x.hex)))
+            dynamicTargets = progress.concat(dynamicTargets.filter(x => !progressHexes.has(x.hex)))
+            progressPlan = { required: Number(G.pow || 0), bank: esm_pow_bank(), remaining: progress.map(x => x.hex) }
+        }
+    }
+    let victoryPreparation = null
+    if (role === "Allies" && phase === "late" && name === "登陆日本" && typeof atomic_bomb_strategy_status === "function") {
+        const atomic = atomic_bomb_strategy_status()
+        if (atomic.noStrategicBombingFailure && atomic.sovietReady && !atomic.resourcesSatisfied) {
+            const resourceTargets = atomic.jpResourceHexes.map(hex => ({ hex, kind: "CONQUEST",
+                objective: "原子弹战略准备：夺取剩余日本资源格", damageLevel: 1,
+                requiresOccupation: true, victoryConstraint: "ATOMIC_RESOURCE_LIMIT" }))
+                .sort((a, b) => esm_front_distance(a.hex, AP) - esm_front_distance(b.hex, AP) || a.hex - b.hex)
+            const resourceHexes = new Set(resourceTargets.map(x => x.hex))
+            chain = resourceTargets.map(x => x.hex).concat(chain.filter(h => !resourceHexes.has(h)))
+            targetMeta = resourceTargets.concat(targetMeta.filter(x => !resourceHexes.has(x.hex)))
+            dynamicTargets = resourceTargets.concat(dynamicTargets.filter(x => !resourceHexes.has(x.hex)))
+            victoryPreparation = { type: "ATOMIC_RESOURCE_LIMIT", current: atomic.jpResources,
+                limit: atomic.resourceLimit, remaining: resourceTargets.map(x => x.hex) }
+        }
+    }
     const strategy = entry ? {
         name, nameFull: entry.name, kind: entry.kind, notes: entry.notes, targets: entry.targets,
         phase, role, seed: seedText, ord, pinnedNow: true, goals, chain, dynamicTargets, targetMeta, ctx,
         nodePath: (ctx._nodePath || []).slice(), conditions: (ctx._conditions || []).slice(), d10Rolls: (ctx._dice || []).slice(),
         eventPhase: isEventStrat ? "early" : undefined,
+        openingSurrenderPlan, progressPlan, victoryPreparation,
     } : {
         name, nameFull: name, kind: "EVENT", notes: [], targets: [], phase, role, ord,
         pinnedNow: true, goals: [], chain: [], targetMeta: [], ctx,
@@ -21785,6 +21942,18 @@ function esm_card_window_action(strategy, view, context) {
     const wantEvent = strategy.kind === "EVENT"
     if (strategy.kind === "PASS" && legal.includes("pass")) return { action: "pass", argument: undefined, via: strategy.name }
 
+    // 原子弹标准把“苏联入侵已发生，或持有且可作为事件打出”列为硬条件。
+    // 旧选牌树会在晚期把 AP#79 当普通高 OC 消耗（历史复盘 seed 20260903 即如此），
+    // 随后整局再也无法满足该条件。只要事件当前合法就立即执行；否则由下方选牌树
+    // 在仍有其他牌时保留它。
+    if (strategy.role === "Allies" && typeof SOVIET_INVADE !== "undefined" && hand.includes(SOVIET_INVADE)) {
+        const classified = classifyCards(hand, strategy.role)
+        const soviet = classified.find(x => x.id === SOVIET_INVADE)
+        if (soviet && soviet.eventPlayable) {
+            return esm_set_card_pick(strategy, soviet, "event", "AP10-S-EVENT", "盟军胜利条件：苏联入侵满洲事件")
+        }
+    }
+
     // AP09 注释：占领战略轰炸基地必须使用当前最大的有效攻势卡。
     // 先选可作为 EC 的军事事件（按 LV），没有时才选最大 OC。
     if(strategy.role==="Allies"&&strategy.name==="占领战略轰炸基地"){
@@ -21799,11 +21968,12 @@ function esm_card_window_action(strategy, view, context) {
         }
     }
 
-    // 条约谈判生存约束：政治意志仅剩 1–2 且本回合 PoW 尚未达标时，设置 FO、PASS 或
-    // 弃牌会在政治阶段直接输掉对局。此时不改变决策轴及目标顺序，只把第10页本可留作
-    // FO/低优先事件的牌改为当前最大有效攻势，以执行该轴的下一个合法目标。
+    // 条约谈判生存约束：PoW 是每回合结算的硬门槛；只要尚未达标，设置 FO、PASS
+    // 或低优先事件都会减少本回合补足夺格数的机会。因此从第一张可用牌起就用最大
+    // 有效攻势执行 progressPlan；达标后立刻恢复第10页正常选牌树。
     // 这是对胜负规则的前视约束，不凭空增加目标、战力或合法动作。
-    if (strategy.role === "Allies" && Number(G.political_will) <= 2 && Number(G.pow) > esm_pow_bank()) {
+    const powDeficit = Math.max(0, Number(G.pow || 0) - esm_pow_bank())
+    if (strategy.role === "Allies" && powDeficit > 0) {
         const classified = classifyCards(hand, strategy.role)
         const ec = classified.filter(c => c.military && c.eventPlayable)
             .sort((a,b)=>b.lv-a.lv||b.ops-a.ops||a.id-b.id)
@@ -21815,7 +21985,7 @@ function esm_card_window_action(strategy, view, context) {
             const node=ec[0]?(chosen.restricted?"AP10-S-RESTRICTED-EC":"AP10-S-UNRESTRICTED-EC")
                 :(chosen.military&&chosen.restricted?"AP10-S-RESTRICTED-OC":"AP10-S-NONMIL-OC")
             return esm_set_card_pick(strategy, chosen, ec[0] ? "event" : "ops", node,
-                `盟军PoW紧急攻势:${esm_pow_bank()}/${G.pow}，政治意志${G.political_will}`)
+                `盟军PoW紧急攻势:${esm_pow_bank()}/${G.pow}，余牌${hand.length}，政治意志${G.political_will}`)
         }
     }
 
@@ -21909,6 +22079,10 @@ function esm_card_selection_tree(strategy, hand) {
     const side=strategy.role==="Japan"?"JP":"AP", prefix=side==="JP"?"JP04":"AP10"
     let c=classifyCards(hand,strategy.role)
     if(!c.length)return null
+    if(side==="AP"&&c.length>1&&typeof SOVIET_INVADE!=="undefined"){
+        const withoutSoviet=c.filter(x=>x.id!==SOVIET_INVADE)
+        if(withoutSoviet.length)c=withoutSoviet
+    }
     // JP04 注释：Operation MI 除非仍在早期且执行中太平洋/外围防御，或它是唯一可用牌，否则不纳入评估。
     if(side==="JP"&&c.length>1&&!(strategy.phase==="early"&&/中太平洋|外围防御/.test(strategy.name)))
         c=c.filter(x=>!/^operation mi$/i.test(x.name))
@@ -22196,6 +22370,9 @@ function esm_trace_of(strategy, privateDetails) {
         priorityTargets: esm_strategy_targets(strategy),
         goals: goalKinds.length ? goalKinds : undefined,
         ...(strategy.powEmergency ? { powEmergency: strategy.powEmergency } : {}),
+        ...(strategy.openingSurrenderPlan ? { openingSurrenderPlan: strategy.openingSurrenderPlan } : {}),
+        ...(strategy.progressPlan ? { progressPlan: strategy.progressPlan } : {}),
+        ...(strategy.victoryPreparation ? { victoryPreparation: strategy.victoryPreparation } : {}),
         ...(strategy.eventPhase ? { eventPhase: strategy.eventPhase } : {}),
         ...(diag ? { diag } : {}) }
 }
@@ -22341,7 +22518,7 @@ function esm_pick_replacement_unit(candidates, role) {
 }
 /** import server/erasmus_state.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.18"
+const ERASMUS_VERSION = "erasmus-v2.0-zh.20"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "delay", "unit", "hex", "strat_move", "ground_move", "roll", "eliminate", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
@@ -22568,8 +22745,11 @@ function target_argument(action, value, seedText, role, view, strategy) {
             const picked=planReaction(view,pickValue,action,role,strategy)
             return picked!==undefined?picked:pick_argument(pickValue,seedText,action,view)
         }
-        const planned = composeTaskForce(eop_focus(role), null, null, view, pickValue, role)
-        const picked = planned && planned.unit !== undefined && planned.unit !== null ? planned.unit : eop_pick_unit(pickValue, role, activeUnits)
+        const activationFocus = typeof eop_activation_focus_faction === "function"
+            ? eop_activation_focus_faction(role === "Japan" ? JP : AP, activeUnits.length) : eop_focus(role)
+        const planned = composeTaskForce(activationFocus, null, null, view, pickValue, role)
+        const picked = planned && planned.unit !== undefined && planned.unit !== null
+            ? planned.unit : eop_pick_unit(pickValue, role, activeUnits, activationFocus)
         return picked !== undefined ? picked : pick_argument(pickValue, seedText, action, view)
     }
     if (action === "unit" && (view?.ai?.windowKind === "pbm" || /Declare battle hexes|Confirm declared battle hexes|Assign units to battle/i.test(prompt))) {
@@ -22621,7 +22801,7 @@ function evaluateChart(chart, view, context) {
     if(/Play reaction cards|Apply reaction cards/i.test(reactionPrompt))reactionStep={suffix:"S-INTEL-CARD",strategy:`${context.role==="Japan"?"JP":"AP"}_REACTION_CARD_PRIORITY`,preferred:["card","done"]}
     else if(/Roll for submarine warfare/i.test(reactionPrompt))reactionStep={suffix:"S-SUB",strategy:`${context.role==="Japan"?"JP":"AP"}_SUBMARINE_ATTACK`,preferred:["roll","done"]}
     else if(/Submarine attack\. Apply hits/i.test(reactionPrompt))reactionStep={suffix:"S-SUB",strategy:`${context.role==="Japan"?"JP":"AP"}_SUBMARINE_ATTACK`,preferred:["unit","done"]}
-    else if(/Choose (unit|space) to retreat|Confirm retreat/i.test(reactionPrompt))reactionStep={suffix:"S-REACTION",strategy:`${context.role==="Japan"?"JP":"AP"}_REACTION_RETREAT`,preferred:["unit","action_hex","done"]}
+    else if(/Choose (unit|space) to retreat|Confirm retreat/i.test(reactionPrompt))reactionStep={suffix:"S-REACTION",strategy:`${context.role==="Japan"?"JP":"AP"}_REACTION_RETREAT`,preferred:["unit","action_hex","eliminate","done"]}
     else if(/roll for special reaction/i.test(reactionPrompt))reactionStep={suffix:"S-SR",strategy:`${context.role==="Japan"?"JP":"AP"}_ROLL_EACH_SR`,preferred:["action_hex","roll","pass","done"]}
     if(reactionStep){
         const side=context.role==="Japan"?"JP06":"AP12",node=`${side}-${reactionStep.suffix}`
@@ -22766,11 +22946,12 @@ function evaluateChart(chart, view, context) {
         fallback = false
         strategy = "HEADLESS_ADVANCE"
     }
-    // “Move units”窗口 + 已选中空中单位(纯空/无地面海军的攻势, 无 advance): 空中单位
-    // “就地待命”应走 turn_box(退到回合轨、下回合返场), 而非 no_move——no_move 会触发
-    // move_to 原地落子, 在反应/纯空场景下落入无合法动作的死窗。地面/海军由 advance 处理。
+    // “Move units”窗口 + 已选中空中单位(纯空/无地面海军的攻势, 无 advance)：
+    // 完整战役必须 no_move 留在基地。随后 declare_battle_hexes 会按 br/ebr 把它承诺到
+    // 战斗格外的会战；旧代码直接 turn_box，等于激活后立刻撤走，造成航空支援恒为 0。
+    // 子图兼容模式若没有 no_move 才保留 turn_box 安全出口。
     if (/move units/i.test(String(view.prompt || "")) && legal.includes("turn_box") && !legal.includes("advance")) {
-        action = "turn_box"
+        action = esm_gate_on() && legal.includes("no_move") ? "no_move" : "turn_box"
     }
     // 通用防 toggle 死循环: 引擎里 unselect_unit 会把“已选/将被撤销”的单位也塞进 unit 候选
     // (记入 view.unselect)。若此刻 unit 的每个候选都是 unselect, 选 unit 只会撤销当前选择 →

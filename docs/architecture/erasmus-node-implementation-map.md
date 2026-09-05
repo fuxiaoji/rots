@@ -2,7 +2,7 @@
 
 > 本文件由 `node tools/rules/build_erasmus_implementation_map.js` 生成。它回答‘逻辑节点由哪段代码执行’，不替代 PDF 节点视觉坐标。坐标请填写 `docs/rules/normalized/erasmus-v2-zh-charts/node-regions.csv`。
 
-- 策略版本：`erasmus-v2.0-zh.18`
+- 策略版本：`erasmus-v2.0-zh.20`
 - 图表：12 张
 - 节点：258 个
 - 实现分类：implemented-by-family=36，implemented-specialized=213，implemented-generic=9

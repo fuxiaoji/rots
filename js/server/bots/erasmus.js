@@ -2,7 +2,7 @@
 /** import server/erasmus_data.js*/
 /** import server/erasmus_state.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.18"
+const ERASMUS_VERSION = "erasmus-v2.0-zh.20"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "delay", "unit", "hex", "strat_move", "ground_move", "roll", "eliminate", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
@@ -229,8 +229,11 @@ function target_argument(action, value, seedText, role, view, strategy) {
             const picked=planReaction(view,pickValue,action,role,strategy)
             return picked!==undefined?picked:pick_argument(pickValue,seedText,action,view)
         }
-        const planned = composeTaskForce(eop_focus(role), null, null, view, pickValue, role)
-        const picked = planned && planned.unit !== undefined && planned.unit !== null ? planned.unit : eop_pick_unit(pickValue, role, activeUnits)
+        const activationFocus = typeof eop_activation_focus_faction === "function"
+            ? eop_activation_focus_faction(role === "Japan" ? JP : AP, activeUnits.length) : eop_focus(role)
+        const planned = composeTaskForce(activationFocus, null, null, view, pickValue, role)
+        const picked = planned && planned.unit !== undefined && planned.unit !== null
+            ? planned.unit : eop_pick_unit(pickValue, role, activeUnits, activationFocus)
         return picked !== undefined ? picked : pick_argument(pickValue, seedText, action, view)
     }
     if (action === "unit" && (view?.ai?.windowKind === "pbm" || /Declare battle hexes|Confirm declared battle hexes|Assign units to battle/i.test(prompt))) {
@@ -282,7 +285,7 @@ function evaluateChart(chart, view, context) {
     if(/Play reaction cards|Apply reaction cards/i.test(reactionPrompt))reactionStep={suffix:"S-INTEL-CARD",strategy:`${context.role==="Japan"?"JP":"AP"}_REACTION_CARD_PRIORITY`,preferred:["card","done"]}
     else if(/Roll for submarine warfare/i.test(reactionPrompt))reactionStep={suffix:"S-SUB",strategy:`${context.role==="Japan"?"JP":"AP"}_SUBMARINE_ATTACK`,preferred:["roll","done"]}
     else if(/Submarine attack\. Apply hits/i.test(reactionPrompt))reactionStep={suffix:"S-SUB",strategy:`${context.role==="Japan"?"JP":"AP"}_SUBMARINE_ATTACK`,preferred:["unit","done"]}
-    else if(/Choose (unit|space) to retreat|Confirm retreat/i.test(reactionPrompt))reactionStep={suffix:"S-REACTION",strategy:`${context.role==="Japan"?"JP":"AP"}_REACTION_RETREAT`,preferred:["unit","action_hex","done"]}
+    else if(/Choose (unit|space) to retreat|Confirm retreat/i.test(reactionPrompt))reactionStep={suffix:"S-REACTION",strategy:`${context.role==="Japan"?"JP":"AP"}_REACTION_RETREAT`,preferred:["unit","action_hex","eliminate","done"]}
     else if(/roll for special reaction/i.test(reactionPrompt))reactionStep={suffix:"S-SR",strategy:`${context.role==="Japan"?"JP":"AP"}_ROLL_EACH_SR`,preferred:["action_hex","roll","pass","done"]}
     if(reactionStep){
         const side=context.role==="Japan"?"JP06":"AP12",node=`${side}-${reactionStep.suffix}`
@@ -427,11 +430,12 @@ function evaluateChart(chart, view, context) {
         fallback = false
         strategy = "HEADLESS_ADVANCE"
     }
-    // “Move units”窗口 + 已选中空中单位(纯空/无地面海军的攻势, 无 advance): 空中单位
-    // “就地待命”应走 turn_box(退到回合轨、下回合返场), 而非 no_move——no_move 会触发
-    // move_to 原地落子, 在反应/纯空场景下落入无合法动作的死窗。地面/海军由 advance 处理。
+    // “Move units”窗口 + 已选中空中单位(纯空/无地面海军的攻势, 无 advance)：
+    // 完整战役必须 no_move 留在基地。随后 declare_battle_hexes 会按 br/ebr 把它承诺到
+    // 战斗格外的会战；旧代码直接 turn_box，等于激活后立刻撤走，造成航空支援恒为 0。
+    // 子图兼容模式若没有 no_move 才保留 turn_box 安全出口。
     if (/move units/i.test(String(view.prompt || "")) && legal.includes("turn_box") && !legal.includes("advance")) {
-        action = "turn_box"
+        action = esm_gate_on() && legal.includes("no_move") ? "no_move" : "turn_box"
     }
     // 通用防 toggle 死循环: 引擎里 unselect_unit 会把“已选/将被撤销”的单位也塞进 unit 候选
     // (记入 view.unselect)。若此刻 unit 的每个候选都是 unselect, 选 unit 只会撤销当前选择 →

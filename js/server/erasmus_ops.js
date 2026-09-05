@@ -208,9 +208,9 @@ function eop_min_dist(hex, locs) {
 // 而非空跑一整轮又无会战可报), 次键 = 到焦点距离(保留战略方向)。此前只按"距焦点最近"
 // 挑单位, 而焦点(如拉包尔)常远在战线后方, 挑出的单位离任何敌军都远 → 移动后够不着敌格
 // → ~半攻势"Confirm offensive"直接跳过会战 → 每回合夺格数远低于 PoW 所需 4。
-function eop_pick_unit(candidates, role, activeUnits) {
+function eop_pick_unit(candidates, role, activeUnits, focusOverride) {
     if (!Array.isArray(candidates) || candidates.length === 0) return undefined
-    const focus = eop_focus(role)
+    const focus = Number.isInteger(focusOverride) ? focusOverride : eop_focus(role)
     if (typeof G === "undefined" || !G || !G.location) return undefined
     const mine = role === "Japan" ? JP : AP
     const axis = eop_axis(role)
@@ -322,24 +322,22 @@ function eop_landing_no_escort(role, view) {
     const md = (typeof get_map_data === "function") ? get_map_data(focus) : null
     if (!md || !md.port) return false
     if (is_space_controlled(focus, mine)) return false
-    // 可新增单位(去已激活、去空中)里, 是否存在"海军与两栖地面同格"的护航编成?
-    // 无头推进按“同格编组”, 只有同格的海陆才能一起上岛(带海上支援登陆); 非同格海军
-    // 会单独一组, 够不着只守地面的敌港。故只看“同格海陆”是否可用。
+    // 可新增单位里是否同时存在海军和两栖地面。护航舰不要求与登陆军从同一港口
+    // 出发；引擎只在会战结算时检查目标格内是否有进攻方海军。旧的“必须同格出发”
+    // 预检会错误取消台湾陆军 + 南海舰队这类合法编成，制造空攻势。
     const cand = Array.isArray(view.actions && view.actions.unit) ? view.actions.unit : []
     const unsel = new Set(Array.isArray(view.unselect) ? view.unselect : [])
-    const navalLocs = new Set(), groundLocs = new Set()
+    let hasNaval = false, hasGround = false
     for (const u of cand) {
         if (unsel.has(u)) continue
         let p = null
         try { p = pieces[u] } catch (e) {}
         if (!p || p.class === "air") continue
-        const loc = G.location[u]
-        if (p.class === "naval") navalLocs.add(loc)
-        else if (p.class === "ground" && (p.asp || p.strat_move)) groundLocs.add(loc)
+        if (p.class === "naval") hasNaval = true
+        else if (p.class === "ground" && (p.asp || p.strat_move)) hasGround = true
     }
-    if (groundLocs.size === 0) return false   // 无两栖地面可激活 → 不会发生无护航登陆
-    for (const loc of groundLocs) if (navalLocs.has(loc)) return false
-    return true
+    if (!hasGround) return false   // 无两栖地面可激活 → 不会发生无护航登陆
+    return !hasNaval
 }
 
 // ---- 引擎无头推进就近转向 ------------------------------------------------
@@ -357,6 +355,27 @@ function eop_advance_tiebreak(hex, faction) {
 function eop_trace(role) {
     const axis = eop_axis(role)
     return { axis: axis ? axis.id : null, axis_note: axis ? axis.note : null, focus: eop_focus(role) }
+}
+
+// 激活上限较高时，第5/11页要求“为每个目标编成一个任务部队”。激活窗尚未宣告
+// 战斗格，不能依赖 battle_hexes 轮换；按每 4 个激活单位（至少两支地面、护航、
+// 空海支援）预分配到下一个未完成目标，使 8/9 点事件形成两个独立且不过薄的编队。
+function eop_activation_focus_faction(faction, selectedCount) {
+    const role = faction === JP ? "Japan" : "Allies"
+    const axis = eop_axis(role)
+    if (!axis || !Array.isArray(axis.chain)) return eop_focus(role)
+    const pending = []
+    for (const h of axis.chain) {
+        const meta = eop_target_meta(role, h)
+        if (meta && (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ")) {
+            if (meta.requiresOccupation && !is_space_controlled(h, faction)) pending.push(h)
+            else { try { if (has_zoi(h, 1 - faction)) pending.push(h) } catch (e) {} }
+        } else if (!is_space_controlled(h, faction)) pending.push(h)
+    }
+    if (!pending.length) return null
+    // 第5/11页的典型最小编队由地面占领、海军护航、空海支援及一支余量构成。
+    // 每4个激活点才转向下一个目标；目标链顺序仍是硬优先，未列入链的岛不会插队。
+    return pending[Math.min(pending.length - 1, Math.floor(Math.max(0, Number(selectedCount) || 0) / 4))]
 }
 
 function eop_target_meta(role, hex) {

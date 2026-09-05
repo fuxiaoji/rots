@@ -130,9 +130,15 @@ function play(seed) {
     const winner = state.result?.won_side || state.result || null
     let finalAtomic = null
     try { finalAtomic = rules.query(state, "Allies", "atomic_bomb_strategy_status") } catch (e) { /* diagnostic only */ }
+    const powBank = Array.isArray(state.capture) ? state.capture.length : 0
+    const surrender = Array.isArray(state.surrender) ? {
+        philippines: !!state.surrender[0], malaya: !!state.surrender[1], dei: !!state.surrender[2],
+        burma: !!state.surrender[3], japan: !!state.surrender[12],
+    } : null
     return { seed, status: "complete", winner, actions: g.actions, turn: g.turn, fallback: g.fallback,
         noBattleHex: g.noBattleHex, unexplainedNoBattle:g.unexplainedNoBattle, traceNodeMissing:g.traceNodeMissing, strategyCounts:g.strategyCounts,
         groundMove: g.groundMove, capturedAP: g.capturedAP, capturedJP: g.capturedJP,
+        politicalWill: Number(state.political_will || 0), powRequired: Number(state.pow || 0), powBank, surrender,
         role: g.role, won_text: state.result?.won_text || state.L?.message || null, closestAdvance: g.closestAdvance,
         atomicBest: g.atomicBest, finalAtomic, strategyLog: g.strategyLog }
 }
@@ -181,6 +187,7 @@ const output = { generatedAt: new Date().toISOString(), tally,
     perGame: completed.map(g => ({ seed: g.seed, winner: g.winner, actions: g.actions, turn: g.turn, fallback: g.fallback,
         noBattleHex: g.noBattleHex, unexplainedNoBattle:g.unexplainedNoBattle, traceNodeMissing:g.traceNodeMissing, strategyCounts:g.strategyCounts,
         groundMove: g.groundMove, capturedAP: g.capturedAP, capturedJP: g.capturedJP,
+        politicalWill:g.politicalWill,powRequired:g.powRequired,powBank:g.powBank,surrender:g.surrender,
         role: g.role, won_text: g.won_text, closestAdvance: g.closestAdvance, atomicBest: g.atomicBest,
         finalAtomic: g.finalAtomic, strategyLog: g.strategyLog })),
     errors: games.filter(x => x.status === "error").map(g => ({ seed: g.seed, error: g.error, actions: g.actions, context: g.context })) }

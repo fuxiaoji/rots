@@ -531,6 +531,52 @@ function esm_jp_hq_suppression_targets() {
     }
     return targets
 }
+
+function esm_front_distance(hex, faction) {
+    let best = 99
+    for (let u = 1; u < pieces.length; ++u) {
+        const p = pieces[u], loc = G.location[u]
+        if (!p || p.faction !== faction || p.class !== "ground" || !(loc >= 0 && loc <= LAST_BOARD_HEX)) continue
+        best = Math.min(best, get_distance(loc, hex))
+    }
+    return best
+}
+
+// 规则 16.47 是盟军每回合必须满足的生存条件。图表决定战区，本函数只把该战区
+// 内能计入 G.capture 的未占目标提到前面；不足时再补入最近、守军较弱的合法计分格。
+// 它不改变控制权或战力，只防止 AI 有可夺目标却把整手牌耗在不计 PoW 的移动上。
+function esm_ap_progress_targets(existingChain, existingMeta) {
+    const deficit = Math.max(0, Number(G.pow || 0) - esm_pow_bank())
+    if (G.turn < 4 || deficit <= 0) return []
+    const byHex = new Map((existingMeta || []).map(x => [x.hex, x]))
+    const eligible = h => {
+        const md = get_map_data(h)
+        return h >= 0 && h <= LAST_BOARD_HEX && is_space_controlled(h, JP) && is_controllable_hex(h) &&
+            !!(md && (md.name || md.resource || md.port || md.airfield))
+    }
+    const candidates = []
+    for (const h of existingChain || []) if (eligible(h)) candidates.push(h)
+    for (let h = 0; h <= LAST_BOARD_HEX; ++h) if (eligible(h) && !candidates.includes(h)) candidates.push(h)
+    const defense = h => {
+        let n = 0
+        for (let u = 1; u < pieces.length; ++u) if (pieces[u] && pieces[u].faction === JP && G.location[u] === h)
+            n += Number((G.reduced && set_has(G.reduced, u) ? pieces[u].rcf : pieces[u].cf) || 0)
+        return n
+    }
+    const chainSet = new Set(existingChain || [])
+    candidates.sort((a, b) => (G.turn >= 9 ? Number(!get_map_data(a).resource) - Number(!get_map_data(b).resource) : 0)
+        // PoW 生存前视只能在当前决策轴内重排可执行目标；旧排序先挑全图最弱空岛，
+        // 把中太平洋/DEI/CBI 主攻群拆散。图表链目标必须先于补充计分格。
+        || Number(!chainSet.has(a)) - Number(!chainSet.has(b))
+        || defense(a) - defense(b)
+        || esm_front_distance(a, AP) - esm_front_distance(b, AP) || a - b)
+    return candidates.slice(0, Math.max(deficit + 2, 4)).map((hex, i) => ({
+        ...(byHex.get(hex) || {}), hex, kind: "CONQUEST", requiresOccupation: true,
+        damageLevel: (byHex.get(hex) || {}).damageLevel || 1,
+        objective: (byHex.get(hex) || {}).objective || `战争进程计分目标 ${i + 1}`,
+        victoryConstraint: "PROGRESS_OF_WAR",
+    }))
+}
 function esm_build_ctx(role, lock, seedText) {
     const ctx = {
         cards_in_hand: (G.hand && G.hand[esm_role_faction(role)]) ? G.hand[esm_role_faction(role)].length : 5,
@@ -675,6 +721,14 @@ function esm_build_ctx(role, lock, seedText) {
             resHexes: (typeof RESOURCE_HEX !== "undefined") ? RESOURCE_HEX.filter(h => h >= 0 && h <= LAST_BOARD_HEX && is_space_controlled(h, JP)) : [],
             advance: esm_advance_metrics(),
             atomic: (typeof atomic_bomb_strategy_status === "function") ? atomic_bomb_strategy_status() : null,
+            openingSurrender: (typeof nations !== "undefined") ? {
+                philippines: !!G.surrender[nations.PHILIPPINES.id],
+                dei: !!G.surrender[nations.DEI.id],
+                philippinesKeysHeld: nations.PHILIPPINES.keys.filter(k => is_space_controlled(hex_to_int(k), JP)).length,
+                philippinesKeysRequired: nations.PHILIPPINES.keys.length,
+                deiKeysHeld: nations.DEI.keys.filter(k => is_space_controlled(hex_to_int(k), JP)).length,
+                deiKeysRequired: nations.DEI.keys.length,
+            } : undefined,
         }
     } catch (e) { /* 无 G 时不设 */ }
     return ctx
@@ -1081,6 +1135,11 @@ function esm_pin_strategy(view, context) {
         const dynamicHexes = new Set(dynamicTargets.map(target => target.hex))
         targetMeta = dynamicTargets.concat(targetMeta.filter(target => !dynamicHexes.has(target.hex)))
     }
+    // 投降完成度只做审计，不覆盖第1页实际选出的空优、资源或事件战略。
+    const openingSurrenderPlan = role === "Japan" && G.turn <= 4 ? {
+        philippinesComplete: !!G.surrender[nations.PHILIPPINES.id],
+        deiComplete: !!G.surrender[nations.DEI.id], diagnosticOnly: true,
+    } : null
     if (role === "Japan" && name === "最终防御战略") {
         dynamicTargets = esm_jp_final_defense_targets()
         chain = dynamicTargets.map(target => target.hex)
@@ -1104,11 +1163,39 @@ function esm_pin_strategy(view, context) {
             }
         }
     }
+    let progressPlan = null
+    if (role === "Allies") {
+        const progress = esm_ap_progress_targets(chain, targetMeta)
+        if (progress.length) {
+            const progressHexes = new Set(progress.map(x => x.hex))
+            chain = progress.map(x => x.hex).concat(chain.filter(h => !progressHexes.has(h)))
+            targetMeta = progress.concat(targetMeta.filter(x => !progressHexes.has(x.hex)))
+            dynamicTargets = progress.concat(dynamicTargets.filter(x => !progressHexes.has(x.hex)))
+            progressPlan = { required: Number(G.pow || 0), bank: esm_pow_bank(), remaining: progress.map(x => x.hex) }
+        }
+    }
+    let victoryPreparation = null
+    if (role === "Allies" && phase === "late" && name === "登陆日本" && typeof atomic_bomb_strategy_status === "function") {
+        const atomic = atomic_bomb_strategy_status()
+        if (atomic.noStrategicBombingFailure && atomic.sovietReady && !atomic.resourcesSatisfied) {
+            const resourceTargets = atomic.jpResourceHexes.map(hex => ({ hex, kind: "CONQUEST",
+                objective: "原子弹战略准备：夺取剩余日本资源格", damageLevel: 1,
+                requiresOccupation: true, victoryConstraint: "ATOMIC_RESOURCE_LIMIT" }))
+                .sort((a, b) => esm_front_distance(a.hex, AP) - esm_front_distance(b.hex, AP) || a.hex - b.hex)
+            const resourceHexes = new Set(resourceTargets.map(x => x.hex))
+            chain = resourceTargets.map(x => x.hex).concat(chain.filter(h => !resourceHexes.has(h)))
+            targetMeta = resourceTargets.concat(targetMeta.filter(x => !resourceHexes.has(x.hex)))
+            dynamicTargets = resourceTargets.concat(dynamicTargets.filter(x => !resourceHexes.has(x.hex)))
+            victoryPreparation = { type: "ATOMIC_RESOURCE_LIMIT", current: atomic.jpResources,
+                limit: atomic.resourceLimit, remaining: resourceTargets.map(x => x.hex) }
+        }
+    }
     const strategy = entry ? {
         name, nameFull: entry.name, kind: entry.kind, notes: entry.notes, targets: entry.targets,
         phase, role, seed: seedText, ord, pinnedNow: true, goals, chain, dynamicTargets, targetMeta, ctx,
         nodePath: (ctx._nodePath || []).slice(), conditions: (ctx._conditions || []).slice(), d10Rolls: (ctx._dice || []).slice(),
         eventPhase: isEventStrat ? "early" : undefined,
+        openingSurrenderPlan, progressPlan, victoryPreparation,
     } : {
         name, nameFull: name, kind: "EVENT", notes: [], targets: [], phase, role, ord,
         pinnedNow: true, goals: [], chain: [], targetMeta: [], ctx,
@@ -1134,6 +1221,18 @@ function esm_card_window_action(strategy, view, context) {
     const wantEvent = strategy.kind === "EVENT"
     if (strategy.kind === "PASS" && legal.includes("pass")) return { action: "pass", argument: undefined, via: strategy.name }
 
+    // 原子弹标准把“苏联入侵已发生，或持有且可作为事件打出”列为硬条件。
+    // 旧选牌树会在晚期把 AP#79 当普通高 OC 消耗（历史复盘 seed 20260903 即如此），
+    // 随后整局再也无法满足该条件。只要事件当前合法就立即执行；否则由下方选牌树
+    // 在仍有其他牌时保留它。
+    if (strategy.role === "Allies" && typeof SOVIET_INVADE !== "undefined" && hand.includes(SOVIET_INVADE)) {
+        const classified = classifyCards(hand, strategy.role)
+        const soviet = classified.find(x => x.id === SOVIET_INVADE)
+        if (soviet && soviet.eventPlayable) {
+            return esm_set_card_pick(strategy, soviet, "event", "AP10-S-EVENT", "盟军胜利条件：苏联入侵满洲事件")
+        }
+    }
+
     // AP09 注释：占领战略轰炸基地必须使用当前最大的有效攻势卡。
     // 先选可作为 EC 的军事事件（按 LV），没有时才选最大 OC。
     if(strategy.role==="Allies"&&strategy.name==="占领战略轰炸基地"){
@@ -1148,11 +1247,12 @@ function esm_card_window_action(strategy, view, context) {
         }
     }
 
-    // 条约谈判生存约束：政治意志仅剩 1–2 且本回合 PoW 尚未达标时，设置 FO、PASS 或
-    // 弃牌会在政治阶段直接输掉对局。此时不改变决策轴及目标顺序，只把第10页本可留作
-    // FO/低优先事件的牌改为当前最大有效攻势，以执行该轴的下一个合法目标。
+    // 条约谈判生存约束：PoW 是每回合结算的硬门槛；只要尚未达标，设置 FO、PASS
+    // 或低优先事件都会减少本回合补足夺格数的机会。因此从第一张可用牌起就用最大
+    // 有效攻势执行 progressPlan；达标后立刻恢复第10页正常选牌树。
     // 这是对胜负规则的前视约束，不凭空增加目标、战力或合法动作。
-    if (strategy.role === "Allies" && Number(G.political_will) <= 2 && Number(G.pow) > esm_pow_bank()) {
+    const powDeficit = Math.max(0, Number(G.pow || 0) - esm_pow_bank())
+    if (strategy.role === "Allies" && powDeficit > 0) {
         const classified = classifyCards(hand, strategy.role)
         const ec = classified.filter(c => c.military && c.eventPlayable)
             .sort((a,b)=>b.lv-a.lv||b.ops-a.ops||a.id-b.id)
@@ -1164,7 +1264,7 @@ function esm_card_window_action(strategy, view, context) {
             const node=ec[0]?(chosen.restricted?"AP10-S-RESTRICTED-EC":"AP10-S-UNRESTRICTED-EC")
                 :(chosen.military&&chosen.restricted?"AP10-S-RESTRICTED-OC":"AP10-S-NONMIL-OC")
             return esm_set_card_pick(strategy, chosen, ec[0] ? "event" : "ops", node,
-                `盟军PoW紧急攻势:${esm_pow_bank()}/${G.pow}，政治意志${G.political_will}`)
+                `盟军PoW紧急攻势:${esm_pow_bank()}/${G.pow}，余牌${hand.length}，政治意志${G.political_will}`)
         }
     }
 
@@ -1258,6 +1358,10 @@ function esm_card_selection_tree(strategy, hand) {
     const side=strategy.role==="Japan"?"JP":"AP", prefix=side==="JP"?"JP04":"AP10"
     let c=classifyCards(hand,strategy.role)
     if(!c.length)return null
+    if(side==="AP"&&c.length>1&&typeof SOVIET_INVADE!=="undefined"){
+        const withoutSoviet=c.filter(x=>x.id!==SOVIET_INVADE)
+        if(withoutSoviet.length)c=withoutSoviet
+    }
     // JP04 注释：Operation MI 除非仍在早期且执行中太平洋/外围防御，或它是唯一可用牌，否则不纳入评估。
     if(side==="JP"&&c.length>1&&!(strategy.phase==="early"&&/中太平洋|外围防御/.test(strategy.name)))
         c=c.filter(x=>!/^operation mi$/i.test(x.name))
@@ -1545,6 +1649,9 @@ function esm_trace_of(strategy, privateDetails) {
         priorityTargets: esm_strategy_targets(strategy),
         goals: goalKinds.length ? goalKinds : undefined,
         ...(strategy.powEmergency ? { powEmergency: strategy.powEmergency } : {}),
+        ...(strategy.openingSurrenderPlan ? { openingSurrenderPlan: strategy.openingSurrenderPlan } : {}),
+        ...(strategy.progressPlan ? { progressPlan: strategy.progressPlan } : {}),
+        ...(strategy.victoryPreparation ? { victoryPreparation: strategy.victoryPreparation } : {}),
         ...(strategy.eventPhase ? { eventPhase: strategy.eventPhase } : {}),
         ...(diag ? { diag } : {}) }
 }

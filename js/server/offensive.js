@@ -1141,6 +1141,16 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
         : steer && typeof eop_advance_tiebreak === "function" ? eop_advance_tiebreak(hex, faction) : -1
     const nearKey = hex => approach >= 0 ? approach : headless_nearest_enemy_dist(hex, 1 - faction)
     if (kind === "attack") {
+        // 航空单位可从战斗格外参战。若后方基地不在目标战斗航程内，本次攻势先把
+        // 它移动到更靠前的合法机场；到达后 choose_attack_hex 仍按 br/ebr 决定能否
+        // 承诺到会战，不绕过任何移动或战斗航程检查。
+        if (movingPiece && movingPiece.class === "air") {
+            const md = get_map_data(hex)
+            if (!md || !md.airfield || !is_space_controlled(hex, faction) || eu.count > 0) return null
+            const range = Math.max(1, Number(movingPiece.br) || Number(movingPiece.ebr) || 1)
+            const d = strategicFocus !== null ? get_distance(hex, strategicFocus) : headless_nearest_enemy_dist(hex, 1 - faction)
+            return [strategicFocus !== null && d <= range ? -4 : 3, d, get_distance(source, hex), hex]
+        }
         // 最终国防圈不是进攻目标表：只向己控驻军焦点移动；不可达时仅在己控格内
         // 向焦点靠近。禁止纯海军落回“最近敌舰”而从本土远征南方资源区。
         if (strategicMeta && strategicMeta.kind === "GARRISON") {
@@ -1222,9 +1232,15 @@ function headless_score_lt(a, b) {
 function headless_advance_has_candidates(kind) {
     for (const u of L.movable_units) {
         const p = pieces[u]
-        if (!p || (p.class === "air" && kind !== "pbm")) continue
+        if (!p || (p.class === "air" && kind !== "pbm" && kind !== "attack")) continue
         const h = G.location[u]
         if (!(h >= 0 && h <= LAST_BOARD_HEX)) continue
+        if (kind === "attack" && p.class === "air" && typeof eop_focus_faction === "function") {
+            let f = null
+            try { f = eop_focus_faction(G.active) } catch (e) { f = null }
+            const br = p.parenthetical ? Number(p.br) : Number(p.ebr || p.br)
+            if (f !== null && get_distance(h, f) <= Math.max(1, br || 1)) continue
+        }
         if (kind === "attack") return true
         if (kind === "pbm" && (p.class === "air" || !could_unit_stop_here(u))) return true
         if (kind === "reaction" && !set_has(G.offensive.battle_hexes, h)) return true
@@ -1238,9 +1254,17 @@ function headless_advance_one(self, kind, targetPlan) {
     if (G.active_stack.length) return { type: "decline" }
     const need = u => {
         const p = pieces[u]
-        if (!p || (p.class === "air" && kind !== "pbm")) return false
+        if (!p || (p.class === "air" && kind !== "pbm" && kind !== "attack")) return false
         const h = G.location[u]
         if (!(h >= 0 && h <= LAST_BOARD_HEX)) return false
+        if (kind === "attack" && p.class === "air") {
+            let f = targetPlan && Number.isInteger(targetPlan.focus) ? targetPlan.focus : null
+            if (f === null && typeof eop_focus_faction === "function") {
+                try { f = eop_focus_faction(G.active) } catch (e) { f = null }
+            }
+            const br = p.parenthetical ? Number(p.br) : Number(p.ebr || p.br)
+            if (f !== null && get_distance(h, f) <= Math.max(1, br || 1)) return false
+        }
         if (kind === "attack") return true
         if (kind === "pbm") return p.class === "air" || !could_unit_stop_here(u)
         if (kind === "reaction") return !set_has(G.offensive.battle_hexes, h)
@@ -1263,7 +1287,7 @@ function headless_advance_one(self, kind, targetPlan) {
         const p = pieces[u]
         if(!p||G.location[u]!==loc)return false
         // 航空 PBM 每机场最多一机，逐个移动；海军/失败地面仍按同格同类编组。
-        if(kind==="pbm"&&leadPiece.class==="air")return u===lead
+        if((kind==="pbm"||kind==="attack")&&leadPiece.class==="air")return u===lead
         if(kind==="pbm")return p.class===leadPiece.class
         return p.class!=="air"
     })
@@ -1272,6 +1296,32 @@ function headless_advance_one(self, kind, targetPlan) {
     group.forEach(u => self.unit(u))
     L.move_data = get_move_data()
     update_move_hex()
+    // 后方前推：只使用引擎本来会显示的扩展航程/战略移动资格。扩展航程用于无法以
+    // 正常战斗航程接近当前轴的括号航空单位；战略移动用于距目标很远、且引擎判定
+    // sm_possible 的非航空编队。两者都通过原 update_move_hex 重新计算合法落点。
+    let plannedMoveType = ANY_MOVE
+    let plannedFocus = targetPlan && Number.isInteger(targetPlan.focus) ? targetPlan.focus : null
+    if (plannedFocus === null && typeof eop_focus_faction === "function") {
+        try { plannedFocus = eop_focus_faction(G.active) } catch (e) { plannedFocus = null }
+    }
+    const focusDistance = plannedFocus !== null ? get_distance(loc, plannedFocus) : 0
+    const farFromFocus = plannedFocus !== null && focusDistance > 8
+    if (kind === "attack" && leadPiece.class === "air" && leadPiece.parenthetical && farFromFocus) {
+        plannedMoveType = AIR_EXTENDED_MOVE
+    } else if (kind === "attack" && leadPiece.class !== "air" && L.move_data.sm_possible && focusDistance > 12) {
+        plannedMoveType = STRAT_MOVE
+    }
+    if (plannedMoveType !== ANY_MOVE) {
+        L.move_type = plannedMoveType
+        L.move_data = get_move_data()
+        update_move_hex()
+        if (!L.allowed_hexes.length) {
+            plannedMoveType = ANY_MOVE
+            L.move_type = ANY_MOVE
+            L.move_data = get_move_data()
+            update_move_hex()
+        }
+    }
     const hasGround = group.some(u => pieces[u] && pieces[u].class === "ground")
     // 记录在 advance 参数中的明确图表目标同样约束纯地面前推（例如仰光/印度陆路）。
     // 没有显式目标时仍仅让可跨海编成使用旧主轴转向，避免普通地面部队无目的横穿大陆。
@@ -1312,6 +1362,7 @@ function headless_advance_one(self, kind, targetPlan) {
         G.active_stack = []
         L.allowed_hexes = []
         L.move_data = {}
+        L.move_type = ANY_MOVE
         return { type: "decline" }
     }
     const path = object_copy(map_get(L.allowed_hexes, best))
