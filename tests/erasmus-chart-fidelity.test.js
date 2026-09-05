@@ -13,6 +13,12 @@ for(const c of doc.charts){
 }
 const byPage=n=>doc.charts.find(c=>c.source_page===n)
 assert.deepEqual(byPage(8).nodes.find(n=>n.id==="AP08-D10").ranges.map(r=>[r.min,r.max]),[[0,4],[5,7],[8,8],[9,9]])
+const ap8Node=id=>byPage(8).nodes.find(n=>n.id===id)
+assert.deepEqual(ap8Node("AP08-B").edges,[{when:true,to:"AP08-D"},{when:false,to:"AP08-C"}],"PDF p8 PoW splits into C+D or C")
+assert.equal(ap8Node("AP08-D").predicate.id,"AP_HAND_GE_3_AND_JP_CONTROLS_COUNTERATTACK_TARGET")
+assert.deepEqual(ap8Node("AP08-D").edges,[{when:true,to:"AP08-S-COUNTEROFFENSIVE"},{when:false,to:"AP08-CARD-GROUP"}])
+assert.deepEqual(ap8Node("AP08-CARD-GROUP").edges,[{when:"always",to:"AP08-D10"}])
+assert.deepEqual(ap8Node("AP08-C").edges,[{when:true,to:"AP08-D10"},{when:false,to:"AP08-S-EVENT"}])
 assert.deepEqual(byPage(12).nodes.find(n=>n.id==="AP12-RF-D10").ranges.map(r=>[r.min,r.max]),[[0,4],[5,9]])
 assert.deepEqual(byPage(5).nodes.find(n=>n.id==="JP05-D10").ranges.map(r=>[r.min,r.max]),[[0,3],[4,9]])
 for(const id of ["JP01-A","JP01-B","JP01-CD","JP01-CEHI","JP01-CJEBIK","JP01-D10","AP09-G"])

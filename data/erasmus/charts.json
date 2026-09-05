@@ -3890,15 +3890,62 @@
           "predicate": {
             "id": "AP_NEEDS_PROGRESS_OF_WAR"
           },
-          "label_zh": "需要满足战争进程？",
+          "label_zh": "需要战争进程？",
           "edges": [
             {
               "when": true,
-              "to": "AP08-C"
+              "to": "AP08-D"
             },
             {
               "when": false,
               "to": "AP08-C"
+            }
+          ],
+          "confidence": "confirmed",
+          "source_page": 8,
+          "visual_region": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 1,
+            "units": "page_fraction"
+          }
+        },
+        {
+          "id": "AP08-D",
+          "type": "condition",
+          "predicate": {
+            "id": "AP_HAND_GE_3_AND_JP_CONTROLS_COUNTERATTACK_TARGET"
+          },
+          "label_zh": "手牌≥3且日本控制反攻目标？",
+          "edges": [
+            {
+              "when": true,
+              "to": "AP08-S-COUNTEROFFENSIVE"
+            },
+            {
+              "when": false,
+              "to": "AP08-CARD-GROUP"
+            }
+          ],
+          "confidence": "confirmed",
+          "source_page": 8,
+          "visual_region": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 1,
+            "units": "page_fraction"
+          }
+        },
+        {
+          "id": "AP08-CARD-GROUP",
+          "type": "process",
+          "label_zh": "攻势卡牌分组",
+          "edges": [
+            {
+              "when": "always",
+              "to": "AP08-D10"
             }
           ],
           "confidence": "confirmed",
@@ -3921,38 +3968,11 @@
           "edges": [
             {
               "when": true,
-              "to": "AP08-D"
+              "to": "AP08-D10"
             },
             {
               "when": false,
               "to": "AP08-S-EVENT"
-            }
-          ],
-          "confidence": "confirmed",
-          "source_page": 8,
-          "visual_region": {
-            "x": 0,
-            "y": 0,
-            "width": 1,
-            "height": 1,
-            "units": "page_fraction"
-          }
-        },
-        {
-          "id": "AP08-D",
-          "type": "condition",
-          "predicate": {
-            "id": "JP_CONTROLS_COUNTERATTACK_TARGET"
-          },
-          "label_zh": "日本控制反攻目标？",
-          "edges": [
-            {
-              "when": true,
-              "to": "AP08-S-COUNTEROFFENSIVE"
-            },
-            {
-              "when": false,
-              "to": "AP08-D10"
             }
           ],
           "confidence": "confirmed",
@@ -3996,7 +4016,7 @@
               "to": "AP08-S-CBI"
             }
           ],
-          "label_zh": "掷D10；不可执行则重掷",
+          "label_zh": "战略D10",
           "edges": [
             {
               "when": "0-4",
@@ -4049,8 +4069,8 @@
         {
           "id": "AP08-S-EVENT",
           "type": "action",
-          "strategy": "AP_EVENT",
-          "label_zh": "事件",
+          "strategy": "AP_EVENT_STRATEGY",
+          "label_zh": "事件战略",
           "edges": [
             {
               "when": "always",
@@ -4070,8 +4090,8 @@
         {
           "id": "AP08-S-COUNTEROFFENSIVE",
           "type": "action",
-          "strategy": "AP_COUNTEROFFENSIVE",
-          "label_zh": "反攻",
+          "strategy": "AP_COUNTEROFFENSIVE_STRATEGY",
+          "label_zh": "反攻战略",
           "edges": [
             {
               "when": "always",
@@ -4092,7 +4112,7 @@
           "id": "AP08-S-SOUTH-PACIFIC",
           "type": "action",
           "strategy": "AP_SOUTH_PACIFIC",
-          "label_zh": "南太平洋",
+          "label_zh": "南太平洋战略",
           "edges": [
             {
               "when": "always",
@@ -4113,7 +4133,7 @@
           "id": "AP08-S-CENTRAL-PACIFIC",
           "type": "action",
           "strategy": "AP_CENTRAL_PACIFIC",
-          "label_zh": "中太平洋",
+          "label_zh": "中太平洋战略",
           "edges": [
             {
               "when": "always",
@@ -4133,8 +4153,8 @@
         {
           "id": "AP08-S-DEI",
           "type": "action",
-          "strategy": "AP_DEI",
-          "label_zh": "DEI",
+          "strategy": "AP_DEI_STRATEGY",
+          "label_zh": "DEI战略",
           "edges": [
             {
               "when": "always",
@@ -4154,8 +4174,8 @@
         {
           "id": "AP08-S-CBI",
           "type": "action",
-          "strategy": "AP_CBI",
-          "label_zh": "CBI",
+          "strategy": "AP_CBI_STRATEGY",
+          "label_zh": "CBI战略",
           "edges": [
             {
               "when": "always",
@@ -4206,12 +4226,12 @@
       ],
       "strategies": [
         "AP_PASS",
-        "AP_EVENT",
-        "AP_COUNTEROFFENSIVE",
+        "AP_EVENT_STRATEGY",
+        "AP_COUNTEROFFENSIVE_STRATEGY",
         "AP_SOUTH_PACIFIC",
         "AP_CENTRAL_PACIFIC",
-        "AP_DEI",
-        "AP_CBI"
+        "AP_DEI_STRATEGY",
+        "AP_CBI_STRATEGY"
       ],
       "dice_tables": [
         {

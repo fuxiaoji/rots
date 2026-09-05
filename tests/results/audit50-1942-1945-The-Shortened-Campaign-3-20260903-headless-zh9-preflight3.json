@@ -1,0 +1,7839 @@
+{
+  "generatedAt": "2026-09-04T13:06:44.055Z",
+  "tally": {
+    "policy": "erasmus-v2.0-zh.9",
+    "scenario": "1942-1945 (The Shortened Campaign)",
+    "gameCount": 3,
+    "baseSeed": 20260903,
+    "maxActions": 60000,
+    "headless_moves": true,
+    "complete": 3,
+    "japanWins": 3,
+    "alliesWins": 0,
+    "otherWins": 0,
+    "errors": 0,
+    "setupErrors": 0,
+    "actionLimit": 0,
+    "fallback": 0,
+    "groundMove": 45,
+    "capturedAP": 22,
+    "capturedJP": 12,
+    "atomicBombWins": 0,
+    "role": {
+      "Japan": {
+        "decisions": 2064,
+        "byKind": {
+          "axis": 564,
+          "card": 15,
+          "taskforce": 920,
+          "reaction": 565,
+          "?": 0
+        },
+        "airStrikeUnits": 9,
+        "airStrikeHexes": 9,
+        "fire": 116,
+        "advance": 187
+      },
+      "Allies": {
+        "decisions": 2648,
+        "byKind": {
+          "axis": 538,
+          "card": 1,
+          "taskforce": 1506,
+          "reaction": 603,
+          "?": 0
+        },
+        "airStrikeUnits": 53,
+        "airStrikeHexes": 53,
+        "fire": 127,
+        "advance": 205
+      }
+    },
+    "noBattleHex": 128,
+    "unexplainedNoBattle": 0,
+    "traceNodeMissing": 0,
+    "strategyCounts": {
+      "Japan/early/保守的空优战略": 39,
+      "Allies/early/撤离菲律宾": 24,
+      "Allies/early/事件战略": 14,
+      "Japan/mid/资源战略": 33,
+      "Allies/mid/南太平洋战略": 32,
+      "Allies/mid/中太平洋战略": 18,
+      "Japan/mid/事件战略": 24,
+      "Allies/mid/CBI战略": 2,
+      "Allies/mid/事件战略": 22,
+      "Japan/mid/PASS": 18,
+      "Allies/mid/DEI战略": 7,
+      "Japan/late/最终国防圈战略": 12,
+      "Allies/late/推进B29": 14,
+      "Japan/late/事件战略": 11,
+      "Allies/late/事件战略": 13,
+      "Allies/late/登陆日本": 11,
+      "Allies/late/占领轰炸基地": 5
+    }
+  },
+  "perGame": [
+    {
+      "seed": 20260903,
+      "winner": "Japan",
+      "actions": 1870,
+      "turn": 10,
+      "fallback": 0,
+      "noBattleHex": 44,
+      "unexplainedNoBattle": 0,
+      "traceNodeMissing": 0,
+      "strategyCounts": {
+        "Japan/early/保守的空优战略": 13,
+        "Allies/early/撤离菲律宾": 9,
+        "Allies/early/事件战略": 5,
+        "Japan/mid/资源战略": 7,
+        "Allies/mid/南太平洋战略": 6,
+        "Allies/mid/中太平洋战略": 4,
+        "Japan/mid/事件战略": 4,
+        "Allies/mid/CBI战略": 1,
+        "Allies/mid/事件战略": 4,
+        "Japan/mid/PASS": 2,
+        "Allies/mid/DEI战略": 1,
+        "Japan/late/最终国防圈战略": 12,
+        "Allies/late/推进B29": 14,
+        "Japan/late/事件战略": 11,
+        "Allies/late/事件战略": 10,
+        "Allies/late/登陆日本": 11
+      },
+      "groundMove": 25,
+      "capturedAP": 11,
+      "capturedJP": 5,
+      "role": {
+        "Japan": {
+          "decisions": 794,
+          "byKind": {
+            "axis": 229,
+            "card": 12,
+            "taskforce": 327,
+            "reaction": 226,
+            "?": 0
+          },
+          "airStrikeUnits": 4,
+          "airStrikeHexes": 4,
+          "fire": 38,
+          "advance": 63
+        },
+        "Allies": {
+          "decisions": 1076,
+          "byKind": {
+            "axis": 211,
+            "card": 0,
+            "taskforce": 663,
+            "reaction": 202,
+            "?": 0
+          },
+          "airStrikeUnits": 24,
+          "airStrikeHexes": 24,
+          "fire": 65,
+          "advance": 101
+        }
+      },
+      "won_text": "Japanese Victory by Treaty Negotiations",
+      "closestAdvance": {
+        "alliedUnit": {
+          "unit": 192,
+          "hex": 792,
+          "distance": 3,
+          "turn": 9
+        },
+        "alliedControlledHex": {
+          "hex": 792,
+          "distance": 3,
+          "name": "Iwo Jima",
+          "turn": 9
+        },
+        "b29": {
+          "unit": 122,
+          "hex": 792,
+          "distance": 3,
+          "turn": 10
+        }
+      },
+      "atomicBest": {
+        "met": false,
+        "turn": 2,
+        "noStrategicBombingFailure": true,
+        "bombingCampaignStart": 0,
+        "bombingRequiredFromTurn": 9,
+        "sovietOccurred": false,
+        "sovietCardId": 79,
+        "sovietInHand": false,
+        "sovietPlayable": false,
+        "sovietReady": false,
+        "jpResources": 4,
+        "jpResourceHexes": [
+          669,
+          670,
+          672,
+          421
+        ],
+        "resourceLimit": 5,
+        "resourcesSatisfied": true
+      },
+      "finalAtomic": {
+        "met": false,
+        "turn": 10,
+        "noStrategicBombingFailure": true,
+        "bombingCampaignStart": 9,
+        "bombingRequiredFromTurn": 9,
+        "sovietOccurred": false,
+        "sovietCardId": 79,
+        "sovietInHand": false,
+        "sovietPlayable": false,
+        "sovietReady": false,
+        "jpResources": 7,
+        "jpResourceHexes": [
+          669,
+          670,
+          672,
+          245,
+          421,
+          480,
+          452
+        ],
+        "resourceLimit": 5,
+        "resourcesSatisfied": false
+      },
+      "strategyLog": [
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 862,
+          "priorityTargets": [
+            {
+              "priority": 8,
+              "hex": 862,
+              "id": 3921,
+              "name": "Gasmata",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 862,
+          "priorityTargets": [
+            {
+              "priority": 8,
+              "hex": 862,
+              "id": 3921,
+              "name": "Gasmata",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 862,
+          "priorityTargets": [
+            {
+              "priority": 8,
+              "hex": 862,
+              "id": 3921,
+              "name": "Gasmata",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 862,
+          "priorityTargets": [
+            {
+              "priority": 8,
+              "hex": 862,
+              "id": 3921,
+              "name": "Gasmata",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "CBI战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 7,
+              "hex": 1009,
+              "id": 4423,
+              "name": "Guadalcanal",
+              "distanceToTokyo": 20
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 862,
+          "priorityTargets": [
+            {
+              "priority": 8,
+              "hex": 862,
+              "id": 3921,
+              "name": "Gasmata",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "DEI战略",
+          "action": "card",
+          "focus": 452,
+          "priorityTargets": [
+            {
+              "priority": 5,
+              "hex": 452,
+              "id": 2517,
+              "name": "Balikpapan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 6,
+              "hex": 480,
+              "id": 2616,
+              "name": "Tarakan",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 862,
+          "priorityTargets": [
+            {
+              "priority": 8,
+              "hex": 862,
+              "id": 3921,
+              "name": "Gasmata",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 825,
+          "priorityTargets": [
+            {
+              "priority": 5,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 825,
+          "priorityTargets": [
+            {
+              "priority": 5,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 825,
+          "priorityTargets": [
+            {
+              "priority": 5,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 825,
+          "priorityTargets": [
+            {
+              "priority": 5,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 673,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 673,
+              "id": 3306,
+              "name": "Pusan",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 5,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 673,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 673,
+              "id": 3306,
+              "name": "Pusan",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 5,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 673,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 673,
+              "id": 3306,
+              "name": "Pusan",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 5,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "推进B29",
+          "action": "card",
+          "focus": 826,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            },
+            {
+              "priority": 6,
+              "hex": 560,
+              "id": 2909,
+              "name": "Tainan",
+              "distanceToTokyo": 8
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 9,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "登陆日本",
+          "action": "card",
+          "focus": 674,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 2,
+              "hex": 789,
+              "id": 3706,
+              "name": "Tokyo",
+              "distanceToTokyo": 0
+            },
+            {
+              "priority": 3,
+              "hex": 788,
+              "id": 3705,
+              "name": "Ominato",
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 4,
+              "hex": 760,
+              "id": 3606,
+              "name": null,
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 5,
+              "hex": 761,
+              "id": 3607,
+              "name": "Nagoya",
+              "distanceToTokyo": 1
+            }
+          ]
+        },
+        {
+          "turn": 9,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 673,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 673,
+              "id": 3306,
+              "name": "Pusan",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 5,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 9,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "登陆日本",
+          "action": "card",
+          "focus": 674,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 2,
+              "hex": 789,
+              "id": 3706,
+              "name": "Tokyo",
+              "distanceToTokyo": 0
+            },
+            {
+              "priority": 3,
+              "hex": 788,
+              "id": 3705,
+              "name": "Ominato",
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 4,
+              "hex": 760,
+              "id": 3606,
+              "name": null,
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 5,
+              "hex": 761,
+              "id": 3607,
+              "name": "Nagoya",
+              "distanceToTokyo": 1
+            }
+          ]
+        },
+        {
+          "turn": 9,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 825,
+          "priorityTargets": [
+            {
+              "priority": 5,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 9,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "登陆日本",
+          "action": "card",
+          "focus": 674,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 2,
+              "hex": 789,
+              "id": 3706,
+              "name": "Tokyo",
+              "distanceToTokyo": 0
+            },
+            {
+              "priority": 3,
+              "hex": 788,
+              "id": 3705,
+              "name": "Ominato",
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 4,
+              "hex": 760,
+              "id": 3606,
+              "name": null,
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 5,
+              "hex": 761,
+              "id": 3607,
+              "name": "Nagoya",
+              "distanceToTokyo": 1
+            }
+          ]
+        },
+        {
+          "turn": 9,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 825,
+          "priorityTargets": [
+            {
+              "priority": 5,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 9,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "登陆日本",
+          "action": "card",
+          "focus": 674,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 2,
+              "hex": 789,
+              "id": 3706,
+              "name": "Tokyo",
+              "distanceToTokyo": 0
+            },
+            {
+              "priority": 3,
+              "hex": 788,
+              "id": 3705,
+              "name": "Ominato",
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 4,
+              "hex": 760,
+              "id": 3606,
+              "name": null,
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 5,
+              "hex": 761,
+              "id": 3607,
+              "name": "Nagoya",
+              "distanceToTokyo": 1
+            }
+          ]
+        },
+        {
+          "turn": 9,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 9,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "登陆日本",
+          "action": "card",
+          "focus": 674,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 2,
+              "hex": 789,
+              "id": 3706,
+              "name": "Tokyo",
+              "distanceToTokyo": 0
+            },
+            {
+              "priority": 3,
+              "hex": 788,
+              "id": 3705,
+              "name": "Ominato",
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 4,
+              "hex": 760,
+              "id": 3606,
+              "name": null,
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 5,
+              "hex": 761,
+              "id": 3607,
+              "name": "Nagoya",
+              "distanceToTokyo": 1
+            }
+          ]
+        },
+        {
+          "turn": 9,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 9,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "登陆日本",
+          "action": "card",
+          "focus": 674,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 2,
+              "hex": 789,
+              "id": 3706,
+              "name": "Tokyo",
+              "distanceToTokyo": 0
+            },
+            {
+              "priority": 3,
+              "hex": 788,
+              "id": 3705,
+              "name": "Ominato",
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 4,
+              "hex": 760,
+              "id": 3606,
+              "name": null,
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 5,
+              "hex": 761,
+              "id": 3607,
+              "name": "Nagoya",
+              "distanceToTokyo": 1
+            }
+          ]
+        },
+        {
+          "turn": 9,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 9,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 10,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "登陆日本",
+          "action": "card",
+          "focus": 674,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 2,
+              "hex": 789,
+              "id": 3706,
+              "name": "Tokyo",
+              "distanceToTokyo": 0
+            },
+            {
+              "priority": 3,
+              "hex": 788,
+              "id": 3705,
+              "name": "Ominato",
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 4,
+              "hex": 760,
+              "id": 3606,
+              "name": null,
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 5,
+              "hex": 761,
+              "id": 3607,
+              "name": "Nagoya",
+              "distanceToTokyo": 1
+            }
+          ]
+        },
+        {
+          "turn": 10,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 825,
+          "priorityTargets": [
+            {
+              "priority": 5,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 6,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 10,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "登陆日本",
+          "action": "card",
+          "focus": 674,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 2,
+              "hex": 789,
+              "id": 3706,
+              "name": "Tokyo",
+              "distanceToTokyo": 0
+            },
+            {
+              "priority": 3,
+              "hex": 788,
+              "id": 3705,
+              "name": "Ominato",
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 4,
+              "hex": 760,
+              "id": 3606,
+              "name": null,
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 5,
+              "hex": 761,
+              "id": 3607,
+              "name": "Nagoya",
+              "distanceToTokyo": 1
+            }
+          ]
+        },
+        {
+          "turn": 10,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "最终国防圈战略",
+          "action": "card",
+          "focus": 825,
+          "priorityTargets": [
+            {
+              "priority": 5,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 6,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            }
+          ]
+        },
+        {
+          "turn": 10,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "登陆日本",
+          "action": "card",
+          "focus": 674,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 2,
+              "hex": 789,
+              "id": 3706,
+              "name": "Tokyo",
+              "distanceToTokyo": 0
+            },
+            {
+              "priority": 3,
+              "hex": 788,
+              "id": 3705,
+              "name": "Ominato",
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 4,
+              "hex": 760,
+              "id": 3606,
+              "name": null,
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 5,
+              "hex": 761,
+              "id": 3607,
+              "name": "Nagoya",
+              "distanceToTokyo": 1
+            }
+          ]
+        },
+        {
+          "turn": 10,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 10,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "登陆日本",
+          "action": "card",
+          "focus": 674,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 2,
+              "hex": 789,
+              "id": 3706,
+              "name": "Tokyo",
+              "distanceToTokyo": 0
+            },
+            {
+              "priority": 3,
+              "hex": 788,
+              "id": 3705,
+              "name": "Ominato",
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 4,
+              "hex": 760,
+              "id": 3606,
+              "name": null,
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 5,
+              "hex": 761,
+              "id": 3607,
+              "name": "Nagoya",
+              "distanceToTokyo": 1
+            }
+          ]
+        },
+        {
+          "turn": 10,
+          "role": "Japan",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 10,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "登陆日本",
+          "action": "card",
+          "focus": 674,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 674,
+              "id": 3307,
+              "name": "Kynshu",
+              "distanceToTokyo": 4
+            },
+            {
+              "priority": 2,
+              "hex": 789,
+              "id": 3706,
+              "name": "Tokyo",
+              "distanceToTokyo": 0
+            },
+            {
+              "priority": 3,
+              "hex": 788,
+              "id": 3705,
+              "name": "Ominato",
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 4,
+              "hex": 760,
+              "id": 3606,
+              "name": null,
+              "distanceToTokyo": 1
+            },
+            {
+              "priority": 5,
+              "hex": 761,
+              "id": 3607,
+              "name": "Nagoya",
+              "distanceToTokyo": 1
+            }
+          ]
+        },
+        {
+          "turn": 10,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 10,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        }
+      ]
+    },
+    {
+      "seed": 20260904,
+      "winner": "Japan",
+      "actions": 1577,
+      "turn": 9,
+      "fallback": 0,
+      "noBattleHex": 48,
+      "unexplainedNoBattle": 0,
+      "traceNodeMissing": 0,
+      "strategyCounts": {
+        "Japan/early/保守的空优战略": 12,
+        "Allies/early/撤离菲律宾": 7,
+        "Allies/early/事件战略": 4,
+        "Japan/mid/资源战略": 15,
+        "Allies/mid/中太平洋战略": 9,
+        "Allies/mid/南太平洋战略": 14,
+        "Allies/mid/DEI战略": 3,
+        "Japan/mid/事件战略": 12,
+        "Allies/mid/事件战略": 10,
+        "Japan/mid/PASS": 10,
+        "Allies/late/占领轰炸基地": 5,
+        "Allies/late/事件战略": 3
+      },
+      "groundMove": 9,
+      "capturedAP": 4,
+      "capturedJP": 3,
+      "role": {
+        "Japan": {
+          "decisions": 686,
+          "byKind": {
+            "axis": 189,
+            "card": 2,
+            "taskforce": 298,
+            "reaction": 197,
+            "?": 0
+          },
+          "airStrikeUnits": 1,
+          "airStrikeHexes": 1,
+          "fire": 37,
+          "advance": 64
+        },
+        "Allies": {
+          "decisions": 891,
+          "byKind": {
+            "axis": 178,
+            "card": 0,
+            "taskforce": 497,
+            "reaction": 216,
+            "?": 0
+          },
+          "airStrikeUnits": 24,
+          "airStrikeHexes": 24,
+          "fire": 37,
+          "advance": 64
+        }
+      },
+      "won_text": "Japanese Victory by Treaty Negotiations",
+      "closestAdvance": {
+        "alliedUnit": {
+          "unit": 161,
+          "hex": 563,
+          "distance": 10,
+          "turn": 2
+        },
+        "alliedControlledHex": {
+          "hex": 1056,
+          "distance": 10,
+          "name": "Wake",
+          "turn": 2
+        },
+        "b29": null
+      },
+      "atomicBest": {
+        "met": false,
+        "turn": 2,
+        "noStrategicBombingFailure": true,
+        "bombingCampaignStart": 0,
+        "bombingRequiredFromTurn": 9,
+        "sovietOccurred": false,
+        "sovietCardId": 79,
+        "sovietInHand": false,
+        "sovietPlayable": false,
+        "sovietReady": false,
+        "jpResources": 4,
+        "jpResourceHexes": [
+          669,
+          670,
+          672,
+          421
+        ],
+        "resourceLimit": 5,
+        "resourcesSatisfied": true
+      },
+      "finalAtomic": {
+        "met": false,
+        "turn": 9,
+        "noStrategicBombingFailure": false,
+        "bombingCampaignStart": 0,
+        "bombingRequiredFromTurn": 9,
+        "sovietOccurred": false,
+        "sovietCardId": 79,
+        "sovietInHand": false,
+        "sovietPlayable": false,
+        "sovietReady": false,
+        "jpResources": 6,
+        "jpResourceHexes": [
+          669,
+          670,
+          672,
+          421,
+          480,
+          452
+        ],
+        "resourceLimit": 5,
+        "resourcesSatisfied": false
+      },
+      "strategyLog": [
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": 512,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 512,
+              "id": 2719,
+              "name": "Kendari",
+              "distanceToTokyo": 18
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": 512,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 512,
+              "id": 2719,
+              "name": "Kendari",
+              "distanceToTokyo": 18
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": 512,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 512,
+              "id": 2719,
+              "name": "Kendari",
+              "distanceToTokyo": 18
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": 512,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 512,
+              "id": 2719,
+              "name": "Kendari",
+              "distanceToTokyo": 18
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "DEI战略",
+          "action": "card",
+          "focus": 512,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 512,
+              "id": 2719,
+              "name": "Kendari",
+              "distanceToTokyo": 18
+            },
+            {
+              "priority": 5,
+              "hex": 452,
+              "id": 2517,
+              "name": "Balikpapan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 6,
+              "hex": 480,
+              "id": 2616,
+              "name": "Tarakan",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 10,
+              "hex": 804,
+              "id": 3721,
+              "name": "Madang",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 10,
+              "hex": 804,
+              "id": 3721,
+              "name": "Madang",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 10,
+              "hex": 804,
+              "id": 3721,
+              "name": "Madang",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 10,
+              "hex": 804,
+              "id": 3721,
+              "name": "Madang",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 10,
+              "hex": 804,
+              "id": 3721,
+              "name": "Madang",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 10,
+              "hex": 804,
+              "id": 3721,
+              "name": "Madang",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 10,
+              "hex": 804,
+              "id": 3721,
+              "name": "Madang",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 10,
+              "hex": 804,
+              "id": 3721,
+              "name": "Madang",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "DEI战略",
+          "action": "card",
+          "focus": 512,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 512,
+              "id": 2719,
+              "name": "Kendari",
+              "distanceToTokyo": 18
+            },
+            {
+              "priority": 5,
+              "hex": 452,
+              "id": 2517,
+              "name": "Balikpapan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 6,
+              "hex": 480,
+              "id": 2616,
+              "name": "Tarakan",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 10,
+              "hex": 804,
+              "id": 3721,
+              "name": "Madang",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 10,
+              "hex": 804,
+              "id": 3721,
+              "name": "Madang",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "DEI战略",
+          "action": "card",
+          "focus": 512,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 512,
+              "id": 2719,
+              "name": "Kendari",
+              "distanceToTokyo": 18
+            },
+            {
+              "priority": 5,
+              "hex": 452,
+              "id": 2517,
+              "name": "Balikpapan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 6,
+              "hex": 480,
+              "id": 2616,
+              "name": "Tarakan",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 10,
+              "hex": 804,
+              "id": 3721,
+              "name": "Madang",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 10,
+              "hex": 804,
+              "id": 3721,
+              "name": "Madang",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 8,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 8,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 8,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 9,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "占领轰炸基地",
+          "action": "card",
+          "focus": 825,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 9,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 9,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "占领轰炸基地",
+          "action": "card",
+          "focus": 825,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 9,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 3,
+              "hex": 304,
+              "id": 2014,
+              "name": "Kuantan",
+              "distanceToTokyo": 17
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 9,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "占领轰炸基地",
+          "action": "card",
+          "focus": 825,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 9,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 9,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "占领轰炸基地",
+          "action": "card",
+          "focus": 825,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 9,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 9,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "占领轰炸基地",
+          "action": "card",
+          "focus": 825,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            },
+            {
+              "priority": 2,
+              "hex": 826,
+              "id": 3814,
+              "name": "Guam",
+              "distanceToTokyo": 8
+            },
+            {
+              "priority": 3,
+              "hex": 909,
+              "id": 4110,
+              "name": "Marcus",
+              "distanceToTokyo": 6
+            },
+            {
+              "priority": 4,
+              "hex": 792,
+              "id": 3709,
+              "name": "Iwo Jima",
+              "distanceToTokyo": 3
+            },
+            {
+              "priority": 5,
+              "hex": 647,
+              "id": 3209,
+              "name": "Okinawa",
+              "distanceToTokyo": 5
+            }
+          ]
+        },
+        {
+          "turn": 9,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 9,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 9,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 308,
+          "priorityTargets": []
+        },
+        {
+          "turn": 9,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 9,
+          "role": "Allies",
+          "phase": "late",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        }
+      ]
+    },
+    {
+      "seed": 20260905,
+      "winner": "Japan",
+      "actions": 1265,
+      "turn": 7,
+      "fallback": 0,
+      "noBattleHex": 36,
+      "unexplainedNoBattle": 0,
+      "traceNodeMissing": 0,
+      "strategyCounts": {
+        "Japan/early/保守的空优战略": 14,
+        "Allies/early/撤离菲律宾": 8,
+        "Allies/early/事件战略": 5,
+        "Japan/mid/资源战略": 11,
+        "Allies/mid/中太平洋战略": 5,
+        "Allies/mid/DEI战略": 3,
+        "Allies/mid/南太平洋战略": 12,
+        "Japan/mid/事件战略": 8,
+        "Allies/mid/事件战略": 8,
+        "Japan/mid/PASS": 6,
+        "Allies/mid/CBI战略": 1
+      },
+      "groundMove": 11,
+      "capturedAP": 7,
+      "capturedJP": 4,
+      "role": {
+        "Japan": {
+          "decisions": 584,
+          "byKind": {
+            "axis": 146,
+            "card": 1,
+            "taskforce": 295,
+            "reaction": 142,
+            "?": 0
+          },
+          "airStrikeUnits": 4,
+          "airStrikeHexes": 4,
+          "fire": 41,
+          "advance": 60
+        },
+        "Allies": {
+          "decisions": 681,
+          "byKind": {
+            "axis": 149,
+            "card": 1,
+            "taskforce": 346,
+            "reaction": 185,
+            "?": 0
+          },
+          "airStrikeUnits": 5,
+          "airStrikeHexes": 5,
+          "fire": 25,
+          "advance": 40
+        }
+      },
+      "won_text": "Japanese Victory by Treaty Negotiations",
+      "closestAdvance": {
+        "alliedUnit": {
+          "unit": 161,
+          "hex": 563,
+          "distance": 10,
+          "turn": 2
+        },
+        "alliedControlledHex": {
+          "hex": 1056,
+          "distance": 10,
+          "name": "Wake",
+          "turn": 2
+        },
+        "b29": null
+      },
+      "atomicBest": {
+        "met": false,
+        "turn": 2,
+        "noStrategicBombingFailure": true,
+        "bombingCampaignStart": 0,
+        "bombingRequiredFromTurn": 9,
+        "sovietOccurred": false,
+        "sovietCardId": 79,
+        "sovietInHand": false,
+        "sovietPlayable": false,
+        "sovietReady": false,
+        "jpResources": 4,
+        "jpResourceHexes": [
+          669,
+          670,
+          672,
+          421
+        ],
+        "resourceLimit": 5,
+        "resourcesSatisfied": true
+      },
+      "finalAtomic": {
+        "met": false,
+        "turn": 7,
+        "noStrategicBombingFailure": true,
+        "bombingCampaignStart": 0,
+        "bombingRequiredFromTurn": 9,
+        "sovietOccurred": false,
+        "sovietCardId": 79,
+        "sovietInHand": false,
+        "sovietPlayable": false,
+        "sovietReady": false,
+        "jpResources": 6,
+        "jpResourceHexes": [
+          304,
+          669,
+          670,
+          672,
+          421,
+          480
+        ],
+        "resourceLimit": 5,
+        "resourcesSatisfied": false
+      },
+      "strategyLog": [
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 2,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "撤离菲律宾",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Japan",
+          "phase": "early",
+          "strategy": "保守的空优战略",
+          "action": "card",
+          "focus": 508,
+          "priorityTargets": [
+            {
+              "priority": 1,
+              "hex": 508,
+              "id": 2715,
+              "name": "Jolo",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 2,
+              "hex": 484,
+              "id": 2620,
+              "name": "Makassar",
+              "distanceToTokyo": 19
+            },
+            {
+              "priority": 3,
+              "hex": 278,
+              "id": 1917,
+              "name": "Teloekbetoeng",
+              "distanceToTokyo": 20
+            },
+            {
+              "priority": 4,
+              "hex": 395,
+              "id": 2318,
+              "name": "Bandjermasin",
+              "distanceToTokyo": 19
+            }
+          ]
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 3,
+          "role": "Allies",
+          "phase": "early",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 7,
+              "hex": 1009,
+              "id": 4423,
+              "name": "Guadalcanal",
+              "distanceToTokyo": 20
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 7,
+              "hex": 1009,
+              "id": 4423,
+              "name": "Guadalcanal",
+              "distanceToTokyo": 20
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "DEI战略",
+          "action": "card",
+          "focus": 480,
+          "priorityTargets": [
+            {
+              "priority": 6,
+              "hex": 480,
+              "id": 2616,
+              "name": "Tarakan",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 7,
+              "hex": 1009,
+              "id": 4423,
+              "name": "Guadalcanal",
+              "distanceToTokyo": 20
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 7,
+              "hex": 1009,
+              "id": 4423,
+              "name": "Guadalcanal",
+              "distanceToTokyo": 20
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "DEI战略",
+          "action": "card",
+          "focus": 480,
+          "priorityTargets": [
+            {
+              "priority": 6,
+              "hex": 480,
+              "id": 2616,
+              "name": "Tarakan",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 7,
+              "hex": 1009,
+              "id": 4423,
+              "name": "Guadalcanal",
+              "distanceToTokyo": 20
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 452,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 452,
+          "priorityTargets": []
+        },
+        {
+          "turn": 4,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 7,
+              "hex": 1009,
+              "id": 4423,
+              "name": "Guadalcanal",
+              "distanceToTokyo": 20
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 7,
+              "hex": 1009,
+              "id": 4423,
+              "name": "Guadalcanal",
+              "distanceToTokyo": 20
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 452,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 452,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "CBI战略",
+          "action": "card",
+          "focus": null,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 452,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 5,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 452,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 5,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 7,
+              "hex": 1009,
+              "id": 4423,
+              "name": "Guadalcanal",
+              "distanceToTokyo": 20
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 452,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 452,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 452,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "DEI战略",
+          "action": "card",
+          "focus": 480,
+          "priorityTargets": [
+            {
+              "priority": 6,
+              "hex": 480,
+              "id": 2616,
+              "name": "Tarakan",
+              "distanceToTokyo": 15
+            }
+          ]
+        },
+        {
+          "turn": 6,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 452,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 6,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 7,
+              "hex": 1009,
+              "id": 4423,
+              "name": "Guadalcanal",
+              "distanceToTokyo": 20
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 7,
+              "hex": 1009,
+              "id": 4423,
+              "name": "Guadalcanal",
+              "distanceToTokyo": 20
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "资源战略",
+          "action": "card",
+          "focus": 535,
+          "priorityTargets": [
+            {
+              "priority": 2,
+              "hex": 535,
+              "id": 2813,
+              "name": "Manila",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 4,
+              "hex": 628,
+              "id": 3119,
+              "name": "Sarong",
+              "distanceToTokyo": 16
+            },
+            {
+              "priority": 5,
+              "hex": 657,
+              "id": 3219,
+              "name": "Vogelkop",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 6,
+              "hex": 686,
+              "id": 3319,
+              "name": "Biak",
+              "distanceToTokyo": 15
+            },
+            {
+              "priority": 7,
+              "hex": 1009,
+              "id": 4423,
+              "name": "Guadalcanal",
+              "distanceToTokyo": 20
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "中太平洋战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": [
+            {
+              "priority": 3,
+              "hex": 1088,
+              "id": 4715,
+              "name": "Kwajalein",
+              "distanceToTokyo": 14
+            },
+            {
+              "priority": 4,
+              "hex": 1001,
+              "id": 4415,
+              "name": "Eniwetok",
+              "distanceToTokyo": 12
+            },
+            {
+              "priority": 5,
+              "hex": 712,
+              "id": 3416,
+              "name": "Palau",
+              "distanceToTokyo": 11
+            },
+            {
+              "priority": 6,
+              "hex": 769,
+              "id": 3615,
+              "name": "Ulithi",
+              "distanceToTokyo": 9
+            },
+            {
+              "priority": 7,
+              "hex": 825,
+              "id": 3813,
+              "name": "Saipan",
+              "distanceToTokyo": 7
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 452,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "南太平洋战略",
+          "action": "card",
+          "focus": 891,
+          "priorityTargets": [
+            {
+              "priority": 9,
+              "hex": 891,
+              "id": 4021,
+              "name": "Rabaul",
+              "distanceToTokyo": 16
+            }
+          ]
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "PASS",
+          "action": "pass",
+          "focus": 452,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 452,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Allies",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 1088,
+          "priorityTargets": []
+        },
+        {
+          "turn": 7,
+          "role": "Japan",
+          "phase": "mid",
+          "strategy": "事件战略",
+          "action": "card",
+          "focus": 452,
+          "priorityTargets": []
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

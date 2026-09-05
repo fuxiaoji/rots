@@ -1,0 +1,2090 @@
+{
+  "policy": "erasmus-v2.0-zh.18",
+  "seeds": [
+    20260903,
+    20261002
+  ],
+  "games": [
+    {
+      "seed": 20260903,
+      "actions": 270,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C129 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 2,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260904,
+      "actions": 170,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260905,
+      "actions": 186,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 3
+    },
+    {
+      "seed": 20260906,
+      "actions": 248,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260907,
+      "actions": 236,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C117 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 5
+    },
+    {
+      "seed": 20260908,
+      "actions": 266,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C122 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260909,
+      "actions": 292,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 2,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260910,
+      "actions": 320,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 1,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260911,
+      "actions": 301,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 1,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260912,
+      "actions": 220,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C155 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260913,
+      "actions": 205,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 1,
+      "zeroActivationCards": [
+        {
+          "side": "Allies",
+          "card": "C84 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 3,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260914,
+      "actions": 244,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260915,
+      "actions": 231,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260916,
+      "actions": 302,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 2,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C156 played as operation card."
+        },
+        {
+          "side": "Japan",
+          "card": "C161 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 3
+    },
+    {
+      "seed": 20260917,
+      "actions": 230,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260918,
+      "actions": 297,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 4
+    },
+    {
+      "seed": 20260919,
+      "actions": 238,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260920,
+      "actions": 248,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260921,
+      "actions": 284,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260922,
+      "actions": 292,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 2,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 2,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C109 played as event."
+        },
+        {
+          "side": "Japan",
+          "card": "C128 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260923,
+      "actions": 260,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 2,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 1,
+      "zeroActivationCards": [
+        {
+          "side": "Allies",
+          "card": "C48 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260924,
+      "actions": 194,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 1,
+      "zeroActivationCards": [
+        {
+          "side": "Allies",
+          "card": "C84 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 4
+    },
+    {
+      "seed": 20260925,
+      "actions": 308,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C93 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 3
+    },
+    {
+      "seed": 20260926,
+      "actions": 283,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 2,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260927,
+      "actions": 277,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C163 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 4
+    },
+    {
+      "seed": 20260928,
+      "actions": 260,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 2,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C114 played as operation card."
+        },
+        {
+          "side": "Japan",
+          "card": "C136 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260929,
+      "actions": 298,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260930,
+      "actions": 264,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260931,
+      "actions": 259,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260932,
+      "actions": 279,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 2,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C135 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260933,
+      "actions": 265,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260934,
+      "actions": 213,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 5,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C141 played as operation card."
+        },
+        {
+          "side": "Japan",
+          "card": "C155 played as operation card."
+        },
+        {
+          "side": "Japan",
+          "card": "C89 played as operation card."
+        },
+        {
+          "side": "Japan",
+          "card": "C151 played as operation card."
+        },
+        {
+          "side": "Japan",
+          "card": "C165 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260935,
+      "actions": 230,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C160 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260936,
+      "actions": 216,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 2,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C135 played as operation card."
+        },
+        {
+          "side": "Japan",
+          "card": "C137 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260937,
+      "actions": 199,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C163 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260938,
+      "actions": 192,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C167 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 0
+    },
+    {
+      "seed": 20260939,
+      "actions": 269,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260940,
+      "actions": 279,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260941,
+      "actions": 241,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 2,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C121 played as event."
+        },
+        {
+          "side": "Japan",
+          "card": "C118 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260942,
+      "actions": 312,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 1,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260943,
+      "actions": 227,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 3
+    },
+    {
+      "seed": 20260944,
+      "actions": 291,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 2,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260945,
+      "actions": 193,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 4
+    },
+    {
+      "seed": 20260946,
+      "actions": 286,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 2,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C138 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260947,
+      "actions": 261,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260948,
+      "actions": 236,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260949,
+      "actions": 242,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 2,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260950,
+      "actions": 301,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260951,
+      "actions": 238,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 3,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260952,
+      "actions": 274,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C128 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260953,
+      "actions": 255,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C140 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 3,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260954,
+      "actions": 327,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 1,
+      "zeroActivationCards": [
+        {
+          "side": "Allies",
+          "card": "C84 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260955,
+      "actions": 233,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 1,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C163 played as event."
+        },
+        {
+          "side": "Allies",
+          "card": "C84 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260956,
+      "actions": 237,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 4
+    },
+    {
+      "seed": 20260957,
+      "actions": 298,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 2,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260958,
+      "actions": 280,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C146 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260959,
+      "actions": 258,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260960,
+      "actions": 302,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260961,
+      "actions": 289,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C134 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260962,
+      "actions": 308,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260963,
+      "actions": 285,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 1,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 4
+    },
+    {
+      "seed": 20260964,
+      "actions": 345,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 3
+    },
+    {
+      "seed": 20260965,
+      "actions": 286,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260966,
+      "actions": 283,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260967,
+      "actions": 262,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": true,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 2,
+      "manilaBattles": 4
+    },
+    {
+      "seed": 20260968,
+      "actions": 278,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260969,
+      "actions": 234,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 4
+    },
+    {
+      "seed": 20260970,
+      "actions": 246,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 3,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C138 played as operation card."
+        },
+        {
+          "side": "Japan",
+          "card": "C89 played as operation card."
+        },
+        {
+          "side": "Japan",
+          "card": "C161 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260971,
+      "actions": 271,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 2,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260972,
+      "actions": 323,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 2,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260973,
+      "actions": 270,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C121 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260974,
+      "actions": 257,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 2,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 2,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C105 played as operation card."
+        },
+        {
+          "side": "Japan",
+          "card": "C130 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260975,
+      "actions": 233,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C121 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260976,
+      "actions": 250,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C160 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260977,
+      "actions": 254,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260978,
+      "actions": 320,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260979,
+      "actions": 304,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 2,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260980,
+      "actions": 247,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260981,
+      "actions": 275,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C163 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 2,
+      "manilaBattles": 4
+    },
+    {
+      "seed": 20260982,
+      "actions": 264,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C105 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260983,
+      "actions": 227,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260984,
+      "actions": 221,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 3
+    },
+    {
+      "seed": 20260985,
+      "actions": 325,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260986,
+      "actions": 291,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 1,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260987,
+      "actions": 225,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C122 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260988,
+      "actions": 287,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 1,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260989,
+      "actions": 328,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 3
+    },
+    {
+      "seed": 20260990,
+      "actions": 256,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260991,
+      "actions": 221,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260992,
+      "actions": 279,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260993,
+      "actions": 365,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C122 played as event."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260994,
+      "actions": 319,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 4
+    },
+    {
+      "seed": 20260995,
+      "actions": 254,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260996,
+      "actions": 214,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260997,
+      "actions": 211,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C115 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260998,
+      "actions": 201,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 5,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C125 played as operation card."
+        },
+        {
+          "side": "Japan",
+          "card": "C135 played as operation card."
+        },
+        {
+          "side": "Japan",
+          "card": "C137 played as operation card."
+        },
+        {
+          "side": "Japan",
+          "card": "C90 played as operation card."
+        },
+        {
+          "side": "Japan",
+          "card": "C96 played as operation card."
+        }
+      ],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260999,
+      "actions": 293,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 2,
+      "amphibiousEscortFailures": 1,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 1,
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20261000,
+      "actions": 294,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 3
+    },
+    {
+      "seed": 20261001,
+      "actions": 201,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 3
+    },
+    {
+      "seed": 20261002,
+      "actions": 269,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 2,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "rangedAirCommitments": 0,
+      "rangedCarrierCommitments": 0,
+      "manilaBattles": 2
+    }
+  ],
+  "manilaCapturedGames": 87,
+  "balikpapanCapturedGames": 16,
+  "tarakanCapturedGames": 1,
+  "anyDeiCapturedGames": 35,
+  "amphibiousEscortFailures": 9,
+  "japaneseZeroActivationOffensives": 49,
+  "alliedZeroActivationOffensives": 5,
+  "manilaBattles": 170,
+  "rangedAirCommitments": 0,
+  "rangedCarrierCommitments": 40,
+  "zeroActivationCards": [
+    {
+      "side": "Japan",
+      "card": "C129 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C117 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C122 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C155 played as operation card."
+    },
+    {
+      "side": "Allies",
+      "card": "C84 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C156 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C161 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C109 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C128 played as event."
+    },
+    {
+      "side": "Allies",
+      "card": "C48 played as event."
+    },
+    {
+      "side": "Allies",
+      "card": "C84 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C93 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C163 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C114 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C136 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C135 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C141 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C155 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C89 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C151 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C165 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C160 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C135 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C137 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C163 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C167 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C121 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C118 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C138 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C128 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C140 played as operation card."
+    },
+    {
+      "side": "Allies",
+      "card": "C84 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C163 played as event."
+    },
+    {
+      "side": "Allies",
+      "card": "C84 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C146 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C134 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C138 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C89 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C161 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C121 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C105 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C130 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C121 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C160 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C163 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C105 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C122 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C122 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C115 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C125 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C135 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C137 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C90 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C96 played as operation card."
+    }
+  ]
+}

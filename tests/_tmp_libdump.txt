@@ -1,0 +1,78 @@
+// JP early :: 激进的空优战略
+"激进的空优战略": {"name":"激进的空优战略","targets":["1. 压制东印度: Jolo [4], Makassar [4], Teloekbetoeng [4], Bandjermasin [4]"],"notes":["[4].如有可能,战后移动一个空中单位到目标格,不然移动一个航母过去。","[7].以足够的力量,按伤害等级消灭覆盖目标的敌方AZOI单位的力量进行空中/海上攻击..."]},
+// JP early :: 保守的空优战略
+"保守的空优战略": {"name":"保守的空优战略","targets":["1. 压制盟军HQ: 菲律宾(0.25x), 新加坡(0.5x), ABDA(0.5x)","2. 压制东印度: Jolo, Makassar, Teloekbetoeng, Bandjermasin"],"notes":["[1].激活必须使盟军HQ断补。"]},
+// JP early :: 激进的南方资源战略
+"激进的南方资源战略": {"name":"激进的南方资源战略","targets":["1. 压制盟军HQ: 菲律宾(0.25x), 新加坡(0.5x), ABDA(0.5x)","2. 东印度投降: Balikpapan, Tarakan, Batavia(若无日军则占领), Tjilatjap, Soerabaja, Bangka, Palembang, Medan","3. 马来亚投降: Kuantan关丹, Singapore新加坡","4. 菲律宾投降: Manila马尼拉, Davao达沃","5. Roll 1d10 分配"],"notes":["[1].激活必须使盟军HQ断补。"]},
+// JP early :: 保守的南方资源战略
+"保守的南方资源战略": {"name":"保守的南方资源战略","targets":["1. 压制东印度: Jolo, Makassar, Teloekbetoeng, Bandjermasin","2. 马来亚投降: Kuantan, Singapore","3. 菲律宾投降: Manila, Davao","4. Roll 1d10 分配"],"notes":[]},
+// JP early :: 中缅印战略 (CBI)
+"中缅印战略 (CBI)": {"name":"中缅印战略 (CBI)","targets":["1. 缅甸投降: Rangoon仰光, Mandalay曼德勒, Lashio腊戍, Myitkyina密支那","2. 中国投降: Lashio腊戍, 中国攻势, 中国事件"],"notes":[]},
+// JP early :: 中太平洋战略
+"中太平洋战略": {"name":"中太平洋战略","targets":["1. 拉包尔 Rabaul (若被盟军控制)","2. 阿图/吉斯卡 Attu/Kiska [6]","3. 马绍尔防御: Wake威克岛, Tarawa塔拉瓦","4. 中途岛 Midway"],"notes":["[6].如果已经控制,则用至少3step的地面单位加固这里,其他情况则忽视该条。"]},
+// JP early :: 马绍尔防御
+"马绍尔防御": {"name":"马绍尔防御","targets":["1. Wake威克岛","2. Tarawa塔拉瓦"],"notes":["[6].如果已经控制,则用至少3step的地面单位加固这里,其他情况则忽视该条。"]},
+// JP early :: 外围防御战略
+"外围防御战略": {"name":"外围防御战略","targets":["1. 澳洲委任统治地: 西北新几内亚(Sarong, Vogelkop, Biak), Guadalcanal瓜岛, Port Moresby莫尔茨比","2. 新几内亚: Hollandia, Lae, Buna, Biak, Vogelkop, Wewak, Gili-Gili, Port Moresby"],"notes":[]},
+// JP early :: 事件战略
+"事件战略": {"name":"事件战略","targets":["1. 欧战为正打欧战牌,否则FOQ","2. 结束日本ISR","3. 造成美国ISR","4. 东京玫瑰","5. 补员牌","6. 天气牌","7. 东条作为1OC","8. 其他放牌"],"notes":["[3].如果卡牌条件允许,按照策略指示使用卡牌。","[5].如果欧洲战事为正数,则打出可用的欧战牌,否则按指示投骰。"]},
+// JP mid :: 资源战略
+"资源战略": {"name":"资源战略","targets":["1. 占领资源: Seoul首尔, Manila马尼拉, Kuantan关丹, 所有东印度资源","2. 新几内亚投降: 16个目标顺序推进 (见外围防御)","3. 缅甸投降: Rangoon, Mandalay, Lashio, Myitkyina","4. 中国投降: Lashio, 中国攻势, 中国事件","5. 加强港口: Truk, Rabaul, Saipan, Davao, Saigon, Eniwetok, Kwajalein, Palau"],"notes":["[3].占领尽可能多的资源格,直到日本控制至少13个(优先无敌军、弱敌军)。","[5].在指定位置放置至少3step地面或1step空中单位。"]},
+// JP mid :: 中太平洋战略
+"中太平洋战略": {"name":"中太平洋战略","targets":["1. Attu/Kiska阿图","2. Wake威克岛","3. Midway中途岛","4. 攻击美国舰队"],"notes":[]},
+// JP mid :: 中缅印战略 (CBI)
+"中缅印战略 (CBI)": {"name":"中缅印战略 (CBI)","targets":["1. 缅甸投降: Rangoon, Mandalay, Lashio, Myitkyina","2. 中国投降: Lashio, 中国攻势, 中国事件","3. 加强港口","4. 印度投降: Akyab, Imphal, Dimasur, Jarhat, Ledo, Dacca","5. 事件战略"],"notes":["[1].如果卡牌条件允许,按照策略指示使用卡牌。"]},
+// JP mid :: 印度战略
+"印度战略": {"name":"印度战略","targets":["1. 印度投降: Akyab, Imphal, Dimasur, Jarhat, Ledo, Dacca","2. 中国投降: Lashio, 中国攻势, 中国事件","3. 加强港口"],"notes":[]},
+// JP mid :: 外围防御战略
+"外围防御战略": {"name":"外围防御战略","targets":["1. 南太平洋侧翼: Biak, Vogelkop, Hollandia, Lae, Buna, Buin, Gili-Gili, Port Moresby","2. 加强港口"],"notes":["[4].如果可能的话,用AZOI覆盖这些目标,否则转移到下一个目标。","[5].在指定位置放置至少3step地面或1step空中单位。"]},
+// JP mid :: 事件战略
+"事件战略": {"name":"事件战略","targets":["同早期阶段事件战略"],"notes":["[1].如果卡牌条件允许,按照策略指示使用卡牌。"]},
+// JP mid :: PASS
+"PASS": {"name":"PASS","targets":["跳过本回合行动"],"notes":[]},
+// JP late :: 最终国防圈战略
+"最终国防圈战略": {"name":"最终国防圈战略","targets":["1. 港口驻军: Okinawa冲绳, Seoul首尔, Pusan釜山, Tainan台南, Saipan/Tinian塞班","2. 机场驻军: Iwo Jima硫磺岛, Kyoto京都","3. 日本港口驻军: Sasebo佐世保, Kure吴, Tokyo东京, Osaka大阪, Nagoya名古屋, Ominato大凑, Hakodate函馆"],"notes":["[3].将任意空中/海上补员用于本州岛，维持到资源格的AZOI。"]},
+// JP late :: 最终防御战略
+"最终防御战略": {"name":"最终防御战略","targets":["1. 集结部队","2. 海空支援","3. 板载冲锋"],"notes":["[4].移动地面单位填满盟军占据格的相邻格。","[5].尽可能在本州岛每个六角格放置空中/海上单位。","[6].如果相邻格被占据满，用最大战力进攻盟军。","[7].所有本州岛战斗派空中/海上单位支援。","[8].战斗到最后一step地面单位。"]},
+// JP late :: 事件战略
+"事件战略": {"name":"事件战略","targets":["同早期阶段事件战略"],"notes":["[1].如果满足条件按顺序执行。第12回合绝不把牌作为FOQ。"]},
+// JP late :: PASS
+"PASS": {"name":"PASS","targets":["跳过本回合行动"],"notes":[]},
+// AL early :: 撤离菲律宾
+"撤离菲律宾": {"name":"撤离菲律宾","targets":["1. P旅到Biak","2. R军到Kendari","3. [SL]军到Manila","4. [FEAF]到Manila","5. [19 LRB]到Timor"],"notes":["如果单位已就位则视为完成"]},
+// AL early :: 撤离马来亚
+"撤离马来亚": {"name":"撤离马来亚","targets":["1. 8 Aus到Kendari","2. MA Air到Palembang"],"notes":[]},
+// AL early :: 建立 ABDA 指挥部
+"建立 ABDA 指挥部": {"name":"建立 ABDA 指挥部","targets":["放置ABDA HQ到: 1. Tjilatjap, 2. Kendari, 3. Balikpapan, 4. Soerabaja, 5. Tarakan"],"notes":[]},
+// AL early :: 增强 CBI 防御
+"增强 CBI 防御": {"name":"增强 CBI 防御","targets":["1. 1 Ind到Rangoon","2. B Ind师到Akyab","3. 66集团军到Lashio","4. 6集团军到Mandalay","5. 5集团军到Myitkyina","6. 1 Burma到Imphal"],"notes":["所有单位就位视作建立完成"]},
+// AL early :: DEI 防御
+"DEI 防御": {"name":"DEI 防御","targets":["派英联邦或美军前往ABDA HQ港口 (Tjilatjap, Kendari, Balikpapan, Soerabaja, Tarakan)"],"notes":[]},
+// AL early :: 橙色计划 (Plan Orange)
+"橙色计划 (Plan Orange)": {"name":"橙色计划 (Plan Orange)","targets":["1. 美国军护航派往莱特岛(Leyte)","2. 若莱特被控，派往马尼拉(Manila)"],"notes":[]},
+// AL early :: 攻势进攻
+"攻势进攻": {"name":"攻势进攻","targets":["1. 对最弱日本单位发起1x海空攻击","2. 脱离最后一支航母避免被灭"],"notes":[]},
+// AL early :: 事件战略
+"事件战略": {"name":"事件战略","targets":["1. 欧战事件","2. 结束ISR或FOQ","3. 造成日本ISR","4. 杜立特空袭","5. 巴丹行军","6. FOQ"],"notes":[]},
+// AL mid :: 反攻战略
+"反攻战略": {"name":"反攻战略","targets":["1. Midway中途岛","2. Dutch Harbor荷兰港","3. Dacca达卡(仅地面推进)","4. Dimasur迪马布尔","5. Jarhat乔尔哈特","6. Ledo雷多","7. Imphal/Kohima英帕尔","8. 澳洲港口(优先地面,其次AA)","9. 澳洲机场(优先地面,其次AA)","10. Guadalcanal瓜岛","11. Attu/Kiska阿图岛","12. Port Moresby莫尔茨比(仅地面推进)","13. Gili-Gili吉里吉里(仅地面推进)","14. New Hebrides新赫布里底(通过AA)","15. Noumea努美阿(优先AA,其次地面)","16. Roll 1d10 切换其他战略"],"notes":["按顺序占领, 无法攻击则向前移动基地","多余激活点攻击日军航空兵"]},
+// AL mid :: 南太平洋战略
+"南太平洋战略": {"name":"南太平洋战略","targets":["1. Guadalcanal","2. Gili-Gili","3. Port Moresby","4. Buna","5. Lae","6. New Georgia","7. Bougainville","8. Gasmata/Rabaul","9. Madang","10. Wewak","11. Aitape","12. Admiralty Islands","13. Hollandia","14. Biak","15. Sarong","16. Vogelkop"],"notes":["优先ANZAC或SW Pac HQ"]},
+// AL mid :: 中太平洋战略
+"中太平洋战略": {"name":"中太平洋战略","targets":["1. Wake威克岛","2. Tarawa塔拉瓦","3. Kwajalein夸贾林","4. Eniwetok恩尼威托克","5. Palau帕劳","6. Uluthi乌利西","7. Saipan塞班"],"notes":["优先Cen Pac HQ，其次SW Pac HQ"]},
+// AL mid :: CBI 战略
+"CBI 战略": {"name":"CBI 战略","targets":["1. Dacca","2. Akyab","3. Dimasur","4. Jarhat","5. Imphal/Kohima","6. Ledo","7. Myitkyina","8. Lashio","9. Mandalay","10. Rangoon"],"notes":["优先SEAC HQ或联合HQ"]},
+// AL mid :: DEI 战略
+"DEI 战略": {"name":"DEI 战略","targets":["1. Timor","2. Kendari","3. Soerabaja","4. Balikpapan","5. Tarakan"],"notes":["优先ANZAC或SW Pac HQ"]},
+// AL late :: 占领战略轰炸基地
+"占领战略轰炸基地": {"name":"占领战略轰炸基地","targets":["1. Saipan塞班","2. Guam关岛","3. Marcus Island南鸟岛","4. Iwo Jima硫磺岛","5. Okinawa冲绳","6. Tainan台南","7. Taihoku台北"],"notes":["使用最大攻势卡占领"]},
+// AL late :: 推进 B29
+"推进 B29": {"name":"推进 B29","targets":["使用OC移动B29到战略基地","剩余激活点攻击指挥范围内日军航母/空军"],"notes":[]},
+// AL late :: 重返菲律宾
+"重返菲律宾": {"name":"重返菲律宾","targets":["1. 占领连接SW Pac HQ距莱特4格基地","2. Leyte莱特","3. Davao达沃","4. 2912六角格(与马尼拉相邻)","5. Manila马尼拉","6. 解放 DEI","7. 解放马来亚"],"notes":["优先SW Pacific HQ"]},
+// AL late :: 跳岛作战
+"跳岛作战": {"name":"跳岛作战","targets":["1. Kwajalein夸贾林","2. Eniwetok恩尼威托克","3. Saipan塞班","4. Iwo Jima硫磺岛","5. Okinawa冲绳","6. 登陆日本"],"notes":["优先Cen Pacific HQ","在最高优先级目标达成前，不要执行下一个目标"]},
+// AL late :: 登陆日本
+"登陆日本": {"name":"登陆日本","targets":["1. Sasebo佐世保","2. Tokyo东京","3. Ominato大凑","4. 3606格","5. Nagoya名古屋","6. Kyoto京都","7. Kure吴","8. Osaka大阪"],"notes":[]},
+// AL late :: 原子弹胜利
+"原子弹胜利": {"name":"原子弹胜利","targets":["1. 打出苏联入侵满洲","2. 占领剩下的日本资源格"],"notes":["需无战略轰炸失败且日本资源<=3 (未打出苏联入侵时<=5)"]},

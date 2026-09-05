@@ -1,0 +1,71 @@
+{
+  "policy": "erasmus-v2.0-zh.12",
+  "scenario": "1942-1945 (The Shortened Campaign)",
+  "gameCount": 1,
+  "baseSeed": 20260903,
+  "maxActions": 60000,
+  "generatedAt": "2026-09-04T15:07:20.403Z",
+  "summary": {
+    "complete": 0,
+    "errors": 0,
+    "actionLimit": 1,
+    "setupErrors": 0,
+    "totalDecisions": 0,
+    "totalFallback": 0,
+    "byRole": {
+      "Allies": {
+        "decisions": 59988,
+        "fallback": 0
+      },
+      "Japan": {
+        "decisions": 12,
+        "fallback": 0
+      }
+    },
+    "byChart": {
+      "ERASMUS-AP-11|Allies": {
+        "decisions": 10,
+        "fallback": 0
+      },
+      "ERASMUS-AP-07|Allies": {
+        "decisions": 2,
+        "fallback": 0
+      },
+      "ERASMUS-JP-04|Japan": {
+        "decisions": 2,
+        "fallback": 0
+      },
+      "ERASMUS-JP-05|Japan": {
+        "decisions": 10,
+        "fallback": 0
+      },
+      "ERASMUS-AP-12|Allies": {
+        "decisions": 59976,
+        "fallback": 0
+      }
+    }
+  },
+  "games": [
+    {
+      "seed": 20260903,
+      "status": "action-limit",
+      "decisions": 60000,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 12,
+        "Allies": 59988
+      },
+      "charts": {
+        "ERASMUS-AP-11|Allies": 10,
+        "ERASMUS-AP-07|Allies": 2,
+        "ERASMUS-JP-04|Japan": 2,
+        "ERASMUS-JP-05|Japan": 10,
+        "ERASMUS-AP-12|Allies": 59976
+      },
+      "turn": 2,
+      "actions": 60000,
+      "winner": null
+    }
+  ],
+  "fallbacks": []
+}

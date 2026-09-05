@@ -1,0 +1,579 @@
+{
+  "complete": 20,
+  "games": 20,
+  "actions": 56551,
+  "fallbacks": 86,
+  "pbmNodes": {
+    "AP12-S-PBM-SEA": 203,
+    "JP06-S-PBM-AIR": 2460,
+    "AP12-S-PBM-AIR": 2650,
+    "JP06-S-PBM-SEA": 225,
+    "JP06-S-PBM-AA": 28,
+    "AP12-S-PBM-AA": 50
+  },
+  "groups": {
+    "ERASMUS-JP-06|EC: 2 Ops. Play reaction cards.|card": 2,
+    "ERASMUS-JP-06|EC: 2 Ops. Play reaction cards.|done": 2,
+    "ERASMUS-JP-06|EC: 2 Ops. Apply reaction cards.|card": 7,
+    "ERASMUS-AP-12|EC: 3 Ops. Play reaction cards.|card": 1,
+    "ERASMUS-AP-12|EC: 3 Ops. Play reaction cards.|done": 1,
+    "ERASMUS-AP-12|EC: 3 Ops. Apply reaction cards.|card": 4,
+    "ERASMUS-AP-12|EC: 2 Ops. Choose unit to retreat.|unit": 2,
+    "ERASMUS-AP-12|EC: 2 Ops. Choose space to retreat.|action_hex": 2,
+    "ERASMUS-AP-12|EC: 2 Ops. Confirm retreat.|done": 2,
+    "ERASMUS-JP-06|EC: 3 Ops. Apply reaction cards.|card": 6,
+    "ERASMUS-JP-06|OC: 2 Ops. Apply reaction cards.|card": 3,
+    "ERASMUS-JP-06|Submarine attack. Apply hits: 1.|unit": 10,
+    "ERASMUS-JP-06|Submarine attack. Apply hits: 0.|done": 10,
+    "ERASMUS-AP-12|Submarine attack. Apply hits: 1.|unit": 2,
+    "ERASMUS-AP-12|Submarine attack. Apply hits: 0.|done": 2,
+    "ERASMUS-JP-06|EC: 2 Ops. Choose unit to retreat.|unit": 1,
+    "ERASMUS-JP-06|EC: 2 Ops. Choose space to retreat.|action_hex": 1,
+    "ERASMUS-JP-06|EC: 2 Ops. Confirm retreat.|done": 1,
+    "ERASMUS-JP-06|OC: 2 Ops. Choose unit to retreat.|unit": 1,
+    "ERASMUS-JP-06|OC: 2 Ops. Choose space to retreat.|action_hex": 1,
+    "ERASMUS-JP-06|OC: 2 Ops. Confirm retreat.|done": 1,
+    "ERASMUS-JP-06|OC: 3 Ops. Apply reaction cards.|card": 1,
+    "ERASMUS-JP-06|OC: 2 Ops. Play reaction cards.|card": 1,
+    "ERASMUS-JP-06|OC: 2 Ops. Play reaction cards.|done": 1,
+    "ERASMUS-JP-06|OC: 3 Ops. Choose hex to roll for special reaction.|pass": 1,
+    "ERASMUS-JP-06|OC: 3 Ops. Choose unit to retreat.|unit": 3,
+    "ERASMUS-JP-06|OC: 3 Ops. Choose space to retreat.|action_hex": 3,
+    "ERASMUS-JP-06|OC: 3 Ops. Confirm retreat.|done": 3,
+    "ERASMUS-JP-06|Submarine attack. Apply hits: 2.|unit": 2,
+    "ERASMUS-JP-06|OC: 1 Ops. Play reaction cards.|card": 1,
+    "ERASMUS-JP-06|OC: 1 Ops. Play reaction cards.|done": 1,
+    "ERASMUS-JP-06|OC: 1 Ops. Apply reaction cards.|card": 1,
+    "ERASMUS-AP-12|EC: 2 Ops. Apply reaction cards.|card": 1,
+    "ERASMUS-AP-12|OC: 3 Ops. Play reaction cards.|card": 1,
+    "ERASMUS-AP-12|OC: 3 Ops. Play reaction cards.|done": 1,
+    "ERASMUS-AP-12|OC: 3 Ops. Apply reaction cards.|card": 2,
+    "ERASMUS-JP-06|Submarine attack. Apply hits: 1.|done": 1
+  },
+  "examples": [
+    {
+      "ordinal": 2494,
+      "turn": 9,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "card",
+      "prompt": "EC: 2 Ops. Play reaction cards.",
+      "legal": [
+        "card",
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 2495,
+      "turn": 9,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "EC: 2 Ops. Play reaction cards.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 2496,
+      "turn": 9,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "card",
+      "prompt": "EC: 2 Ops. Apply reaction cards.",
+      "legal": [
+        "card",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 2662,
+      "turn": 10,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "card",
+      "prompt": "EC: 3 Ops. Play reaction cards.",
+      "legal": [
+        "card",
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 2663,
+      "turn": 10,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "EC: 3 Ops. Play reaction cards.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 2664,
+      "turn": 10,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "card",
+      "prompt": "EC: 3 Ops. Apply reaction cards.",
+      "legal": [
+        "card",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 987,
+      "turn": 4,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "unit",
+      "prompt": "EC: 2 Ops. Choose unit to retreat.",
+      "legal": [
+        "unit",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 988,
+      "turn": 4,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "action_hex",
+      "prompt": "EC: 2 Ops. Choose space to retreat.",
+      "legal": [
+        "action_hex",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 989,
+      "turn": 4,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "EC: 2 Ops. Confirm retreat.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1171,
+      "turn": 5,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "card",
+      "prompt": "EC: 3 Ops. Apply reaction cards.",
+      "legal": [
+        "card",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 232,
+      "turn": 2,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "card",
+      "prompt": "OC: 2 Ops. Apply reaction cards.",
+      "legal": [
+        "card",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 233,
+      "turn": 2,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "unit",
+      "prompt": "Submarine attack. Apply hits: 1.",
+      "legal": [
+        "unit",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 234,
+      "turn": 2,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "Submarine attack. Apply hits: 0.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 415,
+      "turn": 3,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "unit",
+      "prompt": "Submarine attack. Apply hits: 1.",
+      "legal": [
+        "unit",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 416,
+      "turn": 3,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "Submarine attack. Apply hits: 0.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 976,
+      "turn": 4,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "unit",
+      "prompt": "EC: 2 Ops. Choose unit to retreat.",
+      "legal": [
+        "unit",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 977,
+      "turn": 4,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "action_hex",
+      "prompt": "EC: 2 Ops. Choose space to retreat.",
+      "legal": [
+        "action_hex",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 978,
+      "turn": 4,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "EC: 2 Ops. Confirm retreat.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1085,
+      "turn": 4,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "unit",
+      "prompt": "OC: 2 Ops. Choose unit to retreat.",
+      "legal": [
+        "unit",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1086,
+      "turn": 4,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "action_hex",
+      "prompt": "OC: 2 Ops. Choose space to retreat.",
+      "legal": [
+        "action_hex",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1087,
+      "turn": 4,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "OC: 2 Ops. Confirm retreat.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 473,
+      "turn": 3,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "card",
+      "prompt": "OC: 3 Ops. Apply reaction cards.",
+      "legal": [
+        "card",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 942,
+      "turn": 4,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "card",
+      "prompt": "OC: 2 Ops. Play reaction cards.",
+      "legal": [
+        "card",
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 943,
+      "turn": 4,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "OC: 2 Ops. Play reaction cards.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 2956,
+      "turn": 11,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "pass",
+      "prompt": "OC: 3 Ops. Choose hex to roll for special reaction.",
+      "legal": [
+        "pass",
+        "action_hex",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1011,
+      "turn": 4,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "unit",
+      "prompt": "OC: 3 Ops. Choose unit to retreat.",
+      "legal": [
+        "unit",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1012,
+      "turn": 4,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "action_hex",
+      "prompt": "OC: 3 Ops. Choose space to retreat.",
+      "legal": [
+        "action_hex",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1013,
+      "turn": 4,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "OC: 3 Ops. Confirm retreat.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 409,
+      "turn": 3,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "unit",
+      "prompt": "Submarine attack. Apply hits: 2.",
+      "legal": [
+        "unit",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1873,
+      "turn": 7,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "card",
+      "prompt": "OC: 1 Ops. Play reaction cards.",
+      "legal": [
+        "card",
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1874,
+      "turn": 7,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "OC: 1 Ops. Play reaction cards.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1875,
+      "turn": 7,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "card",
+      "prompt": "OC: 1 Ops. Apply reaction cards.",
+      "legal": [
+        "card",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 2438,
+      "turn": 9,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "card",
+      "prompt": "EC: 2 Ops. Apply reaction cards.",
+      "legal": [
+        "card",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 2927,
+      "turn": 10,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "card",
+      "prompt": "OC: 3 Ops. Play reaction cards.",
+      "legal": [
+        "card",
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 2928,
+      "turn": 10,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "OC: 3 Ops. Play reaction cards.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 2929,
+      "turn": 10,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "card",
+      "prompt": "OC: 3 Ops. Apply reaction cards.",
+      "legal": [
+        "card",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 685,
+      "turn": 3,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "Submarine attack. Apply hits: 1.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    }
+  ]
+}

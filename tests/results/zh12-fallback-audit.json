@@ -1,0 +1,399 @@
+{
+  "complete": true,
+  "actions": 3423,
+  "fallbacks": 236,
+  "groups": {
+    "ERASMUS-AP-12|EC: 3 Ops. Confirm post battle move.|next": 19,
+    "ERASMUS-JP-06|EC: 3 Ops. Confirm post battle move.|next": 18,
+    "ERASMUS-JP-06|Remove overstacked units.|unit": 7,
+    "ERASMUS-JP-06|Remove overstacked units.|done": 7,
+    "ERASMUS-JP-06|OC: 2 Ops. Confirm post battle move.|next": 19,
+    "ERASMUS-AP-12|OC: 2 Ops. Confirm post battle move.|next": 26,
+    "ERASMUS-JP-06|OC: 3 Ops. Confirm post battle move.|next": 14,
+    "ERASMUS-AP-12|OC: 3 Ops. Confirm post battle move.|next": 13,
+    "ERASMUS-AP-12|EC: 2 Ops. Confirm post battle move.|next": 19,
+    "ERASMUS-JP-06|EC: 2 Ops. Confirm post battle move.|next": 8,
+    "ERASMUS-AP-12|Remove overstacked units.|unit": 13,
+    "ERASMUS-AP-12|Remove overstacked units.|done": 11,
+    "ERASMUS-JP-06|Choose hex to move disengaging unit or skip.|done": 2,
+    "ERASMUS-JP-06|EC: 2 Ops. Change intelligence condition.|done": 11,
+    "ERASMUS-AP-12|OC: 2 Ops. Change intelligence condition.|done": 4,
+    "ERASMUS-JP-06|OC: 2 Ops. Change intelligence condition.|done": 11,
+    "ERASMUS-AP-12|OC: 1 Ops. Change intelligence condition.|done": 1,
+    "ERASMUS-JP-06|OC: 1 Ops. Confirm post battle move.|next": 4,
+    "ERASMUS-JP-06|EC: 3 Ops. Change intelligence condition.|done": 4,
+    "ERASMUS-AP-12|Review overstacked units. Hexes: H535.|done": 5,
+    "ERASMUS-JP-06|Yamato run. Reduce one step.|unit": 1,
+    "ERASMUS-JP-06|Review overstacked units. Hexes: H512.|done": 2,
+    "ERASMUS-AP-12|OC: 1 Ops. Confirm post battle move.|next": 9,
+    "ERASMUS-AP-12|EC: 2 Ops. Change intelligence condition.|done": 1,
+    "ERASMUS-AP-12|EC: 3 Ops. Change intelligence condition.|done": 4,
+    "ERASMUS-JP-06|OC: 1 Ops. Change intelligence condition.|done": 3
+  },
+  "examples": [
+    {
+      "ordinal": 46,
+      "turn": 2,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "next",
+      "prompt": "EC: 3 Ops. Confirm post battle move.",
+      "legal": [
+        "next",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 49,
+      "turn": 2,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "next",
+      "prompt": "EC: 3 Ops. Confirm post battle move.",
+      "legal": [
+        "next",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 198,
+      "turn": 2,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "unit",
+      "prompt": "Remove overstacked units.",
+      "legal": [
+        "unit",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 199,
+      "turn": 2,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "Remove overstacked units.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 247,
+      "turn": 2,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "next",
+      "prompt": "OC: 2 Ops. Confirm post battle move.",
+      "legal": [
+        "next",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 251,
+      "turn": 2,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "next",
+      "prompt": "OC: 2 Ops. Confirm post battle move.",
+      "legal": [
+        "next",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 349,
+      "turn": 2,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "next",
+      "prompt": "OC: 3 Ops. Confirm post battle move.",
+      "legal": [
+        "next",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 411,
+      "turn": 2,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "next",
+      "prompt": "OC: 3 Ops. Confirm post battle move.",
+      "legal": [
+        "next",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 492,
+      "turn": 3,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "next",
+      "prompt": "EC: 2 Ops. Confirm post battle move.",
+      "legal": [
+        "next",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 497,
+      "turn": 3,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "next",
+      "prompt": "EC: 2 Ops. Confirm post battle move.",
+      "legal": [
+        "next",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 562,
+      "turn": 3,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "unit",
+      "prompt": "Remove overstacked units.",
+      "legal": [
+        "unit",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 564,
+      "turn": 3,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "Remove overstacked units.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 771,
+      "turn": 3,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "Choose hex to move disengaging unit or skip.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 774,
+      "turn": 3,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "EC: 2 Ops. Change intelligence condition.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 852,
+      "turn": 3,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "OC: 2 Ops. Change intelligence condition.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1258,
+      "turn": 4,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "OC: 2 Ops. Change intelligence condition.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1271,
+      "turn": 4,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "OC: 1 Ops. Change intelligence condition.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1274,
+      "turn": 4,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "next",
+      "prompt": "OC: 1 Ops. Confirm post battle move.",
+      "legal": [
+        "next",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1312,
+      "turn": 5,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "EC: 3 Ops. Change intelligence condition.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1403,
+      "turn": 5,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "Review overstacked units. Hexes: H535.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1474,
+      "turn": 5,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "unit",
+      "prompt": "Yamato run. Reduce one step.",
+      "legal": [
+        "unit",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1555,
+      "turn": 5,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "Review overstacked units. Hexes: H512.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1588,
+      "turn": 5,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "next",
+      "prompt": "OC: 1 Ops. Confirm post battle move.",
+      "legal": [
+        "next",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 1988,
+      "turn": 7,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "EC: 2 Ops. Change intelligence condition.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 2583,
+      "turn": 9,
+      "role": "Allies",
+      "chart": "ERASMUS-AP-12",
+      "node": "AP12-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "EC: 3 Ops. Change intelligence condition.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    },
+    {
+      "ordinal": 2885,
+      "turn": 10,
+      "role": "Japan",
+      "chart": "ERASMUS-JP-06",
+      "node": "JP06-FALLBACK",
+      "strategy": null,
+      "action": "done",
+      "prompt": "OC: 1 Ops. Change intelligence condition.",
+      "legal": [
+        "done",
+        "undo"
+      ]
+    }
+  ]
+}

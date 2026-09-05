@@ -1,0 +1,85 @@
+{
+  "rulesSha256": "f4d63c2fce8fb1b4ebe37d8d4754358b3552db4cf8c134fbd5980133100a601d",
+  "reports": [
+    {
+      "seed": 20260903,
+      "policy": "erasmus-v2.0-zh.22",
+      "rulesSha256": "f4d63c2fce8fb1b4ebe37d8d4754358b3552db4cf8c134fbd5980133100a601d",
+      "scenario": "1942-1945 (The Shortened Campaign)",
+      "headless_moves": true,
+      "status": "complete",
+      "winner": "Japan",
+      "result": "Japan",
+      "actions": 2080,
+      "turn": 8,
+      "politicalWill": 0,
+      "turns": [
+        {
+          "turn": 2,
+          "politicalWill": 8,
+          "pow": 0
+        },
+        {
+          "turn": 3,
+          "politicalWill": 6,
+          "pow": 0
+        },
+        {
+          "turn": 4,
+          "politicalWill": 6,
+          "pow": 0
+        },
+        {
+          "turn": 5,
+          "politicalWill": 5,
+          "pow": 3
+        },
+        {
+          "turn": 6,
+          "politicalWill": 4,
+          "pow": 4
+        },
+        {
+          "turn": 7,
+          "politicalWill": 3,
+          "pow": 4
+        },
+        {
+          "turn": 8,
+          "politicalWill": 2,
+          "pow": 4
+        }
+      ],
+      "failure": null,
+      "politicalWillLog": [
+        "Philippines surrender.",
+        "Malaya surrender.",
+        "Political will changed to 6 (-2) - National status.",
+        "Progress of War not checked for turn 2.",
+        "No progress of war required.",
+        "Progress of War not checked for turn 3.",
+        "Progress of war target - 3.",
+        "Political will changed to 5 (-1) - current progress of war 1 < 3.",
+        "Progress of war target - 4.",
+        "Political will changed to 4 (-1) - current progress of war 2 < 4.",
+        "Progress of war target - 4.",
+        "Political will changed to 3 (-1) - current progress of war 0 < 4.",
+        "Progress of war target - 4.",
+        "Political will changed to 2 (-1) - current progress of war 0 < 4.",
+        "Progress of war target - 4.",
+        "&APolitical will changed to 1 (-1) - US Casualties [16.45].",
+        "Political will changed to 0 (-1) - current progress of war 0 < 4."
+      ],
+      "captureLog": [
+        "JP captured H364.",
+        "JP captured H275.",
+        "AP captured H825.",
+        "JP captured H358.",
+        "AP captured H909.",
+        "AP captured H769.",
+        "AP captured H740."
+      ],
+      "fallback": 0
+    }
+  ]
+}

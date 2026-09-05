@@ -1,0 +1,1720 @@
+[
+ {
+  "seed": 20260903,
+  "status": "complete",
+  "endTurn": 8,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 8,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 797
+  },
+  "victoryLines": [
+   "War in europe changed to No effect (1), Minor allied victory (-1).",
+   "War in europe changed to No effect (2), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (0), Minor axis victory (+2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 1 (-1), Minor axis victory (+1).",
+   "War in europe changed to Level 2 (-3), Major axis victory (+2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 1 (-1), Major allied victory (-2).",
+   "War in europe changed to Level 1 (-2), Minor axis victory (+1).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260904,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 1,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 11,
+   "turn": 8,
+   "hex": 360,
+   "label": "H2212 Saigon",
+   "region": "Indochina",
+   "act": 902
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-2), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (-1), Major allied victory (-1).",
+   "War in europe changed to No effect (1), Major allied victory (-2).",
+   "War in europe changed to Level 1 (0), Minor axis victory (+1).",
+   "War in europe changed to Level 1 (-1), Minor axis victory (+1).",
+   "War in europe changed to No effect (1), Minor allied victory (-2).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Minor allied victory (-2).",
+   "War in europe changed to No effect (3), Minor allied victory (-3)."
+  ]
+ },
+ {
+  "seed": 20260905,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 8,
+   "turn": 10,
+   "hex": 826,
+   "label": "H3814 Guam",
+   "region": "Oceania",
+   "act": 1088
+  },
+  "victoryLines": [
+   "War in europe changed to Level 3 (-5), Minor axis victory (+2).",
+   "War in europe changed to Level 2 (-4), Minor allied victory (-1).",
+   "War in europe changed to Level 3 (-6), Minor axis victory (+2).",
+   "War in europe changed to Level 3 (-5), Major allied victory (-1).",
+   "War in europe changed to Level 3 (-6), Minor axis victory (+1).",
+   "War in europe changed to Level 2 (-4), Major allied victory (-2).",
+   "War in europe changed to Level 1 (-2), Minor allied victory (-2).",
+   "War in europe changed to Level 1 (0), Minor allied victory (-2).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260906,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 10,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 1113
+  },
+  "victoryLines": [
+   "War in europe changed to Level 2 (-3), Minor axis victory (+2).",
+   "War in europe changed to Level 3 (-5), Minor axis victory (+2).",
+   "War in europe changed to Level 4 (-7), Minor axis victory (+2).",
+   "War in europe changed to Level 3 (-5), Major allied victory (-2).",
+   "War in europe changed to Level 2 (-3), Minor allied victory (-2).",
+   "War in europe changed to Level 1 (-1), Minor allied victory (-2).",
+   "War in europe changed to No effect (2), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Minor allied victory (-2).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260907,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 7,
+   "turn": 5,
+   "hex": 534,
+   "label": "H2812",
+   "region": "Philippines",
+   "act": 457
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-2), Major allied victory (-1).",
+   "War in europe changed to Level 1 (-1), Minor allied victory (-1).",
+   "War in europe changed to Level 2 (-3), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (-2), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-1), Major allied victory (-1).",
+   "War in europe changed to Level 1 (0), Major allied victory (-1).",
+   "War in europe changed to Level 1 (-1), Minor axis victory (+1).",
+   "War in europe changed to Level 1 (0), Minor allied victory (-1).",
+   "War in europe changed to No effect (2), Minor allied victory (-2).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260908,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 1,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 8,
+   "turn": 7,
+   "hex": 443,
+   "label": "H2508 Yungning",
+   "region": "China",
+   "act": 724
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-1), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (0), Major allied victory (-1).",
+   "War in europe changed to Level 1 (-2), Minor axis victory (+2).",
+   "War in europe changed to Level 2 (-4), Minor axis victory (+2).",
+   "War in europe changed to Level 2 (-3), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-2), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-1), Major allied victory (-1).",
+   "War in europe changed to Level 1 (0), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-1), Minor axis victory (+1).",
+   "War in europe changed to No effect (2), Major allied victory (-3)."
+  ]
+ },
+ {
+  "seed": 20260909,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 11,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 1176
+  },
+  "victoryLines": [
+   "War in europe changed to Level 2 (-4), Minor axis victory (+2).",
+   "War in europe changed to Level 3 (-6), Minor axis victory (+2).",
+   "War in europe changed to Level 3 (-5), Major allied victory (-1).",
+   "War in europe changed to Level 4 (-7), Major axis victory (+2).",
+   "War in europe changed to Level 3 (-5), Major allied victory (-2).",
+   "War in europe changed to Level 2 (-3), Major allied victory (-2).",
+   "War in europe changed to Level 1 (-1), Minor allied victory (-2).",
+   "War in europe changed to No effect (1), Minor allied victory (-2).",
+   "War in europe changed to No effect (3), Minor allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260910,
+  "status": "complete",
+  "endTurn": 11,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 7,
+   "turn": 11,
+   "hex": 534,
+   "label": "H2812",
+   "region": "Philippines",
+   "act": 1144
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-2), Minor allied victory (-1).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 1 (-1), Minor allied victory (-1).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 1 (-2), Minor axis victory (+1).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to No effect (1), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Minor allied victory (-2).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260911,
+  "status": "complete",
+  "endTurn": 10,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 7,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 703
+  },
+  "victoryLines": [
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 2 (-4), Minor axis victory (+2).",
+   "War in europe changed to Level 2 (-3), Major allied victory (-1).",
+   "War in europe changed to Level 3 (-5), Minor axis victory (+2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 2 (-3), Major allied victory (-2).",
+   "War in europe changed to Level 2 (-4), Major axis victory (+1).",
+   "War in europe changed to Level 1 (-2), Minor allied victory (-2).",
+   "War in europe changed to No effect (1), Major allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260912,
+  "status": "complete",
+  "endTurn": 11,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 7,
+   "turn": 4,
+   "hex": 534,
+   "label": "H2812",
+   "region": "Philippines",
+   "act": 262
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (0), Major allied victory (-1).",
+   "War in europe changed to Level 2 (-3), Major axis victory (+3).",
+   "War in europe changed to Level 3 (-5), Minor axis victory (+2).",
+   "War in europe changed to Level 2 (-4), Major allied victory (-1).",
+   "War in europe changed to Level 3 (-5), Minor axis victory (+1).",
+   "War in europe changed to Level 2 (-4), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-2), Major allied victory (-2).",
+   "War in europe changed to Level 1 (0), Minor allied victory (-2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260913,
+  "status": "complete",
+  "endTurn": 8,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 8,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 820
+  },
+  "victoryLines": [
+   "War in europe changed to No effect (2), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (0), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (-2), Minor axis victory (+2).",
+   "War in europe changed to Level 2 (-4), Minor axis victory (+2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 1 (-2), Major allied victory (-2).",
+   "War in europe changed to Level 1 (0), Major allied victory (-2).",
+   "War in europe changed to Level 1 (-2), Major axis victory (+2).",
+   "War in europe changed to Level 1 (0), Minor allied victory (-2).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260914,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 7,
+   "turn": 2,
+   "hex": 534,
+   "label": "H2812",
+   "region": "Philippines",
+   "act": 22
+  },
+  "victoryLines": [
+   "War in europe changed to Level 3 (-6), Minor axis victory (+2).",
+   "War in europe changed to Level 3 (-5), Minor allied victory (-1).",
+   "War in europe changed to Level 4 (-7), Minor axis victory (+2).",
+   "War in europe changed to Level 3 (-6), Minor allied victory (-1).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 2 (-3), Minor allied victory (-3).",
+   "War in europe changed to Level 1 (0), Minor allied victory (-3).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260915,
+  "status": "complete",
+  "endTurn": 9,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 12,
+   "turn": 7,
+   "hex": 328,
+   "label": "H2109",
+   "region": "Siam",
+   "act": 673
+  },
+  "victoryLines": [
+   "War in europe changed to Level 2 (-3), Major allied victory (-1).",
+   "War in europe changed to Level 3 (-5), Minor axis victory (+2).",
+   "War in europe changed to Level 4 (-7), Minor axis victory (+2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 4 (-7), Minor axis victory (+1).",
+   "War in europe changed to Level 3 (-6), Minor allied victory (-1).",
+   "War in europe changed to Level 2 (-4), Minor allied victory (-2).",
+   "War in europe changed to Level 1 (-1), Major allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260916,
+  "status": "complete",
+  "endTurn": 10,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 7,
+   "turn": 3,
+   "hex": 473,
+   "label": "H2609 Canton",
+   "region": "China",
+   "act": 237
+  },
+  "victoryLines": [
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to No effect (2), Minor allied victory (-1).",
+   "War in europe changed to No effect (3), Major allied victory (-2).",
+   "War in europe changed to No effect (2), Minor axis victory (+1).",
+   "War in europe changed to Level 1 (0), Major axis victory (+2).",
+   "War in europe changed to Level 1 (-1), Minor axis victory (+1).",
+   "War in europe changed to No effect (1), Minor allied victory (-2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260917,
+  "status": "complete",
+  "endTurn": 9,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 8,
+   "turn": 3,
+   "hex": 564,
+   "label": "H2913",
+   "region": "Philippines",
+   "act": 196
+  },
+  "victoryLines": [
+   "War in europe changed to Level 3 (-6), Minor axis victory (+2).",
+   "War in europe changed to Level 3 (-5), Major allied victory (-1).",
+   "War in europe changed to Level 3 (-6), Minor axis victory (+1).",
+   "War in europe changed to Level 3 (-5), Minor allied victory (-1).",
+   "War in europe changed to Level 2 (-3), Major allied victory (-2).",
+   "War in europe changed to Level 2 (-4), Minor axis victory (+1).",
+   "War in europe changed to Level 2 (-3), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-1), Minor allied victory (-2).",
+   "War in europe changed to Level 1 (-2), Major axis victory (+1).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260918,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 2,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 54
+  },
+  "victoryLines": [
+   "War in europe changed to No effect (1), Minor allied victory (-1).",
+   "War in europe changed to No effect (2), Major allied victory (-1).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to No effect (3), Minor allied victory (-1).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Minor allied victory (-2).",
+   "War in europe changed to No effect (2), Major axis victory (+1).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260919,
+  "status": "complete",
+  "endTurn": 11,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 2,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 30
+  },
+  "victoryLines": [
+   "War in europe changed to No effect (2), Major allied victory (-1).",
+   "War in europe changed to No effect (3), Minor allied victory (-1).",
+   "War in europe changed to No effect (3), Minor allied victory (-1).",
+   "War in europe changed to No effect (1), Minor axis victory (+2).",
+   "War in europe changed to No effect (3), Major allied victory (-2).",
+   "War in europe changed to No effect (1), Major axis victory (+2).",
+   "War in europe changed to No effect (2), Minor allied victory (-1).",
+   "War in europe changed to No effect (3), Minor allied victory (-1).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260920,
+  "status": "complete",
+  "endTurn": 9,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 12,
+   "turn": 3,
+   "hex": 421,
+   "label": "H2415 Miri",
+   "region": "Borneo",
+   "act": 231
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-2), Minor axis victory (+2).",
+   "War in europe changed to Level 2 (-4), Minor axis victory (+2).",
+   "War in europe changed to Level 3 (-5), Minor axis victory (+1).",
+   "War in europe changed to Level 2 (-3), Major allied victory (-2).",
+   "War in europe changed to Level 3 (-5), Major axis victory (+2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 1 (-2), Major allied victory (-3).",
+   "War in europe changed to Level 1 (0), Minor allied victory (-2).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260921,
+  "status": "complete",
+  "endTurn": 10,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 10,
+   "turn": 4,
+   "hex": 566,
+   "label": "H2915 Davao",
+   "region": "Philippines",
+   "act": 365
+  },
+  "victoryLines": [
+   "War in europe changed to Level 3 (-5), Minor axis victory (+2).",
+   "War in europe changed to Level 2 (-4), Minor allied victory (-1).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 3 (-5), Minor axis victory (+1).",
+   "War in europe changed to Level 3 (-6), Minor axis victory (+1).",
+   "War in europe changed to Level 2 (-4), Major allied victory (-2).",
+   "War in europe changed to Level 1 (-2), Major allied victory (-2).",
+   "War in europe changed to Level 1 (0), Minor allied victory (-2).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260922,
+  "status": "complete",
+  "endTurn": 11,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 4,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 359
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-1), Minor axis victory (+2).",
+   "War in europe changed to Level 2 (-3), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (-2), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (0), Major allied victory (-2).",
+   "War in europe changed to Level 1 (-1), Major axis victory (+1).",
+   "War in europe changed to No effect (1), Minor allied victory (-2).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260923,
+  "status": "complete",
+  "endTurn": 9,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 5,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 469
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-2), Minor axis victory (+2).",
+   "War in europe changed to Level 2 (-4), Minor axis victory (+2).",
+   "War in europe changed to Level 3 (-5), Minor axis victory (+1).",
+   "War in europe changed to Level 2 (-3), Major allied victory (-2).",
+   "War in europe changed to Level 1 (-1), Minor allied victory (-2).",
+   "War in europe changed to No effect (1), Minor allied victory (-2).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Minor allied victory (-2).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260924,
+  "status": "complete",
+  "endTurn": 11,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 8,
+   "turn": 8,
+   "hex": 564,
+   "label": "H2913",
+   "region": "Philippines",
+   "act": 769
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (0), Minor allied victory (-1).",
+   "War in europe changed to No effect (1), Major allied victory (-1).",
+   "War in europe changed to Level 1 (-1), Minor axis victory (+2).",
+   "War in europe changed to No effect (1), Major allied victory (-2).",
+   "War in europe changed to Level 1 (0), Minor axis victory (+1).",
+   "War in europe changed to No effect (1), Minor allied victory (-1).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260925,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 4,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 328
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-1), Major allied victory (-1).",
+   "War in europe changed to Level 1 (0), Minor allied victory (-1).",
+   "War in europe changed to No effect (1), Minor allied victory (-1).",
+   "War in europe changed to No effect (2), Minor allied victory (-1).",
+   "War in europe changed to No effect (1), Minor axis victory (+1).",
+   "War in europe changed to Level 1 (-1), Major axis victory (+2).",
+   "War in europe changed to No effect (2), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Minor allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260926,
+  "status": "complete",
+  "endTurn": 10,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 10,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 1109
+  },
+  "victoryLines": [
+   "War in europe changed to No effect (1), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-2), Major axis victory (+3).",
+   "War in europe changed to Level 1 (-1), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (0), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-1), Minor axis victory (+1).",
+   "War in europe changed to Level 1 (0), Minor allied victory (-1).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260927,
+  "status": "complete",
+  "endTurn": 11,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 7,
+   "turn": 2,
+   "hex": 534,
+   "label": "H2812",
+   "region": "Philippines",
+   "act": 115
+  },
+  "victoryLines": [
+   "War in europe changed to No effect (1), Minor allied victory (-1).",
+   "War in europe changed to No effect (2), Major allied victory (-1).",
+   "War in europe changed to No effect (3), Minor allied victory (-1).",
+   "War in europe changed to No effect (1), Minor axis victory (+2).",
+   "War in europe changed to No effect (3), Major allied victory (-2).",
+   "War in europe changed to No effect (3), Minor allied victory (-2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260928,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 4,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 330
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-1), Major allied victory (-1).",
+   "War in europe changed to Level 1 (0), Major allied victory (-1).",
+   "War in europe changed to No effect (1), Minor allied victory (-1).",
+   "War in europe changed to No effect (2), Minor allied victory (-1).",
+   "War in europe changed to No effect (3), Minor allied victory (-1).",
+   "War in europe changed to No effect (2), Minor axis victory (+1).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "War in europe changed to No effect (2), Major axis victory (+1).",
+   "War in europe changed to No effect (3), Minor allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260929,
+  "status": "complete",
+  "endTurn": 9,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 8,
+   "turn": 4,
+   "hex": 740,
+   "label": "H3515 Yap",
+   "region": "JMandates",
+   "act": 312
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-2), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (-1), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (0), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-1), Minor axis victory (+1).",
+   "War in europe changed to Level 1 (-2), Minor axis victory (+1).",
+   "War in europe changed to Level 2 (-3), Minor axis victory (+1).",
+   "War in europe changed to Level 1 (-1), Major allied victory (-2).",
+   "War in europe changed to No effect (1), Major allied victory (-2).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260930,
+  "status": "complete",
+  "endTurn": 11,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 7,
+   "turn": 3,
+   "hex": 534,
+   "label": "H2812",
+   "region": "Philippines",
+   "act": 229
+  },
+  "victoryLines": [
+   "War in europe changed to Level 2 (-4), Minor axis victory (+2).",
+   "War in europe changed to Level 3 (-6), Minor axis victory (+2).",
+   "War in europe changed to Level 4 (-7), Minor axis victory (+2).",
+   "War in europe changed to Level 3 (-6), Minor allied victory (-1).",
+   "War in europe changed to Level 2 (-4), Major allied victory (-2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 3 (-5), Minor axis victory (+1).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 1 (-2), Major allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260931,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 10,
+   "turn": 9,
+   "hex": 566,
+   "label": "H2915 Davao",
+   "region": "Philippines",
+   "act": 971
+  },
+  "victoryLines": [
+   "War in europe changed to Level 2 (-4), Minor axis victory (+1).",
+   "War in europe changed to Level 1 (-2), Major allied victory (-2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 2 (-4), Major axis victory (+2).",
+   "War in europe changed to Level 3 (-5), Minor axis victory (+1).",
+   "War in europe changed to Level 2 (-3), Minor allied victory (-2).",
+   "War in europe changed to Level 1 (-1), Minor allied victory (-2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260932,
+  "status": "complete",
+  "endTurn": 10,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 2,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 104
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-2), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (-1), Minor allied victory (-1).",
+   "War in europe changed to Level 2 (-4), Major axis victory (+3).",
+   "War in europe changed to Level 3 (-6), Minor axis victory (+2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 2 (-4), Major allied victory (-2).",
+   "War in europe changed to Level 1 (-2), Minor allied victory (-2).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260933,
+  "status": "complete",
+  "endTurn": 8,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 7,
+   "turn": 2,
+   "hex": 534,
+   "label": "H2812",
+   "region": "Philippines",
+   "act": 92
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-2), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (-1), Major allied victory (-1).",
+   "War in europe changed to Level 2 (-3), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (-1), Major allied victory (-2).",
+   "War in europe changed to Level 1 (-2), Minor axis victory (+1).",
+   "War in europe changed to Level 2 (-3), Minor axis victory (+1).",
+   "War in europe changed to Level 1 (-2), Minor allied victory (-1).",
+   "War in europe changed to Level 2 (-3), Minor axis victory (+1).",
+   "War in europe changed to Level 1 (-1), Minor allied victory (-2).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260934,
+  "status": "complete",
+  "endTurn": 11,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 10,
+   "turn": 8,
+   "hex": 388,
+   "label": "H2311 Cam Ranh",
+   "region": "Indochina",
+   "act": 818
+  },
+  "victoryLines": [
+   "War in europe changed to No effect (1), Major allied victory (-1).",
+   "War in europe changed to Level 1 (-1), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (0), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-1), Major axis victory (+1).",
+   "War in europe changed to No effect (2), Minor allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260935,
+  "status": "complete",
+  "endTurn": 11,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 7,
+   "turn": 10,
+   "hex": 534,
+   "label": "H2812",
+   "region": "Philippines",
+   "act": 1065
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-2), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (-1), Major allied victory (-1).",
+   "War in europe changed to Level 2 (-3), Minor axis victory (+2).",
+   "War in europe changed to Level 2 (-4), Minor axis victory (+1).",
+   "War in europe changed to Level 3 (-5), Minor axis victory (+1).",
+   "War in europe changed to Level 2 (-4), Minor allied victory (-1).",
+   "War in europe changed to Level 2 (-3), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (0), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Minor allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260936,
+  "status": "complete",
+  "endTurn": 9,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 4,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 306
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-2), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (-1), Major allied victory (-1).",
+   "War in europe changed to Level 1 (0), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-2), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (0), Major allied victory (-2).",
+   "War in europe changed to No effect (2), Minor allied victory (-2).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260937,
+  "status": "complete",
+  "endTurn": 11,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 10,
+   "turn": 3,
+   "hex": 566,
+   "label": "H2915 Davao",
+   "region": "Philippines",
+   "act": 240
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-2), Major allied victory (-2).",
+   "War in europe changed to Level 2 (-3), Minor axis victory (+1).",
+   "War in europe changed to Level 1 (-2), Minor allied victory (-1).",
+   "War in europe changed to Level 2 (-3), Minor axis victory (+1).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 1 (-1), Minor allied victory (-2).",
+   "War in europe changed to No effect (2), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Minor allied victory (-2).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260938,
+  "status": "complete",
+  "endTurn": 11,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 7,
+   "turn": 11,
+   "hex": 534,
+   "label": "H2812",
+   "region": "Philippines",
+   "act": 1126
+  },
+  "victoryLines": [
+   "War in europe changed to No effect (1), Major allied victory (-1).",
+   "War in europe changed to No effect (2), Major allied victory (-1).",
+   "War in europe changed to No effect (3), Minor allied victory (-1).",
+   "War in europe changed to No effect (3), Minor allied victory (-1).",
+   "War in europe changed to No effect (2), Minor axis victory (+1).",
+   "War in europe changed to No effect (3), Major allied victory (-2).",
+   "War in europe changed to No effect (1), Major axis victory (+2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260939,
+  "status": "complete",
+  "endTurn": 9,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 7,
+   "turn": 9,
+   "hex": 534,
+   "label": "H2812",
+   "region": "Philippines",
+   "act": 969
+  },
+  "victoryLines": [
+   "War in europe changed to Level 3 (-6), Minor axis victory (+2).",
+   "War in europe changed to Level 4 (-7), Major axis victory (+3).",
+   "War in europe changed to Level 4 (-7), Minor axis victory (+2).",
+   "War in europe changed to Level 3 (-6), Minor allied victory (-1).",
+   "War in europe changed to Level 2 (-4), Major allied victory (-2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 2 (-3), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-2), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (0), Minor allied victory (-2).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260940,
+  "status": "complete",
+  "endTurn": 9,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 12,
+   "turn": 3,
+   "hex": 328,
+   "label": "H2109",
+   "region": "Siam",
+   "act": 243
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-2), Minor axis victory (+2).",
+   "War in europe changed to Level 2 (-4), Minor axis victory (+2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 2 (-3), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (0), Major allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260941,
+  "status": "complete",
+  "endTurn": 10,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 10,
+   "turn": 4,
+   "hex": 566,
+   "label": "H2915 Davao",
+   "region": "Philippines",
+   "act": 395
+  },
+  "victoryLines": [
+   "War in europe changed to No effect (1), Minor allied victory (-1).",
+   "War in europe changed to No effect (3), Major allied victory (-2).",
+   "War in europe changed to No effect (2), Minor axis victory (+1).",
+   "War in europe changed to No effect (3), Minor allied victory (-2).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Minor allied victory (-2).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260942,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 1,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 8,
+   "turn": 8,
+   "hex": 564,
+   "label": "H2913",
+   "region": "Philippines",
+   "act": 743
+  },
+  "victoryLines": [
+   "War in europe changed to No effect (1), Major allied victory (-1).",
+   "War in europe changed to Level 1 (-1), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (-2), Minor axis victory (+1).",
+   "War in europe changed to Level 1 (-1), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-2), Minor axis victory (+1).",
+   "War in europe changed to Level 1 (-1), Minor allied victory (-1).",
+   "War in europe changed to No effect (1), Major allied victory (-2).",
+   "War in europe changed to No effect (3), Minor allied victory (-3).",
+   "War in europe changed to No effect (3), Minor allied victory (-3).",
+   "War in europe changed to No effect (3), Major allied victory (-3)."
+  ]
+ },
+ {
+  "seed": 20260943,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 10,
+   "hex": 502,
+   "label": "H2709 Hong Kong",
+   "region": "China",
+   "act": 1109
+  },
+  "victoryLines": [
+   "War in europe changed to Level 2 (-4), Minor axis victory (+2).",
+   "War in europe changed to Level 2 (-3), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-2), Major allied victory (-1).",
+   "War in europe changed to Level 1 (0), Major allied victory (-2).",
+   "War in europe changed to Level 1 (-1), Minor axis victory (+1).",
+   "War in europe changed to Level 1 (0), Minor allied victory (-1).",
+   "War in europe changed to No effect (1), Minor allied victory (-1).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to No effect (3), Minor allied victory (-2).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260944,
+  "status": "complete",
+  "endTurn": 11,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 7,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 664
+  },
+  "victoryLines": [
+   "War in europe changed to No effect (1), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-1), Major axis victory (+2).",
+   "War in europe changed to No effect (1), Major allied victory (-2).",
+   "War in europe changed to Level 1 (0), Minor axis victory (+1).",
+   "War in europe changed to Level 1 (-1), Minor axis victory (+1).",
+   "War in europe changed to No effect (2), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Minor allied victory (-2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260945,
+  "status": "complete",
+  "endTurn": 10,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 11,
+   "turn": 5,
+   "hex": 360,
+   "label": "H2212 Saigon",
+   "region": "Indochina",
+   "act": 430
+  },
+  "victoryLines": [
+   "War in europe changed to No effect (1), Major allied victory (-1).",
+   "War in europe changed to No effect (2), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-1), Major axis victory (+3).",
+   "War in europe changed to Level 1 (0), Major allied victory (-1).",
+   "War in europe changed to Level 1 (-2), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (-1), Minor allied victory (-1).",
+   "War in europe changed to No effect (1), Major allied victory (-2).",
+   "War in europe changed to Level 1 (0), Minor axis victory (+1).",
+   "War in europe changed to No effect (2), Minor allied victory (-2).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260946,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 4,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 376
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-2), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (-1), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (0), Major allied victory (-1).",
+   "War in europe changed to No effect (1), Minor allied victory (-1).",
+   "War in europe changed to No effect (2), Minor allied victory (-1).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260947,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 1,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 8,
+   "turn": 7,
+   "hex": 564,
+   "label": "H2913",
+   "region": "Philippines",
+   "act": 744
+  },
+  "victoryLines": [
+   "War in europe changed to Level 2 (-3), Major axis victory (+3).",
+   "War in europe changed to Level 3 (-5), Minor axis victory (+2).",
+   "War in europe changed to Level 2 (-4), Major allied victory (-1).",
+   "War in europe changed to Level 1 (-2), Major allied victory (-2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 1 (0), Minor allied victory (-2).",
+   "War in europe changed to No effect (3), Minor allied victory (-3)."
+  ]
+ },
+ {
+  "seed": 20260948,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 2,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 12,
+   "turn": 3,
+   "hex": 331,
+   "label": "H2112 Kota Bharu",
+   "region": "Malaya",
+   "act": 176
+  },
+  "victoryLines": [
+   "War in europe changed to No effect (1), Major allied victory (-1).",
+   "War in europe changed to No effect (2), Major allied victory (-1).",
+   "War in europe changed to No effect (1), Minor axis victory (+1).",
+   "War in europe changed to No effect (3), Major allied victory (-2).",
+   "War in europe changed to No effect (2), Minor axis victory (+1).",
+   "War in europe changed to No effect (3), Minor allied victory (-2).",
+   "War in europe changed to No effect (3), Minor allied victory (-2).",
+   "War in europe changed to No effect (3), Minor allied victory (-2)."
+  ]
+ },
+ {
+  "seed": 20260949,
+  "status": "complete",
+  "endTurn": 10,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 8,
+   "turn": 2,
+   "hex": 564,
+   "label": "H2913",
+   "region": "Philippines",
+   "act": 79
+  },
+  "victoryLines": [
+   "War in europe changed to Level 2 (-3), Minor axis victory (+2).",
+   "War in europe changed to Level 1 (-2), Minor allied victory (-1).",
+   "War in europe changed to Level 3 (-5), Major axis victory (+3).",
+   "War in europe changed to Level 4 (-7), Minor axis victory (+2).",
+   "War in europe changed to Level 3 (-5), Major allied victory (-2).",
+   "War in europe changed to Level 3 (-6), Minor axis victory (+1).",
+   "War in europe changed to Level 3 (-5), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (-2), Major allied victory (-3).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260950,
+  "status": "complete",
+  "endTurn": 9,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 8,
+   "turn": 4,
+   "hex": 564,
+   "label": "H2913",
+   "region": "Philippines",
+   "act": 287
+  },
+  "victoryLines": [
+   "War in europe changed to Level 1 (-2), Minor axis victory (+2).",
+   "War in europe changed to Level 2 (-4), Minor axis victory (+2).",
+   "War in europe changed to Level 2 (-3), Major allied victory (-1).",
+   "War in europe changed to Level 1 (-2), Minor allied victory (-1).",
+   "War in europe changed to Level 1 (0), Major allied victory (-2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to No effect (2), Minor allied victory (-2).",
+   "War in europe changed to No effect (3), Major allied victory (-3).",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260951,
+  "status": "complete",
+  "endTurn": 12,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 3,
+   "turn": 4,
+   "hex": 589,
+   "label": "H3009 Taihoku",
+   "region": "Formosa",
+   "act": 355
+  },
+  "victoryLines": [
+   "War in europe changed to Level 3 (-6), Minor axis victory (+2).",
+   "War in europe changed to Level 4 (-7), Minor axis victory (+2).",
+   "War in europe changed to Level 3 (-6), Minor allied victory (-1).",
+   "War in europe changed to Level 2 (-4), Minor allied victory (-2).",
+   "War in europe changed to Level 1 (-1), Major allied victory (-3).",
+   "War in europe changed to No effect (1), Minor allied victory (-2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "War in europe changed to Level 1 (0), Major axis victory (+1).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ },
+ {
+  "seed": 20260952,
+  "status": "complete",
+  "endTurn": 9,
+  "pw": 0,
+  "best": {
+   "unit": "SL Corps",
+   "dist": 7,
+   "turn": 2,
+   "hex": 563,
+   "name": "",
+   "label": "H2912",
+   "region": "Philippines"
+  },
+  "bestStrike": {
+   "dist": 6,
+   "turn": 4,
+   "hex": 562,
+   "label": "H2911",
+   "region": "Philippines",
+   "act": 366
+  },
+  "victoryLines": [
+   "War in europe changed to No effect (1), Minor allied victory (-1).",
+   "War in europe changed to No effect (2), Major allied victory (-1).",
+   "War in europe changed to No effect (3), Minor allied victory (-1).",
+   "War in europe changed to No effect (1), Major axis victory (+2).",
+   "War in europe changed to Level 1 (0), Minor axis victory (+1).",
+   "War in europe changed to No effect (2), Minor allied victory (-2).",
+   "AP deck reshuffled due to Soviet invasion discarded.",
+   "Japanese Victory by Treaty Negotiations."
+  ]
+ }
+]

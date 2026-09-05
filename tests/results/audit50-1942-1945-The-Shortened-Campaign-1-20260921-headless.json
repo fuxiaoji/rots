@@ -1,0 +1,97 @@
+{
+  "generatedAt": "2026-09-04T11:21:49.614Z",
+  "tally": {
+    "policy": "erasmus-v2.0-zh.7",
+    "scenario": "1942-1945 (The Shortened Campaign)",
+    "gameCount": 1,
+    "baseSeed": 20260921,
+    "maxActions": 60000,
+    "headless_moves": true,
+    "complete": 1,
+    "japanWins": 1,
+    "alliesWins": 0,
+    "otherWins": 0,
+    "errors": 0,
+    "setupErrors": 0,
+    "actionLimit": 0,
+    "fallback": 2,
+    "groundMove": 54,
+    "capturedAP": 4,
+    "capturedJP": 6,
+    "role": {
+      "Japan": {
+        "decisions": 1012,
+        "byKind": {
+          "axis": 256,
+          "card": 100,
+          "taskforce": 581,
+          "reaction": 75,
+          "?": 0
+        },
+        "airStrikeUnits": 2,
+        "airStrikeHexes": 2,
+        "fire": 57,
+        "advance": 155
+      },
+      "Allies": {
+        "decisions": 1178,
+        "byKind": {
+          "axis": 303,
+          "card": 143,
+          "taskforce": 672,
+          "reaction": 49,
+          "?": 11
+        },
+        "airStrikeUnits": 4,
+        "airStrikeHexes": 4,
+        "fire": 20,
+        "advance": 98
+      }
+    },
+    "noBattleHex": 72
+  },
+  "perGame": [
+    {
+      "seed": 20260921,
+      "winner": "Japan",
+      "actions": 2190,
+      "turn": 12,
+      "fallback": 2,
+      "noBattleHex": 72,
+      "groundMove": 54,
+      "capturedAP": 4,
+      "capturedJP": 6,
+      "role": {
+        "Japan": {
+          "decisions": 1012,
+          "byKind": {
+            "axis": 256,
+            "card": 100,
+            "taskforce": 581,
+            "reaction": 75,
+            "?": 0
+          },
+          "airStrikeUnits": 2,
+          "airStrikeHexes": 2,
+          "fire": 57,
+          "advance": 155
+        },
+        "Allies": {
+          "decisions": 1178,
+          "byKind": {
+            "axis": 303,
+            "card": 143,
+            "taskforce": 672,
+            "reaction": 49,
+            "?": 11
+          },
+          "airStrikeUnits": 4,
+          "airStrikeHexes": 4,
+          "fire": 20,
+          "advance": 98
+        }
+      }
+    }
+  ],
+  "errors": []
+}

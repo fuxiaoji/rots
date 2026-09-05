@@ -32,15 +32,27 @@ try {
         Import-ZipAsset "empire-of-the-sun/images/$name" "images/$name" "map:$name"
     }
 
-    foreach ($side in @(@("ap", 85), @("jp", 87))) {
+    # Card backs: legacy back art is numbered 85 (AP) / 88 (JP); the current engine
+    # uses index 0 for the back (class `card_ap_0`/`card_jp_0`). Import 1:1 into 00.
+    foreach ($side in @(@("ap", 85), @("jp", 88))) {
+        $prefix = $side[0]
+        $backNumber = [int]$side[1]
+        foreach ($scale in @(100, 200)) {
+            $sourceName = "card_{0}_{1:d2}.{2}.avif" -f $prefix, $backNumber, $scale
+            $targetName = "card_{0}_00.{1}.avif" -f $prefix, $scale
+            Import-ZipAsset "empire-of-the-sun/cards/$sourceName" "cards/zh/$targetName" "card:${prefix}:0:${scale}"
+        }
+    }
+
+    # Card faces: legacy art is one-based and matches the engine's card.num exactly
+    # (card 1 == card_ap_01). Import 1:1 — do NOT shift the index.
+    foreach ($side in @(@("ap", 84), @("jp", 86))) {
         $prefix = $side[0]
         $count = [int]$side[1]
-        for ($index = 0; $index -lt $count; ++$index) {
-            $sourceNumber = $index + 1
+        for ($n = 1; $n -le $count; ++$n) {
             foreach ($scale in @(100, 200)) {
-                $sourceName = "card_{0}_{1:d2}.{2}.avif" -f $prefix, $sourceNumber, $scale
-                $targetName = "card_{0}_{1:d2}.{2}.avif" -f $prefix, $index, $scale
-                Import-ZipAsset "empire-of-the-sun/cards/$sourceName" "cards/zh/$targetName" "card:${prefix}:${index}:${scale}"
+                $name = "card_{0}_{1:d2}.{2}.avif" -f $prefix, $n, $scale
+                Import-ZipAsset "empire-of-the-sun/cards/$name" "cards/zh/$name" "card:${prefix}:${n}:${scale}"
             }
         }
     }
@@ -65,7 +77,7 @@ $manifest = [ordered]@{
     source_zip = (Resolve-Path $ZipPath).Path
     source_zip_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $ZipPath).Hash.ToLowerInvariant()
     imported_at = (Get-Date).ToUniversalTime().ToString("o")
-    mapping_note = "Legacy art numbers are one-based; current engine card indices are zero-based. JP source card 88 is not imported because no current card metadata object matches it."
+    mapping_note = "Card face art is one-based and matches the engine's card.num exactly (card 1 == card_ap_01). Card backs are legacy-numbered 85 (AP) / 88 (JP) and are imported to target index 00."
     assets = $records
 }
 $manifestPath = Join-Path $Root "docs\localization\assets-manifest.json"

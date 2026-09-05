@@ -86,6 +86,11 @@ for(const [page,prefix,role,kind,preds,strategies] of generic){
 
 fs.mkdirSync(out,{recursive:true});fs.mkdirSync(docs,{recursive:true})
 for(const d of defs.sort((a,b)=>a.page-b.page)){
+ const selectedPage=process.argv.find(arg=>arg.startsWith("--page="))
+ if(selectedPage&&d.page!==Number(selectedPage.split("=")[1]))continue
+ // Page 8 was declared in defs before axisNodes existed; use its verified
+ // C+D branch and card-group process rather than the obsolete flattened tree.
+ if(d.page===8)d.nodes=axisNodes(8)
  const nodes=[{id:`${d.prefix}-START`,type:"start",edges:[{when:"always",to:d.nodes[0].id}]},...d.nodes,{id:`${d.prefix}-FALLBACK`,type:"fallback",allowed_actions:["pass","skip"],reason:"图表出口均不合法"},{id:`${d.prefix}-END`,type:"terminal"}]
  for(const n of nodes){n.confidence="confirmed";n.source_page=d.page;n.visual_region={x:0,y:0,width:1,height:1,units:"page_fraction"};for(const e of n.edges||[]){if(e.to==="END")e.to=`${d.prefix}-END`;if(e.to==="FALLBACK")e.to=`${d.prefix}-FALLBACK`}}
  const chart={schema_version:3,id:d.id,chart_id:d.id,role:d.role,phase:d.phase,kind:d.kind,source_page:d.page,source:{pdf:path.basename(pdf),absolute_path:pdf,page:d.page,sha256:sha},nodes,strategies:[...new Set(nodes.flatMap(n=>n.strategy?[n.strategy]:(n.strategies||[]).map(x=>x.id)))],dice_tables:nodes.filter(n=>n.type==="dice").map(n=>({id:n.table_id,sides:n.sides,ranges:n.ranges,source_page:d.page})),qa:{inferred_nodes:[],visual_review_required:false,verified_from_visual:true}}

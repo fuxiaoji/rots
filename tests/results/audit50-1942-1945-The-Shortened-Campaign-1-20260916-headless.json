@@ -1,0 +1,97 @@
+{
+  "generatedAt": "2026-09-04T11:21:47.739Z",
+  "tally": {
+    "policy": "erasmus-v2.0-zh.7",
+    "scenario": "1942-1945 (The Shortened Campaign)",
+    "gameCount": 1,
+    "baseSeed": 20260916,
+    "maxActions": 60000,
+    "headless_moves": true,
+    "complete": 1,
+    "japanWins": 1,
+    "alliesWins": 0,
+    "otherWins": 0,
+    "errors": 0,
+    "setupErrors": 0,
+    "actionLimit": 0,
+    "fallback": 2,
+    "groundMove": 31,
+    "capturedAP": 3,
+    "capturedJP": 4,
+    "role": {
+      "Japan": {
+        "decisions": 772,
+        "byKind": {
+          "axis": 198,
+          "card": 67,
+          "taskforce": 462,
+          "reaction": 45,
+          "?": 0
+        },
+        "airStrikeUnits": 5,
+        "airStrikeHexes": 5,
+        "fire": 45,
+        "advance": 105
+      },
+      "Allies": {
+        "decisions": 806,
+        "byKind": {
+          "axis": 189,
+          "card": 88,
+          "taskforce": 483,
+          "reaction": 39,
+          "?": 7
+        },
+        "airStrikeUnits": 0,
+        "airStrikeHexes": 0,
+        "fire": 18,
+        "advance": 88
+      }
+    },
+    "noBattleHex": 35
+  },
+  "perGame": [
+    {
+      "seed": 20260916,
+      "winner": "Japan",
+      "actions": 1578,
+      "turn": 8,
+      "fallback": 2,
+      "noBattleHex": 35,
+      "groundMove": 31,
+      "capturedAP": 3,
+      "capturedJP": 4,
+      "role": {
+        "Japan": {
+          "decisions": 772,
+          "byKind": {
+            "axis": 198,
+            "card": 67,
+            "taskforce": 462,
+            "reaction": 45,
+            "?": 0
+          },
+          "airStrikeUnits": 5,
+          "airStrikeHexes": 5,
+          "fire": 45,
+          "advance": 105
+        },
+        "Allies": {
+          "decisions": 806,
+          "byKind": {
+            "axis": 189,
+            "card": 88,
+            "taskforce": 483,
+            "reaction": 39,
+            "?": 7
+          },
+          "airStrikeUnits": 0,
+          "airStrikeHexes": 0,
+          "fire": 18,
+          "advance": 88
+        }
+      }
+    }
+  ],
+  "errors": []
+}

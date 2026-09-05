@@ -1,0 +1,62 @@
+{
+  "generatedAt": "2026-09-05T13:57:09.377Z",
+  "tally": {
+    "policy": "erasmus-v2.0-zh.22",
+    "scenario": "1942-1945 (The Shortened Campaign)",
+    "gameCount": 1,
+    "baseSeed": 20260906,
+    "maxActions": 8000,
+    "headless_moves": true,
+    "complete": 0,
+    "japanWins": 0,
+    "alliesWins": 0,
+    "otherWins": 0,
+    "errors": 0,
+    "setupErrors": 0,
+    "actionLimit": 1,
+    "fallback": 0,
+    "groundMove": 0,
+    "capturedAP": 0,
+    "capturedJP": 0,
+    "atomicBombWins": 0,
+    "role": {
+      "Japan": {
+        "decisions": 0,
+        "byKind": {
+          "axis": 0,
+          "card": 0,
+          "taskforce": 0,
+          "reaction": 0,
+          "?": 0
+        },
+        "airStrikeUnits": 0,
+        "airStrikeHexes": 0,
+        "fire": 0,
+        "advance": 0,
+        "hqActivations": 0
+      },
+      "Allies": {
+        "decisions": 0,
+        "byKind": {
+          "axis": 0,
+          "card": 0,
+          "taskforce": 0,
+          "reaction": 0,
+          "?": 0
+        },
+        "airStrikeUnits": 0,
+        "airStrikeHexes": 0,
+        "fire": 0,
+        "advance": 0,
+        "hqActivations": 0
+      }
+    },
+    "noBattleHex": 0,
+    "unexplainedNoBattle": 0,
+    "traceNodeMissing": 0,
+    "strategyCounts": {},
+    "victoryPlanCounts": {}
+  },
+  "perGame": [],
+  "errors": []
+}

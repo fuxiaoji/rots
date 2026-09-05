@@ -2,3 +2,6 @@ HIRES
 info/*.png
 *.idea
 tmp/
+*.zip
+__pycache__/
+*.pyc

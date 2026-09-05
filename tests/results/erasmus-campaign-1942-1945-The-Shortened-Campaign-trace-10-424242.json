@@ -1,0 +1,568 @@
+{
+  "policy": "erasmus-v2.0-zh.3",
+  "scenario": "1942-1945 (The Shortened Campaign)",
+  "gameCount": 10,
+  "baseSeed": 424242,
+  "maxActions": 60000,
+  "generatedAt": "2026-09-03T05:41:37.811Z",
+  "summary": {
+    "complete": 10,
+    "errors": 0,
+    "actionLimit": 0,
+    "setupErrors": 0,
+    "totalDecisions": 11875,
+    "totalFallback": 20,
+    "byRole": {
+      "Allies": {
+        "decisions": 7119,
+        "fallback": 20
+      },
+      "Japan": {
+        "decisions": 4756,
+        "fallback": 0
+      }
+    },
+    "byChart": {
+      "ERASMUS-AP-11|Allies": {
+        "decisions": 3405,
+        "fallback": 0
+      },
+      "ERASMUS-AP-07|Allies": {
+        "decisions": 463,
+        "fallback": 20
+      },
+      "ERASMUS-JP-04|Japan": {
+        "decisions": 1069,
+        "fallback": 0
+      },
+      "ERASMUS-JP-05|Japan": {
+        "decisions": 1871,
+        "fallback": 0
+      },
+      "ERASMUS-JP-01|Japan": {
+        "decisions": 542,
+        "fallback": 0
+      },
+      "ERASMUS-AP-12|Allies": {
+        "decisions": 332,
+        "fallback": 0
+      },
+      "ERASMUS-AP-10|Allies": {
+        "decisions": 1563,
+        "fallback": 0
+      },
+      "ERASMUS-JP-06|Japan": {
+        "decisions": 465,
+        "fallback": 0
+      },
+      "ERASMUS-AP-08|Allies": {
+        "decisions": 934,
+        "fallback": 0
+      },
+      "ERASMUS-JP-02|Japan": {
+        "decisions": 586,
+        "fallback": 0
+      },
+      "ERASMUS-AP-09|Allies": {
+        "decisions": 422,
+        "fallback": 0
+      },
+      "ERASMUS-JP-03|Japan": {
+        "decisions": 223,
+        "fallback": 0
+      }
+    }
+  },
+  "games": [
+    {
+      "seed": 424242,
+      "status": "complete",
+      "decisions": 1244,
+      "fallback": 1,
+      "roleActions": {
+        "Japan": 499,
+        "Allies": 745
+      },
+      "charts": {
+        "ERASMUS-AP-11|Allies": 351,
+        "ERASMUS-AP-07|Allies": 42,
+        "ERASMUS-JP-04|Japan": 114,
+        "ERASMUS-JP-05|Japan": 193,
+        "ERASMUS-JP-01|Japan": 50,
+        "ERASMUS-AP-12|Allies": 35,
+        "ERASMUS-AP-10|Allies": 170,
+        "ERASMUS-JP-06|Japan": 49,
+        "ERASMUS-AP-08|Allies": 90,
+        "ERASMUS-JP-02|Japan": 58,
+        "ERASMUS-AP-09|Allies": 57,
+        "ERASMUS-JP-03|Japan": 35
+      },
+      "turn": 12,
+      "actions": 1244,
+      "winner": "Japan"
+    },
+    {
+      "seed": 424243,
+      "status": "complete",
+      "decisions": 920,
+      "fallback": 2,
+      "roleActions": {
+        "Japan": 368,
+        "Allies": 552
+      },
+      "charts": {
+        "ERASMUS-AP-11|Allies": 264,
+        "ERASMUS-AP-07|Allies": 48,
+        "ERASMUS-JP-04|Japan": 83,
+        "ERASMUS-JP-01|Japan": 49,
+        "ERASMUS-AP-10|Allies": 124,
+        "ERASMUS-JP-06|Japan": 36,
+        "ERASMUS-JP-05|Japan": 136,
+        "ERASMUS-AP-12|Allies": 24,
+        "ERASMUS-AP-08|Allies": 92,
+        "ERASMUS-JP-02|Japan": 64
+      },
+      "turn": 9,
+      "actions": 920,
+      "winner": "Japan"
+    },
+    {
+      "seed": 424244,
+      "status": "complete",
+      "decisions": 1174,
+      "fallback": 1,
+      "roleActions": {
+        "Japan": 464,
+        "Allies": 710
+      },
+      "charts": {
+        "ERASMUS-AP-11|Allies": 344,
+        "ERASMUS-AP-07|Allies": 51,
+        "ERASMUS-JP-04|Japan": 106,
+        "ERASMUS-JP-05|Japan": 173,
+        "ERASMUS-JP-01|Japan": 55,
+        "ERASMUS-AP-12|Allies": 31,
+        "ERASMUS-AP-10|Allies": 150,
+        "ERASMUS-JP-06|Japan": 47,
+        "ERASMUS-AP-08|Allies": 96,
+        "ERASMUS-JP-02|Japan": 59,
+        "ERASMUS-AP-09|Allies": 38,
+        "ERASMUS-JP-03|Japan": 24
+      },
+      "turn": 11,
+      "actions": 1174,
+      "winner": "Japan"
+    },
+    {
+      "seed": 424245,
+      "status": "complete",
+      "decisions": 1243,
+      "fallback": 4,
+      "roleActions": {
+        "Japan": 509,
+        "Allies": 734
+      },
+      "charts": {
+        "ERASMUS-AP-11|Allies": 347,
+        "ERASMUS-AP-07|Allies": 40,
+        "ERASMUS-JP-04|Japan": 111,
+        "ERASMUS-JP-01|Japan": 51,
+        "ERASMUS-AP-10|Allies": 168,
+        "ERASMUS-JP-06|Japan": 48,
+        "ERASMUS-JP-05|Japan": 206,
+        "ERASMUS-AP-12|Allies": 35,
+        "ERASMUS-AP-08|Allies": 86,
+        "ERASMUS-JP-02|Japan": 57,
+        "ERASMUS-AP-09|Allies": 58,
+        "ERASMUS-JP-03|Japan": 36
+      },
+      "turn": 12,
+      "actions": 1243,
+      "winner": "Japan"
+    },
+    {
+      "seed": 424246,
+      "status": "complete",
+      "decisions": 1171,
+      "fallback": 2,
+      "roleActions": {
+        "Japan": 464,
+        "Allies": 707
+      },
+      "charts": {
+        "ERASMUS-AP-11|Allies": 342,
+        "ERASMUS-AP-07|Allies": 45,
+        "ERASMUS-JP-04|Japan": 106,
+        "ERASMUS-JP-05|Japan": 192,
+        "ERASMUS-JP-01|Japan": 58,
+        "ERASMUS-AP-12|Allies": 35,
+        "ERASMUS-AP-10|Allies": 154,
+        "ERASMUS-JP-06|Japan": 41,
+        "ERASMUS-AP-08|Allies": 90,
+        "ERASMUS-JP-02|Japan": 52,
+        "ERASMUS-AP-09|Allies": 41,
+        "ERASMUS-JP-03|Japan": 15
+      },
+      "turn": 11,
+      "actions": 1171,
+      "winner": "Japan"
+    },
+    {
+      "seed": 424247,
+      "status": "complete",
+      "decisions": 1239,
+      "fallback": 1,
+      "roleActions": {
+        "Japan": 499,
+        "Allies": 740
+      },
+      "charts": {
+        "ERASMUS-AP-11|Allies": 347,
+        "ERASMUS-AP-07|Allies": 44,
+        "ERASMUS-JP-04|Japan": 119,
+        "ERASMUS-JP-05|Japan": 187,
+        "ERASMUS-JP-01|Japan": 52,
+        "ERASMUS-AP-12|Allies": 33,
+        "ERASMUS-AP-10|Allies": 166,
+        "ERASMUS-JP-06|Japan": 51,
+        "ERASMUS-AP-08|Allies": 92,
+        "ERASMUS-JP-02|Japan": 64,
+        "ERASMUS-AP-09|Allies": 58,
+        "ERASMUS-JP-03|Japan": 26
+      },
+      "turn": 12,
+      "actions": 1239,
+      "winner": "Japan"
+    },
+    {
+      "seed": 424248,
+      "status": "complete",
+      "decisions": 1182,
+      "fallback": 3,
+      "roleActions": {
+        "Japan": 471,
+        "Allies": 711
+      },
+      "charts": {
+        "ERASMUS-AP-11|Allies": 351,
+        "ERASMUS-AP-07|Allies": 49,
+        "ERASMUS-JP-04|Japan": 106,
+        "ERASMUS-JP-01|Japan": 55,
+        "ERASMUS-AP-10|Allies": 148,
+        "ERASMUS-JP-06|Japan": 50,
+        "ERASMUS-JP-05|Japan": 187,
+        "ERASMUS-AP-12|Allies": 34,
+        "ERASMUS-JP-02|Japan": 56,
+        "ERASMUS-AP-08|Allies": 95,
+        "ERASMUS-AP-09|Allies": 34,
+        "ERASMUS-JP-03|Japan": 17
+      },
+      "turn": 11,
+      "actions": 1182,
+      "winner": "Japan"
+    },
+    {
+      "seed": 424249,
+      "status": "complete",
+      "decisions": 1135,
+      "fallback": 2,
+      "roleActions": {
+        "Japan": 458,
+        "Allies": 677
+      },
+      "charts": {
+        "ERASMUS-AP-11|Allies": 331,
+        "ERASMUS-AP-07|Allies": 48,
+        "ERASMUS-AP-10|Allies": 143,
+        "ERASMUS-JP-04|Japan": 95,
+        "ERASMUS-JP-05|Japan": 182,
+        "ERASMUS-JP-01|Japan": 54,
+        "ERASMUS-AP-12|Allies": 31,
+        "ERASMUS-JP-06|Japan": 48,
+        "ERASMUS-AP-08|Allies": 96,
+        "ERASMUS-JP-02|Japan": 58,
+        "ERASMUS-AP-09|Allies": 28,
+        "ERASMUS-JP-03|Japan": 21
+      },
+      "turn": 11,
+      "actions": 1135,
+      "winner": "Japan"
+    },
+    {
+      "seed": 424250,
+      "status": "complete",
+      "decisions": 1264,
+      "fallback": 2,
+      "roleActions": {
+        "Japan": 506,
+        "Allies": 758
+      },
+      "charts": {
+        "ERASMUS-AP-11|Allies": 355,
+        "ERASMUS-AP-07|Allies": 47,
+        "ERASMUS-JP-04|Japan": 117,
+        "ERASMUS-JP-05|Japan": 198,
+        "ERASMUS-JP-01|Japan": 57,
+        "ERASMUS-AP-12|Allies": 34,
+        "ERASMUS-AP-10|Allies": 168,
+        "ERASMUS-JP-06|Japan": 47,
+        "ERASMUS-AP-08|Allies": 96,
+        "ERASMUS-JP-02|Japan": 64,
+        "ERASMUS-AP-09|Allies": 58,
+        "ERASMUS-JP-03|Japan": 23
+      },
+      "turn": 12,
+      "actions": 1264,
+      "winner": "Japan"
+    },
+    {
+      "seed": 424251,
+      "status": "complete",
+      "decisions": 1303,
+      "fallback": 2,
+      "roleActions": {
+        "Japan": 518,
+        "Allies": 785
+      },
+      "charts": {
+        "ERASMUS-AP-11|Allies": 373,
+        "ERASMUS-AP-07|Allies": 49,
+        "ERASMUS-JP-04|Japan": 112,
+        "ERASMUS-JP-01|Japan": 61,
+        "ERASMUS-JP-05|Japan": 217,
+        "ERASMUS-AP-12|Allies": 40,
+        "ERASMUS-AP-10|Allies": 172,
+        "ERASMUS-JP-06|Japan": 48,
+        "ERASMUS-AP-08|Allies": 101,
+        "ERASMUS-JP-02|Japan": 54,
+        "ERASMUS-AP-09|Allies": 50,
+        "ERASMUS-JP-03|Japan": 26
+      },
+      "turn": 12,
+      "actions": 1303,
+      "winner": "Japan"
+    }
+  ],
+  "fallbacks": [
+    {
+      "seed": 424242,
+      "ord": 12,
+      "role": "Allies",
+      "turn": 2,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "Hold Arcadia or discard and replace with random card."
+    },
+    {
+      "seed": 424243,
+      "ord": 12,
+      "role": "Allies",
+      "turn": 2,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "Hold Arcadia or discard and replace with random card."
+    },
+    {
+      "seed": 424243,
+      "ord": 208,
+      "role": "Allies",
+      "turn": 3,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "C9: Select action."
+    },
+    {
+      "seed": 424244,
+      "ord": 12,
+      "role": "Allies",
+      "turn": 2,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "Hold Arcadia or discard and replace with random card."
+    },
+    {
+      "seed": 424245,
+      "ord": 12,
+      "role": "Allies",
+      "turn": 2,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "Hold Arcadia or discard and replace with random card."
+    },
+    {
+      "seed": 424245,
+      "ord": 42,
+      "role": "Allies",
+      "turn": 2,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "C9: Select action."
+    },
+    {
+      "seed": 424245,
+      "ord": 220,
+      "role": "Allies",
+      "turn": 3,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "C65: Select action."
+    },
+    {
+      "seed": 424245,
+      "ord": 240,
+      "role": "Allies",
+      "turn": 3,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "C74: Select action."
+    },
+    {
+      "seed": 424246,
+      "ord": 12,
+      "role": "Allies",
+      "turn": 2,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "Hold Arcadia or discard and replace with random card."
+    },
+    {
+      "seed": 424246,
+      "ord": 206,
+      "role": "Allies",
+      "turn": 3,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "C75: Select action."
+    },
+    {
+      "seed": 424247,
+      "ord": 12,
+      "role": "Allies",
+      "turn": 2,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "Hold Arcadia or discard and replace with random card."
+    },
+    {
+      "seed": 424248,
+      "ord": 12,
+      "role": "Allies",
+      "turn": 2,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "Hold Arcadia or discard and replace with random card."
+    },
+    {
+      "seed": 424248,
+      "ord": 40,
+      "role": "Allies",
+      "turn": 2,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "C62: Select action."
+    },
+    {
+      "seed": 424248,
+      "ord": 176,
+      "role": "Allies",
+      "turn": 3,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "C74: Select action."
+    },
+    {
+      "seed": 424249,
+      "ord": 12,
+      "role": "Allies",
+      "turn": 2,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "Hold Arcadia or discard and replace with random card."
+    },
+    {
+      "seed": 424249,
+      "ord": 229,
+      "role": "Allies",
+      "turn": 3,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "C9: Select action."
+    },
+    {
+      "seed": 424250,
+      "ord": 12,
+      "role": "Allies",
+      "turn": 2,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "Hold Arcadia or discard and replace with random card."
+    },
+    {
+      "seed": 424250,
+      "ord": 51,
+      "role": "Allies",
+      "turn": 2,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "C9: Select action."
+    },
+    {
+      "seed": 424251,
+      "ord": 12,
+      "role": "Allies",
+      "turn": 2,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "Hold Arcadia or discard and replace with random card."
+    },
+    {
+      "seed": 424251,
+      "ord": 166,
+      "role": "Allies",
+      "turn": 3,
+      "chart": "ERASMUS-AP-07",
+      "node": "ERASMUS-AP-07-FALLBACK",
+      "action": "discard",
+      "strategy": "AP_ORANGE_PLAN",
+      "prompt": "C62: Select action."
+    }
+  ]
+}

@@ -8,9 +8,10 @@
 |---|---|---|
 | AP08-START | start | always→AP08-A |
 | AP08-A | condition / AP_CAN_PASS | true→AP08-S-PASS；false→AP08-B |
-| AP08-B | condition / AP_NEEDS_PROGRESS_OF_WAR | true→AP08-C；false→AP08-C |
-| AP08-C | condition / AP_HAND_GE_3 | true→AP08-D；false→AP08-S-EVENT |
-| AP08-D | condition / JP_CONTROLS_COUNTERATTACK_TARGET | true→AP08-S-COUNTEROFFENSIVE；false→AP08-D10 |
+| AP08-B | condition / AP_NEEDS_PROGRESS_OF_WAR | true→AP08-D；false→AP08-C |
+| AP08-D | condition / AP_HAND_GE_3_AND_JP_CONTROLS_COUNTERATTACK_TARGET | true→AP08-S-COUNTEROFFENSIVE；false→AP08-CARD-GROUP |
+| AP08-CARD-GROUP | process | always→AP08-D10 |
+| AP08-C | condition / AP_HAND_GE_3 | true→AP08-D10；false→AP08-S-EVENT |
 | AP08-D10 | dice | 0-4→AP08-S-SOUTH-PACIFIC；5-7→AP08-S-CENTRAL-PACIFIC；8→AP08-S-DEI；9→AP08-S-CBI |
 | AP08-S-PASS | action | always→AP08-END |
 | AP08-S-EVENT | action | always→AP08-END |

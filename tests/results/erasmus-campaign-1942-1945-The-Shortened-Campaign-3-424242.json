@@ -1,0 +1,69 @@
+{
+  "generatedAt": "2026-09-04T10:04:08.952Z",
+  "summary": {
+    "policy": "erasmus-v2.0-zh.7",
+    "scenario": "1942-1945 (The Shortened Campaign)",
+    "gameCount": 3,
+    "baseSeed": 424242,
+    "maxActions": 60000,
+    "complete": 0,
+    "japanWins": 0,
+    "alliesWins": 0,
+    "otherWins": 0,
+    "setupErrors": 0,
+    "errors": 1,
+    "actionLimit": 2,
+    "fallbackActions": 3,
+    "averageActions": 0,
+    "averageTurn": 0
+  },
+  "games": [
+    {
+      "seed": 424242,
+      "status": "action-limit",
+      "winner": null,
+      "actions": 60000,
+      "turn": 2,
+      "fallback": 1,
+      "roleActions": {
+        "Japan": 55,
+        "Allies": 59945
+      },
+      "maxActions": 60000
+    },
+    {
+      "seed": 424243,
+      "status": "error",
+      "winner": null,
+      "actions": 242,
+      "turn": 3,
+      "fallback": 1,
+      "roleActions": {
+        "Japan": 140,
+        "Allies": 102
+      },
+      "error": "ERASMUS has no legal action",
+      "context": {
+        "role": "Japan",
+        "turn": 3,
+        "prompt": "EC: 2 Ops. Assign units to battle. (Reaction units must be assigned to battle).",
+        "actions": {
+          "undo": 1
+        }
+      }
+    },
+    {
+      "seed": 424244,
+      "status": "action-limit",
+      "winner": null,
+      "actions": 60000,
+      "turn": 3,
+      "fallback": 1,
+      "roleActions": {
+        "Japan": 132,
+        "Allies": 59868
+      },
+      "maxActions": 60000
+    }
+  ]
+}

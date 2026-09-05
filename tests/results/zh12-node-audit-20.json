@@ -1,0 +1,219 @@
+{
+  "complete": 20,
+  "games": 20,
+  "actions": 50902,
+  "fallbacks": 0,
+  "missingCount": 59,
+  "missingExamples": [
+    {
+      "seed": 20260903,
+      "ordinal": 1089,
+      "chart": "ERASMUS-AP-11",
+      "node": "AP12-S-SUB",
+      "nodePath": [
+        "AP12-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 1."
+    },
+    {
+      "seed": 20260903,
+      "ordinal": 1090,
+      "chart": "ERASMUS-AP-08",
+      "node": "AP12-S-SUB",
+      "nodePath": [
+        "AP12-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 0."
+    },
+    {
+      "seed": 20260904,
+      "ordinal": 1484,
+      "chart": "ERASMUS-JP-05",
+      "node": "JP06-S-SUB",
+      "nodePath": [
+        "JP06-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 2."
+    },
+    {
+      "seed": 20260904,
+      "ordinal": 1485,
+      "chart": "ERASMUS-JP-05",
+      "node": "JP06-S-SUB",
+      "nodePath": [
+        "JP06-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 1."
+    },
+    {
+      "seed": 20260904,
+      "ordinal": 1486,
+      "chart": "ERASMUS-JP-02",
+      "node": "JP06-S-SUB",
+      "nodePath": [
+        "JP06-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 0."
+    },
+    {
+      "seed": 20260904,
+      "ordinal": 1763,
+      "chart": "ERASMUS-JP-05",
+      "node": "JP06-S-SUB",
+      "nodePath": [
+        "JP06-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 1."
+    },
+    {
+      "seed": 20260904,
+      "ordinal": 1764,
+      "chart": "ERASMUS-JP-02",
+      "node": "JP06-S-SUB",
+      "nodePath": [
+        "JP06-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 0."
+    },
+    {
+      "seed": 20260904,
+      "ordinal": 2665,
+      "chart": "ERASMUS-JP-05",
+      "node": "JP06-S-SUB",
+      "nodePath": [
+        "JP06-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 1."
+    },
+    {
+      "seed": 20260904,
+      "ordinal": 2666,
+      "chart": "ERASMUS-JP-03",
+      "node": "JP06-S-SUB",
+      "nodePath": [
+        "JP06-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 0."
+    },
+    {
+      "seed": 20260905,
+      "ordinal": 514,
+      "chart": "ERASMUS-JP-05",
+      "node": "JP06-S-SUB",
+      "nodePath": [
+        "JP06-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 1."
+    },
+    {
+      "seed": 20260905,
+      "ordinal": 515,
+      "chart": "ERASMUS-JP-01",
+      "node": "JP06-S-SUB",
+      "nodePath": [
+        "JP06-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 0."
+    },
+    {
+      "seed": 20260907,
+      "ordinal": 1293,
+      "chart": "ERASMUS-JP-05",
+      "node": "JP06-S-SUB",
+      "nodePath": [
+        "JP06-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 1."
+    },
+    {
+      "seed": 20260907,
+      "ordinal": 1294,
+      "chart": "ERASMUS-JP-02",
+      "node": "JP06-S-SUB",
+      "nodePath": [
+        "JP06-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 0."
+    },
+    {
+      "seed": 20260908,
+      "ordinal": 334,
+      "chart": "ERASMUS-AP-11",
+      "node": "AP12-S-SUB",
+      "nodePath": [
+        "AP12-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 1."
+    },
+    {
+      "seed": 20260908,
+      "ordinal": 335,
+      "chart": "ERASMUS-AP-07",
+      "node": "AP12-S-SUB",
+      "nodePath": [
+        "AP12-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 0."
+    },
+    {
+      "seed": 20260908,
+      "ordinal": 859,
+      "chart": "ERASMUS-JP-05",
+      "node": "JP06-S-SUB",
+      "nodePath": [
+        "JP06-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 1."
+    },
+    {
+      "seed": 20260908,
+      "ordinal": 860,
+      "chart": "ERASMUS-JP-01",
+      "node": "JP06-S-SUB",
+      "nodePath": [
+        "JP06-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 0."
+    },
+    {
+      "seed": 20260909,
+      "ordinal": 68,
+      "chart": "ERASMUS-JP-05",
+      "node": "JP06-S-SUB",
+      "nodePath": [
+        "JP06-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 1."
+    },
+    {
+      "seed": 20260909,
+      "ordinal": 69,
+      "chart": "ERASMUS-JP-01",
+      "node": "JP06-S-SUB",
+      "nodePath": [
+        "JP06-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 0."
+    },
+    {
+      "seed": 20260909,
+      "ordinal": 675,
+      "chart": "ERASMUS-AP-11",
+      "node": "AP12-S-SUB",
+      "nodePath": [
+        "AP12-S-SUB"
+      ],
+      "prompt": "Submarine attack. Apply hits: 1."
+    }
+  ],
+  "pbmNodes": {
+    "AP12-S-PBM-SEA": 228,
+    "JP06-S-PBM-AIR": 1583,
+    "AP12-S-PBM-AIR": 2289,
+    "AP12-S-PBM-AA": 37,
+    "JP06-S-PBM-SEA": 187,
+    "JP06-S-PBM-AA": 22
+  },
+  "groups": {},
+  "examples": []
+}

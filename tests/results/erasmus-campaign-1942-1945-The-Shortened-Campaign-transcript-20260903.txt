@@ -1,0 +1,431 @@
+# 1942-1945 (The Shortened Campaign)  seed=20260903  status=action-limit  winner=null
+# policy=erasmus-v2.0-zh.17  actions=400  logLines=418
+   0 [T?] !Empire of the Sun. 1942-1945 (The Shortened Campaign)
+
+   1 [T2] @Turn 2 - Jan-Apr 1942
+   2 [T2] #GEmergency move:
+   3 [T2] 克莱姆森[92] moved to 荷兰迪亚(Hollandia)格(3520).
+   4 [T2] 休斯顿[91] moved to 阿德默勒尔蒂(Admiralty Islands)格(3820).
+   5 [T2] 澳大利亚[95] moved to 卡维恩(Kavieng)格(4020).
+   6 [T2] 埃克塞特[94] moved to 仰光(Rangoon)格(2008).
+   7 [T2] 荷兰[96] moved to 莱特岛(Leyte)格(3014).
+   8 [T2] AP chooses 5 random cards.
+
+   9 [T2] @Turn 2. Offensives phase
+  10 [T2] #JJP Action
+  11 [T2] C122护航总司令部(Grand Escort Command) played as event.
+  12 [T2] JP gains +2 escort bonus.
+  13 [T2] 联合舰队HQ（山本）[5] activated for offensive.
+  14 [T2] Activated ^2 units|赤城[9], 东部军[33]^, 5 limit.
+  15 [T2] No battle hexes declared: no active unit can reach a legal enemy battle hex.
+  16 [T2] #GOffensive reaction
+  17 [T2] #GResolve battles
+  18 [T2] #GPost battle movement
+  19 [T2] #AAP Action
+  20 [T2] C40灵巧行动(Operation Dexterity) played as event.
+  21 [T2] 西南太平洋HQ[80] activated for offensive.
+  22 [T2] Activated ^5 units|远东空军（美国）[98], 飞虎队[102], 菲律宾预备军[160], 南吕宋军[161], 菲律宾保安旅[163]^, 7 limit.
+  23 [T2] #GCancel offensive
+  24 [T2] C148恶劣天气(Weather) played as event.
+  25 [T2] C40灵巧行动(Operation Dexterity) discarded.
+  26 [T2] JP draw additional card.
+  27 [T2] #JJP Action
+  28 [T2] C132安达二十三(General Adachi) played as event.
+  29 [T2] 南方军HQ[7] activated for offensive.
+  30 [T2] No units activated.
+  31 [T2] No battle hexes declared: no active unit can reach a legal enemy battle hex.
+  32 [T2] #GOffensive reaction
+  33 [T2] #GResolve battles
+  34 [T2] #GPost battle movement
+  35 [T2] #AAP Action
+  36 [T2] C65麦克阿瑟的道义责任(MacArthur `moral obligation`) played as event.
+  37 [T2] 西南太平洋HQ[80] activated for offensive.
+  38 [T2] Activated ^8 units|休斯顿[91], 海军陆战队第211战斗机中队[97], 远东空军（美国）[98], 第19远程轰炸机部队[99], 飞虎队[102], 菲律宾预备军[160], 南吕宋军[161], 菲律宾保安旅[163]^, 10 limit.
+  39 [T2] #GOffensive reaction
+  40 [T2] C101萨沃岛海战(Japanese Counterattack at Savo Island) played as event.
+  41 [T2] #IIntelligence condition changed to Intercept
+  42 [T2] 联合舰队HQ（山本）[5] activated for reaction.
+  43 [T2] Activated ^3 units|第22航空战队[24], 第1飞行师团[44], 第5飞行师团[48]^, 6 limit.
+  44 [T2] ^第5飞行师团[48] with 0 units|第5飞行师团[48]^ assigned to attack to Philippines格(2812).
+  45 [T2] ^第22航空战队[24] with 0 units|第22航空战队[24]^ assigned to attack to 米里(Miri)格(2415).
+  46 [T2] JP draw additional card.
+  47 [T2] #GResolve battles
+  48 [T2] %ABattle hex A (Philippines格(2812))
+  49 [T2] &AAttacker: ^1 units|(远东空军（美国）[98])^.
+  50 [T2] &ADefender: ^2 units|第5飞行师团[48], 第14军[34]^.
+  51 [T2] &AAir Naval combat:
+  52 [T2] &AAP fire (4).
+  53 [T2] &AB2  (0.25) x 4 = 1.
+  54 [T2] &AJP fire (22).
+  55 [T2] &AR4  (0.5) x 22 = 11.
+  56 [T2] &AP98 eliminated (1 x 10).
+  57 [T2] 
+  58 [T2] %ABattle hex B (米里(Miri)格(2415))
+  59 [T2] &AAttacker: ^1 units|(第19远程轰炸机部队[99])^.
+  60 [T2] &ADefender: ^2 units|第22航空战队[24], 第2特别海军陆战队[28]^.
+  61 [T2] &AAir Naval combat:
+  62 [T2] &AAP fire (1).
+  63 [T2] &AB1  (0.25) x 1 = 1.
+  64 [T2] &AJP fire (10).
+  65 [T2] &AR7  (1) x 10 = 10.
+  66 [T2] &AP99 eliminated (1 x 9).
+  67 [T2] 
+  68 [T2] %ABattle hex C (Siam格(2109))
+  69 [T2] &AAttacker: ^1 units|飞虎队[102]^.
+  70 [T2] &ADefender: ^1 units|第15军[35]^.
+  71 [T2] &AAir Naval combat:
+  72 [T2] &AAP fire (6).
+  73 [T2] &AB3  (0.5) x 6 = 3.
+  74 [T2] 
+  75 [T2] #GPost battle movement
+  76 [T2] #JJP Action
+  77 [T2] C124U号作战(Operation U-Go) played as event.
+  78 [T2] 联合舰队HQ（山本）[5] activated for offensive.
+  79 [T2] No units activated.
+  80 [T2] No battle hexes declared: no active unit can reach a legal enemy battle hex.
+  81 [T2] #GOffensive reaction
+  82 [T2] #GResolve battles
+  83 [T2] #GPost battle movement
+  84 [T2] #AAP Action
+  85 [T2] C23鱼雷快艇(PT Boats) played as operation card.
+  86 [T2] 西南太平洋HQ[80] activated for offensive.
+  87 [T2] -1 activation (US Line of Communication).
+  88 [T2] Activated ^2 units|菲律宾预备军[160], 南吕宋军[161]^, 3 limit.
+  89 [T2] No battle hexes declared: no active unit can reach a legal enemy battle hex.
+  90 [T2] #GOffensive reaction
+  91 [T2] #GResolve battles
+  92 [T2] #GPost battle movement
+  93 [T2] #JJP Action
+  94 [T2] C160剑号作战(Operation Tsurugi) played as event.
+  95 [T2] 联合舰队HQ（山本）[5] activated for offensive.
+  96 [T2] No units activated.
+  97 [T2] No battle hexes declared: no active unit can reach a legal enemy battle hex.
+  98 [T2] #GOffensive reaction
+  99 [T2] #GResolve battles
+ 100 [T2] #GPost battle movement
+ 101 [T2] #AAP Action
+ 102 [T2] C8澳大利亚海岸监视哨(Australian Coast Watchers) played as operation card.
+ 103 [T2] 西南太平洋HQ[80] activated for offensive.
+ 104 [T2] -1 activation (US Line of Communication).
+ 105 [T2] Activated ^1 units|南吕宋军[161]^, 2 limit.
+ 106 [T2] No battle hexes declared: no active unit can reach a legal enemy battle hex.
+ 107 [T2] #GOffensive reaction
+ 108 [T2] #GResolve battles
+ 109 [T2] #GPost battle movement
+ 110 [T2] #JJP Action
+ 111 [T2] C105圣雄甘地(Mahatma Gandhi) played as operation card.
+ 112 [T2] 联合舰队HQ（山本）[5] activated for offensive.
+ 113 [T2] Activated ^3 units|赤城[9], 东部军[33], 第18军[38]^, 6 limit.
+ 114 [T2] No battle hexes declared: no active unit can reach a legal enemy battle hex.
+ 115 [T2] #GOffensive reaction
+ 116 [T2] #GResolve battles
+ 117 [T2] #GPost battle movement
+ 118 [T2] #AAP Action
+ 119 [T2] AP played future offensive card.
+ 120 [T2] #JJP Action
+ 121 [T2] C136欧洲战事(War in europe) played as operation card.
+ 122 [T2] 联合舰队HQ（山本）[5] activated for offensive.
+ 123 [T2] Activated ^3 units|赤城[9], 东部军[33], 第18军[38]^, 6 limit.
+ 124 [T2] No battle hexes declared: no active unit can reach a legal enemy battle hex.
+ 125 [T2] #GOffensive reaction
+ 126 [T2] #GResolve battles
+ 127 [T2] #GPost battle movement
+ 128 [T2] #AAP Action
+ 129 [T2] AP have no cards in hand.
+ 130 [T2] #JJP Action
+ 131 [T2] JP played future offensive card.
+
+ 132 [T2] @Turn 2. Political phase
+ 133 [T2] Progress of War not checked for turn 2.
+
+ 134 [T2] @Turn 2. Attrition phase
+
+ 135 [T2] @Turn 2. End of turn phase
+ 136 [T2] !Turn 3 - May-Aug 1942
+
+ 137 [T3] @Turn 3. Strategic phase
+ 138 [T3] #AAP Reinforcement segment
+ 139 [T3] AP amphibious shipping points changed to 2 (1).
+ 140 [T3] AP reinforcements delayed.
+ 141 [T3] Sent to Europe roll:
+ 142 [T3] 第13航空队（远程）[114]: B1  <= 1.
+ 143 [T3] 第13航空队（远程）[114] displaced to turn box 6.
+ 144 [T3] 第13航空队[115]: B6  > 1.
+ 145 [T3] 第11航空队（远程）[116]: B3  > 1.
+ 146 [T3] 第11航空队[117]: B3  > 1.
+ 147 [T3] 第14军[188]: B9  > 1.
+ 148 [T3] 第1军[189]: B4  > 1.
+ 149 [T3] 南太平洋HQ（戈姆利）[81] placed to 莫尔兹比港(Port Moresby)格(3823).
+ 150 [T3] 澳新军团HQ[86] placed to 莱城(Lae)格(3822).
+ 151 [T3] 第10航空队（远程）[108] placed to 卡维恩(Kavieng)格(4020).
+ 152 [T3] 第5航空队（远程）[109] placed to 卡维恩(Kavieng)格(4020).
+ 153 [T3] 第5航空队[110] placed to 卡维恩(Kavieng)格(4020).
+ 154 [T3] 第1海军陆战队航空联队[111] placed to 卡维恩(Kavieng)格(4020).
+ 155 [T3] 东南亚空军[112] placed to 仰光(Rangoon)格(2008).
+ 156 [T3] 密西西比[123] placed to 卡维恩(Kavieng)格(4020).
+ 157 [T3] 北安普顿[124] placed to 卡维恩(Kavieng)格(4020).
+ 158 [T3] 厌战[125] placed to 仰光(Rangoon)格(2008).
+ 159 [T3] 不挠[126] placed to 仰光(Rangoon)格(2008).
+ 160 [T3] 竞技神[127] placed to 仰光(Rangoon)格(2008).
+ 161 [T3] 第11军[187] placed to 阿德默勒尔蒂(Admiralty Islands)格(3820).
+ 162 [T3] 海军陆战旅[193] placed to 阿德默勒尔蒂(Admiralty Islands)格(3820).
+ 163 [T3] 陆战突击旅[194] placed to 阿德默勒尔蒂(Admiralty Islands)格(3820).
+ 164 [T3] #JJP Reinforcement segment
+ 165 [T3] 第26航空战队[50] placed to 曼谷(Bangkok)格(2110).
+ 166 [T3] 第6飞行师团[58] placed to 曼谷(Bangkok)格(2110).
+ 167 [T3] 第31军[66] placed to 河内(Hanoi)格(2409).
+ 168 [T3] 隼鹰[75] placed to 曼谷(Bangkok)格(2110).
+ 169 [T3] #AAP Replacement segment
+ 170 [T3] +1 US Naval Replacement Point (AP controlled Oahu).
+ 171 [T3] 中国第66军[157] flipped to full size.
+ 172 [T3] #JJP Replacement segment
+ 173 [T3] 大和[74] flipped to full size.
+ 174 [T3] #AStrategic warfare segment
+ 175 [T3] AP submarine warfare:
+ 176 [T3] +1 Defective torpedoes (1942).
+ 177 [T3] +2 JP Escort.
+ 178 [T3] B4 +3 <= 3 (FAILED).
+ 179 [T3] JP use strategic reserves (7 cards).
+ 180 [T3] AP draw 6 cards.
+ 181 [T3] AP receive 1 passes.
+ 182 [T3] No progress of war required.
+
+ 183 [T3] @Turn 3. Offensives phase
+ 184 [T3] #AAP Future Offensive
+ 185 [T3] AP played FO card.
+ 186 [T3] C44方栓行动(Operation Squarepeg) played as event.
+ 187 [T3] 澳新军团HQ[86] activated for offensive.
+ 188 [T3] Activated ^2 units|澳大利亚[95], 澳大利亚空军[106]^, 3 limit.
+ 189 [T3] No battle hexes declared: no active unit can reach a legal enemy battle hex.
+ 190 [T3] #GOffensive reaction
+ 191 [T3] #GResolve battles
+ 192 [T3] #GPost battle movement
+ 193 [T3] #JJP Action
+ 194 [T3] C157蚂蚁运输(Ants) played as event.
+ 195 [T3] JP barges active.
+ 196 [T3] 南方军HQ[7] activated for offensive.
+ 197 [T3] Activated ^3 units|瑞凤[12], 第22航空战队[24], 第16军[36]^, 4 limit.
+ 198 [T3] #GOffensive reaction
+ 199 [T3] Change intelligence condition:
+ 200 [T3] B7  <= 6 (FAILED).
+ 201 [T3] #GResolve battles
+ 202 [T3] %JBattle hex A (新加坡(Singapore)格(2015))
+ 203 [T3] &JAttacker: ^1 units|第22航空战队[24]^.
+ 204 [T3] &JDefender: ^2 units|马来亚空军（英国）[105], 第8澳大利亚师[167]^.
+ 205 [T3] &JAir Naval combat:
+ 206 [T3] &JJP fire (10).
+ 207 [T3] &J+3 Surprise attack.
+ 208 [T3] &JR3 +3 (1) x 10 = 10.
+ 209 [T3] &JP105 reduced (1 x 9).
+ 210 [T3] &JAP fire (3).
+ 211 [T3] &JB9  (1) x 3 = 3 (critical!).
+ 212 [T3] &JP24 reduced (1 x 3).
+ 213 [T3] 
+ 214 [T3] %JBattle hex B (打拉根(Tarakan)格(2616))
+ 215 [T3] &JAttacker: ^1 units|瑞凤[12]^.
+ 216 [T3] &JDefender: ^1 units|(第3团(荷兰)[177])^.
+ 217 [T3] &JAir Naval combat:
+ 218 [T3] &JJP fire (8).
+ 219 [T3] &J+3 Surprise attack.
+ 220 [T3] &JR0 +3 (0.5) x 8 = 4.
+ 221 [T3] 
+ 222 [T3] #GPost battle movement
+ 223 [T3] #AAP Action
+ 224 [T3] C37电流行动(Operation Galvanic) played as event.
+ 225 [T3] 西南太平洋HQ[80] activated for offensive.
+ 226 [T3] -1 activation (US Line of Communication).
+ 227 [T3] Activated ^1 units|南吕宋军[161]^, 7 limit.
+ 228 [T3] No battle hexes declared: no active unit can reach a legal enemy battle hex.
+ 229 [T3] #GOffensive reaction
+ 230 [T3] #GResolve battles
+ 231 [T3] #GPost battle movement
+ 232 [T3] #JJP Action
+ 233 [T3] C116I号作战(Operation I-Go) played as event.
+ 234 [T3] 联合舰队HQ（山本）[5] activated for offensive.
+ 235 [T3] Activated ^4 units|第22航空战队[24], 第5飞行师团[48], 第26航空战队[50], 第6飞行师团[58]^, 7 limit.
+ 236 [T3] #GOffensive reaction
+ 237 [T3] Change intelligence condition:
+ 238 [T3] B6  <= 7 (SUCCESS).
+ 239 [T3] #IIntelligence condition changed to Intercept
+ 240 [T3] 西南太平洋HQ[80] activated for reaction.
+ 241 [T3] -1 activation (US Line of Communication).
+ 242 [T3] Activated ^1 units|南吕宋军[161]^, 4 limit.
+ 243 [T3] #GResolve battles
+ 244 [T3] %JBattle hex A (新加坡(Singapore)格(2015))
+ 245 [T3] &JAttacker: ^2 units|(第22航空战队[24]), 第26航空战队[50]^.
+ 246 [T3] &JDefender: ^2 units|(马来亚空军（英国）[105]), 第8澳大利亚师[167]^.
+ 247 [T3] &JAir Naval combat:
+ 248 [T3] &JJP fire (10).
+ 249 [T3] &J+1 Air Shuttle.
+ 250 [T3] &JR8 +1 (1) x 10 = 10.
+ 251 [T3] &JAP fire (3).
+ 252 [T3] &JB1  (0.25) x 3 = 1.
+ 253 [T3] &JP105 eliminated (1 x 9).
+ 254 [T3] 
+ 255 [T3] %JBattle hex B (关丹(Kuantan)格(2014))
+ 256 [T3] &JAttacker: ^1 units|第6飞行师团[58]^.
+ 257 [T3] &JDefender: ^1 units|第3印度军[170]^.
+ 258 [T3] &JAir Naval combat:
+ 259 [T3] &JJP fire (4).
+ 260 [T3] &J+1 Air Shuttle.
+ 261 [T3] &JR3 +1 (0.5) x 4 = 2.
+ 262 [T3] 
+ 263 [T3] %JBattle hex C (马尼拉(Manila)格(2813))
+ 264 [T3] &JAttacker: ^1 units|第5飞行师团[48]^.
+ 265 [T3] &JDefender: ^1 units|菲律宾预备军[160]^.
+ 266 [T3] &JAir Naval combat:
+ 267 [T3] &JJP fire (22).
+ 268 [T3] &J+1 Air Shuttle.
+ 269 [T3] &JR9 +1 (1) x 22 = 22 (critical!).
+ 270 [T3] &JP160 reduced.
+ 271 [T3] 
+ 272 [T3] #GPost battle movement
+ 273 [T3] #AAP Action
+ 274 [T3] C36樱花行动(Operation Cherry Blossom) played as event.
+ 275 [T3] 西南太平洋HQ[80] activated for offensive.
+ 276 [T3] -1 activation (US Line of Communication).
+ 277 [T3] Activated ^2 units|菲律宾预备军[160], 南吕宋军[161]^, 6 limit.
+ 278 [T3] No battle hexes declared: no active unit can reach a legal enemy battle hex.
+ 279 [T3] #GOffensive reaction
+ 280 [T3] #GResolve battles
+ 281 [T3] #GPost battle movement
+ 282 [T3] #JJP Action
+ 283 [T3] C129捷号作战(Operation Sho-Go) played as operation card.
+ 284 [T3] 联合舰队HQ（山本）[5] activated for offensive.
+ 285 [T3] Activated ^3 units|赤城[9], 第22航空战队[24], 第26航空战队[50]^, 6 limit.
+ 286 [T3] #GOffensive reaction
+ 287 [T3] Change intelligence condition:
+ 288 [T3] B3  <= 5 (SUCCESS).
+ 289 [T3] #IIntelligence condition changed to Intercept
+ 290 [T3] 西南太平洋HQ[80] activated for reaction.
+ 291 [T3] -1 activation (US Line of Communication).
+ 292 [T3] Activated ^1 units|菲律宾预备军[160]^, 4 limit.
+ 293 [T3] #GResolve battles
+ 294 [T3] %JBattle hex A (新加坡(Singapore)格(2015))
+ 295 [T3] &JAttacker: ^2 units|(第22航空战队[24]), 第26航空战队[50]^.
+ 296 [T3] &JDefender: ^1 units|第8澳大利亚师[167]^.
+ 297 [T3] &JAir Naval combat:
+ 298 [T3] &JJP fire (10).
+ 299 [T3] &JR9  (1) x 10 = 10 (critical!).
+ 300 [T3] &JP167 reduced (1 x 10).
+ 301 [T3] 
+ 302 [T3] #GPost battle movement
+ 303 [T3] #AAP Action
+ 304 [T3] C29脚指甲行动(Operation Toenails) played as event.
+ 305 [T3] 西南太平洋HQ[80] activated for offensive.
+ 306 [T3] -1 activation (US Line of Communication).
+ 307 [T3] Activated ^2 units|菲律宾预备军[160], 南吕宋军[161]^, 5 limit.
+ 308 [T3] No battle hexes declared: no active unit can reach a legal enemy battle hex.
+ 309 [T3] #GOffensive reaction
+ 310 [T3] #GResolve battles
+ 311 [T3] #GPost battle movement
+ 312 [T3] #JJP Action
+ 313 [T3] C141欧洲战事(War in europe) played as operation card.
+ 314 [T3] 联合舰队HQ（山本）[5] activated for offensive.
+ 315 [T3] Activated ^3 units|赤城[9], 第22航空战队[24], 第26航空战队[50]^, 6 limit.
+ 316 [T3] #GOffensive reaction
+ 317 [T3] Change intelligence condition:
+ 318 [T3] B6  <= 5 (FAILED).
+ 319 [T3] #GResolve battles
+ 320 [T3] %JBattle hex A (新加坡(Singapore)格(2015))
+ 321 [T3] &JAttacker: ^2 units|(第22航空战队[24]), 第26航空战队[50]^.
+ 322 [T3] &JDefender: ^1 units|(第8澳大利亚师[167])^.
+ 323 [T3] &JAir Naval combat:
+ 324 [T3] &JJP fire (10).
+ 325 [T3] &J+3 Surprise attack.
+ 326 [T3] &JR7 +3 (1) x 10 = 10.
+ 327 [T3] 
+ 328 [T3] #GPost battle movement
+ 329 [T3] #AAP Action
+ 330 [T3] C46酿酒人行动(Operation Brewer) played as event.
+ 331 [T3] 西南太平洋HQ[80] activated for offensive.
+ 332 [T3] -1 activation (US Line of Communication).
+ 333 [T3] Activated ^1 units|南吕宋军[161]^, 2 limit.
+ 334 [T3] No battle hexes declared: no active unit can reach a legal enemy battle hex.
+ 335 [T3] #GOffensive reaction
+ 336 [T3] #GResolve battles
+ 337 [T3] #GPost battle movement
+ 338 [T3] #JJP Action
+ 339 [T3] JP played FO card.
+ 340 [T3] C90报复杜立特空袭(Doolittle Raid Reprisal) played as operation card.
+ 341 [T3] 联合舰队HQ（山本）[5] activated for offensive.
+ 342 [T3] Activated ^2 units|第22航空战队[24], 第26航空战队[50]^, 5 limit.
+ 343 [T3] #GOffensive reaction
+ 344 [T3] Change intelligence condition:
+ 345 [T3] B9  <= 4 (FAILED).
+ 346 [T3] #GResolve battles
+ 347 [T3] %JBattle hex A (新加坡(Singapore)格(2015))
+ 348 [T3] &JAttacker: ^2 units|(第22航空战队[24]), 第26航空战队[50]^.
+ 349 [T3] &JDefender: ^1 units|(第8澳大利亚师[167])^.
+ 350 [T3] &JAir Naval combat:
+ 351 [T3] &JJP fire (10).
+ 352 [T3] &J+3 Surprise attack.
+ 353 [T3] &JR6 +3 (1) x 10 = 10.
+ 354 [T3] 
+ 355 [T3] #GPost battle movement
+ 356 [T3] #AAP Action
+ 357 [T3] C80新式潜艇战术(New Submarine Doctrine) played as event.
+ 358 [T3] JP lose escort bonus.
+ 359 [T3] AP draw additional card.
+ 360 [T3] #JJP Action
+ 361 [T3] C152日本陆海军(Japanese Army/Navy) played as operation card.
+ 362 [T3] 联合舰队HQ（山本）[5] activated for offensive.
+ 363 [T3] Activated ^2 units|第22航空战队[24], 第26航空战队[50]^, 5 limit.
+ 364 [T3] #GOffensive reaction
+ 365 [T3] Change intelligence condition:
+ 366 [T3] B8  <= 4 (FAILED).
+ 367 [T3] #GResolve battles
+ 368 [T3] %JBattle hex A (新加坡(Singapore)格(2015))
+ 369 [T3] &JAttacker: ^2 units|(第22航空战队[24]), 第26航空战队[50]^.
+ 370 [T3] &JDefender: ^1 units|(第8澳大利亚师[167])^.
+ 371 [T3] &JAir Naval combat:
+ 372 [T3] &JJP fire (10).
+ 373 [T3] &J+3 Surprise attack.
+ 374 [T3] &JR5 +3 (1) x 10 = 10.
+ 375 [T3] 
+ 376 [T3] #GPost battle movement
+ 377 [T3] #AAP Action
+ 378 [T3] C18埃德温·博斯(Edwin Booz) played as event.
+ 379 [T3] AP amphibious shipping points changed to 3 (1).
+ 380 [T3] #JJP Action
+ 381 [T3] C127东条辞职(Tojo Resigns) played as operation card.
+ 382 [T3] 联合舰队HQ（山本）[5] activated for offensive.
+ 383 [T3] Activated ^1 units|第22航空战队[24]^, 4 limit.
+ 384 [T3] #GOffensive reaction
+ 385 [T3] Change intelligence condition:
+ 386 [T3] B1  <= 3 (SUCCESS).
+ 387 [T3] #IIntelligence condition changed to Intercept
+ 388 [T3] 西南太平洋HQ[80] activated for reaction.
+ 389 [T3] -1 activation (US Line of Communication).
+ 390 [T3] No units activated.
+ 391 [T3] #GResolve battles
+ 392 [T3] %JBattle hex A (新加坡(Singapore)格(2015))
+ 393 [T3] &JAttacker: ^1 units|(第22航空战队[24])^.
+ 394 [T3] &JDefender: ^1 units|(第8澳大利亚师[167])^.
+ 395 [T3] &JAir Naval combat:
+ 396 [T3] &JJP fire (5).
+ 397 [T3] &JR5  (0.5) x 5 = 3.
+ 398 [T3] 
+ 399 [T3] #GPost battle movement
+ 400 [T3] #AAP Action
+ 401 [T3] AP played future offensive card.
+ 402 [T3] #JJP Action
+ 403 [T3] JP played future offensive card.
+
+ 404 [T3] @Turn 3. Political phase
+ 405 [T3] Progress of War not checked for turn 3.
+
+ 406 [T3] @Turn 3. Attrition phase
+
+ 407 [T3] @Turn 3. End of turn phase
+ 408 [T3] JP deck reshuffled due to Tojo resign discarded.
+ 409 [T3] !Turn 4 - Sep-Dec 1942
+
+ 410 [T4] @Turn 4. Strategic phase
+ 411 [T4] #AAP Reinforcement segment
+ 412 [T4] AP amphibious shipping points changed to 4 (1).
+ 413 [T4] AP reinforcements delayed.
+ 414 [T4] Sent to Europe roll:
+ 415 [T4] 第14航空队（远程）[118]: B6  > 1.
+ 416 [T4] 第13航空队[115] placed to 新加坡(Singapore)格(2015).
+ 417 [T4] 第11航空队（远程）[116] placed to 新加坡(Singapore)格(2015).

@@ -1,0 +1,15 @@
+{
+  "complete": true,
+  "actions": 3924,
+  "fallbacks": 0,
+  "pbmNodes": {
+    "AP12-S-PBM-SEA": 6,
+    "JP06-S-PBM-AIR": 163,
+    "AP12-S-PBM-AIR": 202,
+    "JP06-S-PBM-SEA": 30,
+    "JP06-S-PBM-AA": 9,
+    "AP12-S-PBM-AA": 8
+  },
+  "groups": {},
+  "examples": []
+}

@@ -86,7 +86,9 @@ function esm_phase(role) {
 
 // ---- 地理/索引一次性预计算 -------------------------------------------------
 function esm_idx(token) {
-    return eop_resolve_token(token)
+    if (typeof eop_resolve_token === "function") return eop_resolve_token(token)
+    const matches = esm_name_hexes(token)
+    return matches.length ? matches[0] : null
 }
 function esm_geo() {
     const sid = G.sid
@@ -368,9 +370,14 @@ function esm_al_eval_mid(ctx, d10) {
     ctx._nodePath = ["AP08-START"]; ctx._conditions = []; ctx._dice = []
     if (esm_trace_pred(ctx, "AP08-A", "AP_CAN_PASS", ctx.can_pass)) return esm_trace_action(ctx, "AP08-S-PASS", "PASS")
     const pow = esm_trace_pred(ctx, "AP08-B", "AP_NEEDS_PROGRESS_OF_WAR", ctx.al_M_B_needs_war_progress)
-    const cards3 = esm_trace_pred(ctx, "AP08-C", "AP_HAND_GE_3", ctx.cards_in_hand >= 3)
-    if (pow && cards3 && esm_trace_pred(ctx, "AP08-D", "JP_CONTROLS_COUNTERATTACK_TARGET", ctx.al_M_D_jp_controls_counterattack_target)) return esm_trace_action(ctx, "AP08-S-COUNTEROFFENSIVE", "反攻战略")
-    if (!cards3) return esm_trace_action(ctx, "AP08-S-EVENT", "事件战略")
+    if (pow) {
+        const combined = ctx.cards_in_hand >= 3 && ctx.al_M_D_jp_controls_counterattack_target
+        if (esm_trace_pred(ctx,"AP08-D","AP_HAND_GE_3_AND_JP_CONTROLS_COUNTERATTACK_TARGET",combined))
+            return esm_trace_action(ctx,"AP08-S-COUNTEROFFENSIVE","反攻战略")
+        ctx._offensiveCardGrouping = true
+        ctx._nodePath.push("AP08-CARD-GROUP")
+    } else if (!esm_trace_pred(ctx,"AP08-C","AP_HAND_GE_3",ctx.cards_in_hand>=3))
+        return esm_trace_action(ctx,"AP08-S-EVENT","事件战略")
     const roll = esm_trace_d10(ctx, "AP08-D10", d10, ":al-mid")
     if (roll <= 4) return esm_trace_action(ctx, "AP08-S-SOUTH-PACIFIC", "南太平洋战略")
     if (roll <= 7) return esm_trace_action(ctx, "AP08-S-CENTRAL-PACIFIC", "中太平洋战略")
@@ -488,11 +495,125 @@ function esm_goal_target_meta(goals) {
             seen.add(hex)
             const suppress = goal.kind === "SUPPRESS"
             const garrisonClass = goal.kind === "GARRISON" ? (/机场/.test(goal.text) ? "air" : "ground") : null
-            out.push({ hex, kind: goal.kind, objective: goal.text, garrisonClass,
+            out.push({ ...goal.meta, hex, kind: goal.kind, objective: goal.text, garrisonClass: goal.meta && goal.meta.garrisonClass || garrisonClass,
                 damageLevel: suppress ? 0.5 : 1,
                 requiresOccupation: goal.kind === "CONQUEST" || goal.kind === "INVADE_JAPAN" })
         }
     }
+    return out
+}
+
+// Typed chart instructions. IDs are the engine's counter identities, never display-name guesses.
+const ESM_REDEPLOY = {
+    "撤离菲律宾": [["army_ap_p", "Biak"], ["army_ap_r", "Kendari"], ["army_ap_sl", "Manila"], ["air_ap_feaf", "Manila"], ["air_ap_19_lrb", "Timor"]],
+    "撤离马来亚": [["army_ap_8_au", "Kendari"], ["air_ap_ma", "Palembang"]],
+    "增强CBI防御": [["army_ap_1_ind", "Rangoon"], ["army_ap_b_ind", "Akyab"], ["army_ap_66_cn", "Lashio"], ["army_ap_6_cn", "Mandalay"], ["army_ap_5_cn", "Myitkyina"], ["army_ap_1_bu", "Imphal"]],
+}
+const ESM_FORTIFY = ["Truk", "Rabaul", "Saipan", "Davao", "Saigon", "Eniwetok", "Kwajalein", "Palau", "Timor", "Kendari", "Soerabaja", "Balikpapan", "Tarakan", "Rangoon", "Mandalay", "Lashio"]
+function esm_on_map(u) { const h = G.location[u]; return Number.isInteger(h) && h >= 0 && h <= LAST_BOARD_HEX }
+function esm_redeploy_targets(name) {
+    const targets = []
+    for (const [id, place] of ESM_REDEPLOY[name] || []) {
+        const u = find_piece(id), hex = esm_idx(place)
+        if (!(u > 0) || !esm_on_map(u) || !Number.isInteger(hex)) continue
+        let target = targets.find(t => t.hex === hex)
+        if (!target) targets.push(target = { hex, kind: "REDEPLOY", requiredUnits: [], requiresFriendlyControl: true,
+            requiresOccupation: false, objective: name + ":" + place })
+        target.requiredUnits.push(u)
+    }
+    return targets
+}
+function esm_redeploy_complete(name) {
+    return esm_redeploy_targets(name).every(t => t.requiredUnits.every(u => G.location[u] === t.hex))
+}
+function esm_hq_reachable_hexes(hq) {
+    if (!(hq > 0) || !esm_on_map(hq) || G.oos && set_has(G.oos, hq)) return []
+    // Use the engine's command path algorithm, including hostile AZOI and land barriers.
+    if (typeof mark_activation_zone === "function" && typeof HEX_TEMP_FLAG3 !== "undefined" && Array.isArray(G.supply_cache)) {
+        const saved = G.supply_cache.slice()
+        try { mark_activation_zone(hq); return G.supply_cache.flatMap((flags, h) => h <= LAST_BOARD_HEX && flags & HEX_TEMP_FLAG3 ? [h] : []) }
+        finally { G.supply_cache = saved }
+    }
+    return [] // No geometric approximation when a real command path is unavailable.
+}
+function esm_attack_targets(role, classes, extraOnly) {
+    const mine = esm_role_faction(role), enemy = 1 - mine, found = new Map()
+    for (let u = 1; u < pieces.length; ++u) {
+        const p = pieces[u]
+        if (!p || p.faction !== enemy || !esm_on_map(u)) continue
+        if (!classes.includes(p.class) && !(classes.includes("carrier") && p.class === "naval" && p.br)) continue
+        if (role === "Japan" && p.service !== "navy") continue
+        const hex = G.location[u]
+        if (!found.has(hex)) found.set(hex, { hex, kind: "NAVAL", damageLevel: 1, requiresOccupation: false,
+            targetClasses: classes, extraActivationOnly: !!extraOnly, objective: extraOnly ? "剩余激活点攻击敌军航空/航母" : "攻击最弱敌军海空堆叠",
+            preserveLastCarrier: role === "Allies" })
+    }
+    const strength = t => pieces.reduce((sum, p, u) => sum + (p && p.faction === enemy && G.location[u] === t.hex ? Number(G.reduced && set_has(G.reduced, u) ? p.rcf : p.cf) || 0 : 0), 0)
+    const typePriority = t => {
+        const stack = pieces.filter((p, u) => p && p.faction === enemy && G.location[u] === t.hex)
+        return stack.some(p => p.class === "air") ? (stack.some(p => p.class === "naval") ? 1 : 0) : 2
+    }
+    return [...found.values()].sort((a,b) => typePriority(a)-typePriority(b) || strength(a)-strength(b) || a.hex-b.hex)
+}
+function esm_orange_targets() {
+    const leyte = esm_idx("Leyte"), hex = is_space_controlled(leyte, JP) ? esm_idx("Manila") : leyte
+    const md = get_map_data(hex)
+    if (!md || md.region !== "Philippines" || !md.port || !is_space_controlled(hex, AP)) return []
+    const escortPairs = []
+    for (let g = 1; g < pieces.length; ++g) {
+        const p = pieces[g]
+        if (!p || p.faction !== AP || p.class !== "ground" || p.service !== "army" || p.size !== 3 || !esm_on_map(g)) continue
+        if (get_distance(G.location[g], hex) > 15 || G.location[g] === hex) continue
+        for (let c = 1; c < pieces.length; ++c) {
+            const q = pieces[c]
+            if (q && q.faction === AP && q.class === "naval" && q.br && q.service === "navy" && G.location[c] === G.location[g])
+                escortPairs.push({ ground:g, carrier:c, origin:G.location[g] })
+        }
+    }
+    return escortPairs.length ? [{hex,kind:"REDEPLOY",escortRequired:true,escortPairs,maxDistance:15,
+        requiresFriendlyControl:true,requiresOccupation:false,movementModes:["SR"],objective:"橙色计划：同格美国陆军军与航母共同战略移动"}] : []
+}
+function esm_semantic_targets(role, phase, name, metadata) {
+    let out = metadata.map(t => ({...t}))
+    if (role === "Allies" && ESM_REDEPLOY[name]) return esm_redeploy_targets(name)
+    if (role === "Allies" && name === "DEI防御") {
+        const hex = G.location[HQ_ABDA], md = get_map_data(hex)
+        return esm_on_map(HQ_ABDA) && md && md.port && is_space_controlled(hex,AP) ? [{hex,kind:"GARRISON",
+            garrisonClass:"ground",unitFilter:"COMMONWEALTH_OR_US_ARMY",garrisonRequirement:{groundSteps:1},
+            requiresFriendlyControl:true,objective:"派一个英联邦或美国陆军军至ABDA当前港口"}] : []
+    }
+    if (role === "Allies" && name === "橙色计划") return esm_orange_targets()
+    if (role === "Allies" && name === "攻势进攻") return esm_attack_targets(role,["air","naval"],false)
+    if (role === "Japan" && phase === "mid" && name === "中太平洋战略") out.push(...esm_attack_targets(role,["naval"],false))
+    if (role === "Allies" && name === "重返菲律宾") {
+        const leyte = esm_idx("Leyte"), reachable = new Set(esm_hq_reachable_hexes(HQ_SOUTH_WEST))
+        const bases = []
+        for (const hex of reachable) {
+            const md = get_map_data(hex)
+            if (hex !== leyte && md && (md.port || md.airfield) && get_distance(hex,leyte) <= 4)
+                bases.push({hex,kind:"CONQUEST",requiresOccupation:true,damageLevel:1,targetGroup:0,
+                    objective:"连接SW Pacific HQ并在Leyte四格内的基地",dynamicBase:true,requiredHQ:HQ_SOUTH_WEST})
+        }
+        bases.sort((a,b) => Number(is_space_controlled(b.hex,AP))-Number(is_space_controlled(a.hex,AP)) || esm_front_distance(a.hex,AP)-esm_front_distance(b.hex,AP) || a.hex-b.hex)
+        // A single qualifying base satisfies this instruction; never substitute Leyte itself.
+        out = bases.slice(0,1).concat(out.filter(t => !/连接/.test(t.objective)))
+    }
+    if (role === "Allies" && name === "跳岛作战") out = out.map((t,i) => ({...t,strictSequential:true,targetGroup:i+1}))
+    if (role === "Allies" && (name === "反攻战略" || name === "推进B29")) {
+        if (name === "反攻战略") out = out.map(t => ({...t,advanceBaseIfUnreachable:true}))
+        out.push(...esm_attack_targets(role,name === "推进B29" ? ["air","carrier"] : ["air"],true))
+    }
+    if (role === "Allies" && phase === "mid") out = out.filter(t => {
+        if (name === "南太平洋战略" && [esm_idx("Gasmata"),esm_idx("Rabaul")].includes(t.hex)) {
+            return pieces.filter((p,u)=>p&&p.faction===JP&&p.class==="ground"&&p.size>=3&&G.location[u]===t.hex).length < 2
+        }
+        if (name === "反攻战略" && t.hex === esm_idx("Attu/Kiska")) {
+            const groundNear = pieces.some((p,u)=>p&&p.faction===AP&&p.class==="ground"&&esm_on_map(u)&&get_distance(G.location[u],t.hex)<=10)
+            const carrierNear = pieces.some((p,u)=>p&&p.faction===AP&&p.class==="naval"&&p.br&&esm_on_map(u)&&get_distance(G.location[u],t.hex)<=15)
+            return groundNear && (!(G.inter_service && G.inter_service[AP]===1) || carrierNear)
+        }
+        return true
+    })
     return out
 }
 
@@ -561,7 +682,8 @@ function esm_jp_dei_surrender_targets() {
             if (!Number.isInteger(hex) || !(hex >= 0 && hex <= LAST_BOARD_HEX)) continue
             const conditional = name === "Batavia"
             if (conditional && otherJapaneseGroundOnJava) continue
-            out.push({ hex, kind: "CONQUEST", requiresOccupation: true, damageLevel: 1,
+            out.push({ hex, kind: conditional ? "GARRISON" : "CONQUEST", requiresOccupation: !conditional, damageLevel: 1,
+                ...(conditional ? {requiresFriendlyControl:true,ignoreIfEnemy:true,garrisonRequirement:{groundSteps:3},garrisonClass:"ground"} : {}),
                 objective: `${group + 1}. 东印度投降：${groupNames[group].join(", ")}`,
                 targetGroup: group + 1, targetInGroup: groupNames[group].indexOf(name) + 1,
                 condition: conditional ? "NO_OTHER_JP_GROUND_ON_JAVA" : null,
@@ -625,11 +747,6 @@ function esm_ap_progress_targets(existingChain, existingMeta) {
         return h >= 0 && h <= LAST_BOARD_HEX && is_space_controlled(h, JP) && is_controllable_hex(h) &&
             !!(md && (md.name || md.resource || md.port || md.airfield))
     }
-    // 16.47 只规定盟军必须取得战争进程，并不授权 CDSS 脱离当前决策轴去全图
-    // 搜索“最近/最弱”的任意计分格。旧实现的第二个循环会把哈尔滨、奉天、仰光
-    // 甚至日本近海随机岛屿插入中太平洋/南太平洋链，直接造成兵力分散。进程前视
-    // 现在只能重排本次图表已经列出的目标；没有轴目标时保持空，让选牌/事件流程
-    // 正常结束，而不是制造一个图表外攻势。
     const candidates = []
     for (const h of existingChain || []) if (eligible(h) && !candidates.includes(h)) candidates.push(h)
     const defense = h => {
@@ -640,11 +757,8 @@ function esm_ap_progress_targets(existingChain, existingMeta) {
     }
     const chainSet = new Set(existingChain || [])
     candidates.sort((a, b) =>
-        // 胜利前置链可能包含尚距前线十余格的塞班/上海。PoW 已亏空时必须先夺本牌
-        // 可到达的近程计分格，否则“高优先级但不可达”会连续耗牌并导致条约谈判败。
         Number(esm_front_distance(a, AP) > 6) - Number(esm_front_distance(b, AP) > 6)
         || (G.turn >= 9 ? Number(!get_map_data(a).resource) - Number(!get_map_data(b).resource) : 0)
-        // 候选已严格限定在当前图表链；chainSet 保留为审计防线。
         || Number(!chainSet.has(a)) - Number(!chainSet.has(b))
         || defense(a) - defense(b)
         || esm_front_distance(a, AP) - esm_front_distance(b, AP) || a - b)
@@ -711,8 +825,8 @@ function esm_build_ctx(role, lock, seedText) {
         const philIn = r => r === "Philippines"
         const malIn = r => r === "Malaya"
         const deiR = r => r === "DEI" || r === "Java" || r === "Sumatra" || r === "Borneo" || r === "Celebes"
-        ctx.al_B_hq_supplied_phil = esm_ap_hq_supplied_at(philIn)
-        ctx.al_C_hq_supplied_malaya = esm_ap_hq_supplied_at(malIn)
+        ctx.al_B_hq_supplied_phil = esm_ap_hq_supplied_at(philIn) && !esm_redeploy_complete("撤离菲律宾")
+        ctx.al_C_hq_supplied_malaya = esm_ap_hq_supplied_at(malIn) && !esm_redeploy_complete("撤离马来亚")
         ctx.al_D_arcadia_played = (() => {
             try { return esm_card_removed(find_card(AP, 4)) || G.location[HQ_ABDA] >= 0 && G.location[HQ_ABDA] <= LAST_BOARD_HEX } catch (e) { return false }
         })()
@@ -736,14 +850,14 @@ function esm_build_ctx(role, lock, seedText) {
                     let usCorps = false
                     for (let g = 1; g < pieces.length; ++g) {
                         const q = pieces[g]
-                        if (q && q.faction === AP && q.class === "ground" && q.service === "army" && G.location[g] === loc) { usCorps = true; break }
+                        if (q && q.faction === AP && q.class === "ground" && q.service === "army" && q.size === 3 && G.location[g] === loc) { usCorps = true; break }
                     }
                     if (usCorps && philPorts.some(h => get_distance(loc, h) <= 15)) return true
                 }
                 return false
             } catch (e) { return false }
         })()
-        ctx.al_N_aus_no_jp_ground = esm_count_ground(JP, r => r === "Australia") === 0
+        ctx.al_N_aus_no_jp_ground = esm_count_ground(JP, r => r === "Australia") === 0 && !pieces.some((p,u) => p && p.faction === JP && p.class === "ground" && G.location[u] === esm_idx("Port Moresby"))
         ctx.al_O_dei_not_surrendered = (typeof nations !== "undefined") ? !surr(nations.DEI.id) : true
         ctx.al_P_abda_hq_supplied = (() => { const loc = G.location[HQ_ABDA]; return (loc >= 0 && loc <= LAST_BOARD_HEX) && !(G.oos && set_has(G.oos, HQ_ABDA)) })()
         // 中期
@@ -924,7 +1038,7 @@ function esm_classify(text) {
     if (text.includes("B29") || text.includes("轰炸")) return "B29"
     if (text.includes("驻军") || text.includes("加固")) return "GARRISON"
     if (text.includes("加强港口")) return "PORTS"
-    if (["投降", "占领", "夺", "攻占", "推进", "登陆", "进军"].some(k => text.includes(k))) return "CONQUEST"
+    if (["投降", "占领", "夺", "攻占", "推进", "登陆", "进军", "解放"].some(k => text.includes(k))) return "CONQUEST"
     return esm_line_hexes(text).length ? "CONQUEST" : "ADMIN"
 }
 
@@ -982,7 +1096,8 @@ function esm_parse_goals_inner(entry, role, phase, visiting) {
     for (let i = 0; i < targets.length; i++) {
         const text = String(targets[i]).trim()
         if (!text) continue
-        const kind = esm_classify(text)
+        let kind = esm_classify(text)
+        let meta = {}
         let hexes = esm_line_hexes(text)
         const region = esm_region_of(text)
         if (kind === "CONQUEST" && !hexes.length) {
@@ -999,7 +1114,31 @@ function esm_parse_goals_inner(entry, role, phase, visiting) {
                 hexes = list.filter(h => reg.namedIdx.has(h)).sort((a, b) => a - b)
             }
         }
-        goals.push({ priority: i + 1, kind, text, hexes, region })
+        if (/加强港口/.test(text)) {
+            kind = "GARRISON"
+            hexes = ESM_FORTIFY.map(esm_idx).filter(Number.isInteger)
+            meta = { requiresFriendlyControl:true,ignoreIfEnemy:true,garrisonRequirement:{groundSteps:3,airSteps:1,operator:"OR"},preferredClass:"air" }
+        }
+        if (/仅地面推进/.test(text)) meta.movementModes = ["GROUND"]
+        else if (/通过AA/.test(text)) meta.movementModes = ["AA"]
+        else if (/优先AA/.test(text)) meta.movementModes = ["AA","GROUND"]
+        else if (/优先地面/.test(text)) meta.movementModes = ["GROUND","AA"]
+        if (meta.movementModes) {
+            kind = "CONQUEST"
+            if (!hexes.length && reg) for (const named of reg.named) {
+                if (text.includes(named.name) && !hexes.includes(named.idx)) hexes.push(named.idx)
+            }
+        }
+        if (/所有东印度资源/.test(text) && reg) for (const regionName of ["DEI","Java","Sumatra","Borneo","Celebes"])
+            for (const hex of reg.regionResource.get(regionName) || []) if (!hexes.includes(hex)) hexes.push(hex)
+        if (/连接.*HQ/.test(text)) { kind = "DYNAMIC_BASE"; hexes = [] }
+        if (/Roll.*1d10/.test(text)) { kind = "STRATEGY_ROLL"; hexes = [] }
+        if (/中国攻势/.test(text)) meta.followupActions = ["china_offensive","china_event"]
+        if (/澳洲港口|澳洲机场/.test(text) && typeof LAST_BOARD_HEX !== "undefined" && typeof get_map_data === "function") {
+            hexes = []
+            for (let h=0;h<=LAST_BOARD_HEX;h++) { const md=get_map_data(h); if(md&&md.region==="Australia"&&(/港口/.test(text)?md.port:md.airfield))hexes.push(h) }
+        }
+        goals.push({ priority: i + 1, kind, text, hexes, region, meta })
     }
     return goals
 }
@@ -1028,17 +1167,17 @@ const ESM_JP_LIB = {
         "激进的南方资源战略": { name: "激进的南方资源战略", kind: "CONQUEST", targets: ["1. 压制盟军HQ: 菲律宾(0.25x), 新加坡(0.5x), ABDA(0.5x)", "2. 东印度投降: Balikpapan, Tarakan, Batavia(若无日军则占领), Tjilatjap, Soerabaja, Bangka, Palembang, Medan", "3. 马来亚投降: Kuantan关丹, Singapore新加坡", "4. 菲律宾投降: Manila马尼拉, Davao达沃", "5. Roll 1d10 分配"], notes: ["[1].激活必须使盟军HQ断补。"] },
         "保守的南方资源战略": { name: "保守的南方资源战略", kind: "CONQUEST", targets: ["1. 压制东印度: Jolo, Makassar, Teloekbetoeng, Bandjermasin", "2. 马来亚投降: Kuantan, Singapore", "3. 菲律宾投降: Manila, Davao", "4. Roll 1d10 分配"], notes: [] },
         "中缅印战略": { name: "中缅印战略 (CBI)", kind: "CONQUEST", targets: ["1. 缅甸投降: Rangoon仰光, Mandalay曼德勒, Lashio腊戍, Myitkyina密支那", "2. 中国投降: Lashio腊戍, 中国攻势, 中国事件"], notes: [] },
-        "中太平洋战略": { name: "中太平洋战略", kind: "CONQUEST", targets: ["1. 拉包尔 Rabaul (若被盟军控制)", "2. 阿图/吉斯卡 Attu/Kiska [6]", "3. 马绍尔防御: Wake威克岛, Tarawa塔拉瓦", "4. 中途岛 Midway"], notes: ["[6].如果已经控制,则用至少3step的地面单位加固这里,其他情况则忽视该条。"] },
-        "马绍尔防御": { name: "马绍尔防御", kind: "CONQUEST", targets: ["1. Wake威克岛", "2. Tarawa塔拉瓦"], notes: ["[6].如果已经控制,则用至少3step的地面单位加固这里,其他情况则忽视该条。"] },
+        "中太平洋战略": { name: "中太平洋战略", kind: "CONQUEST", targets: ["1. 西北新几内亚: Sarong, Vogelkop, Biak", "2. 阿图/吉斯卡 Attu/Kiska [2]", "3. 马绍尔防御: Wake威克岛, Tarawa塔拉瓦", "4. 中途岛 Midway [2]"], notes: [] },
+        "马绍尔防御": { name: "马绍尔防御", kind: "CONQUEST", targets: ["1. Wake威克岛", "2. Tarawa塔拉瓦"], notes: [] },
         "外围防御战略": { name: "外围防御战略", kind: "CONQUEST", targets: ["1. 澳洲委任统治地: 西北新几内亚(Sarong, Vogelkop, Biak), Guadalcanal瓜岛, Port Moresby莫尔茨比", "2. 新几内亚: Hollandia, Lae, Buna, Biak, Vogelkop, Wewak, Gili-Gili, Port Moresby"], notes: [] },
         "事件战略": { name: "事件战略", kind: "EVENT", targets: ["1. 欧战为正打欧战牌,否则FOQ", "2. 结束日本ISR", "3. 造成美国ISR", "4. 东京玫瑰", "5. 补员牌", "6. 天气牌", "7. 东条作为1OC", "8. 其他放牌"], notes: ["[3].如果卡牌条件允许,按照策略指示使用卡牌。", "[5].如果欧洲战事为正数,则打出可用的欧战牌,否则按指示投骰。"] },
     },
     mid: {
-        "资源战略": { name: "资源战略", kind: "CONQUEST", targets: ["1. 占领资源: Seoul首尔, Manila马尼拉, Kuantan关丹, 所有东印度资源", "2. 新几内亚投降: 16个目标顺序推进 (见外围防御)", "3. 缅甸投降: Rangoon, Mandalay, Lashio, Myitkyina", "4. 中国投降: Lashio, 中国攻势, 中国事件", "5. 加强港口: Truk, Rabaul, Saipan, Davao, Saigon, Eniwetok, Kwajalein, Palau"], notes: ["[3].占领尽可能多的资源格,直到日本控制至少13个(优先无敌军、弱敌军)。", "[5].在指定位置放置至少3step地面或1step空中单位。"] },
+        "资源战略": { name: "资源战略", kind: "CONQUEST", targets: ["1. 占领资源: Seoul首尔, Manila马尼拉, Kuantan关丹, 所有东印度资源, Vogelkop, Rangoon", "2. 新几内亚投降: Biak, Vogelkop, Hollandia, Lae, Buna, Wewak, Gili-Gili, Port Moresby", "3. 缅甸投降: Rangoon, Mandalay, Lashio, Myitkyina", "4. 中国投降: Lashio, 中国攻势, 中国事件", "5. 加强港口: Truk, Rabaul, Saipan, Davao, Saigon, Eniwetok, Kwajalein, Palau"], notes: ["[3].占领尽可能多的资源格,直到日本控制至少13个(优先无敌军、弱敌军)。", "[5].在指定位置放置至少3step地面或1step空中单位，优先空中。"] },
         "中太平洋战略": { name: "中太平洋战略", kind: "CONQUEST", targets: ["1. Attu/Kiska阿图", "2. Wake威克岛", "3. Midway中途岛", "4. 攻击美国舰队"], notes: [] },
         "中缅印战略": { name: "中缅印战略 (CBI)", kind: "CONQUEST", targets: ["1. 缅甸投降: Rangoon, Mandalay, Lashio, Myitkyina", "2. 中国投降: Lashio, 中国攻势, 中国事件", "3. 加强港口", "4. 印度投降: Akyab, Imphal, Dimasur, Jarhat, Ledo, Dacca", "5. 事件战略"], notes: ["[1].如果卡牌条件允许,按照策略指示使用卡牌。"] },
         "印度战略": { name: "印度战略", kind: "CONQUEST", targets: ["1. 印度投降: Akyab, Imphal, Dimasur, Jarhat, Ledo, Dacca", "2. 中国投降: Lashio, 中国攻势, 中国事件", "3. 加强港口"], notes: [] },
-        "外围防御战略": { name: "外围防御战略", kind: "CONQUEST", targets: ["1. 南太平洋侧翼: Biak, Vogelkop, Hollandia, Lae, Buna, Buin, Gili-Gili, Port Moresby", "2. 加强港口"], notes: ["[4].如果可能的话,用AZOI覆盖这些目标,否则转移到下一个目标。", "[5].在指定位置放置至少3step地面或1step空中单位。"] },
+        "外围防御战略": { name: "外围防御战略", kind: "CONQUEST", targets: ["1. 压制南太平洋侧翼: Hollandia, Lae, Buna, Biak, Wewak, Buin", "2. 中国投降: Lashio, 中国攻势, 中国事件", "3. 加强港口", "4. 缅甸投降: Rangoon, Mandalay, Lashio, Myitkyina"], notes: ["[4].如果可能的话,用AZOI覆盖这些目标,否则转移到下一个目标。", "[5].在指定位置放置至少3step地面或1step空中单位，优先空中。"] },
         "事件战略": { name: "事件战略", kind: "EVENT", targets: ["同早期阶段事件战略"], notes: ["[1].如果卡牌条件允许,按照策略指示使用卡牌。"] },
         "PASS": { name: "PASS", kind: "PASS", targets: ["跳过本回合行动"], notes: [] },
     },
@@ -1190,6 +1329,22 @@ function esm_pin_strategy(view, context) {
     const seedText = `${context.seed}:${ord}:${role}:${phase}:${G.turn}`
     const ctx = esm_build_ctx(role, lock, seedText)
     let name = esm_eval(role, phase, ctx, lock)
+    if ((role === "Japan" && phase === "early" && /南方资源战略/.test(name)) || (role === "Allies" && name === "反攻战略")) {
+        const original = esm_strategy_entry(role,phase,name)
+        const beforeRoll = esm_goal_target_meta(esm_parse_entry(original,role,phase))
+        const complete = beforeRoll.every(t => t.kind === "SUPPRESS" ? !has_zoi(t.hex,1-faction) : is_space_controlled(t.hex,faction))
+        if (complete) {
+            const roll = esm_trace_d10(ctx, role === "Japan" ? "JP01-RESOURCE-D10" : "AP08-COMPLETE-D10", undefined, ":allocation:"+ord)
+            ctx._allocationFrom = name
+            if (role === "Japan") name = roll <= 2 ? "事件战略" : roll <= 6 ? "中缅印战略" : "中太平洋战略"
+            else name = roll <= 4 ? "南太平洋战略" : roll <= 7 ? "中太平洋战略" : roll === 8 ? "DEI战略" : "CBI战略"
+        }
+    }
+    // D2 接线: 同阶段 d10 轮换轴(盟军 mid 南太平洋/中太平洋/DEI/CBI、late 重返/跳岛)
+    // 在旧轴仍有未夺目标且尚未停滞时延续旧轴, 阻止逐卡重掷导致每回合内反复换轴、
+    // 链首格(如 Kwajalein/Guadalcanal)永远夺不下。确定性分支(can_pass/事件/反攻/
+    // 占领轰炸基地/推进B29/原子弹/登陆日本)不是轮换轴, 照常打断延续。
+    name = esm_pin_axis_continuity(lock, role, phase, name)
     // 事件战略: 钉住内容统一展开到【早期】事件清单(py 三处口径殊途同归):
     //   (a) JP 表中/晚期目标 = "同早期阶段事件战略"(指针);
     //   (b) AL mid/late 决策树直接 return AL_EARLY_STRATEGIES["事件战略"](py 共用早期条目,
@@ -1268,7 +1423,7 @@ function esm_pin_strategy(view, context) {
     // 仍保留决策轴选出的战区/战略名称，但以明确的规则胜利前视把图表已有“占领战略
     // 轰炸基地”链放到执行队首。PoW 亏空会在下一段再次前插，故政治意志生存仍优先。
     let victoryApproach = null
-    if (role === "Allies" && phase === "mid" && G.turn >= 6) {
+    if (false && role === "Allies" && phase === "mid" && G.turn >= 6) {
         const bombingEntry = esm_strategy_entry("Allies", "late", "占领轰炸基地")
         if (bombingEntry) {
             let approach = []
@@ -1288,7 +1443,7 @@ function esm_pin_strategy(view, context) {
         }
     }
     let progressPlan = null
-    if (role === "Allies") {
+    if (role === "Allies" && name !== "跳岛作战" && name !== "重返菲律宾" && name !== "反攻战略") {
         const progress = esm_ap_progress_targets(chain, targetMeta)
         if (progress.length) {
             const progressHexes = new Set(progress.map(x => x.hex))
@@ -1326,6 +1481,9 @@ function esm_pin_strategy(view, context) {
                 note: "夺取北方港口与南方岛链机场，部署航空AZOI并清除日军航空，维持连续三个国势阶段断线" }
         }
     }
+    targetMeta = esm_semantic_targets(role, phase, name, targetMeta)
+    chain = [...new Set(targetMeta.map(t=>t.hex))]
+    dynamicTargets = targetMeta.filter(t=>t.requiredUnits || t.escortPairs || t.dynamicBase || t.extraActivationOnly)
     const strategy = entry ? {
         name, nameFull: entry.name, kind: entry.kind, notes: entry.notes, targets: entry.targets,
         phase, role, seed: seedText, ord, pinnedNow: true, goals, chain, dynamicTargets, targetMeta, ctx,
@@ -1343,6 +1501,7 @@ function esm_pin_strategy(view, context) {
     const runStart = (sameRun && prevCache.runStart) ? prevCache.runStart : G.turn
     const runHeld = (sameRun && prevCache.runHeld !== undefined) ? prevCache.runHeld : esm_chain_held_count(chain, faction)
     lock.role[role] = { turn: G.turn, phase, strategyName: name, strategy, runStart, runHeld }
+    esm_log_strategy(strategy)
     return strategy
 }
 
@@ -1350,7 +1509,7 @@ function esm_pin_strategy(view, context) {
 // 依据已钉战略返回 { action, argument }(未钉或非法时返回 null → 调方走原路径)。
 function esm_card_window_action(strategy, view, context) {
     const legal = Object.keys(view.actions || {}).filter(a => { const v = view.actions[a]; return Array.isArray(v) ? v.length > 0 : Boolean(v) })
-    const hand = Array.isArray(view.actions.card) ? view.actions.card.slice() : []
+    let hand = Array.isArray(view.actions.card) ? view.actions.card.slice() : []
     if (!hand.length) return null
     const faction = esm_role_faction(strategy.role)
     const wantOps = strategy.kind === "CONQUEST" || strategy.kind === "ABSTRACT"
@@ -1359,13 +1518,33 @@ function esm_card_window_action(strategy, view, context) {
 
     // 原子弹标准把“苏联入侵已发生，或持有且可作为事件打出”列为硬条件。
     // 旧选牌树会在晚期把 AP#79 当普通高 OC 消耗（历史复盘 seed 20260903 即如此），
-    // 随后整局再也无法满足该条件。只要事件当前合法就立即执行；否则由下方选牌树
-    // 在仍有其他牌时保留它。
+    // 随后整局再也无法满足该条件。只要事件当前合法就立即执行；否则在仍有其他牌时
+    // 全局保留它(从候选池剔除), 防止 PoW 紧急攻势/通用选牌等任何路径把它当 OC 消耗。
     if (strategy.role === "Allies" && typeof SOVIET_INVADE !== "undefined" && hand.includes(SOVIET_INVADE)) {
         const classified = classifyCards(hand, strategy.role)
         const soviet = classified.find(x => x.id === SOVIET_INVADE)
         if (soviet && soviet.eventPlayable) {
             return esm_set_card_pick(strategy, soviet, "event", "AP10-S-EVENT", "盟军胜利条件：苏联入侵满洲事件")
+        }
+        if (hand.length > 1) {
+            hand = hand.filter(c => c !== SOVIET_INVADE)
+        } else if (legal.includes("pass")) {
+            // 仅剩 AP#79 且 TOJO 未激活：宁可 PASS 也要把它留在手上，等 TOJO 激活后作事件打出。
+            // 若当 OC 打出会 reshuffle 回牌库，错过“TOJO 激活 + 苏联牌在握”的原子弹窗口。
+            return { action: "pass", argument: undefined, via: "盟军保留苏联入侵满洲(原子弹胜利条件)" }
+        }
+    }
+
+    // 原子弹胜利的历史前置：第8回合起引擎(get_allowed_actions)把“东条辞职”(JP#43)
+    // 强制为仅事件可打。图表“东条作为1OC”只适用于早期；第8回合后必须作为事件打出
+    // 以激活 TOJO，否则苏联入侵满洲永远无法成为事件打出，原子弹标准第2条恒假。
+    // 该牌 remove:true 只在事件打出时生效(OC 打出会被 reshuffle 回牌库反复回到手牌)，
+    // 故作为事件打出也是唯一能真正把它清出游戏的方式。
+    if (strategy.role === "Japan" && typeof TOJO_RESIGNS !== "undefined" && G.turn >= 8 && hand.includes(TOJO_RESIGNS)) {
+        const classified = classifyCards(hand, strategy.role)
+        const tojo = classified.find(x => x.id === TOJO_RESIGNS)
+        if (tojo && tojo.eventPlayable) {
+            return esm_set_card_pick(strategy, tojo, "event", "JP04-S-TOJO-EVENT", "日本：东条辞职事件(原子弹胜利前置)")
         }
     }
 
@@ -1403,6 +1582,9 @@ function esm_card_window_action(strategy, view, context) {
                 `盟军PoW紧急攻势:${esm_pow_bank()}/${G.pow}，余牌${hand.length}，政治意志${G.political_will}`)
         }
     }
+
+    const semanticPick = esm_semantic_card_pick(strategy, hand)
+    if (semanticPick) return semanticPick
 
     // 第4/10页是每次出牌都必须重走的独立决策树，不能被当前决策轴的 CONQUEST/EVENT
     // 类型短路。返回 null 才表示图表没有给出可执行牌，继续使用战略轴的事件清单。
@@ -1736,6 +1918,35 @@ function esm_event_strategy_card_pick(strategy, hand) {
 }
 
 // 选行动窗("C{idx}: Select action."): 按已钉战略选 ops/event 等。
+function esm_china_ready(strategy) {
+    if (strategy.role !== "Japan") return false
+    const index = (strategy.goals || []).findIndex(g => g.meta && g.meta.followupActions)
+    if (index < 0) return false
+    return strategy.goals.slice(0,index+1).every(g => (g.hexes||[]).every(h => is_space_controlled(h,JP)))
+}
+function esm_semantic_card_pick(strategy, hand) {
+    const classified = classifyCards(hand,strategy.role)
+    if (esm_china_ready(strategy)) {
+        const offensive = classified.filter(c => { try { return get_allowed_actions(c.id).includes("china_offensive") } catch(e) {return false} })
+            .sort((a,b)=>a.ops-b.ops||a.id-b.id)[0]
+        if (offensive) return esm_set_card_pick(strategy,offensive,"china_offensive","JP-CHINA-OFFENSIVE","中国投降：中国攻势")
+        const event = classified.find(c=>c.eventPlayable && cards[c.id] && cards[c.id].china)
+        if (event) return esm_set_card_pick(strategy,event,"event","JP-CHINA-EVENT","中国投降：中国事件")
+    }
+    if (strategy.role === "Japan" && strategy.ctx && strategy.ctx._allocationFrom && Number(G.wie)>0) {
+        const europe = classified.find(c=>c.eventPlayable && cards[c.id] && cards[c.id].wie)
+        if(europe) return esm_set_card_pick(strategy,europe,"event","JP01-RESOURCE-WIE","资源战略注[5]：欧战事件优先")
+    }
+    if (strategy.role === "Allies" && strategy.name === "建立ABDA") {
+        const arcadia = classified.find(c=>c.eventPlayable && c.id===find_card(AP,4))
+        if(arcadia) return esm_set_card_pick(strategy,arcadia,"event","AP07-ABDA","建立ABDA：阿卡迪亚会议")
+    }
+    if (ESM_REDEPLOY[strategy.name] || ["DEI防御","橙色计划","攻势进攻","推进B29"].includes(strategy.name)) {
+        const oc = classified.filter(c=>c.opsPlayable).sort((a,b)=>b.ops-a.ops||a.id-b.id)[0]
+        if(oc) return esm_set_card_pick(strategy,oc,"ops","AP-SEMANTIC-OC",strategy.name+"：执行指定调动/攻击")
+    }
+    return null
+}
 function esm_card_action_window_action(strategy, view, context) {
     const legal = Object.keys(view.actions || {}).filter(a => { const v = view.actions[a]; return Array.isArray(v) ? v.length > 0 : Boolean(v) })
     if (strategy.cardIntent && legal.includes(strategy.cardIntent)) {
@@ -1790,6 +2001,25 @@ function esm_trace_of(strategy, privateDetails) {
         ...(strategy.victoryPreparation ? { victoryPreparation: strategy.victoryPreparation } : {}),
         ...(strategy.eventPhase ? { eventPhase: strategy.eventPhase } : {}),
         ...(diag ? { diag } : {}) }
+}
+
+// 调试日志: 把每张牌钉选时的 AI 阶段、所选战略与当前首位战略目标写入 RTT 日志
+// (G.log), 便于人工在回放里直接看到 AI 处在哪个阶段、执行哪条战略、把哪些地点
+// 放在队首。纯展示, 不触碰引擎状态 / RNG。
+function esm_log_strategy(strategy) {
+    try {
+        if (typeof log !== "function" || !strategy) return
+        const roleCn = strategy.role === "Japan" ? "日本" : "盟军"
+        const phaseCn = strategy.phase === "early" ? "早期" : strategy.phase === "mid" ? "中期" : "晚期"
+        const targets = esm_strategy_targets(strategy)
+        const head = targets.slice(0, 5).map(t => {
+            const nm = t.name ? t.name : `#${t.hex}`
+            const ctl = t.controlledBy === "Japan" ? "日" : t.controlledBy === "Allies" ? "盟" : "?"
+            const mark = t.achieved ? "✓" : "·"
+            return `${t.priority}.${mark}${nm}(${t.hex}${ctl})`
+        }).join(" ")
+        log(`[ERASMUS] ${roleCn}·${phaseCn} 战略「${strategy.name}」 首位目标: ${head || "(无)"}`)
+    } catch (e) { /* 日志失败不影响决策 */ }
 }
 
 // ===========================================================================

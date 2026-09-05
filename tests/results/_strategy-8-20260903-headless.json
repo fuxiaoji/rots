@@ -1,0 +1,1859 @@
+{
+  "policy": "erasmus-v2.0-zh.5",
+  "scenario": "1942-1945 (The Shortened Campaign)",
+  "gameCount": 8,
+  "baseSeed": 20260903,
+  "headless": true,
+  "generatedAt": "2026-09-03T09:10:51.242Z",
+  "games": [
+    {
+      "seed": 20260903,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1440,
+      "endTurn": 11,
+      "endMessage": "Japanese Victory by Treaty Negotiations",
+      "tail": "@Turn 11. End of turn phase |  | Japanese Victory by Treaty Negotiations.",
+      "perTurn": [
+        {
+          "turn": 2,
+          "pw": 8,
+          "wie": 5,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 3,
+          "pw": 9,
+          "wie": 8,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 4,
+          "pw": 8,
+          "wie": 9,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 5,
+          "pw": 7,
+          "wie": 7,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 6,
+          "pw": 6,
+          "wie": 5,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 7,
+          "pw": 5,
+          "wie": 4,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 8,
+          "pw": 4,
+          "wie": 2,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 9,
+          "pw": 3,
+          "wie": 1,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 10,
+          "pw": 2,
+          "wie": 1,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        }
+      ],
+      "finalPw": 0,
+      "finalWie": 1,
+      "finalJpJapan": 0,
+      "finalApAnyJapaneseCity": null,
+      "apCapturedHexes": [
+        274,
+        328
+      ],
+      "jpCapturedHexes": [],
+      "pwCauses": [
+        {
+          "diff": 1,
+          "cause": "Doolittle Raid"
+        },
+        {
+          "diff": -1,
+          "cause": "Tokyo Rose"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 1 < 2"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 2"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 3"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        }
+      ],
+      "powLines": [
+        "Progress of War not checked for turn 2.",
+        "Progress of War not checked for turn 3."
+      ],
+      "apActivations": {
+        "Japan": 0,
+        "Allies": 0
+      },
+      "logSample": [
+        "&JJP captured H480.",
+        "AP captured H274.",
+        "&AAP captured H562.",
+        "AP captured H328."
+      ]
+    },
+    {
+      "seed": 20260904,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1299,
+      "endTurn": 10,
+      "endMessage": "Japanese Victory by Treaty Negotiations",
+      "tail": "@Turn 10. End of turn phase |  | Japanese Victory by Treaty Negotiations.",
+      "perTurn": [
+        {
+          "turn": 2,
+          "pw": 8,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 3,
+          "pw": 6,
+          "wie": 1,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 4,
+          "pw": 6,
+          "wie": 2,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 5,
+          "pw": 6,
+          "wie": 2,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 6,
+          "pw": 5,
+          "wie": 4,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 7,
+          "pw": 4,
+          "wie": 5,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 8,
+          "pw": 3,
+          "wie": 5,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 9,
+          "pw": 2,
+          "wie": 2,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        }
+      ],
+      "finalPw": 0,
+      "finalWie": 0,
+      "finalJpJapan": 0,
+      "finalApAnyJapaneseCity": null,
+      "apCapturedHexes": [
+        274,
+        304,
+        274,
+        273,
+        302,
+        331,
+        669,
+        670
+      ],
+      "jpCapturedHexes": [
+        302
+      ],
+      "pwCauses": [
+        {
+          "diff": -2,
+          "cause": "Tojo Resigns"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 2 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "Tokyo Rose"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        }
+      ],
+      "powLines": [
+        "Progress of War not checked for turn 2.",
+        "Progress of War not checked for turn 3.",
+        "Progress of War 5 >= 3."
+      ],
+      "apActivations": {
+        "Japan": 0,
+        "Allies": 0
+      },
+      "logSample": [
+        "AP captured H274.",
+        "&JJP captured H452.",
+        "&JJP captured H304.",
+        "&JJP captured H480.",
+        "&AAP captured H534.",
+        "AP captured H304.",
+        "AP captured H274.",
+        "AP captured H273.",
+        "AP captured H302.",
+        "AP captured H331.",
+        "AP captured H669.",
+        "AP captured H670."
+      ]
+    },
+    {
+      "seed": 20260905,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1004,
+      "endTurn": 8,
+      "endMessage": "Japanese Victory by Treaty Negotiations",
+      "tail": "@Turn 8. End of turn phase |  | Japanese Victory by Treaty Negotiations.",
+      "perTurn": [
+        {
+          "turn": 2,
+          "pw": 5,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 3,
+          "pw": 4,
+          "wie": 5,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 4,
+          "pw": 4,
+          "wie": 7,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 5,
+          "pw": 4,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 6,
+          "pw": 3,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 7,
+          "pw": 2,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        }
+      ],
+      "finalPw": 0,
+      "finalWie": 3,
+      "finalJpJapan": 0,
+      "finalApAnyJapaneseCity": null,
+      "apCapturedHexes": [
+        274,
+        1032,
+        273,
+        328
+      ],
+      "jpCapturedHexes": [
+        534
+      ],
+      "pwCauses": [
+        {
+          "diff": -1,
+          "cause": "Tokyo Rose"
+        },
+        {
+          "diff": -2,
+          "cause": "Tojo Resigns"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 3"
+        },
+        {
+          "diff": 1,
+          "cause": "Doolittle Raid"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 1 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 1 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 1 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        }
+      ],
+      "powLines": [
+        "Progress of War not checked for turn 2.",
+        "Progress of War not checked for turn 3."
+      ],
+      "apActivations": {
+        "Japan": 0,
+        "Allies": 0
+      },
+      "logSample": [
+        "&JJP captured H452.",
+        "AP captured H274.",
+        "AP captured H1032.",
+        "&JJP captured H480.",
+        "&AAP captured H534.",
+        "AP captured H273.",
+        "AP captured H328.",
+        "JP captured H534."
+      ]
+    },
+    {
+      "seed": 20260906,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1248,
+      "endTurn": 10,
+      "endMessage": "Japanese Victory by Treaty Negotiations",
+      "tail": "@Turn 10. End of turn phase |  | Japanese Victory by Treaty Negotiations.",
+      "perTurn": [
+        {
+          "turn": 2,
+          "pw": 8,
+          "wie": 7,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 3,
+          "pw": 6,
+          "wie": 8,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 4,
+          "pw": 6,
+          "wie": 6,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 5,
+          "pw": 5,
+          "wie": 4,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 6,
+          "pw": 4,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 7,
+          "pw": 3,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 8,
+          "pw": 3,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 9,
+          "pw": 2,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        }
+      ],
+      "finalPw": 0,
+      "finalWie": 3,
+      "finalJpJapan": 0,
+      "finalApAnyJapaneseCity": null,
+      "apCapturedHexes": [
+        274,
+        331,
+        273,
+        302,
+        328,
+        331
+      ],
+      "jpCapturedHexes": [
+        358,
+        331
+      ],
+      "pwCauses": [
+        {
+          "diff": -1,
+          "cause": "Tokyo Rose"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 3"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 3 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": 1,
+          "cause": "Doolittle Raid"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 1 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 1 < 4"
+        }
+      ],
+      "powLines": [
+        "Progress of War not checked for turn 2.",
+        "Progress of War not checked for turn 3."
+      ],
+      "apActivations": {
+        "Japan": 0,
+        "Allies": 0
+      },
+      "logSample": [
+        "JP captured H358.",
+        "AP captured H274.",
+        "AP captured H331.",
+        "AP captured H273.",
+        "AP captured H302.",
+        "JP captured H331.",
+        "AP captured H328.",
+        "AP captured H331."
+      ]
+    },
+    {
+      "seed": 20260907,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1195,
+      "endTurn": 9,
+      "endMessage": "Japanese Victory by Treaty Negotiations",
+      "tail": "@Turn 9. End of turn phase |  | Japanese Victory by Treaty Negotiations.",
+      "perTurn": [
+        {
+          "turn": 2,
+          "pw": 6,
+          "wie": 2,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 3,
+          "pw": 6,
+          "wie": 4,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 4,
+          "pw": 6,
+          "wie": 5,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 5,
+          "pw": 5,
+          "wie": 5,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 6,
+          "pw": 4,
+          "wie": 5,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 7,
+          "pw": 3,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 8,
+          "pw": 2,
+          "wie": 0,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        }
+      ],
+      "finalPw": 0,
+      "finalWie": 0,
+      "finalJpJapan": 0,
+      "finalApAnyJapaneseCity": null,
+      "apCapturedHexes": [
+        274,
+        274,
+        669,
+        670
+      ],
+      "jpCapturedHexes": [
+        534
+      ],
+      "pwCauses": [
+        {
+          "diff": -2,
+          "cause": "Tojo Resigns"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 1 < 3"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 1 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 2 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        }
+      ],
+      "powLines": [
+        "Progress of War not checked for turn 2.",
+        "Progress of War not checked for turn 3."
+      ],
+      "apActivations": {
+        "Japan": 0,
+        "Allies": 0
+      },
+      "logSample": [
+        "&JJP captured H452.",
+        "&AAP captured H534.",
+        "&JJP captured H480.",
+        "&JJP captured H594.",
+        "AP captured H274.",
+        "AP captured H274.",
+        "JP captured H534.",
+        "AP captured H669.",
+        "AP captured H670.",
+        "&AAP captured H328."
+      ]
+    },
+    {
+      "seed": 20260908,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1464,
+      "endTurn": 11,
+      "endMessage": "Japanese Victory by Treaty Negotiations",
+      "tail": "@Turn 11. End of turn phase |  | Japanese Victory by Treaty Negotiations.",
+      "perTurn": [
+        {
+          "turn": 2,
+          "pw": 8,
+          "wie": 5,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 3,
+          "pw": 8,
+          "wie": 6,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 4,
+          "pw": 8,
+          "wie": 6,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 5,
+          "pw": 7,
+          "wie": 5,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 6,
+          "pw": 6,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 7,
+          "pw": 5,
+          "wie": 5,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 8,
+          "pw": 4,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 9,
+          "pw": 3,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 10,
+          "pw": 2,
+          "wie": 0,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        }
+      ],
+      "finalPw": 0,
+      "finalWie": 0,
+      "finalJpJapan": 0,
+      "finalApAnyJapaneseCity": null,
+      "apCapturedHexes": [
+        274,
+        273,
+        825,
+        328
+      ],
+      "jpCapturedHexes": [],
+      "pwCauses": [
+        {
+          "diff": -1,
+          "cause": "current progress of war 1 < 3"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": 1,
+          "cause": "Doolittle Raid"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        }
+      ],
+      "powLines": [
+        "Progress of War not checked for turn 2.",
+        "Progress of War not checked for turn 3."
+      ],
+      "apActivations": {
+        "Japan": 0,
+        "Allies": 0
+      },
+      "logSample": [
+        "AP captured H274.",
+        "AP captured H273.",
+        "&AAP captured H302.",
+        "AP captured H825.",
+        "AP captured H328."
+      ]
+    },
+    {
+      "seed": 20260909,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1002,
+      "endTurn": 8,
+      "endMessage": "Japanese Victory by Treaty Negotiations",
+      "tail": "@Turn 8. End of turn phase |  | Japanese Victory by Treaty Negotiations.",
+      "perTurn": [
+        {
+          "turn": 2,
+          "pw": 8,
+          "wie": 5,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 3,
+          "pw": 8,
+          "wie": 7,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 4,
+          "pw": 8,
+          "wie": 7,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 5,
+          "pw": 7,
+          "wie": 6,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 6,
+          "pw": 4,
+          "wie": 4,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 7,
+          "pw": 3,
+          "wie": 4,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        }
+      ],
+      "finalPw": 0,
+      "finalWie": 4,
+      "finalJpJapan": 0,
+      "finalApAnyJapaneseCity": null,
+      "apCapturedHexes": [],
+      "jpCapturedHexes": [],
+      "pwCauses": [
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 3"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -2,
+          "cause": "Tojo Resigns"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        }
+      ],
+      "powLines": [
+        "Progress of War not checked for turn 2.",
+        "Progress of War not checked for turn 3."
+      ],
+      "apActivations": {
+        "Japan": 0,
+        "Allies": 0
+      },
+      "logSample": [
+        "&JJP captured H480."
+      ]
+    },
+    {
+      "seed": 20260910,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 1358,
+      "endTurn": 11,
+      "endMessage": "Japanese Victory by Treaty Negotiations",
+      "tail": "@Turn 11. End of turn phase |  | Japanese Victory by Treaty Negotiations.",
+      "perTurn": [
+        {
+          "turn": 2,
+          "pw": 8,
+          "wie": 5,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 3,
+          "pw": 8,
+          "wie": 4,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 4,
+          "pw": 7,
+          "wie": 4,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 5,
+          "pw": 6,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 6,
+          "pw": 6,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 7,
+          "pw": 5,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 8,
+          "pw": 4,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 9,
+          "pw": 3,
+          "wie": 3,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        },
+        {
+          "turn": 10,
+          "pw": 2,
+          "wie": 0,
+          "jpByRegion": {
+            "Japan": 0,
+            "Korea": 0,
+            "Manchuria": 0,
+            "China": 0,
+            "Philippines": 0,
+            "Caroline": 0,
+            "JMandates": 0,
+            "Marshall": 0,
+            "DEI": 0,
+            "Guinea": 0,
+            "Australia": 0,
+            "Burma": 0
+          },
+          "apJapaneseCity": null
+        }
+      ],
+      "finalPw": 0,
+      "finalWie": 0,
+      "finalJpJapan": 0,
+      "finalApAnyJapaneseCity": null,
+      "apCapturedHexes": [
+        973,
+        274,
+        1032,
+        273,
+        302
+      ],
+      "jpCapturedHexes": [],
+      "pwCauses": [
+        {
+          "diff": -1,
+          "cause": "Tokyo Rose"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 2 < 3"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": 1,
+          "cause": "Doolittle Raid"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 1 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 2 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 1 < 4"
+        },
+        {
+          "diff": -1,
+          "cause": "current progress of war 0 < 4"
+        }
+      ],
+      "powLines": [
+        "Progress of War not checked for turn 2.",
+        "Progress of War not checked for turn 3."
+      ],
+      "apActivations": {
+        "Japan": 0,
+        "Allies": 0
+      },
+      "logSample": [
+        "&JJP captured H452.",
+        "&JJP captured H480.",
+        "&JJP captured H514.",
+        "AP captured H973.",
+        "AP captured H274.",
+        "AP captured H1032.",
+        "AP captured H273.",
+        "AP captured H302.",
+        "&JJP captured H302.",
+        "&JJP captured H304.",
+        "&AAP captured H304."
+      ]
+    }
+  ]
+}

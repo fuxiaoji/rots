@@ -131,6 +131,10 @@ function eop_focus(role) {
     for (const idx of eop_axis_chain(mine === JP ? "Japan" : "Allies")) {
         if (idx < 0 || idx > LAST_BOARD_HEX) continue
         const meta = eop_target_meta(mine === JP ? "Japan" : "Allies", idx)
+        if (meta) {
+            if (eop_target_pending(mine === JP ? "Japan" : "Allies", idx, meta)) return idx
+            continue
+        }
         // 压制目标的完成条件是敌方 AZOI 不再覆盖该格，并非必须夺取控制权。
         // 因此 Jolo 即便仍由盟军控制，只要覆盖它的航空/航母 ZOI 已被消灭，就应顺延
         // 到 Makassar；夺占类目标仍严格以控制权为完成条件。
@@ -215,8 +219,10 @@ function eop_pick_unit(candidates, role, activeUnits, focusOverride) {
     const mine = role === "Japan" ? JP : AP
     const axis = eop_axis(role)
     const focusMeta = focus === null ? null : eop_target_meta(role, focus)
+    candidates = candidates.filter(u=>eop_unit_matches_target(u,role,focusMeta,focus))
+    if (!candidates.length) return undefined
     if (focus !== null && axis && (axis.kind === "GARRISON" || axis.kind === "DEFEND")) {
-        const required = focusMeta && focusMeta.kind === "GARRISON" ? (focusMeta.garrisonClass || "ground") : null
+        const required = focusMeta && focusMeta.kind === "GARRISON" && !focusMeta.garrisonRequirement ? (focusMeta.garrisonClass || "ground") : null
         const home = candidates.filter(u => {
             const p = pieces[u], h = G.location[u], md = h >= 0 && h <= LAST_BOARD_HEX ? get_map_data(h) : null
             if (!p || p.faction !== mine || !md) return false
@@ -360,27 +366,113 @@ function eop_trace(role) {
 // 激活上限较高时，第5/11页要求“为每个目标编成一个任务部队”。激活窗尚未宣告
 // 战斗格，不能依赖 battle_hexes 轮换；按每 4 个激活单位（至少两支地面、护航、
 // 空海支援）预分配到下一个未完成目标，使 8/9 点事件形成两个独立且不过薄的编队。
-function eop_activation_focus_faction(faction, selectedCount) {
+function eop_activation_focus_faction(faction, selectedCount, view, candidates) {
     const role = faction === JP ? "Japan" : "Allies"
     const axis = eop_axis(role)
     if (!axis || !Array.isArray(axis.chain)) return eop_focus(role)
-    const pending = []
-    for (const h of axis.chain) {
-        const meta = eop_target_meta(role, h)
-        if (meta && (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ")) {
-            if (meta.requiresOccupation && !is_space_controlled(h, faction)) pending.push(h)
-            else { try { if (has_zoi(h, 1 - faction)) pending.push(h) } catch (e) {} }
-        } else if (!is_space_controlled(h, faction)) pending.push(h)
-    }
+    const pending = axis.chain.filter(h => eop_target_pending(role,h,eop_target_meta(role,h)))
     if (!pending.length) return null
-    // 第5/11页的典型最小编队由地面占领、海军护航、空海支援及一支余量构成。
-    // 每4个激活点才转向下一个目标；目标链顺序仍是硬优先，未列入链的岛不会插队。
-    return pending[Math.min(pending.length - 1, Math.floor(Math.max(0, Number(selectedCount) || 0) / 4))]
+    const first=eop_target_meta(role,pending[0])
+    if (first?.strictSequential) return pending[0]
+    const eligible=first?.targetGroup!==undefined ? pending.filter(h=>eop_target_meta(role,h)?.targetGroup===first.targetGroup) : pending
+    const active=new Set((view?.offensive?.active_units || G.offensive?.active_units || []).flat())
+    const available=Array.isArray(candidates)?candidates.filter(u=>!active.has(u)):null
+    if(view && available){
+        const reserved=new Set()
+        for(const h of eligible){
+            const meta=eop_target_meta(role,h)
+            if(meta?.extraActivationOnly){
+                const hq=view.offensive?.active_hq?.[faction] || G.offensive?.active_hq?.[faction]
+                if(!hq || get_distance(G.location[hq],h)>Number(pieces[hq]?.cr||0))continue
+            }
+            if(meta?.requiredUnits){
+                if(meta.requiredUnits.every(u=>G.location[u]===h || active.has(u))){
+                    meta.requiredUnits.forEach(u=>reserved.add(u));continue
+                }
+                if(!available.some(u=>eop_unit_matches_target(u,role,meta,h)))continue
+                return h
+            }
+            if(meta?.kind==="GARRISON"){
+                let projected=(view.ai?.units||[]).map(u=>({...u}))
+                for(const u of projected){
+                    if(eop_garrison_satisfied(role,h,meta,projected))break
+                    if(active.has(u.id)&&!reserved.has(u.id)&&eop_unit_matches_target(u,role,meta,h)){
+                        u.location=h;reserved.add(u.id)
+                    }
+                }
+                if(eop_garrison_satisfied(role,h,meta,projected))continue
+            }
+            const plan=composeTaskForce(h,null,null,view,available,role)
+            if(!plan.complete && plan.unit!==undefined && plan.unit!==null)return h
+            // An inaccessible primary attack does not authorize spending its
+            // activation budget on an explicitly residual attack.
+            if(!plan.complete && !meta?.extraActivationOnly && meta?.kind!=="REDEPLOY" && meta?.kind!=="GARRISON")return h
+        }
+        return null
+    }
+    return eligible[Math.min(eligible.length-1,Math.floor(Math.max(0,Number(selectedCount)||0)/4))]
 }
 
 function eop_target_meta(role, hex) {
     const axis = eop_axis(role)
     return axis && Array.isArray(axis.targetMeta) ? axis.targetMeta.find(target => target.hex === hex) || null : null
+}
+
+// Shared by activation, task-force composition and actual movement. Semantic
+// restrictions remain hard filters even when a preferred candidate is unavailable.
+function eop_unit_matches_target(unit, role, meta, target) {
+    if (!meta) return true
+    const id = typeof unit === "number" ? unit : unit?.id
+    const p = typeof unit === "number" ? pieces[unit] : unit
+    if (!p || p.faction !== (role === "Japan" ? JP : AP)) return false
+    const location = Number.isInteger(p.location) ? p.location : G.location[id]
+    if (Array.isArray(meta.requiredUnits) && !meta.requiredUnits.includes(id)) return false
+    if (meta.unitFilter === "COMMONWEALTH_OR_US_ARMY" && !["army", "br", "au", "ind", "bu"].includes(p.service)) return false
+    if (meta.requiresFriendlyControl && !is_space_controlled(target, p.faction)) return false
+    if (meta.kind === "GARRISON") {
+        const req = meta.garrisonRequirement
+        if (req ? !((req.groundSteps && p.class === "ground") || (req.airSteps && p.class === "air")) : p.class !== (meta.garrisonClass || "ground")) return false
+    }
+    if (meta.kind === "NAVAL" && p.class !== "naval" && p.class !== "air") return false
+    if (meta.targetClasses && p.class !== "air" && p.class !== "naval") return false
+    if (meta.escortPairs) {
+        if (!meta.escortPairs.some(pair => (pair.ground === id || pair.carrier === id)
+            && G.location[pair.ground] === pair.origin && G.location[pair.carrier] === pair.origin)) return false
+    }
+    if (meta.maxDistance && get_distance(location, target) > meta.maxDistance) return false
+    if (meta.preserveLastCarrier && (p.type === "cv" || p.type === "cvl" || p.type === "cve")) {
+        let carriers = 0
+        for (let u=1;u<pieces.length;u++) if (pieces[u]?.faction===p.faction && /^cv/.test(pieces[u].type||"") && G.location[u]>=0 && G.location[u]<=LAST_BOARD_HEX) carriers++
+        if (carriers <= 1) return false
+    }
+    return true
+}
+
+function eop_unit_steps(unit, id) {
+    const reduced = typeof unit.reduced === "boolean" ? unit.reduced
+        : !!(G.reduced && (typeof set_has === "function" ? set_has(G.reduced,id) : G.reduced.includes(id)))
+    return reduced ? 1 : 2
+}
+function eop_garrison_satisfied(role, hex, meta, units) {
+    const mine=role==="Japan"?JP:AP
+    const list=units || pieces.map((p,id)=>p && ({...p,id,location:G.location[id]}))
+    const at=list.filter(p=>p && p.faction===mine && p.location===hex)
+    const req=meta.garrisonRequirement
+    if (!req) return at.some(p=>p.class===(meta.garrisonClass||"ground"))
+    const checks=[]
+    for(const cls of ["ground","air"]) if(req[cls+"Steps"]) checks.push(at.filter(p=>p.class===cls).reduce((n,p)=>n+eop_unit_steps(p,p.id),0)>=req[cls+"Steps"])
+    return checks.length>0 && (req.operator==="OR" ? checks.some(Boolean) : checks.every(Boolean))
+}
+function eop_target_pending(role, hex, meta) {
+    const mine=role==="Japan"?JP:AP
+    if (!meta) return !is_space_controlled(hex,mine)
+    if ((meta.ignoreIfEnemy || meta.requiresFriendlyControl || meta.kind==="GARRISON") && !is_space_controlled(hex,mine)) return false
+    if (meta.kind==="GARRISON") return !eop_garrison_satisfied(role,hex,meta)
+    if (meta.kind==="REDEPLOY" && meta.requiredUnits) return meta.requiredUnits.some(u=>G.location[u]>=0 && G.location[u]<=LAST_BOARD_HEX && G.location[u]!==hex)
+    if (meta.kind==="REDEPLOY") return true
+    if (meta.kind==="NAVAL" || meta.targetClasses) return pieces.some((p,u)=>p && p.faction!==mine && G.location[u]===hex && (meta.targetClasses ? meta.targetClasses.some(c=>c===p.class || c==="carrier"&&/^cv/.test(p.type||"")) : p.class==="naval"))
+    if (meta.kind==="SUPPRESS" || meta.kind==="SUPPRESS_HQ") return !!(meta.requiresOccupation && !is_space_controlled(hex,mine)) || (typeof has_zoi==="function" && has_zoi(hex,1-mine))
+    return !is_space_controlled(hex,mine)
 }
 
 // 一张 EC 可为多个目标分别编成任务部队。当前首要目标已经建立战斗格后，
@@ -393,22 +485,13 @@ function eop_next_focus_faction(faction, excludedHexes, recordedPlan) {
     if(!axis||!Array.isArray(axis.chain))return null
     const excluded=new Set(Array.isArray(excludedHexes)?excludedHexes:[])
     const current=recordedPlan&&Number.isInteger(recordedPlan.focus)?recordedPlan.focus:eop_focus(role)
-    const start=Math.max(-1,axis.chain.indexOf(current))
-    for(let i=start+1;i<axis.chain.length;i++){
-        const h=axis.chain[i],meta=Array.isArray(axis.targetMeta)
-            ?axis.targetMeta.find(x=>x.hex===h)||null:eop_target_meta(role,h)
-        if(excluded.has(h))continue
-        if(meta?.kind==="GARRISON"){
-            if(!is_space_controlled(h,faction))continue
-            const cls=meta.garrisonClass||"ground"
-            let present=false
-            for(let u=1;u<pieces.length;u++)if(pieces[u]&&pieces[u].faction===faction&&pieces[u].class===cls&&G.location[u]===h){present=true;break}
-            if(present)continue
-        }else if(meta?.kind==="SUPPRESS"||meta?.kind==="SUPPRESS_HQ"){
-            try{if(!has_zoi(h,1-faction))continue}catch(e){}
-        }else if(is_space_controlled(h,faction))continue
-        return {hex:h,meta}
-    }
+    const metadata=h=>axis.targetMeta?.find(x=>x.hex===h)||null
+    const pending=axis.chain.filter(h=>eop_target_pending(role,h,metadata(h)))
+    if(!pending.length)return null
+    const first=metadata(pending[0])
+    if(first?.strictSequential)return null
+    const eligible=first?.targetGroup!==undefined?pending.filter(h=>metadata(h)?.targetGroup===first.targetGroup):pending
+    for(const h of eligible) if(h!==current&&!excluded.has(h))return {hex:h,meta:metadata(h)}
     return null
 }
 
@@ -478,24 +561,33 @@ function evaluateTargetFeasibility(target, card, hq, view) {
         requiredAirSeaMath:Math.max(1,Math.ceil(relevantDefense/damageLevel))}
 }
 function composeTaskForce(target, card, hq, view, candidates, role) {
+    if((target===null || target===undefined) && eop_axis(role))return {complete:true,strict:true,unit:null,formation:"objectives-scheduled"}
     const units=Array.isArray(view?.ai?.units)?view.ai.units:[], byId=new Map(units.map(u=>[u.id,u]))
     const active=new Set((view?.offensive?.active_units||[]).flat()), f=evaluateTargetFeasibility(target,card,hq,view)
+    candidates=(candidates||[]).filter(id=>eop_unit_matches_target(byId.get(id)||id,role,f.meta,target))
     const committed=[...active].map(id=>byId.get(id)).filter(Boolean)
     const cf=u=>u.reduced?(Number(u.rcf)||Math.ceil((Number(u.cf)||0)/2)):(Number(u.cf)||0)
     const strikeStrength=committed.filter(u=>u.class==="air"||u.class==="naval").reduce((s,u)=>s+cf(u),0)
     const groundStrength=committed.filter(u=>u.class==="ground").reduce((s,u)=>s+cf(u),0)
     const hasGround=committed.some(u=>u.class==="ground"),hasNaval=committed.some(u=>u.class==="naval")
     const hasRangedSupport=committed.some(u=>u.class==="air"||(u.class==="naval"&&Number(u.br)>0))
-    if(f.meta?.kind==="GARRISON"){
-        const required=f.garrisonClass||"ground"
-        const already=units.some(u=>u.faction===(role==="Japan"?JP:AP)&&u.location===target&&u.class===required)
-        if(already)return {complete:true,required:1,strength:1,unit:null,formation:`garrison-${required}`,
-            groundStrength,strikeStrength,potentialReactionStrength:0}
-        const pool=(candidates||[]).map(id=>byId.get(id)).filter(u=>u&&u.class===required)
-        pool.sort((a,b)=>(typeof get_distance==="function"?get_distance(a.location,target)-get_distance(b.location,target):0)
-            || cf(a)-cf(b)||a.id-b.id)
-        return {complete:false,required:1,strength:0,unit:pool[0]?.id,formation:`garrison-${required}`,
-            groundStrength,strikeStrength,potentialReactionStrength:0}
+    if(f.meta?.escortPairs){
+        const pairs=f.meta.escortPairs.filter(pair=>G.location[pair.ground]===pair.origin && G.location[pair.carrier]===pair.origin
+            && get_distance(pair.origin,target)<=f.meta.maxDistance)
+        const pair=pairs.find(p=>active.has(p.ground)||active.has(p.carrier))
+            ||pairs.find(p=>candidates.includes(p.ground)&&candidates.includes(p.carrier))
+        const complete=!!pair&&active.has(pair.ground)&&active.has(pair.carrier)
+        const unit=pair?[pair.ground,pair.carrier].find(id=>!active.has(id)&&candidates.includes(id)):undefined
+        return {complete,strict:true,required:2,strength:pair?Number(active.has(pair.ground))+Number(active.has(pair.carrier)):0,
+            unit:complete?null:unit,formation:"orange-army-carrier-convoy",groundStrength,strikeStrength,potentialReactionStrength:0}
+    }
+    if(f.meta?.kind==="GARRISON" || f.meta?.kind==="REDEPLOY"){
+        const already=f.meta.kind==="GARRISON"?eop_garrison_satisfied(role,target,f.meta,units):!eop_target_pending(role,target,f.meta)
+        const pool=candidates.map(id=>byId.get(id)).filter(u=>u && u.location!==target)
+        pool.sort((a,b)=>(f.meta.garrisonRequirement?.airSteps ? (a.class==="air"?0:1)-(b.class==="air"?0:1):0)
+            || get_distance(a.location,target)-get_distance(b.location,target)||a.id-b.id)
+        return {complete:already,strict:true,required:1,strength:already?1:0,unit:already?null:pool[0]?.id,
+            formation:f.meta.kind.toLowerCase(),groundStrength,strikeStrength,potentialReactionStrength:0}
     }
     const landing=f.requiresOccupation&&f.coastal&&view?.ai?.focusControlledBy!==view?.active
     const need=f.suppress?f.requiredAirSeaMath:f.requiresOccupation?f.requiredGroundMath:(f.groundDefense>0?f.requiredGroundMath:f.requiredAirSeaMath)
@@ -525,7 +617,7 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
         return unactivated.length>1
     })
     let amphibiousPick
-    if(landing&&typeof eop_pick_unit==="function")amphibiousPick=eop_pick_unit((candidates||[]),role,[...active])
+    if(landing&&typeof eop_pick_unit==="function")amphibiousPick=eop_pick_unit(pool.map(u=>u.id),role,[...active],target)
     const classRank=u=>f.suppress?({air:0,naval:1,ground:2}[u.class]??3)
         :f.requiresOccupation?(!hasGround?({ground:0,naval:1,air:2}[u.class]??3):(!hasNaval&&landing?({naval:0,air:1,ground:2}[u.class]??3):({air:0,naval:1,ground:2}[u.class]??3)))
         :({air:0,naval:1,ground:2}[u.class]??3)
@@ -534,7 +626,7 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
     const distance=u=>typeof get_distance==="function"&&target!==null&&target!==undefined
         ?get_distance(u.location,target):99
     pool.sort((a,b)=>classRank(a)-classRank(b)||distance(a)-distance(b)||cf(b)-cf(a)||a.id-b.id)
-    return {complete:false,required:need,strength:math,unit:amphibiousPick??pool[0]?.id,
+    return {complete:false,strict:true,required:need,strength:math,unit:amphibiousPick??pool[0]?.id,
         formation:landing?"supported-amphibious-assault":f.requiresOccupation?"ground-with-support":"air-sea-strike",
         groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
 }
@@ -551,19 +643,43 @@ function selectOperationalHq(view,candidates,role){
         /(南太平洋)/i.test(name)?/(south pacific|anzac|south west)/i:
         /(中太平洋|跳岛|轰炸|b29|登陆日本)/i.test(name)?/central pacific/i:
         /(印度|缅甸)/i.test(name)?/seac/i:/central pacific|south west/i)
-        :(name.includes("cbi")||name.includes("india")?/south hq/i:name.includes("central")?/combined fleet/i:/south hq|south seas/i)
+        :(/(cbi|india|中缅印|印度)/i.test(name)?/south hq/i:/(central|中太平洋|马绍尔)/i.test(name)?/combined fleet/i:/south hq|south seas/i)
     const mine=role==="Japan"?JP:AP
     const commandable=id=>{const hq=byId.get(id);if(!hq)return 0
         const range=Math.max(0,Number(hq.cr)||0)
         return (view?.ai?.units||[]).filter(u=>u.faction===mine&&u.class!=="hq"&&u.location>=0
             &&(!(Number(hq.supply)||0)||((Number(u.supply)||0)&Number(hq.supply)))
             &&typeof get_distance==="function"&&get_distance(hq.location,u.location)<=range).length}
+    // 夺占(requiresOccupation)目标——敌占岛屿/资源格——必须由地面单位实施两栖登陆。
+    // 图表虽注“优先 Cen Pac HQ”，但 1942 年 Central Pacific 只有海空、无地面军，
+    // 硬选它会激活 8 个海空单位却“无单位可达敌战格”。夺占目标下优先能指挥地面军的 HQ。
+    const focusMeta=focus!==null&&focus!==undefined&&typeof eop_target_meta==="function"?eop_target_meta(role,focus):null
+    const needsGround=!!(focusMeta&&focusMeta.requiresOccupation)
+    const groundCommandable=id=>{const hq=byId.get(id);if(!hq)return 0
+        const range=Math.max(0,Number(hq.cr)||0)
+        return (view?.ai?.units||[]).filter(u=>u.faction===mine&&u.class==="ground"&&u.location>=0
+            &&(!(Number(hq.supply)||0)||((Number(u.supply)||0)&Number(hq.supply)))
+            &&typeof get_distance==="function"&&get_distance(hq.location,u.location)<=range).length}
+    // REDEPLOY(撤离)类战略要调动的单位是明确编号的 requiredUnits，并非“指挥部范围内
+    // 任意兵力”。旧排序只按范围内单位总数挑 HQ，导致撤离马来亚/菲律宾时选到兵多但
+    // 根本不含待撤离单位的 Central Pacific HQ，产生“激活 0 单位”的空攻势。这里把
+    // “能指挥到待撤离单位”的 HQ 提到最前，其余照旧。
+    const required=new Set()
+    if(Array.isArray(axis?.targetMeta))for(const t of axis.targetMeta)
+        if(t&&t.kind==="REDEPLOY"&&Array.isArray(t.requiredUnits))for(const u of t.requiredUnits)required.add(u)
+    const requiredCount=id=>{if(!required.size)return 0
+        const hq=byId.get(id);if(!hq)return 0
+        const range=Math.max(0,Number(hq.cr)||0)
+        return (view?.ai?.units||[]).filter(u=>required.has(u.id)&&u.faction===mine&&u.location>=0
+            &&(!(Number(hq.supply)||0)||((Number(u.supply)||0)&Number(hq.supply)))
+            &&typeof get_distance==="function"&&get_distance(hq.location,u.location)<=range).length}
     const score=id=>{const u=byId.get(id),d=u&&focus!==null&&focus!==undefined&&typeof get_distance==="function"?get_distance(u.location,focus):99
         const preview=typeof erasmus_preview_activatable_units==="function"?erasmus_preview_activatable_units(id):null
         const n=Array.isArray(preview)?preview.length:commandable(id)
         // 先排除“名义上符合战略、实际上范围内没有任何兵力”的 HQ；多个可用 HQ
-        // 再按图表指定 HQ、目标距离和效能排序。
-        return [n>0?0:1,u&&preferred.test(String(u.name||""))?0:1,-n,d,-(u?.cm||0),-(u?.cr||0),id]}
+        // 再按图表指定 HQ、目标距离和效能排序。夺占目标优先要“有地面军”的 HQ。
+        return [n>0?0:1,needsGround?(groundCommandable(id)>0?0:1):0,
+            u&&preferred.test(String(u.name||""))?0:1,-requiredCount(id),-n,d,-(u?.cm||0),-(u?.cr||0),id]}
     return candidates.slice().sort((a,b)=>{const x=score(a),y=score(b);for(let i=0;i<x.length;i++)if(x[i]!==y[i])return x[i]-y[i];return 0})[0]
 }
 function planReaction(view,candidates,action,role,strategy){

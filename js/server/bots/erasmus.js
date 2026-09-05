@@ -150,10 +150,12 @@ function target_argument(action, value, seedText, role, view, strategy) {
         const meta = focus === null ? null : eop_target_meta(role, focus)
         const axis = eop_axis(role)
         return {
+            ...(meta || {}),
             focus,
             kind: meta?.kind || null,
             requiresOccupation: !!meta?.requiresOccupation,
             axisKind: axis?.kind || null,
+            strictSequential: !!axis?.strictSequential || !!meta?.strictSequential,
             chain: Array.isArray(axis?.chain) ? axis.chain.slice() : [],
             targetMeta: Array.isArray(axis?.targetMeta) ? axis.targetMeta.map(x=>({...x})) : [],
         }
@@ -232,12 +234,16 @@ function target_argument(action, value, seedText, role, view, strategy) {
             return picked!==undefined?picked:pick_argument(pickValue,seedText,action,view)
         }
         const activationFocus = typeof eop_activation_focus_faction === "function"
-            ? eop_activation_focus_faction(role === "Japan" ? JP : AP, activeUnits.length) : eop_focus(role)
+            ? eop_activation_focus_faction(role === "Japan" ? JP : AP, activeUnits.length, view, pickValue) : eop_focus(role)
+        const activationMeta = eop_target_meta(role, activationFocus)
+        if (typeof eop_unit_matches_target === "function")
+            pickValue = pickValue.filter(u => eop_unit_matches_target(u, role, activationMeta, activationFocus))
         if (role === "Allies" && typeof eop_preserve_rear_air === "function") {
             const reachable = pickValue.filter(u => !eop_preserve_rear_air(u, role, activationFocus))
             if (reachable.length) pickValue = reachable
         }
         const planned = composeTaskForce(activationFocus, null, null, view, pickValue, role)
+        if (planned?.strict && planned.unit == null) return undefined
         const picked = planned && planned.unit !== undefined && planned.unit !== null
             ? planned.unit : eop_pick_unit(pickValue, role, activeUnits, activationFocus)
         return picked !== undefined ? picked : pick_argument(pickValue, seedText, action, view)
@@ -386,15 +392,22 @@ function evaluateChart(chart, view, context) {
     // 只剩空中单位)时, 继续选 unit 只会 toggle 撤销或触发无头移动死窗; 此时必须 done 收尾。
     if (/activate units/i.test(String(view.prompt || "")) && legal.includes("done") && legal.includes("unit")) {
         const unsel = new Set(Array.isArray(view?.unselect) ? view.unselect : [])
-        const forcePlan = composeTaskForce(view?.ai?.focus, null, null, view,
-            Array.isArray(view.actions.unit) ? view.actions.unit.filter(u=>!unsel.has(u)) : [], context.role)
-        // 若过滤后为空(只剩已激活单位), 则 done 收尾。
+        const selectedCount = view.offensive?.active_units?.flat?.().length || 0
+        const activationFocus = typeof eop_activation_focus_faction === "function"
+            ? eop_activation_focus_faction(context.role === "Japan" ? JP : AP, selectedCount, view,
+                Array.isArray(view.actions.unit) ? view.actions.unit.filter(u=>!unsel.has(u)) : []) : view?.ai?.focus
+        const activationMeta = eop_target_meta(context.role, activationFocus)
+        // 先算出与 target_argument 完全一致的“可新增单位”集(剔 unselect/HQ/B29/后方空优/
+        // 不匹配目标), 再交给 composeTaskForce 与 done 判定, 避免 forcePlan 看到 HQ/B29 而
+        // target_argument 已剔除它 → 返回 undefined 撤销已选单位, 形成 toggle 死循环。
         const addable = (Array.isArray(view.actions.unit) ? view.actions.unit : [])
             .filter(u => !unsel.has(u))
             .filter(u => { try { return !pieces[u] || pieces[u].class !== "hq" } catch (e) { return true } })
             .filter(u => { try { return esm_gate_on() || !pieces[u] || pieces[u].class !== "air" } catch (e) { return true } })
             .filter(u => { try { return typeof eop_preserve_ready_b29 !== "function" || !eop_preserve_ready_b29(u, context.role) } catch (e) { return true } })
-            .filter(u => { try { return typeof eop_preserve_rear_air !== "function" || !eop_preserve_rear_air(u, context.role, view?.ai?.focus) } catch (e) { return true } })
+            .filter(u => { try { return typeof eop_preserve_rear_air !== "function" || !eop_preserve_rear_air(u, context.role, activationFocus) } catch (e) { return true } })
+            .filter(u => typeof eop_unit_matches_target !== "function" || eop_unit_matches_target(u, context.role, activationMeta, activationFocus))
+        const forcePlan = composeTaskForce(activationFocus, null, null, view, addable, context.role)
         const selected = progress ? Number(progress[1]) : (view.offensive?.active_units?.flat?.().length || 0)
         // HQ 加成可因新激活单位的军种/区域而下降。提示“2 of 3 (2 + 1)”中的括号前值
         // 才是不会随下一次选择反噬的稳定上限；达到它就结束，避免 2/3→3/2→撤销 的循环。
@@ -406,6 +419,7 @@ function evaluateChart(chart, view, context) {
         // 没有新增合法候选时才结束。本规则不改变引擎给出的合法单位集合。
         if (selected < limit && addable.length > 0) action = "unit"
         else action = "done"
+        if (forcePlan?.strict && forcePlan.unit == null) action = "done"
         // 两栖登陆无护航可用: 在本窗尚未激活任何单位时提前 done(空攻势), 避免把两栖地面
         // 送去敌占/敌控港口硬登陆吃 "Amphibious Assault failed"。已有已激活单位时不再阻断
         // (那些单位已注定走无头推进, 由 eop_pick_unit 的护航逻辑尽量补海军)。

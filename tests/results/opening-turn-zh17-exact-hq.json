@@ -1,0 +1,422 @@
+{
+  "policy": "erasmus-v2.0-zh.17",
+  "seeds": [
+    20260903,
+    20260922
+  ],
+  "games": [
+    {
+      "seed": 20260903,
+      "actions": 245,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 2,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C132 played as event."
+        },
+        {
+          "side": "Japan",
+          "card": "C124 played as event."
+        }
+      ],
+      "manilaBattles": 3
+    },
+    {
+      "seed": 20260904,
+      "actions": 159,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C87 played as event."
+        }
+      ],
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260905,
+      "actions": 186,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "manilaBattles": 3
+    },
+    {
+      "seed": 20260906,
+      "actions": 248,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260907,
+      "actions": 236,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C117 played as operation card."
+        }
+      ],
+      "manilaBattles": 5
+    },
+    {
+      "seed": 20260908,
+      "actions": 266,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C122 played as event."
+        }
+      ],
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260909,
+      "actions": 292,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260910,
+      "actions": 254,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 2,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C134 played as event."
+        },
+        {
+          "side": "Japan",
+          "card": "C132 played as event."
+        }
+      ],
+      "manilaBattles": 3
+    },
+    {
+      "seed": 20260911,
+      "actions": 256,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 1,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C134 played as event."
+        }
+      ],
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260912,
+      "actions": 219,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C138 played as operation card."
+        }
+      ],
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260913,
+      "actions": 205,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 1,
+      "zeroActivationCards": [
+        {
+          "side": "Allies",
+          "card": "C84 played as event."
+        }
+      ],
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260914,
+      "actions": 255,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260915,
+      "actions": 231,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260916,
+      "actions": 302,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": true,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 2,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C156 played as operation card."
+        },
+        {
+          "side": "Japan",
+          "card": "C161 played as operation card."
+        }
+      ],
+      "manilaBattles": 3
+    },
+    {
+      "seed": 20260917,
+      "actions": 230,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260918,
+      "actions": 260,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C100 played as event."
+        }
+      ],
+      "manilaBattles": 4
+    },
+    {
+      "seed": 20260919,
+      "actions": 187,
+      "turn": 3,
+      "manilaCaptured": false,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 1,
+      "apNoUnits": 0,
+      "zeroActivationCards": [
+        {
+          "side": "Japan",
+          "card": "C100 played as event."
+        }
+      ],
+      "manilaBattles": 2
+    },
+    {
+      "seed": 20260920,
+      "actions": 248,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260921,
+      "actions": 284,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 0,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "manilaBattles": 1
+    },
+    {
+      "seed": 20260922,
+      "actions": 317,
+      "turn": 3,
+      "manilaCaptured": true,
+      "balikpapanCaptured": false,
+      "tarakanCaptured": false,
+      "deiCaptureCount": 1,
+      "amphibiousEscortFailures": 0,
+      "jpNoUnits": 0,
+      "apNoUnits": 0,
+      "zeroActivationCards": [],
+      "manilaBattles": 2
+    }
+  ],
+  "manilaCapturedGames": 16,
+  "balikpapanCapturedGames": 2,
+  "tarakanCapturedGames": 0,
+  "anyDeiCapturedGames": 5,
+  "amphibiousEscortFailures": 1,
+  "japaneseZeroActivationOffensives": 13,
+  "alliedZeroActivationOffensives": 1,
+  "manilaBattles": 40,
+  "zeroActivationCards": [
+    {
+      "side": "Japan",
+      "card": "C132 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C124 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C87 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C117 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C122 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C134 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C132 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C134 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C138 played as operation card."
+    },
+    {
+      "side": "Allies",
+      "card": "C84 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C156 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C161 played as operation card."
+    },
+    {
+      "side": "Japan",
+      "card": "C100 played as event."
+    },
+    {
+      "side": "Japan",
+      "card": "C100 played as event."
+    }
+  ]
+}

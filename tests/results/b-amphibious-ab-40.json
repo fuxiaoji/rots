@@ -1,0 +1,47 @@
+{
+ "topic": "B 引擎占格/登岛执行 — 同种子 A/B (40 局, seeds 20260903-20260942, 1942-1945 Shortened headless)",
+ "method": "逐 action 扫 state.log 增量计数逐格夺控行 /^(?:&A)?AP captured H(d+)/ (会战窗 &A 前缀; 夺格常在对方 done/next 边界结算, 故不限 role; 同 action 同格去重)。修正早期实现只扫 role==Allies 动作增量导致的系统性低估(曾误报基线 0 夺岛)。终局仍以 PW 条约日本全胜(~t8-12)结束。",
+ "arms": {
+  "baseline": {
+   "env": "B_CRUISE=0 B_BIAS=0",
+   "complete": 40,
+   "error": 0,
+   "actionLimit": 0,
+   "totalCaptures": 193,
+   "avgPerGame": 4.8,
+   "islandSeeds": 26,
+   "islandEvents": 70,
+   "reach": {
+    "Saipan": 5,
+    "Guam": 8,
+    "Iwo Jima": 8,
+    "Eniwetok": 5,
+    "Palau": 1,
+    "Ulithi": 1,
+    "Manila": 0,
+    "Okinawa": 0
+   }
+  },
+  "fix": {
+   "env": "默认(B_CRUISE/B_BIAS 开)",
+   "complete": 40,
+   "error": 0,
+   "actionLimit": 0,
+   "totalCaptures": 497,
+   "avgPerGame": 12.4,
+   "islandSeeds": 39,
+   "islandEvents": 290,
+   "reach": {
+    "Saipan": 15,
+    "Guam": 20,
+    "Iwo Jima": 32,
+    "Eniwetok": 33,
+    "Palau": 11,
+    "Ulithi": 17,
+    "Manila": 0,
+    "Okinawa": 0
+   }
+  }
+ },
+ "boundary": "马尼拉/冲绳/日本本土终局控制 0/40: 引擎已能把两栖力量送到中太平洋纵深(伊 32/40 局达硫磺岛、恩尼威托克 33/40), 但剧本在 ~t8-12 由日本 PW 条约先胜终止, 冲绳/本土不在时间窗内。"
+}

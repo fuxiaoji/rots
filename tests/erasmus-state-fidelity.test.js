@@ -99,11 +99,26 @@ eq(alE, { al_D_arcadia_played: true, al_E_cbi_def_established: true, al_P_abda_h
 const alM = T.al_mid
 eq(alM, { can_pass: true }, "PASS", "can_pass")
 eq(alM, { al_M_B_needs_war_progress: true, al_M_D_jp_controls_counterattack_target: true }, "反攻战略", "需战争进程 + 有反攻目标")
-eq(alM, { cards_in_hand: 2 }, "事件战略", "cards<3 (war-progress 条件 cards>=3 失败)")
+eq(alM, { cards_in_hand: 2 }, "南太平洋战略", "PoW亏空且cards<3：卡牌分组后掷骰，不进入事件", 0)
+eq(alM, { cards_in_hand: 2, al_M_B_needs_war_progress: false }, "事件战略", "无PoW亏空且cards<3才进入事件")
+eq(alM, { al_M_D_jp_controls_counterattack_target: false }, "DEI战略", "PoW亏空但无反攻目标：卡牌分组后掷骰", 8)
 eq(alM, { al_M_B_needs_war_progress: false }, "南太平洋战略", "roll<=4", 0)
 eq(alM, { al_M_B_needs_war_progress: false }, "中太平洋战略", "roll 5..7", 5)
 eq(alM, { al_M_B_needs_war_progress: false }, "DEI战略", "roll==8", 8)
 eq(alM, { al_M_B_needs_war_progress: false }, "CBI战略", "roll==9", 9)
+// Follow actual PDF arrows for every PoW/card-count/counterattack combination.
+const ap8Chart = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "data", "erasmus", "charts.json"), "utf8")).charts.find(c=>c.id === "ERASMUS-AP-08")
+for (const needsPow of [false, true]) for (const cards of [1, 2, 3, 5]) for (const counter of [false, true]) {
+    const ctx = {...defaults(), al_M_B_needs_war_progress: needsPow, cards_in_hand: cards, al_M_D_jp_controls_counterattack_target: counter}
+    alM(ctx, 8)
+    const nodePath = ctx._nodePath
+    for (let i = 0; i + 1 < nodePath.length; ++i) {
+        const node = ap8Chart.nodes.find(n=>n.id === nodePath[i])
+        assert(node?.edges?.some(e=>e.to === nodePath[i + 1]), `AP08 impossible arrow ${nodePath[i]} -> ${nodePath[i + 1]}`)
+    }
+    assert.equal(nodePath.includes("AP08-CARD-GROUP"), needsPow && !(cards >= 3 && counter), "card grouping is required only on failed C+D")
+    count++
+}
 
 // ---- AL 晚期 (页9 / py evaluate_late L720-743) ------------------------------
 const alL = T.al_late

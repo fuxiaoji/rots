@@ -1,0 +1,59 @@
+{
+  "generatedAt": "2026-09-04T14:31:28.735Z",
+  "tally": {
+    "policy": "erasmus-v2.0-zh.10",
+    "scenario": "--help",
+    "gameCount": 50,
+    "baseSeed": 20260903,
+    "maxActions": 60000,
+    "headless_moves": false,
+    "complete": 0,
+    "japanWins": 0,
+    "alliesWins": 0,
+    "otherWins": 0,
+    "errors": 0,
+    "setupErrors": 50,
+    "actionLimit": 0,
+    "fallback": 0,
+    "groundMove": 0,
+    "capturedAP": 0,
+    "capturedJP": 0,
+    "atomicBombWins": 0,
+    "role": {
+      "Japan": {
+        "decisions": 0,
+        "byKind": {
+          "axis": 0,
+          "card": 0,
+          "taskforce": 0,
+          "reaction": 0,
+          "?": 0
+        },
+        "airStrikeUnits": 0,
+        "airStrikeHexes": 0,
+        "fire": 0,
+        "advance": 0
+      },
+      "Allies": {
+        "decisions": 0,
+        "byKind": {
+          "axis": 0,
+          "card": 0,
+          "taskforce": 0,
+          "reaction": 0,
+          "?": 0
+        },
+        "airStrikeUnits": 0,
+        "airStrikeHexes": 0,
+        "fire": 0,
+        "advance": 0
+      }
+    },
+    "noBattleHex": 0,
+    "unexplainedNoBattle": 0,
+    "traceNodeMissing": 0,
+    "strategyCounts": {}
+  },
+  "perGame": [],
+  "errors": []
+}

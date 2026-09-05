@@ -1,0 +1,60 @@
+{
+  "generatedAt": "2026-09-04T10:03:55.102Z",
+  "summary": {
+    "policy": "erasmus-v2.0-zh.7",
+    "scenario": "South Pacific",
+    "gameCount": 3,
+    "baseSeed": 424242,
+    "maxActions": 20000,
+    "complete": 3,
+    "japanWins": 3,
+    "alliesWins": 0,
+    "draws": 0,
+    "actionLimit": 0,
+    "errors": 0,
+    "fallbackActions": 0,
+    "averageActions": 361,
+    "averageTurn": 6
+  },
+  "games": [
+    {
+      "seed": 424242,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 359,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 169,
+        "Allies": 190
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424243,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 369,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 176,
+        "Allies": 193
+      },
+      "message": "Japanese Decisive Victory"
+    },
+    {
+      "seed": 424244,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 355,
+      "turn": 6,
+      "fallback": 0,
+      "roleActions": {
+        "Japan": 153,
+        "Allies": 202
+      },
+      "message": "Japanese Decisive Victory"
+    }
+  ]
+}

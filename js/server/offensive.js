@@ -1141,6 +1141,16 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
         : steer && typeof eop_advance_tiebreak === "function" ? eop_advance_tiebreak(hex, faction) : -1
     const nearKey = hex => approach >= 0 ? approach : headless_nearest_enemy_dist(hex, 1 - faction)
     if (kind === "attack") {
+        // 驻军和指定撤离的终点是己方位置；不能把这些激活改成就近攻击。
+        if (strategicMeta && (strategicMeta.kind === "REDEPLOY" || strategicMeta.kind === "GARRISON" || strategicMeta.kind === "PORTS")) {
+            if (!is_space_controlled(hex, faction) || eu.count > 0) return null
+            const md = get_map_data(hex)
+            if (movingPiece?.class === "air" && !md?.airfield) return null
+            if (movingPiece?.class === "naval" && !md?.port) return null
+            const d = get_distance(hex, strategicFocus)
+            if (hex !== strategicFocus && d >= get_distance(source, strategicFocus)) return null
+            return [hex === strategicFocus ? -5 : 2, d, get_distance(source, hex), hex]
+        }
         // 盟军开局的事件/撤退战略可能没有地图焦点。旧的通用“最近敌军”退化会让
         // 夏威夷舰机跨海选择日本本土，形成图表外自杀攻势。只有当前实际战略焦点
         // 本身位于日本区域时，盟军才可把日本本土列为战斗格。
@@ -1188,6 +1198,13 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
                 return [-3, eu.naval, eu.count, hex]
             }
             return [-2, eu.ground, eu.count, hex]
+        }
+        // 硬串行目标和明确的前进部署分支只准接近当前目标，不能绕路夺下一岛。
+        if (strategicMeta?.strictSequential || strategicMeta?.advanceBaseIfUnreachable || targetPlan?.strictSequential) {
+            if (!is_space_controlled(hex, faction) || eu.count > 0) return null
+            const d = get_distance(hex, strategicFocus)
+            if (d >= get_distance(source, strategicFocus)) return null
+            return [3, d, get_distance(source, hex), hex]
         }
         if (eu.count > 0) {
             if (hasGround) return [0, eu.ground, eu.count, nearKey(hex), hex]
@@ -1245,7 +1262,9 @@ function headless_advance_has_candidates(kind) {
             let f = null
             try { f = eop_focus_faction(G.active) } catch (e) { f = null }
             const br = p.parenthetical ? Number(p.br) : Number(p.ebr || p.br)
-            if (f !== null && get_distance(h, f) <= Math.max(1, br || 1)) continue
+            const meta = f !== null && typeof eop_target_meta === "function" ? eop_target_meta(G.active===JP?"Japan":"Allies",f) : null
+            const relocation = meta && (meta.kind === "REDEPLOY" || meta.kind === "GARRISON" || meta.kind === "PORTS")
+            if (!relocation && f !== null && get_distance(h, f) <= Math.max(1, br || 1)) continue
         }
         if (kind === "attack") return true
         if (kind === "pbm" && (p.class === "air" || !could_unit_stop_here(u))) return true
@@ -1258,18 +1277,32 @@ function headless_advance_has_candidates(kind) {
 // 返回 {type:"move"} 已排定一次移动(子窗随后运行), {type:"decline"} 放弃一组单位, {type:"none"} 无候选。
 function headless_advance_one(self, kind, targetPlan) {
     if (G.active_stack.length) return { type: "decline" }
+    // 同一张牌可激活多个指定调动任务。每次移动重新从保存的任务表绑定可移动单位，
+    // 例如 SL 与 FEAF 均到 Manila，而 P 旅仍应独立到 Biak。
+    if (kind === "attack" && targetPlan?.targetMeta?.some(m=>m.requiredUnits || m.escortPairs)) {
+        const role=G.active===JP?"Japan":"Allies"
+        for (const h of targetPlan.chain || []) {
+            const meta=targetPlan.targetMeta.find(m=>m.hex===h)
+            if(!meta || typeof eop_target_pending!=="function" || !eop_target_pending(role,h,meta))continue
+            const matching=L.movable_units.some(u=>G.location[u]!==h && eop_unit_matches_target(u,role,meta,h))
+            if(matching){targetPlan={...targetPlan,...meta,focus:h};break}
+            if(meta.strictSequential)break
+        }
+    }
     const need = u => {
         const p = pieces[u]
         if (!p || (p.class === "air" && kind !== "pbm" && kind !== "attack")) return false
         const h = G.location[u]
         if (!(h >= 0 && h <= LAST_BOARD_HEX)) return false
+        if(kind==="attack" && targetPlan?.kind==="REDEPLOY" && h===targetPlan.focus)return false
         if (kind === "attack" && p.class === "air") {
             let f = targetPlan && Number.isInteger(targetPlan.focus) ? targetPlan.focus : null
             if (f === null && typeof eop_focus_faction === "function") {
                 try { f = eop_focus_faction(G.active) } catch (e) { f = null }
             }
             const br = p.parenthetical ? Number(p.br) : Number(p.ebr || p.br)
-            if (f !== null && get_distance(h, f) <= Math.max(1, br || 1)) return false
+            const relocation = targetPlan && (targetPlan.kind === "REDEPLOY" || targetPlan.kind === "GARRISON" || targetPlan.kind === "PORTS")
+            if (!relocation && f !== null && get_distance(h, f) <= Math.max(1, br || 1)) return false
         }
         if (kind === "attack") return true
         if (kind === "pbm") return p.class === "air" || !could_unit_stop_here(u)
@@ -1279,6 +1312,8 @@ function headless_advance_one(self, kind, targetPlan) {
     let loc = -1, lead = -1, leadScore = null
     for (const u of L.movable_units) {
         if (!need(u)) continue
+        if (kind === "attack" && targetPlan && typeof eop_unit_matches_target === "function"
+            && !eop_unit_matches_target(u, G.active === JP ? "Japan" : "Allies", targetPlan, targetPlan.focus)) continue
         const h = G.location[u]
         const p=pieces[u]
         // PBM 按图表 A/B/C：航空先、海上次、失败两栖地面最后；航空同类先处理最强单位。
@@ -1292,12 +1327,20 @@ function headless_advance_one(self, kind, targetPlan) {
     const group = L.movable_units.filter(u => {
         const p = pieces[u]
         if(!p||G.location[u]!==loc)return false
+        if(kind==="attack" && targetPlan && typeof eop_unit_matches_target === "function"
+            && !eop_unit_matches_target(u,G.active===JP?"Japan":"Allies",targetPlan,targetPlan.focus))return false
+        if(kind==="attack" && targetPlan?.escortPairs?.length){
+            const pair=targetPlan.escortPairs.find(x=>x.ground===lead||x.carrier===lead)
+            if(!pair || (u!==pair.ground&&u!==pair.carrier))return false
+        }
         // 航空 PBM 每机场最多一机，逐个移动；海军/失败地面仍按同格同类编组。
         if((kind==="pbm"||kind==="attack")&&leadPiece.class==="air")return u===lead
         if(kind==="pbm")return p.class===leadPiece.class
         return p.class!=="air"
     })
     if (!group.length) return { type: "none" }
+    if(kind==="attack" && targetPlan?.escortRequired && targetPlan.escortPairs?.length
+        && !targetPlan.escortPairs.some(p=>group.includes(p.ground)&&group.includes(p.carrier)))return {type:"none"}
     // 逐个真实选入(获得 organic 配对/移动路径语义, 并从 movable 移除以保证单窗只走一次)
     group.forEach(u => self.unit(u))
     L.move_data = get_move_data()
@@ -1312,7 +1355,10 @@ function headless_advance_one(self, kind, targetPlan) {
     }
     const focusDistance = plannedFocus !== null ? get_distance(loc, plannedFocus) : 0
     const farFromFocus = plannedFocus !== null && focusDistance > 8
-    if (kind === "attack" && leadPiece.class === "air" && leadPiece.parenthetical && farFromFocus) {
+    const semanticModes = kind === "attack" && Array.isArray(targetPlan?.movementModes) ? targetPlan.movementModes : []
+    if (semanticModes.includes("STRATEGIC") || semanticModes.includes("SR")) {
+        plannedMoveType = STRAT_MOVE
+    } else if (kind === "attack" && leadPiece.class === "air" && leadPiece.parenthetical && farFromFocus) {
         plannedMoveType = AIR_EXTENDED_MOVE
     } else if (kind === "attack" && leadPiece.class !== "air" && L.move_data.sm_possible && focusDistance > 12) {
         plannedMoveType = STRAT_MOVE
@@ -1321,7 +1367,7 @@ function headless_advance_one(self, kind, targetPlan) {
         L.move_type = plannedMoveType
         L.move_data = get_move_data()
         update_move_hex()
-        if (!L.allowed_hexes.length) {
+        if (!L.allowed_hexes.length && !semanticModes.includes("STRATEGIC") && !semanticModes.includes("SR")) {
             plannedMoveType = ANY_MOVE
             L.move_type = ANY_MOVE
             L.move_data = get_move_data()
@@ -1334,15 +1380,34 @@ function headless_advance_one(self, kind, targetPlan) {
     const steer = kind === "attack" && ((targetPlan && Number.isInteger(targetPlan.focus))
         || group.some(u => pieces[u] && pieces[u].class === "naval"))
     let best = null, bestScore = null
-    map_for_each(L.allowed_hexes, (h) => {
+    let bestPath = null, bestMoveType = plannedMoveType
+    const movementOptions = semanticModes.length && hasGround
+        ? semanticModes.map(m=>m==="GROUND"?GROUND_MOVE:m==="AA"?AMPH_MOVE:(m==="STRATEGIC"||m==="SR")?STRAT_MOVE:ANY_MOVE)
+        : [plannedMoveType]
+    for (let modeIndex=0; modeIndex<movementOptions.length; ++modeIndex) {
+        const mode=movementOptions[modeIndex]
+        L.move_type=mode
+        L.move_data=get_move_data()
+        update_move_hex()
+        map_for_each(L.allowed_hexes, (h) => {
+        const path=map_get(L.allowed_hexes,h)
+        if (hasGround && mode===GROUND_MOVE && !(path[0]&GROUND_MOVE)) return
+        if (hasGround && mode===AMPH_MOVE && !(path[0]&AMPH_MOVE)) return
+        if (mode===STRAT_MOVE && !(path[0]&STRAT_MOVE)) return
         const sc = headless_target_score(h, hasGround, G.active, kind, steer, leadPiece, loc, targetPlan)
         if (!sc) return
+        // 优先方式只在同样能完成目标时优先；不能因陆路只够前进一步而压过可直接登陆。
+        sc.splice(1,0,modeIndex)
         if (!best || headless_score_lt(sc, bestScore)) {
             bestScore = sc
             best = h
+            bestPath=object_copy(path)
+            bestMoveType=mode
         }
-    })
+        })
+    }
     if (best === null && kind === "attack" && hasGround && L.move_data && (L.move_data.move_type & AMPH_MOVE)
+        && !semanticModes.length && !targetPlan?.strictSequential
         && ((typeof process === "undefined") || process.env.B_CRUISE !== "0")) {
         // B: 两栖编成“空海巡航”。焦点是敌占/待夺格但本激活够不着(允许落点里没有任何敌控
         // 格)时, 原实现直接放弃该组 → 海军陆战队永远停在原地, 无法把跨洋远征拉近目标;
@@ -1371,7 +1436,9 @@ function headless_advance_one(self, kind, targetPlan) {
         L.move_type = ANY_MOVE
         return { type: "decline" }
     }
-    const path = object_copy(map_get(L.allowed_hexes, best))
+    const path = bestPath || object_copy(map_get(L.allowed_hexes, best))
+    L.move_type = bestMoveType
+    L.move_data = get_move_data()
     L.allowed_hexes = []
     G.offensive.organic = G.offensive.organic.filter(u => !set_has(group, u))
     push_undo()

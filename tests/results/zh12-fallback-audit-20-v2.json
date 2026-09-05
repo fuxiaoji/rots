@@ -1,0 +1,16 @@
+{
+  "complete": 20,
+  "games": 20,
+  "actions": 57672,
+  "fallbacks": 0,
+  "pbmNodes": {
+    "AP12-S-PBM-SEA": 229,
+    "JP06-S-PBM-AIR": 2345,
+    "AP12-S-PBM-AIR": 2641,
+    "JP06-S-PBM-SEA": 152,
+    "AP12-S-PBM-AA": 31,
+    "JP06-S-PBM-AA": 19
+  },
+  "groups": {},
+  "examples": []
+}
