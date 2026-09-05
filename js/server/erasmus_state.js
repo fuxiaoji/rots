@@ -17,7 +17,8 @@
 
 // ---- 策略 kind(策略级: 驱动选牌窗/微执行) --------------------------------
 // CONQUEST: 有序夺控/作战目标链(喂 eop 焦点层); EVENT: 事件战略(选事件牌);
-// PASS: 本回合跳; GARRISON/DEFEND: v1 有界近似(按 EVENT 微执行, trace 标注);
+// PASS: 本回合跳; GARRISON: 只向日本仍控制但缺指定兵种的国防圈格调动;
+// DEFEND: 围绕本州盟军地面部队集结、支援并反击，禁止回落到南方资源轴;
 // ABSTRACT: 抽象目标(B29/原子弹)。D4 起不再按 EVENT 空打事件 —— 用 OC 打攻势把
 // 抽象目标落成可执行链(推进B29=前推轰炸基地链/使 B29 可达; 原子弹胜利=资源夺回链),
 // 选牌窗意图 = OPS(原子弹胜利持苏联牌时优先事件)。
@@ -230,6 +231,20 @@ function esm_has_class_at(hex, faction, cls) {
     for (let u = 1; u < pieces.length; ++u)
         if (pieces[u].faction === faction && pieces[u].class === cls && G.location[u] === hex) return true
     return false
+}
+
+// 第3页脚注[2]：驻军全称量词只覆盖“日本仍控制”的格。盟军已经占领的港口/机场
+// 不属于最终国防圈的驻军对象；把它们纳入 every() 会让 BC 永久为假，进而永远无法
+// 进入 E“盟军地面单位在本州？”与最终防御战略。
+function esm_jp_final_perimeter_status() {
+    const ports = esm_geo().portsWithin8Tokyo.filter(h => is_space_controlled(h, JP))
+    const airfields = esm_geo().airfieldsWithin5.filter(h => is_space_controlled(h, JP))
+    return {
+        portsGarrisoned: ports.every(h => esm_has_class_at(h, JP, "ground")),
+        airfieldsGarrisoned: airfields.every(h => esm_has_class_at(h, JP, "air")),
+        consideredPorts: ports,
+        consideredAirfields: airfields,
+    }
 }
 function esm_large_ground_steps(faction, regionPred) {
     let steps = 0
@@ -447,6 +462,13 @@ function esm_strategy_targets(strategy) {
         if (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ") {
             const mine = esm_role_faction(strategy.role)
             try { target.achieved = !has_zoi(h, 1 - mine) } catch (e) { target.achieved = false }
+        } else if (meta.kind === "GARRISON") {
+            const mine = esm_role_faction(strategy.role)
+            try {
+                const controlled = is_space_controlled(h, mine)
+                target.ignored = !controlled
+                target.achieved = !controlled || esm_has_class_at(h, mine, meta.garrisonClass || "ground")
+            } catch (e) { target.achieved = false }
         }
         return target
     })
@@ -461,12 +483,30 @@ function esm_goal_target_meta(goals) {
             if (seen.has(hex)) continue
             seen.add(hex)
             const suppress = goal.kind === "SUPPRESS"
-            out.push({ hex, kind: goal.kind, objective: goal.text,
+            const garrisonClass = goal.kind === "GARRISON" ? (/机场/.test(goal.text) ? "air" : "ground") : null
+            out.push({ hex, kind: goal.kind, objective: goal.text, garrisonClass,
                 damageLevel: suppress ? 0.5 : 1,
                 requiresOccupation: goal.kind === "CONQUEST" || goal.kind === "INVADE_JAPAN" })
         }
     }
     return out
+}
+
+// 第3页最终防御[4]-[8]：实际作战焦点是本州上的盟军地面单位，而不是资源轴。
+// 目标位置按距东京、hex 稳定排序；操作层随后只从日本区域选集结/支援单位。
+function esm_jp_final_defense_targets() {
+    const found = new Map()
+    for (let u = 1; u < pieces.length; ++u) {
+        const p = pieces[u], h = G.location[u]
+        if (!p || p.faction !== AP || p.class !== "ground" || !(h >= 0 && h <= LAST_BOARD_HEX)) continue
+        const md = get_map_data(h)
+        if (!md || md.region !== "Japan") continue
+        if (!found.has(h)) found.set(h, {
+            hex: h, kind: "DEFEND_HONSHU", objective: "最终防御：集结、海空支援、板载冲锋",
+            damageLevel: 1, requiresOccupation: true, homeDefense: true,
+        })
+    }
+    return [...found.values()].sort((a, b) => get_distance(a.hex, TOKYO) - get_distance(b.hex, TOKYO) || a.hex - b.hex)
 }
 
 // 图表第1页的“压制盟军HQ”不是固定地图地名，而是三个会移动的 HQ 当前所在格。
@@ -533,8 +573,9 @@ function esm_build_ctx(role, lock, seedText) {
         ctx.jp_I_more_steps_in_burma = esm_large_ground_steps(JP, r => r === "Burma") > esm_large_ground_steps(AP, r => r === "Burma")
         ctx.jp_J_logistics_ge_18 = logistics >= 18
         // 晚期
-        ctx.jp_L_B_garrisons_within_8 = esm_geo().portsWithin8Tokyo.every(h => is_space_controlled(h, JP) && esm_has_class_at(h, JP, "ground"))
-        ctx.jp_L_C_airfields_within_5 = esm_geo().airfieldsWithin5.every(h => is_space_controlled(h, JP) && esm_has_class_at(h, JP, "air"))
+        const perimeter = esm_jp_final_perimeter_status()
+        ctx.jp_L_B_garrisons_within_8 = perimeter.portsGarrisoned
+        ctx.jp_L_C_airfields_within_5 = perimeter.airfieldsGarrisoned
         ctx.jp_L_E_allied_on_honshu = esm_count_ground(AP, r => r === "Japan") > 0
     } else {
         const surr = n => (G.surrender && G.surrender[n] ? true : false)
@@ -1035,6 +1076,11 @@ function esm_pin_strategy(view, context) {
         const dynamicHexes = new Set(dynamicTargets.map(target => target.hex))
         targetMeta = dynamicTargets.concat(targetMeta.filter(target => !dynamicHexes.has(target.hex)))
     }
+    if (role === "Japan" && name === "最终防御战略") {
+        dynamicTargets = esm_jp_final_defense_targets()
+        chain = dynamicTargets.map(target => target.hex)
+        targetMeta = dynamicTargets.slice()
+    }
     // D4: ABSTRACT 自身无 hex 链(纯文本目标), 落到可执行回退链, 让 eop 焦点层在"推进B29/
     // 原子弹胜利"钉住期间仍有可打的主攻方向:
     //   推进B29   -> 占领轰炸基地(把基地前推到距东京 ≤8, B29 才谈得上就位/轰炸);
@@ -1117,8 +1163,11 @@ function esm_card_window_action(strategy, view, context) {
         }
     }
     if (strategy.kind === "GARRISON" || strategy.kind === "DEFEND") {
-        // v1 有界近似: 国防圈/最终防御 -> 事件微执行(打事件/低值牌), 保留大 OC 卡。
-        return esm_choose_card(hand, "event", legal, strategy)
+        // 国防圈与最终防御都需要实际激活、移动和会战。第4页若已经选中可执行
+        // 军事事件，chartPick 会在上方返回并保留 event 意图；其余情况必须选 OC，
+        // 不能用低值事件把整个防御行动窗口耗掉。
+        return esm_choose_card(hand, "ops", legal, strategy)
+            || esm_choose_card(hand, "event", legal, strategy)
     }
     if (strategy.kind === "ABSTRACT") {
         // D4: 推进B29/原子弹胜利 = 打 OC 攻势把基地/资源链推向完成(而非当事件空耗)。
@@ -1332,8 +1381,9 @@ function esm_card_action_window_action(strategy, view, context) {
         strategy.cardIntent = null
         return { action: intent, argument: undefined, via: `${strategy.cardTreeNode || strategy.name}:${intent}` }
     }
-    const wantEvent = strategy.kind === "EVENT" || strategy.kind === "GARRISON" || strategy.kind === "DEFEND"
-    const wantOps = strategy.kind === "CONQUEST" || strategy.kind === "ABSTRACT"   // D4: ABSTRACT 走 OPS
+    const wantEvent = strategy.kind === "EVENT"
+    const wantOps = strategy.kind === "CONQUEST" || strategy.kind === "ABSTRACT"
+        || strategy.kind === "GARRISON" || strategy.kind === "DEFEND"
     if (wantOps && legal.includes("ops")) return { action: "ops", argument: undefined, via: strategy.name + ":ops" }
     if (wantEvent && legal.includes("event")) return { action: "event", argument: undefined, via: strategy.name + ":event" }
     // 所选牌的受限事件/OC不可用时，按第4/10页的其余合法用途继续；

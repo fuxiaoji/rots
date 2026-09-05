@@ -1079,9 +1079,34 @@ function erasmus_pbm_target_score(hex, faction, piece, source) {
 
 function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece, source) {
     const eu = headless_enemy_units_at(hex, 1 - faction)
+    let strategicFocus = null, strategicMeta = null, strategicAxis = null
+    if (typeof eop_focus_faction === "function") {
+        try {
+            strategicFocus = eop_focus_faction(faction)
+            strategicMeta = strategicFocus === null ? null : eop_target_meta(faction === JP ? "Japan" : "Allies", strategicFocus)
+            strategicAxis = eop_axis(faction === JP ? "Japan" : "Allies")
+        } catch (e) { strategicFocus = strategicMeta = strategicAxis = null }
+    }
     const approach = steer && typeof eop_advance_tiebreak === "function" ? eop_advance_tiebreak(hex, faction) : -1
     const nearKey = hex => approach >= 0 ? approach : headless_nearest_enemy_dist(hex, 1 - faction)
     if (kind === "attack") {
+        // 最终国防圈不是进攻目标表：只向己控驻军焦点移动；不可达时仅在己控格内
+        // 向焦点靠近。禁止纯海军落回“最近敌舰”而从本土远征南方资源区。
+        if (strategicMeta && strategicMeta.kind === "GARRISON") {
+            if (!is_space_controlled(hex, faction)) return null
+            const d = get_distance(hex, strategicFocus)
+            return [hex === strategicFocus ? 0 : 1, d, hex]
+        }
+        // 最终防御[4]-[8]只围绕本州盟军地面单位。允许地面、空中/海军支援进入
+        // 当前本州焦点；不可直接到达时，只在日本区域己控格内集结。
+        if (strategicMeta && strategicMeta.kind === "DEFEND_HONSHU") {
+            if (hex === strategicFocus && eu.count > 0) return [0, hasGround ? 0 : 1, eu.ground, hex]
+            const md = get_map_data(hex)
+            if (!md || md.region !== "Japan" || !is_space_controlled(hex, faction)) return null
+            return [1, get_distance(hex, strategicFocus), hex]
+        }
+        // GARRISON/DEFEND 显式战略即使暂时无焦点，也不得使用通用远征目标。
+        if (strategicAxis && (strategicAxis.kind === "GARRISON" || strategicAxis.kind === "DEFEND")) return null
         if (eu.count > 0) {
             if (hasGround) return [0, eu.ground, eu.count, nearKey(hex), hex]
             if (eu.naval > 0) return [0, eu.naval, eu.count, nearKey(hex), hex]

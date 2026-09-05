@@ -104,10 +104,12 @@ function eop_axis_chain(role) {
 // 该方当前应当遵循的主轴; 无主轴(如日本资源已足、转入防守)返回 null。
 function eop_axis(role) {
     const ov = EOP_OVERRIDE[role]
-    if (ov && ((ov.tokens && ov.tokens.length) || (Array.isArray(ov.chain) && ov.chain.length))) {
+    // 状态机显式给出一个战略时，即使其目标链为空（事件、已完成驻军、暂时没有本州
+    // 登陆部队），也必须阻断旧的默认资源轴。旧判断会把空链战略悄悄替换成 JP_RESOURCE。
+    if (ov) {
         return { id: ov.name || (role + "_AXIS"), role: role,
             note: ov.note ? `${ov.name} — ${ov.note}` : (ov.name || role + "轴"),
-            tokens: ov.tokens || [], chain: ov.chain || [], targetMeta: ov.targetMeta || [] }
+            kind: ov.kind || null, tokens: ov.tokens || [], chain: ov.chain || [], targetMeta: ov.targetMeta || [] }
     }
     if (role === "Allies") return EOP_AXES.AP
     // 日本: 控制资源 < 13 时抢南方资源; 达标后转入防守, 不再无谓远征。
@@ -134,6 +136,19 @@ function eop_focus(role) {
         // 到 Makassar；夺占类目标仍严格以控制权为完成条件。
         if (meta && (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ")) {
             if (typeof has_zoi === "function" && has_zoi(idx, 1 - mine)) return idx
+            continue
+        }
+        // 最终国防圈[2]：只考虑仍由日本控制的地点。己控地点必须有对应兵种驻军；
+        // 敌控地点既不算完成条件，也不转化成夺回目标。
+        if (meta && meta.kind === "GARRISON") {
+            if (!is_space_controlled(idx, mine)) continue
+            const required = meta.garrisonClass || "ground"
+            let occupied = false
+            for (let u = 1; u < pieces.length; ++u) {
+                const p = pieces[u]
+                if (p && p.faction === mine && p.class === required && G.location[u] === idx) { occupied = true; break }
+            }
+            if (!occupied) return idx
             continue
         }
         if (!is_space_controlled(idx, mine)) return idx
@@ -195,6 +210,26 @@ function eop_pick_unit(candidates, role, activeUnits) {
     const focus = eop_focus(role)
     if (typeof G === "undefined" || !G || !G.location) return undefined
     const mine = role === "Japan" ? JP : AP
+    const axis = eop_axis(role)
+    const focusMeta = focus === null ? null : eop_target_meta(role, focus)
+    if (focus !== null && axis && (axis.kind === "GARRISON" || axis.kind === "DEFEND")) {
+        const required = focusMeta && focusMeta.kind === "GARRISON" ? (focusMeta.garrisonClass || "ground") : null
+        const home = candidates.filter(u => {
+            const p = pieces[u], h = G.location[u], md = h >= 0 && h <= LAST_BOARD_HEX ? get_map_data(h) : null
+            if (!p || p.faction !== mine || !md) return false
+            if (required) return p.class === required
+            return md.region === "Japan" && (p.class === "ground" || p.class === "air" || p.class === "naval")
+        })
+        if (home.length) {
+            const cls = p => axis.kind === "DEFEND" ? (p.class === "ground" ? 0 : p.class === "air" ? 1 : 2) : 0
+            home.sort((a, b) => cls(pieces[a]) - cls(pieces[b])
+                || get_distance(G.location[a], focus) - get_distance(G.location[b], focus)
+                || (Number(pieces[b].cf) || 0) - (Number(pieces[a].cf) || 0) || a - b)
+            return home[0]
+        }
+        // 本土防御没有合适单位时宁可不选，也不能退回最近敌军/南方资源轴。
+        return undefined
+    }
     const enemyLocs = eop_enemy_locs(mine)
     const activated = Array.isArray(activeUnits) ? activeUnits : []
     // 两栖登陆护航 (TF_FORMATIONS「带海上/带航空海上支援的登陆」至少 1 海军单位):
@@ -338,6 +373,7 @@ function evaluateTargetFeasibility(target, card, hq, view) {
     const potentialReactionStrength=reactionPool.reduce((s,u)=>s+cf(u),0)
     const relevantDefense=defense+potentialReactionStrength
     return {target,meta,damageLevel,legal:target!==null&&target!==undefined,coastal,defense,suppress,requiresOccupation,
+        garrisonClass:meta?.garrisonClass||null,
         groundDefense:defenders.filter(u=>u.class==="ground").reduce((s,u)=>s+cf(u),0),
         potentialReaction:potentialReactionStrength>0,potentialReactionStrength,
         requiredGroundMath:Math.max(1,defenders.filter(u=>u.class==="ground").reduce((s,u)=>s+cf(u),0)),
@@ -351,6 +387,17 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
     const strikeStrength=committed.filter(u=>u.class==="air"||u.class==="naval").reduce((s,u)=>s+cf(u),0)
     const groundStrength=committed.filter(u=>u.class==="ground").reduce((s,u)=>s+cf(u),0)
     const hasGround=committed.some(u=>u.class==="ground"),hasNaval=committed.some(u=>u.class==="naval")
+    if(f.meta?.kind==="GARRISON"){
+        const required=f.garrisonClass||"ground"
+        const already=units.some(u=>u.faction===(role==="Japan"?JP:AP)&&u.location===target&&u.class===required)
+        if(already)return {complete:true,required:1,strength:1,unit:null,formation:`garrison-${required}`,
+            groundStrength,strikeStrength,potentialReactionStrength:0}
+        const pool=(candidates||[]).map(id=>byId.get(id)).filter(u=>u&&u.class===required)
+        pool.sort((a,b)=>(typeof get_distance==="function"?get_distance(a.location,target)-get_distance(b.location,target):0)
+            || cf(a)-cf(b)||a.id-b.id)
+        return {complete:false,required:1,strength:0,unit:pool[0]?.id,formation:`garrison-${required}`,
+            groundStrength,strikeStrength,potentialReactionStrength:0}
+    }
     const landing=f.requiresOccupation&&f.coastal&&view?.ai?.focusControlledBy!==view?.active
     const need=f.suppress?f.requiredAirSeaMath:f.requiresOccupation?f.requiredGroundMath:(f.groundDefense>0?f.requiredGroundMath:f.requiredAirSeaMath)
     const math=f.suppress?strikeStrength:f.requiresOccupation?groundStrength:Math.max(groundStrength,strikeStrength)
