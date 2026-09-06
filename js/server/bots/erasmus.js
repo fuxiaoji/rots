@@ -48,10 +48,14 @@ function legal_actions(view) {
 }
 
 function predicate_value(view, id, context, nodeId) {
-    if(id==="WEATHER_STANDARD_MET"){
-        const raw=erasmus_hash(`${context.seed}:${context.actionOrdinal}:${nodeId}:WEATHER-D10`)%10
-        const modified=raw-(view?.ai?.reaction?.surprise?2:0)
-        return modified<Number(view?.ai?.reaction?.enemyActivatedCount||0)*2
+    // 第6/12页反应 predicate 精确化 (PR4)：WEATHER_STANDARD_MET 用真实激活单位数+D10+情报
+    // 修正，不再用「敌激活数×2」代理；REACTION_FORCE_STANDARD_MET 用 D10 地面 2x 标准；
+    // 神风/潜艇标准走 RTT 查询层。惰性按节点缓存，缺失(undefined)时退回 view.ai.predicates。
+    if (EOP_EXACT_REACTION_PREDICATES && EOP_EXACT_REACTION_PREDICATES.indexOf(id) >= 0) {
+        if (!context.__exactReactionPreds) context.__exactReactionPreds = {}
+        if (!context.__exactReactionPreds[nodeId]) context.__exactReactionPreds[nodeId] = eop_exact_reaction_predicates(view, context, nodeId)
+        const exact = context.__exactReactionPreds[nodeId][id]
+        if (exact !== undefined) return !!exact
     }
     // 第5/11页任务部队 predicate 精确化 (PR2)：优先读 RTT 规则查询层的精确求值，
     // 缺失(undefined)时退回 view.ai.predicates 的启发式兜底。惰性计算一次并挂到 context。
@@ -356,10 +360,12 @@ function evaluateChart(chart, view, context) {
         nodePath.push(current.id)
         if (current.type === "condition") {
             const result = predicate_value(view, current.predicate?.id, context, current.id)
-            const evidence=current.predicate?.id==="WEATHER_STANDARD_MET"?{
-                raw:erasmus_hash(`${context.seed}:${context.actionOrdinal}:${current.id}:WEATHER-D10`)%10,
-                surpriseModifier:view?.ai?.reaction?.surprise?-2:0,
-                threshold:Number(view?.ai?.reaction?.enemyActivatedCount||0)*2}:undefined
+            const evidence=current.predicate?.id==="WEATHER_STANDARD_MET"?(()=>{
+                const enemy=(context.role==="Japan"?AP:JP)
+                const activatedCount=Array.isArray(G?.offensive?.active_units)?(G.offensive.active_units[enemy]||[]).length:0
+                const raw=erasmus_hash(`${context.seed}:${context.actionOrdinal}:${current.id}:WEATHER-D10`)%10
+                return {raw, surpriseModifier:G?.offensive?.intelligence===SURPRISE?-2:0, activatedCount, threshold:activatedCount*2}
+            })():undefined
             conditions.push({ nodeId: current.id, predicate: current.predicate?.id, result, ...(evidence?{evidence}:{}) })
             const edge = current.edges.find(item => item.when === result) || current.edges.find(item => item.when === "always")
             current = nodes.get(edge?.to)

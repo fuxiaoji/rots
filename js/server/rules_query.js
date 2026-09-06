@@ -310,6 +310,88 @@ function querySpecialReaction(opts) {
     })
 }
 
+// 神风攻击标准 (清单 #14)：镜像引擎 set_kamikaze_able_battles + kamikaze_attack._begin 的
+// 合法资格，不靠卡牌名/单位名正则。返回 { met, legalCapitalShipTargets, eligibleAirUnits }。
+//   legalCapitalShipTargets —— 可被神风命中的盟军已承诺海军单位(BB/CV 等, 在神风战斗格内)。
+//   eligibleAirUnits        —— 可承担减损、ebr 能打到神风战斗格的日军航空单位。
+// battleHex 注入时只判该格；否则按引擎口径求全部神风战斗格(距东京≤11 且盟军海军已承诺)。
+function queryKamikazeStandard(battleHex) {
+    return rules_query_snapshot(() => {
+        const empty = { met: false, legalCapitalShipTargets: [], eligibleAirUnits: [] }
+        if (!G.offensive || !Array.isArray(G.offensive.battle_hexes)) return empty
+        const apCommittedNaval = new Set()
+        ;(Array.isArray(G.offensive.active_units?.[AP]) ? G.offensive.active_units[AP] : []).forEach(u => {
+            const p = pieces[u]
+            if (p && p.faction === AP && p.class === "naval" && unit_on_board(u)) {
+                apCommittedNaval.add(get_unit_battle_hex(u))
+            }
+        })
+        let battles
+        if (battleHex !== undefined && battleHex !== null && Number.isInteger(battleHex)) {
+            battles = [battleHex]
+        } else {
+            battles = G.offensive.battle_hexes.filter(h => get_distance(h, TOKYO) <= 11 && apCommittedNaval.has(h))
+        }
+        if (!battles.length) return empty
+        const eligibleAirUnits = []
+        for_each_unit_on_map((u, piece, loc) => {
+            if (piece.faction === JP && piece.class === "air" && in_range_on_map(loc, piece.ebr, battles, JP).length) {
+                eligibleAirUnits.push(u)
+            }
+        })
+        const legalCapitalShipTargets = []
+        ;(Array.isArray(G.offensive.active_units?.[AP]) ? G.offensive.active_units[AP] : []).forEach(u => {
+            const p = pieces[u]
+            if (!p || p.faction !== AP || p.class !== "naval" || !unit_on_board(u)) return
+            if (battles.indexOf(get_unit_battle_hex(u)) >= 0) legalCapitalShipTargets.push(u)
+        })
+        return { met: legalCapitalShipTargets.length > 0 && eligibleAirUnits.length > 0, legalCapitalShipTargets, eligibleAirUnits }
+    })
+}
+
+// 潜艇合法目标 (清单 #15)：RTT 给出"能合法受潜艇打击"的敌方海军单位(镜像
+// P.submarine_attack._begin 的 allowed_units 口径)，Erasmus 决策层再按 CV→BB→CA→DD 排序。
+// 返回 { legalTargets }，每项为 { id, type, lf, cf, name, reduced }。
+function querySubmarineTargets(opts) {
+    const attackerFaction = (opts && opts.attackerFaction !== undefined)
+        ? opts.attackerFaction : (G.offensive ? G.offensive.attacker : 1 - R)
+    return rules_query_snapshot(() => {
+        const legalTargets = []
+        if (!G.offensive || !Array.isArray(G.offensive.active_units)) return { legalTargets }
+        ;(G.offensive.active_units[attackerFaction] || []).forEach(u => {
+            const p = pieces[u]
+            if (!p || p.class !== "naval" || !unit_on_board(u) || set_has(G.reduced, u)) return
+            legalTargets.push({ id: u, type: p.type || null, lf: Number(p.lf) || 0, cf: Number(p.cf) || 0, name: p.name || p.id || String(u), reduced: false })
+        })
+        return { legalTargets }
+    })
+}
+
+// PBM 合法落点 (清单 #16/#17/#18)：快照内设 active_stack/move_type、暂切 POST_BATTLE_STAGE，
+// 跑引擎 update_move_hex() 后收割 L.allowed_hexes。Erasmus 只在这些合法格上做图表优先级排序。
+function queryPbmDestinations(unit, ctx) {
+    return rules_query_snapshot(() => {
+        const piece = pieces[unit]
+        const loc = G.location[unit]
+        if (!piece || !Number.isInteger(loc) || !G.offensive || !Array.isArray(G.offensive.active_cards) || !G.offensive.active_cards[0]) {
+            return []
+        }
+        G.active_stack = [unit]
+        L.move_type = (ctx && ctx.move_type) || (piece.class === "air" ? AIR_MOVE : piece.class === "naval" ? NAVAL_MOVE : ANY_MOVE)
+        const stageSaved = G.offensive.stage
+        G.offensive.stage = POST_BATTLE_STAGE
+        try {
+            update_move_hex()
+        } finally {
+            G.offensive.stage = stageSaved
+        }
+        const dm = L.allowed_hexes
+        const hexes = []
+        for (let i = 0; i < dm.length; i += 2) hexes.push(dm[i])
+        return hexes
+    })
+}
+
 // ============================================================================
 // 测试/工具分发
 // ============================================================================
@@ -321,6 +403,7 @@ const RULES_QUERY_FNS = [
     "queryActivationCandidates", "queryGroundReachability", "queryNavalReachability",
     "queryCombatParticipation", "queryReactionCandidates",
     "queryReactionStrength", "querySpecialReaction",
+    "queryKamikazeStandard", "querySubmarineTargets", "queryPbmDestinations",
 ]
 
 function rules_query_dispatch(q) {
@@ -333,6 +416,7 @@ function rules_query_dispatch(q) {
         queryActivationCandidates, queryGroundReachability, queryNavalReachability,
         queryCombatParticipation, queryReactionCandidates,
         queryReactionStrength, querySpecialReaction,
+        queryKamikazeStandard, querySubmarineTargets, queryPbmDestinations,
     }
     if (typeof impl[fn] !== "function") return null
     const args = q.args || q.params

@@ -19076,6 +19076,88 @@ function querySpecialReaction(opts) {
     })
 }
 
+// 神风攻击标准 (清单 #14)：镜像引擎 set_kamikaze_able_battles + kamikaze_attack._begin 的
+// 合法资格，不靠卡牌名/单位名正则。返回 { met, legalCapitalShipTargets, eligibleAirUnits }。
+//   legalCapitalShipTargets —— 可被神风命中的盟军已承诺海军单位(BB/CV 等, 在神风战斗格内)。
+//   eligibleAirUnits        —— 可承担减损、ebr 能打到神风战斗格的日军航空单位。
+// battleHex 注入时只判该格；否则按引擎口径求全部神风战斗格(距东京≤11 且盟军海军已承诺)。
+function queryKamikazeStandard(battleHex) {
+    return rules_query_snapshot(() => {
+        const empty = { met: false, legalCapitalShipTargets: [], eligibleAirUnits: [] }
+        if (!G.offensive || !Array.isArray(G.offensive.battle_hexes)) return empty
+        const apCommittedNaval = new Set()
+        ;(Array.isArray(G.offensive.active_units?.[AP]) ? G.offensive.active_units[AP] : []).forEach(u => {
+            const p = pieces[u]
+            if (p && p.faction === AP && p.class === "naval" && unit_on_board(u)) {
+                apCommittedNaval.add(get_unit_battle_hex(u))
+            }
+        })
+        let battles
+        if (battleHex !== undefined && battleHex !== null && Number.isInteger(battleHex)) {
+            battles = [battleHex]
+        } else {
+            battles = G.offensive.battle_hexes.filter(h => get_distance(h, TOKYO) <= 11 && apCommittedNaval.has(h))
+        }
+        if (!battles.length) return empty
+        const eligibleAirUnits = []
+        for_each_unit_on_map((u, piece, loc) => {
+            if (piece.faction === JP && piece.class === "air" && in_range_on_map(loc, piece.ebr, battles, JP).length) {
+                eligibleAirUnits.push(u)
+            }
+        })
+        const legalCapitalShipTargets = []
+        ;(Array.isArray(G.offensive.active_units?.[AP]) ? G.offensive.active_units[AP] : []).forEach(u => {
+            const p = pieces[u]
+            if (!p || p.faction !== AP || p.class !== "naval" || !unit_on_board(u)) return
+            if (battles.indexOf(get_unit_battle_hex(u)) >= 0) legalCapitalShipTargets.push(u)
+        })
+        return { met: legalCapitalShipTargets.length > 0 && eligibleAirUnits.length > 0, legalCapitalShipTargets, eligibleAirUnits }
+    })
+}
+
+// 潜艇合法目标 (清单 #15)：RTT 给出"能合法受潜艇打击"的敌方海军单位(镜像
+// P.submarine_attack._begin 的 allowed_units 口径)，Erasmus 决策层再按 CV→BB→CA→DD 排序。
+// 返回 { legalTargets }，每项为 { id, type, lf, cf, name, reduced }。
+function querySubmarineTargets(opts) {
+    const attackerFaction = (opts && opts.attackerFaction !== undefined)
+        ? opts.attackerFaction : (G.offensive ? G.offensive.attacker : 1 - R)
+    return rules_query_snapshot(() => {
+        const legalTargets = []
+        if (!G.offensive || !Array.isArray(G.offensive.active_units)) return { legalTargets }
+        ;(G.offensive.active_units[attackerFaction] || []).forEach(u => {
+            const p = pieces[u]
+            if (!p || p.class !== "naval" || !unit_on_board(u) || set_has(G.reduced, u)) return
+            legalTargets.push({ id: u, type: p.type || null, lf: Number(p.lf) || 0, cf: Number(p.cf) || 0, name: p.name || p.id || String(u), reduced: false })
+        })
+        return { legalTargets }
+    })
+}
+
+// PBM 合法落点 (清单 #16/#17/#18)：快照内设 active_stack/move_type、暂切 POST_BATTLE_STAGE，
+// 跑引擎 update_move_hex() 后收割 L.allowed_hexes。Erasmus 只在这些合法格上做图表优先级排序。
+function queryPbmDestinations(unit, ctx) {
+    return rules_query_snapshot(() => {
+        const piece = pieces[unit]
+        const loc = G.location[unit]
+        if (!piece || !Number.isInteger(loc) || !G.offensive || !Array.isArray(G.offensive.active_cards) || !G.offensive.active_cards[0]) {
+            return []
+        }
+        G.active_stack = [unit]
+        L.move_type = (ctx && ctx.move_type) || (piece.class === "air" ? AIR_MOVE : piece.class === "naval" ? NAVAL_MOVE : ANY_MOVE)
+        const stageSaved = G.offensive.stage
+        G.offensive.stage = POST_BATTLE_STAGE
+        try {
+            update_move_hex()
+        } finally {
+            G.offensive.stage = stageSaved
+        }
+        const dm = L.allowed_hexes
+        const hexes = []
+        for (let i = 0; i < dm.length; i += 2) hexes.push(dm[i])
+        return hexes
+    })
+}
+
 // ============================================================================
 // 测试/工具分发
 // ============================================================================
@@ -19087,6 +19169,7 @@ const RULES_QUERY_FNS = [
     "queryActivationCandidates", "queryGroundReachability", "queryNavalReachability",
     "queryCombatParticipation", "queryReactionCandidates",
     "queryReactionStrength", "querySpecialReaction",
+    "queryKamikazeStandard", "querySubmarineTargets", "queryPbmDestinations",
 ]
 
 function rules_query_dispatch(q) {
@@ -19099,6 +19182,7 @@ function rules_query_dispatch(q) {
         queryActivationCandidates, queryGroundReachability, queryNavalReachability,
         queryCombatParticipation, queryReactionCandidates,
         queryReactionStrength, querySpecialReaction,
+        queryKamikazeStandard, querySubmarineTargets, queryPbmDestinations,
     }
     if (typeof impl[fn] !== "function") return null
     const args = q.args || q.params
@@ -21160,6 +21244,54 @@ function eop_evaluate_damage_level(meta, attackers, defenders, reactionIds, byId
     return { met, airSeaMet, groundSurvivalMet, attackerAirSea, attackerGround, airSeaDefense, groundDefense, reactionStrength }
 }
 
+// ============================================================================
+// Page 6 / Page 12 反应与 PBM 精确求值器 (PR4)
+// ============================================================================
+
+// 反应兵力标准 (清单 #11)：纯函数，无引擎全局依赖，可经 vm 单测。
+// 返回 { airSeaOneXMet, airCountMet, groundTwoXRequired, groundTwoXMet, complete }。
+//   airSeaOneXMet   己方空海战斗力 ≥ 敌方空海战斗力 (1x 标准)
+//   airCountMet     己方空军数量 ≥ 敌方空军数量
+//   groundTwoXRequired  D10 0-4 → 地面须 2x 生存；5-9 → 无地面要求 (图表 1-4/5-9, 0 按低段)
+//   groundTwoXMet   己方地面 CF ≥ 2× 敌方地面 CF (无地面要求时恒 true)
+function eop_evaluate_reaction_force_standard(input) {
+    const sel = (input && input.selectedReactionUnits) || []
+    const atk = (input && input.attackingUnits) || []
+    const d10 = (input && Number.isInteger(input.d10)) ? input.d10 : 5
+    const cf = eop_unit_cf
+    const ownAS = sel.filter(u => u.class === "air" || u.class === "naval").reduce((s, u) => s + cf(u), 0)
+    const enemyAS = atk.filter(u => u.class === "air" || u.class === "naval").reduce((s, u) => s + cf(u), 0)
+    const ownAir = sel.filter(u => u.class === "air").length
+    const enemyAir = atk.filter(u => u.class === "air").length
+    const airSeaOneXMet = ownAS >= enemyAS
+    const airCountMet = ownAir >= enemyAir
+    const groundTwoXRequired = d10 <= 4
+    const ownGround = sel.filter(u => u.class === "ground").reduce((s, u) => s + cf(u), 0)
+    const enemyGround = atk.filter(u => u.class === "ground").reduce((s, u) => s + cf(u), 0)
+    const groundTwoXMet = !groundTwoXRequired || ownGround >= Math.max(1, 2 * enemyGround)
+    const complete = airSeaOneXMet && airCountMet && groundTwoXMet
+    return { airSeaOneXMet, airCountMet, groundTwoXRequired, groundTwoXMet, complete }
+}
+
+// 天气反应标准 (清单 #13)：d10 < 2×真实激活单位数 (CDSS 例：4 个移动单位→需掷 < 8)。
+// 输入只用真实激活单位数 + D10 + 情报修正(奇袭 -2)；禁止会战格数 / Logistic Value / 代理值。
+function eop_weather_reaction_standard(input) {
+    const activatedCount = Math.max(0, Number((input && input.activatedCount) || 0))
+    const die = (input && Number.isInteger(input.die)) ? input.die : 9
+    const surprise = !!(input && input.surprise)
+    return (die - (surprise ? 2 : 0)) < activatedCount * 2
+}
+
+// 潜艇目标优先级 (清单 #15)：CV→BB→CA→DD；同类按防御值(lf)降序，稳定 id 破平。
+// 输入来自 querySubmarineTargets().legalTargets，只排序不造目标。
+function eop_pick_submarine_target(legalTargets) {
+    if (!Array.isArray(legalTargets) || !legalTargets.length) return undefined
+    const rank = u => { const t = String(u.type || u.name || "").toLowerCase(); return /^cv/.test(t) ? 0 : /bb/.test(t) ? 1 : /^ca/.test(t) ? 2 : /dd/.test(t) ? 3 : 4 }
+    return legalTargets.slice().sort((a, b) => rank(a) - rank(b)
+        || (Number(b.lf) || 0) - (Number(a.lf) || 0)
+        || (a.id ?? 0) - (b.id ?? 0))[0]
+}
+
 // 精确求值 7 个任务部队 predicate（只读；返回 undefined 表示退回兜底）。
 function eop_exact_taskforce_predicates(view, context) {
     const out = {}
@@ -21209,6 +21341,80 @@ function eop_exact_taskforce_predicates(view, context) {
     out.TARGET_DAMAGE_LEVEL_MET = dmg.met
 
     return out
+}
+
+// 第6/12页反应 predicate 精确求值 (PR4)。只读；返回 undefined 表示退回 view.ai.predicates。
+const EOP_EXACT_REACTION_PREDICATES = [
+    "REACTION_FORCE_STANDARD_MET", "WEATHER_STANDARD_MET",
+    "EARLY_DEFENSE_DONE_AND_KAMIKAZE_STANDARD",
+    "HAS_VALID_SUBMARINE_TARGET", "HAS_SUBMARINE_CARD_AND_TARGET",
+]
+
+function eop_exact_reaction_predicates(view, context, nodeId) {
+    const out = {}
+    for (const id of EOP_EXACT_REACTION_PREDICATES) out[id] = undefined
+    if (!view || !view.ai) return out
+    if (typeof G === "undefined" || !G || !G.offensive) return out
+    const role = context && context.role ? context.role : view.active
+    const faction = role === "Japan" ? JP : AP
+    const enemy = 1 - faction
+    if (nodeId === undefined || nodeId === null) nodeId = context && context.nodeId
+    const units = Array.isArray(view.ai.units) ? view.ai.units : []
+    const byId = new Map(units.map(u => [u.id, u]))
+    const seed = context && context.seed, ordinal = context && context.actionOrdinal
+    const hash = text => (typeof erasmus_hash === "function" ? erasmus_hash(text) % 10 : 5)
+
+    // WEATHER_STANDARD_MET：真实攻击方激活单位数 + D10 + 情报修正(奇袭)。
+    const attackingIds = (Array.isArray(G.offensive.active_units) && Array.isArray(G.offensive.active_units[enemy])) ? G.offensive.active_units[enemy] : []
+    out.WEATHER_STANDARD_MET = eop_weather_reaction_standard({
+        activatedCount: attackingIds.length,
+        die: hash(`${seed}:${ordinal}:${nodeId}:WEATHER-D10`),
+        surprise: G.offensive.intelligence === SURPRISE,
+    })
+
+    // REACTION_FORCE_STANDARD_MET：己方可反应候选 vs 攻击方已承诺单位。
+    if (Array.isArray(G.offensive.battle_hexes) && G.offensive.battle_hexes.length) {
+        const attackingUnits = attackingIds.map(id => byId.get(id)).filter(Boolean)
+        let reactionUnits = []
+        if (typeof queryReactionCandidates === "function") {
+            try {
+                const reaction = queryReactionCandidates({ reactionFaction: faction })
+                reactionUnits = reaction.air.concat(reaction.carrier, reaction.naval, reaction.ground).map(id => byId.get(id)).filter(Boolean)
+            } catch (e) { reactionUnits = [] }
+        }
+        const std = eop_evaluate_reaction_force_standard({
+            selectedReactionUnits: reactionUnits, attackingUnits,
+            d10: hash(`${seed}:${ordinal}:${nodeId}:RF-D10`),
+        })
+        out.REACTION_FORCE_STANDARD_MET = std.complete
+    }
+
+    // 神风标准 (清单 #14)：合法 BB/CV 目标 + 可减损日军航空单位。
+    let kamikazeMet = false
+    if (typeof queryKamikazeStandard === "function") {
+        try { kamikazeMet = !!queryKamikazeStandard().met } catch (e) { kamikazeMet = false }
+    }
+    // 潜艇合法目标 (清单 #15)：攻击方已承诺海军单位。
+    let subTargets = []
+    if (typeof querySubmarineTargets === "function") {
+        try { subTargets = querySubmarineTargets({ attackerFaction: enemy }).legalTargets || [] } catch (e) { subTargets = [] }
+    }
+    out.HAS_VALID_SUBMARINE_TARGET = subTargets.length > 0
+    out.HAS_SUBMARINE_CARD_AND_TARGET = out.HAS_VALID_SUBMARINE_TARGET && !!view.ai.predicates.HAS_SUBMARINE_CARD
+    // I+J：早期防御完成 + 神风标准。早期防御完成取战略层权威信号，缺省退回 false
+    // (不擅自把"有神风卡"当成"满足神风标准")。
+    const earlyDefenseDone = typeof eop_early_defense_done === "function" ? !!eop_early_defense_done(role, view, context) : false
+    out.EARLY_DEFENSE_DONE_AND_KAMIKAZE_STANDARD = earlyDefenseDone && kamikazeMet
+
+    return out
+}
+
+// 日本"早期防御完成"：第6页 I 框。取第1页 B 框"DEI 投降格全部占领"同一口径——
+// 早期南方扩张/防御圈完成即视为早期防御完成。无权威信号时保守返回 false。
+function eop_early_defense_done(role, view, context) {
+    if (role !== "Japan") return false
+    if (typeof nations === "undefined" || !nations || !nations.DEI || !Array.isArray(nations.DEI.keys)) return false
+    try { return nations.DEI.keys.every(k => is_space_controlled(hex_to_int(k), JP)) } catch (e) { return false }
 }
 
 // PR3：任务部队候选的“合法参与”过滤——不可达单位不得进入排序。用 RTT 规则查询层
@@ -21385,27 +21591,43 @@ function planReaction(view,candidates,action,role,strategy){
         return hit[0]
     }
     if(action==="action_hex"||action==="hex"){
-        const score=h=>{
+        // 反应会战格优先级 (清单 #12)：HQ→Resource→Port→Airfield→Other。不能只取 sorted[0]，
+        // 最高优先级目标可能凑不够合法反应兵力；按优先级逐个检查反应兵力标准能否达到，
+        // 能达则选，否则顺延下一目标。
+        const tier=h=>{
             const md=typeof get_map_data==="function"?get_map_data(h):{}
-            const at=units.filter(u=>u.location===h), own=at.filter(u=>u.faction===mine), foe=at.filter(u=>u.faction===enemy)
-            // 反应格优先级（双方同构）：己方 HQ、资源格、港口、机场、其他。
-            const tier=own.some(u=>u.class==="hq")?0:md.resource?1:md.port?2:md.airfield?3:4
-            const foePower=foe.reduce((s,u)=>s+(u.reduced?(u.rcf||Math.ceil(u.cf/2)):u.cf||0),0)
-            return [tier,foePower,h]
+            const own=units.filter(u=>u.location===h&&u.faction===mine)
+            return own.some(u=>u.class==="hq")?0:md.resource?1:md.port?2:md.airfield?3:4
         }
-        return candidates.slice().sort((a,b)=>{const x=score(a),y=score(b);return x[0]-y[0]||x[1]-y[1]||x[2]-y[2]})[0]
+        const ordered=candidates.slice().sort((a,b)=>tier(a)-tier(b)||a-b)
+        if(typeof queryReactionCandidates!=="function"||typeof eop_evaluate_reaction_force_standard!=="function")return ordered[0]
+        const attackers=(view?.offensive?.active_units||[]).flat().map(id=>byId.get(id)).filter(u=>u&&u.faction===enemy)
+        for(const h of ordered){
+            try{
+                const reaction=queryReactionCandidates({reactionFaction:mine,targetHex:h})
+                const sel=reaction.air.concat(reaction.carrier,reaction.naval,reaction.ground).map(id=>byId.get(id)).filter(Boolean)
+                // 用 D10=0 的最严情形(地面须 2x)判"能否达到反应兵力标准"。
+                const std=eop_evaluate_reaction_force_standard({selectedReactionUnits:sel,attackingUnits:attackers,d10:0})
+                if(std.complete)return h
+            }catch(e){ return h }
+        }
+        return ordered[0]
     }
-    // 反应兵力标准：先使海空战力达到敌海空1倍，再使己方空军数量追平；最后才加地面。
+    // 反应兵力标准 (清单 #11)：用共享求值器判定当前缺口，每次加入最能填补缺口的
+    // 一个合法单位；complete 时不再补兵。空海战力不足→航空/海军；空军数量不足→航空；
+    // 地面 2x 要求未满足→地面。
     const active=new Set((view?.offensive?.active_units||[]).flat())
     const selected=[...active].map(id=>byId.get(id)).filter(u=>u&&u.faction===mine)
     const attackers=[...active].map(id=>byId.get(id)).filter(u=>u&&u.faction===enemy)
     const cf=u=>u?(u.reduced?(Number(u.rcf)||Math.ceil((Number(u.cf)||0)/2)):(Number(u.cf)||0)):0
-    const ownAS=selected.filter(u=>u.class==="air"||u.class==="naval").reduce((s,u)=>s+cf(u),0)
-    const enemyAS=attackers.filter(u=>u.class==="air"||u.class==="naval").reduce((s,u)=>s+cf(u),0)
-    const ownAir=selected.filter(u=>u.class==="air").length, enemyAir=attackers.filter(u=>u.class==="air").length
-    const rank=u=>ownAS<enemyAS?(u.class==="air"?0:u.class==="naval"?1:2)
-        :ownAir<enemyAir?(u.class==="air"?0:u.class==="naval"?1:2)
-        :(u.class==="ground"?0:u.class==="air"?1:2)
+    const d10=typeof erasmus_hash==="function"?erasmus_hash(`${view?.seed??0}:${view?.actionOrdinal??0}:RF-D10`)%10:5
+    const std=eop_evaluate_reaction_force_standard({selectedReactionUnits:selected,attackingUnits:attackers,d10})
+    const rank=u=>{
+        if(!std.airSeaOneXMet)return (u.class==="air"||u.class==="naval")?0:2
+        if(!std.airCountMet)return u.class==="air"?1:2
+        if(std.groundTwoXRequired&&!std.groundTwoXMet)return u.class==="ground"?0:2
+        return u.class==="air"?1:u.class==="naval"?2:3
+    }
     return candidates.slice().sort((a,b)=>rank(byId.get(a))-rank(byId.get(b))||cf(byId.get(b))-cf(byId.get(a))||a-b)[0]
 }
 
@@ -21421,6 +21643,30 @@ function planPostBattleMovement(view,candidates,action,role){
     const rank=u=>u?.class==="air"?0:u?.class==="naval"?1:(u?.class==="ground"&&failed.has(u.id)?2:3)
     return candidates.slice().sort((a,b)=>rank(byId.get(a))-rank(byId.get(b))
         ||(rank(byId.get(a))===0?cf(byId.get(b))-cf(byId.get(a)):0)||a-b)[0]
+}
+
+// 第6/12页航空/海军 PBM 落点评分 (清单 #16/#17/#18)。落点必须先在 queryPbmDestinations
+// 里被 RTT 判定合法，这里只做图表优先级评分；硬约束(一机场一空军等)由 offensive.js 的
+// erasmus_pbm_target_score 以返回 null(=legal false) 表达，而非扣分。返回 null 表示该格
+// 非法或不属于该兵种，不应被选。
+function scoreAirPbmDestination(unit, hex, ctx) {
+    if (typeof erasmus_pbm_target_score !== "function") return null
+    const piece = pieces[unit]
+    if (!piece || piece.class !== "air") return null
+    const source = G.location[unit]
+    const faction = piece.faction
+    const plan = (ctx && ctx.targetPlan) || null
+    return erasmus_pbm_target_score(hex, faction, piece, source, plan)
+}
+
+function scoreNavalPbmDestination(unit, hex, ctx) {
+    if (typeof erasmus_pbm_target_score !== "function") return null
+    const piece = pieces[unit]
+    if (!piece || piece.class !== "naval") return null
+    const source = G.location[unit]
+    const faction = piece.faction
+    const plan = (ctx && ctx.targetPlan) || null
+    return erasmus_pbm_target_score(hex, faction, piece, source, plan)
 }
 /** import server/erasmus_ops.js*/
 /** import server/erasmus_data.js*/
@@ -23669,10 +23915,14 @@ function legal_actions(view) {
 }
 
 function predicate_value(view, id, context, nodeId) {
-    if(id==="WEATHER_STANDARD_MET"){
-        const raw=erasmus_hash(`${context.seed}:${context.actionOrdinal}:${nodeId}:WEATHER-D10`)%10
-        const modified=raw-(view?.ai?.reaction?.surprise?2:0)
-        return modified<Number(view?.ai?.reaction?.enemyActivatedCount||0)*2
+    // 第6/12页反应 predicate 精确化 (PR4)：WEATHER_STANDARD_MET 用真实激活单位数+D10+情报
+    // 修正，不再用「敌激活数×2」代理；REACTION_FORCE_STANDARD_MET 用 D10 地面 2x 标准；
+    // 神风/潜艇标准走 RTT 查询层。惰性按节点缓存，缺失(undefined)时退回 view.ai.predicates。
+    if (EOP_EXACT_REACTION_PREDICATES && EOP_EXACT_REACTION_PREDICATES.indexOf(id) >= 0) {
+        if (!context.__exactReactionPreds) context.__exactReactionPreds = {}
+        if (!context.__exactReactionPreds[nodeId]) context.__exactReactionPreds[nodeId] = eop_exact_reaction_predicates(view, context, nodeId)
+        const exact = context.__exactReactionPreds[nodeId][id]
+        if (exact !== undefined) return !!exact
     }
     // 第5/11页任务部队 predicate 精确化 (PR2)：优先读 RTT 规则查询层的精确求值，
     // 缺失(undefined)时退回 view.ai.predicates 的启发式兜底。惰性计算一次并挂到 context。
@@ -23977,10 +24227,12 @@ function evaluateChart(chart, view, context) {
         nodePath.push(current.id)
         if (current.type === "condition") {
             const result = predicate_value(view, current.predicate?.id, context, current.id)
-            const evidence=current.predicate?.id==="WEATHER_STANDARD_MET"?{
-                raw:erasmus_hash(`${context.seed}:${context.actionOrdinal}:${current.id}:WEATHER-D10`)%10,
-                surpriseModifier:view?.ai?.reaction?.surprise?-2:0,
-                threshold:Number(view?.ai?.reaction?.enemyActivatedCount||0)*2}:undefined
+            const evidence=current.predicate?.id==="WEATHER_STANDARD_MET"?(()=>{
+                const enemy=(context.role==="Japan"?AP:JP)
+                const activatedCount=Array.isArray(G?.offensive?.active_units)?(G.offensive.active_units[enemy]||[]).length:0
+                const raw=erasmus_hash(`${context.seed}:${context.actionOrdinal}:${current.id}:WEATHER-D10`)%10
+                return {raw, surpriseModifier:G?.offensive?.intelligence===SURPRISE?-2:0, activatedCount, threshold:activatedCount*2}
+            })():undefined
             conditions.push({ nodeId: current.id, predicate: current.predicate?.id, result, ...(evidence?{evidence}:{}) })
             const edge = current.edges.find(item => item.when === result) || current.edges.find(item => item.when === "always")
             current = nodes.get(edge?.to)
