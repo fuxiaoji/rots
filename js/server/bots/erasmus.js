@@ -2,7 +2,7 @@
 /** import server/erasmus_data.js*/
 /** import server/erasmus_state.js*/
 
-const ERASMUS_VERSION = "erasmus-v2.0-zh.23"
+const ERASMUS_VERSION = "erasmus-v2.0-zh.26"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "delay", "unit", "hex", "strat_move", "ground_move", "roll", "eliminate", "continue", "next", "done", "skip", "pass", "cancel"]
 const FAMILY_ACTION_PRIORITY = {
     // OPS 卡/攻势战略: 在“Select action”窗口应打出 ops,而不是事件
@@ -441,7 +441,9 @@ function evaluateChart(chart, view, context) {
             .filter(u => { try { return !pieces[u] || pieces[u].class !== "hq" } catch (e) { return true } })
             .filter(u => { try { return esm_gate_on() || !pieces[u] || pieces[u].class !== "air" } catch (e) { return true } })
             .filter(u => { try { return typeof eop_preserve_ready_b29 !== "function" || !eop_preserve_ready_b29(u, context.role) } catch (e) { return true } })
-            .filter(u => { try { return typeof eop_preserve_rear_air !== "function" || !eop_preserve_rear_air(u, context.role, effectiveFocus) } catch (e) { return true } })
+            // 后方航空的「折返跑」保护只在会战编队(composeTaskForce 内部)生效，不在此处
+            // 从 addable 里整批剔除：否则 eop_pick_forward_unit 看不到这些后方航空，无法
+            // 在无立即可参战目标时把它们故意前推(转场/SR 到前线机场)，重新退化回「不调航空」。
             .filter(u => !hasFeasibleTarget || typeof eop_unit_matches_target !== "function" || eop_unit_matches_target(u, context.role, activationMeta, effectiveFocus))
         const forcePlan = composeTaskForce(effectiveFocus, null, null, view, addable, context.role)
         const selected = progress ? Number(progress[1]) : (view.offensive?.active_units?.flat?.().length || 0)
@@ -467,6 +469,10 @@ function evaluateChart(chart, view, context) {
         if (typeof eop_landing_no_escort === "function"
             && !(view.offensive?.active_units?.flat?.().length > 0)
             && eop_landing_no_escort(context.role, view)) action = "done"
+        // #3：占领目标但地面兵力不足且无可补充地面时，在尚未激活任何单位前提前 done 空攻势，
+        // 避免白耗激活点去硬攻登不下来的敌占格。
+        if (forcePlan?.insufficient
+            && !(view.offensive?.active_units?.flat?.().length > 0)) action = "done"
     }
     // “Declare battle hexes.”窗口的 unit 是选择可打击的已激活空中单位(随后用
     // action_hex 指向目标格并 create_battle_hex), 并非追加激活单位, 因此该窗口

@@ -577,17 +577,17 @@ function eop_preserve_rear_air(u, role, target) {
     const extended = Math.max(1, Number(p.ebr) || Number(p.br) || 1)
     // 一次航空移动最多把距离缩短 extended；随后还须在 extended 内支援会战。
     if (get_distance(h, target) <= extended * 2) return false
-    // R9：距目标超过一移+一攻的后方航空兵，若能沿机场链多段转场前推（任一可达机场
-    // 更靠近目标），就不再硬删（文档 §3：能多段转场前推的空军不再被直接删）；只有既
-    // 不能立即参战、又无前推机场可用的才保护，避免「夏威夷航空兵折返跑」。
+    // R9：距目标超过一移+一攻的后方航空兵，只有当它能沿机场链多段转场到「攻击航程内」
+    // 的机场（下一会战即可投入）才前推；仅「更靠近但仍够不着」的一格格空跑不再放行，
+    // 否则夏威夷空军每回合被激活向前挪一格、下一回合又够不着，形成折返跑。前推本身
+    // 走 eop_pick_forward_unit 的故意战略转移，而非把它塞进立即参战编队。
     if (typeof queryAirTransferReachability === "function") {
         try {
             const transfer = queryAirTransferReachability(u)
-            const d0 = get_distance(h, target)
             for (const hex of transfer.reachableHexes) {
-                if (get_distance(hex, target) < d0) return false
+                if (get_distance(hex, target) <= extended) return false
             }
-        } catch (e) { /* 查询失败保守放行（不保护），由立即参战过滤兜底 */ return false }
+        } catch (e) { /* 查询失败保守保护，避免折返跑 */ return true }
     }
     return true
 }
@@ -698,8 +698,15 @@ function eop_evaluate_damage_level(meta, attackers, defenders, reactionIds, byId
     // 攻击地面单位存活」错误等价成「攻击地面 CF ≥ 2× 防守地面 CF」，会严重压制进攻。
     // groundSurvivalMet 仍返回，供风险评分/排序使用，但不参与 met 判定。
     const groundSurvivalMet = !requiresOccupation ? true : (attackerGround >= Math.max(1, 2 * groundDefense))
-    const met = airSeaMet
-    return { met, airSeaMet, groundSurvivalMet, attackerAirSea, attackerGround, airSeaDefense, groundDefense, reactionStrength }
+    // #8：占领目标的 met 必须同时判「地面能否吃掉守军」。此前只比空海战力，地面不足也判
+    // complete → 少得登不下来还硬上 → 成功夺格率过低。按 ground_battle_table(期望乘数≈1.05)
+    // 取 1:1 为最低可攻门槛，不用 2x 硬闸(会压制进攻)；空岛只需任一地面 CF≥1 即可占领。
+    // 地面战力判定不得除 damageLevel：damageLevel 是「空海压制等级」(SUPPRESS_HQ 马尼拉=0.25、
+    // 新加坡=0.5)，只约束空海 damage level，与地面 step-loss 战果表(乘数≈1.05)无关。把它
+    // 除进地面门槛会让马尼拉要求 4× 地面、新加坡 2×，导致日军陆军迟迟不上马尼拉/新加坡。
+    const groundMet = !requiresOccupation || attackerGround >= Math.max(1, groundDefense)
+    const met = airSeaMet && groundMet
+    return { met, airSeaMet, groundMet, groundSurvivalMet, attackerAirSea, attackerGround, airSeaDefense, groundDefense, reactionStrength }
 }
 
 // ============================================================================
@@ -1020,8 +1027,10 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
         const unactivated=at.filter(x=>x.class==="ground"&&!active.has(x.id))
         return unactivated.length>1
     })
-    // 不可达单位不得进入排序（地面走引擎 BFS、航空走航程、海军走引擎海军 BFS）。
-    pool=eop_filter_attack_now_participants(pool,target,role,EOP_PLAN_MODE.ATTACK_NOW)
+    // 恢复 1.0 的后方调度：不在此处用「立即参战」当硬闸把后方/转场单位整批删掉，
+    // 否则本牌打不到目标的后方兵力无法沿 SR/转场前推，形成「打出牌但 0 单位调度」。
+    // 同一兵种先选最靠近目标者（下方 distance 排序）已保证优先就近单位；真正不可达的
+    // 单位由移动器/choose_attack_hex 的 br/ebr 与 BFS 可达性兜底剔除，不需要这里硬删。
     let amphibiousPick
     if(landing&&typeof eop_pick_unit==="function")amphibiousPick=eop_pick_unit(pool.map(u=>u.id),role,[...active],target)
     const classRank=u=>f.suppress?({air:0,naval:1,ground:2}[u.class]??3)
@@ -1032,9 +1041,12 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
     const distance=u=>typeof get_distance==="function"&&target!==null&&target!==undefined
         ?get_distance(u.location,target):99
     pool.sort((a,b)=>classRank(a)-classRank(b)||distance(a)-distance(b)||cf(b)-cf(a)||a.id-b.id)
+    // #3：占领目标但地面兵力不足、且已无可补充地面时标记 insufficient，激活窗据此提前
+    // done 空攻势，避免「少得登不下来还硬上」白耗激活点(与 eop_landing_no_escort 同理)。
+    const insufficient = f.requiresOccupation && !dmg.groundMet && !pool.some(u => u.class === "ground")
     return {complete:false,strict:true,required:need,strength:math,unit:amphibiousPick??pool[0]?.id,
         formation:landing?"supported-amphibious-assault":f.requiresOccupation?"ground-with-support":"air-sea-strike",
-        groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
+        groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired,insufficient}
 }
 
 function selectOperationalHq(view,candidates,role){
@@ -1145,6 +1157,7 @@ function planReaction(view,candidates,action,role,strategy){
     const d10=typeof erasmus_hash==="function"?erasmus_hash(`${view?.seed??0}:${view?.actionOrdinal??0}:RF-D10`)%10:5
     const std=eop_evaluate_reaction_force_standard({selectedReactionUnits:selected,attackingUnits:attackers,d10})
     const rank=u=>{
+        if(!u)return 9 // 候选单位不在 view.ai.units 投影内(如已被消灭/移出): 排最末，避免空引用崩溃
         if(!std.airSeaOneXMet)return (u.class==="air"||u.class==="naval")?0:2
         if(!std.airCountMet)return u.class==="air"?1:2
         if(std.groundTwoXRequired&&!std.groundTwoXMet)return u.class==="ground"?0:2
