@@ -21022,9 +21022,9 @@ function eop_activation_focus_faction(faction, selectedCount, view, candidates) 
             }
             const plan=composeTaskForce(h,null,null,view,available,role)
             if(!plan.complete && plan.unit!==undefined && plan.unit!==null)return h
-            // An inaccessible primary attack does not authorize spending its
-            // activation budget on an explicitly residual attack.
-            if(!plan.complete && !meta?.extraActivationOnly && meta?.kind!=="REDEPLOY" && meta?.kind!=="GARRISON")return h
+            // 第一目标不可行（无单位能立即参战）时，不再把本牌激活预算锁死在它身上
+            // 造成 0 激活；继续遍历下一个可行动目标（文档 §7）。extraActivationOnly /
+            // REDEPLOY / GARRISON 已在前序分支各自 continue/return。
         }
         return null
     }
@@ -21635,8 +21635,8 @@ function selectOperationalHq(view,candidates,role){
         const n=Array.isArray(preview)?preview.length:commandable(id)
         // 先排除“名义上符合战略、实际上范围内没有任何兵力”的 HQ；多个可用 HQ
         // 再按图表指定 HQ、目标距离和效能排序。夺占目标优先要“有地面军”的 HQ。
-        return [n>0?0:1,needsGround?(groundCommandable(id)>0?0:1):0,
-            u&&preferred.test(String(u.name||""))?0:1,-requiredCount(id),-n,d,-(u?.cm||0),-(u?.cr||0),id]}
+        return [n>0?0:1,-requiredCount(id),needsGround?(groundCommandable(id)>0?0:1):0,
+            u&&preferred.test(String(u.name||""))?0:1,-n,d,-(u?.cm||0),-(u?.cr||0),id]}
     return candidates.slice().sort((a,b)=>{const x=score(a),y=score(b);for(let i=0;i<x.length;i++)if(x[i]!==y[i])return x[i]-y[i];return 0})[0]
 }
 function planReaction(view,candidates,action,role,strategy){
@@ -22267,7 +22267,7 @@ function esm_redeploy_targets(name) {
         if (!(u > 0) || !esm_on_map(u) || !Number.isInteger(hex)) continue
         let target = targets.find(t => t.hex === hex)
         if (!target) targets.push(target = { hex, kind: "REDEPLOY", requiredUnits: [], requiresFriendlyControl: true,
-            requiresOccupation: false, objective: name + ":" + place })
+            requiresOccupation: false, movementModes: ["SR"], objective: name + ":" + place })
         target.requiredUnits.push(u)
     }
     return targets

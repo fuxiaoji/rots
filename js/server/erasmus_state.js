@@ -518,7 +518,7 @@ function esm_redeploy_targets(name) {
         if (!(u > 0) || !esm_on_map(u) || !Number.isInteger(hex)) continue
         let target = targets.find(t => t.hex === hex)
         if (!target) targets.push(target = { hex, kind: "REDEPLOY", requiredUnits: [], requiresFriendlyControl: true,
-            requiresOccupation: false, objective: name + ":" + place })
+            requiresOccupation: false, movementModes: ["SR"], objective: name + ":" + place })
         target.requiredUnits.push(u)
     }
     return targets
