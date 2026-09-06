@@ -631,7 +631,6 @@ function eop_meets_battle_support_standard(meta, activeUnits, target, faction) {
 function eop_evaluate_damage_level(meta, attackers, defenders, reactionIds, byId, target, reactionStrengthOverride) {
     const cf = eop_unit_cf
     const requiresOccupation = !!(meta && meta.requiresOccupation)
-    const suppress = !!(meta && (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ"))
     const damageLevel = (meta && meta.damageLevel) || 1
     const airSeaDefense = defenders.filter(u => u.class === "air" || u.class === "naval").reduce((s, u) => s + cf(u), 0)
     const groundDefense = defenders.filter(u => u.class === "ground").reduce((s, u) => s + cf(u), 0)
@@ -644,8 +643,11 @@ function eop_evaluate_damage_level(meta, attackers, defenders, reactionIds, byId
     const attackerGround = attackers.filter(u => u.class === "ground").reduce((s, u) => s + cf(u), 0)
     const relevantDefense = (requiresOccupation ? airSeaDefense : totalDefense) + reactionStrength
     const airSeaMet = attackerAirSea >= Math.ceil(relevantDefense / damageLevel)
+    // 2x 生存不再作为「能否进攻」的硬门槛（文档 §4）：它把「敌方取得 2x 战果后仍有一个
+    // 攻击地面单位存活」错误等价成「攻击地面 CF ≥ 2× 防守地面 CF」，会严重压制进攻。
+    // groundSurvivalMet 仍返回，供风险评分/排序使用，但不参与 met 判定。
     const groundSurvivalMet = !requiresOccupation ? true : (attackerGround >= Math.max(1, 2 * groundDefense))
-    const met = suppress ? airSeaMet : (requiresOccupation ? (airSeaMet && groundSurvivalMet) : airSeaMet)
+    const met = airSeaMet
     return { met, airSeaMet, groundSurvivalMet, attackerAirSea, attackerGround, airSeaDefense, groundDefense, reactionStrength }
 }
 

@@ -100,13 +100,14 @@ const byId = list => new Map(list.map(u => [u.id, u]))
     assert.equal(damage(meta, [unit("air", 5)], [unit("air", 2)], [99], reaction, 300).met, true)
     assert.equal(damage(meta, [unit("air", 3)], [unit("air", 2)], [99], reaction, 300).met, false, "反应兵力须计入")
 
-    // 占领目标: 地面 2x 生存。守军地面 2 → 攻击地面需 >= 4
+    // 占领目标: 地面 2x 生存仅作风险评分输出，不再作为 met 硬门槛（文档 §4）。
+    // 守军地面 2 → 地面 3 < 2x 守军 2 时 groundSurvivalMet=false，但空海已达标则 met 仍 true。
     meta = { requiresOccupation: true, kind: "CONQUEST", damageLevel: 1 }
     const d = (groundCf) => damage(meta, [unit("air", 10), unit("ground", groundCf)], [unit("ground", 2)], [], new Map(), 300)
     assert.equal(d(4).groundSurvivalMet, true)
     assert.equal(d(4).met, true)
     assert.equal(d(3).groundSurvivalMet, false, "地面 3 < 2x 守军 2")
-    assert.equal(d(3).met, false, "地面生存不足→整体不达标")
+    assert.equal(d(3).met, true, "地面生存不足不再抑制进攻，空海达标→met=true")
 
     // 无地面守军: 只要 ≥1 地面即可占领
     const noDef = damage(meta, [unit("ground", 1)], [], [], new Map(), 300)
