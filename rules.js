@@ -23436,6 +23436,13 @@ function esm_pin_strategy(view, context) {
     return strategy
 }
 
+/** import server/erasmus_card.js*/
+// 卡牌选择 / 分类 / 选行动窗口 —— 从 erasmus_state.js 抽离(解耦: 单文件过大)。
+// 函数: esm_card_window_action / esm_choose_card / esm_set_card_pick / esm_card_selection_tree /
+//   esm_card_activation_classes / esm_card_activation_capacity / classifyCards /
+//   esm_event_strategy_card_pick / esm_china_ready / esm_semantic_card_pick /
+//   esm_card_action_window_action / esm_atomic_event_pick / esm_trace_of / esm_log_strategy
+// 与 erasmus_state.js 同属一个 inline 模块作用域, 依赖其 esm_* 查询/上下文函数与全局表。
 // ---- 选牌/选行动窗口的行为 --------------------------------------------------
 // 依据已钉战略返回 { action, argument }(未钉或非法时返回 null → 调方走原路径)。
 function esm_card_window_action(strategy, view, context) {
@@ -23973,7 +23980,12 @@ function esm_log_strategy(strategy) {
         log(`[ERASMUS] ${roleCn}·${phaseCn} 战略「${strategy.name}」 首位目标: ${head || "(无)"}`)
     } catch (e) { /* 日志失败不影响决策 */ }
 }
-
+/** import server/erasmus_card.js*/
+/** import server/erasmus_placement.js*/
+// CDSS 增援/补员落位 —— 从 erasmus_state.js 抽离(解耦: 单文件过大)。
+// 函数: esm_reinf_window / esm_enemy_locs / esm_min_dist / esm_pick_nearest / esm_hq_home /
+//   esm_placement_score / esm_ap_forward_focus / esm_is_cbi_hex / esm_pick_placement /
+//   esm_pick_replacement_unit
 // ===========================================================================
 // CDSS「增援或补员阶段」落位 (顺序 L157-187) —— zh.7 补全
 // 此前增援/补员落位走通用 action_hex/unit 散打(就近焦点或随机散打), 未实现 CDSS
@@ -24143,6 +24155,7 @@ function esm_pick_replacement_unit(candidates, role) {
     }
     return candidates.slice().sort((a, b) => score(a) - score(b))[0]
 }
+/** import server/erasmus_placement.js*/
 /** import server/erasmus_state.js*/
 
 const ERASMUS_VERSION = "erasmus-v2.0-zh.26"
