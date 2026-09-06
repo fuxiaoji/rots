@@ -1371,13 +1371,19 @@ function esm_pin_strategy(view, context) {
     // 空优战略的压制目标已按同一口径全部达成(盟军HQ格与东印度压制目标均无盟军 AZOI)
     // 时，再做一次战略判断，转入南方资源战略实际夺占(菲律宾/马来亚/东印度投降)。
     if (role === "Japan" && phase === "early" && (name === "保守的空优战略" || name === "激进的空优战略")) {
-        const hqDone = (name === "激进的空优战略") || esm_jp_hq_suppression_targets().every(t => !has_zoi(t.hex, AP))
+        // 空优战略的完成口径：图表脚注[1]「激活必须使盟军HQ断补」——即所有压制HQ目标
+        // 都已离场/断补/被灭(esm_jp_hq_suppression_targets 已跳过 OOS 的 HQ，故 length===0
+        // 等价于「HQ 全断补」)。原用 !has_zoi(敌 AZOI 消失) 会随敌航空转场而反复闪烁，
+        // 导致日军长期滞留空优、空袭无法消灭地面军、又不去夺取实质推进目标。
+        const hqDone = (name === "激进的空优战略") || esm_jp_hq_suppression_targets().length === 0
         let deiDone = true
         for (const h of ["Jolo", "Makassar", "Teloekbetoeng", "Bandjermasin"]) {
             const idx = esm_idx(h)
             if (!Number.isInteger(idx) || has_zoi(idx, AP)) { deiDone = false; break }
         }
-        if (hqDone && deiDone) name = "激进的南方资源战略"
+        // 第3回合起无论压制是否“完美达成”都转南方资源战略实际夺占(菲律宾/马来亚/东印度
+        // 投降)，避免空优战略因目标永远无法按 !has_zoi 口径完成而卡死整局。
+        if ((hqDone && deiDone) || G.turn >= 3) name = "激进的南方资源战略"
     }
     // 事件战略: 钉住内容统一展开到【早期】事件清单(py 三处口径殊途同归):
     //   (a) JP 表中/晚期目标 = "同早期阶段事件战略"(指针);
