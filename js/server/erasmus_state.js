@@ -1397,7 +1397,13 @@ function esm_pin_strategy(view, context) {
         targetMeta = esm_goal_target_meta(goals)
     }
     if (role === "Japan" && (name === "保守的空优战略" || name === "激进的南方资源战略")) {
-        dynamicTargets = esm_jp_hq_suppression_targets()
+        // 静态链里已有同格的夺占目标(投降/CONQUEST, requiresOccupation)时，不要再用
+        // SUPPRESS_HQ 把整份静态 meta 顶替掉：压制HQ(去敌方 AZOI) ≠ 占领城市(马来亚/
+        // 菲律宾投降)。占领该格本身会消灭其上的盟军 HQ、同时达成压制，故这类 HQ 格应
+        // 保留静态夺占目标，只对「不落在任何投降格上」的 HQ(如 ABDA 若设于 Kendari)保留
+        // 独立 SUPPRESS_HQ 前置。否则马尼拉/新加坡在 T2 之后退回纯压制、永不占领。
+        const conquered = new Set(targetMeta.filter(t => t.requiresOccupation).map(t => t.hex))
+        dynamicTargets = esm_jp_hq_suppression_targets().filter(t => !conquered.has(t.hex))
         chain = dynamicTargets.map(target => target.hex).concat(chain.filter(h => !dynamicTargets.some(target => target.hex === h)))
         const dynamicHexes = new Set(dynamicTargets.map(target => target.hex))
         targetMeta = dynamicTargets.concat(targetMeta.filter(target => !dynamicHexes.has(target.hex)))
