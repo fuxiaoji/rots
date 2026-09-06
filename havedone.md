@@ -1,5 +1,17 @@
 # 已完成工作记录
 
+## 2026-09-06：冻结「AI 1.0」+ 测试版 8 项行为回归修复（批次 1–3 完成）
+
+原则不变：只改 bot 策略文件（erasmus.js/erasmus_state.js/erasmus_ops.js）+ rules_query.js 查询函数，不动规则引擎（cycle/game/offensive/scenario/supply/actions/events/move 保持 RTT 原样）。
+
+- **冻结 AI 1.0**：把 git a68de77（erasmus-v2.0-zh.22，用户认定的最佳 AI）四份源码原样冻结到 `js/server/bots_v10/`，用 IIFE 命名空间隔离与测试版同名的 `eop_*/esm_*`，注册为 `erasmus-v1.0`（显示名「AI 1.0」）。ops/data/state 三文件与 a68de77 逐字节一致，erasmus.js 仅 3 条 import 路径不同。测试版（erasmus-v2）改名「测试版」，建局页支持 PvE/AIvsAI 双版本与跨版本对战下拉。
+- **批次1（#1 后方调度 + #4 战后移动）**：`composeTaskForce` 与 `attack_now` 过滤不再把本牌打不到目标的后方/转场单位整批硬删，改走可达性前推判定；战后移动补 SR。
+- **批次2（#3 最小可行兵力 + #8 编队成功率）**：占领目标 met 纳入地面战力；地面不足且无地面可补时提前 done 空攻势。
+- **批次3（#2 夺岛积极 + #6 航空前推）**：占领地面门槛改为 1:1（修 damageLevel 误除导致马尼拉要求 4×、新加坡 2× 地面才进攻）；`eop_preserve_rear_air` 转场判定收紧为「落入攻击航程内(≤ebr)」且只在会战编队内生效，让后方航空可被故意前推，修夏威夷折返跑。版本 zh.23 → zh.26。
+- **盟军胜利路线**：苏联牌(AP#79)权重调整（T<7 消耗可重洗、T≥7 保留作事件）、原子弹不可达时把轰炸基地/B29 前置视为已满足以转封锁、补釜山/汉城封锁目标。
+- **50 局审计**（`EOTS_HEADLESS_MOVES=1`，1942-1945，seed 20260903）：complete=50、errors=0、action-limit=0；**盟军 1 胜（原子弹胜利）/ 日本 49 胜**，capturedAP=210 / capturedJP=183。验收标准「盟军至少一局获胜」达成。产物 `tests/results/audit50-...-50-20260903-headless-headless-b3.json`。
+- **已知未决**：①日军前期陆军不上马尼拉根因是第2回合选了「保守空优」而非「南方资源」，属战略选择问题，待批次4/后续；② `erasmus-save-replay.test.js` 的 save/restore 确定性失败为既有引擎序列化问题（fb80943 即已失败，本次偏移点仅因行动序列变化而移动），非本次回归，未动引擎。
+
 ## 2026-09-06：Erasmus 代码化缺口整改（PR1–PR6）
 
 按 `EOTS_Erasmus_v2_代码化缺口整改清单.md` 逐项落地，原则「Erasmus 负责选什么，RTT 规则引擎负责什么是合法」，只改 bot 策略文件（`erasmus.js`/`erasmus_state.js`/`erasmus_ops.js`）+ 新增只读查询层，不动规则引擎。
