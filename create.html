@@ -97,7 +97,6 @@
         玩家阵营：
         <label><input type="radio" name="human_role" value="Allies" checked> 盟军</label>
         <label><input type="radio" name="human_role" value="Japan"> 日本</label>
-        <input type="hidden" name="bot_id" value="erasmus-v2">
     </p>
 </fieldset>
 <hr>
@@ -138,8 +137,14 @@
     fast_checkbox.onchange();
     document.querySelectorAll("input[name='mode']").forEach(function (input) {
         input.onchange = function () {
-            var pve = document.querySelector("input[name='mode']:checked").value === "pve"
+            var mode = document.querySelector("input[name='mode']:checked").value
+            var pve = mode === "pve"
+            var aivai = mode === "aivai"
             document.getElementById("pve_role").hidden = !pve
+            var bp = document.getElementById("bot_picker_pve")
+            if (bp) bp.hidden = !pve
+            var ba = document.getElementById("bot_picker_aivai")
+            if (ba) ba.hidden = !aivai
             // PvE 也允许选 1942-1945 缩短战役等 bot 支持场景, 不再强制回南太平洋。
             scenario.onchange()
         }
