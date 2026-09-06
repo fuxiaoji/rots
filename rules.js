@@ -21911,6 +21911,10 @@ var ERASMUS_CHARTS = [{"schema_version":3,"id":"ERASMUS-JP-01","chart_id":"ERASM
 var ESM_GATE_CACHE = {}
 var ESM_LOCKED = {}          // key `${seed}|${sid}` -> { turn, role: {Japan:{...},Allies:{...}}, seenOrd, bombFail, lastTurn }
 var ESM_PREP = {}            // key sid -> 预计算地理清单(一次性)
+// 本回合已算定的日军后勤值(Logistic Value)——决策轴少数应在回合内缓存的值：
+// 手牌随打牌变化会让逐牌重算的后勤值来回抖动、令早期/中期策略在同一回合内翻转，
+// 故首次计算后缓存到回合末(回合推进自然失效)。
+var ESM_JP_LOGISTICS_CACHE = { sid: null, turn: -1, value: 0 }
 
 // ===========================================================================
 // Gate / 剧本门槛
@@ -22036,11 +22040,13 @@ function esm_role_faction(role) { return role === "Japan" ? JP : AP }
 // 日志字段(手牌 LV 合计 —— 用户选定口径) 与 通用谓词
 // ===========================================================================
 function esm_jp_logistics() {
+    if (ESM_JP_LOGISTICS_CACHE.sid === G.sid && ESM_JP_LOGISTICS_CACHE.turn === G.turn) return ESM_JP_LOGISTICS_CACHE.value
     let sum = 0
     for (const c of (G.hand && G.hand[JP]) || []) {
         const lv = cards[c] && cards[c].logistic
         if (typeof lv === "number") sum += lv
     }
+    ESM_JP_LOGISTICS_CACHE = { sid: G.sid, turn: G.turn, value: sum }
     return sum
 }
 function esm_count_carriers(faction) {
@@ -23238,6 +23244,20 @@ function esm_pin_strategy(view, context) {
     // 链首格(如 Kwajalein/Guadalcanal)永远夺不下。确定性分支(can_pass/事件/反攻/
     // 占领轰炸基地/推进B29/原子弹/登陆日本)不是轮换轴, 照常打断延续。
     name = esm_pin_axis_continuity(lock, role, phase, name)
+    // 用户反馈(重大bug)：决策轴每张牌重新判，但空优战略的压制目标按「无敌方 AZOI」
+    // (esm_strategy_targets / eop_target_pending 口径)判定完成后，仍被反复选中、链空无
+    // 目标，且图表箭头「A=盟军HQ断补」在实践中永不满足(实测 oosSize 全程为 0)。故：当
+    // 空优战略的压制目标已按同一口径全部达成(盟军HQ格与东印度压制目标均无盟军 AZOI)
+    // 时，再做一次战略判断，转入南方资源战略实际夺占(菲律宾/马来亚/东印度投降)。
+    if (role === "Japan" && phase === "early" && (name === "保守的空优战略" || name === "激进的空优战略")) {
+        const hqDone = (name === "激进的空优战略") || esm_jp_hq_suppression_targets().every(t => !has_zoi(t.hex, AP))
+        let deiDone = true
+        for (const h of ["Jolo", "Makassar", "Teloekbetoeng", "Bandjermasin"]) {
+            const idx = esm_idx(h)
+            if (!Number.isInteger(idx) || has_zoi(idx, AP)) { deiDone = false; break }
+        }
+        if (hqDone && deiDone) name = "激进的南方资源战略"
+    }
     // 事件战略: 钉住内容统一展开到【早期】事件清单(py 三处口径殊途同归):
     //   (a) JP 表中/晚期目标 = "同早期阶段事件战略"(指针);
     //   (b) AL mid/late 决策树直接 return AL_EARLY_STRATEGIES["事件战略"](py 共用早期条目,
