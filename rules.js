@@ -21499,10 +21499,24 @@ function eop_exact_strategic_predicates(view, context, nodeId) {
     return out
 }
 
-// PR3：任务部队候选的“合法参与”过滤——不可达单位不得进入排序。用 RTT 规则查询层
-// 的 queryCombatParticipation 判可达性（地面/海军走引擎 BFS，航空走战斗航程），
-// 任何查询异常都保守放行，绝不因查询崩溃而误剔候选。
-function eop_filter_legal_participants(unitsById, target, role) {
+// 规划模式枚举（文档 §2）：把「立即参战 / 准备下一目标 / 调动 / 驻防 / 防御 / 航空转场 /
+// 战略移动 / AZOI 网络」等不同规划阶段显式区分，禁止再按 kind 字符串做 if-bypass。
+const EOP_PLAN_MODE = { ATTACK_NOW:"attack-now", PREPARE_NEXT_TARGET:"prepare-next-target",
+    REDEPLOY:"redeploy", GARRISON:"garrison", DEFEND:"defend", AZOI_NETWORK:"azoi-network",
+    AIR_TRANSFER:"air-transfer", STRATEGIC_MOVE:"strategic-move" }
+
+// 开发/测试断言开关：生产环境恒 false，断言零开销。
+const EOP_DEV = typeof process !== "undefined" && process.env
+    && (process.env.EOTS_DEV === "1" || process.env.NODE_ENV === "test")
+
+// PR3：任务部队候选的「立即参战」硬过滤——仅限 ATTACK_NOW。用 RTT 规则查询层的
+// queryCombatParticipation 判可达性（地面/海军走引擎 BFS，航空走战斗航程），任何查询
+// 异常都保守放行，绝不因查询崩溃而误剔候选。文档 §2 禁止把它当通用硬闸套到
+// REDEPLOY/GARRISON/DEFEND/AZOI/AIR_TRANSFER/STRATEGIC_MOVE 上（那些走可前推/可到达查询）。
+function eop_filter_attack_now_participants(unitsById, target, role, mode) {
+    if (EOP_DEV && mode !== undefined && mode !== EOP_PLAN_MODE.ATTACK_NOW) {
+        throw new Error("eop_filter_attack_now_participants 仅限 ATTACK_NOW，got " + mode)
+    }
     if (target === null || target === undefined || !Number.isInteger(target)) return unitsById
     return unitsById.filter(u => {
         try { return typeof queryCombatParticipation !== "function" || queryCombatParticipation(u.id, target, {}).legal }
@@ -21537,7 +21551,7 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
         // SR/headless 路径移向目标，不能套用 queryCombatParticipation 的会战参与过滤，
         // 否则地面单位无法"会战参与"到隔海目标 → pool 空 → unit undefined → 激活窗被迫
         // done，形成"打出牌但 0 单位调度"的空攻势。GARRISON 需实际进入目标格，保留过滤。
-        const pool=f.meta.kind==="REDEPLOY"?moved:eop_filter_legal_participants(moved,target,role)
+        const pool=f.meta.kind==="REDEPLOY"?moved:eop_filter_attack_now_participants(moved,target,role,EOP_PLAN_MODE.ATTACK_NOW)
         pool.sort((a,b)=>(f.meta.garrisonRequirement?.airSteps ? (a.class==="air"?0:1)-(b.class==="air"?0:1):0)
             || get_distance(a.location,target)-get_distance(b.location,target)||a.id-b.id)
         return {complete:already,strict:true,required:1,strength:already?1:0,unit:already?null:pool[0]?.id,
@@ -21586,7 +21600,7 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
         return unactivated.length>1
     })
     // 不可达单位不得进入排序（地面走引擎 BFS、航空走航程、海军走引擎海军 BFS）。
-    pool=eop_filter_legal_participants(pool,target,role)
+    pool=eop_filter_attack_now_participants(pool,target,role,EOP_PLAN_MODE.ATTACK_NOW)
     let amphibiousPick
     if(landing&&typeof eop_pick_unit==="function")amphibiousPick=eop_pick_unit(pool.map(u=>u.id),role,[...active],target)
     const classRank=u=>f.suppress?({air:0,naval:1,ground:2}[u.class]??3)
