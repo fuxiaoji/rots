@@ -53,6 +53,13 @@ function predicate_value(view, id, context, nodeId) {
         const modified=raw-(view?.ai?.reaction?.surprise?2:0)
         return modified<Number(view?.ai?.reaction?.enemyActivatedCount||0)*2
     }
+    // 第5/11页任务部队 predicate 精确化 (PR2)：优先读 RTT 规则查询层的精确求值，
+    // 缺失(undefined)时退回 view.ai.predicates 的启发式兜底。惰性计算一次并挂到 context。
+    if (EOP_EXACT_TASKFORCE_PREDICATES && EOP_EXACT_TASKFORCE_PREDICATES.indexOf(id) >= 0) {
+        if (!context.__exactTaskforcePreds) context.__exactTaskforcePreds = eop_exact_taskforce_predicates(view, context)
+        const exact = context.__exactTaskforcePreds[id]
+        if (exact !== undefined) return !!exact
+    }
     if (view.ai && view.ai.predicates && Object.prototype.hasOwnProperty.call(view.ai.predicates, id))
         return !!view.ai.predicates[id]
     const turn = Number(view.turn || 0)

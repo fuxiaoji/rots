@@ -560,6 +560,120 @@ function evaluateTargetFeasibility(target, card, hq, view) {
         requiredGroundMath:Math.max(1,defenders.filter(u=>u.class==="ground").reduce((s,u)=>s+cf(u),0)),
         requiredAirSeaMath:Math.max(1,Math.ceil(relevantDefense/damageLevel))}
 }
+// ---- Page 5 / Page 11 任务部队 predicate 精确化 (PR2) ----------------------
+// 与 evaluateTargetFeasibility 的粗代理不同，这些求值器只依赖 RTT 规则查询层
+// (rules_query.js) 的精确合法性/移动/反应结果，不再用 aiStage/aiBattle/resource/
+// get_distance 作为“能不能打”的代理。返回 undefined 表示该谓词在当前状态不可判定，
+// 由 predicate_value 退回 view.ai.predicates 兜底。
+
+const EOP_EXACT_TASKFORCE_PREDICATES = [
+    "CAN_GROUND_ADVANCE", "GROUND_CAN_ENTER_EXIT", "TARGET_IS_SR",
+    "ENEMY_AIR_OR_CARRIER_CAN_REACT", "ENEMY_NAVAL_GROUND_CAN_REACT",
+    "FORCE_MEETS_BATTLE_SUPPORT_STANDARD", "TARGET_DAMAGE_LEVEL_MET",
+]
+
+// 单位当前战斗值（减损用 rcf，否则 cf）。
+function eop_unit_cf(u) {
+    return u.reduced ? (Number(u.rcf) || Math.ceil((Number(u.cf) || 0) / 2)) : (Number(u.cf) || 0)
+}
+
+// 地面单位进入目标后仍能合法退出：进入合法，且至少存在一个相邻合法可达格。
+function eop_can_ground_enter_exit(unitId, target, reach) {
+    const canEnter = !!reach.costByHex[target]
+    if (!canEnter) return { canEnter: false, canExit: false, entryCost: undefined, exitHexes: [] }
+    const md = get_map_data(target)
+    const neighbors = (md && Array.isArray(md.nh)) ? md.nh : []
+    const exitHexes = neighbors.filter(n => Number.isInteger(n) && n !== target && reach.costByHex[n] !== undefined)
+    return { canEnter: true, canExit: exitHexes.length > 0, entryCost: reach.costByHex[target], exitHexes }
+}
+
+// 战斗支援标准：只判兵种构成，不判总战斗力（与 Damage Level 拆开）。
+function eop_meets_battle_support_standard(meta, activeUnits, target, faction) {
+    const hasGround = activeUnits.some(u => u.class === "ground")
+    const hasNaval = activeUnits.some(u => u.class === "naval")
+    const hasRangedSupport = activeUnits.some(u => u.class === "air" || (u.class === "naval" && Number(u.br) > 0))
+    const requiresOccupation = !!(meta && meta.requiresOccupation)
+    const suppress = !!(meta && (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ"))
+    const md = (target !== null && target !== undefined && Number.isInteger(target)) ? get_map_data(target) : null
+    const coastal = !!(md && (md.port || md.island))
+    const landing = requiresOccupation && coastal && !is_space_controlled(target, faction)
+    const missing = []
+    if (requiresOccupation && !hasGround) missing.push("ground")
+    if (landing && !hasNaval) missing.push("naval")
+    if (suppress && !hasRangedSupport) missing.push("air-sea")
+    return { met: missing.length === 0, missing }
+}
+
+// 伤害等级：攻击有效战斗力是否达到目标 Damage Level；占领目标另须地面 2x 生存。
+function eop_evaluate_damage_level(meta, attackers, defenders, reactionIds, byId, target) {
+    const cf = eop_unit_cf
+    const requiresOccupation = !!(meta && meta.requiresOccupation)
+    const suppress = !!(meta && (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ"))
+    const damageLevel = (meta && meta.damageLevel) || 1
+    const airSeaDefense = defenders.filter(u => u.class === "air" || u.class === "naval").reduce((s, u) => s + cf(u), 0)
+    const groundDefense = defenders.filter(u => u.class === "ground").reduce((s, u) => s + cf(u), 0)
+    const totalDefense = airSeaDefense + groundDefense
+    const reactionStrength = (reactionIds || []).reduce((s, id) => { const u = byId.get(id); return s + (u ? cf(u) : 0) }, 0)
+    const attackerAirSea = attackers.filter(u => u.class === "air" || u.class === "naval").reduce((s, u) => s + cf(u), 0)
+    const attackerGround = attackers.filter(u => u.class === "ground").reduce((s, u) => s + cf(u), 0)
+    const relevantDefense = (requiresOccupation ? airSeaDefense : totalDefense) + reactionStrength
+    const airSeaMet = attackerAirSea >= Math.ceil(relevantDefense / damageLevel)
+    const groundSurvivalMet = !requiresOccupation ? true : (attackerGround >= Math.max(1, 2 * groundDefense))
+    const met = suppress ? airSeaMet : (requiresOccupation ? (airSeaMet && groundSurvivalMet) : airSeaMet)
+    return { met, airSeaMet, groundSurvivalMet, attackerAirSea, attackerGround, airSeaDefense, groundDefense, reactionStrength }
+}
+
+// 精确求值 7 个任务部队 predicate（只读；返回 undefined 表示退回兜底）。
+function eop_exact_taskforce_predicates(view, context) {
+    const out = {}
+    for (const id of EOP_EXACT_TASKFORCE_PREDICATES) out[id] = undefined
+    if (!view || !view.ai) return out
+    const role = context && context.role ? context.role : view.active
+    const faction = role === "Japan" ? JP : AP
+    const enemy = 1 - faction
+    const target = view.ai.focus
+    if (target === null || target === undefined || !Number.isInteger(target)) return out
+    if (typeof G === "undefined" || !G || !G.offensive || !Array.isArray(G.offensive.active_cards) || !G.offensive.active_cards[0]) return out
+    const units = Array.isArray(view.ai.units) ? view.ai.units : []
+    const byId = new Map(units.map(u => [u.id, u]))
+    const meta = eop_target_meta(role, target)
+    const activeIds = (G.offensive.active_units && Array.isArray(G.offensive.active_units[faction])) ? G.offensive.active_units[faction].slice() : []
+    const activeUnits = activeIds.map(id => byId.get(id)).filter(Boolean)
+    const defenders = units.filter(u => u.location === target && u.faction === enemy)
+
+    // 反应候选（精确）。
+    const reaction = queryReactionCandidates({ reactionFaction: enemy, targetHex: target })
+    const reactionIds = reaction.air.concat(reaction.carrier, reaction.naval, reaction.ground)
+    out.ENEMY_AIR_OR_CARRIER_CAN_REACT = (reaction.air.length + reaction.carrier.length) > 0
+    out.ENEMY_NAVAL_GROUND_CAN_REACT = (reaction.naval.length + reaction.ground.length) > 0
+
+    // SR。
+    out.TARGET_IS_SR = !!querySpecialReaction({ reactingFaction: enemy, target }).eligible
+
+    // 地面可达性（精确）：存在能合法推进到目标的己方地面单位。
+    let canGroundAdvance = false
+    let groundCanEnterExit = false
+    for (const u of units) {
+        if (u.faction !== faction || u.class !== "ground") continue
+        if (!Number.isInteger(u.location) || u.location < 0 || u.location > LAST_BOARD_HEX) continue
+        const reach = queryGroundReachability(u.id, { move_type: ANY_MOVE })
+        if (reach.reachableHexes && reach.reachableHexes.indexOf(target) >= 0) {
+            canGroundAdvance = true
+            if (eop_can_ground_enter_exit(u.id, target, reach).canExit) groundCanEnterExit = true
+        }
+    }
+    out.CAN_GROUND_ADVANCE = canGroundAdvance
+    out.GROUND_CAN_ENTER_EXIT = groundCanEnterExit
+
+    // 支援标准（兵种构成）与伤害等级（战斗力 + 地面 2x 生存）。
+    const support = eop_meets_battle_support_standard(meta, activeUnits, target, faction)
+    out.FORCE_MEETS_BATTLE_SUPPORT_STANDARD = support.met
+    const dmg = eop_evaluate_damage_level(meta, activeUnits, defenders, reactionIds, byId, target)
+    out.TARGET_DAMAGE_LEVEL_MET = dmg.met
+
+    return out
+}
+
 function composeTaskForce(target, card, hq, view, candidates, role) {
     if((target===null || target===undefined) && eop_axis(role))return {complete:true,strict:true,unit:null,formation:"objectives-scheduled"}
     const units=Array.isArray(view?.ai?.units)?view.ai.units:[], byId=new Map(units.map(u=>[u.id,u]))

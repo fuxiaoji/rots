@@ -29,8 +29,12 @@ const RULES_QUERY_L_KEYS = [
 
 // 快照事务：在 fn() 执行前后保存/恢复全局可变状态。
 // 注意不重赋值 G（避免破坏 exports.* 中 G=state 的原地引用约定），只就地恢复字段。
-function rules_query_snapshot(fn) {
+// 引擎移动/反应生成器要求 G.active 为数值阵营；而 decide() 期间 G.active 被框架
+// _save 还原成 "Allies"/"Japan" 字符串。故事务内把 G.active 临时规整为数值（默认取
+// 数值 R，或显式 activeOverride），finally 里还原，绝不外泄。
+function rules_query_snapshot(fn, activeOverride) {
     const rSaved = R
+    const activeSaved = G.active
     const seed = G.seed
     const supplyCache = Array.isArray(G.supply_cache) ? G.supply_cache.slice() : G.supply_cache
     const logLen = Array.isArray(G.log) ? G.log.length : 0
@@ -46,9 +50,12 @@ function rules_query_snapshot(fn) {
     for (const k of RULES_QUERY_L_KEYS) lSaved[k] = { had: Object.prototype.hasOwnProperty.call(L, k), value: L[k] }
     let result
     try {
+        if (activeOverride !== undefined) G.active = activeOverride
+        else if (typeof G.active !== "number" && typeof R === "number") G.active = R
         result = fn()
     } finally {
         R = rSaved
+        G.active = activeSaved
         G.seed = seed
         G.supply_cache = supplyCache
         if (Array.isArray(G.log)) G.log.length = logLen
@@ -200,7 +207,7 @@ function queryReactionCandidates(opts) {
         })
         R = prevR
         return { air, carrier, naval, ground, hq: [], specialReaction: [] }
-    })
+    }, reactionFaction)
 }
 
 // 反应候选强度合计（空海 + 地面），供 potentialReactionStrength 使用。
@@ -209,6 +216,34 @@ function queryReactionStrength(opts) {
     const battleHex = opts && opts.battleHex
     const all = c.air.concat(c.carrier, c.naval, c.ground)
     return sum_combat_factor(all, battleHex)
+}
+
+// 特殊反应资格：目标是否为反应方可掷“特殊反应”骰的潜在 SR 格。
+// 忠实复用 P.special_reaction._begin 的逐格资格判定：命名格 + 反应方 ZOI +
+// 反应方某 HQ 指挥范围内。返回 { eligible, reason, respondingHq, legalUnits }。
+function querySpecialReaction(opts) {
+    const reactingFaction = (opts && opts.reactingFaction !== undefined)
+        ? opts.reactingFaction : (1 - (G.offensive ? G.offensive.attacker : R))
+    const target = opts && opts.target
+    return rules_query_snapshot(() => {
+        if (target === null || target === undefined || !Number.isInteger(target)) {
+            return { eligible: false, reason: "no-target", respondingHq: null, legalUnits: [] }
+        }
+        const md = get_map_data(target)
+        if (!md || !md.named) return { eligible: false, reason: "not-named", respondingHq: null, legalUnits: [] }
+        if (!has_zoi(target, reactingFaction)) return { eligible: false, reason: "no-zoi", respondingHq: null, legalUnits: [] }
+        let respondingHq = null
+        for_each_unit_on_map((u, piece) => {
+            if (respondingHq !== null) return
+            if (piece.faction === reactingFaction && piece.class === "hq"
+                && in_range_on_map(G.location[u], piece.cr, [target], reactingFaction).length) {
+                respondingHq = u
+            }
+        })
+        return respondingHq !== null
+            ? { eligible: true, reason: null, respondingHq, legalUnits: [] }
+            : { eligible: false, reason: "out-of-range", respondingHq: null, legalUnits: [] }
+    })
 }
 
 // ============================================================================
@@ -220,7 +255,7 @@ const RULES_QUERY_FNS = [
     "queryPotentialCombatStrength", "queryBattleTable", "querySpaceControlled",
     "queryFactionUnits", "queryLegalReinforcementHexes", "queryEmergencyRetreatHexes",
     "queryActivationCandidates", "queryGroundReachability", "queryReactionCandidates",
-    "queryReactionStrength",
+    "queryReactionStrength", "querySpecialReaction",
 ]
 
 function rules_query_dispatch(q) {
@@ -231,7 +266,7 @@ function rules_query_dispatch(q) {
         queryPotentialCombatStrength, queryBattleTable, querySpaceControlled,
         queryFactionUnits, queryLegalReinforcementHexes, queryEmergencyRetreatHexes,
         queryActivationCandidates, queryGroundReachability, queryReactionCandidates,
-        queryReactionStrength,
+        queryReactionStrength, querySpecialReaction,
     }
     if (typeof impl[fn] !== "function") return null
     const args = q.args || q.params

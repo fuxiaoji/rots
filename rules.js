@@ -18795,8 +18795,12 @@ const RULES_QUERY_L_KEYS = [
 
 // 快照事务：在 fn() 执行前后保存/恢复全局可变状态。
 // 注意不重赋值 G（避免破坏 exports.* 中 G=state 的原地引用约定），只就地恢复字段。
-function rules_query_snapshot(fn) {
+// 引擎移动/反应生成器要求 G.active 为数值阵营；而 decide() 期间 G.active 被框架
+// _save 还原成 "Allies"/"Japan" 字符串。故事务内把 G.active 临时规整为数值（默认取
+// 数值 R，或显式 activeOverride），finally 里还原，绝不外泄。
+function rules_query_snapshot(fn, activeOverride) {
     const rSaved = R
+    const activeSaved = G.active
     const seed = G.seed
     const supplyCache = Array.isArray(G.supply_cache) ? G.supply_cache.slice() : G.supply_cache
     const logLen = Array.isArray(G.log) ? G.log.length : 0
@@ -18812,9 +18816,12 @@ function rules_query_snapshot(fn) {
     for (const k of RULES_QUERY_L_KEYS) lSaved[k] = { had: Object.prototype.hasOwnProperty.call(L, k), value: L[k] }
     let result
     try {
+        if (activeOverride !== undefined) G.active = activeOverride
+        else if (typeof G.active !== "number" && typeof R === "number") G.active = R
         result = fn()
     } finally {
         R = rSaved
+        G.active = activeSaved
         G.seed = seed
         G.supply_cache = supplyCache
         if (Array.isArray(G.log)) G.log.length = logLen
@@ -18966,7 +18973,7 @@ function queryReactionCandidates(opts) {
         })
         R = prevR
         return { air, carrier, naval, ground, hq: [], specialReaction: [] }
-    })
+    }, reactionFaction)
 }
 
 // 反应候选强度合计（空海 + 地面），供 potentialReactionStrength 使用。
@@ -18975,6 +18982,34 @@ function queryReactionStrength(opts) {
     const battleHex = opts && opts.battleHex
     const all = c.air.concat(c.carrier, c.naval, c.ground)
     return sum_combat_factor(all, battleHex)
+}
+
+// 特殊反应资格：目标是否为反应方可掷“特殊反应”骰的潜在 SR 格。
+// 忠实复用 P.special_reaction._begin 的逐格资格判定：命名格 + 反应方 ZOI +
+// 反应方某 HQ 指挥范围内。返回 { eligible, reason, respondingHq, legalUnits }。
+function querySpecialReaction(opts) {
+    const reactingFaction = (opts && opts.reactingFaction !== undefined)
+        ? opts.reactingFaction : (1 - (G.offensive ? G.offensive.attacker : R))
+    const target = opts && opts.target
+    return rules_query_snapshot(() => {
+        if (target === null || target === undefined || !Number.isInteger(target)) {
+            return { eligible: false, reason: "no-target", respondingHq: null, legalUnits: [] }
+        }
+        const md = get_map_data(target)
+        if (!md || !md.named) return { eligible: false, reason: "not-named", respondingHq: null, legalUnits: [] }
+        if (!has_zoi(target, reactingFaction)) return { eligible: false, reason: "no-zoi", respondingHq: null, legalUnits: [] }
+        let respondingHq = null
+        for_each_unit_on_map((u, piece) => {
+            if (respondingHq !== null) return
+            if (piece.faction === reactingFaction && piece.class === "hq"
+                && in_range_on_map(G.location[u], piece.cr, [target], reactingFaction).length) {
+                respondingHq = u
+            }
+        })
+        return respondingHq !== null
+            ? { eligible: true, reason: null, respondingHq, legalUnits: [] }
+            : { eligible: false, reason: "out-of-range", respondingHq: null, legalUnits: [] }
+    })
 }
 
 // ============================================================================
@@ -18986,7 +19021,7 @@ const RULES_QUERY_FNS = [
     "queryPotentialCombatStrength", "queryBattleTable", "querySpaceControlled",
     "queryFactionUnits", "queryLegalReinforcementHexes", "queryEmergencyRetreatHexes",
     "queryActivationCandidates", "queryGroundReachability", "queryReactionCandidates",
-    "queryReactionStrength",
+    "queryReactionStrength", "querySpecialReaction",
 ]
 
 function rules_query_dispatch(q) {
@@ -18997,7 +19032,7 @@ function rules_query_dispatch(q) {
         queryPotentialCombatStrength, queryBattleTable, querySpaceControlled,
         queryFactionUnits, queryLegalReinforcementHexes, queryEmergencyRetreatHexes,
         queryActivationCandidates, queryGroundReachability, queryReactionCandidates,
-        queryReactionStrength,
+        queryReactionStrength, querySpecialReaction,
     }
     if (typeof impl[fn] !== "function") return null
     const args = q.args || q.params
@@ -20993,6 +21028,120 @@ function evaluateTargetFeasibility(target, card, hq, view) {
         requiredGroundMath:Math.max(1,defenders.filter(u=>u.class==="ground").reduce((s,u)=>s+cf(u),0)),
         requiredAirSeaMath:Math.max(1,Math.ceil(relevantDefense/damageLevel))}
 }
+// ---- Page 5 / Page 11 任务部队 predicate 精确化 (PR2) ----------------------
+// 与 evaluateTargetFeasibility 的粗代理不同，这些求值器只依赖 RTT 规则查询层
+// (rules_query.js) 的精确合法性/移动/反应结果，不再用 aiStage/aiBattle/resource/
+// get_distance 作为“能不能打”的代理。返回 undefined 表示该谓词在当前状态不可判定，
+// 由 predicate_value 退回 view.ai.predicates 兜底。
+
+const EOP_EXACT_TASKFORCE_PREDICATES = [
+    "CAN_GROUND_ADVANCE", "GROUND_CAN_ENTER_EXIT", "TARGET_IS_SR",
+    "ENEMY_AIR_OR_CARRIER_CAN_REACT", "ENEMY_NAVAL_GROUND_CAN_REACT",
+    "FORCE_MEETS_BATTLE_SUPPORT_STANDARD", "TARGET_DAMAGE_LEVEL_MET",
+]
+
+// 单位当前战斗值（减损用 rcf，否则 cf）。
+function eop_unit_cf(u) {
+    return u.reduced ? (Number(u.rcf) || Math.ceil((Number(u.cf) || 0) / 2)) : (Number(u.cf) || 0)
+}
+
+// 地面单位进入目标后仍能合法退出：进入合法，且至少存在一个相邻合法可达格。
+function eop_can_ground_enter_exit(unitId, target, reach) {
+    const canEnter = !!reach.costByHex[target]
+    if (!canEnter) return { canEnter: false, canExit: false, entryCost: undefined, exitHexes: [] }
+    const md = get_map_data(target)
+    const neighbors = (md && Array.isArray(md.nh)) ? md.nh : []
+    const exitHexes = neighbors.filter(n => Number.isInteger(n) && n !== target && reach.costByHex[n] !== undefined)
+    return { canEnter: true, canExit: exitHexes.length > 0, entryCost: reach.costByHex[target], exitHexes }
+}
+
+// 战斗支援标准：只判兵种构成，不判总战斗力（与 Damage Level 拆开）。
+function eop_meets_battle_support_standard(meta, activeUnits, target, faction) {
+    const hasGround = activeUnits.some(u => u.class === "ground")
+    const hasNaval = activeUnits.some(u => u.class === "naval")
+    const hasRangedSupport = activeUnits.some(u => u.class === "air" || (u.class === "naval" && Number(u.br) > 0))
+    const requiresOccupation = !!(meta && meta.requiresOccupation)
+    const suppress = !!(meta && (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ"))
+    const md = (target !== null && target !== undefined && Number.isInteger(target)) ? get_map_data(target) : null
+    const coastal = !!(md && (md.port || md.island))
+    const landing = requiresOccupation && coastal && !is_space_controlled(target, faction)
+    const missing = []
+    if (requiresOccupation && !hasGround) missing.push("ground")
+    if (landing && !hasNaval) missing.push("naval")
+    if (suppress && !hasRangedSupport) missing.push("air-sea")
+    return { met: missing.length === 0, missing }
+}
+
+// 伤害等级：攻击有效战斗力是否达到目标 Damage Level；占领目标另须地面 2x 生存。
+function eop_evaluate_damage_level(meta, attackers, defenders, reactionIds, byId, target) {
+    const cf = eop_unit_cf
+    const requiresOccupation = !!(meta && meta.requiresOccupation)
+    const suppress = !!(meta && (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ"))
+    const damageLevel = (meta && meta.damageLevel) || 1
+    const airSeaDefense = defenders.filter(u => u.class === "air" || u.class === "naval").reduce((s, u) => s + cf(u), 0)
+    const groundDefense = defenders.filter(u => u.class === "ground").reduce((s, u) => s + cf(u), 0)
+    const totalDefense = airSeaDefense + groundDefense
+    const reactionStrength = (reactionIds || []).reduce((s, id) => { const u = byId.get(id); return s + (u ? cf(u) : 0) }, 0)
+    const attackerAirSea = attackers.filter(u => u.class === "air" || u.class === "naval").reduce((s, u) => s + cf(u), 0)
+    const attackerGround = attackers.filter(u => u.class === "ground").reduce((s, u) => s + cf(u), 0)
+    const relevantDefense = (requiresOccupation ? airSeaDefense : totalDefense) + reactionStrength
+    const airSeaMet = attackerAirSea >= Math.ceil(relevantDefense / damageLevel)
+    const groundSurvivalMet = !requiresOccupation ? true : (attackerGround >= Math.max(1, 2 * groundDefense))
+    const met = suppress ? airSeaMet : (requiresOccupation ? (airSeaMet && groundSurvivalMet) : airSeaMet)
+    return { met, airSeaMet, groundSurvivalMet, attackerAirSea, attackerGround, airSeaDefense, groundDefense, reactionStrength }
+}
+
+// 精确求值 7 个任务部队 predicate（只读；返回 undefined 表示退回兜底）。
+function eop_exact_taskforce_predicates(view, context) {
+    const out = {}
+    for (const id of EOP_EXACT_TASKFORCE_PREDICATES) out[id] = undefined
+    if (!view || !view.ai) return out
+    const role = context && context.role ? context.role : view.active
+    const faction = role === "Japan" ? JP : AP
+    const enemy = 1 - faction
+    const target = view.ai.focus
+    if (target === null || target === undefined || !Number.isInteger(target)) return out
+    if (typeof G === "undefined" || !G || !G.offensive || !Array.isArray(G.offensive.active_cards) || !G.offensive.active_cards[0]) return out
+    const units = Array.isArray(view.ai.units) ? view.ai.units : []
+    const byId = new Map(units.map(u => [u.id, u]))
+    const meta = eop_target_meta(role, target)
+    const activeIds = (G.offensive.active_units && Array.isArray(G.offensive.active_units[faction])) ? G.offensive.active_units[faction].slice() : []
+    const activeUnits = activeIds.map(id => byId.get(id)).filter(Boolean)
+    const defenders = units.filter(u => u.location === target && u.faction === enemy)
+
+    // 反应候选（精确）。
+    const reaction = queryReactionCandidates({ reactionFaction: enemy, targetHex: target })
+    const reactionIds = reaction.air.concat(reaction.carrier, reaction.naval, reaction.ground)
+    out.ENEMY_AIR_OR_CARRIER_CAN_REACT = (reaction.air.length + reaction.carrier.length) > 0
+    out.ENEMY_NAVAL_GROUND_CAN_REACT = (reaction.naval.length + reaction.ground.length) > 0
+
+    // SR。
+    out.TARGET_IS_SR = !!querySpecialReaction({ reactingFaction: enemy, target }).eligible
+
+    // 地面可达性（精确）：存在能合法推进到目标的己方地面单位。
+    let canGroundAdvance = false
+    let groundCanEnterExit = false
+    for (const u of units) {
+        if (u.faction !== faction || u.class !== "ground") continue
+        if (!Number.isInteger(u.location) || u.location < 0 || u.location > LAST_BOARD_HEX) continue
+        const reach = queryGroundReachability(u.id, { move_type: ANY_MOVE })
+        if (reach.reachableHexes && reach.reachableHexes.indexOf(target) >= 0) {
+            canGroundAdvance = true
+            if (eop_can_ground_enter_exit(u.id, target, reach).canExit) groundCanEnterExit = true
+        }
+    }
+    out.CAN_GROUND_ADVANCE = canGroundAdvance
+    out.GROUND_CAN_ENTER_EXIT = groundCanEnterExit
+
+    // 支援标准（兵种构成）与伤害等级（战斗力 + 地面 2x 生存）。
+    const support = eop_meets_battle_support_standard(meta, activeUnits, target, faction)
+    out.FORCE_MEETS_BATTLE_SUPPORT_STANDARD = support.met
+    const dmg = eop_evaluate_damage_level(meta, activeUnits, defenders, reactionIds, byId, target)
+    out.TARGET_DAMAGE_LEVEL_MET = dmg.met
+
+    return out
+}
+
 function composeTaskForce(target, card, hq, view, candidates, role) {
     if((target===null || target===undefined) && eop_axis(role))return {complete:true,strict:true,unit:null,formation:"objectives-scheduled"}
     const units=Array.isArray(view?.ai?.units)?view.ai.units:[], byId=new Map(units.map(u=>[u.id,u]))
@@ -23428,6 +23577,13 @@ function predicate_value(view, id, context, nodeId) {
         const raw=erasmus_hash(`${context.seed}:${context.actionOrdinal}:${nodeId}:WEATHER-D10`)%10
         const modified=raw-(view?.ai?.reaction?.surprise?2:0)
         return modified<Number(view?.ai?.reaction?.enemyActivatedCount||0)*2
+    }
+    // 第5/11页任务部队 predicate 精确化 (PR2)：优先读 RTT 规则查询层的精确求值，
+    // 缺失(undefined)时退回 view.ai.predicates 的启发式兜底。惰性计算一次并挂到 context。
+    if (EOP_EXACT_TASKFORCE_PREDICATES && EOP_EXACT_TASKFORCE_PREDICATES.indexOf(id) >= 0) {
+        if (!context.__exactTaskforcePreds) context.__exactTaskforcePreds = eop_exact_taskforce_predicates(view, context)
+        const exact = context.__exactTaskforcePreds[id]
+        if (exact !== undefined) return !!exact
     }
     if (view.ai && view.ai.predicates && Object.prototype.hasOwnProperty.call(view.ai.predicates, id))
         return !!view.ai.predicates[id]
