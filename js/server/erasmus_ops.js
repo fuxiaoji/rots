@@ -900,7 +900,12 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
     }
     if(f.meta?.kind==="GARRISON" || f.meta?.kind==="REDEPLOY"){
         const already=f.meta.kind==="GARRISON"?eop_garrison_satisfied(role,target,f.meta,units):!eop_target_pending(role,target,f.meta)
-        const pool=eop_filter_legal_participants(candidates.map(id=>byId.get(id)).filter(u=>u && u.location!==target),target,role)
+        const moved=candidates.map(id=>byId.get(id)).filter(u=>u && u.location!==target)
+        // REDEPLOY(撤离/调动)是战略移动(SR)，不是会战：requiredUnits 只需被激活并沿
+        // SR/headless 路径移向目标，不能套用 queryCombatParticipation 的会战参与过滤，
+        // 否则地面单位无法"会战参与"到隔海目标 → pool 空 → unit undefined → 激活窗被迫
+        // done，形成"打出牌但 0 单位调度"的空攻势。GARRISON 需实际进入目标格，保留过滤。
+        const pool=f.meta.kind==="REDEPLOY"?moved:eop_filter_legal_participants(moved,target,role)
         pool.sort((a,b)=>(f.meta.garrisonRequirement?.airSteps ? (a.class==="air"?0:1)-(b.class==="air"?0:1):0)
             || get_distance(a.location,target)-get_distance(b.location,target)||a.id-b.id)
         return {complete:already,strict:true,required:1,strength:already?1:0,unit:already?null:pool[0]?.id,
