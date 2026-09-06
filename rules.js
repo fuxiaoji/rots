@@ -23506,6 +23506,23 @@ function esm_card_window_action(strategy, view, context) {
         }
     }
 
+    // #7: 己方 ISR(对立状况)激活时, 无论战略轴是 CONQUEST/ABSTRACT/GARRISON/DEFEND 还是
+    // EVENT, 都应在选牌窗立即用【己方阵营】的 isr_agreement 和解牌作事件清除。引擎
+    // default_event(game.js)按 card.faction 清该方 ISR。否则这些牌会被非 EVENT 轴当 OC
+    // 打掉, 己方长期带着 ISR 减成(增援门槛、若干事件封锁)。此为卡牌选择 bug 的全局前置。
+    if (G.inter_service && G.inter_service[faction] === 1) {
+        const isrClassified = classifyCards(hand, strategy.role)
+        const agreement = isrClassified.find(c => {
+            const card = cards[c.id] || {}
+            return card.isr_agreement && card.faction === faction && c.allowed.includes("event")
+        })
+        if (agreement) {
+            return esm_set_card_pick(strategy, agreement, "event",
+                strategy.role === "Japan" ? "JP04-S-ISR-AGREEMENT" : "AP10-S-ISR-AGREEMENT",
+                `${strategy.role}清除己方ISR:打己方isr_agreement和解牌`)
+        }
+    }
+
     const semanticPick = esm_semantic_card_pick(strategy, hand)
     if (semanticPick) return semanticPick
 
