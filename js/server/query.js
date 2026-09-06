@@ -1,4 +1,7 @@
 function on_query(q, params, b) {
+    if (q && typeof q === "object" && q.name === "rules_query") {
+        return rules_query_dispatch(q)
+    }
     if (q.name === "battle_info") {
         return battle_info_query(q.index)
     }
