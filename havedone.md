@@ -1,5 +1,18 @@
 # 已完成工作记录
 
+## 2026-09-06：Erasmus 代码化缺口整改（PR1–PR6）
+
+按 `EOTS_Erasmus_v2_代码化缺口整改清单.md` 逐项落地，原则「Erasmus 负责选什么，RTT 规则引擎负责什么是合法」，只改 bot 策略文件（`erasmus.js`/`erasmus_state.js`/`erasmus_ops.js`）+ 新增只读查询层，不动规则引擎。
+
+- **PR1**：新增 `js/server/rules_query.js`（只读、无副作用，包装引擎移动/反应/补给/ZOI/增援查询）+ `tests/rules-query.test.js`。
+- **PR2**：Page 5/11 任务部队 predicate 精确化——`CAN_GROUND_ADVANCE`/`GROUND_CAN_ENTER_EXIT`/`TARGET_IS_SR`/`ENEMY_AIR_OR_CARRIER_CAN_REACT`/`ENEMY_NAVAL_GROUND_CAN_REACT`/`FORCE_MEETS_BATTLE_SUPPORT_STANDARD`/`TARGET_DAMAGE_LEVEL_MET` 不再用 `aiBattle`/`aiStage`/`resource`/距离代理，改走 `rules_query` 合法候选；golden 测试 `erasmus-taskforce-predicate.test.js`。
+- **PR3**：`composeTaskForce()` 重构为「合法参与候选→排序→支援兵种→Damage Level→地面 2x 生存→最少单位」。
+- **PR4**：Page 6/12 反应+PBM——反应兵力标准(空海1x+空军数+D10 地面2x)、天气标准、神风标准、潜艇目标优先级(CV→BB→CA→DD)、反应会战格优先级、空/海/失败AA 的 PBM 目的地评分；`erasmus-reaction-predicate.test.js`。
+- **PR5**：战略层残余启发式——`isTargetComplete`/`IS_LAST_TARGET`(统一 SUPPRESS/GARRISON/DEFEND/B29/ATOMIC/NAVAL/CONTROL 完成口径)、`CBI_DEFENSE_COMPLETE`/`ORANGE_PLAN_CRITERIA`/`PERIMETER_TARGET_1_COMPLETE` 精确求值、大部队地面步数(lf≥12, full=2/reduced=1)；`erasmus-strategic-predicate.test.js`。
+- **PR6**：fidelity 审计——`node-implementation-map.json` 的 status 词汇改为五态 `exact-engine/exact-derived/partial/heuristic/missing`（259 节点：241 exact-derived / 10 exact-engine / 4 partial / 4 heuristic）；新增 `data/erasmus/predicate-fidelity.json`（15 个关键 predicate）；`build_erasmus_implementation_map.js` 生成器同步；策略版本 `zh.22 → zh.23`。
+
+**50 局审计**（`EOTS_HEADLESS_MOVES=1`，「1942-1945」seed 20260903）：complete=50，errors=0，action-limit=0，fallback=0，unexplainedNoBattle=0；**盟军 0 胜 / 日本 50 胜**。原子弹路线未触发，根因：(1) 苏联入侵满洲(AP#79)在第 4 回合仅剩这一张牌时被强制当 OC 打出并 reshuffle，错过「TOJO 激活 + 苏联牌在握」窗口（引擎在该窗只给 `card` 动作，无 pass/FO）；(2) 日本资源格终局仍 6–7 个（无苏联需 ≤5，有苏联需 ≤3），盟军夺回不足。`traceNodeMissing=724`(≈15/局) 为决策轴复合节点 id(如 JP01-CEHI)不在 charts.json 的既有现象，非本次引入。
+
 ## 2026-09-04：AI 战略调试面板
 
 - 将侧栏从单行节点日志改为“当前决策卡片 + 可折叠历史”：展示阵营、回合、战略阶段、规则窗口、选定战略、正在执行的动作和真实图表节点。
