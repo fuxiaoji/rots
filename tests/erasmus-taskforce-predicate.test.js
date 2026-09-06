@@ -68,13 +68,20 @@ const byId = list => new Map(list.map(u => [u.id, u]))
     assert.deepEqual(support(m, [unit("air", 4)], 200, FACTION).missing, ["ground"], "占领缺地面")
     assert.equal(support(m, [unit("air", 4)], 200, FACTION).met, false)
 
-    // 沿海敌控港口的两栖登陆: 需地面 + 海军护航
+    // 沿岸敌控港口(非岛, 陆路可进): 地面推进, 不要求海军护航 (文档 §5/R7)
     MAP = { 201: { nh: [], port: true, island: false } }
     CONTROL = { 201: 1 } // 敌方控制
-    const landing = support(m, [unit("ground", 4)], 201, FACTION)
+    const advance = support(m, [unit("ground", 4)], 201, FACTION)
+    assert.deepEqual(advance.missing, [], "非岛沿岸港口地面推进不需海军")
+    assert.equal(advance.met, true)
+
+    // 岛屿敌控格: 两栖登陆, 需地面 + 海军护航 (文档 §5/R7)
+    MAP = { 202: { nh: [], port: true, island: true } }
+    CONTROL = { 202: 1 }
+    const landing = support(m, [unit("ground", 4)], 202, FACTION)
     assert.deepEqual(landing.missing, ["naval"], "两栖登陆缺海军护航")
     assert.equal(landing.met, false)
-    assert.equal(support(m, [unit("ground", 4), unit("naval", 2, { br: 1 })], 201, FACTION).met, true, "地面+海军→met")
+    assert.equal(support(m, [unit("ground", 4), unit("naval", 2, { br: 1 })], 202, FACTION).met, true, "地面+海军→met")
 
     // 压制目标: 需航空/航母(远程支援), 地面不算
     let s = { kind: "SUPPRESS" }

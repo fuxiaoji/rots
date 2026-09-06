@@ -21185,6 +21185,7 @@ function evaluateTargetFeasibility(target, card, hq, view) {
     const suppress=meta?.kind==="SUPPRESS"||meta?.kind==="SUPPRESS_HQ"
     const requiresOccupation=!!meta?.requiresOccupation
     const coastal=!!(md&&(md.port||md.island))
+    const amphibious=determineBattleMode(target,roleFaction).amphibious
     // 第5/11页：兵力标准须把可能反应的敌军计入。以公开单位的战斗航程筛出能到目标的
     // 航空/海军，并计入其中最强一支，避免把一架飞机对现有守军刚好达标误判为完整编队。
     const reactionPool=units.filter(u=>u.faction!==roleFaction&&u.location!==target&&(u.class==="air"||u.class==="naval")
@@ -21193,7 +21194,7 @@ function evaluateTargetFeasibility(target, card, hq, view) {
     const potentialReactionStrength=reactionPool.reduce((s,u)=>s+cf(u),0)
     const airSeaDefense=defenders.filter(u=>u.class==="air"||u.class==="naval").reduce((s,u)=>s+cf(u),0)
     const relevantDefense=(requiresOccupation?airSeaDefense:defense)+potentialReactionStrength
-    return {target,meta,damageLevel,legal:target!==null&&target!==undefined,coastal,defense,suppress,requiresOccupation,
+    return {target,meta,damageLevel,legal:target!==null&&target!==undefined,coastal,amphibious,defense,suppress,requiresOccupation,
         garrisonClass:meta?.garrisonClass||null,
         groundDefense:defenders.filter(u=>u.class==="ground").reduce((s,u)=>s+cf(u),0),
         airSeaDefense,
@@ -21228,6 +21229,16 @@ function eop_can_ground_enter_exit(unitId, target, reach) {
     return { canEnter: true, canExit: exitHexes.length > 0, entryCost: reach.costByHex[target], exitHexes }
 }
 
+// 战斗模式判定（文档 §5/R7）：区分「两栖登陆」与「相邻陆路地面推进」。
+// 引擎地图 data_map.js 用 island:true 标记无陆路、须两栖登陆的格（冲绳/硫磺岛/塞班/
+// 马尔代夫等）；沿岸但非岛的敌控港口/城市格可经陆路相邻进入，属 GROUND_ADVANCE，
+// 不应被强制要求海军护航。faction/opts 预留：Phase 5 用真实移动路径细化时传入。
+function determineBattleMode(target, faction, opts) {
+    const md = (target !== null && target !== undefined && Number.isInteger(target)) ? get_map_data(target) : null
+    const amphibious = !!(md && md.island)
+    return { mode: amphibious ? "AMPHIBIOUS_ASSAULT" : "GROUND_ADVANCE", amphibious, island: !!(md && md.island) }
+}
+
 // 战斗支援标准：只判兵种构成，不判总战斗力（与 Damage Level 拆开）。
 function eop_meets_battle_support_standard(meta, activeUnits, target, faction) {
     const hasGround = activeUnits.some(u => u.class === "ground")
@@ -21235,9 +21246,10 @@ function eop_meets_battle_support_standard(meta, activeUnits, target, faction) {
     const hasRangedSupport = activeUnits.some(u => u.class === "air" || (u.class === "naval" && Number(u.br) > 0))
     const requiresOccupation = !!(meta && meta.requiresOccupation)
     const suppress = !!(meta && (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ"))
-    const md = (target !== null && target !== undefined && Number.isInteger(target)) ? get_map_data(target) : null
-    const coastal = !!(md && (md.port || md.island))
-    const landing = requiresOccupation && coastal && !is_space_controlled(target, faction)
+    // 沿岸≠两栖：只有岛屿（无陆路）才须两栖登陆并要求海军护航；相邻陆路可进的
+    // 敌控港口/沿岸格是地面推进，不要求海军（文档 §5/R7）。
+    const amphibious = determineBattleMode(target, faction).amphibious
+    const landing = requiresOccupation && amphibious && !is_space_controlled(target, faction)
     const missing = []
     if (requiresOccupation && !hasGround) missing.push("ground")
     if (landing && !hasNaval) missing.push("naval")
@@ -21531,7 +21543,7 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
         return {complete:already,strict:true,required:1,strength:already?1:0,unit:already?null:pool[0]?.id,
             formation:f.meta.kind.toLowerCase(),groundStrength,strikeStrength,potentialReactionStrength:0}
     }
-    const landing=f.requiresOccupation&&f.coastal&&view?.ai?.focusControlledBy!==view?.active
+    const landing=f.requiresOccupation&&f.amphibious&&view?.ai?.focusControlledBy!==view?.active
     const need=f.suppress?f.requiredAirSeaMath:f.requiresOccupation?f.requiredGroundMath:(f.groundDefense>0?f.requiredGroundMath:f.requiredAirSeaMath)
     const math=f.suppress?strikeStrength:f.requiresOccupation?groundStrength:Math.max(groundStrength,strikeStrength)
     // 占领军不仅要有地面与登陆护航；只要目标上有空海兵力或可能发生
