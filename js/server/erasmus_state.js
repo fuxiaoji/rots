@@ -712,6 +712,8 @@ function esm_ap_blockade_targets() {
         ["Shanghai", "北方资源线：占领上海并建立航空封锁"],
         ["Tsingtao", "北方资源线：占领青岛并建立航空封锁"],
         ["Port Arthur", "北方资源线：占领旅顺并建立航空封锁"],
+        ["Pusan", "朝鲜海峡资源线：夺取釜山并建立AZOI切断满洲/朝鲜资源追溯"],
+        ["Seoul", "朝鲜海峡资源线：夺取汉城并建立AZOI切断满洲/朝鲜资源追溯"],
         ["Tainan", "南方资源线：夺取台南机场并建立AZOI"],
         ["Taihoku", "南方资源线：夺取台北机场并建立AZOI"],
         ["Okinawa", "南方资源线：夺取冲绳并建立AZOI"],
@@ -901,6 +903,18 @@ function esm_build_ctx(role, lock, seedText) {
         ctx.al_L_F_controls_hex_within_8_tokyo = (() => {
             try { return esm_geo().controlledHexesWithin8Tokyo.some(h => is_space_controlled(h, AP)) } catch (e) { return false }
         })()
+        // 原子弹路线硬前提是苏联牌(AP#79)就绪。该牌作事件需 TOJO 事件先激活(JP 打出卡43)，
+        // 但 #79 多在 T3-T7 过早抽到、在 TOJO 激活(T8+)前就被当 OC 打掉，即便晚抽也多被
+        // "PoW 紧急攻势"抢先当 OC 打出 -> sovietReady 恒假 -> 原子弹路线不可达。
+        // 此时页9 的"占领轰炸基地/推进B29"只是为不可达的原子弹铺路，会空耗 T9-T11，把
+        // 封锁胜利(基础规则 16.47：连续三个国势阶段日本本土无法追溯资源格)压到第 12 回合
+        // 才启动，无从累计 3 回合断线。故当苏联牌未就绪时，把这两个原子弹专属前置视为已
+        // 满足，让纯树直接进入 F(距东京 8)分支 -> 重返菲律宾/跳岛/登陆日本，即封锁所需的
+        // 夺港 + 部署 AZOI 路线。纯树(esm_al_eval_late)本身不改，保真测试不受影响。
+        if (!esm_soviet_occurred() && !esm_soviet_playable()) {
+            ctx.al_L_D_has_strategic_bombing_base = true
+            ctx.al_L_E_all_b29_on_base = true
+        }
         ctx.al_L_G_meets_atomic_bomb_criteria = esm_atomic_met()
     }
     // D5 诊断(仅 trace 用, 不进决策): 钉选时刻的引擎权威账本 —— PoW 银行/G.pow/JP 资源/
@@ -1456,6 +1470,12 @@ function esm_pin_strategy(view, context) {
     let victoryPreparation = victoryApproach
     if (role === "Allies" && phase === "late" && name === "登陆日本" && typeof atomic_bomb_strategy_status === "function") {
         const atomic = atomic_bomb_strategy_status()
+        // 原子弹胜利 = 轰炸未失败 AND 苏联牌就绪 AND 资源达标。苏联牌(AP#79)作事件需
+        // TOJO 事件先激活(JP 打出卡43)，但 #79 多在 T3-T7 过早抽到、在 TOJO 激活前被当
+        // OC 打掉，sovietReady 恒假 -> 原子弹路线不可达。此时若只按"资源超标"就去夺资源，
+        // 是把资源当成了独立硬条件而忽视苏联牌这一并行前提，纯属为不可达的原子弹铺路；
+        // 应走封锁胜利路线(else 分支: 夺港 + AZOI 切断日本本土→资源格海路)。故资源夺回
+        // 仅当苏联牌就绪时才有意义。
         if (atomic.noStrategicBombingFailure && atomic.sovietReady && !atomic.resourcesSatisfied) {
             const resourceTargets = atomic.jpResourceHexes.map(hex => ({ hex, kind: "CONQUEST",
                 objective: "原子弹战略准备：夺取剩余日本资源格", damageLevel: 1,
@@ -1516,22 +1536,26 @@ function esm_card_window_action(strategy, view, context) {
     const wantEvent = strategy.kind === "EVENT"
     if (strategy.kind === "PASS" && legal.includes("pass")) return { action: "pass", argument: undefined, via: strategy.name }
 
-    // 原子弹标准把“苏联入侵已发生，或持有且可作为事件打出”列为硬条件。
-    // 旧选牌树会在晚期把 AP#79 当普通高 OC 消耗（历史复盘 seed 20260903 即如此），
-    // 随后整局再也无法满足该条件。只要事件当前合法就立即执行；否则在仍有其他牌时
-    // 全局保留它(从候选池剔除), 防止 PoW 紧急攻势/通用选牌等任何路径把它当 OC 消耗。
+    // 用户指示：提升苏联牌(AP#79)权重。它既是 3OC 优质攻势牌，又是原子弹胜利的硬前提
+    // （作事件捕获哈尔滨/奉天并置 soviet_occurred）。早期(1942~1943前期, T<7)抽到：TOJO
+    // 尚不可能激活、事件打不出来，保留会长期占一手槽又白丢 3OC -> 按普通攻势牌消耗即可
+    // (reshuffle 回牌库，仍有再抽到的机会)。后期(1943秋后, T>=7)抽到：保留作为未来事件。
+    // 只要事件当前合法就立即执行；否则在仍有其他牌时从候选池剔除，防止 PoW 紧急攻势/通用
+    // 选牌等任何路径把它当 OC 消耗。
     if (strategy.role === "Allies" && typeof SOVIET_INVADE !== "undefined" && hand.includes(SOVIET_INVADE)) {
         const classified = classifyCards(hand, strategy.role)
         const soviet = classified.find(x => x.id === SOVIET_INVADE)
         if (soviet && soviet.eventPlayable) {
             return esm_set_card_pick(strategy, soviet, "event", "AP10-S-EVENT", "盟军胜利条件：苏联入侵满洲事件")
         }
-        if (hand.length > 1) {
-            hand = hand.filter(c => c !== SOVIET_INVADE)
-        } else if (legal.includes("pass")) {
-            // 仅剩 AP#79 且 TOJO 未激活：宁可 PASS 也要把它留在手上，等 TOJO 激活后作事件打出。
-            // 若当 OC 打出会 reshuffle 回牌库，错过“TOJO 激活 + 苏联牌在握”的原子弹窗口。
-            return { action: "pass", argument: undefined, via: "盟军保留苏联入侵满洲(原子弹胜利条件)" }
+        if (G.turn >= 7) {
+            if (hand.length > 1) {
+                hand = hand.filter(c => c !== SOVIET_INVADE)
+            } else if (legal.includes("pass")) {
+                // 仅剩 AP#79 且 TOJO 未激活：宁可 PASS 也要把它留在手上，等 TOJO 激活后作事件打出。
+                // 若当 OC 打出会 reshuffle 回牌库，错过“TOJO 激活 + 苏联牌在握”的原子弹窗口。
+                return { action: "pass", argument: undefined, via: "盟军保留苏联入侵满洲(原子弹胜利条件)" }
+            }
         }
     }
 
