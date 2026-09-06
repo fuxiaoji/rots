@@ -168,6 +168,70 @@ function queryGroundReachability(unit, ctx) {
     })
 }
 
+// 海军单位可达格（复用引擎 get_naval_move 的 BFS）。与 queryGroundReachability 同构：
+// 快照内设 active_stack/move_type，跑 get_move_data + mark_participate_attack_hex +
+// get_naval_move，收割可达格。返回 { reachableHexes, costByHex, predecessor }。
+function queryNavalReachability(unit, ctx) {
+    return rules_query_snapshot(() => {
+        const loc = G.location[unit]
+        if (!G.offensive || !Array.isArray(G.offensive.active_cards) || !G.offensive.active_cards[0]) {
+            return { reachableHexes: [], costByHex: {}, predecessor: {} }
+        }
+        G.active_stack = [unit]
+        L.move_type = (ctx && ctx.move_type) || NAVAL_MOVE
+        L.move_data = get_move_data()
+        if (L.move_data.move_type & NAVAL_MOVE) mark_participate_attack_hex()
+        const dm = get_naval_move(0)
+        const reachableHexes = []
+        const costByHex = {}
+        const predecessor = {}
+        for (let i = 0; i < dm.length; i += 2) {
+            const hex = dm[i]
+            const path = dm[i + 1]
+            costByHex[hex] = path[0]
+            if (path.length >= 3) predecessor[hex] = path[path.length - 2]
+            if (hex !== loc) reachableHexes.push(hex)
+        }
+        return { reachableHexes, costByHex, predecessor }
+    })
+}
+
+// 合法参与判定：单位能否合法参与 target 会战（只读，无副作用）。
+//   ground: 引擎地面 BFS 可达 target，或已在 target。
+//   air:    战斗航程 in_range_on_map 可达（br 或延伸 ebr）。
+//   naval:  引擎海军 BFS 可达 target，或已在 target。
+// 返回 { legal, moveMode, path, usesExtendedRange, effectiveAttack }。
+function queryCombatParticipation(unit, target, ctx) {
+    const base = { legal: false, moveMode: null, path: null, usesExtendedRange: false, effectiveAttack: 0 }
+    if (!Number.isInteger(target) || target < 0 || target > LAST_BOARD_HEX) return base
+    const piece = pieces[unit]
+    const loc = G.location[unit]
+    if (!piece || !Number.isInteger(loc)) return base
+    const cf = piece.reduced ? (Number(piece.rcf) || Math.ceil((Number(piece.cf) || 0) / 2)) : (Number(piece.cf) || 0)
+    const faction = piece.faction
+    if (piece.class === "ground") {
+        if (loc === target) return { legal: true, moveMode: "already", path: [loc], usesExtendedRange: false, effectiveAttack: cf }
+        const reach = queryGroundReachability(unit, ctx)
+        const legal = reach.reachableHexes.indexOf(target) >= 0
+        return { legal, moveMode: "ground", path: legal ? [loc, target] : null, usesExtendedRange: false, effectiveAttack: cf }
+    }
+    if (piece.class === "air") {
+        const br = Math.max(1, Number(piece.br) || 0)
+        const ebr = Math.max(1, Number(piece.ebr) || Number(piece.br) || 0)
+        const normal = in_range_on_map(loc, br, [target], faction).length > 0
+        const extended = ebr > br && in_range_on_map(loc, ebr, [target], faction).length > 0
+        return { legal: normal || extended, moveMode: normal ? "air" : (extended ? "air-extended" : null),
+            path: null, usesExtendedRange: !normal && extended, effectiveAttack: cf }
+    }
+    if (piece.class === "naval") {
+        if (loc === target) return { legal: true, moveMode: "already", path: [loc], usesExtendedRange: false, effectiveAttack: cf }
+        const reach = queryNavalReachability(unit, ctx)
+        const legal = reach.reachableHexes.indexOf(target) >= 0
+        return { legal, moveMode: "naval", path: legal ? [loc, target] : null, usesExtendedRange: false, effectiveAttack: cf }
+    }
+    return base
+}
+
 // 反应候选：反应方 reactFaction 对当前（或注入的 targetHex）会战格能合法反应的部队，
 // 按兵种分类成 { air, carrier, naval, ground, hq, specialReaction }。
 function queryReactionCandidates(opts) {
@@ -254,7 +318,8 @@ const RULES_QUERY_FNS = [
     "queryZoi", "queryNonNeutralZoi", "queryGroundMoveCost", "querySupplyStatus",
     "queryPotentialCombatStrength", "queryBattleTable", "querySpaceControlled",
     "queryFactionUnits", "queryLegalReinforcementHexes", "queryEmergencyRetreatHexes",
-    "queryActivationCandidates", "queryGroundReachability", "queryReactionCandidates",
+    "queryActivationCandidates", "queryGroundReachability", "queryNavalReachability",
+    "queryCombatParticipation", "queryReactionCandidates",
     "queryReactionStrength", "querySpecialReaction",
 ]
 
@@ -265,7 +330,8 @@ function rules_query_dispatch(q) {
         queryZoi, queryNonNeutralZoi, queryGroundMoveCost, querySupplyStatus,
         queryPotentialCombatStrength, queryBattleTable, querySpaceControlled,
         queryFactionUnits, queryLegalReinforcementHexes, queryEmergencyRetreatHexes,
-        queryActivationCandidates, queryGroundReachability, queryReactionCandidates,
+        queryActivationCandidates, queryGroundReachability, queryNavalReachability,
+        queryCombatParticipation, queryReactionCandidates,
         queryReactionStrength, querySpecialReaction,
     }
     if (typeof impl[fn] !== "function") return null

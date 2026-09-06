@@ -44,6 +44,7 @@ function assertReadOnly(state, fn) {
         ["queryEmergencyRetreatHexes", [air.id], (r) => assert(Array.isArray(r))],
         ["queryActivationCandidates", [hq.id], (r) => assert(Array.isArray(r))],
         ["queryGroundReachability", [ground.id], (r) => assert(r && Array.isArray(r.reachableHexes))],
+        ["queryNavalReachability", [naval.id], (r) => assert(r && Array.isArray(r.reachableHexes) && r.costByHex && r.predecessor)],
         ["queryReactionCandidates", [], (r) => assert(r && Array.isArray(r.air) && Array.isArray(r.naval))],
     ]
     for (const [fn, args, check] of leafChecks) {
@@ -77,6 +78,24 @@ function assertReadOnly(state, fn) {
     const b = query(state, "Allies", "queryActivationCandidates", [hq.id])
     assert.deepStrictEqual(a, b)
     assert(a.every(Number.isInteger), "activation candidates must be unit ids")
+}
+
+// 5. 合法参与判定：已在目标格的单位应判 legal=true（moveMode="already"），且只读确定。
+{
+    const { state } = setup()
+    // 无攻势上下文的“已在目标”分支不依赖 active_cards，仍应给出确定结果。
+    const unit = rules.view(state, "Allies").ai.units
+        .find(u => (u.class === "ground" || u.class === "naval") && Number.isInteger(u.location) && u.location > 0)
+    const target = unit.location
+    const first = assertReadOnly(state, () => query(state, "Allies", "queryCombatParticipation", [unit.id, target]))
+    assert.strictEqual(first.legal, true, "unit already at target is legal")
+    assert.strictEqual(first.moveMode, "already")
+    assert.strictEqual(typeof first.effectiveAttack, "number")
+    const second = query(state, "Allies", "queryCombatParticipation", [unit.id, target])
+    assert.deepStrictEqual(second, first, "queryCombatParticipation must be deterministic")
+    // 非法目标：直接给出 legal=false，不抛错。
+    const invalid = query(state, "Allies", "queryCombatParticipation", [unit.id, -1])
+    assert.strictEqual(invalid.legal, false)
 }
 
 console.log("rules-query tests passed")

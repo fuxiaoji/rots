@@ -605,7 +605,7 @@ function eop_meets_battle_support_standard(meta, activeUnits, target, faction) {
 }
 
 // 伤害等级：攻击有效战斗力是否达到目标 Damage Level；占领目标另须地面 2x 生存。
-function eop_evaluate_damage_level(meta, attackers, defenders, reactionIds, byId, target) {
+function eop_evaluate_damage_level(meta, attackers, defenders, reactionIds, byId, target, reactionStrengthOverride) {
     const cf = eop_unit_cf
     const requiresOccupation = !!(meta && meta.requiresOccupation)
     const suppress = !!(meta && (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ"))
@@ -613,7 +613,10 @@ function eop_evaluate_damage_level(meta, attackers, defenders, reactionIds, byId
     const airSeaDefense = defenders.filter(u => u.class === "air" || u.class === "naval").reduce((s, u) => s + cf(u), 0)
     const groundDefense = defenders.filter(u => u.class === "ground").reduce((s, u) => s + cf(u), 0)
     const totalDefense = airSeaDefense + groundDefense
-    const reactionStrength = (reactionIds || []).reduce((s, id) => { const u = byId.get(id); return s + (u ? cf(u) : 0) }, 0)
+    // 反应兵力默认按精确反应候选逐个累计；reactionStrengthOverride 供无引擎查询层
+    // (单测 vm 沙箱) 时回退到 evaluateTargetFeasibility 的航程粗筛值。
+    const reactionStrength = reactionStrengthOverride !== undefined ? reactionStrengthOverride
+        : (reactionIds || []).reduce((s, id) => { const u = byId.get(id); return s + (u ? cf(u) : 0) }, 0)
     const attackerAirSea = attackers.filter(u => u.class === "air" || u.class === "naval").reduce((s, u) => s + cf(u), 0)
     const attackerGround = attackers.filter(u => u.class === "ground").reduce((s, u) => s + cf(u), 0)
     const relevantDefense = (requiresOccupation ? airSeaDefense : totalDefense) + reactionStrength
@@ -674,6 +677,17 @@ function eop_exact_taskforce_predicates(view, context) {
     return out
 }
 
+// PR3：任务部队候选的“合法参与”过滤——不可达单位不得进入排序。用 RTT 规则查询层
+// 的 queryCombatParticipation 判可达性（地面/海军走引擎 BFS，航空走战斗航程），
+// 任何查询异常都保守放行，绝不因查询崩溃而误剔候选。
+function eop_filter_legal_participants(unitsById, target, role) {
+    if (target === null || target === undefined || !Number.isInteger(target)) return unitsById
+    return unitsById.filter(u => {
+        try { return typeof queryCombatParticipation !== "function" || queryCombatParticipation(u.id, target, {}).legal }
+        catch (e) { return true }
+    })
+}
+
 function composeTaskForce(target, card, hq, view, candidates, role) {
     if((target===null || target===undefined) && eop_axis(role))return {complete:true,strict:true,unit:null,formation:"objectives-scheduled"}
     const units=Array.isArray(view?.ai?.units)?view.ai.units:[], byId=new Map(units.map(u=>[u.id,u]))
@@ -684,7 +698,6 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
     const strikeStrength=committed.filter(u=>u.class==="air"||u.class==="naval").reduce((s,u)=>s+cf(u),0)
     const groundStrength=committed.filter(u=>u.class==="ground").reduce((s,u)=>s+cf(u),0)
     const hasGround=committed.some(u=>u.class==="ground"),hasNaval=committed.some(u=>u.class==="naval")
-    const hasRangedSupport=committed.some(u=>u.class==="air"||(u.class==="naval"&&Number(u.br)>0))
     if(f.meta?.escortPairs){
         const pairs=f.meta.escortPairs.filter(pair=>G.location[pair.ground]===pair.origin && G.location[pair.carrier]===pair.origin
             && get_distance(pair.origin,target)<=f.meta.maxDistance)
@@ -697,7 +710,7 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
     }
     if(f.meta?.kind==="GARRISON" || f.meta?.kind==="REDEPLOY"){
         const already=f.meta.kind==="GARRISON"?eop_garrison_satisfied(role,target,f.meta,units):!eop_target_pending(role,target,f.meta)
-        const pool=candidates.map(id=>byId.get(id)).filter(u=>u && u.location!==target)
+        const pool=eop_filter_legal_participants(candidates.map(id=>byId.get(id)).filter(u=>u && u.location!==target),target,role)
         pool.sort((a,b)=>(f.meta.garrisonRequirement?.airSteps ? (a.class==="air"?0:1)-(b.class==="air"?0:1):0)
             || get_distance(a.location,target)-get_distance(b.location,target)||a.id-b.id)
         return {complete:already,strict:true,required:1,strength:already?1:0,unit:already?null:pool[0]?.id,
@@ -710,9 +723,24 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
     // 空海反应，还必须补足图表伤害等级所需的空海战力。航空兵/航母可在
     // 战斗格外投入，故这里只要求其加入任务部队，不要求移动进目标格。
     const supportRequired=f.requiresOccupation
-    const supportMet=!supportRequired||(hasRangedSupport&&strikeStrength>=f.requiredAirSeaMath)
-    const compositionMet=(!f.requiresOccupation||hasGround)&&(!landing||hasNaval)&&supportMet
-    if(compositionMet&&math>=need)return {complete:true,required:need,strength:math,unit:null,
+    // PR3：任务部队“是否达标”改用与第 5/11 页 predicate 完全一致的 RTT 精确求值器：
+    //   支援标准只判兵种构成(eop_meets_battle_support_standard)；伤害等级另判有效战斗力
+    //   且占领须地面 2x 生存(eop_evaluate_damage_level)。两者拆开，不再手算 CF 阈值。
+    //   反应兵力改用引擎精确反应候选(queryReactionCandidates)，而非 get_distance 粗筛。
+    const faction=role==="Japan"?JP:AP, enemy=1-faction
+    const defenders=units.filter(u=>u.location===target&&u.faction===enemy)
+    let reactionIds=[], reactionStrengthOverride
+    try {
+        if (typeof queryReactionCandidates === "function") {
+            const reaction=queryReactionCandidates({reactionFaction:enemy,targetHex:target})
+            reactionIds=reaction.air.concat(reaction.carrier,reaction.naval,reaction.ground)
+        } else {
+            reactionStrengthOverride=f.potentialReactionStrength
+        }
+    } catch (e) { reactionStrengthOverride=f.potentialReactionStrength }
+    const support=eop_meets_battle_support_standard(f.meta,committed,target,faction)
+    const dmg=eop_evaluate_damage_level(f.meta,committed,defenders,reactionIds,byId,target,reactionStrengthOverride)
+    if(support.met&&dmg.met)return {complete:true,required:need,strength:math,unit:null,
         formation:landing?"supported-amphibious-assault":f.suppress?"air-sea-strike":"minimum-sufficient",
         groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
     let pool=(candidates||[]).map(id=>byId.get(id)).filter(Boolean)
@@ -730,6 +758,8 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
         const unactivated=at.filter(x=>x.class==="ground"&&!active.has(x.id))
         return unactivated.length>1
     })
+    // 不可达单位不得进入排序（地面走引擎 BFS、航空走航程、海军走引擎海军 BFS）。
+    pool=eop_filter_legal_participants(pool,target,role)
     let amphibiousPick
     if(landing&&typeof eop_pick_unit==="function")amphibiousPick=eop_pick_unit(pool.map(u=>u.id),role,[...active],target)
     const classRank=u=>f.suppress?({air:0,naval:1,ground:2}[u.class]??3)
