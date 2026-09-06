@@ -1,5 +1,16 @@
 # 已完成工作记录
 
+## 2026-09-06：空优战略卡死修复——马尼拉去重 + 第3回合转南方资源战略
+
+用户实测发现日军前期长期滞留「保守的空优战略」：空袭只有指挥部与受损军力的马尼拉（空袭无法消灭地面军），马尼拉已断补，又不去目标第二「消灭新加坡空军使新加坡断补」，于是永久停滞，实质推进目标（东印度/马来亚/菲律宾投降）永远轮不到。根因与修复（单主题 commit）：
+
+- **马尼拉去重（b7ecfb2）**：`esm_jp_hq_suppression_targets` 把菲律宾 HQ 所在马尼拉作为动态 SUPPRESS_HQ 前置入链，与「菲律宾投降」CONQUEST 目标同 hex 去重后顶替了夺占意图。修复：静态链已有同格夺占目标（requiresOccupation）时不再用 SUPPRESS_HQ 顶替整份静态 meta——压制 HQ（去敌方 AZOI）≠ 占领城市；占领该格本身消灭盟军 HQ 并同时达成压制。新加坡同理保留夺占目标。
+- **第3回合强制转南方资源战略（e9b955c）**：空优战略完成口径改按图表脚注[1]「激活必须使盟军HQ断补」——压制 HQ 目标全部离场/断补/被灭（`esm_jp_hq_suppression_targets().length===0`）才算完成，不再用 `!has_zoi`（敌 AZOI 消失）这一随敌航空转场反复闪烁的判据；并加 `G.turn>=3` 兜底，第3回合起无论压制是否完美达成都转「激进的南方资源战略」实际夺占，避免永久卡死。
+
+**诊断验证**（`_diag_manila.js`，seed 20260903）：T2 保守空优 → T3 转南方资源战略 → 马尼拉 T5 占领 → 菲律宾投降 true → 日本 T11 胜。核心回归（semantic-ops/state-fidelity/chart-fidelity/rules-query/strategic-predicate/erasmus）全绿。已推 GitHub（`fix/erasmus-behavior-regression`）。
+
+**仍为既有问题（非本次引入）**：`erasmus-save-replay.test.js`（`esm_log_strategy` 决策期写 G.log 致 save/replay 日志偏移）、`erasmus-activation-utilization`、`erasmus-semantic-state`、`erasmus-goal-fidelity`（AL late「重返菲律宾」kinds 与 py 参考不一致）在 HEAD 即已失败，未动引擎/未修。新加坡/马来亚/东印度在本 seed 仍未占领（日本已靠菲律宾投降 T11 胜），属后续推进目标，非本 bug 范围。
+
 ## 2026-09-06：冻结「AI 1.0」+ 测试版 8 项行为回归修复（批次 1–4 完成 + 决策轴重判）
 
 原则不变：只改 bot 策略文件（erasmus.js/erasmus_state.js/erasmus_ops.js）+ rules_query.js 查询函数，不动规则引擎（cycle/game/offensive/scenario/supply/actions/events/move 保持 RTT 原样）。
