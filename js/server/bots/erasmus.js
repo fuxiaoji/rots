@@ -64,6 +64,14 @@ function predicate_value(view, id, context, nodeId) {
         const exact = context.__exactTaskforcePreds[id]
         if (exact !== undefined) return !!exact
     }
+    // 战略层残余启发式精确化 (PR5)：IS_LAST_TARGET / CBI_DEFENSE_COMPLETE / ORANGE_PLAN_CRITERIA /
+    // PERIMETER_TARGET_1_COMPLETE 接到 erasmus_state 同源精确求值；不可判定(undefined)时退回
+    // view.ai.predicates 兜底，不擅自造值。
+    if (EOP_EXACT_STRATEGIC_PREDICATES && EOP_EXACT_STRATEGIC_PREDICATES.indexOf(id) >= 0) {
+        if (!context.__exactStrategicPreds) context.__exactStrategicPreds = eop_exact_strategic_predicates(view, context, nodeId)
+        const exact = context.__exactStrategicPreds[id]
+        if (exact !== undefined) return !!exact
+    }
     if (view.ai && view.ai.predicates && Object.prototype.hasOwnProperty.call(view.ai.predicates, id))
         return !!view.ai.predicates[id]
     const turn = Number(view.turn || 0)

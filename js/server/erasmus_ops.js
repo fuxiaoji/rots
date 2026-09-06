@@ -453,6 +453,22 @@ function eop_unit_steps(unit, id) {
         : !!(G.reduced && (typeof set_has === "function" ? set_has(G.reduced,id) : G.reduced.includes(id)))
     return reduced ? 1 : 2
 }
+
+// 清单 #24：大部队地面步数 —— 防御强度 lf≥12 才计入；full=2 / reduced=1 step。
+// 替换「单位枚数」统计：reduced 单位只算 1 step，未减损算 2 step；lf<12 的小单位不计入。
+// regionPred 接 region 字符串(与 esm_region 同口径)；regionOf 供单测注入(默认 esm_region)。
+function eop_count_large_force_steps(faction, regionPred, regionOf) {
+    const region = typeof regionOf === "function" ? regionOf : (typeof esm_region === "function" ? esm_region : h => h)
+    let steps = 0
+    for (let u = 1; u < pieces.length; ++u) {
+        const p = pieces[u], loc = G.location[u]
+        if (!p || p.faction !== faction || p.class !== "ground" || Number(p.lf || 0) < 12) continue
+        if (!(loc >= 0 && loc <= LAST_BOARD_HEX)) continue
+        if (regionPred && !regionPred(region(loc))) continue
+        steps += eop_unit_steps(p, u)
+    }
+    return steps
+}
 function eop_garrison_satisfied(role, hex, meta, units) {
     const mine=role==="Japan"?JP:AP
     const list=units || pieces.map((p,id)=>p && ({...p,id,location:G.location[id]}))
@@ -473,6 +489,13 @@ function eop_target_pending(role, hex, meta) {
     if (meta.kind==="NAVAL" || meta.targetClasses) return pieces.some((p,u)=>p && p.faction!==mine && G.location[u]===hex && (meta.targetClasses ? meta.targetClasses.some(c=>c===p.class || c==="carrier"&&/^cv/.test(p.type||"")) : p.class==="naval"))
     if (meta.kind==="SUPPRESS" || meta.kind==="SUPPRESS_HQ") return !!(meta.requiresOccupation && !is_space_controlled(hex,mine)) || (typeof has_zoi==="function" && has_zoi(hex,1-mine))
     return !is_space_controlled(hex,mine)
+}
+
+// 清单 #19：目标完成判定的唯一口径。按目标类型分派——SUPPRESS/SUPPRESS_HQ→AZOI 覆盖
+// (has_zoi) 或夺控；GARRISON→驻军步数；NAVAL→清除敌海军；REDEPLOY→requiredUnits 到位；
+// 其余(CONTROL/CONQUEST)→己方控制。禁止把战略目标一律简化成「占格」。= !eop_target_pending。
+function eop_is_target_complete(role, hex, meta) {
+    return !eop_target_pending(role, hex, meta)
 }
 
 // 一张 EC 可为多个目标分别编成任务部队。当前首要目标已经建立战斗格后，
@@ -797,6 +820,51 @@ function eop_early_defense_done(role, view, context) {
     if (role !== "Japan") return false
     if (typeof nations === "undefined" || !nations || !nations.DEI || !Array.isArray(nations.DEI.keys)) return false
     try { return nations.DEI.keys.every(k => is_space_controlled(hex_to_int(k), JP)) } catch (e) { return false }
+}
+
+// 战略层残余启发式精确化 (PR5)。清单 #19/#22/#23/#25：IS_LAST_TARGET/CBI_DEFENSE_COMPLETE/
+// ORANGE_PLAN_CRITERIA/PERIMETER_TARGET_1_COMPLETE 在全战役态已由 erasmus_state 精确求值，
+// 但 game.js 的 view.ai.predicates 兜底把它们强制为 false(SP/Burma 兼容态)或按「占格/有会战」
+// 粗算(IS_LAST_TARGET)。此处把同一精确求值器接到 predicate_value 优先层：不可判定时返回
+// undefined → 退回 view.ai.predicates，不擅自造值。
+const EOP_EXACT_STRATEGIC_PREDICATES = [
+    "IS_LAST_TARGET", "CBI_DEFENSE_COMPLETE", "ORANGE_PLAN_CRITERIA", "PERIMETER_TARGET_1_COMPLETE",
+]
+
+function eop_exact_strategic_predicates(view, context, nodeId) {
+    const out = {}
+    for (const id of EOP_EXACT_STRATEGIC_PREDICATES) out[id] = undefined
+    if (typeof G === "undefined" || !G) return out
+    const role = context && context.role ? context.role : view && view.active
+    if (role !== "Japan" && role !== "Allies") return out
+
+    // IS_LAST_TARGET：主轴链上唯一尚未完成的目标数 === 1。完成判定统一走
+    // eop_is_target_complete(不再把 SUPPRESS/AZOI 等目标简化成「占格」)。
+    if (typeof eop_is_target_complete === "function" && typeof eop_axis === "function") {
+        try {
+            const axis = eop_axis(role)
+            if (axis && Array.isArray(axis.chain) && axis.chain.length) {
+                const pending = axis.chain.filter(h => !eop_is_target_complete(role, h, eop_target_meta(role, h)))
+                out.IS_LAST_TARGET = pending.length === 1
+            }
+        } catch (e) { /* 保持 undefined → 兜底 */ }
+    }
+
+    // CBI / Orange / Perimeter：复用 erasmus_state 权威 ctx(与全战役态同源)。
+    if (typeof esm_build_ctx === "function") {
+        try {
+            const seed = (context && context.seed) || ""
+            const ctx = esm_build_ctx(role, null, `${seed}:${nodeId || ""}:strategic`)
+            if (role === "Japan") {
+                out.PERIMETER_TARGET_1_COMPLETE = !!ctx.jp_M_perimeter_target_1_complete
+            } else {
+                out.CBI_DEFENSE_COMPLETE = !!ctx.al_E_cbi_def_established
+                out.ORANGE_PLAN_CRITERIA = !!(ctx.al_J_phil_not_surrendered && ctx.al_K_service_agreement
+                    && ctx.al_L_has_2_carriers && ctx.al_M_us_corps_near_carrier && ctx.al_N_aus_no_jp_ground)
+            }
+        } catch (e) { /* 保持 undefined → 兜底 */ }
+    }
+    return out
 }
 
 // PR3：任务部队候选的“合法参与”过滤——不可达单位不得进入排序。用 RTT 规则查询层
