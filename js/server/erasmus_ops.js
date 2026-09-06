@@ -313,6 +313,32 @@ function eop_pick_unit(candidates, role, activeUnits, focusOverride) {
     return scored[0][0]
 }
 
+// 前推调度单位选择（文档 §5）：无立即可参战目标时的「战略移动/转场/推进」兜底。
+// 不套用 eop_unit_matches_target 的目标语义过滤（requiredUnits / escortPairs / unitFilter
+// 等只约束「特定目标编队」，不约束「向前调动」）；只按阵线/焦点距离评分，让坐拥后方的
+// 单位在空窗期仍向前线推进，避免「打出牌但 0 单位调度」的空攻势。
+function eop_pick_forward_unit(candidates, role, focusOverride) {
+    if (!Array.isArray(candidates) || candidates.length === 0) return undefined
+    if (typeof G === "undefined" || !G || !G.location) return undefined
+    const mine = role === "Japan" ? JP : AP
+    const focus = Number.isInteger(focusOverride) ? focusOverride : eop_focus(role)
+    const cands = []
+    for (const u of candidates) {
+        const p = pieces[u]
+        if (!p || p.faction !== mine) continue
+        const h = G.location[u]
+        if (h >= 0 && h <= LAST_BOARD_HEX) cands.push(u)
+    }
+    if (!cands.length) return undefined
+    const enemyLocs = eop_enemy_locs(mine)
+    const hasFocus = focus !== null && Number.isInteger(focus)
+    const fd = h => hasFocus ? (typeof get_distance === "function" ? get_distance(h, focus) : Math.abs(h - focus)) : 99
+    const scored = cands.map(u => [u, eop_min_dist(G.location[u], enemyLocs), fd(G.location[u])])
+    // 有明确焦点优先靠近焦点（保留战略方向）；无焦点/一般前推优先靠近最近敌军。
+    scored.sort((a, b) => (hasFocus ? a[2] - b[2] || a[1] - b[1] : a[1] - b[1] || a[2] - b[2]) || a[0] - b[0])
+    return scored[0][0]
+}
+
 // 两栖登陆无护航可用 → 阻断硬登陆 (TF_FORMATIONS「无支援登陆」仅限空目标且无敌方反应;
 // 敌占/敌控港口的两栖夺控若本窗既无已激活海军、待激活候选里也无海军, 继续激活两栖地面
 // 只会被 broken_aa 判 "Amphibious Assault failed" 吃损失)。返回 true 让选牌窗在尚未激活

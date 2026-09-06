@@ -239,6 +239,21 @@ function target_argument(action, value, seedText, role, view, strategy) {
             const avail = value.filter(u => !unsel.has(u))
             if (avail.length) pickValue = avail
         }
+        // 已激活单位(含本窗已选)传给 eop_pick_unit, 用于两栖登陆护航判定: 敌占港需 ≥1 海军护航。
+        const activeUnits = Array.isArray(view?.offensive?.active_units) ? view.offensive.active_units.flat() : []
+        // 与 evaluateChart 用同一原始候选集(仅剔已选)计算 activationFocus，保证两处
+        // hasFeasibleTarget 一致，避免一处判「前推」另一处判「有目标」造成 toggle 死循环。
+        const activationFocus = typeof eop_activation_focus_faction === "function"
+            ? eop_activation_focus_faction(role === "Japan" ? JP : AP, activeUnits.length, view, pickValue.slice()) : eop_focus(role)
+        // 无立即可参战目标时退回「前推」模式（文档 §5）：战略移动/转场/推进，而非空攻势。
+        // 目标语义过滤(requiredUnits/escortPairs 等)只约束「特定目标编队」，不约束前推。
+        const hasFeasibleTarget = activationFocus !== null && activationFocus !== undefined
+        const effectiveFocus = hasFeasibleTarget ? activationFocus : eop_focus(role)
+        const activationMeta = eop_target_meta(role, effectiveFocus)
+        if(view?.ai?.windowKind==="reaction"){
+            const picked=planReaction(view,pickValue,action,role,strategy)
+            return picked!==undefined?picked:pick_argument(pickValue,seedText,action,view)
+        }
         // 完整战役恢复航空兵（航空打击/地面支援所必需）。South Pacific
         // 仍是兼容启发式配置，其交互移动窗没有无头路径参数，继续排除空军。
         if (!esm_gate_on()) pickValue = pickValue.filter(u => { try { return pieces[u] && pieces[u].class !== "air" } catch (e) { return true } })
@@ -246,25 +261,21 @@ function target_argument(action, value, seedText, role, view, strategy) {
             pickValue = pickValue.filter(u => !eop_preserve_ready_b29(u, role))
         // 指挥部只在专用 Choose HQ 窗参与决策；进攻激活 HQ 不会产生移动或战斗力。
         pickValue = pickValue.filter(u => { try { return !pieces[u] || pieces[u].class !== "hq" } catch (e) { return true } })
-        // 已激活单位(含本窗已选)传给 eop_pick_unit, 用于两栖登陆护航判定: 敌占港需 ≥1 海军护航。
-        const activeUnits = Array.isArray(view?.offensive?.active_units) ? view.offensive.active_units.flat() : []
-        if(view?.ai?.windowKind==="reaction"){
-            const picked=planReaction(view,pickValue,action,role,strategy)
-            return picked!==undefined?picked:pick_argument(pickValue,seedText,action,view)
-        }
-        const activationFocus = typeof eop_activation_focus_faction === "function"
-            ? eop_activation_focus_faction(role === "Japan" ? JP : AP, activeUnits.length, view, pickValue) : eop_focus(role)
-        const activationMeta = eop_target_meta(role, activationFocus)
-        if (typeof eop_unit_matches_target === "function")
-            pickValue = pickValue.filter(u => eop_unit_matches_target(u, role, activationMeta, activationFocus))
+        if (hasFeasibleTarget && typeof eop_unit_matches_target === "function")
+            pickValue = pickValue.filter(u => eop_unit_matches_target(u, role, activationMeta, effectiveFocus))
         if (role === "Allies" && typeof eop_preserve_rear_air === "function") {
-            const reachable = pickValue.filter(u => !eop_preserve_rear_air(u, role, activationFocus))
+            const reachable = pickValue.filter(u => !eop_preserve_rear_air(u, role, effectiveFocus))
             if (reachable.length) pickValue = reachable
         }
-        const planned = composeTaskForce(activationFocus, null, null, view, pickValue, role)
-        if (planned?.strict && planned.unit == null) return undefined
+        const planned = composeTaskForce(effectiveFocus, null, null, view, pickValue, role)
+        if (planned?.strict && planned.unit == null) {
+            // 无单位能立即参战：退回前推调度后方单位（战略移动/转场/推进）。
+            const fwd = eop_pick_forward_unit(pickValue, role, effectiveFocus)
+            if (fwd !== undefined) return fwd
+            return undefined
+        }
         const picked = planned && planned.unit !== undefined && planned.unit !== null
-            ? planned.unit : eop_pick_unit(pickValue, role, activeUnits, activationFocus)
+            ? planned.unit : eop_pick_unit(pickValue, role, activeUnits, effectiveFocus)
         return picked !== undefined ? picked : pick_argument(pickValue, seedText, action, view)
     }
     if (action === "unit" && (view?.ai?.windowKind === "pbm" || /Declare battle hexes|Confirm declared battle hexes|Assign units to battle/i.test(prompt))) {
@@ -417,18 +428,22 @@ function evaluateChart(chart, view, context) {
         const activationFocus = typeof eop_activation_focus_faction === "function"
             ? eop_activation_focus_faction(context.role === "Japan" ? JP : AP, selectedCount, view,
                 Array.isArray(view.actions.unit) ? view.actions.unit.filter(u=>!unsel.has(u)) : []) : view?.ai?.focus
-        const activationMeta = eop_target_meta(context.role, activationFocus)
+        // 无立即可参战目标时退回「前推」模式，与 target_argument 保持同一有效焦点（文档 §5）。
+        const hasFeasibleTarget = activationFocus !== null && activationFocus !== undefined
+        const effectiveFocus = hasFeasibleTarget ? activationFocus : eop_focus(context.role)
+        const activationMeta = eop_target_meta(context.role, effectiveFocus)
         // 先算出与 target_argument 完全一致的“可新增单位”集(剔 unselect/HQ/B29/后方空优/
-        // 不匹配目标), 再交给 composeTaskForce 与 done 判定, 避免 forcePlan 看到 HQ/B29 而
+        // 匹配目标), 再交给 composeTaskForce 与 done 判定, 避免 forcePlan 看到 HQ/B29 而
         // target_argument 已剔除它 → 返回 undefined 撤销已选单位, 形成 toggle 死循环。
+        // 目标语义过滤(requiredUnits/escortPairs)只约束「特定目标编队」，前推模式不套用。
         const addable = (Array.isArray(view.actions.unit) ? view.actions.unit : [])
             .filter(u => !unsel.has(u))
             .filter(u => { try { return !pieces[u] || pieces[u].class !== "hq" } catch (e) { return true } })
             .filter(u => { try { return esm_gate_on() || !pieces[u] || pieces[u].class !== "air" } catch (e) { return true } })
             .filter(u => { try { return typeof eop_preserve_ready_b29 !== "function" || !eop_preserve_ready_b29(u, context.role) } catch (e) { return true } })
-            .filter(u => { try { return typeof eop_preserve_rear_air !== "function" || !eop_preserve_rear_air(u, context.role, activationFocus) } catch (e) { return true } })
-            .filter(u => typeof eop_unit_matches_target !== "function" || eop_unit_matches_target(u, context.role, activationMeta, activationFocus))
-        const forcePlan = composeTaskForce(activationFocus, null, null, view, addable, context.role)
+            .filter(u => { try { return typeof eop_preserve_rear_air !== "function" || !eop_preserve_rear_air(u, context.role, effectiveFocus) } catch (e) { return true } })
+            .filter(u => !hasFeasibleTarget || typeof eop_unit_matches_target !== "function" || eop_unit_matches_target(u, context.role, activationMeta, effectiveFocus))
+        const forcePlan = composeTaskForce(effectiveFocus, null, null, view, addable, context.role)
         const selected = progress ? Number(progress[1]) : (view.offensive?.active_units?.flat?.().length || 0)
         // HQ 加成可因新激活单位的军种/区域而下降。提示“2 of 3 (2 + 1)”中的括号前值
         // 才是不会随下一次选择反噬的稳定上限；达到它就结束，避免 2/3→3/2→撤销 的循环。
@@ -440,7 +455,12 @@ function evaluateChart(chart, view, context) {
         // 没有新增合法候选时才结束。本规则不改变引擎给出的合法单位集合。
         if (selected < limit && addable.length > 0) action = "unit"
         else action = "done"
-        if (forcePlan?.strict && forcePlan.unit == null) action = "done"
+        if (forcePlan?.strict && forcePlan.unit == null) {
+            // 无单位能立即参战时，若仍有可前推的后方单位（战略移动/转场/推进到有效焦点），
+            // 不空攻势直接 done；只有确实无可调度单位才 done（文档 §5）。
+            const fwd = typeof eop_pick_forward_unit === "function" ? eop_pick_forward_unit(addable, context.role, effectiveFocus) : undefined
+            if (fwd === undefined) action = "done"
+        }
         // 两栖登陆无护航可用: 在本窗尚未激活任何单位时提前 done(空攻势), 避免把两栖地面
         // 送去敌占/敌控港口硬登陆吃 "Amphibious Assault failed"。已有已激活单位时不再阻断
         // (那些单位已注定走无头推进, 由 eop_pick_unit 的护航逻辑尽量补海军)。
