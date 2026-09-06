@@ -216,12 +216,9 @@ function queryCombatParticipation(unit, target, ctx) {
         return { legal, moveMode: "ground", path: legal ? [loc, target] : null, usesExtendedRange: false, effectiveAttack: cf }
     }
     if (piece.class === "air") {
-        const br = Math.max(1, Number(piece.br) || 0)
-        const ebr = Math.max(1, Number(piece.ebr) || Number(piece.br) || 0)
-        const normal = in_range_on_map(loc, br, [target], faction).length > 0
-        const extended = ebr > br && in_range_on_map(loc, ebr, [target], faction).length > 0
-        return { legal: normal || extended, moveMode: normal ? "air" : (extended ? "air-extended" : null),
-            path: null, usesExtendedRange: !normal && extended, effectiveAttack: cf }
+        const c = queryAirCombatParticipation(unit, target, ctx)
+        return { legal: c.legal, moveMode: c.legal ? (c.usesExtendedRange ? "air-extended" : "air") : null,
+            path: null, usesExtendedRange: c.usesExtendedRange, effectiveAttack: c.effectiveAttack }
     }
     if (piece.class === "naval") {
         if (loc === target) return { legal: true, moveMode: "already", path: [loc], usesExtendedRange: false, effectiveAttack: cf }
@@ -230,6 +227,57 @@ function queryCombatParticipation(unit, target, ctx) {
         return { legal, moveMode: "naval", path: legal ? [loc, target] : null, usesExtendedRange: false, effectiveAttack: cf }
     }
     return base
+}
+
+// 航空「立即参战」判定（与转场分离，文档 §3）：只接受当前战斗航程 br/ebr 覆盖的会战格，
+// 不把「可转场到达」误判成「可参战」。ctx.usedExtendedRange=true 时（本攻势已用延伸航程
+// 转场）返回 legal=false——延伸航程既用于转场，就不能再用于本攻势的攻击。
+function queryAirCombatParticipation(unit, battleHex, ctx) {
+    const base = { legal: false, usesExtendedRange: false, effectiveAttack: 0 }
+    if (!Number.isInteger(battleHex) || battleHex < 0 || battleHex > LAST_BOARD_HEX) return base
+    const piece = pieces[unit]
+    const loc = G.location[unit]
+    if (!piece || piece.class !== "air" || !Number.isInteger(loc)) return base
+    const cf = piece.reduced ? (Number(piece.rcf) || Math.ceil((Number(piece.cf) || 0) / 2)) : (Number(piece.cf) || 0)
+    const faction = piece.faction
+    const br = Math.max(1, Number(piece.br) || 0)
+    const ebr = Math.max(1, Number(piece.ebr) || Number(piece.br) || 0)
+    const normal = in_range_on_map(loc, br, [battleHex], faction).length > 0
+    const extended = ebr > br && in_range_on_map(loc, ebr, [battleHex], faction).length > 0
+    if (ctx && ctx.usedExtendedRange) return { legal: false, usesExtendedRange: true, effectiveAttack: 0 }
+    return { legal: normal || extended, usesExtendedRange: !normal && extended, effectiveAttack: cf }
+}
+
+// 航空转场可达性（文档 §3）：复用引擎 compute_air_move_hexes 的多段 leg BFS（A→B→C 沿机场链），
+// 与「立即参战」分离。返回 { reachableHexes, costByHex, predecessor }，reachableHexes 为本攻势
+// 内该航空单位可转场到达的友控机场格集合。默认 STRAT_MOVE（多段 + 允许延伸航程 + 2×leg）。
+function queryAirTransferReachability(unit, ctx) {
+    const piece = pieces[unit]
+    const loc = G.location[unit]
+    if (!piece || piece.class !== "air" || !Number.isInteger(loc)) {
+        return { reachableHexes: [], costByHex: {}, predecessor: {} }
+    }
+    return rules_query_snapshot(() => {
+        if (!G.offensive || !Array.isArray(G.offensive.active_cards) || !G.offensive.active_cards[0]) {
+            return { reachableHexes: [], costByHex: {}, predecessor: {} }
+        }
+        R = piece.faction
+        G.active_stack = [unit]
+        L.move_type = (ctx && ctx.move_type) || STRAT_MOVE
+        L.move_data = get_move_data()
+        if (!Array.isArray(G.offensive.battle_hexes)) G.offensive.battle_hexes = []
+        compute_air_move_hexes()
+        const reachableHexes = []
+        const costByHex = {}
+        const predecessor = {}
+        for (let i = 0; i < L.allowed_hexes.length; i += 2) {
+            const hex = L.allowed_hexes[i]
+            const path = L.allowed_hexes[i + 1]
+            reachableHexes.push(hex)
+            if (path && path.length >= 3) predecessor[hex] = path[path.length - 2]
+        }
+        return { reachableHexes, costByHex, predecessor }
+    }, piece.faction)
 }
 
 // 反应候选：反应方 reactFaction 对当前（或注入的 targetHex）会战格能合法反应的部队，
@@ -401,7 +449,8 @@ const RULES_QUERY_FNS = [
     "queryPotentialCombatStrength", "queryBattleTable", "querySpaceControlled",
     "queryFactionUnits", "queryLegalReinforcementHexes", "queryEmergencyRetreatHexes",
     "queryActivationCandidates", "queryGroundReachability", "queryNavalReachability",
-    "queryCombatParticipation", "queryReactionCandidates",
+    "queryCombatParticipation", "queryAirCombatParticipation", "queryAirTransferReachability",
+    "queryReactionCandidates",
     "queryReactionStrength", "querySpecialReaction",
     "queryKamikazeStandard", "querySubmarineTargets", "queryPbmDestinations",
 ]
@@ -414,7 +463,8 @@ function rules_query_dispatch(q) {
         queryPotentialCombatStrength, queryBattleTable, querySpaceControlled,
         queryFactionUnits, queryLegalReinforcementHexes, queryEmergencyRetreatHexes,
         queryActivationCandidates, queryGroundReachability, queryNavalReachability,
-        queryCombatParticipation, queryReactionCandidates,
+        queryCombatParticipation, queryAirCombatParticipation, queryAirTransferReachability,
+        queryReactionCandidates,
         queryReactionStrength, querySpecialReaction,
         queryKamikazeStandard, querySubmarineTargets, queryPbmDestinations,
     }

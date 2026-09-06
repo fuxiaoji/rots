@@ -98,4 +98,31 @@ function assertReadOnly(state, fn) {
     assert.strictEqual(invalid.legal, false)
 }
 
+// 6. 航空「立即参战」与「转场」分离（文档 §3）：br 内可参战；延伸航程转场后本攻势不可参战；
+//    转场查询返回 { reachableHexes, costByHex, predecessor } 且只读确定。
+{
+    const { state } = setup()
+    const air = rules.view(state, "Allies").ai.units
+        .find(u => u.class === "air" && Number.isInteger(u.location) && u.location > 0)
+    assert(air, "South Pacific setup must have an on-map air unit")
+    // 已在其自身格（距离 0）→ 正常战斗航程覆盖 → legal=true。
+    const atSelf = assertReadOnly(state, () => query(state, "Allies", "queryAirCombatParticipation", [air.id, air.location]))
+    assert.strictEqual(atSelf.legal, true, "air at own hex is within normal range")
+    assert.strictEqual(atSelf.usesExtendedRange, false)
+    assert.strictEqual(typeof atSelf.effectiveAttack, "number")
+    // 非法目标 → legal=false，不抛错。
+    const invalid = query(state, "Allies", "queryAirCombatParticipation", [air.id, -1])
+    assert.strictEqual(invalid.legal, false)
+    // 本攻势已用延伸航程转场 → 不再参与本攻势攻击（文档 §3）。
+    const afterTransfer = query(state, "Allies", "queryAirCombatParticipation", [air.id, air.location, { usedExtendedRange: true }])
+    assert.strictEqual(afterTransfer.legal, false, "extended-range transfer forbids same-offensive attack")
+    // 转场查询：返回形状正确且只读确定（无攻势上下文 → 空集合，但不抛错）。
+    const transfer = assertReadOnly(state, () => query(state, "Allies", "queryAirTransferReachability", [air.id]))
+    assert(transfer && Array.isArray(transfer.reachableHexes), "transfer must expose reachableHexes array")
+    assert(transfer.costByHex && typeof transfer.costByHex === "object", "transfer must expose costByHex")
+    assert(transfer.predecessor && typeof transfer.predecessor === "object", "transfer must expose predecessor")
+    const transfer2 = query(state, "Allies", "queryAirTransferReachability", [air.id])
+    assert.deepStrictEqual(transfer2, transfer, "queryAirTransferReachability must be deterministic")
+}
+
 console.log("rules-query tests passed")

@@ -550,7 +550,20 @@ function eop_preserve_rear_air(u, role, target) {
     if (!hasHq) return false
     const extended = Math.max(1, Number(p.ebr) || Number(p.br) || 1)
     // 一次航空移动最多把距离缩短 extended；随后还须在 extended 内支援会战。
-    return get_distance(h, target) > extended * 2
+    if (get_distance(h, target) <= extended * 2) return false
+    // R9：距目标超过一移+一攻的后方航空兵，若能沿机场链多段转场前推（任一可达机场
+    // 更靠近目标），就不再硬删（文档 §3：能多段转场前推的空军不再被直接删）；只有既
+    // 不能立即参战、又无前推机场可用的才保护，避免「夏威夷航空兵折返跑」。
+    if (typeof queryAirTransferReachability === "function") {
+        try {
+            const transfer = queryAirTransferReachability(u)
+            const d0 = get_distance(h, target)
+            for (const hex of transfer.reachableHexes) {
+                if (get_distance(hex, target) < d0) return false
+            }
+        } catch (e) { /* 查询失败保守放行（不保护），由立即参战过滤兜底 */ return false }
+    }
+    return true
 }
 
 // Public-view planning interfaces used by the chart executor. They deliberately
