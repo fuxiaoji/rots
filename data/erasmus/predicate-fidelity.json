@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "policy_version": "erasmus-v2.0-zh.23",
+  "note": "清单 #32 优先审计的 15 个关键 predicate 的 fidelity 落账。exact-engine=引擎合法性(exact) / exact-derived=确定性派生 / partial=CF阈值近似 / heuristic=代理 / missing=未实现。",
+  "predicates": {
+    "CAN_GROUND_ADVANCE": {
+      "pages": [
+        "JP05",
+        "AP11"
+      ],
+      "fidelity": "exact-engine",
+      "implementation": "rules_query.queryGroundReachability + eop_exact_taskforce_predicates",
+      "tests": [
+        "rules-query",
+        "erasmus-taskforce-predicate"
+      ]
+    },
+    "GROUND_CAN_ENTER_EXIT": {
+      "pages": [
+        "JP05",
+        "AP11"
+      ],
+      "fidelity": "exact-engine",
+      "implementation": "eop_can_ground_enter_exit over queryGroundReachability",
+      "tests": [
+        "erasmus-taskforce-predicate"
+      ]
+    },
+    "TARGET_IS_SR": {
+      "pages": [
+        "JP05",
+        "AP11"
+      ],
+      "fidelity": "exact-engine",
+      "implementation": "rules_query.querySpecialReaction",
+      "tests": [
+        "erasmus-taskforce-predicate"
+      ]
+    },
+    "ENEMY_AIR_OR_CARRIER_CAN_REACT": {
+      "pages": [
+        "JP05",
+        "AP11"
+      ],
+      "fidelity": "exact-engine",
+      "implementation": "rules_query.queryReactionCandidates",
+      "tests": [
+        "erasmus-taskforce-predicate"
+      ]
+    },
+    "ENEMY_NAVAL_GROUND_CAN_REACT": {
+      "pages": [
+        "JP05",
+        "AP11"
+      ],
+      "fidelity": "exact-engine",
+      "implementation": "rules_query.queryReactionCandidates",
+      "tests": [
+        "erasmus-taskforce-predicate"
+      ]
+    },
+    "FORCE_MEETS_BATTLE_SUPPORT_STANDARD": {
+      "pages": [
+        "JP05",
+        "AP11"
+      ],
+      "fidelity": "exact-derived",
+      "implementation": "eop_meets_battle_support_standard(仅判兵种构成)",
+      "tests": [
+        "erasmus-taskforce-predicate"
+      ]
+    },
+    "TARGET_DAMAGE_LEVEL_MET": {
+      "pages": [
+        "JP05",
+        "AP11"
+      ],
+      "fidelity": "partial",
+      "implementation": "eop_evaluate_damage_level(CF 阈值 + 地面 2x 生存近似)",
+      "tests": [
+        "erasmus-taskforce-predicate"
+      ]
+    },
+    "REACTION_FORCE_STANDARD_MET": {
+      "pages": [
+        "JP06",
+        "AP12"
+      ],
+      "fidelity": "partial",
+      "implementation": "eop_evaluate_reaction_force_standard(空海1x/空军数精确, D10地面2x CF阈值)",
+      "tests": [
+        "erasmus-reaction-predicate"
+      ]
+    },
+    "WEATHER_STANDARD_MET": {
+      "pages": [
+        "JP06",
+        "AP12"
+      ],
+      "fidelity": "exact-derived",
+      "implementation": "eop_weather_reaction_standard(d10 < 2×激活单位数)",
+      "tests": [
+        "erasmus-reaction-predicate"
+      ]
+    },
+    "EARLY_DEFENSE_DONE_AND_KAMIKAZE_STANDARD": {
+      "pages": [
+        "JP06"
+      ],
+      "fidelity": "exact-engine",
+      "implementation": "queryKamikazeStandard + eop_early_defense_done(DEI投降格)",
+      "tests": [
+        "erasmus-reaction-predicate"
+      ]
+    },
+    "HAS_VALID_SUBMARINE_TARGET": {
+      "pages": [
+        "JP06",
+        "AP12"
+      ],
+      "fidelity": "exact-engine",
+      "implementation": "rules_query.querySubmarineTargets",
+      "tests": [
+        "erasmus-reaction-predicate"
+      ]
+    },
+    "IS_LAST_TARGET": {
+      "pages": [
+        "JP05",
+        "AP11"
+      ],
+      "fidelity": "exact-derived",
+      "implementation": "eop_is_target_complete(按目标类型统一完成判定)",
+      "tests": [
+        "erasmus-strategic-predicate"
+      ]
+    },
+    "CBI_DEFENSE_COMPLETE": {
+      "pages": [
+        "AP07"
+      ],
+      "fidelity": "exact-derived",
+      "implementation": "esm_cbi_defense_complete(6 单位指定防御位)",
+      "tests": [
+        "erasmus-state-fidelity"
+      ]
+    },
+    "ORANGE_PLAN_CRITERIA": {
+      "pages": [
+        "AP07"
+      ],
+      "fidelity": "exact-derived",
+      "implementation": "esm_build_ctx al_J..al_N(航母+陆军军同格+港口+≤15)",
+      "tests": [
+        "erasmus-state-fidelity"
+      ]
+    },
+    "PERIMETER_TARGET_1_COMPLETE": {
+      "pages": [
+        "JP01"
+      ],
+      "fidelity": "exact-derived",
+      "implementation": "esm_build_ctx jp_M_perimeter_target_1_complete(5 外围格控制)",
+      "tests": [
+        "erasmus-state-fidelity"
+      ]
+    }
+  }
+}

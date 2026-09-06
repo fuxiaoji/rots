@@ -12,9 +12,10 @@ assert.strictEqual(mappedNodes.length, chartNodes.length, "implementation map no
 assert.strictEqual(new Set(mappedNodes).size, mappedNodes.length, "implementation map contains duplicate nodes")
 assert.deepStrictEqual(mappedNodes.slice().sort(), chartNodes.slice().sort(), "implementation map misses or invents chart nodes")
 
+const FIDELITY_STATES = new Set(["exact-engine", "exact-derived", "partial", "heuristic", "missing"])
 for (const node of implementationMap.nodes) {
 	assert(node.implementation_entry, `${node.chart_id}/${node.node_id} has no implementation entry`)
-	assert(node.status.startsWith("implemented-"), `${node.chart_id}/${node.node_id} has unaudited status ${node.status}`)
+	assert(FIDELITY_STATES.has(node.status), `${node.chart_id}/${node.node_id} has unaudited status ${node.status}`)
 }
 
 console.log(`Erasmus implementation map passed: ${mappedNodes.length} nodes`)

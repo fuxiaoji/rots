@@ -1,15 +1,16 @@
 {
   "schema_version": 1,
-  "policy_version": "erasmus-v2.0-zh.20",
+  "policy_version": "erasmus-v2.0-zh.23",
   "generated_from": "data/erasmus/charts.json",
   "note": "这是逻辑实现映射，不是 PDF 视觉坐标。视觉坐标由 node-regions.csv 人工回填。",
   "summary": {
     "charts": 12,
-    "nodes": 258,
-    "by_status": {
-      "implemented-by-family": 36,
-      "implemented-specialized": 213,
-      "implemented-generic": 9
+    "nodes": 259,
+    "by_fidelity": {
+      "exact-derived": 241,
+      "heuristic": 4,
+      "exact-engine": 10,
+      "partial": 4
     }
   },
   "nodes": [
@@ -24,7 +25,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -39,7 +40,7 @@
       "label_zh": "菲律宾、东印度或马来亚的盟军HQ断补？",
       "predicate_id": "AP_HQ_OOS_PHI_DEI_MALAYA",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_early",
       "implementation_detail": "专用战略轴求值器计算 AP_HQ_OOS_PHI_DEI_MALAYA，并把实际节点写入轨迹。"
     },
@@ -54,7 +55,7 @@
       "label_zh": "东印度投降格全部占领？",
       "predicate_id": "DEI_SURRENDER_HEXES_ALL_OCCUPIED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_early",
       "implementation_detail": "专用战略轴求值器计算 DEI_SURRENDER_HEXES_ALL_OCCUPIED，并把实际节点写入轨迹。"
     },
@@ -69,7 +70,7 @@
       "label_zh": "C+D？",
       "predicate_id": "JP_HAND_GE_3_AND_RES_LT_13",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_early",
       "implementation_detail": "专用战略轴求值器计算 JP_HAND_GE_3_AND_RES_LT_13，并把实际节点写入轨迹。"
     },
@@ -84,7 +85,7 @@
       "label_zh": "后勤值≥20？",
       "predicate_id": "JP_LOGISTICS_GTE_20",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_early",
       "implementation_detail": "专用战略轴求值器计算 JP_LOGISTICS_GTE_20，并把实际节点写入轨迹。"
     },
@@ -99,7 +100,7 @@
       "label_zh": "第3回合或以后？",
       "predicate_id": "TURN_GE_3",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_early",
       "implementation_detail": "专用战略轴求值器计算 TURN_GE_3，并把实际节点写入轨迹。"
     },
@@ -114,7 +115,7 @@
       "label_zh": "A+C+D？",
       "predicate_id": "A_AND_HAND_GE_3_AND_RES_LT_13",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_early",
       "implementation_detail": "专用战略轴求值器计算 A_AND_HAND_GE_3_AND_RES_LT_13，并把实际节点写入轨迹。"
     },
@@ -129,7 +130,7 @@
       "label_zh": "C+(E或H+I)？",
       "predicate_id": "HAND_GE_3_AND_RES_GE_13_OR_LOGISTICS_LE_19_AND_DEI_AZOI",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_early",
       "implementation_detail": "专用战略轴求值器计算 HAND_GE_3_AND_RES_GE_13_OR_LOGISTICS_LE_19_AND_DEI_AZOI，并把实际节点写入轨迹。"
     },
@@ -144,7 +145,7 @@
       "label_zh": "C+J+E+(B或I或K)？",
       "predicate_id": "HAND_GE_3_AND_RABAUL_GUADALCANAL_AND_RES_GE_13_AND_DEI_OR_NG",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_early",
       "implementation_detail": "专用战略轴求值器计算 HAND_GE_3_AND_RABAUL_GUADALCANAL_AND_RES_GE_13_AND_DEI_OR_NG，并把实际节点写入轨迹。"
     },
@@ -159,7 +160,7 @@
       "label_zh": "C+L？",
       "predicate_id": "HAND_GE_3_AND_MAL_PHI_DEI_INCOMPLETE",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_early",
       "implementation_detail": "专用战略轴求值器计算 HAND_GE_3_AND_MAL_PHI_DEI_INCOMPLETE，并把实际节点写入轨迹。"
     },
@@ -174,7 +175,7 @@
       "label_zh": "外围防御目标1完成？",
       "predicate_id": "PERIMETER_TARGET_1_COMPLETE",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_early",
       "implementation_detail": "专用战略轴求值器计算 PERIMETER_TARGET_1_COMPLETE，并把实际节点写入轨迹。"
     },
@@ -189,7 +190,7 @@
       "label_zh": "掷D10",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-generic",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "以 seed、动作序号、图表、节点和骰表派生确定性 D10（0–9），由骰点边选择后继。"
     },
@@ -204,7 +205,7 @@
       "label_zh": "激进空优",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_early",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -219,7 +220,7 @@
       "label_zh": "保守空优",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_early",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -234,7 +235,7 @@
       "label_zh": "激进南方资源",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_early",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -249,7 +250,7 @@
       "label_zh": "外围防御",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_early",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -264,7 +265,7 @@
       "label_zh": "事件",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_early",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -279,7 +280,7 @@
       "label_zh": "中太平洋",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_early",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -294,7 +295,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -309,7 +310,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -324,7 +325,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -339,7 +340,7 @@
       "label_zh": "手牌≥3？",
       "predicate_id": "JP_HAND_GE_3",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_mid",
       "implementation_detail": "专用战略轴求值器计算 JP_HAND_GE_3，并把实际节点写入轨迹。"
     },
@@ -354,7 +355,7 @@
       "label_zh": "可以PASS？",
       "predicate_id": "JP_CAN_PASS",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_mid",
       "implementation_detail": "专用战略轴求值器计算 JP_CAN_PASS，并把实际节点写入轨迹。"
     },
@@ -369,7 +370,7 @@
       "label_zh": "资源格<13？",
       "predicate_id": "JP_RESOURCE_COUNT_LT_13",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_mid",
       "implementation_detail": "专用战略轴求值器计算 JP_RESOURCE_COUNT_LT_13，并把实际节点写入轨迹。"
     },
@@ -384,7 +385,7 @@
       "label_zh": "后勤值≥20？",
       "predicate_id": "JP_LOGISTICS_GTE_20",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_mid",
       "implementation_detail": "专用战略轴求值器计算 JP_LOGISTICS_GTE_20，并把实际节点写入轨迹。"
     },
@@ -399,7 +400,7 @@
       "label_zh": "美国政治意志<4？",
       "predicate_id": "US_POLITICAL_WILL_LT_4",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_mid",
       "implementation_detail": "专用战略轴求值器计算 US_POLITICAL_WILL_LT_4，并把实际节点写入轨迹。"
     },
@@ -414,7 +415,7 @@
       "label_zh": "后勤值≥15？",
       "predicate_id": "JP_LOGISTICS_GTE_15",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_mid",
       "implementation_detail": "专用战略轴求值器计算 JP_LOGISTICS_GTE_15，并把实际节点写入轨迹。"
     },
@@ -429,7 +430,7 @@
       "label_zh": "缅甸投降？",
       "predicate_id": "BURMA_SURRENDERED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_mid",
       "implementation_detail": "专用战略轴求值器计算 BURMA_SURRENDERED，并把实际节点写入轨迹。"
     },
@@ -444,7 +445,7 @@
       "label_zh": "甘地或缅甸大军力步数优势，且后勤≥18？",
       "predicate_id": "GANDHI_OR_MORE_LARGE_STEPS_AND_LOGISTICS_GTE_18",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_mid",
       "implementation_detail": "专用战略轴求值器计算 GANDHI_OR_MORE_LARGE_STEPS_AND_LOGISTICS_GTE_18，并把实际节点写入轨迹。"
     },
@@ -459,7 +460,7 @@
       "label_zh": "PASS",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_mid",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -474,7 +475,7 @@
       "label_zh": "事件",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_mid",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -489,7 +490,7 @@
       "label_zh": "资源",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_mid",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -504,7 +505,7 @@
       "label_zh": "中太平洋",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_mid",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -519,7 +520,7 @@
       "label_zh": "中缅印",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_mid",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -534,7 +535,7 @@
       "label_zh": "印度",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_mid",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -549,7 +550,7 @@
       "label_zh": "外围防御",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_mid",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -564,7 +565,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -579,7 +580,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -594,7 +595,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -609,7 +610,7 @@
       "label_zh": "手牌≥3？",
       "predicate_id": "JP_HAND_GE_3",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_late",
       "implementation_detail": "专用战略轴求值器计算 JP_HAND_GE_3，并把实际节点写入轨迹。"
     },
@@ -624,7 +625,7 @@
       "label_zh": "东京8格港口和5格机场均有驻军？",
       "predicate_id": "TOKYO_8_PORTS_AND_TOKYO_5_AIRFIELDS_GARRISONED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_late",
       "implementation_detail": "专用战略轴求值器计算 TOKYO_8_PORTS_AND_TOKYO_5_AIRFIELDS_GARRISONED，并把实际节点写入轨迹。"
     },
@@ -639,7 +640,7 @@
       "label_zh": "可以PASS？",
       "predicate_id": "JP_CAN_PASS",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_late",
       "implementation_detail": "专用战略轴求值器计算 JP_CAN_PASS，并把实际节点写入轨迹。"
     },
@@ -654,7 +655,7 @@
       "label_zh": "盟军地面单位在本州？",
       "predicate_id": "ALLIED_GROUND_ON_HONSHU",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_late",
       "implementation_detail": "专用战略轴求值器计算 ALLIED_GROUND_ON_HONSHU，并把实际节点写入轨迹。"
     },
@@ -669,7 +670,7 @@
       "label_zh": "事件",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_late",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -684,7 +685,7 @@
       "label_zh": "最终国防圈",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_late",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -699,7 +700,7 @@
       "label_zh": "PASS",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_late",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -714,7 +715,7 @@
       "label_zh": "最终防御",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_jp_eval_late",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -729,7 +730,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -744,7 +745,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -759,7 +760,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -774,7 +775,7 @@
       "label_zh": "攻势阶段有打出过牌？",
       "predicate_id": "JP_CARD_ALREADY_PLAYED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -789,7 +790,7 @@
       "label_zh": "卡牌分类",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:classifyCards",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -804,7 +805,7 @@
       "label_zh": "当前手牌大于2张？",
       "predicate_id": "JP_HAND_GT_2",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -819,7 +820,7 @@
       "label_zh": "本场第一张牌？",
       "predicate_id": "JP_FIRST_GAME_CARD",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -834,7 +835,7 @@
       "label_zh": "有先发打击牌？",
       "predicate_id": "JP_HAS_FIRST_STRIKE_EVENT",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -849,7 +850,7 @@
       "label_zh": "有可执行的不受限军事事件？",
       "predicate_id": "JP_HAS_UNRESTRICTED_MILITARY_EVENT",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -864,7 +865,7 @@
       "label_zh": "有可执行的受限军事事件？",
       "predicate_id": "JP_HAS_RESTRICTED_MILITARY_EVENT",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -879,7 +880,7 @@
       "label_zh": "所有有效军事事件均因限制不能达成目标？",
       "predicate_id": "JP_ALL_MILITARY_EVENTS_RESTRICTED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -894,7 +895,7 @@
       "label_zh": "本回合已选择未来攻势？",
       "predicate_id": "JP_FO_SELECTED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -909,7 +910,7 @@
       "label_zh": "早期东印度目标都占领？",
       "predicate_id": "JP_EARLY_DEI_TARGET_OCCUPIED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -924,7 +925,7 @@
       "label_zh": "只剩1张牌？",
       "predicate_id": "JP_LAST_CARD",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -939,7 +940,7 @@
       "label_zh": "剩下可用事件牌是反应牌？",
       "predicate_id": "JP_LAST_PLAYABLE_IS_REACTION",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -954,7 +955,7 @@
       "label_zh": "先发打击EC",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "把图表出口翻译为 event/ops/future-offensive/pass 意图，再由 esm_card_window_action 选择合法卡牌。"
     },
@@ -969,7 +970,7 @@
       "label_zh": "无限制军事事件EC",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "把图表出口翻译为 event/ops/future-offensive/pass 意图，再由 esm_card_window_action 选择合法卡牌。"
     },
@@ -984,7 +985,7 @@
       "label_zh": "受限军事事件EC",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "把图表出口翻译为 event/ops/future-offensive/pass 意图，再由 esm_card_window_action 选择合法卡牌。"
     },
@@ -999,7 +1000,7 @@
       "label_zh": "受限军事事件OC",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "把图表出口翻译为 event/ops/future-offensive/pass 意图，再由 esm_card_window_action 选择合法卡牌。"
     },
@@ -1014,7 +1015,7 @@
       "label_zh": "无军事事件OC",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "把图表出口翻译为 event/ops/future-offensive/pass 意图，再由 esm_card_window_action 选择合法卡牌。"
     },
@@ -1029,7 +1030,7 @@
       "label_zh": "未来攻势",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "把图表出口翻译为 event/ops/future-offensive/pass 意图，再由 esm_card_window_action 选择合法卡牌。"
     },
@@ -1044,7 +1045,7 @@
       "label_zh": "事件战略",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "把图表出口翻译为 event/ops/future-offensive/pass 意图，再由 esm_card_window_action 选择合法卡牌。"
     },
@@ -1059,7 +1060,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -1074,7 +1075,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -1089,7 +1090,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -1104,7 +1105,7 @@
       "label_zh": "对目标的海空攻击？",
       "predicate_id": "IS_AIR_STRIKE",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "heuristic",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 IS_AIR_STRIKE，图解释器选择 true/false 边。"
     },
@@ -1119,7 +1120,7 @@
       "label_zh": "目标沿岸或岛屿？",
       "predicate_id": "TARGET_IS_SEACOAST_OR_ISLAND",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 TARGET_IS_SEACOAST_OR_ISLAND，图解释器选择 true/false 边。"
     },
@@ -1134,7 +1135,7 @@
       "label_zh": "能否地面推进占领？",
       "predicate_id": "CAN_GROUND_ADVANCE",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-engine",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 CAN_GROUND_ADVANCE，图解释器选择 true/false 边。"
     },
@@ -1149,7 +1150,7 @@
       "label_zh": "D或(E+F)？",
       "predicate_id": "TARGET_EMPTY_OR_NAVAL_AND_GROUND_CAN_EXIT",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 TARGET_EMPTY_OR_NAVAL_AND_GROUND_CAN_EXIT，图解释器选择 true/false 边。"
     },
@@ -1164,7 +1165,7 @@
       "label_zh": "目标为空？",
       "predicate_id": "TARGET_EMPTY",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 TARGET_EMPTY，图解释器选择 true/false 边。"
     },
@@ -1179,7 +1180,7 @@
       "label_zh": "目标为空？",
       "predicate_id": "TARGET_EMPTY",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 TARGET_EMPTY，图解释器选择 true/false 边。"
     },
@@ -1194,7 +1195,7 @@
       "label_zh": "潜在SR格？",
       "predicate_id": "TARGET_IS_SR",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-engine",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 TARGET_IS_SR，图解释器选择 true/false 边。"
     },
@@ -1209,7 +1210,7 @@
       "label_zh": "敌空军或航母可反应？",
       "predicate_id": "ENEMY_AIR_OR_CARRIER_CAN_REACT",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-engine",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 ENEMY_AIR_OR_CARRIER_CAN_REACT，图解释器选择 true/false 边。"
     },
@@ -1224,7 +1225,7 @@
       "label_zh": "航空打击",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -1239,7 +1240,7 @@
       "label_zh": "带航空支援地面攻击",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -1254,7 +1255,7 @@
       "label_zh": "带航空/海上支援地面攻击",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -1269,7 +1270,7 @@
       "label_zh": "带海上支援登陆",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -1284,7 +1285,7 @@
       "label_zh": "带航空/海上支援登陆",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -1299,7 +1300,7 @@
       "label_zh": "无支援登陆",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -1314,7 +1315,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -1329,7 +1330,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -1344,7 +1345,7 @@
       "label_zh": "激活点满足战斗支援标准？",
       "predicate_id": "FORCE_MEETS_BATTLE_SUPPORT_STANDARD",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 FORCE_MEETS_BATTLE_SUPPORT_STANDARD，图解释器选择 true/false 边。"
     },
@@ -1359,7 +1360,7 @@
       "label_zh": "目标伤害等级达到？",
       "predicate_id": "TARGET_DAMAGE_LEVEL_MET",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "partial",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 TARGET_DAMAGE_LEVEL_MET，图解释器选择 true/false 边。"
     },
@@ -1374,7 +1375,7 @@
       "label_zh": "掷D10",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-generic",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "以 seed、动作序号、图表、节点和骰表派生确定性 D10（0–9），由骰点边选择后继。"
     },
@@ -1389,7 +1390,7 @@
       "label_zh": "攻击最弱堆叠",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -1404,7 +1405,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -1419,7 +1420,7 @@
       "label_zh": "K+L？",
       "predicate_id": "ENEMY_CAN_REACT_AND_IS_EC",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 ENEMY_CAN_REACT_AND_IS_EC，图解释器选择 true/false 边。"
     },
@@ -1434,7 +1435,7 @@
       "label_zh": "最后目标？",
       "predicate_id": "IS_LAST_TARGET",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 IS_LAST_TARGET，图解释器选择 true/false 边。"
     },
@@ -1449,7 +1450,7 @@
       "label_zh": "考虑压制攻击",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -1464,7 +1465,7 @@
       "label_zh": "用额外激活点激活更多单位",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -1479,7 +1480,7 @@
       "label_zh": "为下一目标编成新任务部队",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -1494,7 +1495,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -1509,7 +1510,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -1524,7 +1525,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -1539,7 +1540,7 @@
       "label_zh": "天气牌可用？",
       "predicate_id": "WEATHER_CARD_AVAILABLE",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -1554,7 +1555,7 @@
       "label_zh": "满足天气牌标准？",
       "predicate_id": "WEATHER_STANDARD_MET",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -1569,7 +1570,7 @@
       "label_zh": "天气反应",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -1584,7 +1585,7 @@
       "label_zh": "有SR？",
       "predicate_id": "IS_STRATEGIC_REDEPLOYMENT",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "heuristic",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -1599,7 +1600,7 @@
       "label_zh": "为每处SR掷骰",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -1614,7 +1615,7 @@
       "label_zh": "有战斗格？",
       "predicate_id": "HAS_BATTLE",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -1629,7 +1630,7 @@
       "label_zh": "E+(F或G)？",
       "predicate_id": "BATTLE_IN_HQ_RANGE_AND_REACTION_CARD",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -1644,7 +1645,7 @@
       "label_zh": "情报判定",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-generic",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "以 seed、动作序号、图表、节点和骰表派生确定性 D10（0–9），由骰点边选择后继。"
     },
@@ -1659,7 +1660,7 @@
       "label_zh": "打出情报反应牌",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -1674,7 +1675,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -1689,7 +1690,7 @@
       "label_zh": "满足反应部队标准？",
       "predicate_id": "REACTION_FORCE_STANDARD_MET",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "partial",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -1704,7 +1705,7 @@
       "label_zh": "日本反应兵力D10（图示1-4/5-9；0按低段）",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-generic",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "以 seed、动作序号、图表、节点和骰表派生确定性 D10（0–9），由骰点边选择后继。"
     },
@@ -1719,7 +1720,7 @@
       "label_zh": "反应战略",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -1734,7 +1735,7 @@
       "label_zh": "I+J？",
       "predicate_id": "EARLY_DEFENSE_DONE_AND_KAMIKAZE_STANDARD",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-engine",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -1749,7 +1750,7 @@
       "label_zh": "神风特攻",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -1764,7 +1765,7 @@
       "label_zh": "K+L？",
       "predicate_id": "HAS_SUBMARINE_CARD_AND_TARGET",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-engine",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -1779,7 +1780,7 @@
       "label_zh": "潜艇攻击",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -1794,7 +1795,7 @@
       "label_zh": "如果可以的话执行PBM",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planPostBattleMovement + js/server/offensive.js:erasmus_pbm_target_score",
       "implementation_detail": "按航空、海军、失败两栖三条独立 PBM 优先级选择合法单位和目的地。"
     },
@@ -1809,7 +1810,7 @@
       "label_zh": "空中单位需要PBM？",
       "predicate_id": "PBM_AIR_REQUIRED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planPostBattleMovement + js/server/offensive.js:erasmus_pbm_target_score",
       "implementation_detail": "按航空、海军、失败两栖三条独立 PBM 优先级选择合法单位和目的地。"
     },
@@ -1824,7 +1825,7 @@
       "label_zh": "海上单位需要PBM？",
       "predicate_id": "PBM_SEA_REQUIRED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planPostBattleMovement + js/server/offensive.js:erasmus_pbm_target_score",
       "implementation_detail": "按航空、海军、失败两栖三条独立 PBM 优先级选择合法单位和目的地。"
     },
@@ -1839,7 +1840,7 @@
       "label_zh": "失败两栖单位需要PBM？",
       "predicate_id": "PBM_AA_FAILED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planPostBattleMovement + js/server/offensive.js:erasmus_pbm_target_score",
       "implementation_detail": "按航空、海军、失败两栖三条独立 PBM 优先级选择合法单位和目的地。"
     },
@@ -1854,7 +1855,7 @@
       "label_zh": "航空PBM",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planPostBattleMovement + js/server/offensive.js:erasmus_pbm_target_score",
       "implementation_detail": "按航空、海军、失败两栖三条独立 PBM 优先级选择合法单位和目的地。"
     },
@@ -1869,7 +1870,7 @@
       "label_zh": "海上PBM",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planPostBattleMovement + js/server/offensive.js:erasmus_pbm_target_score",
       "implementation_detail": "按航空、海军、失败两栖三条独立 PBM 优先级选择合法单位和目的地。"
     },
@@ -1884,7 +1885,7 @@
       "label_zh": "AA失败PBM",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planPostBattleMovement + js/server/offensive.js:erasmus_pbm_target_score",
       "implementation_detail": "按航空、海军、失败两栖三条独立 PBM 优先级选择合法单位和目的地。"
     },
@@ -1899,7 +1900,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -1914,7 +1915,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -1929,7 +1930,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -1944,7 +1945,7 @@
       "label_zh": "手牌≥3？",
       "predicate_id": "AP_HAND_GE_3",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "专用战略轴求值器计算 AP_HAND_GE_3，并把实际节点写入轨迹。"
     },
@@ -1959,7 +1960,7 @@
       "label_zh": "菲律宾有补给HQ？",
       "predicate_id": "SUPPLIED_HQ_IN_PHILIPPINES",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "专用战略轴求值器计算 SUPPLIED_HQ_IN_PHILIPPINES，并把实际节点写入轨迹。"
     },
@@ -1974,7 +1975,7 @@
       "label_zh": "马来亚有补给HQ？",
       "predicate_id": "SUPPLIED_HQ_IN_MALAYA",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "专用战略轴求值器计算 SUPPLIED_HQ_IN_MALAYA，并把实际节点写入轨迹。"
     },
@@ -1989,7 +1990,7 @@
       "label_zh": "Arcadia已打出？",
       "predicate_id": "ARCADIA_PLAYED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "专用战略轴求值器计算 ARCADIA_PLAYED，并把实际节点写入轨迹。"
     },
@@ -2004,7 +2005,7 @@
       "label_zh": "CBI防御完成？",
       "predicate_id": "CBI_DEFENSE_COMPLETE",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "专用战略轴求值器计算 CBI_DEFENSE_COMPLETE，并把实际节点写入轨迹。"
     },
@@ -2019,7 +2020,7 @@
       "label_zh": "有PASS且只剩一张牌？",
       "predicate_id": "HAS_PASS_AND_ONE_CARD_LEFT",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "专用战略轴求值器计算 HAS_PASS_AND_ONE_CARD_LEFT，并把实际节点写入轨迹。"
     },
@@ -2034,7 +2035,7 @@
       "label_zh": "橙色计划条件全部满足？",
       "predicate_id": "ORANGE_PLAN_CRITERIA",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "专用战略轴求值器计算 ORANGE_PLAN_CRITERIA，并把实际节点写入轨迹。"
     },
@@ -2049,7 +2050,7 @@
       "label_zh": "DEI未投降且ABDA有补给？",
       "predicate_id": "DEI_NOT_SURRENDERED_AND_ABDA_SUPPLIED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "专用战略轴求值器计算 DEI_NOT_SURRENDERED_AND_ABDA_SUPPLIED，并把实际节点写入轨迹。"
     },
@@ -2064,7 +2065,7 @@
       "label_zh": "事件",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2079,7 +2080,7 @@
       "label_zh": "撤离菲律宾",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2094,7 +2095,7 @@
       "label_zh": "撤离马来亚",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2109,7 +2110,7 @@
       "label_zh": "建立ABDA",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2124,7 +2125,7 @@
       "label_zh": "增强CBI防御",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2139,7 +2140,7 @@
       "label_zh": "PASS",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2154,7 +2155,7 @@
       "label_zh": "橙色计划",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2169,7 +2170,7 @@
       "label_zh": "DEI防御",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2184,7 +2185,7 @@
       "label_zh": "攻势进攻",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_early",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2199,7 +2200,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -2214,7 +2215,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -2229,7 +2230,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -2244,7 +2245,7 @@
       "label_zh": "可以PASS？",
       "predicate_id": "AP_CAN_PASS",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_mid",
       "implementation_detail": "专用战略轴求值器计算 AP_CAN_PASS，并把实际节点写入轨迹。"
     },
@@ -2256,12 +2257,42 @@
       "kind": "decision-axis",
       "node_id": "AP08-B",
       "node_type": "condition",
-      "label_zh": "需要满足战争进程？",
+      "label_zh": "需要战争进程？",
       "predicate_id": "AP_NEEDS_PROGRESS_OF_WAR",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_mid",
       "implementation_detail": "专用战略轴求值器计算 AP_NEEDS_PROGRESS_OF_WAR，并把实际节点写入轨迹。"
+    },
+    {
+      "chart_id": "ERASMUS-AP-08",
+      "page": 8,
+      "role": "Allies",
+      "phase": "middle",
+      "kind": "decision-axis",
+      "node_id": "AP08-D",
+      "node_type": "condition",
+      "label_zh": "手牌≥3且日本控制反攻目标？",
+      "predicate_id": "AP_HAND_GE_3_AND_JP_CONTROLS_COUNTERATTACK_TARGET",
+      "strategy_id": "",
+      "status": "exact-derived",
+      "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_mid",
+      "implementation_detail": "专用战略轴求值器计算 AP_HAND_GE_3_AND_JP_CONTROLS_COUNTERATTACK_TARGET，并把实际节点写入轨迹。"
+    },
+    {
+      "chart_id": "ERASMUS-AP-08",
+      "page": 8,
+      "role": "Allies",
+      "phase": "middle",
+      "kind": "decision-axis",
+      "node_id": "AP08-CARD-GROUP",
+      "node_type": "process",
+      "label_zh": "攻势卡牌分组",
+      "predicate_id": "",
+      "strategy_id": "",
+      "status": "exact-derived",
+      "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_mid",
+      "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
     {
       "chart_id": "ERASMUS-AP-08",
@@ -2274,7 +2305,7 @@
       "label_zh": "手牌≥3？",
       "predicate_id": "AP_HAND_GE_3",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_mid",
       "implementation_detail": "专用战略轴求值器计算 AP_HAND_GE_3，并把实际节点写入轨迹。"
     },
@@ -2284,27 +2315,12 @@
       "role": "Allies",
       "phase": "middle",
       "kind": "decision-axis",
-      "node_id": "AP08-D",
-      "node_type": "condition",
-      "label_zh": "日本控制反攻目标？",
-      "predicate_id": "JP_CONTROLS_COUNTERATTACK_TARGET",
-      "strategy_id": "",
-      "status": "implemented-specialized",
-      "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_mid",
-      "implementation_detail": "专用战略轴求值器计算 JP_CONTROLS_COUNTERATTACK_TARGET，并把实际节点写入轨迹。"
-    },
-    {
-      "chart_id": "ERASMUS-AP-08",
-      "page": 8,
-      "role": "Allies",
-      "phase": "middle",
-      "kind": "decision-axis",
       "node_id": "AP08-D10",
       "node_type": "dice",
-      "label_zh": "掷D10；不可执行则重掷",
+      "label_zh": "战略D10",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-generic",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "以 seed、动作序号、图表、节点和骰表派生确定性 D10（0–9），由骰点边选择后继。"
     },
@@ -2319,7 +2335,7 @@
       "label_zh": "PASS",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_mid",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2331,10 +2347,10 @@
       "kind": "decision-axis",
       "node_id": "AP08-S-EVENT",
       "node_type": "action",
-      "label_zh": "事件",
+      "label_zh": "事件战略",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_mid",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2346,10 +2362,10 @@
       "kind": "decision-axis",
       "node_id": "AP08-S-COUNTEROFFENSIVE",
       "node_type": "action",
-      "label_zh": "反攻",
+      "label_zh": "反攻战略",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_mid",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2361,10 +2377,10 @@
       "kind": "decision-axis",
       "node_id": "AP08-S-SOUTH-PACIFIC",
       "node_type": "action",
-      "label_zh": "南太平洋",
+      "label_zh": "南太平洋战略",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_mid",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2376,10 +2392,10 @@
       "kind": "decision-axis",
       "node_id": "AP08-S-CENTRAL-PACIFIC",
       "node_type": "action",
-      "label_zh": "中太平洋",
+      "label_zh": "中太平洋战略",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_mid",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2391,10 +2407,10 @@
       "kind": "decision-axis",
       "node_id": "AP08-S-DEI",
       "node_type": "action",
-      "label_zh": "DEI",
+      "label_zh": "DEI战略",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_mid",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2406,10 +2422,10 @@
       "kind": "decision-axis",
       "node_id": "AP08-S-CBI",
       "node_type": "action",
-      "label_zh": "CBI",
+      "label_zh": "CBI战略",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_mid",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2424,7 +2440,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -2439,7 +2455,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -2454,7 +2470,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -2469,7 +2485,7 @@
       "label_zh": "可以PASS？",
       "predicate_id": "AP_CAN_PASS",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_late",
       "implementation_detail": "专用战略轴求值器计算 AP_CAN_PASS，并把实际节点写入轨迹。"
     },
@@ -2484,7 +2500,7 @@
       "label_zh": "第12回合？",
       "predicate_id": "TURN_12",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_late",
       "implementation_detail": "专用战略轴求值器计算 TURN_12，并把实际节点写入轨迹。"
     },
@@ -2499,7 +2515,7 @@
       "label_zh": "手牌≥3？",
       "predicate_id": "AP_HAND_GE_3",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_late",
       "implementation_detail": "专用战略轴求值器计算 AP_HAND_GE_3，并把实际节点写入轨迹。"
     },
@@ -2514,7 +2530,7 @@
       "label_zh": "拥有战略轰炸基地？",
       "predicate_id": "AP_HAS_STRATEGIC_BOMBING_BASE",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_late",
       "implementation_detail": "专用战略轴求值器计算 AP_HAS_STRATEGIC_BOMBING_BASE，并把实际节点写入轨迹。"
     },
@@ -2529,7 +2545,7 @@
       "label_zh": "地图上所有B-29均在基地？",
       "predicate_id": "ALL_MAP_B29_ON_BASE",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_late",
       "implementation_detail": "专用战略轴求值器计算 ALL_MAP_B29_ON_BASE，并把实际节点写入轨迹。"
     },
@@ -2544,7 +2560,7 @@
       "label_zh": "控制东京8格内格？",
       "predicate_id": "AP_CONTROLS_HEX_WITHIN_TOKYO_8",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_late",
       "implementation_detail": "专用战略轴求值器计算 AP_CONTROLS_HEX_WITHIN_TOKYO_8，并把实际节点写入轨迹。"
     },
@@ -2559,7 +2575,7 @@
       "label_zh": "掷D10",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-generic",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "以 seed、动作序号、图表、节点和骰表派生确定性 D10（0–9），由骰点边选择后继。"
     },
@@ -2574,7 +2590,7 @@
       "label_zh": "满足原子弹战略标准？",
       "predicate_id": "AP_MEETS_ATOMIC_BOMB_STRATEGY_CRITERIA",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_late",
       "implementation_detail": "专用战略轴求值器计算 AP_MEETS_ATOMIC_BOMB_STRATEGY_CRITERIA，并把实际节点写入轨迹。"
     },
@@ -2589,7 +2605,7 @@
       "label_zh": "PASS",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_late",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2604,7 +2620,7 @@
       "label_zh": "事件",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_late",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2619,7 +2635,7 @@
       "label_zh": "占领轰炸基地",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_late",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2634,7 +2650,7 @@
       "label_zh": "推进B-29",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_late",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2649,7 +2665,7 @@
       "label_zh": "重返菲律宾",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_late",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2664,7 +2680,7 @@
       "label_zh": "跳岛",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_late",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2679,7 +2695,7 @@
       "label_zh": "轮流",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_late",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2694,7 +2710,7 @@
       "label_zh": "原子弹胜利",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_late",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2709,7 +2725,7 @@
       "label_zh": "登陆日本",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_al_eval_late",
       "implementation_detail": "战略出口绑定策略库、有序目标链和卡牌意图。"
     },
@@ -2724,7 +2740,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -2739,7 +2755,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -2754,7 +2770,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -2769,7 +2785,7 @@
       "label_zh": "攻势阶段有打出过牌？",
       "predicate_id": "AP_CARD_ALREADY_PLAYED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -2784,7 +2800,7 @@
       "label_zh": "卡牌分类",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:classifyCards",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -2799,7 +2815,7 @@
       "label_zh": "中国距崩溃≤2且有可用中国事件？",
       "predicate_id": "AP_CHINA_WITHIN_2_AND_EVENT_AVAILABLE",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -2814,7 +2830,7 @@
       "label_zh": "打出中国事件牌",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "把图表出口翻译为 event/ops/future-offensive/pass 意图，再由 esm_card_window_action 选择合法卡牌。"
     },
@@ -2829,7 +2845,7 @@
       "label_zh": "当前手牌大于2张？",
       "predicate_id": "AP_HAND_GT_2",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -2844,7 +2860,7 @@
       "label_zh": "本场第一张牌？",
       "predicate_id": "AP_FIRST_GAME_CARD",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -2859,7 +2875,7 @@
       "label_zh": "有先发打击牌？",
       "predicate_id": "AP_HAS_FLINTLOCK_OR_SHOESTRING",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -2874,7 +2890,7 @@
       "label_zh": "有可执行的不受限军事事件？",
       "predicate_id": "AP_HAS_UNRESTRICTED_MILITARY_EVENT",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -2889,7 +2905,7 @@
       "label_zh": "有可执行的受限军事事件？",
       "predicate_id": "AP_HAS_RESTRICTED_MILITARY_EVENT",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -2904,7 +2920,7 @@
       "label_zh": "所有有效军事事件均因限制不能达成目标？",
       "predicate_id": "AP_ALL_MILITARY_EVENTS_RESTRICTED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -2919,7 +2935,7 @@
       "label_zh": "本回合已选择未来攻势？",
       "predicate_id": "AP_FO_SELECTED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -2934,7 +2950,7 @@
       "label_zh": "早期CBI防御完成？",
       "predicate_id": "CBI_DEFENSE_COMPLETE",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -2949,7 +2965,7 @@
       "label_zh": "只剩1张牌？",
       "predicate_id": "AP_LAST_CARD",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -2964,7 +2980,7 @@
       "label_zh": "剩下可用事件牌是反应牌？",
       "predicate_id": "AP_LAST_PLAYABLE_IS_REACTION",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "用己方手牌元数据计算条件；不读取对手手牌。"
     },
@@ -2979,7 +2995,7 @@
       "label_zh": "先发打击EC",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "把图表出口翻译为 event/ops/future-offensive/pass 意图，再由 esm_card_window_action 选择合法卡牌。"
     },
@@ -2994,7 +3010,7 @@
       "label_zh": "无限制军事事件EC",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "把图表出口翻译为 event/ops/future-offensive/pass 意图，再由 esm_card_window_action 选择合法卡牌。"
     },
@@ -3009,7 +3025,7 @@
       "label_zh": "受限军事事件EC",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "把图表出口翻译为 event/ops/future-offensive/pass 意图，再由 esm_card_window_action 选择合法卡牌。"
     },
@@ -3024,7 +3040,7 @@
       "label_zh": "受限军事事件OC",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "把图表出口翻译为 event/ops/future-offensive/pass 意图，再由 esm_card_window_action 选择合法卡牌。"
     },
@@ -3039,7 +3055,7 @@
       "label_zh": "无军事事件OC",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "把图表出口翻译为 event/ops/future-offensive/pass 意图，再由 esm_card_window_action 选择合法卡牌。"
     },
@@ -3054,7 +3070,7 @@
       "label_zh": "未来攻势",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "把图表出口翻译为 event/ops/future-offensive/pass 意图，再由 esm_card_window_action 选择合法卡牌。"
     },
@@ -3069,7 +3085,7 @@
       "label_zh": "事件战略",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_state.js:esm_card_selection_tree",
       "implementation_detail": "把图表出口翻译为 event/ops/future-offensive/pass 意图，再由 esm_card_window_action 选择合法卡牌。"
     },
@@ -3084,7 +3100,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -3099,7 +3115,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -3114,7 +3130,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -3129,7 +3145,7 @@
       "label_zh": "对目标的海空攻击？",
       "predicate_id": "IS_AIR_STRIKE",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "heuristic",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 IS_AIR_STRIKE，图解释器选择 true/false 边。"
     },
@@ -3144,7 +3160,7 @@
       "label_zh": "目标沿岸或岛屿？",
       "predicate_id": "TARGET_IS_SEACOAST_OR_ISLAND",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 TARGET_IS_SEACOAST_OR_ISLAND，图解释器选择 true/false 边。"
     },
@@ -3159,7 +3175,7 @@
       "label_zh": "能否地面推进占领？",
       "predicate_id": "CAN_GROUND_ADVANCE",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-engine",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 CAN_GROUND_ADVANCE，图解释器选择 true/false 边。"
     },
@@ -3174,7 +3190,7 @@
       "label_zh": "D或(E+F)？",
       "predicate_id": "TARGET_EMPTY_OR_NAVAL_AND_GROUND_CAN_EXIT",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 TARGET_EMPTY_OR_NAVAL_AND_GROUND_CAN_EXIT，图解释器选择 true/false 边。"
     },
@@ -3189,7 +3205,7 @@
       "label_zh": "目标为空？",
       "predicate_id": "TARGET_EMPTY",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 TARGET_EMPTY，图解释器选择 true/false 边。"
     },
@@ -3204,7 +3220,7 @@
       "label_zh": "目标为空？",
       "predicate_id": "TARGET_EMPTY",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 TARGET_EMPTY，图解释器选择 true/false 边。"
     },
@@ -3219,7 +3235,7 @@
       "label_zh": "潜在SR格？",
       "predicate_id": "TARGET_IS_SR",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-engine",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 TARGET_IS_SR，图解释器选择 true/false 边。"
     },
@@ -3234,7 +3250,7 @@
       "label_zh": "敌空军或航母可反应？",
       "predicate_id": "ENEMY_AIR_OR_CARRIER_CAN_REACT",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-engine",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 ENEMY_AIR_OR_CARRIER_CAN_REACT，图解释器选择 true/false 边。"
     },
@@ -3249,7 +3265,7 @@
       "label_zh": "航空打击",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -3264,7 +3280,7 @@
       "label_zh": "带航空支援地面攻击",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -3279,7 +3295,7 @@
       "label_zh": "带航空/海上支援地面攻击",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -3294,7 +3310,7 @@
       "label_zh": "带海上支援登陆",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -3309,7 +3325,7 @@
       "label_zh": "带航空/海上支援登陆",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -3324,7 +3340,7 @@
       "label_zh": "无支援登陆",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -3339,7 +3355,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -3354,7 +3370,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -3369,7 +3385,7 @@
       "label_zh": "激活点满足战斗支援标准？",
       "predicate_id": "FORCE_MEETS_BATTLE_SUPPORT_STANDARD",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 FORCE_MEETS_BATTLE_SUPPORT_STANDARD，图解释器选择 true/false 边。"
     },
@@ -3384,7 +3400,7 @@
       "label_zh": "目标伤害等级达到？",
       "predicate_id": "TARGET_DAMAGE_LEVEL_MET",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "partial",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 TARGET_DAMAGE_LEVEL_MET，图解释器选择 true/false 边。"
     },
@@ -3399,7 +3415,7 @@
       "label_zh": "掷D10",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-generic",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "以 seed、动作序号、图表、节点和骰表派生确定性 D10（0–9），由骰点边选择后继。"
     },
@@ -3414,7 +3430,7 @@
       "label_zh": "攻击最弱堆叠",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -3429,7 +3445,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -3444,7 +3460,7 @@
       "label_zh": "K+L？",
       "predicate_id": "ENEMY_CAN_REACT_AND_IS_EC",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 ENEMY_CAN_REACT_AND_IS_EC，图解释器选择 true/false 边。"
     },
@@ -3459,7 +3475,7 @@
       "label_zh": "最后目标？",
       "predicate_id": "IS_LAST_TARGET",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility",
       "implementation_detail": "从阵营视图派生 IS_LAST_TARGET，图解释器选择 true/false 边。"
     },
@@ -3474,7 +3490,7 @@
       "label_zh": "考虑压制攻击",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -3489,7 +3505,7 @@
       "label_zh": "用额外激活点激活更多单位",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -3504,7 +3520,7 @@
       "label_zh": "为下一目标编成新任务部队",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:composeTaskForce",
       "implementation_detail": "按目标性质、兵种、伤害标准、潜在反应、HQ守卫和剩余激活量选择最少但足够的合法单位。"
     },
@@ -3519,7 +3535,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -3534,7 +3550,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -3549,7 +3565,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -3564,7 +3580,7 @@
       "label_zh": "有SR？",
       "predicate_id": "IS_STRATEGIC_REDEPLOYMENT",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "heuristic",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -3579,7 +3595,7 @@
       "label_zh": "为每处SR掷骰",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -3594,7 +3610,7 @@
       "label_zh": "有战斗格？",
       "predicate_id": "HAS_BATTLE",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -3609,7 +3625,7 @@
       "label_zh": "补给HQ范围内有战斗格？",
       "predicate_id": "BATTLE_IN_SUPPLIED_HQ_RANGE",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-engine",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -3624,7 +3640,7 @@
       "label_zh": "D或E或F？",
       "predicate_id": "HAS_INTEL_COUNTER_OR_AMBUSH",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -3639,7 +3655,7 @@
       "label_zh": "情报判定",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-generic",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "以 seed、动作序号、图表、节点和骰表派生确定性 D10（0–9），由骰点边选择后继。"
     },
@@ -3654,7 +3670,7 @@
       "label_zh": "打出情报反应牌",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -3669,7 +3685,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -3684,7 +3700,7 @@
       "label_zh": "满足反应部队标准？",
       "predicate_id": "REACTION_FORCE_STANDARD_MET",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "partial",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -3699,7 +3715,7 @@
       "label_zh": "盟军反应兵力D10",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-generic",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "以 seed、动作序号、图表、节点和骰表派生确定性 D10（0–9），由骰点边选择后继。"
     },
@@ -3714,7 +3730,7 @@
       "label_zh": "反应战略",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -3729,7 +3745,7 @@
       "label_zh": "H+I？",
       "predicate_id": "HAS_SUBMARINE_CARD_AND_TARGET",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-engine",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -3744,7 +3760,7 @@
       "label_zh": "潜艇攻击",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planReaction",
       "implementation_detail": "按天气、情报、特殊反应、反应战斗格和兵力标准选择合法动作。"
     },
@@ -3759,7 +3775,7 @@
       "label_zh": "如果可以的话执行PBM",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planPostBattleMovement + js/server/offensive.js:erasmus_pbm_target_score",
       "implementation_detail": "按航空、海军、失败两栖三条独立 PBM 优先级选择合法单位和目的地。"
     },
@@ -3774,7 +3790,7 @@
       "label_zh": "空中单位需要PBM？",
       "predicate_id": "PBM_AIR_REQUIRED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planPostBattleMovement + js/server/offensive.js:erasmus_pbm_target_score",
       "implementation_detail": "按航空、海军、失败两栖三条独立 PBM 优先级选择合法单位和目的地。"
     },
@@ -3789,7 +3805,7 @@
       "label_zh": "海上单位需要PBM？",
       "predicate_id": "PBM_SEA_REQUIRED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planPostBattleMovement + js/server/offensive.js:erasmus_pbm_target_score",
       "implementation_detail": "按航空、海军、失败两栖三条独立 PBM 优先级选择合法单位和目的地。"
     },
@@ -3804,7 +3820,7 @@
       "label_zh": "失败两栖单位需要PBM？",
       "predicate_id": "PBM_AA_FAILED",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planPostBattleMovement + js/server/offensive.js:erasmus_pbm_target_score",
       "implementation_detail": "按航空、海军、失败两栖三条独立 PBM 优先级选择合法单位和目的地。"
     },
@@ -3819,7 +3835,7 @@
       "label_zh": "航空PBM",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planPostBattleMovement + js/server/offensive.js:erasmus_pbm_target_score",
       "implementation_detail": "按航空、海军、失败两栖三条独立 PBM 优先级选择合法单位和目的地。"
     },
@@ -3834,7 +3850,7 @@
       "label_zh": "海上PBM",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planPostBattleMovement + js/server/offensive.js:erasmus_pbm_target_score",
       "implementation_detail": "按航空、海军、失败两栖三条独立 PBM 优先级选择合法单位和目的地。"
     },
@@ -3849,7 +3865,7 @@
       "label_zh": "AA失败PBM",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-specialized",
+      "status": "exact-derived",
       "implementation_entry": "js/server/erasmus_ops.js:planPostBattleMovement + js/server/offensive.js:erasmus_pbm_target_score",
       "implementation_detail": "按航空、海军、失败两栖三条独立 PBM 优先级选择合法单位和目的地。"
     },
@@ -3864,7 +3880,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     },
@@ -3879,7 +3895,7 @@
       "label_zh": "",
       "predicate_id": "",
       "strategy_id": "",
-      "status": "implemented-by-family",
+      "status": "exact-derived",
       "implementation_entry": "js/server/bots/erasmus.js:evaluateChart",
       "implementation_detail": "图解释器按显式边推进，并在返回前校验 view.actions。"
     }

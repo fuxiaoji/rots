@@ -10,9 +10,28 @@ const mdPath = path.join(root, "docs/architecture/erasmus-node-implementation-ma
 
 const document = JSON.parse(fs.readFileSync(chartsPath, "utf8"))
 
+// PR6：节点实现保真度五态词汇，替代旧的 implemented-by-family/specialized/generic。
+// exact-engine = 合法性来自 RTT 规则查询层(引擎)；exact-derived = 确定性派生；
+// partial = CF/step 阈值近似；heuristic = 代理/正则；missing = 未实现。
+const EXACT_ENGINE = new Set([
+    "CAN_GROUND_ADVANCE", "TARGET_IS_SR", "ENEMY_AIR_OR_CARRIER_CAN_REACT",
+    "EARLY_DEFENSE_DONE_AND_KAMIKAZE_STANDARD", "HAS_SUBMARINE_CARD_AND_TARGET",
+    "BATTLE_IN_SUPPLIED_HQ_RANGE",
+])
+const PARTIAL = new Set(["TARGET_DAMAGE_LEVEL_MET", "REACTION_FORCE_STANDARD_MET"])
+const HEURISTIC = new Set(["IS_AIR_STRIKE", "IS_STRATEGIC_REDEPLOYMENT"])
+
+function fidelityFor(chart, node) {
+    const pid = node.predicate && node.predicate.id
+    if (pid && EXACT_ENGINE.has(pid)) return "exact-engine"
+    if (pid && PARTIAL.has(pid)) return "partial"
+    if (pid && HEURISTIC.has(pid)) return "heuristic"
+    return "exact-derived"
+}
+
 function handlerFor(chart, node) {
 	const base = {
-		status: "implemented-by-family",
+		status: fidelityFor(chart, node),
 		entry: "js/server/bots/erasmus.js:evaluateChart",
 		detail: "图解释器按显式边推进，并在返回前校验 view.actions。",
 	}
@@ -21,13 +40,13 @@ function handlerFor(chart, node) {
 		return base
 
 	if (node.type === "dice") return {
-		status: "implemented-generic",
+		status: fidelityFor(chart, node),
 		entry: "js/server/bots/erasmus.js:evaluateChart",
 		detail: "以 seed、动作序号、图表、节点和骰表派生确定性 D10（0–9），由骰点边选择后继。",
 	}
 
 	if (chart.kind === "decision-axis") return {
-		status: "implemented-specialized",
+		status: fidelityFor(chart, node),
 		entry: `js/server/erasmus_state.js:${chart.role === "Japan" ? "esm_jp_eval_" : "esm_al_eval_"}${chart.phase === "middle" ? "mid" : chart.phase === "end" ? "late" : "early"}`,
 		detail: node.type === "condition"
 			? `专用战略轴求值器计算 ${node.predicate?.id || "条件"}，并把实际节点写入轨迹。`
@@ -35,7 +54,7 @@ function handlerFor(chart, node) {
 	}
 
 	if (chart.kind === "card-selection") return {
-		status: "implemented-specialized",
+		status: fidelityFor(chart, node),
 		entry: node.type === "process"
 			? "js/server/erasmus_state.js:classifyCards"
 			: "js/server/erasmus_state.js:esm_card_selection_tree",
@@ -45,7 +64,7 @@ function handlerFor(chart, node) {
 	}
 
 	if (chart.kind === "task-force") return {
-		status: "implemented-specialized",
+		status: fidelityFor(chart, node),
 		entry: node.type === "condition"
 			? "js/server/game.js:view.ai.predicates + js/server/erasmus_ops.js:evaluateTargetFeasibility"
 			: "js/server/erasmus_ops.js:composeTaskForce",
@@ -55,7 +74,7 @@ function handlerFor(chart, node) {
 	}
 
 	if (chart.kind === "reaction") return {
-		status: "implemented-specialized",
+		status: fidelityFor(chart, node),
 		entry: /PBM/.test(node.id)
 			? "js/server/erasmus_ops.js:planPostBattleMovement + js/server/offensive.js:erasmus_pbm_target_score"
 			: "js/server/erasmus_ops.js:planReaction",
@@ -99,7 +118,7 @@ const output = {
 	policy_version: document.policy_version,
 	generated_from: "data/erasmus/charts.json",
 	note: "这是逻辑实现映射，不是 PDF 视觉坐标。视觉坐标由 node-regions.csv 人工回填。",
-	summary: { charts: document.charts.length, nodes: rows.length, by_status: counts },
+	summary: { charts: document.charts.length, nodes: rows.length, by_fidelity: counts },
 	nodes: rows,
 }
 fs.writeFileSync(jsonPath, JSON.stringify(output, null, 2) + "\n")
@@ -135,9 +154,11 @@ for (const chart of document.charts) {
 
 lines.push("## 状态含义")
 lines.push("")
-lines.push("- `implemented-specialized`：该图表族有专用谓词、策略或动作规划器。")
-lines.push("- `implemented-generic`：由通用确定性骰表/图遍历代码执行。")
-lines.push("- `implemented-by-family`：开始、终点和保护出口由图表族公共解释逻辑执行。")
+lines.push("- `exact-engine`：谓词的合法性直接来自 RTT 规则查询层(引擎)。")
+lines.push("- `exact-derived`：由游戏状态确定性派生(战略轴/选卡/结构解释器/骰表)。")
+lines.push("- `partial`：CF/step 阈值近似(引擎无公开战果表可直调)。")
+lines.push("- `heuristic`：代理/正则/状态串推断。")
+lines.push("- `missing`：未实现。")
 lines.push("")
 lines.push("此映射只证明调用路径存在，不单独证明语义与纸面图表完全相同。语义正确性仍由逐节点黄金测试、来源脚注和实战轨迹共同验收。")
 lines.push("")
