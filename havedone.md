@@ -1,6 +1,6 @@
 # 已完成工作记录
 
-## 2026-09-06：冻结「AI 1.0」+ 测试版 8 项行为回归修复（批次 1–3 完成）
+## 2026-09-06：冻结「AI 1.0」+ 测试版 8 项行为回归修复（批次 1–4 完成 + 决策轴重判）
 
 原则不变：只改 bot 策略文件（erasmus.js/erasmus_state.js/erasmus_ops.js）+ rules_query.js 查询函数，不动规则引擎（cycle/game/offensive/scenario/supply/actions/events/move 保持 RTT 原样）。
 
@@ -8,9 +8,12 @@
 - **批次1（#1 后方调度 + #4 战后移动）**：`composeTaskForce` 与 `attack_now` 过滤不再把本牌打不到目标的后方/转场单位整批硬删，改走可达性前推判定；战后移动补 SR。
 - **批次2（#3 最小可行兵力 + #8 编队成功率）**：占领目标 met 纳入地面战力；地面不足且无地面可补时提前 done 空攻势。
 - **批次3（#2 夺岛积极 + #6 航空前推）**：占领地面门槛改为 1:1（修 damageLevel 误除导致马尼拉要求 4×、新加坡 2× 地面才进攻）；`eop_preserve_rear_air` 转场判定收紧为「落入攻击航程内(≤ebr)」且只在会战编队内生效，让后方航空可被故意前推，修夏威夷折返跑。版本 zh.23 → zh.26。
+- **决策轴重判（用户反馈「重大bug」）**：①每张牌重判决策轴 + 阶段早/中/晚切表——诊断实测原生已可用，无需改；②本回合后勤值 `esm_jp_logistics` 按 (sid,turn) 缓存，避免手牌随打牌变化令后勤值逐牌抖动、导致早期/中期策略在同一回合内翻转；③空优战略（保守/激进）的压制目标按「无敌方 AZOI」口径（与 esm_strategy_targets / eop_target_pending 一致）全部达成后，重判转入「激进的南方资源战略」实际夺占，修复「保守空优执行完就没目标、链空停滞」。
+- **批次4（#5 目标不可行顺延 + #7 ISR 反制）**：#5 首目标不可行遍历下一目标已于 57cc54f（批次1 REDEPLOY 顺延）完成；#7 己方 ISR 激活时在 `esm_card_window_action` 顶部加全局前置（与苏联/东条/PoW 紧急块并列）——手牌含己方阵营可作事件的 `isr_agreement` 和解牌即立即作事件清除（引擎 default_event 按 card.faction 清该方 ISR），不再把和解牌封死在 EVENT 战略轴内被 CONQUEST/ABSTRACT 当 OC 打掉。
 - **盟军胜利路线**：苏联牌(AP#79)权重调整（T<7 消耗可重洗、T≥7 保留作事件）、原子弹不可达时把轰炸基地/B29 前置视为已满足以转封锁、补釜山/汉城封锁目标。
-- **50 局审计**（`EOTS_HEADLESS_MOVES=1`，1942-1945，seed 20260903）：complete=50、errors=0、action-limit=0；**盟军 1 胜（原子弹胜利）/ 日本 49 胜**，capturedAP=210 / capturedJP=183。验收标准「盟军至少一局获胜」达成。产物 `tests/results/audit50-...-50-20260903-headless-headless-b3.json`。
-- **已知未决**：①日军前期陆军不上马尼拉根因是第2回合选了「保守空优」而非「南方资源」，属战略选择问题，待批次4/后续；② `erasmus-save-replay.test.js` 的 save/restore 确定性失败为既有引擎序列化问题（fb80943 即已失败，本次偏移点仅因行动序列变化而移动），非本次回归，未动引擎。
+- **50 局审计·批次3后**（`EOTS_HEADLESS_MOVES=1`，1942-1945，seed 20260903）：complete=50、errors=0、action-limit=0；**盟军 1 胜（原子弹胜利）/ 日本 49 胜**，capturedAP=210 / capturedJP=183。验收标准「盟军至少一局获胜」达成。
+- **50 局审计·决策轴重判+批次4后**（同 seed 20260903）：complete=50、errors=0、action-limit=0、fallback=0、unexplainedNoBattle=0；**盟军 0 胜 / 日本 50 胜**（atomicBombWins=0），capturedAP=229 / capturedJP=178、groundMove=557。空优→资源过渡令日军早期即进入南方资源轴（早期钉选 资源391 / 空优268），夺占更贴合图表；但原 1 胜原子弹本就是 50 局里 2% 的单局小概率，确定性轨迹因行动序列偏移未再复现——盟军胜利线仍不足，需在「不削弱日军忠实度」前提下另提盟军胜利转化（已知瓶颈）。产物 `tests/results/audit50-...-50-20260903-headless.json`。
+- **已知未决**：①日军前期陆军不上马尼拉——「空优达成→转南方资源」过渡已让空优不再永久停滞，但资源战略下马尼拉仍未夺占：`esm_jp_hq_suppression_targets` 把菲律宾 HQ 所在马尼拉作为动态 SUPPRESS_HQ 目标前置入链，与「菲律宾投降」CONQUEST 目标同 hex 去重后顶替了夺占意图，压制达成（无敌方 AZOI）即视为完成、无占领后续；用户指示不改菲律宾投降权重，此项留待确认；② `erasmus-save-replay.test.js` 的 save/restore 确定性失败为既有引擎序列化问题（fb80943 即已失败，本次偏移点仅因行动序列变化而移动），非本次回归，未动引擎。
 
 ## 2026-09-06：Erasmus 代码化缺口整改（PR1–PR6）
 
