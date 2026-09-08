@@ -1535,6 +1535,36 @@ function esm_card_window_action(strategy, view, context) {
         }
     }
 
+    // [opt] allies_resource_raid: TOJO 激活彩票。原子弹标准 = TOJO 激活时苏联牌在握(或已发生)
+    // + 日本资源≤门槛; victory_check 每回合都跑 get_victory, atomic.met 一旦成立立即
+    // finish("Allies")——不必等第12回合。TOJO 只能由日本打出/被随机弃掉东条辞职(仅 T≥8)
+    // 激活；AP#60 “20th Bomber Command”事件=日本随机弃一张牌 —— 是盟军侧唯一能主动
+    // 摇激活 TOJO 的彩票(T8 起)。因此 T8 前把 #60 与苏联牌一起攥在手里(不被 OC 消耗),
+    // T8 起 TOJO 未激活且苏联牌尚未发生时优先把 #60 作事件打出。
+    const emcAT = (typeof em_cfg === "function") ? em_cfg() : null
+    const bomberId = emcAT && emcAT.allies_resource_raid ? (() => { try { return find_card(AP, 60) } catch (e) { return -1 } })() : -1
+    if (emcAT && emcAT.allies_resource_raid && strategy.role === "Allies" && bomberId > 0) {
+        let tojoActive = false
+        try { tojoActive = is_event_active(events.TOJO) } catch (e) { tojoActive = false }
+        let sovietDone = false
+        try { sovietDone = !!(G.removed && G.removed[AP] && set_has(G.removed[AP], SOVIET_INVADE)) } catch (e) {}
+        if (!tojoActive && !sovietDone && Number(G.turn) < 8 && hand.includes(bomberId)
+            && !(hand.length === 1 && !legal.includes("pass"))) {
+            // T8 前攥住 #60(除非它是唯一可打牌且不能 pass —— 那只能打出); 只过滤,
+            // 不制造空手牌/不在手牌的假候选。
+            const held = hand.filter(c => c !== bomberId && c !== SOVIET_INVADE)
+            if (held.length) hand = held
+        }
+        if (!tojoActive && !sovietDone && Number(G.turn) >= 8 && hand.includes(bomberId)) {
+            const classified = classifyCards(hand, strategy.role)
+            const bomber = classified.find(x => x.id === bomberId)
+            if (bomber && bomber.eventPlayable) {
+                return esm_set_card_pick(strategy, bomber, "event", "AP10-S-EVENT",
+                    "盟军TOJO激活彩票：20th Bomber Command 事件(日本随机弃牌, T≥8 可摇出东条辞职)")
+            }
+        }
+    }
+
     // 原子弹胜利的历史前置：第8回合起引擎(get_allowed_actions)把“东条辞职”(JP#43)
     // 强制为仅事件可打。图表“东条作为1OC”只适用于早期；第8回合后必须作为事件打出
     // 以激活 TOJO，否则苏联入侵满洲永远无法成为事件打出，原子弹标准第2条恒假。

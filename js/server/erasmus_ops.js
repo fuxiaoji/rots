@@ -86,6 +86,49 @@ function eop_clear_all_chains() {
     EOP_OVERRIDE = { Japan: null, Allies: null }
 }
 
+// [opt] allies_resource_raid: 原子弹/封锁胜利的日本资源格 raid 链补充。
+// 1942-45 剧本盟军唯一胜利 = 原子弹(victory_1945), 需日本控制资源 ≤5(或苏联已发生 ≤3)。
+// 实测终局日本恒持 6-7 格(Kuantan/Seoul/Harbin/Mukden/Manila/Miri...)。本函数把
+// "未控制且不在链上的日本资源格"按前沿距离追加到盟军当前战略链尾部(kind CONQUEST,
+// requiresOccupation), 使编队在主轴目标完成后(或经 target_scoring 重排)发起两栖夺占。
+// 触发条件: 日本资源 ≤ emRaidResTrigger(默认 7, 即距原子弹门槛 ≤2 格)。全部在
+// em_cfg().allies_resource_raid 开关之后; 基线(配置关)不进本函数调用点。
+function eop_append_resource_raid_targets() {
+    const emcRR = (typeof em_cfg === "function") ? em_cfg() : null
+    if (!emcRR || !emcRR.allies_resource_raid) return
+    const ov = EOP_OVERRIDE.Allies
+    if (!ov || !Array.isArray(ov.chain)) return
+    let jpRes = 99
+    if (typeof get_jp_resources === "function") { try { jpRes = get_jp_resources() } catch (e) { jpRes = 99 } }
+    if (jpRes > (Number(emcRR.emRaidResTrigger) || 7)) return
+    const inChain = new Set(ov.chain)
+    const raids = []
+    if (typeof RESOURCE_HEX !== "undefined" && Array.isArray(RESOURCE_HEX)) {
+        for (const h of RESOURCE_HEX) {
+            if (inChain.has(h)) continue
+            const md = (typeof get_map_data === "function") ? get_map_data(h) : null
+            if (!md || !md.resource) continue
+            if (is_space_controlled(h, AP)) continue
+            raids.push(h)
+        }
+    }
+    if (!raids.length) return
+    // 距当前焦点近者优先(逐格两栖推进可达性最高); 最多 emRaidMaxTargets(默认 3) 格。
+    // 克隆 override, 不回写状态机缓存的 strategy(避免污染 esm 审计/延续判定)。
+    const focus = eop_focus("Allies")
+    const d = h => (focus !== null && typeof get_distance === "function") ? get_distance(h, focus) : 0
+    raids.sort((a, b) => d(a) - d(b) || a - b)
+    const picked = raids.slice(0, Math.max(1, Number(emcRR.emRaidMaxTargets) || 3))
+    const meta = Array.isArray(ov.targetMeta) ? ov.targetMeta.slice() : []
+    for (const h of picked) {
+        const at = meta.findIndex(t => t.hex === h)
+        if (at >= 0) meta.splice(at, 1)
+        meta.push({ hex: h, kind: "CONQUEST", requiresOccupation: true, damageLevel: 1,
+            objective: "资源 raid: 压低日本资源至原子弹/封锁门槛" })
+    }
+    EOP_OVERRIDE.Allies = Object.assign({}, ov, { chain: ov.chain.concat(picked), targetMeta: meta })
+}
+
 // 当前主轴的完整目标链。外部链覆盖(erasmus_state)直接携带已解析好的有序 idx
 // chain(=parse_goals 全部 hex, 忠实 py target_chain), 不走 token 二次解析;
 // 默认 EOP_AXES 走 name/4-digit token -> idx。
@@ -126,13 +169,21 @@ function eop_axis(role) {
 // role: "Japan" | "Allies" (或 faction 数值 0/1)。
 function eop_focus(role) {
     if (typeof G === "undefined" || !G || !G.supply_cache) return null
+    // [opt] target_scoring: 收集链内未完成的夺占类目标, 按价值×可达性评分选择;
+    // 配置关闭时控制流与基线完全一致。
+    const emc = (typeof em_cfg === "function") ? em_cfg() : null
+    const emScore = !!(emc && emc.target_scoring && typeof em_score_focus === "function")
+    const emPending = emScore ? [] : null
     const faction = role === "Japan" ? JP : role === "Allies" ? AP : role
     const mine = faction === JP ? JP : AP
     for (const idx of eop_axis_chain(mine === JP ? "Japan" : "Allies")) {
         if (idx < 0 || idx > LAST_BOARD_HEX) continue
         const meta = eop_target_meta(mine === JP ? "Japan" : "Allies", idx)
         if (meta) {
-            if (eop_target_pending(mine === JP ? "Japan" : "Allies", idx, meta)) return idx
+            if (eop_target_pending(mine === JP ? "Japan" : "Allies", idx, meta)) {
+                if (emScore) { emPending.push({ idx, meta }); continue }
+                return idx
+            }
             continue
         }
         // 压制目标的完成条件是敌方 AZOI 不再覆盖该格，并非必须夺取控制权。
@@ -158,7 +209,14 @@ function eop_focus(role) {
             if (!occupied) return idx
             continue
         }
-        if (!is_space_controlled(idx, mine)) return idx
+        if (!is_space_controlled(idx, mine)) {
+            if (emScore) { emPending.push({ idx, meta }); continue }
+            return idx
+        }
+    }
+    if (emScore && emPending.length) {
+        const picked = em_score_focus(mine === JP ? "Japan" : "Allies", emPending)
+        if (picked !== null && picked !== undefined) return picked
     }
     return null
 }
@@ -343,7 +401,88 @@ function eop_landing_no_escort(role, view) {
         else if (p.class === "ground" && (p.asp || p.strat_move)) hasGround = true
     }
     if (!hasGround) return false   // 无两栖地面可激活 → 不会发生无护航登陆
-    return !hasNaval
+    // [opt] taskforce_math: 引擎两栖编组要求海军与登陆地面“同格编组”——AMPH 路径只在
+    // 海陆同组时存在(get_move_data), 纯海军组进不了敌占岛屿格(敌港不可入)。海军候选与
+    // 地面候选相距过远时, 登陆会在会战结算吃 broken_aa("lack of naval escort")。
+    // 因此要求存在“可会合的海陆对”: 同格, 或海军在 emAmphEscortDist(默认 4)格内
+    // (一个激活+港口运输内可会合)。基线(配置关)不变。
+    const emcPaired = (typeof em_cfg === "function") ? em_cfg() : null
+    if (emcPaired && emcPaired.taskforce_math) {
+        const escortDist = Number(emcPaired.emAmphEscortDist) || 4
+        const groundLocsP = new Set()
+        for (const u of cand) {
+            if (unsel.has(u)) continue
+            const p = (() => { try { return pieces[u] } catch (e) { return null } })()
+            if (p && p.class === "ground" && (p.asp || p.strat_move) && G.location[u] >= 0 && G.location[u] <= LAST_BOARD_HEX) groundLocsP.add(G.location[u])
+        }
+        let hasPairedEscort = false
+        for (const u of cand) {
+            if (unsel.has(u) || hasPairedEscort) continue
+            const p = (() => { try { return pieces[u] } catch (e) { return null } })()
+            if (!p || p.class !== "naval" || !(G.location[u] >= 0 && G.location[u] <= LAST_BOARD_HEX)) continue
+            if (groundLocsP.has(G.location[u])) { hasPairedEscort = true; break }
+            if (typeof get_distance === "function") {
+                for (const gl of groundLocsP) {
+                    if (get_distance(G.location[u], gl) <= escortDist) { hasPairedEscort = true; break }
+                }
+            }
+        }
+        if (!hasPairedEscort) return true
+    }
+    // [opt] 期望战斗闸门: 有护航/地面候选时, 用海空战+地面会战期望评估登陆成败。
+    // 海空战必败(力量/air cover)或 pWin 低于阈值 → 取消空攻势, 避免 broken_aa/
+    // US_CASUALTIES(盟军 PW-1)与整支攻势白耗。基线(配置关)保持原 !hasNaval 判定。
+    const emc = (typeof em_cfg === "function") ? em_cfg() : null
+    if (!emc || !emc.taskforce_math || typeof em_amphib_assessment !== "function") return !hasNaval
+    const byId = u => { try { return pieces[u] } catch (e) { return null } }
+    const cfOf = u => { const p = byId(u); if (!p) return 0
+        const reducedSet = (typeof G !== "undefined" && G && typeof set_has === "function") ? set_has(G.reduced, u) : false
+        return reducedSet ? (Number(p.rcf) || Math.ceil((Number(p.cf) || 0) / 2)) : (Number(p.cf) || 0) }
+    const lfOf = u => { const p = byId(u); return Number(p && p.lf) || 3 }
+    let attNavalCF = 0, attAirCF = 0, attGroundCF = 0, attNavalHasBr = false
+    const attGroundLfs = []
+    for (const u of cand) {
+        if (unsel.has(u)) continue
+        const p = byId(u); if (!p) continue
+        if (p.class === "naval") { attNavalCF += cfOf(u); if (Number(p.br) > 0) attNavalHasBr = true }
+        else if (p.class === "air") attAirCF += cfOf(u)
+        else if (p.class === "ground") { attGroundCF += cfOf(u); attGroundLfs.push(lfOf(u)) }
+    }
+    const enemy = 1 - mine
+    let defNavalCF = 0, defAirCF = 0, defGroundCF = 0, defNavalHasBr = false
+    const defGroundLfs = []
+    const atFocusIds = new Set()
+    for (let u = 1; u < pieces.length; ++u) {
+        const p = pieces[u]; if (!p || p.faction !== enemy) continue
+        const loc = G.location[u]
+        if (loc !== focus) continue
+        atFocusIds.add(u)
+        if (p.class === "naval") { defNavalCF += cfOf(u); if (Number(p.br) > 0) defNavalHasBr = true }
+        else if (p.class === "air") defAirCF += cfOf(u)
+        else if (p.class === "ground") { defGroundCF += cfOf(u); defGroundLfs.push(lfOf(u)) }
+    }
+    // [opt] taskforce_math: 反应兵力改用引擎精确反应候选(含 ebr 航空/反应舰队/CV),
+    // 按 emReactionWeight(默认 0.5) 折算 —— 反应需掷骰/天气/编制成立, 非必然到场;
+    // 全额计反应会过度悲观(实测把大半两栖攻势误杀成空攻势)。
+    try {
+        if (typeof queryReactionCandidates === "function") {
+            const emcRw = (typeof em_cfg === "function") ? em_cfg() : null
+            const rw = emcRw ? (Number(emcRw.emReactionWeight) || 0) : 0.5
+            const rc = queryReactionCandidates({ reactionFaction: enemy, targetHex: focus })
+            const seen = new Set()
+            for (const id of rc.air.concat(rc.carrier, rc.naval)) {
+                if (atFocusIds.has(id) || seen.has(id)) continue
+                seen.add(id)
+                const p = pieces[id]; if (!p) continue
+                if (p.class === "air") defAirCF += cfOf(id) * rw
+                else if (p.class === "naval") { defNavalCF += cfOf(id) * rw; if (Number(p.br) > 0) defNavalHasBr = true }
+            }
+        }
+    } catch (e) { /* 反应查询不可用时保留焦点守军估计 */ }
+    const assess = em_amphib_assessment({ attacker: mine, targetHex: focus,
+        attNavalCF, attNavalHasBr, attAirCF, attGroundCF, attGroundLfs,
+        defNavalCF, defNavalHasBr, defAirCF, defGroundCF, defGroundLfs })
+    return !!assess.abort
 }
 
 // ---- 引擎无头推进就近转向 ------------------------------------------------
@@ -374,11 +513,28 @@ function eop_activation_focus_faction(faction, selectedCount, view, candidates) 
     if (!pending.length) return null
     const first=eop_target_meta(role,pending[0])
     if (first?.strictSequential) return pending[0]
-    const eligible=first?.targetGroup!==undefined ? pending.filter(h=>eop_target_meta(role,h)?.targetGroup===first.targetGroup) : pending
+    let eligible=first?.targetGroup!==undefined ? pending.filter(h=>eop_target_meta(role,h)?.targetGroup===first.targetGroup) : pending
+    // [opt] target_scoring+taskforce_math: 激活焦点按 价值×doctrine×可达性 重排,
+    // 让高价值且可达的目标(如资源 raid 格)优先获得编队, 而不是被链首远目标锁死。
+    // 基线(配置关)保持链序不变。
+    const emcAFo=(typeof em_cfg==="function")?em_cfg():null
+    if(emcAFo&&emcAFo.taskforce_math&&emcAFo.target_scoring&&typeof em_score_focus==="function"&&eligible.length>1){
+        const scoreOf=h=>{
+            const m=eop_target_meta(role,h)
+            const value=(typeof em_target_value==="function")?em_target_value(role,h):1
+            const doctrine=Math.pow(emcAFo.emDoctrineDecay,Math.max(0,pending.indexOf(h)))
+            let reach=1
+            if(typeof get_distance==="function"){const d=get_distance(h,pending[0]);reach=Math.pow(emcAFo.emScoreDistDecay,Math.max(0,d))}
+            return doctrine*value*reach*(m&&m.strictSequential?1e6:1)
+        }
+        eligible=eligible.slice().sort((a,b)=>scoreOf(b)-scoreOf(a)||a-b)
+    }
     const active=new Set((view?.offensive?.active_units || G.offensive?.active_units || []).flat())
     const available=Array.isArray(candidates)?candidates.filter(u=>!active.has(u)):null
     if(view && available){
         const reserved=new Set()
+        let firstPending=eligible[0]
+        let firstPendingMeta=eop_target_meta(role,firstPending)
         for(const h of eligible){
             const meta=eop_target_meta(role,h)
             if(meta?.extraActivationOnly){
@@ -406,9 +562,15 @@ function eop_activation_focus_faction(faction, selectedCount, view, candidates) 
             if(!plan.complete && plan.unit!==undefined && plan.unit!==null)return h
             // An inaccessible primary attack does not authorize spending its
             // activation budget on an explicitly residual attack.
+            // [opt] taskforce_math: 编组完全无单位可用(plan.unit 为空)的主目标不再锁死
+            // 焦点 —— 顺延到下一个可行目标(如链尾资源 raid 格), 全部不可行时回退链首
+            // 供航空申报。基线(配置关)保持原"链首即焦点"行为。
+            if(emcAFo&&emcAFo.taskforce_math&&(plan.unit===undefined||plan.unit===null))continue
             if(!plan.complete && !meta?.extraActivationOnly && meta?.kind!=="REDEPLOY" && meta?.kind!=="GARRISON")return h
         }
-        return null
+        if(!(emcAFo&&emcAFo.taskforce_math))return null
+        // [opt] 回退: 所有目标都无可编单位时维持链首焦点(供远程航空申报会战)。
+        return firstPendingMeta?.extraActivationOnly||firstPendingMeta?.kind==="GARRISON"||firstPendingMeta?.kind==="REDEPLOY" ? null : firstPending
     }
     return eligible[Math.min(eligible.length-1,Math.floor(Math.max(0,Number(selectedCount)||0)/4))]
 }
@@ -872,9 +1034,35 @@ function eop_exact_strategic_predicates(view, context, nodeId) {
 // 任何查询异常都保守放行，绝不因查询崩溃而误剔候选。
 function eop_filter_legal_participants(unitsById, target, role) {
     if (target === null || target === undefined || !Number.isInteger(target)) return unitsById
+    // [opt] taskforce_math 两栖编队参与判定。queryCombatParticipation 的地面分支走陆路
+    // BFS(queryGroundReachability/ANY_MOVE)、海军分支走海军 BFS——都建模不了引擎真实的
+    // 两栖参与方式: AMPH_MOVE 路径只对“同格海陆编组”存在(get_move_data 8664-8676;
+    // 无头推进 movementOptions offensive.js)。对敌占港口/岛屿的夺占目标它把全部地面与
+    // 海军候选判非法, 池子只剩射程内 1-2 个航空单位 → 激活窗永远只选空/无单位可选而
+    // done(实测整局 139 个激活窗、47 窗含地面候选却 0 地面激活、盟军 0 夺格)。
+    // 开配置时按两栖编队语义放行: 两栖地面(asp/strat_move)与护航海军保持候选;
+    // 基线(配置关)判定路径逐位不变。
+    const emcAF = (typeof em_cfg === "function") ? em_cfg() : null
+    let amphLanding = false
+    if (emcAF && emcAF.taskforce_math) {
+        const mineAF = role === "Japan" ? JP : AP
+        const mdAF = (typeof get_map_data === "function") ? get_map_data(target) : null
+        amphLanding = !!mdAF && (mdAF.port || mdAF.island) && !is_space_controlled(target, mineAF)
+    }
     return unitsById.filter(u => {
-        try { return typeof queryCombatParticipation !== "function" || queryCombatParticipation(u.id, target, {}).legal }
-        catch (e) { return true }
+        try {
+            if (typeof queryCombatParticipation !== "function") return true
+            const legalAF = queryCombatParticipation(u.id, target, {}).legal
+            if (legalAF || !amphLanding) return legalAF
+            const pAF = pieces[u.id]
+            if (!pAF) return false
+            // 两栖登陆地面: 编组后经 AMPH_MOVE 登岛(引擎组级合法性, 单位级 BFS 判不了)。
+            if (pAF.class === "ground") return !!(pAF.asp || pAF.strat_move)
+            // 护航/会战海军: 引擎只在会战结算时检查目标格是否有进攻方海军(broken_aa),
+            // 无头推进把同格海陆编成同组一起上岛, 故海军候选不得被 BFS 过滤掉。
+            if (pAF.class === "naval") return true
+            return false
+        } catch (e) { return true }
     })
 }
 
@@ -955,19 +1143,35 @@ function composeTaskForce(target, card, hq, view, candidates, role) {
     })
     // 不可达单位不得进入排序（地面走引擎 BFS、航空走航程、海军走引擎海军 BFS）。
     pool=eop_filter_legal_participants(pool,target,role)
+    // [opt] CV 保全: 盟军非登陆打击场合不把 CV 投入普通消耗战(保留 air cover/减少 PW 风险)。
+    const emc=(typeof em_cfg==="function")?em_cfg():null
+    if(emc&&emc.allies_cv_preserve&&role==="Allies"&&!landing&&typeof is_cv_unit==="function"){
+        pool=pool.filter(u=>{const p=pieces[u.id];return !(p&&p.class==="naval"&&is_cv_unit(p))})
+    }
     let amphibiousPick
     if(landing&&typeof eop_pick_unit==="function")amphibiousPick=eop_pick_unit(pool.map(u=>u.id),role,[...active],target)
-    const classRank=u=>f.suppress?({air:0,naval:1,ground:2}[u.class]??3)
-        :f.requiresOccupation?(!hasGround?({ground:0,naval:1,air:2}[u.class]??3):(!hasNaval&&landing?({naval:0,air:1,ground:2}[u.class]??3):({air:0,naval:1,ground:2}[u.class]??3)))
-        :({air:0,naval:1,ground:2}[u.class]??3)
-    // 同一兵种先选最靠近当前图表目标者，再比较战力；否则会从本土抽一个高战力但
-    // 本攻势根本到不了菲律宾的陆军，最终形成“高激活、零会战”。
-    const distance=u=>typeof get_distance==="function"&&target!==null&&target!==undefined
-        ?get_distance(u.location,target):99
-    pool.sort((a,b)=>classRank(a)-classRank(b)||distance(a)-distance(b)||cf(b)-cf(a)||a.id-b.id)
-    return {complete:false,strict:true,required:need,strength:math,unit:amphibiousPick??pool[0]?.id,
+    // [opt] 边际效用编队: 以期望战斗数学选增量效用最大的单位; 不可用/无正效用时回退基线排序。
+    let emPick
+    if(emc&&emc.taskforce_math&&typeof em_pick_taskforce_unit==="function"&&pool.length&&!amphibiousPick){
+        emPick=em_pick_taskforce_unit({pool,committed,defenders,target,faction,role,
+            landing,requiresOccupation:f.requiresOccupation,suppress:f.suppress,damageLevel:f.damageLevel,
+            value:(typeof em_target_value==="function")?em_target_value(role,target):1})
+    }
+    if(!emPick){
+        const classRank=u=>f.suppress?({air:0,naval:1,ground:2}[u.class]??3)
+            :f.requiresOccupation?(!hasGround?({ground:0,naval:1,air:2}[u.class]??3):(!hasNaval&&landing?({naval:0,air:1,ground:2}[u.class]??3):({air:0,naval:1,ground:2}[u.class]??3)))
+            :({air:0,naval:1,ground:2}[u.class]??3)
+        // 同一兵种先选最靠近当前图表目标者，再比较战力；否则会从本土抽一个高战力但
+        // 本攻势根本到不了菲律宾的陆军，最终形成“高激活、零会战”。
+        const distance=u=>typeof get_distance==="function"&&target!==null&&target!==undefined
+            ?get_distance(u.location,target):99
+        pool.sort((a,b)=>classRank(a)-classRank(b)||distance(a)-distance(b)||cf(b)-cf(a)||a.id-b.id)
+        emPick=pool[0]?.id
+    }
+    return {complete:false,strict:true,required:need,strength:math,unit:amphibiousPick??emPick,
         formation:landing?"supported-amphibious-assault":f.requiresOccupation?"ground-with-support":"air-sea-strike",
-        groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
+        groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired,
+        ...(emPick&&emc&&emc.taskforce_math?{via:"em-marginal"}:{})}
 }
 
 function selectOperationalHq(view,candidates,role){
@@ -992,8 +1196,16 @@ function selectOperationalHq(view,candidates,role){
     // 夺占(requiresOccupation)目标——敌占岛屿/资源格——必须由地面单位实施两栖登陆。
     // 图表虽注“优先 Cen Pac HQ”，但 1942 年 Central Pacific 只有海空、无地面军，
     // 硬选它会激活 8 个海空单位却“无单位可达敌战格”。夺占目标下优先能指挥地面军的 HQ。
+    // [opt] 判定放宽: 目标是未控制的港口/岛屿格(无论 meta 是否标注 requiresOccupation)
+    // 都按“需地面两栖”选 HQ —— 否则南太平洋等两栖征服战略永远落到海空 HQ, 盟军
+    // 整局 0 地面激活、0 夺格(基线实测)。基线模式(配置关)维持原判定。
+    const emcHq=(typeof em_cfg==="function")?em_cfg():null
     const focusMeta=focus!==null&&focus!==undefined&&typeof eop_target_meta==="function"?eop_target_meta(role,focus):null
-    const needsGround=!!(focusMeta&&focusMeta.requiresOccupation)
+    const focusMd=(focus!==null&&focus!==undefined&&typeof get_map_data==="function")?get_map_data(focus):null
+    const mineC=role==="Japan"?JP:AP
+    const emNeedsGround=!!(emcHq&&emcHq.taskforce_math&&focus!==null&&focus!==undefined&&focusMd
+        &&focusMd.port&&!is_space_controlled(focus,mineC))
+    const needsGround=!!(focusMeta&&focusMeta.requiresOccupation)||emNeedsGround
     const groundCommandable=id=>{const hq=byId.get(id);if(!hq)return 0
         const range=Math.max(0,Number(hq.cr)||0)
         return (view?.ai?.units||[]).filter(u=>u.faction===mine&&u.class==="ground"&&u.location>=0
@@ -1074,16 +1286,22 @@ function planReaction(view,candidates,action,role,strategy){
     const active=new Set((view?.offensive?.active_units||[]).flat())
     const selected=[...active].map(id=>byId.get(id)).filter(u=>u&&u.faction===mine)
     const attackers=[...active].map(id=>byId.get(id)).filter(u=>u&&u.faction===enemy)
-    const cf=u=>u?(u.reduced?(Number(u.rcf)||Math.ceil((Number(u.cf)||0)/2)):(Number(u.cf)||0)):0
+    const cf=u=>u?(u.reduced?(Number(u.rcf)||Math.ceil(u.cf/2)):(Number(u.cf)||0)):0
     const d10=typeof erasmus_hash==="function"?erasmus_hash(`${view?.seed??0}:${view?.actionOrdinal??0}:RF-D10`)%10:5
     const std=eop_evaluate_reaction_force_standard({selectedReactionUnits:selected,attackingUnits:attackers,d10})
     const rank=u=>{
+        if(!u)return 3
         if(!std.airSeaOneXMet)return (u.class==="air"||u.class==="naval")?0:2
         if(!std.airCountMet)return u.class==="air"?1:2
         if(std.groundTwoXRequired&&!std.groundTwoXMet)return u.class==="ground"?0:2
         return u.class==="air"?1:u.class==="naval"?2:3
     }
-    return candidates.slice().sort((a,b)=>rank(byId.get(a))-rank(byId.get(b))||cf(byId.get(b))-cf(byId.get(a))||a-b)[0]
+    // 候选 id 可能不在 view.ai.units 投影里(增援/移出图单位) —— 排序键必须容忍缺失,
+    // 否则 rank(undefined).class 直接崩溃(match 1943 seed 20260908 实测)。
+    const known=candidates.filter(id=>byId.get(id))
+    const unknown=candidates.filter(id=>!byId.get(id))
+    known.sort((a,b)=>rank(byId.get(a))-rank(byId.get(b))||cf(byId.get(b))-cf(byId.get(a))||a-b)
+    return known[0]!==undefined?known[0]:(unknown.sort((a,b)=>a-b)[0])
 }
 
 // 第6/12页 PBM 的单位顺序。落点的六级/三级优先级由 offensive.js 在计算真实合法路径后

@@ -1,0 +1,58 @@
+// 参数注册中心 (Research Plan v1.0 §11: 禁止 magic score 散落) — erasmus-v2-opt 研究层。
+// 全部优化开关默认关闭 = 基线(zh.23)行为逐位一致; erasmus-v2-opt 按角色 profile 开启。
+// 消融实验 = 逐开关对比; 数值参数集中于此, 便于敏感性分析。
+"use strict"
+
+const EM_FLAGS = [
+    "target_scoring",         // 1=链内未完成目标按 价值×可达性 重排焦点; 0=链首优先(基线)
+    "taskforce_math",         // 1=编队边际效用选单位+两栖期望闸门; 0=兵种词典序贪心(基线)
+    "allies_cv_preserve",     // 1=盟军非登陆场合避免消耗 CV; 0=不区分
+    "allies_pow_quota",       // 1=盟军 PoW 未达标时命名格加权; 0=不加权
+    "allies_resource_raid",   // 1=盟军对日资源格目标加权(原子弹/VP 条件); 0=不加权
+    "japan_resource_defense", // 1=日本资源格防守加权; 0=不加权
+]
+
+// 数值参数(敏感性问题分析对象; 均有工程注释)
+const EM_PARAMS_BASE = {
+    emWWin: 1.0,            // 夺格/战胜概率效用权重
+    emWLoss: 0.6,           // 己方期望损失惩罚权重(cf 加权)
+    emWCost: 0.05,          // 单位激活固定成本
+    emMinPWin: 0.30,        // 两栖登陆最低可接受获胜概率, 低于则取消空攻势
+    emScoreDistDecay: 0.9,  // 目标评分距离衰减因子
+    emDoctrineDecay: 0.92,  // 链序衰减: 越靠链首 doctrine 权重越高
+    emCvReserveMinAdv: 1.5, // CV 投入所需最低边际效用倍数
+    emRaidResTrigger: 10,   // 日本资源 ≤ 该值时盟军追加资源 raid 目标(原子弹门槛 5/3)
+    emRaidMaxTargets: 4,    // 每次战略链最多追加的 raid 资源格数
+    emAmphNavalMargin: 1.0, // 两栖登陆放行所需海空战力优势倍数(对未建模反应的保守边际)
+    emAmphEscortDist: 4,    // 护航海军与登陆地面可会合的最大距离(同格或该距离内)
+    emReactionWeight: 0.35,  // 反应兵力折算系数(反应需掷骰/天气成立, 非必然到场)
+}
+
+function em_profile_from_env() {
+    // EOTS_OPT_PROFILE=all|baseline|逗号分隔开关列表
+    if (typeof process === "undefined" || !process.env) return null
+    const raw = process.env.EOTS_OPT_PROFILE
+    if (!raw || raw === "baseline") return {}
+    if (raw === "all") { const p = {}; EM_FLAGS.forEach(f => p[f] = 1); return p }
+    const p = {}
+    raw.split(",").map(s => s.trim()).filter(Boolean).forEach(f => { if (EM_FLAGS.includes(f)) p[f] = 1 })
+    return p
+}
+
+let em_current = null
+
+function em_cfg() {
+    if (em_current) return em_current
+    return null
+}
+
+// opt bot 每次决策前按角色注入; 决策结束必须 reset(防串染基线 bot)。
+function em_set_config(flags, params) {
+    const merged = { ...EM_PARAMS_BASE }
+    EM_FLAGS.forEach(f => merged[f] = 0)
+    if (flags) for (const k of Object.keys(flags)) if (EM_FLAGS.includes(flags[k] !== undefined ? k : k)) merged[k] = flags[k] ? 1 : 0
+    if (params) for (const k of Object.keys(params)) if (k in EM_PARAMS_BASE) merged[k] = params[k]
+    em_current = merged
+}
+
+function em_reset_config() { em_current = null }

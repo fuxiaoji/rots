@@ -245,3 +245,14 @@
 - [x] 首要目标宣战后，后续任务部队沿图表链尝试下一目标。
 - [x] 增加 Turn 2 固定种子审计及卡牌、HQ、多目标回归测试。
 - [ ] 继续消除剩余 8 次/20 局日本空启动与 2 次无护航失败；7/20 东印度夺控尚不能视为开局战略完全合格。
+
+## 当前增量：zh.24 科研评估基建 + 期望战斗数学优化层（2026-09-09）
+
+- [x] match-run.js 增强运行器（双 bot/差分指标/确定性验证与 audit 一致）。
+- [x] erasmus_config.js 参数注册中心 + erasmus_math.js 期望战斗数学 + erasmus-v2-opt 注册；基线逐位一致验证通过。
+- [x] 基线统计两剧本×32 seed；E1 复杂度画像两剧本（分支 median 4 / p95 40 / max 284；每局 900-1900 决策）。
+- [x] analyze-matches.js 统计（bootstrap CI + Mann-Whitney + Cliff's delta）、run-experiments.sh 矩阵驱动。
+- [x] 日本 opt 探针：1942 夺格 4.4→5.0/局；1943 略负（target_scoring 干扰），待消融定 profile。
+- [ ] 盟军 0 地面激活根因修复（子代理执行中：choose-hq/激活路径/AP-11 谓词）。
+- [ ] 正式矩阵 4 配对×2 剧本×32 seed + 6 开关消融 + 统计显著性。
+- [ ] 论文结果/讨论回填。

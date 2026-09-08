@@ -1,3 +1,5 @@
+/** import server/bots/erasmus_config.js*/
+/** import server/bots/erasmus_math.js*/
 /** import server/erasmus_ops.js*/
 /** import server/erasmus_data.js*/
 /** import server/erasmus_state.js*/
@@ -583,6 +585,11 @@ var EOTS_BOTS = {
                     sm = esm_pin_strategy(view, context)
                     // 忠实目标链: chain = parse_goals 有序 idx; goals = 每行 Goal(kind/text)
                     if (sm) eop_set_strategy_chain(context.role, { name: sm.name, kind: sm.kind, note: (sm.notes || []).join("; "), goals: sm.goals, chain: sm.chain, targetMeta: sm.targetMeta })
+                    // [opt] allies_resource_raid: 原子弹/封锁胜利的日本资源格 raid 目标,
+                    // 追加到盟军当前战略链尾(克隆 override, 不回写状态机缓存)。
+                    if (context.role === "Allies" && typeof eop_append_resource_raid_targets === "function") {
+                        eop_append_resource_raid_targets()
+                    }
                 } else {
                     eop_clear_all_chains()   // 防同进程跨剧本串台
                 }
@@ -624,6 +631,22 @@ var EOTS_BOTS = {
                 if (!res.publicTrace.axis) res.publicTrace.axis = t ? t.axis : null
             }
             return res
+        },
+    },
+    // 研究变体: 同一决策核心 + 参数注册中心(erasmus_config.js)开启优化层。
+    // profile 经 EOTS_OPT_PROFILE 环境变量注入(all|baseline|逗号分隔开关);
+    // 每次决策前注入、finally 重置, 保证同进程与基线 bot 混跑互不串染(消融实验用)。
+    "erasmus-v2-opt": {
+        name: "伊拉斯谟 v2.0-opt", version: ERASMUS_VERSION + "-opt",
+        scenarios: ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Japan", "Allies"],
+        decide(view, context) {
+            const profile = (typeof em_profile_from_env === "function") ? em_profile_from_env() : {}
+            em_set_config(profile)
+            try {
+                return EOTS_BOTS["erasmus-v2"].decide(view, context)
+            } finally {
+                em_reset_config()
+            }
         },
     },
 }

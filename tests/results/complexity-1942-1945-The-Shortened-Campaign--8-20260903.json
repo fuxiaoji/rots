@@ -1,0 +1,165 @@
+{
+ "generatedAt": "2026-09-08T17:05:05.505Z",
+ "scenario": "1942-1945 (The Shortened Campaign)",
+ "gameCount": 8,
+ "baseSeed": 20260903,
+ "decisionDepth": {
+  "perGame": {
+   "n": 8,
+   "mean": 1673,
+   "median": 1835,
+   "p95": 1891,
+   "max": 1891
+  },
+  "perTurn": {
+   "n": 8,
+   "mean": 148.15,
+   "median": 152.91666666666666,
+   "p95": 157.58333333333334,
+   "max": 157.58333333333334
+  }
+ },
+ "branchingKeys": {
+  "n": 13384,
+  "mean": 2.81,
+  "median": 2,
+  "p95": 5,
+  "max": 9
+ },
+ "branchingExpanded": {
+  "n": 13384,
+  "mean": 9.96,
+  "median": 4,
+  "p95": 40,
+  "max": 275
+ },
+ "topDecisionKinds": [
+  {
+   "kind": "EC: # Ops. Activate units: # of  # (# + ",
+   "count": 1097
+  },
+  {
+   "kind": "Turn # Select card to play.",
+   "count": 1085
+  },
+  {
+   "kind": "C#: Select action.",
+   "count": 1005
+  },
+  {
+   "kind": "OC: # Ops. Activate units: # of  # (# + ",
+   "count": 882
+  },
+  {
+   "kind": "EC: # Ops. Move units (#/#).",
+   "count": 781
+  },
+  {
+   "kind": "Choose hex to place P# as a reinforcemen",
+   "count": 770
+  },
+  {
+   "kind": "OC: # Ops. Move units (#/#).",
+   "count": 677
+  },
+  {
+   "kind": "OC: # Ops. Confirm offensive.",
+   "count": 553
+  },
+  {
+   "kind": "OC: # Ops. Confirm post battle move.",
+   "count": 543
+  },
+  {
+   "kind": "OC: # Ops. Choose HQ.",
+   "count": 521
+  },
+  {
+   "kind": "OC: # Ops. Change intelligence condition",
+   "count": 501
+  },
+  {
+   "kind": "EC: # Ops. Confirm offensive.",
+   "count": 453
+  },
+  {
+   "kind": "EC: # Ops. Confirm post battle move.",
+   "count": 443
+  },
+  {
+   "kind": "EC: # Ops. Choose HQ.",
+   "count": 401
+  },
+  {
+   "kind": "EC: # Ops. Change intelligence condition",
+   "count": 386
+  }
+ ],
+ "unitsOnBoard": {
+  "Japan": {
+   "n": 63,
+   "mean": 56.24,
+   "median": 55,
+   "p95": 65,
+   "max": 66
+  },
+  "Allies": {
+   "n": 63,
+   "mean": 80.73,
+   "median": 79,
+   "p95": 105,
+   "max": 108
+  }
+ },
+ "playableHexCount": 1477,
+ "perGame": [
+  {
+   "seed": 20260903,
+   "decisions": 1566,
+   "turn": 11,
+   "winner": null
+  },
+  {
+   "seed": 20260904,
+   "decisions": 1275,
+   "turn": 9,
+   "winner": null
+  },
+  {
+   "seed": 20260905,
+   "decisions": 1745,
+   "turn": 12,
+   "winner": null
+  },
+  {
+   "seed": 20260906,
+   "decisions": 1835,
+   "turn": 12,
+   "winner": null
+  },
+  {
+   "seed": 20260907,
+   "decisions": 1354,
+   "turn": 10,
+   "winner": null
+  },
+  {
+   "seed": 20260908,
+   "decisions": 1891,
+   "turn": 12,
+   "winner": null
+  },
+  {
+   "seed": 20260909,
+   "decisions": 1866,
+   "turn": 12,
+   "winner": null
+  },
+  {
+   "seed": 20260910,
+   "decisions": 1852,
+   "turn": 12,
+   "winner": null
+  }
+ ]
+}

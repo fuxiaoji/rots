@@ -474,3 +474,14 @@
 - PoW 前视只重排当前图表链，移除跨战区全图扫描，防止哈尔滨、奉天及无关大陆目标拆散夺岛兵力。
 - 第1页“东印度投降”已按四级结构写入权威 JSON、Markdown 和运行时目标元数据：Balikpapan/Tarakan；条件 Batavia；Tjilatjap/Soerabaja；Bangka/Palembang/Medan。Jolo 等只属于空优“压制东印度”，不会混入投降表。
 - 全部 Erasmus 自动测试通过。50局固定种子技术跑批为50/50正常终局、0异常、0 fallback、0缺失节点，但盟军仍0胜；该负面结果保留，后续继续检查苏联入侵牌的保留/重洗和原子弹路线。
+
+### zh.24：科研评估基建 + 期望战斗数学优化层（opt-v1）
+
+- 新增 `tests/match-run.js` 增强对局运行器：双方可配不同 bot、确定性 seed、控制位差分(夺格)/单位集合差分(歼灭/减编)/会战标记解析(成功作战)三路指标；seed 20260903 单局动作数与 `erasmus-campaign-audit.js` 完全一致(1566/11回合)。
+- `js/server/framework.js` 增加只读 `exports.pieces`（无语义改动）；`rules.js`/`play.js` 重编译。
+- 新增参数注册中心 `js/server/bots/erasmus_config.js`（6 开关+7 数值参数，默认全关=基线逐位一致）与期望战斗数学模块 `js/server/bots/erasmus_math.js`（与引擎表值对齐：ground_battle_table/naval_battle_table、受损单位数判胜、两栖守方+3、broken_aa 护航链）；注册 `erasmus-v2-opt` bot（`EOTS_OPT_PROFILE` 注入 profile，decide 后 finally 重置防串染）。
+- 基线逐位一致性验证：同 seed 4 局 perGame 各字段与修改前完全一致（IDENTICAL: true）；`node tests/erasmus.test.js` 通过。
+- 基线统计（32 seed/剧本）：1942 日本 32/32 全胜（条约 11），盟军 0 胜，盟军整局 0 地面激活、0 地面战胜利、夺格 3；1943 日本 31/31 全胜（条约 25），盟军地面胜 9/300。
+- opt-v1 探针（日本 opt 8 局）：日本夺格 4.4→5.0/局、地面胜 1.8→2.0/局；盟军 opt 尚无效（0 地面激活根因未除，已定位 choose-hq 与激活路径，修复进行中）。
+- 新增 `tests/analyze-matches.js`（bootstrap 95% CI + Mann-Whitney U + Cliff's delta）与 `tests/complexity-profile.js`（计划文件 E1 有效复杂度画像）。
+- 论文骨架 `research/paper/paper-draft.md`；进度锚点 `work/goal-progress.md`。
