@@ -1516,7 +1516,16 @@ function esm_pin_strategy(view, context) {
     if (emcBB && emcBB.allies_blockade && role === "Allies"
         && (phase === "late" || G.turn >= (Number(emcBB.emBlockadeTurnMin) || 7))
         && esm_atomic_blockade_unreachable()) {
+        // [opt W2.4] 兵力聚焦: 只前插"前沿最近"的至多 2 个未完成封锁环(esm_ap_blockade_front_targets
+        // 已按前沿距离排序)。整链前插会分散主轴兵力(配对实测盟军夺格 -1.1/局且 0 封锁达成)。
         const blockadeTargets = esm_ap_blockade_front_targets()
+            .filter(t => {
+                const meta = t
+                const pendingFn = typeof eop_target_pending === "function" ? eop_target_pending : null
+                if (!pendingFn) return true
+                try { return pendingFn("Allies", t.hex, t) } catch (e) { return true }
+            })
+            .slice(0, 2)
         if (blockadeTargets.length) {
             const blockadeHexes = new Set(blockadeTargets.map(x => x.hex))
             chain = blockadeTargets.map(x => x.hex).concat(chain.filter(h => !blockadeHexes.has(h)))
@@ -1525,7 +1534,7 @@ function esm_pin_strategy(view, context) {
             blockadePlan = { type: "ALLIES_BLOCKADE_PUSH", source: "RULE_VICTORY_OVERLAY",
                 connected: status.connected, timerStart: status.timerStart,
                 remaining: blockadeTargets.map(x => x.hex),
-                note: "封锁推进: 夺占朝鲜桥头堡(Pusan/Seoul)与北方口岸, 于己控机场驻航空建立非中立AZOI, 维持连续三个国势阶段断线" }
+                note: "封锁推进(聚焦2环): 夺占前沿最近的切割节点(朝鲜桥头堡/AZOI环机场), 于己控机场驻航空建立非中立AZOI, 维持连续三个国势阶段断线" }
         }
     }
     let progressPlan = null

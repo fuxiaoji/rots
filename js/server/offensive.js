@@ -1193,10 +1193,26 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
         }
         // GARRISON/DEFEND 显式战略即使暂时无焦点，也不得使用通用远征目标。
         if (strategicAxis && (strategicAxis.kind === "GARRISON" || strategicAxis.kind === "DEFEND")) return null
+        // [opt island_sweep] 本分支配置只读一次(簇落点/首波分流都用)。
+        const emcIS = (typeof em_cfg === "function") ? em_cfg() : null
+        // [opt island_sweep 段3] 叠格闸门: 引擎每格每方非海军上限 3 个(is_overstack:
+        // (cnt+2)%128>7), 超编单位在会战结算"could not participate/移除" = 白白损失。
+        // 地面编队不落向已满格, 改投簇内其它格。基线(配置关)不变。
+        const swStackOk = h => {
+            const own = headless_units_at(h, faction)
+            return (own.ground + own.hq) < 3
+        }
+        const swOn = emcIS && emcIS.island_sweep
+        // [opt island_sweep 段2] 首波分流: 焦点格已有己方地面(首波已落)时, 后续地面编队
+        // 不再堆焦点(会叠格/重复登陆), 改由下方岛群簇分支分流到簇内次级登陆点;
+        // 纯海军编队不受此限 —— 仍允许并入焦点(护航合并 [-3])。基线(配置关)不变。
+        const swSpread = swOn && hasGround && strategicFocus !== null
+            && (headless_units_at(strategicFocus, faction).ground > 0
+                || (hasGround && !swStackOk(strategicFocus)))
         // 决策轴的当前目标是硬优先级，不是距离平分键。旧逻辑先比较守军数量，导致
         // 马尼拉可达时仍把登陆编队送往守军更弱的婆罗洲/小岛。占领目标必须有地面
         // 单位；压制目标则允许空海编队。其余可达目标只在当前编队到不了焦点时接手。
-        if (strategicMeta && hex === strategicFocus) {
+        if (strategicMeta && hex === strategicFocus && !swSpread) {
             if (strategicMeta.requiresOccupation && !hasGround) {
                 // 登陆军与护航舰队可以从不同基地出发。若本攻势已经激活地面登陆军，
                 // 允许纯海军编队进入同一目标格，最终合并会战，避免错误的“无护航”。
@@ -1215,13 +1231,44 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
             if (d >= get_distance(source, strategicFocus)) return null
             return [3, d, get_distance(source, hex), hex]
         }
+        // [opt island_sweep 段2] 岛群簇落点: 焦点已 committed(该格已宣战或已有己方地面)时,
+        // 后续地面编队优先转投簇内“无敌空虚敌控格”; 若该格本就是激活期分配的岛群簇格
+        // (eop_cluster_meta 命中), 直接定向。插在空敌控分支 [1,nearKey] 之前, 使
+        // capture_landing_hexes(攻势结束)与 move.js:881 路径占领批量夺格。
+        // 分数 [1, -(到焦点距离), hex]: 同为空敌控分支(首键 1)但负距离键必压过 nearKey≥0。
+        if (swOn && hasGround && typeof eop_island_cluster === "function") {
+            const roleStrIS = faction === JP ? "Japan" : "Allies"
+            let clusterFocus = null
+            if (typeof eop_cluster_meta === "function") {
+                const cm = eop_cluster_meta(roleStrIS, hex)
+                if (cm && Number.isInteger(cm.focus)) clusterFocus = cm.focus
+            }
+            if (clusterFocus === null && strategicFocus !== null
+                && (set_has(G.offensive.battle_hexes, strategicFocus)
+                    || headless_units_at(strategicFocus, faction).ground > 0))
+                clusterFocus = strategicFocus
+            if (clusterFocus !== null && hex !== clusterFocus && eu.count === 0
+                && is_space_controlled(hex, 1 - faction) && swStackOk(hex)) {
+                const cluster = eop_island_cluster(roleStrIS, clusterFocus)
+                if (cluster.includes(hex)) return [1, -(get_distance(hex, clusterFocus)), hex]
+            }
+        }
         if (eu.count > 0) {
+            // [opt island_sweep 段1] 非焦点、守军 ≥2 地面单位的格不经理任务部队伤害
+            // 数学(composeTaskForce 2x 生存)就是裸攻 —— 兜底推进编队绕开它改投空虚格,
+            // 只打单守军格(典型 1 reduced 驻军)。基线(配置关)行为不变。
+            if (swOn && hasGround && movingPiece && movingPiece.class === "ground"
+                && hex !== strategicFocus && eu.ground > 1) return null
+            // [opt island_sweep 段3] 已满叠格不入(超编单位会战不参与/被移除)。
+            if (swOn && hasGround && !swStackOk(hex)) return null
             if (hasGround) return [0, eu.ground, eu.count, nearKey(hex), hex]
             if (eu.naval > 0) return [0, eu.naval, eu.count, nearKey(hex), hex]
             return null
         }
         if (is_space_controlled(hex, 1 - faction)) {
             if (!hasGround) return null
+            // [opt island_sweep 段3] 空虚敌控格同样受叠格闸门约束(同窗多组会挤进同格)。
+            if (swOn && !swStackOk(hex)) return null
             return [1, nearKey(hex), hex]
         }
         return null

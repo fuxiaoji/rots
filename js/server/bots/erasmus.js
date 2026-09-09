@@ -220,6 +220,15 @@ function target_argument(action, value, seedText, role, view, strategy) {
         const picked=planReaction(view,value,action,role,strategy)
         return picked!==undefined?picked:pick_argument(value,seedText,action,view)
     }
+    if (action === "action_hex" && esm_gate_on() && /declare battle hexes/i.test(prompt)) {
+        // [opt island_sweep 段3] EC 申报窗多焦点: 焦点已宣战后向岛群簇内下一敌控格
+        // 申报第二战斗格; 非该场景(基线/OC/焦点未宣)返回 undefined 走基线选格。
+        const emcDH = (typeof em_cfg === "function") ? em_cfg() : null
+        if (emcDH && emcDH.island_sweep && typeof eop_pick_declare_hex === "function") {
+            const picked = eop_pick_declare_hex(value, role)
+            if (picked !== undefined) return picked
+        }
+    }
     if (action === "action_hex") {
         const picked = eop_pick_action_hex(value, role)
         return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
@@ -257,14 +266,30 @@ function target_argument(action, value, seedText, role, view, strategy) {
         const activationFocus = typeof eop_activation_focus_faction === "function"
             ? eop_activation_focus_faction(role === "Japan" ? JP : AP, activeUnits.length, view, pickValue) : eop_focus(role)
         const activationMeta = eop_target_meta(role, activationFocus)
+        // [opt island_sweep 段1] 目标过滤前的原始候选, 供"推进夺格"兜底; 基线(配置关)不生成。
+        const emcAdv = (typeof em_cfg === "function") ? em_cfg() : null
+        const rawPick = (emcAdv && emcAdv.island_sweep) ? pickValue.slice() : null
+        // [opt island_sweep 段2] 激活焦点为岛群簇格时注入夺占合成 meta(地面+护航编组)。
+        const clusterMeta = (emcAdv && emcAdv.island_sweep && typeof eop_cluster_meta === "function")
+            ? eop_cluster_meta(role, activationFocus) : null
         if (typeof eop_unit_matches_target === "function")
             pickValue = pickValue.filter(u => eop_unit_matches_target(u, role, activationMeta, activationFocus))
         if (role === "Allies" && typeof eop_preserve_rear_air === "function") {
             const reachable = pickValue.filter(u => !eop_preserve_rear_air(u, role, activationFocus))
             if (reachable.length) pickValue = reachable
         }
-        const planned = composeTaskForce(activationFocus, null, null, view, pickValue, role)
-        if (planned?.strict && planned.unit == null) return undefined
+        const planned = composeTaskForce(activationFocus, null, null, view, pickValue, role, clusterMeta)
+        if (planned?.strict && planned.unit == null) {
+            // [opt island_sweep 段1] 焦点编不出单位≠撤销/收工: 链上轮换已在
+            // eop_activation_focus_faction 完成, 全链无产出时激活一支地面单位走
+            // 无头推进"空虚敌控格"落点(offensive.js [1,nearKey] 分支)吃满预算夺格。
+            if (rawPick) {
+                const adv = typeof eop_pick_advance_unit === "function"
+                    ? eop_pick_advance_unit(rawPick, role, activeUnits) : undefined
+                if (adv !== undefined) return adv
+            }
+            return undefined
+        }
         const picked = planned && planned.unit !== undefined && planned.unit !== null
             ? planned.unit : eop_pick_unit(pickValue, role, activeUnits, activationFocus)
         return picked !== undefined ? picked : pick_argument(pickValue, seedText, action, view)
@@ -420,17 +445,27 @@ function evaluateChart(chart, view, context) {
             ? eop_activation_focus_faction(context.role === "Japan" ? JP : AP, selectedCount, view,
                 Array.isArray(view.actions.unit) ? view.actions.unit.filter(u=>!unsel.has(u)) : []) : view?.ai?.focus
         const activationMeta = eop_target_meta(context.role, activationFocus)
+        // [opt island_sweep] 配置本窗只读一次(簇 meta + 兜底候选都用)。
+        const emcWin = (typeof em_cfg === "function") ? em_cfg() : null
+        // [opt island_sweep 段2] 激活焦点为岛群簇格时注入夺占合成 meta(地面+护航编组),
+        // 与 target_argument 的 clusterMeta 同源同值。
+        const clusterMeta = (emcWin && emcWin.island_sweep && typeof eop_cluster_meta === "function")
+            ? eop_cluster_meta(context.role, activationFocus) : null
         // 先算出与 target_argument 完全一致的“可新增单位”集(剔 unselect/HQ/B29/后方空优/
         // 不匹配目标), 再交给 composeTaskForce 与 done 判定, 避免 forcePlan 看到 HQ/B29 而
         // target_argument 已剔除它 → 返回 undefined 撤销已选单位, 形成 toggle 死循环。
-        const addable = (Array.isArray(view.actions.unit) ? view.actions.unit : [])
+        const baseAddable = (Array.isArray(view.actions.unit) ? view.actions.unit : [])
             .filter(u => !unsel.has(u))
             .filter(u => { try { return !pieces[u] || pieces[u].class !== "hq" } catch (e) { return true } })
             .filter(u => { try { return esm_gate_on() || !pieces[u] || pieces[u].class !== "air" } catch (e) { return true } })
             .filter(u => { try { return typeof eop_preserve_ready_b29 !== "function" || !eop_preserve_ready_b29(u, context.role) } catch (e) { return true } })
+        // [opt island_sweep 段1] 目标过滤前的候选副本(与 target_argument 的 rawPick 同集),
+        // 供激活窗"推进夺格"兜底判定; 基线(配置关)为 null, 行为不变。
+        const advCandidates = (emcWin && emcWin.island_sweep) ? baseAddable : null
+        const addable = baseAddable
             .filter(u => { try { return typeof eop_preserve_rear_air !== "function" || !eop_preserve_rear_air(u, context.role, activationFocus) } catch (e) { return true } })
             .filter(u => typeof eop_unit_matches_target !== "function" || eop_unit_matches_target(u, context.role, activationMeta, activationFocus))
-        const forcePlan = composeTaskForce(activationFocus, null, null, view, addable, context.role)
+        const forcePlan = composeTaskForce(activationFocus, null, null, view, addable, context.role, clusterMeta)
         const selected = progress ? Number(progress[1]) : (view.offensive?.active_units?.flat?.().length || 0)
         // HQ 加成可因新激活单位的军种/区域而下降。提示“2 of 3 (2 + 1)”中的括号前值
         // 才是不会随下一次选择反噬的稳定上限；达到它就结束，避免 2/3→3/2→撤销 的循环。
@@ -442,7 +477,19 @@ function evaluateChart(chart, view, context) {
         // 没有新增合法候选时才结束。本规则不改变引擎给出的合法单位集合。
         if (selected < limit && addable.length > 0) action = "unit"
         else action = "done"
-        if (forcePlan?.strict && forcePlan.unit == null) action = "done"
+        if (forcePlan?.strict && forcePlan.unit == null) {
+            // [opt island_sweep 段1] 编组收工前先试"推进夺格"兜底: 预算未满且有可激活
+            // 地面单位时继续 unit(与 target_argument 的 island_sweep 分支同函数同输入,
+            // 保证两侧决策一致); 无可用兜底才 done。基线(配置关)保持原 done。
+            let advPicked
+            if (advCandidates && selected < limit && advCandidates.length
+                && typeof eop_pick_advance_unit === "function")
+                advPicked = eop_pick_advance_unit(advCandidates, context.role, view.offensive?.active_units?.flat?.() || [])
+            if (advPicked !== undefined) {
+                action = "unit"
+                activationPlan.mode = "island_sweep 推进夺格兜底"
+            } else action = "done"
+        }
         // 两栖登陆无护航可用: 在本窗尚未激活任何单位时提前 done(空攻势), 避免把两栖地面
         // 送去敌占/敌控港口硬登陆吃 "Amphibious Assault failed"。已有已激活单位时不再阻断
         // (那些单位已注定走无头推进, 由 eop_pick_unit 的护航逻辑尽量补海军)。

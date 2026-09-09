@@ -493,3 +493,12 @@
 - capture_rate 开关：PBM 地面落点优先"空虚敌控格"（move.js:881 移入即夺）。配对实验为中性（日本地面胜 -1.1 p=0.08，资源 -1.0 p=0.05），不进推荐 profile。
 - match-run 新指标：capRate（每回合夺格均值/峰值/有夺格回合数）、blockade（trace 断链起始与进度）、blockadeWins/homelandWins 胜局分类。实测夺格速率日本 0.82/回合（峰值 7）、盟军 0.47/回合——距人类 10+/回合仍远，主要杠杆（多战斗格攻势、深度路径夺格）留待下轮。
 - 推荐配置（测试版2.0）：taskforce_math + allies_cv_preserve + allies_pow_quota + allies_resource_raid + japan_resource_defense；32 局基线逐位一致验证保持（base-verify-v3 IDENTICAL）。
+
+### zh.26：W1 岛群扫荡（island_sweep 实验开关）+ 封锁图模型（改进计划 v2 第一批）
+
+- 新指标：activationRatio（激活完成率，基线仅 0.36——64% 激活预算被提前 done 浪费，夺格率低的首要原因）、battleHexesPerTurn、capRate（每回合夺格均值/峰值）、blockade（trace 断链起始/进度）、blockadeWins/homelandWins。
+- island_sweep（实验开关，默认关）三段实现：①激活完成率（链上轮换+推进夺格兜底，actR 0.44→0.63）；②岛群簇展开+多路登陆编组（簇内第 k 支海陆对→第 k 个簇格，capture_landing_hexes 批量占领）；③申报窗多焦点（EC 牌焦点已宣战后自动申报簇内下一战斗格）。
+- 32 局配对（vs exp-final-1942 同 seed）：日本夺格 271→383（+41%）、battleHexesPerTurn 6.71（多焦点攻势成立）、盟军 1 胜（原子弹，本代码库第二次）、合计 capRate 1.50→1.76/回合、歼灭 560/640→721/748。代价：两栖失败 124→222（诊断：12 海空战败 vs 3 无护航——W3.1 反应概率化是下一步主修）、PW 0.31→0.69。
+- W2.1 封锁最小割分析（tools/blockade-cut.js，真实地图数据 vm 加载）：最小 ZOI 机场链 10 环（冲绳 51 边/肯达里 34/莱特 24/塔拉坎 18/米里 15/新加坡 12/金兰湾 13/帕劳/巴厘/萨隆）；对马海峡 3 条水边 ZOI 不可覆盖、朝鲜/满洲陆桥 16 条路边必须地面占领；杀伤前置量化（新加坡/金兰湾半径2内 5 敌机场）。
+- W2.4 allies_blockade 兵力聚焦修复：整链前插改为前沿最近 ≤2 环/回合（原实现分散兵力：盟军夺格 -1.1/局且 0 封锁达成）。
+- 基线逐位一致验证保持（basev-final-w1 IDENTICAL）；erasmus.test.js 通过。

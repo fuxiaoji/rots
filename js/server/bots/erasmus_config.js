@@ -12,6 +12,7 @@ const EM_FLAGS = [
     "japan_resource_defense", // 1=日本资源格防守加权; 0=不加权
     "allies_blockade",        // 1=盟军封锁推进前视(朝鲜桥头堡+AZOI 环, 规则 16.47/trace 胜利); 0=不启用
     "capture_rate",           // 1=PBM/推进落点优先"空虚敌控格"(地面移入即夺, move.js:881 路径夺格); 0=基线落点表
+    "island_sweep",           // 1=岛群清扫: 激活预算用满(链上轮换+推进兜底)+岛群多路登陆+申报窗多焦点; 0=基线
 ]
 
 // 数值参数(敏感性问题分析对象; 均有工程注释)
@@ -29,6 +30,10 @@ const EM_PARAMS_BASE = {
     emAmphEscortDist: 4,    // 护航海军与登陆地面可会合的最大距离(同格或该距离内)
     emReactionWeight: 0.35,  // 反应兵力折算系数(反应需掷骰/天气成立, 非必然到场)
     emBlockadeTurnMin: 7,   // [allies_blockade] 封锁推进启动的最早回合(1943=T7 只剩收尾, 1942=T7 余 6 回合)
+    emSweepAdvDist: 3,      // [island_sweep] 推进兜底: 地面到最近空虚敌控格超过该距离不选(防深腹地暴露行军)
+    emSweepHarborNav: 6,    // [island_sweep] 港内敌舰 cf ≥ 该值(航母/战列级)的登陆目标跳过(港湾海空战风险)
+    emSweepCluster: 4,      // [island_sweep 段2] 岛群簇大小上限(焦点外次级登陆格数)
+    emSweepClusterDist: 2,  // [island_sweep 段2] 岛群簇收集半径(到焦点 hex 距离)
 }
 
 function em_profile_from_env() {

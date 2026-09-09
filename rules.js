@@ -11723,10 +11723,26 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
         }
         // GARRISON/DEFEND 显式战略即使暂时无焦点，也不得使用通用远征目标。
         if (strategicAxis && (strategicAxis.kind === "GARRISON" || strategicAxis.kind === "DEFEND")) return null
+        // [opt island_sweep] 本分支配置只读一次(簇落点/首波分流都用)。
+        const emcIS = (typeof em_cfg === "function") ? em_cfg() : null
+        // [opt island_sweep 段3] 叠格闸门: 引擎每格每方非海军上限 3 个(is_overstack:
+        // (cnt+2)%128>7), 超编单位在会战结算"could not participate/移除" = 白白损失。
+        // 地面编队不落向已满格, 改投簇内其它格。基线(配置关)不变。
+        const swStackOk = h => {
+            const own = headless_units_at(h, faction)
+            return (own.ground + own.hq) < 3
+        }
+        const swOn = emcIS && emcIS.island_sweep
+        // [opt island_sweep 段2] 首波分流: 焦点格已有己方地面(首波已落)时, 后续地面编队
+        // 不再堆焦点(会叠格/重复登陆), 改由下方岛群簇分支分流到簇内次级登陆点;
+        // 纯海军编队不受此限 —— 仍允许并入焦点(护航合并 [-3])。基线(配置关)不变。
+        const swSpread = swOn && hasGround && strategicFocus !== null
+            && (headless_units_at(strategicFocus, faction).ground > 0
+                || (hasGround && !swStackOk(strategicFocus)))
         // 决策轴的当前目标是硬优先级，不是距离平分键。旧逻辑先比较守军数量，导致
         // 马尼拉可达时仍把登陆编队送往守军更弱的婆罗洲/小岛。占领目标必须有地面
         // 单位；压制目标则允许空海编队。其余可达目标只在当前编队到不了焦点时接手。
-        if (strategicMeta && hex === strategicFocus) {
+        if (strategicMeta && hex === strategicFocus && !swSpread) {
             if (strategicMeta.requiresOccupation && !hasGround) {
                 // 登陆军与护航舰队可以从不同基地出发。若本攻势已经激活地面登陆军，
                 // 允许纯海军编队进入同一目标格，最终合并会战，避免错误的“无护航”。
@@ -11745,13 +11761,44 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
             if (d >= get_distance(source, strategicFocus)) return null
             return [3, d, get_distance(source, hex), hex]
         }
+        // [opt island_sweep 段2] 岛群簇落点: 焦点已 committed(该格已宣战或已有己方地面)时,
+        // 后续地面编队优先转投簇内“无敌空虚敌控格”; 若该格本就是激活期分配的岛群簇格
+        // (eop_cluster_meta 命中), 直接定向。插在空敌控分支 [1,nearKey] 之前, 使
+        // capture_landing_hexes(攻势结束)与 move.js:881 路径占领批量夺格。
+        // 分数 [1, -(到焦点距离), hex]: 同为空敌控分支(首键 1)但负距离键必压过 nearKey≥0。
+        if (swOn && hasGround && typeof eop_island_cluster === "function") {
+            const roleStrIS = faction === JP ? "Japan" : "Allies"
+            let clusterFocus = null
+            if (typeof eop_cluster_meta === "function") {
+                const cm = eop_cluster_meta(roleStrIS, hex)
+                if (cm && Number.isInteger(cm.focus)) clusterFocus = cm.focus
+            }
+            if (clusterFocus === null && strategicFocus !== null
+                && (set_has(G.offensive.battle_hexes, strategicFocus)
+                    || headless_units_at(strategicFocus, faction).ground > 0))
+                clusterFocus = strategicFocus
+            if (clusterFocus !== null && hex !== clusterFocus && eu.count === 0
+                && is_space_controlled(hex, 1 - faction) && swStackOk(hex)) {
+                const cluster = eop_island_cluster(roleStrIS, clusterFocus)
+                if (cluster.includes(hex)) return [1, -(get_distance(hex, clusterFocus)), hex]
+            }
+        }
         if (eu.count > 0) {
+            // [opt island_sweep 段1] 非焦点、守军 ≥2 地面单位的格不经理任务部队伤害
+            // 数学(composeTaskForce 2x 生存)就是裸攻 —— 兜底推进编队绕开它改投空虚格,
+            // 只打单守军格(典型 1 reduced 驻军)。基线(配置关)行为不变。
+            if (swOn && hasGround && movingPiece && movingPiece.class === "ground"
+                && hex !== strategicFocus && eu.ground > 1) return null
+            // [opt island_sweep 段3] 已满叠格不入(超编单位会战不参与/被移除)。
+            if (swOn && hasGround && !swStackOk(hex)) return null
             if (hasGround) return [0, eu.ground, eu.count, nearKey(hex), hex]
             if (eu.naval > 0) return [0, eu.naval, eu.count, nearKey(hex), hex]
             return null
         }
         if (is_space_controlled(hex, 1 - faction)) {
             if (!hasGround) return null
+            // [opt island_sweep 段3] 空虚敌控格同样受叠格闸门约束(同窗多组会挤进同格)。
+            if (swOn && !swStackOk(hex)) return null
             return [1, nearKey(hex), hex]
         }
         return null
@@ -20639,6 +20686,7 @@ const EM_FLAGS = [
     "japan_resource_defense", // 1=日本资源格防守加权; 0=不加权
     "allies_blockade",        // 1=盟军封锁推进前视(朝鲜桥头堡+AZOI 环, 规则 16.47/trace 胜利); 0=不启用
     "capture_rate",           // 1=PBM/推进落点优先"空虚敌控格"(地面移入即夺, move.js:881 路径夺格); 0=基线落点表
+    "island_sweep",           // 1=岛群清扫: 激活预算用满(链上轮换+推进兜底)+岛群多路登陆+申报窗多焦点; 0=基线
 ]
 
 // 数值参数(敏感性问题分析对象; 均有工程注释)
@@ -20656,6 +20704,10 @@ const EM_PARAMS_BASE = {
     emAmphEscortDist: 4,    // 护航海军与登陆地面可会合的最大距离(同格或该距离内)
     emReactionWeight: 0.35,  // 反应兵力折算系数(反应需掷骰/天气成立, 非必然到场)
     emBlockadeTurnMin: 7,   // [allies_blockade] 封锁推进启动的最早回合(1943=T7 只剩收尾, 1942=T7 余 6 回合)
+    emSweepAdvDist: 3,      // [island_sweep] 推进兜底: 地面到最近空虚敌控格超过该距离不选(防深腹地暴露行军)
+    emSweepHarborNav: 6,    // [island_sweep] 港内敌舰 cf ≥ 该值(航母/战列级)的登陆目标跳过(港湾海空战风险)
+    emSweepCluster: 4,      // [island_sweep 段2] 岛群簇大小上限(焦点外次级登陆格数)
+    emSweepClusterDist: 2,  // [island_sweep 段2] 岛群簇收集半径(到焦点 hex 距离)
 }
 
 function em_profile_from_env() {
@@ -21158,6 +21210,37 @@ function eop_focus_faction(faction) {
 }
 
 // ---- 选目标格 (action_hex 参数) ------------------------------------------
+// [opt island_sweep 段3] 申报窗多焦点: 焦点格已宣战后, EC 牌(不限 1 个新战斗格)
+// 自动向岛群簇内下一个“有敌军格”申报第二战斗格 —— 同回合多路会战 → 多路夺格。
+// OC 牌(new_battle_allowed 限 1)与焦点未宣时返回 undefined, 走基线 eop_pick_action_hex。
+function eop_pick_declare_hex(candidates, role) {
+    const emc = (typeof em_cfg === "function") ? em_cfg() : null
+    if (!emc || !emc.island_sweep) return undefined
+    if (!Array.isArray(candidates) || !candidates.length) return undefined
+    if (typeof G === "undefined" || !G || !G.offensive) return undefined
+    let multiAllowed = false
+    try { multiAllowed = G.offensive.type !== OC } catch (e) { multiAllowed = false }
+    if (!multiAllowed) return undefined
+    const focus = eop_focus(role)
+    if (focus === null) return undefined
+    try { if (!(typeof set_has === "function" && set_has(G.offensive.battle_hexes, focus))) return undefined } catch (e) { return undefined }
+    const mine = role === "Japan" ? JP : AP
+    if (typeof eop_island_cluster !== "function") return undefined
+    const cluster = new Set(eop_island_cluster(role, focus))
+    const hasEnemy = h => { try { return is_faction_units(h, 1 - mine) } catch (e) { return false } }
+    // 只在簇内有敌军格时多开第二战斗格; 簇外格交回基线选格(不扩散申报范围)。
+    let best = null, bestScore = null
+    for (const h of candidates) {
+        if (!cluster.has(h) || !hasEnemy(h)) continue
+        const d = typeof get_distance === "function" ? get_distance(h, focus) : Math.abs(h - focus)
+        const score = [d, h]
+        if (bestScore === null || score[0] < bestScore[0]
+            || (score[0] === bestScore[0] && score[1] < bestScore[1])) { best = h; bestScore = score }
+    }
+    return best !== null ? best : undefined
+}
+
+// ---- 选目标格 (action_hex 参数) ------------------------------------------
 // 优先当前焦点; 焦点不可达时, 在候选里选距离焦点最近的格(逐步靠近主轴),
 // 而不是随机散打。无焦点(= 无主轴或主轴已全达成)时返回 undefined 让原逻辑决定。
 function eop_pick_action_hex(candidates, role) {
@@ -21173,6 +21256,39 @@ function eop_pick_action_hex(candidates, role) {
         if (d < bestD || (d === bestD && (best === null || h < best))) { bestD = d; best = h }
     }
     return best !== null ? best : undefined
+}
+
+// [opt island_sweep 段2] 簇分流选点: 在焦点 focusHex 的岛群簇内挑下一个可编组
+// “海陆同港对”的次级登陆格(已宣战/已有己方地面/无护航可会合的簇格跳过)。
+// 返回 hex 或 null。第 k 支护航+地面编组自然对应第 k 个仍可编组的簇格 —— 已落格
+// 被过滤, 同格海陆编组语义由 composeTaskForce 合成 meta(夺占)与 headless 同格
+// 分组保证。
+function eop_pick_cluster_landing(role, view, available, focusHex, dbg) {
+    const emc = (typeof em_cfg === "function") ? em_cfg() : null
+    if (!emc || !emc.island_sweep) return null
+    if (!Array.isArray(available) || !Number.isInteger(focusHex)) return null
+    if (typeof eop_island_cluster !== "function") return null
+    const dlog = dbg && typeof process !== "undefined" && process.env.EOTS_SW_DEBUG ? line => console.log(`[SW] ${line}`) : null
+    if (dlog) {
+        const cluster = eop_island_cluster(role, focusHex)
+        dlog(`clusterLanding role=${role} focus=${focusHex} avail=${available.length} cluster=[${cluster.join(",")}]`)
+    }
+    for (const ch of eop_island_cluster(role, focusHex)) {
+        try {
+            if (G.offensive && typeof set_has === "function" && set_has(G.offensive.battle_hexes, ch)) { if (dlog) dlog(`  hex=${ch} skip battleHexes`); continue }
+            let ownGround = false
+            for (let u = 1; u < pieces.length; ++u) {
+                const p = pieces[u]
+                if (p && p.faction === (role === "Japan" ? JP : AP) && p.class === "ground" && G.location[u] === ch) { ownGround = true; break }
+            }
+            if (ownGround) { if (dlog) dlog(`  hex=${ch} skip ownGround`); continue }
+        } catch (e) { /* 状态不可用则照常尝试编组 */ }
+        if (typeof eop_landing_no_escort_for === "function" && eop_landing_no_escort_for(role, view, ch)) { if (dlog) dlog(`  hex=${ch} skip noEscort`); continue }
+        const plan = composeTaskForce(ch, null, null, view, available, role, { requiresOccupation: true, islandCluster: true })
+        if (dlog) dlog(`  hex=${ch} plan complete=${plan.complete} unit=${plan.unit}`)
+        if (!plan.complete && plan.unit !== undefined && plan.unit !== null) return ch
+    }
+    return null
 }
 
 // ---- 选进攻/激活单位 ------------------------------------------------------
@@ -21318,11 +21434,14 @@ function eop_pick_unit(candidates, role, activeUnits, focusOverride) {
 // 敌占/敌控港口的两栖夺控若本窗既无已激活海军、待激活候选里也无海军, 继续激活两栖地面
 // 只会被 broken_aa 判 "Amphibious Assault failed" 吃损失)。返回 true 让选牌窗在尚未激活
 // 任何单位时提前 done 收尾(空攻势, 不耗单位)。仅完整全图剧本(gate on)。
-function eop_landing_no_escort(role, view) {
+// [opt island_sweep 段1] 通用化: 对任意候选目标格判"两栖无护航"。eop_landing_no_escort
+// 委托 eop_focus(role); 轮换逻辑(island_sweep)用它逐目标预检, 避免顺延到无护航登陆目标
+// 制造 broken_aa 损失。
+function eop_landing_no_escort_for(role, view, targetHex) {
     if (typeof esm_gate_on !== "function" || !esm_gate_on()) return false
     if (!view || !view.offensive) return false
     const mine = role === "Japan" ? JP : AP
-    const focus = eop_focus(role)
+    const focus = Number.isInteger(targetHex) ? targetHex : eop_focus(role)
     if (focus === null) return false
     const meta = eop_target_meta(role, focus)
     if (!meta || !meta.requiresOccupation) return false
@@ -21344,13 +21463,13 @@ function eop_landing_no_escort(role, view) {
         else if (p.class === "ground" && (p.asp || p.strat_move)) hasGround = true
     }
     if (!hasGround) return false   // 无两栖地面可激活 → 不会发生无护航登陆
-    // [opt] taskforce_math: 引擎两栖编组要求海军与登陆地面“同格编组”——AMPH 路径只在
-    // 海陆同组时存在(get_move_data), 纯海军组进不了敌占岛屿格(敌港不可入)。海军候选与
-    // 地面候选相距过远时, 登陆会在会战结算吃 broken_aa("lack of naval escort")。
+    // [opt] taskforce_math/island_sweep: 引擎两栖编组要求海军与登陆地面“同格编组”——AMPH
+    // 路径只在海陆同组时存在(get_move_data), 纯海军组进不了敌占岛屿格(敌港不可入)。
+    // 海军候选与地面候选相距过远时, 登陆会在会战结算吃 broken_aa("lack of naval escort")。
     // 因此要求存在“可会合的海陆对”: 同格, 或海军在 emAmphEscortDist(默认 4)格内
     // (一个激活+港口运输内可会合)。基线(配置关)不变。
     const emcPaired = (typeof em_cfg === "function") ? em_cfg() : null
-    if (emcPaired && emcPaired.taskforce_math) {
+    if (emcPaired && (emcPaired.taskforce_math || emcPaired.island_sweep)) {
         const escortDist = Number(emcPaired.emAmphEscortDist) || 4
         const groundLocsP = new Set()
         for (const u of cand) {
@@ -21379,8 +21498,10 @@ function eop_landing_no_escort(role, view) {
     // [opt] 期望战斗闸门: 有护航/地面候选时, 用海空战+地面会战期望评估登陆成败。
     // 海空战必败(力量/air cover)或 pWin 低于阈值 → 取消空攻势, 避免 broken_aa/
     // US_CASUALTIES(盟军 PW-1)与整支攻势白耗。基线(配置关)保持原 !hasNaval 判定。
+    // [opt island_sweep 段1] 轮换放大了两栖激活量, 同样适用该闸门(否则失败登陆
+    // 的损失恶化远超容限)。
     const emc = (typeof em_cfg === "function") ? em_cfg() : null
-    if (!emc || !emc.taskforce_math || typeof em_amphib_assessment !== "function") return !hasNaval
+    if (!emc || !(emc.taskforce_math || emc.island_sweep) || typeof em_amphib_assessment !== "function") return !hasNaval
     const byId = u => { try { return pieces[u] } catch (e) { return null } }
     const cfOf = u => { const p = byId(u); if (!p) return 0
         const reducedSet = (typeof G !== "undefined" && G && typeof set_has === "function") ? set_has(G.reduced, u) : false
@@ -21432,6 +21553,83 @@ function eop_landing_no_escort(role, view) {
     return !!assess.abort
 }
 
+// 原签名保持: 激活窗(erasmus.js)对当前图表焦点调用的两栖无护航预检。
+function eop_landing_no_escort(role, view) {
+    return eop_landing_no_escort_for(role, view, null)
+}
+
+// [opt island_sweep 段1] 激活完成率: 通用"推进夺格"兜底选单位。
+// 焦点/战略链编不出单位时, 激活窗不应提前 done 浪费预算: 激活一支地面单位,
+// 无头推进的落点评分(offensive.js headless_target_score [1,nearKey] 空虚敌控分支)
+// 会把它沿合法路径推向空虚敌控格 —— 地面移入即逐格 capture_hex(move.js:881),
+// 攻势结束 capture_landing_hexes 再兜底占领, 直接转化为夺格。
+// 地面优先(唯一能夺格的兵种, 距空虚敌控格 ≤ emSweepAdvDist 才选, 避免深处的
+// 部队长途暴露行军); 无合适地面时兜底选一支靠前航空兵(前推机场, 用满预算,
+// 不主动接战)。GARRISON/DEFEND 轴不动用兜底(驻军不该被拉去进攻)。海军绝不
+// 兜底(纯海军组只会扑敌舰格单挑)。基线(配置关)直接返回 undefined, 维持原 done。
+function eop_pick_advance_unit(candidates, role, activeUnits) {
+    const emc = (typeof em_cfg === "function") ? em_cfg() : null
+    if (!emc || !emc.island_sweep) return undefined
+    if (!Array.isArray(candidates) || !candidates.length) return undefined
+    if (typeof G === "undefined" || !G || !G.location) return undefined
+    if (typeof is_space_controlled !== "function" || typeof get_distance !== "function") return undefined
+    if (typeof eop_axis === "function") {
+        const axis = eop_axis(role)
+        if (axis && (axis.kind === "GARRISON" || axis.kind === "DEFEND")) return undefined
+    }
+    const mine = role === "Japan" ? JP : AP
+    // 空虚敌控格 = 敌方控制且双方皆无单位的格(有敌单位的是会战格, 不属"推进夺格")。
+    const occupied = new Set()
+    for (let u = 1; u < pieces.length; ++u) {
+        const p = pieces[u]
+        if (!p) continue
+        const h = G.location[u]
+        if (h >= 0 && h <= LAST_BOARD_HEX) occupied.add(h)
+    }
+    const emptyEnemy = []
+    for (let h = 0; h <= LAST_BOARD_HEX; ++h) {
+        if (!occupied.has(h) && is_space_controlled(h, 1 - mine)) emptyEnemy.push(h)
+    }
+    if (!emptyEnemy.length) return undefined
+    const better = (a, b) => { for (let i = 0; i < a.length; ++i) { if (a[i] !== b[i]) return a[i] < b[i] } return false }
+    const maxD = Number(emc.emSweepAdvDist) || 3
+    let best = null, bestScore = null
+    for (const u of candidates) {
+        const p = (() => { try { return pieces[u] } catch (e) { return null } })()
+        if (!p || p.class !== "ground") continue
+        const loc = G.location[u]
+        if (!(loc >= 0 && loc <= LAST_BOARD_HEX)) continue
+        // 首键 = 到最近空虚敌控格的距离(越近越可能本回合就夺格; 超 emSweepAdvDist 不选);
+        // 次键 = 两栖/可海运地面优先(岛屿格只有它们够得着); 再次 = 满编优先(减损单位
+        // 推进遇敌易损); 末键 = id 保证确定性。
+        let d = 99
+        for (const h of emptyEnemy) {
+            const dd = get_distance(loc, h)
+            if (dd < d) d = dd
+        }
+        if (d > maxD) continue
+        // 减损地面不参与推进兜底(1 step 损失, 被敌反攻即歼灭; 留守待整编)。
+        if (G.reduced && (typeof set_has === "function" ? set_has(G.reduced, u) : G.reduced.includes(u))) continue
+        const score = [d, (p.asp || p.strat_move) ? 0 : 1, u]
+        if (bestScore === null || better(score, bestScore)) { best = u; bestScore = score }
+    }
+    if (best !== null) return best
+    // 航空兜底: 无地面可推进时, 激活一支离前线最近的航空兵(前推机场+用满预算)。
+    // 排除 eop_preserve_ready_b29 上游已滤; 此处再排后方空优preserve(折返跑)。
+    let airBest = null, airScore = null
+    const enemyLocs = eop_enemy_locs(mine)
+    for (const u of candidates) {
+        const p = (() => { try { return pieces[u] } catch (e) { return null } })()
+        if (!p || p.class !== "air") continue
+        if (typeof eop_preserve_rear_air === "function" && eop_preserve_rear_air(u, role, null)) continue
+        const loc = G.location[u]
+        if (!(loc >= 0 && loc <= LAST_BOARD_HEX)) continue
+        const score = [eop_min_dist(loc, enemyLocs), u]
+        if (airScore === null || better(score, airScore)) { airBest = u; airScore = score }
+    }
+    return airBest !== null ? airBest : undefined
+}
+
 // ---- 引擎无头推进就近转向 ------------------------------------------------
 // 供 js/server/offensive.js 调用: 攻击方有主轴时, 用“到焦点的距离”作为
 // 同等优先目标内的次级排序键, 引导地面/海军/登陆沿主轴推进。守卫在无主轴时
@@ -21479,6 +21677,25 @@ function eop_activation_focus_faction(faction, selectedCount, view, candidates) 
     const active=new Set((view?.offensive?.active_units || G.offensive?.active_units || []).flat())
     const available=Array.isArray(candidates)?candidates.filter(u=>!active.has(u)):null
     if(view && available){
+        // [opt island_sweep 段2] 焦点主任务编组已足(plan0.complete) → 后续海陆对优先分流
+        // 到岛群簇次级登陆格(第 k 支→第 k 格), 而不是散到链上远端目标; 簇全部编不出时
+        // 再回到链上轮换/推进兜底。基线(配置关)不进入该分支。
+        if(emcAFo&&emcAFo.island_sweep&&eligible.length){
+            const fhMeta=eop_target_meta(role,eligible[0])
+            if(!fhMeta?.extraActivationOnly&&fhMeta?.kind!=="GARRISON"&&fhMeta?.kind!=="REDEPLOY"){
+                const plan0=composeTaskForce(eligible[0],null,null,view,available,role)
+                // “编组已足” = composeTaskForce 达标(complete) 或 已承诺战力≥目标所需
+                // (strength≥required; 伤害级 2x 生存闸门太苛, 几乎永不达标, 簇分流会饿死)。
+                const sufficed=plan0&&(plan0.complete
+                    ||(Number(plan0.required)>0&&Number(plan0.strength)>=Number(plan0.required)))
+                if(typeof process!=="undefined"&&process.env.EOTS_SW_DEBUG&&plan0)
+                    console.log(`[SW] preloop focus=${eligible[0]} complete=${plan0.complete} str=${plan0.strength} req=${plan0.required} sufficed=${sufficed} avail=${available.length}`)
+                if(sufficed){
+                    const chx=eop_pick_cluster_landing(role,view,available,eligible[0],true)
+                    if(chx!==null&&chx!==undefined)return chx
+                }
+            }
+        }
         const reserved=new Set()
         let firstPending=eligible[0]
         let firstPendingMeta=eop_target_meta(role,firstPending)
@@ -21506,17 +21723,50 @@ function eop_activation_focus_faction(faction, selectedCount, view, candidates) 
                 if(eop_garrison_satisfied(role,h,meta,projected))continue
             }
             const plan=composeTaskForce(h,null,null,view,available,role)
-            if(!plan.complete && plan.unit!==undefined && plan.unit!==null)return h
+            if(!plan.complete && plan.unit!==undefined && plan.unit!==null){
+                // [opt island_sweep 段1] 顺延目标的风险/产出预检(含链首): (a) 无护航可会合
+                // 或期望战评估不过的两栖登陆目标必吃 broken_aa/港湾海空战, 跳过; (b) 猎杀
+                // 海军(NAVAL)与非夺占(压制类)目标只生会战不生夺格 —— 预算让位给
+                // requiresOccupation 夺格目标与推进兜底; (c) 港内停有强敌舰(≥emSweepHarborNav
+                // cf, 通常为航母/战列)的目标, 港湾海空战我方胜率低, 换下一目标。
+                if(emcAFo&&emcAFo.island_sweep){
+                    if(typeof eop_landing_no_escort_for==="function"&&eop_landing_no_escort_for(role,view,h))continue
+                    if(meta?.kind==="NAVAL"||!meta?.requiresOccupation)continue
+                    const enemyF=role==="Japan"?AP:JP
+                    let defNav=0
+                    for(let u=1;u<pieces.length;++u){
+                        const p=pieces[u]
+                        if(!p||p.faction!==enemyF||p.class!=="naval"||G.location[u]!==h)continue
+                        defNav+=p.reduced?(Number(p.rcf)||Math.ceil((Number(p.cf)||0)/2)):(Number(p.cf)||0)
+                    }
+                    if(defNav>=(Number(emcAFo.emSweepHarborNav)||6))continue
+                }
+                return h
+            }
             // An inaccessible primary attack does not authorize spending its
             // activation budget on an explicitly residual attack.
             // [opt] taskforce_math: 编组完全无单位可用(plan.unit 为空)的主目标不再锁死
             // 焦点 —— 顺延到下一个可行目标(如链尾资源 raid 格), 全部不可行时回退链首
             // 供航空申报。基线(配置关)保持原"链首即焦点"行为。
-            if(emcAFo&&emcAFo.taskforce_math&&(plan.unit===undefined||plan.unit===null))continue
+            // [opt island_sweep] 激活完成率(段1): 同样顺延 —— 焦点编不出单位≠全局收工,
+            // 继续沿链找下一个 pending 目标; 全链无产出时由 erasmus.js 激活窗的
+            // "推进夺格"兜底吃满预算(eop_pick_advance_unit), 不在此回退链首。
+            if(emcAFo&&(emcAFo.taskforce_math||emcAFo.island_sweep)&&(plan.unit===undefined||plan.unit===null))continue
             if(!plan.complete && !meta?.extraActivationOnly && meta?.kind!=="REDEPLOY" && meta?.kind!=="GARRISON")return h
         }
-        if(!(emcAFo&&emcAFo.taskforce_math))return null
+        if(!(emcAFo&&(emcAFo.taskforce_math||emcAFo.island_sweep)))return null
         // [opt] 回退: 所有目标都无可编单位时维持链首焦点(供远程航空申报会战)。
+        // island_sweep 段1: 不回退链首锁死预算 —— 先试岛群簇分流(段2), 再由激活窗的
+        // "推进夺格"兜底(eop_pick_advance_unit)吃满预算。
+        if(emcAFo&&emcAFo.island_sweep){
+            const baseFocus=Number.isInteger(eligible[0])?eligible[0]:null
+            if(baseFocus!==null){
+                const chx=eop_pick_cluster_landing(role,view,available,baseFocus,true)
+                if(chx!==null&&chx!==undefined)return chx
+            }
+            // taskforce_math 联合开启时保留其“链首供远程航空申报”回退(不回退既有指标)。
+            if(!(emcAFo&&emcAFo.taskforce_math))return null
+        }
         return firstPendingMeta?.extraActivationOnly||firstPendingMeta?.kind==="GARRISON"||firstPendingMeta?.kind==="REDEPLOY" ? null : firstPending
     }
     return eligible[Math.min(eligible.length-1,Math.floor(Math.max(0,Number(selectedCount)||0)/4))]
@@ -21627,6 +21877,72 @@ function eop_next_focus_faction(faction, excludedHexes, recordedPlan) {
     return null
 }
 
+// ---- [opt island_sweep 段2] 岛群簇 -----------------------------------------
+// 同一 island/环礁的相邻命名格(距离≤emSweepClusterDist 的 port/airfield/named 格)
+// 通常只有 1 个 reduced 驻军 —— 焦点格得手后, 把后续海陆对分流转投簇内其它格,
+// 经 capture_landing_hexes / move.js:881 逐格路径占领批量夺格。
+// 缓存: 模块级 Map 按 role|turn|focus 键控几何(地图静态部分), 控制权/守军 CF 在
+// 读取时点过滤(防 turn 内易手), 防抖 = 超过 512 项整表清空。
+const EOP_CLUSTER_CACHE = new Map()
+
+function eop_island_cluster(role, focus) {
+    const emc = (typeof em_cfg === "function") ? em_cfg() : null
+    if (!emc || !emc.island_sweep) return []
+    if (!Number.isInteger(focus) || typeof get_map_data !== "function"
+        || typeof get_distance !== "function" || typeof is_space_controlled !== "function") return []
+    if (typeof G === "undefined" || !G || typeof pieces === "undefined") return []
+    const maxN = Number(emc.emSweepCluster) || 4
+    const radius = Number(emc.emSweepClusterDist) || 2
+    const turn = Number(G.turn || 0)
+    const key = `${role}|${turn}|${focus}`
+    let geo = EOP_CLUSTER_CACHE.get(key)
+    if (!geo) {
+        geo = []
+        for (let h = 0; h <= LAST_BOARD_HEX; ++h) {
+            if (h === focus) continue
+            const md = get_map_data(h)
+            if (!md || !(md.port || md.airfield || md.name)) continue
+            if (get_distance(h, focus) > radius) continue
+            geo.push(h)
+        }
+        if (EOP_CLUSTER_CACHE.size > 512) EOP_CLUSTER_CACHE.clear()
+        EOP_CLUSTER_CACHE.set(key, geo)
+    }
+    const mine = role === "Japan" ? JP : AP
+    const scored = []
+    for (const h of geo) {
+        if (is_space_controlled(h, mine)) continue // 已己控(夺回/占领中)不再入簇
+        let cf = 0
+        for (let u = 1; u < pieces.length; ++u) {
+            const p = pieces[u]
+            if (!p || p.faction === mine || G.location[u] !== h) continue
+            cf += p.reduced ? (Number(p.rcf) || Math.ceil((Number(p.cf) || 0) / 2)) : (Number(p.cf) || 0)
+        }
+        scored.push([cf, get_distance(h, focus), h])
+    }
+    // 守军 CF 升序(先摘软柿子) + 距离升序 + id 确定性; 上限 emSweepCluster。
+    scored.sort((a, b) => a[0] - b[0] || a[1] - b[1] || a[2] - b[2])
+    return scored.slice(0, maxN).map(x => x[2])
+}
+
+// 反查: hex 是否属于当前回合某焦点的岛群簇 → 返回簇格合成 meta(夺占语义+所属焦点),
+// 供 composeTaskForce 对无 targetMeta 的簇格复用“地面+护航”编组、headless 推进定向;
+// 基线恒 null。
+function eop_cluster_meta(role, hex) {
+    const emc = (typeof em_cfg === "function") ? em_cfg() : null
+    if (!emc || !emc.island_sweep) return null
+    if (!Number.isInteger(hex) || typeof G === "undefined" || !G) return null
+    for (const key of EOP_CLUSTER_CACHE.keys()) {
+        const parts = key.split("|")
+        if (parts[0] !== role || Number(parts[1]) !== Number(G.turn || 0)) continue
+        const focus = Number(parts[2])
+        if (focus === hex) continue
+        if (eop_island_cluster(role, focus).includes(hex))
+            return { requiresOccupation: true, islandCluster: true, focus }
+    }
+    return null
+}
+
 // 已在东京 8 格内盟军机场待命的 B29 是战略轰炸胜利链的必要资产。普通攻势若再次
 // 激活它，无头移动层只能把纯航空编成送回下一回合轨，导致下一战略轰炸阶段缺席。
 // 因此把“已就位且格内无日军”的 B29 从普通激活候选中保护起来。
@@ -21664,9 +21980,9 @@ function eop_preserve_rear_air(u, role, target) {
 
 // Public-view planning interfaces used by the chart executor. They deliberately
 // consume view.ai/public legal candidates rather than the mutable game state.
-function evaluateTargetFeasibility(target, card, hq, view) {
+function evaluateTargetFeasibility(target, card, hq, view, metaOverride) {
     const units=Array.isArray(view?.ai?.units)?view.ai.units:[], roleFaction=view?.active === "Allies" ? AP : JP
-    const meta=eop_target_meta(view?.active,target)
+    const meta=(metaOverride!==undefined&&metaOverride!==null)?metaOverride:eop_target_meta(view?.active,target)
     const cf=u=>u.reduced?(Number(u.rcf)||Math.ceil((Number(u.cf)||0)/2)):(Number(u.cf)||0)
     const allDefenders=units.filter(u=>u.location===target&&u.faction!==roleFaction)
     const defenders=meta?.kind==="SUPPRESS_HQ"?allDefenders.filter(u=>u.class==="air"||u.class==="naval"):allDefenders
@@ -21991,7 +22307,9 @@ function eop_filter_legal_participants(unitsById, target, role) {
     // 基线(配置关)判定路径逐位不变。
     const emcAF = (typeof em_cfg === "function") ? em_cfg() : null
     let amphLanding = false
-    if (emcAF && emcAF.taskforce_math) {
+    if (emcAF && (emcAF.taskforce_math || emcAF.island_sweep)) {
+        // [opt island_sweep 段2] 簇格(合成夺占 meta)与焦点敌占港口同样依赖该放行,
+        // 否则两栖地面/护航海军被 BFS 过滤, 岛群分流永远编不出海陆对。
         const mineAF = role === "Japan" ? JP : AP
         const mdAF = (typeof get_map_data === "function") ? get_map_data(target) : null
         amphLanding = !!mdAF && (mdAF.port || mdAF.island) && !is_space_controlled(target, mineAF)
@@ -22013,10 +22331,12 @@ function eop_filter_legal_participants(unitsById, target, role) {
     })
 }
 
-function composeTaskForce(target, card, hq, view, candidates, role) {
+// [opt island_sweep 段2] metaOverride: 岛群簇格无 targetMeta, 由 eop_cluster_meta
+// 注入夺占语义合成 meta; 基线(配置关)恒 undefined, 行为逐位不变。
+function composeTaskForce(target, card, hq, view, candidates, role, metaOverride) {
     if((target===null || target===undefined) && eop_axis(role))return {complete:true,strict:true,unit:null,formation:"objectives-scheduled"}
     const units=Array.isArray(view?.ai?.units)?view.ai.units:[], byId=new Map(units.map(u=>[u.id,u]))
-    const active=new Set((view?.offensive?.active_units||[]).flat()), f=evaluateTargetFeasibility(target,card,hq,view)
+    const active=new Set((view?.offensive?.active_units||[]).flat()), f=evaluateTargetFeasibility(target,card,hq,view,metaOverride)
     candidates=(candidates||[]).filter(id=>eop_unit_matches_target(byId.get(id)||id,role,f.meta,target))
     const committed=[...active].map(id=>byId.get(id)).filter(Boolean)
     const cf=u=>u.reduced?(Number(u.rcf)||Math.ceil((Number(u.cf)||0)/2)):(Number(u.cf)||0)
@@ -23812,7 +24132,16 @@ function esm_pin_strategy(view, context) {
     if (emcBB && emcBB.allies_blockade && role === "Allies"
         && (phase === "late" || G.turn >= (Number(emcBB.emBlockadeTurnMin) || 7))
         && esm_atomic_blockade_unreachable()) {
+        // [opt W2.4] 兵力聚焦: 只前插"前沿最近"的至多 2 个未完成封锁环(esm_ap_blockade_front_targets
+        // 已按前沿距离排序)。整链前插会分散主轴兵力(配对实测盟军夺格 -1.1/局且 0 封锁达成)。
         const blockadeTargets = esm_ap_blockade_front_targets()
+            .filter(t => {
+                const meta = t
+                const pendingFn = typeof eop_target_pending === "function" ? eop_target_pending : null
+                if (!pendingFn) return true
+                try { return pendingFn("Allies", t.hex, t) } catch (e) { return true }
+            })
+            .slice(0, 2)
         if (blockadeTargets.length) {
             const blockadeHexes = new Set(blockadeTargets.map(x => x.hex))
             chain = blockadeTargets.map(x => x.hex).concat(chain.filter(h => !blockadeHexes.has(h)))
@@ -23821,7 +24150,7 @@ function esm_pin_strategy(view, context) {
             blockadePlan = { type: "ALLIES_BLOCKADE_PUSH", source: "RULE_VICTORY_OVERLAY",
                 connected: status.connected, timerStart: status.timerStart,
                 remaining: blockadeTargets.map(x => x.hex),
-                note: "封锁推进: 夺占朝鲜桥头堡(Pusan/Seoul)与北方口岸, 于己控机场驻航空建立非中立AZOI, 维持连续三个国势阶段断线" }
+                note: "封锁推进(聚焦2环): 夺占前沿最近的切割节点(朝鲜桥头堡/AZOI环机场), 于己控机场驻航空建立非中立AZOI, 维持连续三个国势阶段断线" }
         }
     }
     let progressPlan = null
@@ -24824,6 +25153,15 @@ function target_argument(action, value, seedText, role, view, strategy) {
         const picked=planReaction(view,value,action,role,strategy)
         return picked!==undefined?picked:pick_argument(value,seedText,action,view)
     }
+    if (action === "action_hex" && esm_gate_on() && /declare battle hexes/i.test(prompt)) {
+        // [opt island_sweep 段3] EC 申报窗多焦点: 焦点已宣战后向岛群簇内下一敌控格
+        // 申报第二战斗格; 非该场景(基线/OC/焦点未宣)返回 undefined 走基线选格。
+        const emcDH = (typeof em_cfg === "function") ? em_cfg() : null
+        if (emcDH && emcDH.island_sweep && typeof eop_pick_declare_hex === "function") {
+            const picked = eop_pick_declare_hex(value, role)
+            if (picked !== undefined) return picked
+        }
+    }
     if (action === "action_hex") {
         const picked = eop_pick_action_hex(value, role)
         return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
@@ -24861,14 +25199,30 @@ function target_argument(action, value, seedText, role, view, strategy) {
         const activationFocus = typeof eop_activation_focus_faction === "function"
             ? eop_activation_focus_faction(role === "Japan" ? JP : AP, activeUnits.length, view, pickValue) : eop_focus(role)
         const activationMeta = eop_target_meta(role, activationFocus)
+        // [opt island_sweep 段1] 目标过滤前的原始候选, 供"推进夺格"兜底; 基线(配置关)不生成。
+        const emcAdv = (typeof em_cfg === "function") ? em_cfg() : null
+        const rawPick = (emcAdv && emcAdv.island_sweep) ? pickValue.slice() : null
+        // [opt island_sweep 段2] 激活焦点为岛群簇格时注入夺占合成 meta(地面+护航编组)。
+        const clusterMeta = (emcAdv && emcAdv.island_sweep && typeof eop_cluster_meta === "function")
+            ? eop_cluster_meta(role, activationFocus) : null
         if (typeof eop_unit_matches_target === "function")
             pickValue = pickValue.filter(u => eop_unit_matches_target(u, role, activationMeta, activationFocus))
         if (role === "Allies" && typeof eop_preserve_rear_air === "function") {
             const reachable = pickValue.filter(u => !eop_preserve_rear_air(u, role, activationFocus))
             if (reachable.length) pickValue = reachable
         }
-        const planned = composeTaskForce(activationFocus, null, null, view, pickValue, role)
-        if (planned?.strict && planned.unit == null) return undefined
+        const planned = composeTaskForce(activationFocus, null, null, view, pickValue, role, clusterMeta)
+        if (planned?.strict && planned.unit == null) {
+            // [opt island_sweep 段1] 焦点编不出单位≠撤销/收工: 链上轮换已在
+            // eop_activation_focus_faction 完成, 全链无产出时激活一支地面单位走
+            // 无头推进"空虚敌控格"落点(offensive.js [1,nearKey] 分支)吃满预算夺格。
+            if (rawPick) {
+                const adv = typeof eop_pick_advance_unit === "function"
+                    ? eop_pick_advance_unit(rawPick, role, activeUnits) : undefined
+                if (adv !== undefined) return adv
+            }
+            return undefined
+        }
         const picked = planned && planned.unit !== undefined && planned.unit !== null
             ? planned.unit : eop_pick_unit(pickValue, role, activeUnits, activationFocus)
         return picked !== undefined ? picked : pick_argument(pickValue, seedText, action, view)
@@ -25024,17 +25378,27 @@ function evaluateChart(chart, view, context) {
             ? eop_activation_focus_faction(context.role === "Japan" ? JP : AP, selectedCount, view,
                 Array.isArray(view.actions.unit) ? view.actions.unit.filter(u=>!unsel.has(u)) : []) : view?.ai?.focus
         const activationMeta = eop_target_meta(context.role, activationFocus)
+        // [opt island_sweep] 配置本窗只读一次(簇 meta + 兜底候选都用)。
+        const emcWin = (typeof em_cfg === "function") ? em_cfg() : null
+        // [opt island_sweep 段2] 激活焦点为岛群簇格时注入夺占合成 meta(地面+护航编组),
+        // 与 target_argument 的 clusterMeta 同源同值。
+        const clusterMeta = (emcWin && emcWin.island_sweep && typeof eop_cluster_meta === "function")
+            ? eop_cluster_meta(context.role, activationFocus) : null
         // 先算出与 target_argument 完全一致的“可新增单位”集(剔 unselect/HQ/B29/后方空优/
         // 不匹配目标), 再交给 composeTaskForce 与 done 判定, 避免 forcePlan 看到 HQ/B29 而
         // target_argument 已剔除它 → 返回 undefined 撤销已选单位, 形成 toggle 死循环。
-        const addable = (Array.isArray(view.actions.unit) ? view.actions.unit : [])
+        const baseAddable = (Array.isArray(view.actions.unit) ? view.actions.unit : [])
             .filter(u => !unsel.has(u))
             .filter(u => { try { return !pieces[u] || pieces[u].class !== "hq" } catch (e) { return true } })
             .filter(u => { try { return esm_gate_on() || !pieces[u] || pieces[u].class !== "air" } catch (e) { return true } })
             .filter(u => { try { return typeof eop_preserve_ready_b29 !== "function" || !eop_preserve_ready_b29(u, context.role) } catch (e) { return true } })
+        // [opt island_sweep 段1] 目标过滤前的候选副本(与 target_argument 的 rawPick 同集),
+        // 供激活窗"推进夺格"兜底判定; 基线(配置关)为 null, 行为不变。
+        const advCandidates = (emcWin && emcWin.island_sweep) ? baseAddable : null
+        const addable = baseAddable
             .filter(u => { try { return typeof eop_preserve_rear_air !== "function" || !eop_preserve_rear_air(u, context.role, activationFocus) } catch (e) { return true } })
             .filter(u => typeof eop_unit_matches_target !== "function" || eop_unit_matches_target(u, context.role, activationMeta, activationFocus))
-        const forcePlan = composeTaskForce(activationFocus, null, null, view, addable, context.role)
+        const forcePlan = composeTaskForce(activationFocus, null, null, view, addable, context.role, clusterMeta)
         const selected = progress ? Number(progress[1]) : (view.offensive?.active_units?.flat?.().length || 0)
         // HQ 加成可因新激活单位的军种/区域而下降。提示“2 of 3 (2 + 1)”中的括号前值
         // 才是不会随下一次选择反噬的稳定上限；达到它就结束，避免 2/3→3/2→撤销 的循环。
@@ -25046,7 +25410,19 @@ function evaluateChart(chart, view, context) {
         // 没有新增合法候选时才结束。本规则不改变引擎给出的合法单位集合。
         if (selected < limit && addable.length > 0) action = "unit"
         else action = "done"
-        if (forcePlan?.strict && forcePlan.unit == null) action = "done"
+        if (forcePlan?.strict && forcePlan.unit == null) {
+            // [opt island_sweep 段1] 编组收工前先试"推进夺格"兜底: 预算未满且有可激活
+            // 地面单位时继续 unit(与 target_argument 的 island_sweep 分支同函数同输入,
+            // 保证两侧决策一致); 无可用兜底才 done。基线(配置关)保持原 done。
+            let advPicked
+            if (advCandidates && selected < limit && advCandidates.length
+                && typeof eop_pick_advance_unit === "function")
+                advPicked = eop_pick_advance_unit(advCandidates, context.role, view.offensive?.active_units?.flat?.() || [])
+            if (advPicked !== undefined) {
+                action = "unit"
+                activationPlan.mode = "island_sweep 推进夺格兜底"
+            } else action = "done"
+        }
         // 两栖登陆无护航可用: 在本窗尚未激活任何单位时提前 done(空攻势), 避免把两栖地面
         // 送去敌占/敌控港口硬登陆吃 "Amphibious Assault failed"。已有已激活单位时不再阻断
         // (那些单位已注定走无头推进, 由 eop_pick_unit 的护航逻辑尽量补海军)。
