@@ -485,3 +485,11 @@
 - opt-v1 探针（日本 opt 8 局）：日本夺格 4.4→5.0/局、地面胜 1.8→2.0/局；盟军 opt 尚无效（0 地面激活根因未除，已定位 choose-hq 与激活路径，修复进行中）。
 - 新增 `tests/analyze-matches.js`（bootstrap 95% CI + Mann-Whitney U + Cliff's delta）与 `tests/complexity-profile.js`（计划文件 E1 有效复杂度画像）。
 - 论文骨架 `research/paper/paper-draft.md`；进度锚点 `work/goal-progress.md`。
+
+### zh.25：两个胜利条件、ZOI 中和机制与封锁战略（测试版2.0）
+
+- 机制核实并落地（用户指正）：两栖目标格被敌非中立 ZOI 覆盖时，br∈[1,5] 舰载/航母在半径 2 内经 set_zoi 设置 JP_ZOI_NTRL 中和敌 ZOI；编队层已实现中和舰优先挑选（taskforce_math 门控）。配对实验（32 局同 seed）证明"无中和舰即取消攻势"的硬闸有害（盟军夺格 -1.9/局 p=0.06），已改为仅偏好不中止。
+- 盟军封锁战略（allies_blockade）：复刻 trace 判定的诊断函数 + 最小切割集目标链（Pusan/Seoul 桥头堡断九州→朝鲜陆桥 + 北方口岸/岛链 AZOI 环 + 前沿距离排序），T7 起原子弹不可达时前插第三轴。当前实现会分散兵力（盟军夺格 -1.1/局）且 32 局 0 封锁达成，默认关闭，留作调参项（提高 emBlockadeTurnMin / 与主轴并行而非前插）。
+- capture_rate 开关：PBM 地面落点优先"空虚敌控格"（move.js:881 移入即夺）。配对实验为中性（日本地面胜 -1.1 p=0.08，资源 -1.0 p=0.05），不进推荐 profile。
+- match-run 新指标：capRate（每回合夺格均值/峰值/有夺格回合数）、blockade（trace 断链起始与进度）、blockadeWins/homelandWins 胜局分类。实测夺格速率日本 0.82/回合（峰值 7）、盟军 0.47/回合——距人类 10+/回合仍远，主要杠杆（多战斗格攻势、深度路径夺格）留待下轮。
+- 推荐配置（测试版2.0）：taskforce_math + allies_cv_preserve + allies_pow_quota + allies_resource_raid + japan_resource_defense；32 局基线逐位一致验证保持（base-verify-v3 IDENTICAL）。

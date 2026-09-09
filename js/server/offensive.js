@@ -1106,6 +1106,15 @@ function erasmus_pbm_target_score(hex, faction, piece, source, targetPlan) {
         return [2,goalDist,dist,hex]
     }
     if (piece.class === "ground") {
+        // [opt capture_rate] 空虚敌控格 = 移入即夺格(move.js:881 路径逐格 capture_hex)。
+        // 图表落点表原本地面只认港口, 通用兜底又把己控格排在空虚敌控格之前,
+        // 导致战后 PBM 从不主动夺格(基线 ~1 格/回合)。开启后: 空虚敌控格(含敌港)
+        // 为最高优先, 港口表依次后移一位。基线(配置关)路径与数值完全不变。
+        const emcCR = (typeof em_cfg === "function") ? em_cfg() : null
+        if (emcCR && emcCR.capture_rate) {
+            const enemyTotal = enemy.air + enemy.naval + enemy.ground + enemy.hq
+            if (enemyTotal === 0 && is_space_controlled(hex, 1 - faction)) return [0, dist, hex]
+        }
         if (!md.port) return null
         if (own.naval>0) return [0,dist,hex]
         return [1,dist,hex]

@@ -10,6 +10,8 @@ const EM_FLAGS = [
     "allies_pow_quota",       // 1=盟军 PoW 未达标时命名格加权; 0=不加权
     "allies_resource_raid",   // 1=盟军对日资源格目标加权(原子弹/VP 条件); 0=不加权
     "japan_resource_defense", // 1=日本资源格防守加权; 0=不加权
+    "allies_blockade",        // 1=盟军封锁推进前视(朝鲜桥头堡+AZOI 环, 规则 16.47/trace 胜利); 0=不启用
+    "capture_rate",           // 1=PBM/推进落点优先"空虚敌控格"(地面移入即夺, move.js:881 路径夺格); 0=基线落点表
 ]
 
 // 数值参数(敏感性问题分析对象; 均有工程注释)
@@ -26,6 +28,7 @@ const EM_PARAMS_BASE = {
     emAmphNavalMargin: 1.0, // 两栖登陆放行所需海空战力优势倍数(对未建模反应的保守边际)
     emAmphEscortDist: 4,    // 护航海军与登陆地面可会合的最大距离(同格或该距离内)
     emReactionWeight: 0.35,  // 反应兵力折算系数(反应需掷骰/天气成立, 非必然到场)
+    emBlockadeTurnMin: 7,   // [allies_blockade] 封锁推进启动的最早回合(1943=T7 只剩收尾, 1942=T7 余 6 回合)
 }
 
 function em_profile_from_env() {

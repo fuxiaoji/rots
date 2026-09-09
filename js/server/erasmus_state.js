@@ -735,6 +735,70 @@ function esm_ap_blockade_targets() {
     return targets
 }
 
+// [opt allies_blockade] 封锁推进诊断: 复刻 check_japan_resource_trace 的连通判定口径,
+// 只读。返回 { connected, timerStart } —— connected=false 表示当前全断(规则 16.47 计时中)。
+// 供 esm_pin_strategy 的 victoryPreparation 审计字段与日志使用, 不改变任何引擎状态。
+function esm_blockade_trace_status() {
+    let connected = null, timerStart = 0
+    try { connected = !!check_japan_resource_trace() } catch (e) { connected = null }
+    try { timerStart = is_event_active(events.JAPAN_TRACE_RESOURCES) || 0 } catch (e) { timerStart = 0 }
+    return { connected, timerStart }
+}
+
+// [opt allies_blockade] 原子弹路径可达性: 资源 ≤ 门槛(苏修后 3, 否则 5)且苏联牌已发生/
+// 可打出时, 原子弹胜利可达, 封锁轴不抢主轴; 否则(资源>5 或 TOJO/苏联未就绪)封锁是
+// 唯一剩余的规则胜利前视。
+function esm_atomic_blockade_unreachable() {
+    if (typeof atomic_bomb_strategy_status !== "function") return false
+    let atomic = null
+    try { atomic = atomic_bomb_strategy_status() } catch (e) { return false }
+    if (!atomic) return false
+    if (atomic.met) return false
+    return !atomic.sovietReady || !atomic.resourcesSatisfied
+}
+
+// [opt allies_blockade] 封锁推进目标链(诊断报告的最小切割集落地):
+//   目标 A(陆桥) —— 朝鲜桥头堡 Pusan/Seoul: Kynshu→Pusan 是 1 海格跳, Pusan 占领(敌占格
+//     occupied_land)或其上 AP 非中立 AZOI 直接切断首尔/奉天/哈尔滨 3 资源格的陆桥;
+//     Seoul 本身是日控资源格, 夺占即 -1 资源。
+//   目标 B(AZOI 环) —— 琉球/台湾/北方口岸: 夺占后按 esm_ap_blockade_targets 同款双态
+//     (敌控→CONQUEST requiresOccupation; 己控机场缺航空→GARRISON garrisonClass air)。
+//   元数据口径与既有 JAPAN_RESOURCE_BLOCKADE overlay 完全一致(victoryConstraint 同族)。
+// 全部只在 em_cfg().allies_blockade 开关后由 esm_pin_strategy 调用; 基线不进本函数。
+function esm_ap_blockade_front_targets() {
+    const specs = [
+        ["Pusan", "封锁目标A(陆桥): 两栖夺占釜山——切断 Kynshu→Pusan 首尔/奉天/哈尔滨陆桥首跳"],
+        ["Seoul", "封锁目标A(陆桥): 夺占首尔(日控资源格)并断朝鲜陆桥"],
+        ["Shima", "封锁目标B(AZOI环): 占领Sonai群岛前哨, 压制九州出岛海跳"],
+    ]
+    const targets = []
+    const seen = new Set()
+    const push = (hex, kind, objective, extra) => {
+        if (!(hex >= 0 && hex <= LAST_BOARD_HEX) || seen.has(hex)) return
+        seen.add(hex)
+        targets.push(Object.assign({ hex, kind, objective, damageLevel: 1,
+            victoryConstraint: "JAPAN_RESOURCE_BLOCKADE" }, extra || {}))
+    }
+    for (const [name, objective] of specs) {
+        const hex = esm_idx(name)
+        if (hex === null || hex === undefined) continue
+        if (is_space_controlled(hex, JP)) push(hex, "CONQUEST", objective, { requiresOccupation: true })
+        else if (get_map_data(hex).airfield && !esm_has_class_at(hex, AP, "air"))
+            push(hex, "GARRISON", `${objective}：部署盟军航空兵建立AZOI`, { garrisonClass: "air" })
+    }
+    // 既有北方口岸/南方岛链清单(Shanghai/Tsingtao/Port Arthur/Tainan/Taihoku/Okinawa/
+    // Iwo Jima/Saipan/Guam), 复用其 CONQUEST/GARRISON 双态元数据。
+    for (const t of esm_ap_blockade_targets()) {
+        if (seen.has(t.hex)) continue
+        seen.add(t.hex)
+        targets.push(t)
+    }
+    // 目标 C: 前沿可达性优先 —— 距盟军地面前沿近的切割格排前, 远洋目标(塞班/关岛等)
+    // 保留在链尾供 target_scoring 评分层择优, 不阻塞近端可达目标。
+    targets.sort((a, b) => esm_front_distance(a.hex, AP) - esm_front_distance(b.hex, AP) || a.hex - b.hex)
+    return targets
+}
+
 // 规则 16.47 是盟军每回合必须满足的生存条件。图表决定战区，本函数只把该战区
 // 内能计入 G.capture 的未占目标提到前面；不足时再补入最近、守军较弱的合法计分格。
 // 它不改变控制权或战力，只防止 AI 有可夺目标却把整手牌耗在不计 PoW 的移动上。
@@ -1442,6 +1506,28 @@ function esm_pin_strategy(view, context) {
             }
         }
     }
+    // [opt allies_blockade] 封锁推进前视: turn≥emBlockadeTurnMin 且原子弹路径不可达
+    // (资源>5 或 TOJO/苏联未就绪)时, 把"最小切割集"(朝鲜桥头堡 + AZOI 环)前插到战略链,
+    // 作为 late 跳岛/重返菲律宾之后的第三轴。PoW 保命逻辑不受扰动: 本块在 progressPlan
+    // 之前展开, PoW 亏空目标(progress)仍会前插到封锁目标之前; powEmergency 选牌不变。
+    // (G.capture 每回合末清空, 首卡窗 bank 恒 0, 故不能用"bank≥pow"作门槛。)
+    const emcBB = (typeof em_cfg === "function") ? em_cfg() : null
+    let blockadePlan = null
+    if (emcBB && emcBB.allies_blockade && role === "Allies"
+        && (phase === "late" || G.turn >= (Number(emcBB.emBlockadeTurnMin) || 7))
+        && esm_atomic_blockade_unreachable()) {
+        const blockadeTargets = esm_ap_blockade_front_targets()
+        if (blockadeTargets.length) {
+            const blockadeHexes = new Set(blockadeTargets.map(x => x.hex))
+            chain = blockadeTargets.map(x => x.hex).concat(chain.filter(h => !blockadeHexes.has(h)))
+            targetMeta = blockadeTargets.concat(targetMeta.filter(x => !blockadeHexes.has(x.hex)))
+            const status = esm_blockade_trace_status()
+            blockadePlan = { type: "ALLIES_BLOCKADE_PUSH", source: "RULE_VICTORY_OVERLAY",
+                connected: status.connected, timerStart: status.timerStart,
+                remaining: blockadeTargets.map(x => x.hex),
+                note: "封锁推进: 夺占朝鲜桥头堡(Pusan/Seoul)与北方口岸, 于己控机场驻航空建立非中立AZOI, 维持连续三个国势阶段断线" }
+        }
+    }
     let progressPlan = null
     if (role === "Allies" && name !== "跳岛作战" && name !== "重返菲律宾" && name !== "反攻战略") {
         const progress = esm_ap_progress_targets(chain, targetMeta)
@@ -1481,6 +1567,9 @@ function esm_pin_strategy(view, context) {
                 note: "夺取北方港口与南方岛链机场，部署航空AZOI并清除日军航空，维持连续三个国势阶段断线" }
         }
     }
+    // [opt allies_blockade] 封锁推进计划落到审计字段(覆盖同族的规则胜利前视, 便于
+    // 对局日志区分"封锁推进第三轴"与既有"登陆日本后置 overlay")。
+    if (blockadePlan) victoryPreparation = blockadePlan
     targetMeta = esm_semantic_targets(role, phase, name, targetMeta)
     chain = [...new Set(targetMeta.map(t=>t.hex))]
     dynamicTargets = targetMeta.filter(t=>t.requiredUnits || t.escortPairs || t.dynamicBase || t.extraActivationOnly)

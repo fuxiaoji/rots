@@ -319,18 +319,28 @@ function eop_pick_unit(candidates, role, activeUnits, focusOverride) {
     //    非同格海军补了也白补 —— 无头推进按“同格编组”, 非同格海军会单独一组, 而纯海军组
     //    只能攻“敌海军格”(headless_target_score), 够不着只守地面的敌港, 地面仍无护航吃失败。
     if (landing && !actNaval) {
+        // [opt taskforce_math] 目标格被敌非中立 ZOI 覆盖时, 编组须含 br∈[1,5] 航母/舰载:
+        // set_zoi(supply.js:223) 中 0<br<6 单位半径2内设置 JP_ZOI_NTRL 中和敌方 ZOI,
+        // 否则海军移路被敌 ZOI 阻断、登陆吃 broken_aa。中和舰优先于普通护航。
+        const emcZE = (typeof em_cfg === "function") ? em_cfg() : null
+        const zoiBlocked = !!(emcZE && emcZE.taskforce_math && typeof has_non_n_zoi === "function"
+            && has_non_n_zoi(focus, 1 - mine))
+        const neutralizes = u => { const p = pieces[u]; const br = Number(p && p.br) || 0; return br >= 1 && br < 6 }
         let best = null
         for (const u of candidates) {
             const p = pieces[u]
             if (p && p.class === "naval" && groundCandLocs.has(G.location[u])) {
-                if (best === null || u < best) best = u
+                if (best === null) { best = u; continue }
+                if (zoiBlocked && neutralizes(u) !== neutralizes(best)) { if (neutralizes(u)) best = u; continue }
+                if (u < best) best = u
             }
         }
         if (best !== null) return best
         // 海军不必与登陆军出发时同格：它可以从另一基地移动到同一战斗格提供
         // 护航/海上支援。无头执行器会分别移动编队，再在同一格合并会战。
         const naval = candidates.filter(u => pieces[u] && pieces[u].class === "naval")
-        naval.sort((a, b) => get_distance(G.location[a], focus) - get_distance(G.location[b], focus)
+        naval.sort((a, b) => (zoiBlocked && (neutralizes(b) ? 0 : 1) - (neutralizes(a) ? 0 : 1)) || 0
+            || get_distance(G.location[a], focus) - get_distance(G.location[b], focus)
             || (Number(pieces[b].cf) || 0) - (Number(pieces[a].cf) || 0) || a - b)
         if (naval.length) return naval[0]
     }
@@ -428,6 +438,10 @@ function eop_landing_no_escort(role, view) {
             }
         }
         if (!hasPairedEscort) return true
+        // [opt taskforce_math] ZOI 中和: 目标格被敌非中立 ZOI 覆盖时优先由 br∈[1,5] 舰载
+        // 中和(set_zoi 设 JP_ZOI_NTRL)。仅作编队偏好(eop_pick_unit), 不作硬中止——
+        // 配对实验实测: 无中和舰即取消会误杀大量可成功登陆(盟军夺格 -1.9/局, p=0.06),
+        // 敌 ZOI 下的登陆多数仍可达成。
     }
     // [opt] 期望战斗闸门: 有护航/地面候选时, 用海空战+地面会战期望评估登陆成败。
     // 海空战必败(力量/air cover)或 pWin 低于阈值 → 取消空攻势, 避免 broken_aa/

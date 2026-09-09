@@ -94,3 +94,60 @@
 - 论文：research/paper/paper-draft.md
 
 锚点 7/20 → 收官
+
+## 收官确认
+- 两次提交：67c8637（优化层）、a99d12d（harness+实验+论文）
+- 目标1（AI 优化）：达成——全部主指标统计显著提升（见 §最终结果）
+- 目标2（计划+论文）：paper-draft 完成（方法/实验/结果/讨论）；计划文件中 RL 训练类实验(PPO)因无 GPU 训练基建未启动，已完成的对应项：E1 复杂度画像、参数注册中心(P0-3)、行为指标体系、随机性隔离核查
+
+---
+
+## 第二夜：两个胜利条件 + ZOI 机制 + 夺格速率（锚点 8-9）
+
+### 机制验证（引擎级证据）
+- **封锁胜利**：check_japan_resource_trace（supply.js:784）——8 本土城市(3307,3704,3407,3506,3507,3607,3706,3705, data.js:317 id=28) BFS 到日控资源格；海路被敌非中立 ZOI 阻断（non_neutral_zoi）、敌控港口阻断；连续 3 回合全断 → "Allies Victory by blockade"（cycle.js:302）。
+- **ZOI 中和**（用户指出的航母机制，supply.js:223 set_zoi）：0<br<6 的舰载/航空单位在半径 2 内设置 JP_ZOI_NTRL<<(1-faction)，即**中和敌方 ZOI**；br≥6 只投影不中和。
+- **本州占领**：check_nation_controlled(nations.JAPAN, AP)（cycle.js:298）→ "Japanese mainland islands captured"。
+- 推论：封锁=占领朝鲜/满洲沿海陆桥 + 航空 AZOI 覆盖关键海峡；登陆带 br<6 护航舰自动开路。
+
+### 进行中
+- 子代理 A：ZOI 抵消登陆编组 + 夺格速率（多战斗格/PBM 夺格/空虚格吞并，目标 ≥6 格/回合合计）
+- 子代理 B：盟军封锁战略 allies_blockade（最小切断集诊断 + 战略链 + 验证）
+- match-run 已加 capRate（均值/峰值/有夺格回合数）+ blockade 指标 ✓
+- 中间态编译产物出现过首局盟军胜（seed 20260909 T11）——方向有效
+
+---
+
+## 第三阶段（用户指令）：两个胜利条件 + ZOI 机制 + 夺格速率（锚点 10-11）
+
+### 用户纠偏（重要规则理解修正）
+1. 两个额外盟军胜利条件：占领本州(cycle.js:298)、资源封锁 3 回合(cycle.js:302)。
+2. 两栖登陆目标格有敌 ZOI 时，可先派航母(br∈[1,5])到附近中和 ZOI 再登陆——引擎依据 supply.js:223 set_zoi 的 JP_ZOI_NTRL 位。
+3. 夺格速率目标：人类水平每回合 10+ 格/方（当前仅 ~0.9）。
+
+### 已实现（本轮）
+- match-run 新指标：capRate（每回合夺格均值/峰值/有夺格回合数）、blockade（断链起始回合与进度）、blockadeWins/homelandWins 胜局分类。
+- 子代理 B（封锁）落地：allies_blockade flag + esm_ap_blockade_front_targets（最小切割集：Pusan/Seoul 釜山首尔桥头堡切断九州→朝鲜陆桥 + 北方口岸/岛链 AZOI 环 + 前沿距离排序）+ T7 后原子弹不可达时前插第三轴 + trace 诊断字段；基线逐位一致验证通过（base-verify-before/blk 均 IDENTICAL）。
+- 我接管子代理 A：①capture_rate flag：PBM 地面落点把"空虚敌控格"（移入即夺，move.js:881 路径逐格 capture_hex）设为最高优先；②ZOI 中和护航：eop_pick_unit 护航挑选与 eop_landing_no_escort 在敌非中立 ZOI 覆盖目标时要求/优先 br∈[1,5] 中和舰。基线逐位一致验证通过（base-verify-cap IDENTICAL）。
+
+### 待办
+- 配对实验隔离两项修改的影响（运行中）→ 决定 测试版2.0 的 profile。
+- 夺格速率与人类 10+/回合差距仍大，后续杠杆：多战斗格攻势、PBM 路径夺格深度利用。
+
+---
+
+## 测试版2.0 发布定版（锚点 12）
+
+### 配对实验归因（32 局同 seed，与 exp-final-1942 对照）
+| 变更 | 效果 | 处置 |
+|---|---|---|
+| ZOI 中和硬中止 | 盟军夺格 -1.9/局 (p=0.06)，两栖失败 -0.9 | 移除，仅保留中和舰偏好 |
+| capture_rate PBM 夺格 | 中性（日本地面胜 -1.1 p=0.08，资源 -1.0 p=0.05） | 开关保留，不进推荐 profile |
+| allies_blockade overlay | 盟军夺格 -1.1/局，0 封锁达成 | 开关保留默认关，待调参 |
+
+### 推荐配置（不变，已验证）
+taskforce_math + allies_cv_preserve + allies_pow_quota + allies_resource_raid + japan_resource_defense
+基线逐位一致：base-verify-v3 IDENTICAL ✓
+
+### 夺格速率现状（对人类 10+/回合的目标）
+日本 0.82/回合（峰值 7）、盟军 0.47/回合（峰值 4）。主要约束：单战斗格攻势为主、PBM 路径夺格未深度利用。下轮杠杆：多战斗格攻势（每 EC 编 2+ 任务部队）、激活预算满负荷、PBM 连锁路径夺格。

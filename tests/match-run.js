@@ -89,8 +89,13 @@ function accumulateDeltas(prev, curr, g) {
     for (let hex = 1; hex < n; ++hex) {
         const wasJP = (prev.supply[hex] & JP_CONTROLLED) !== 0
         const isJP = (curr.supply_cache[hex] & JP_CONTROLLED) !== 0
-        if (wasJP && !isJP) g.role.Allies.capturedHexes++
-        else if (!wasJP && isJP) g.role.Japan.capturedHexes++
+        if (wasJP && !isJP) {
+            g.role.Allies.capturedHexes++
+            g.capByTurn.Allies[g.turn] = (g.capByTurn.Allies[g.turn] || 0) + 1
+        } else if (!wasJP && isJP) {
+            g.role.Japan.capturedHexes++
+            g.capByTurn.Japan[g.turn] = (g.capByTurn.Japan[g.turn] || 0) + 1
+        }
     }
     return snapshot(curr)
 }
@@ -104,7 +109,8 @@ function play(seed) {
     }
     const g = { seed, status: "error", actions: 0, turn: Number(state.turn || 0), fallback: 0,
         noBattleHex: 0, traceNodeMissing: 0, role: { Japan: emptyRole(), Allies: emptyRole() },
-        logIndex: 0, curAttacker: null, pwMin: Number(state.political_will || 0), pwLog: [] }
+        logIndex: 0, curAttacker: null, pwMin: Number(state.political_will || 0), pwLog: [],
+        capByTurn: { Japan: {}, Allies: {} } }
     let prev = snapshot(state)
 
     const scanNewLogLines = () => {
@@ -179,6 +185,17 @@ function play(seed) {
     const jpResources = (() => { try { return rules.query(state, "Allies", "atomic_bomb_strategy_status")?.jpResources ?? null } catch (e) { return null } })()
     const finalAtomic = (() => { try { const a = rules.query(state, "Allies", "atomic_bomb_strategy_status"); return a ? { met: !!a.met, jpResources: a.jpResources, sovietReady: !!a.sovietReady, campaign: a.campaign } : null } catch (e) { return null } })()
     const powBank = Array.isArray(state.capture) ? state.capture.length : 0
+    // 每回合夺格率(含零回合)与封锁进度(JAPAN_TRACE_RESOURCES id=28, 值=首次断链回合)
+    const capRate = {}
+    for (const side of ["Japan", "Allies"]) {
+        const byTurn = g.capByTurn[side]
+        const vals = []
+        for (let t = 1; t <= g.turn; ++t) vals.push(byTurn[t] || 0)
+        const mean = vals.length ? vals.reduce((s, x) => s + x, 0) / vals.length : 0
+        capRate[side] = { mean: Number(mean.toFixed(2)), max: Math.max(0, ...vals), turnsWithCapture: vals.filter(x => x > 0).length }
+    }
+    const blockadeEvent = Array.isArray(state.events) ? Number(state.events[28] || 0) : 0
+    const blockade = blockadeEvent > 0 ? { startedTurn: blockadeEvent, progress: Math.max(0, Number(g.turn) - blockadeEvent + 1) } : null
     const surrender = Array.isArray(state.surrender) ? {
         philippines: !!state.surrender[0], malaya: !!state.surrender[1], dei: !!state.surrender[2],
         burma: !!state.surrender[3], japan: !!state.surrender[12],
@@ -190,6 +207,7 @@ function play(seed) {
         traceNodeMissing: g.traceNodeMissing,
         politicalWill: Number(state.political_will || 0), pwMin: g.pwMin, pwLog: g.pwLog,
         powRequired: Number(state.pow || 0), powBank, surrender, jpResources, finalAtomic,
+        capRate, blockade,
         role: g.role }
 }
 
@@ -222,6 +240,15 @@ const tally = {
     setupErrors: games.filter(x => x.status === "setup-error").length,
     actionLimit: games.filter(x => x.status === "action-limit").length,
     atomicBombWins: completed.filter(x => /atomic bomb/i.test(String(x.won_text || ""))).length,
+    blockadeWins: completed.filter(x => /blockade/i.test(String(x.won_text || ""))).length,
+    homelandWins: completed.filter(x => /mainland islands captured/i.test(String(x.won_text || ""))).length,
+    blockadeStarted: completed.filter(x => x.blockade).length,
+    meanCapRate: {
+        Japan: Number(mean(completed, x => x.capRate?.Japan?.mean).toFixed(2)),
+        Allies: Number(mean(completed, x => x.capRate?.Allies?.mean).toFixed(2)),
+        JapanMax: Math.max(0, ...completed.map(x => x.capRate?.Japan?.max || 0)),
+        AlliesMax: Math.max(0, ...completed.map(x => x.capRate?.Allies?.max || 0)),
+    },
     treatyWins: completed.filter(x => /Treaty/i.test(String(x.won_text || ""))).length,
     meanTurn: Number(mean(completed, x => x.turn).toFixed(2)),
     meanPW: Number(mean(completed, x => x.politicalWill).toFixed(2)),
@@ -251,7 +278,7 @@ tally.inflicted = {
 const perGame = completed.map(x => ({ seed: x.seed, winner: x.winner, won_text: x.won_text, vp: x.vp,
     actions: x.actions, turn: x.turn, politicalWill: x.politicalWill, pwMin: x.pwMin,
     powRequired: x.powRequired, powBank: x.powBank, surrender: x.surrender, jpResources: x.jpResources,
-    finalAtomic: x.finalAtomic, role: x.role }))
+    finalAtomic: x.finalAtomic, capRate: x.capRate, blockade: x.blockade, role: x.role }))
 const output = { generatedAt: new Date().toISOString(), tally, perGame,
     errors: games.filter(x => x.status === "error").map(x => ({ seed: x.seed, error: x.error, actions: x.actions })) }
 const slug = scenario.replace(/[^\w]+/g, "-").replace(/^-|-$/g, "")
