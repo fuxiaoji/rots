@@ -208,6 +208,21 @@ function target_argument(action, value, seedText, role, view, strategy) {
     if(action==="unit"&&Array.isArray(value)&&/Assign hits|Submarine attack\. Apply hits|Reduce one step|Remove overstacked units/i.test(prompt)){
         const byId=new Map((view?.ai?.units||[]).map(u=>[u.id,u])),cf=u=>u?(u.reduced?(u.rcf||Math.ceil(u.cf/2)):u.cf||0):0
         if(/Remove overstacked/i.test(prompt))return value.slice().sort((a,b)=>cf(byId.get(a))-cf(byId.get(b))||(byId.get(a)?.lf||0)-(byId.get(b)?.lf||0)||a-b)[0]
+        // [opt loss_optimal] 受击分配价值最优: 一步受损的价值损失 = 满编→减编损失(cf−rcf),
+        // 减编→歼灭损失(rcf); 不可替换 ×1.5、CV ×1.4(战略价值)。取损失最小的单位承伤,
+        // 替换图表的 CV→BB→CA→DD 词典序(该序主动把航母送上去挨打, 损失交换比劣化)。
+        // 仍受引擎 hit_able 候选集约束(此处的 value 即合法承伤单位表)。
+        const emcLH=(typeof em_cfg==="function")?em_cfg():null
+        if(emcLH&&emcLH.loss_optimal){
+            const emLoss=id=>{const u=byId.get(id);if(!u)return 999
+                const full=Number(u.cf)||0,rc=Number(u.rcf)||Math.ceil(full/2)
+                let loss=u.reduced?rc:(full-rc)
+                const p=(typeof pieces!=="undefined"&&pieces[id])?pieces[id]:null
+                if(p&&p.notreplaceable)loss*=1.5
+                if(/^cv/i.test(String(u.type||"")))loss*=1.4
+                return loss}
+            return value.slice().sort((a,b)=>emLoss(a)-emLoss(b)||a-b)[0]
+        }
         // 第6/12页执行注释：两步损失按 CV→BB→CA→DD；同类选防御力最高者。
         const navalRank=u=>{const t=String(u?.type||u?.name||"").toUpperCase();return /CV/.test(t)?0:/BB/.test(t)?1:/CA/.test(t)?2:/DD/.test(t)?3:4}
         return value.slice().sort((a,b)=>navalRank(byId.get(a))-navalRank(byId.get(b))||(byId.get(b)?.lf||0)-(byId.get(a)?.lf||0)||a-b)[0]
