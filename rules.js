@@ -21807,6 +21807,17 @@ function eop_activation_focus_faction(faction, selectedCount, view, candidates) 
                     const db=(typeof esm_front_distance==="function")?esm_front_distance(b2,AP):99
                     return da-db||a2-b2
                 })
+                // [可行性过滤] 就近优先但跳过"编不出地面组"的格子(str=0 死锁焦点,
+                // 实测 657 Vogelkop 无两栖可达地面时锁死整条 raid 链); 全不可行才回退最近格。
+                if(view&&available){
+                    for(const h of resPending){
+                        try{
+                            const pl=composeTaskForce(h,null,null,view,available,role)
+                            if(pl&&!pl.complete&&pl.unit!==undefined&&pl.unit!==null)return h
+                            if(pl&&pl.complete)continue // 已达标(已控/已驻)不该出现在 pending, 防御
+                        }catch(e){}
+                    }
+                }
                 return resPending[0]
             }
             if(emcAFo.allies_pow_quota&&Number(G.pow||0)>0&&Array.isArray(G.capture)&&G.capture.length<Number(G.pow)&&typeof esm_ap_progress_targets==="function"){
