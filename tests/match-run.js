@@ -186,7 +186,7 @@ function play(seed) {
 
     // 对手损失 = 差分计数按受损方归属; capturedHexes 已按 AP/JP 前缀计数。
     const jpResources = (() => { try { return rules.query(state, "Allies", "atomic_bomb_strategy_status")?.jpResources ?? null } catch (e) { return null } })()
-    const finalAtomic = (() => { try { const a = rules.query(state, "Allies", "atomic_bomb_strategy_status"); return a ? { met: !!a.met, jpResources: a.jpResources, sovietReady: !!a.sovietReady, campaign: a.campaign } : null } catch (e) { return null } })()
+    const finalAtomic = (() => { try { const a = rules.query(state, "Allies", "atomic_bomb_strategy_status"); return a ? { met: !!a.met, jpResources: a.jpResources, sovietReady: !!a.sovietReady, campaign: a.bombingCampaignStart, noFail: !!a.noStrategicBombingFailure, resourcesSatisfied: !!a.resourcesSatisfied } : null } catch (e) { return null } })()
     const powBank = Array.isArray(state.capture) ? state.capture.length : 0
     // 每回合夺格率(含零回合)与封锁进度(JAPAN_TRACE_RESOURCES id=28, 值=首次断链回合)
     const capRate = {}

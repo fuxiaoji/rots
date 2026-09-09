@@ -11,8 +11,10 @@ const EM_FLAGS = [
     "allies_resource_raid",   // 1=盟军对日资源格目标加权(原子弹/VP 条件); 0=不加权
     "japan_resource_defense", // 1=日本资源格防守加权; 0=不加权
     "allies_blockade",        // 1=盟军封锁推进前视(朝鲜桥头堡+AZOI 环, 规则 16.47/trace 胜利); 0=不启用
+    "allies_blockade_v2",     // 1=盟军资源封锁主路: 无门槛全量 raid 非己控资源格+己控资源格 GARRISON 驻守; 0=不启用
     "capture_rate",           // 1=PBM/推进落点优先"空虚敌控格"(地面移入即夺, move.js:881 路径夺格); 0=基线落点表
     "island_sweep",           // 1=岛群清扫: 激活预算用满(链上轮换+推进兜底)+岛群多路登陆+申报窗多焦点; 0=基线
+    "loss_optimal",           // 1=受击分配价值最优(一步受损损失最小化, 替换 CV→BB→CA→DD 词典序); 0=图表序
 ]
 
 // 数值参数(敏感性问题分析对象; 均有工程注释)
@@ -34,6 +36,12 @@ const EM_PARAMS_BASE = {
     emSweepHarborNav: 6,    // [island_sweep] 港内敌舰 cf ≥ 该值(航母/战列级)的登陆目标跳过(港湾海空战风险)
     emSweepCluster: 4,      // [island_sweep 段2] 岛群簇大小上限(焦点外次级登陆格数)
     emSweepClusterDist: 2,  // [island_sweep 段2] 岛群簇收集半径(到焦点 hex 距离)
+    emBlkInsAfterPending: 2,   // [allies_blockade_v2] raid 格插到链首前 N 个 pending 夺占目标之后(不占绝对首位)
+    emBlkGarrisonSteps: 2,     // [allies_blockade_v2] 己控资源格 GARRISON 所需地面步数(防日本夺回)
+    emBlkManchCutTurn: 5,      // [allies_blockade_v2] 满洲通路切断目标(Pusan CONQUEST)最早回合
+    emBlkPinResTargets: 4,     // [allies_blockade_v2] 链级封锁主轴每次前插的 JP 资源格上限(按前沿距离取最近)
+    emBlkPinResReach: 20,     // [allies_blockade_v2] 链级前插资源格的前沿半径(地面距离; 两栖目标经海军一跳可达,
+                          //  地面距离 6 会漏掉全部 DEI/婆罗洲目标——放宽后由编队可行性过滤, 簇按距离仍就近优先)
 }
 
 function em_profile_from_env() {

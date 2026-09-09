@@ -647,9 +647,13 @@ var EOTS_BOTS = {
                     sm = esm_pin_strategy(view, context)
                     // 忠实目标链: chain = parse_goals 有序 idx; goals = 每行 Goal(kind/text)
                     if (sm) eop_set_strategy_chain(context.role, { name: sm.name, kind: sm.kind, note: (sm.notes || []).join("; "), goals: sm.goals, chain: sm.chain, targetMeta: sm.targetMeta })
-                    // [opt] allies_resource_raid: 原子弹/封锁胜利的日本资源格 raid 目标,
-                    // 追加到盟军当前战略链尾(克隆 override, 不回写状态机缓存)。
-                    if (context.role === "Allies" && typeof eop_append_resource_raid_targets === "function") {
+                    // [opt] allies_resource_raid / allies_blockade_v2: 日本资源格 raid 目标,
+                    // 追加到盟军当前战略链(克隆 override, 不回写状态机缓存)。
+                    // v2 开启时 eop_append_blockade_raid 接管(全量/无门槛/驻守), 旧 raid 不再追加。
+                    if (context.role === "Allies" && typeof eop_append_blockade_raid === "function"
+                        && eop_append_blockade_raid()) {
+                        // v2 已接管本次链覆盖
+                    } else if (context.role === "Allies" && typeof eop_append_resource_raid_targets === "function") {
                         eop_append_resource_raid_targets()
                     }
                 } else {

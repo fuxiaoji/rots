@@ -19239,6 +19239,7 @@ function rules_query_dispatch(q) {
         queryCombatParticipation, queryReactionCandidates,
         queryReactionStrength, querySpecialReaction,
         queryKamikazeStandard, querySubmarineTargets, queryPbmDestinations,
+        queryJapanResourceTrace: () => { try { return !!check_japan_resource_trace() } catch (e) { return null } },
     }
     if (typeof impl[fn] !== "function") return null
     const args = q.args || q.params
@@ -20685,8 +20686,10 @@ const EM_FLAGS = [
     "allies_resource_raid",   // 1=盟军对日资源格目标加权(原子弹/VP 条件); 0=不加权
     "japan_resource_defense", // 1=日本资源格防守加权; 0=不加权
     "allies_blockade",        // 1=盟军封锁推进前视(朝鲜桥头堡+AZOI 环, 规则 16.47/trace 胜利); 0=不启用
+    "allies_blockade_v2",     // 1=盟军资源封锁主路: 无门槛全量 raid 非己控资源格+己控资源格 GARRISON 驻守; 0=不启用
     "capture_rate",           // 1=PBM/推进落点优先"空虚敌控格"(地面移入即夺, move.js:881 路径夺格); 0=基线落点表
     "island_sweep",           // 1=岛群清扫: 激活预算用满(链上轮换+推进兜底)+岛群多路登陆+申报窗多焦点; 0=基线
+    "loss_optimal",           // 1=受击分配价值最优(一步受损损失最小化, 替换 CV→BB→CA→DD 词典序); 0=图表序
 ]
 
 // 数值参数(敏感性问题分析对象; 均有工程注释)
@@ -20708,6 +20711,12 @@ const EM_PARAMS_BASE = {
     emSweepHarborNav: 6,    // [island_sweep] 港内敌舰 cf ≥ 该值(航母/战列级)的登陆目标跳过(港湾海空战风险)
     emSweepCluster: 4,      // [island_sweep 段2] 岛群簇大小上限(焦点外次级登陆格数)
     emSweepClusterDist: 2,  // [island_sweep 段2] 岛群簇收集半径(到焦点 hex 距离)
+    emBlkInsAfterPending: 2,   // [allies_blockade_v2] raid 格插到链首前 N 个 pending 夺占目标之后(不占绝对首位)
+    emBlkGarrisonSteps: 2,     // [allies_blockade_v2] 己控资源格 GARRISON 所需地面步数(防日本夺回)
+    emBlkManchCutTurn: 5,      // [allies_blockade_v2] 满洲通路切断目标(Pusan CONQUEST)最早回合
+    emBlkPinResTargets: 4,     // [allies_blockade_v2] 链级封锁主轴每次前插的 JP 资源格上限(按前沿距离取最近)
+    emBlkPinResReach: 20,     // [allies_blockade_v2] 链级前插资源格的前沿半径(地面距离; 两栖目标经海军一跳可达,
+                          //  地面距离 6 会漏掉全部 DEI/婆罗洲目标——放宽后由编队可行性过滤, 簇按距离仍就近优先)
 }
 
 function em_profile_from_env() {
@@ -21080,7 +21089,7 @@ function eop_clear_all_chains() {
 // em_cfg().allies_resource_raid 开关之后; 基线(配置关)不进本函数调用点。
 function eop_append_resource_raid_targets() {
     const emcRR = (typeof em_cfg === "function") ? em_cfg() : null
-    if (!emcRR || !emcRR.allies_resource_raid) return
+    if (!emcRR || !emcRR.allies_resource_raid || emcRR.allies_blockade_v2) return  // v2 开启时由 eop_append_blockade_raid 接管(全量/无门槛)
     const ov = EOP_OVERRIDE.Allies
     if (!ov || !Array.isArray(ov.chain)) return
     let jpRes = 99
@@ -21112,6 +21121,108 @@ function eop_append_resource_raid_targets() {
             objective: "资源 raid: 压低日本资源至原子弹/封锁门槛" })
     }
     EOP_OVERRIDE.Allies = Object.assign({}, ov, { chain: ov.chain.concat(picked), targetMeta: meta })
+}
+
+// [opt allies_blockade_v2] 资源封锁主路(规则 16.47 trace 胜利): 上一轮 raid(emRaidResTrigger/
+// emRaidMaxTargets 门槛)只把资源格追加到链尾, 实测终局日本仍恒持 6 格。v2 改为:
+//   (a) 无触发门槛、无数量上限 —— 所有非 AP 控制的资源格(RESOURCE_HEX, data_map 14 格)以
+//       CONQUEST requiresOccupation damageLevel:1 加入盟军链, 插在链首至多 emBlkInsAfterPending
+//       个 pending 夺占目标之后(不占绝对首位 —— PoW/progress/封锁环 overlay 在其前仍会重排);
+//   (b) 已 AP 控制的资源格改为 GARRISON garrisonClass:"ground" 驻守元数据(防基线日本沿
+//       JP_RESOURCE 轴夺回) —— GARRISON pending 条件=己控且地面步数 < emBlkGarrisonSteps,
+//       激活窗按 eop_activation_focus_faction 的 projected 驻军逻辑补兵, 推进/焦点亦指向该格。
+// 克隆 override 不回写状态机缓存(与既有 raid 相同); 基线(v2 关)不进本函数调用点。
+function eop_append_blockade_raid() {
+    const emcBR = (typeof em_cfg === "function") ? em_cfg() : null
+    if (!emcBR || !emcBR.allies_blockade_v2) return false
+    const ov = EOP_OVERRIDE.Allies
+    if (!ov || !Array.isArray(ov.chain)) return false
+    if (typeof RESOURCE_HEX === "undefined" || !Array.isArray(RESOURCE_HEX)) return false
+    const inChain = new Set(ov.chain)
+    const meta0 = Array.isArray(ov.targetMeta) ? ov.targetMeta : []
+    const focus = eop_focus("Allies")
+    // 排序键: 距盟军地面前沿(有地面单位可达性)近者优先 —— 焦点距在链空时为 null,
+    // 用 esm_front_distance(与封锁环 overlay 同源)比"距旧焦点"更能反映两栖可达性。
+    const d = h => {
+        if (typeof esm_front_distance === "function") {
+            try { return esm_front_distance(h, AP) } catch (e) { /* 回退 */ }
+        }
+        return (focus !== null && typeof get_distance === "function") ? get_distance(h, focus) : 0
+    }
+    const conquests = [], garrisons = []
+    for (const h of RESOURCE_HEX) {
+        if (!(h >= 0 && h <= LAST_BOARD_HEX)) continue
+        const md = (typeof get_map_data === "function") ? get_map_data(h) : null
+        if (!md || !md.resource) continue
+        if (is_space_controlled(h, AP)) {
+            const existing = meta0.find(t => t.hex === h)
+            // 已有同格 GARRISON 且驻军已满(含链上已有)则不重复; 未驻满(或仅 CONQUEST 残留)则补 GARRISON。
+            if (existing && existing.kind === "GARRISON" && inChain.has(h)
+                && !eop_target_pending("Allies", h, existing)) continue
+            garrisons.push(h)
+        } else if (!inChain.has(h)) {
+            conquests.push(h)
+        }
+    }
+    // [allies_blockade_v2 段2] 满洲通路切断: 南方三格(304 Kuantan, 421 Miri, 535 Manila)已 AP
+    // 控制且满洲/朝鲜(669 Harbin, 670 Mukden, 672 Seoul)仍有 JP 控制时, 把朝鲜陆桥唯一海跳
+    // 港 Pusan(673, id 3306)加入 CONQUEST —— Pusan 为敌控后 trace 的 oversea→land 渡转
+    // (supply.js: "MD.port && !enemy_port")被禁, Seoul/Mukden/Harbin 陆网整断; Seoul 672 本身
+    // 是资源格(己在 RESOURCE_HEX raid 集内)。turn ≥ emBlkManchCutTurn 才启用(早期兵力不外调)。
+    if (G.turn >= (Number(emcBR.emBlkManchCutTurn) || 5)) {
+        const southHeld = [304, 421, 535].every(h => is_space_controlled(h, AP))
+        const northJp = [669, 670, 672].some(h => is_space_controlled(h, JP))
+        if (southHeld && northJp) {
+            const pusan = (typeof eop_resolve_token === "function") ? eop_resolve_token("Pusan") : null
+            if (pusan !== null && pusan !== undefined && pusan >= 0 && pusan <= LAST_BOARD_HEX
+                && is_space_controlled(pusan, JP) && !inChain.has(pusan)) {
+                conquests.push(pusan)
+                if (typeof process !== "undefined" && process.env.EOTS_SW_DEBUG)
+                    console.log(`[BLK] T${G.turn} manchuria-cut: Pusan(${pusan}) 加入通路切断目标`)
+            }
+        }
+    }
+    if (!conquests.length && !garrisons.length) return false
+    conquests.sort((a, b) => d(a) - d(b) || a - b)
+    garrisons.sort((a, b) => d(a) - d(b) || a - b)
+    // 插入点: 链首连续 pending 夺占/压制目标计满 emBlkInsAfterPending(默认 2)个为止。
+    let ins = 0
+    const cap = Math.min(Number(emcBR.emBlkInsAfterPending) || 2, ov.chain.length)
+    for (let i = 0; i < cap; ++i) {
+        const m = meta0.find(t => t.hex === ov.chain[i])
+        if (m && m.kind !== "GARRISON" && m.kind !== "REDEPLOY"
+            && eop_target_pending("Allies", ov.chain[i], m)) ins = i + 1
+        else break
+    }
+    const meta = meta0.slice()
+    const newHexes = []
+    for (const h of conquests) {
+        const at = meta.findIndex(t => t.hex === h)
+        if (at >= 0) meta.splice(at, 1)
+        meta.push({ hex: h, kind: "CONQUEST", requiresOccupation: true, damageLevel: 1,
+            objective: "封锁 raid: 夺占日本资源格(16.47 trace 断链胜利主路)",
+            victoryConstraint: "JAPAN_RESOURCE_BLOCKADE" })
+        newHexes.push(h)
+    }
+    const garrisonSteps = Math.max(1, Number(emcBR.emBlkGarrisonSteps) || 1)
+    for (const h of garrisons) {
+        const at = meta.findIndex(t => t.hex === h)
+        if (at >= 0) meta.splice(at, 1)
+        meta.push({ hex: h, kind: "GARRISON", garrisonClass: "ground",
+            garrisonRequirement: { groundSteps: garrisonSteps },
+            objective: "封锁驻守: 地面驻军防日本夺回资源格",
+            victoryConstraint: "JAPAN_RESOURCE_BLOCKADE_HOLD" })
+        newHexes.push(h)
+    }
+    const chain = ov.chain.slice()
+    chain.splice(Math.min(ins, chain.length), 0, ...newHexes)
+    EOP_OVERRIDE.Allies = Object.assign({}, ov, { chain, targetMeta: meta })
+    if (typeof process !== "undefined" && process.env.EOTS_SW_DEBUG) {
+        const postFocus = eop_focus("Allies")
+        const nm = h => { try { return get_map_data(h).name || int_to_hex(h) } catch (e) { return String(h) } }
+        console.log(`[BLK] T${G.turn} raid+=${conquests.length} garrison=${garrisons.length} ins=${ins} chain=${chain.slice(0, 6).map(nm).join(">")} preFocus=${focus} postFocus=${postFocus}${postFocus !== null ? "(" + nm(postFocus) + ")" : ""} jpRes=${(typeof get_jp_resources === "function") ? get_jp_resources() : "?"}`)
+    }
+    return true
 }
 
 // 当前主轴的完整目标链。外部链覆盖(erasmus_state)直接携带已解析好的有序 idx
@@ -21676,6 +21787,34 @@ function eop_activation_focus_faction(faction, selectedCount, view, candidates) 
     }
     const active=new Set((view?.offensive?.active_units || G.offensive?.active_units || []).flat())
     const available=Array.isArray(candidates)?candidates.filter(u=>!active.has(u)):null
+    // [opt W-PoW] 本回合 PoW 配额未达标 → 命名格夺占绝对优先(压过岛群簇分流)。
+    // 验尸: island_sweep 扫荡无名礁格使 capRate 上升但 PoW 银行断供, PW 5-7 点/局
+    // 流失、T8 条约败——B29(T9 到场)/封锁(T9+)全部活不到。bank≥pow 后自动恢复扫荡。
+    // [opt W-PoW / blockade_v2] 资源格焦点首选: (a) PoW 未达标时命名格绝对优先;
+    // (b) blockade_v2 开启时资源格恒为首 focus(夺取南方三格 304/421/535 = 原子弹资源
+    // 门槛+封锁 trace+PoW 三赢; 实测 20260907 campaign✓ soviet✓ 资源 6 差一格即胜)。
+    // 资源格本身是命名格, PoW 银行同步喂满; 编队可行性过滤兜底不可达格。
+    if(emcAFo&&role==="Allies"&&(emcAFo.allies_blockade_v2||(emcAFo.allies_pow_quota&&Number(G.pow||0)>0&&Array.isArray(G.capture)&&G.capture.length<Number(G.pow)))){
+        try{
+            const resPending=(axis.chain||[]).filter(h=>{
+                if(!eop_target_pending(role,h,eop_target_meta(role,h)))return false
+                const m2=(typeof get_map_data==="function")?get_map_data(h):null
+                return !!(m2&&m2.resource)
+            })
+            if(resPending.length){
+                resPending.sort((a2,b2)=>{
+                    const da=(typeof esm_front_distance==="function")?esm_front_distance(a2,AP):99
+                    const db=(typeof esm_front_distance==="function")?esm_front_distance(b2,AP):99
+                    return da-db||a2-b2
+                })
+                return resPending[0]
+            }
+            if(emcAFo.allies_pow_quota&&Number(G.pow||0)>0&&Array.isArray(G.capture)&&G.capture.length<Number(G.pow)&&typeof esm_ap_progress_targets==="function"){
+                const prog=esm_ap_progress_targets(axis.chain,axis.targetMeta||[])
+                if(prog.length&&prog[0]&&prog[0].hex!==undefined&&prog[0].hex!==null)return prog[0].hex
+            }
+        }catch(e){/* 诊断不可用则走原逻辑 */}
+    }
     if(view && available){
         // [opt island_sweep 段2] 焦点主任务编组已足(plan0.complete) → 后续海陆对优先分流
         // 到岛群簇次级登陆格(第 k 支→第 k 格), 而不是散到链上远端目标; 簇全部编不出时
@@ -21723,6 +21862,8 @@ function eop_activation_focus_faction(faction, selectedCount, view, candidates) 
                 if(eop_garrison_satisfied(role,h,meta,projected))continue
             }
             const plan=composeTaskForce(h,null,null,view,available,role)
+            if(typeof process!=="undefined"&&process.env.EOTS_SW_DEBUG&&meta&&(meta.victoryConstraint||"").indexOf("JAPAN_RESOURCE")===0)
+                console.log(`[BLK-ACT] T${G.turn} focus=${h}(${(get_map_data(h)||{}).name||h}) complete=${plan.complete} unit=${plan.unit} req=${plan.required} str=${plan.strength} pend=${eop_target_pending(role,h,meta)} avail=${available?available.length:"-"}`)
             if(!plan.complete && plan.unit!==undefined && plan.unit!==null){
                 // [opt island_sweep 段1] 顺延目标的风险/产出预检(含链首): (a) 无护航可会合
                 // 或期望战评估不过的两栖登陆目标必吃 broken_aa/港湾海空战, 跳过; (b) 猎杀
@@ -24129,19 +24270,54 @@ function esm_pin_strategy(view, context) {
     // (G.capture 每回合末清空, 首卡窗 bank 恒 0, 故不能用"bank≥pow"作门槛。)
     const emcBB = (typeof em_cfg === "function") ? em_cfg() : null
     let blockadePlan = null
-    if (emcBB && emcBB.allies_blockade && role === "Allies"
+    // [opt allies_blockade_v2] v2 开启时封锁环 overlay 同样激活(v2 主路=资源 raid; 本 overlay
+    // 供给 Pusan/Seoul/Shima 前沿切割环的链首 ≤2 环前插, 与 raid 的"链首 pending 后插入"正好衔接)。
+    if (emcBB && (emcBB.allies_blockade || emcBB.allies_blockade_v2) && role === "Allies"
         && (phase === "late" || G.turn >= (Number(emcBB.emBlockadeTurnMin) || 7))
         && esm_atomic_blockade_unreachable()) {
         // [opt W2.4] 兵力聚焦: 只前插"前沿最近"的至多 2 个未完成封锁环(esm_ap_blockade_front_targets
         // 已按前沿距离排序)。整链前插会分散主轴兵力(配对实测盟军夺格 -1.1/局且 0 封锁达成)。
-        const blockadeTargets = esm_ap_blockade_front_targets()
+        const frontTargets = esm_ap_blockade_front_targets()
             .filter(t => {
                 const meta = t
                 const pendingFn = typeof eop_target_pending === "function" ? eop_target_pending : null
                 if (!pendingFn) return true
                 try { return pendingFn("Allies", t.hex, t) } catch (e) { return true }
             })
-            .slice(0, 2)
+        const blockadeTargets = frontTargets.slice(0, 2)
+        // [opt allies_blockade_v2] 资源封锁主轴(链级): 追加前沿最近的至多 emBlkPinResTargets 个
+        // JP 控制资源格 CONQUEST + 己控未驻满资源格 GARRISON —— 实测决定时间追加(链尾/链首 2 环后)
+        // 会被 CENPAC 轴的 doctrine×reach 评分淹没, 盟军整局只在打环礁, 资源格 0 夺取。
+        // 链级前插后 target_scoring 的价值项(资源 +6/+10)才有机会主导焦点; PoW/progress 仍在本
+        // overlay 之前展开, PW 生存不受扰动。
+        if (emcBB.allies_blockade_v2) {
+            const maxRes = Math.max(1, Number(emcBB.emBlkPinResTargets) || 4)
+            const maxReach = Math.max(2, Number(emcBB.emBlkPinResReach) || 6)
+            const already = new Set(blockadeTargets.map(x => x.hex))
+            const resTargets = (typeof RESOURCE_HEX !== "undefined" && Array.isArray(RESOURCE_HEX) ? RESOURCE_HEX : [])
+                .filter(h => h >= 0 && h <= LAST_BOARD_HEX && !already.has(h))
+                .map(h => {
+                    const md = get_map_data(h)
+                    if (!md || !md.resource) return null
+                    if (is_space_controlled(h, JP)) {
+                        // [A/B 实测] 只前插"前沿可达"(≤emBlkPinResReach)的资源格: 远洋目标占位会
+                        // 淹没近端可执行目标(编组 unit=undefined 空转), 反而降低盟军夺格率与 PoW。
+                        const d = esm_front_distance(h, AP)
+                        if (!(d >= 0 && d <= maxReach)) return null
+                        return { hex: h, kind: "CONQUEST", requiresOccupation: true,
+                            damageLevel: 1, objective: "封锁主轴: 夺占日本资源格(16.47 trace 胜利)",
+                            victoryConstraint: "JAPAN_RESOURCE_BLOCKADE" }
+                    }
+                    if (!esm_has_class_at(h, AP, "ground")) return { hex: h, kind: "GARRISON", garrisonClass: "ground",
+                        garrisonRequirement: { groundSteps: Math.max(1, Number(emcBB.emBlkGarrisonSteps) || 1) },
+                        objective: "封锁主轴: 驻守资源格防夺回", victoryConstraint: "JAPAN_RESOURCE_BLOCKADE_HOLD" }
+                    return null
+                })
+                .filter(Boolean)
+                .sort((a, b) => esm_front_distance(a.hex, AP) - esm_front_distance(b.hex, AP) || a.hex - b.hex)
+                .slice(0, maxRes)
+            blockadeTargets.push(...resTargets)
+        }
         if (blockadeTargets.length) {
             const blockadeHexes = new Set(blockadeTargets.map(x => x.hex))
             chain = blockadeTargets.map(x => x.hex).concat(chain.filter(h => !blockadeHexes.has(h)))
@@ -25141,6 +25317,21 @@ function target_argument(action, value, seedText, role, view, strategy) {
     if(action==="unit"&&Array.isArray(value)&&/Assign hits|Submarine attack\. Apply hits|Reduce one step|Remove overstacked units/i.test(prompt)){
         const byId=new Map((view?.ai?.units||[]).map(u=>[u.id,u])),cf=u=>u?(u.reduced?(u.rcf||Math.ceil(u.cf/2)):u.cf||0):0
         if(/Remove overstacked/i.test(prompt))return value.slice().sort((a,b)=>cf(byId.get(a))-cf(byId.get(b))||(byId.get(a)?.lf||0)-(byId.get(b)?.lf||0)||a-b)[0]
+        // [opt loss_optimal] 受击分配价值最优: 一步受损的价值损失 = 满编→减编损失(cf−rcf),
+        // 减编→歼灭损失(rcf); 不可替换 ×1.5、CV ×1.4(战略价值)。取损失最小的单位承伤,
+        // 替换图表的 CV→BB→CA→DD 词典序(该序主动把航母送上去挨打, 损失交换比劣化)。
+        // 仍受引擎 hit_able 候选集约束(此处的 value 即合法承伤单位表)。
+        const emcLH=(typeof em_cfg==="function")?em_cfg():null
+        if(emcLH&&emcLH.loss_optimal){
+            const emLoss=id=>{const u=byId.get(id);if(!u)return 999
+                const full=Number(u.cf)||0,rc=Number(u.rcf)||Math.ceil(full/2)
+                let loss=u.reduced?rc:(full-rc)
+                const p=(typeof pieces!=="undefined"&&pieces[id])?pieces[id]:null
+                if(p&&p.notreplaceable)loss*=1.5
+                if(/^cv/i.test(String(u.type||"")))loss*=1.4
+                return loss}
+            return value.slice().sort((a,b)=>emLoss(a)-emLoss(b)||a-b)[0]
+        }
         // 第6/12页执行注释：两步损失按 CV→BB→CA→DD；同类选防御力最高者。
         const navalRank=u=>{const t=String(u?.type||u?.name||"").toUpperCase();return /CV/.test(t)?0:/BB/.test(t)?1:/CA/.test(t)?2:/DD/.test(t)?3:4}
         return value.slice().sort((a,b)=>navalRank(byId.get(a))-navalRank(byId.get(b))||(byId.get(b)?.lf||0)-(byId.get(a)?.lf||0)||a-b)[0]
@@ -25565,9 +25756,13 @@ var EOTS_BOTS = {
                     sm = esm_pin_strategy(view, context)
                     // 忠实目标链: chain = parse_goals 有序 idx; goals = 每行 Goal(kind/text)
                     if (sm) eop_set_strategy_chain(context.role, { name: sm.name, kind: sm.kind, note: (sm.notes || []).join("; "), goals: sm.goals, chain: sm.chain, targetMeta: sm.targetMeta })
-                    // [opt] allies_resource_raid: 原子弹/封锁胜利的日本资源格 raid 目标,
-                    // 追加到盟军当前战略链尾(克隆 override, 不回写状态机缓存)。
-                    if (context.role === "Allies" && typeof eop_append_resource_raid_targets === "function") {
+                    // [opt] allies_resource_raid / allies_blockade_v2: 日本资源格 raid 目标,
+                    // 追加到盟军当前战略链(克隆 override, 不回写状态机缓存)。
+                    // v2 开启时 eop_append_blockade_raid 接管(全量/无门槛/驻守), 旧 raid 不再追加。
+                    if (context.role === "Allies" && typeof eop_append_blockade_raid === "function"
+                        && eop_append_blockade_raid()) {
+                        // v2 已接管本次链覆盖
+                    } else if (context.role === "Allies" && typeof eop_append_resource_raid_targets === "function") {
                         eop_append_resource_raid_targets()
                     }
                 } else {

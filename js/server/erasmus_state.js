@@ -1513,19 +1513,54 @@ function esm_pin_strategy(view, context) {
     // (G.capture 每回合末清空, 首卡窗 bank 恒 0, 故不能用"bank≥pow"作门槛。)
     const emcBB = (typeof em_cfg === "function") ? em_cfg() : null
     let blockadePlan = null
-    if (emcBB && emcBB.allies_blockade && role === "Allies"
+    // [opt allies_blockade_v2] v2 开启时封锁环 overlay 同样激活(v2 主路=资源 raid; 本 overlay
+    // 供给 Pusan/Seoul/Shima 前沿切割环的链首 ≤2 环前插, 与 raid 的"链首 pending 后插入"正好衔接)。
+    if (emcBB && (emcBB.allies_blockade || emcBB.allies_blockade_v2) && role === "Allies"
         && (phase === "late" || G.turn >= (Number(emcBB.emBlockadeTurnMin) || 7))
         && esm_atomic_blockade_unreachable()) {
         // [opt W2.4] 兵力聚焦: 只前插"前沿最近"的至多 2 个未完成封锁环(esm_ap_blockade_front_targets
         // 已按前沿距离排序)。整链前插会分散主轴兵力(配对实测盟军夺格 -1.1/局且 0 封锁达成)。
-        const blockadeTargets = esm_ap_blockade_front_targets()
+        const frontTargets = esm_ap_blockade_front_targets()
             .filter(t => {
                 const meta = t
                 const pendingFn = typeof eop_target_pending === "function" ? eop_target_pending : null
                 if (!pendingFn) return true
                 try { return pendingFn("Allies", t.hex, t) } catch (e) { return true }
             })
-            .slice(0, 2)
+        const blockadeTargets = frontTargets.slice(0, 2)
+        // [opt allies_blockade_v2] 资源封锁主轴(链级): 追加前沿最近的至多 emBlkPinResTargets 个
+        // JP 控制资源格 CONQUEST + 己控未驻满资源格 GARRISON —— 实测决定时间追加(链尾/链首 2 环后)
+        // 会被 CENPAC 轴的 doctrine×reach 评分淹没, 盟军整局只在打环礁, 资源格 0 夺取。
+        // 链级前插后 target_scoring 的价值项(资源 +6/+10)才有机会主导焦点; PoW/progress 仍在本
+        // overlay 之前展开, PW 生存不受扰动。
+        if (emcBB.allies_blockade_v2) {
+            const maxRes = Math.max(1, Number(emcBB.emBlkPinResTargets) || 4)
+            const maxReach = Math.max(2, Number(emcBB.emBlkPinResReach) || 6)
+            const already = new Set(blockadeTargets.map(x => x.hex))
+            const resTargets = (typeof RESOURCE_HEX !== "undefined" && Array.isArray(RESOURCE_HEX) ? RESOURCE_HEX : [])
+                .filter(h => h >= 0 && h <= LAST_BOARD_HEX && !already.has(h))
+                .map(h => {
+                    const md = get_map_data(h)
+                    if (!md || !md.resource) return null
+                    if (is_space_controlled(h, JP)) {
+                        // [A/B 实测] 只前插"前沿可达"(≤emBlkPinResReach)的资源格: 远洋目标占位会
+                        // 淹没近端可执行目标(编组 unit=undefined 空转), 反而降低盟军夺格率与 PoW。
+                        const d = esm_front_distance(h, AP)
+                        if (!(d >= 0 && d <= maxReach)) return null
+                        return { hex: h, kind: "CONQUEST", requiresOccupation: true,
+                            damageLevel: 1, objective: "封锁主轴: 夺占日本资源格(16.47 trace 胜利)",
+                            victoryConstraint: "JAPAN_RESOURCE_BLOCKADE" }
+                    }
+                    if (!esm_has_class_at(h, AP, "ground")) return { hex: h, kind: "GARRISON", garrisonClass: "ground",
+                        garrisonRequirement: { groundSteps: Math.max(1, Number(emcBB.emBlkGarrisonSteps) || 1) },
+                        objective: "封锁主轴: 驻守资源格防夺回", victoryConstraint: "JAPAN_RESOURCE_BLOCKADE_HOLD" }
+                    return null
+                })
+                .filter(Boolean)
+                .sort((a, b) => esm_front_distance(a.hex, AP) - esm_front_distance(b.hex, AP) || a.hex - b.hex)
+                .slice(0, maxRes)
+            blockadeTargets.push(...resTargets)
+        }
         if (blockadeTargets.length) {
             const blockadeHexes = new Set(blockadeTargets.map(x => x.hex))
             chain = blockadeTargets.map(x => x.hex).concat(chain.filter(h => !blockadeHexes.has(h)))

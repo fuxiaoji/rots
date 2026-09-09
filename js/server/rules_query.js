@@ -417,6 +417,7 @@ function rules_query_dispatch(q) {
         queryCombatParticipation, queryReactionCandidates,
         queryReactionStrength, querySpecialReaction,
         queryKamikazeStandard, querySubmarineTargets, queryPbmDestinations,
+        queryJapanResourceTrace: () => { try { return !!check_japan_resource_trace() } catch (e) { return null } },
     }
     if (typeof impl[fn] !== "function") return null
     const args = q.args || q.params
