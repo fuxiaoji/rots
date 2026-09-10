@@ -46,12 +46,17 @@ const EM_PARAMS_BASE = {
                           //  地面距离 6 会漏掉全部 DEI/婆罗洲目标——放宽后由编队可行性过滤, 簇按距离仍就近优先)
 }
 
+// 未设 EOTS_OPT_PROFILE 时 erasmus-v2-opt 的内置默认(可玩项默认配置):
+// 已验证最优组合(dawn-final32/blk2 系列定版), 兼容双方角色(盟军专属 flag 对日惰性)。
+const EM_DEFAULT_PROFILE = "taskforce_math,island_sweep,allies_resource_raid,allies_blockade_v2,allies_pow_quota,allies_cv_preserve,loss_optimal"
+
 function em_profile_from_env() {
-    // EOTS_OPT_PROFILE=all|baseline|逗号分隔开关列表
+    // EOTS_OPT_PROFILE=all|baseline|逗号分隔开关列表(未设=内置默认)
     // EOTS_OPT_PARAMS=key=value,key=value (数值参数覆盖, 供参数扫描)
-    if (typeof process === "undefined" || !process.env) return null
-    const raw = process.env.EOTS_OPT_PROFILE
-    if (!raw || raw === "baseline") return {}
+    if (typeof process === "undefined" || !process.env) return {}
+    let raw = process.env.EOTS_OPT_PROFILE
+    if (raw === "baseline") return {}
+    if (!raw) raw = EM_DEFAULT_PROFILE
     const p = {}
     if (raw === "all") { EM_FLAGS.forEach(f => p[f] = 1) }
     else raw.split(",").map(s => s.trim()).filter(Boolean).forEach(f => { if (EM_FLAGS.includes(f)) p[f] = 1 })
