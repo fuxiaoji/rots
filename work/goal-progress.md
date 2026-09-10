@@ -220,3 +220,9 @@ taskforce_math + allies_cv_preserve + allies_pow_quota + allies_resource_raid + 
 3. 资源≤5 率 19%→50%: 南方三格攻坚的两栖编组时序(提前至 T6-7)
 4. 夺格速率: emSweep 参数数值通道暴露到环境变量 + 簇大小/距离扫描
 5. 两栖失败抑制: cluster 目标的海空 margin 预检(复用 em_amphib_assessment)
+
+## 05:00 tojo_pressure 杠杆闭环
+- 机制发现: 任意美航母航空 committed 到日本地区战斗格 → 强制日随机弃牌(events.js Carrier raids on Japan); 弃 TOJO_RESIGNS 且 T≥8 → TOJO 立即激活(2325-2328)
+- tojo_pressure flag 实装(headless 攻击分支放行日本区海空袭扰, T8+ 且 TOJO 未激活)
+- 实测 0 次触发: T8 时盟军 CV 不在日本作战半径(Iwo/Okinawa 链 T9-11 才通)——杠杆前置=前沿推进加速, 属多会话工程
+- 基线逐位一致保持; flag 保留(晚局自然射程内会生效)

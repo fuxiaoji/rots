@@ -15,6 +15,7 @@ const EM_FLAGS = [
     "capture_rate",           // 1=PBM/推进落点优先"空虚敌控格"(地面移入即夺, move.js:881 路径夺格); 0=基线落点表
     "island_sweep",           // 1=岛群清扫: 激活预算用满(链上轮换+推进兜底)+岛群多路登陆+申报窗多焦点; 0=基线
     "loss_optimal",           // 1=受击分配价值最优(一步受损损失最小化, 替换 CV→BB→CA→DD 词典序); 0=图表序
+    "tojo_pressure",          // 1=T8 起 CV 空袭日本地区(每次强制日随机弃牌, 弃 TOJO_RESIGNS 即激活 TOJO); 0=基线
 ]
 
 // 数值参数(敏感性问题分析对象; 均有工程注释)
@@ -40,7 +41,8 @@ const EM_PARAMS_BASE = {
     emBlkGarrisonSteps: 2,     // [allies_blockade_v2] 己控资源格 GARRISON 所需地面步数(防日本夺回)
     emBlkManchCutTurn: 5,      // [allies_blockade_v2] 满洲通路切断目标(Pusan CONQUEST)最早回合
     emBlkPinResTargets: 4,     // [allies_blockade_v2] 链级封锁主轴每次前插的 JP 资源格上限(按前沿距离取最近)
-    emBlkPinResReach: 20,     // [allies_blockade_v2] 链级前插资源格的前沿半径(地面距离; 两栖目标经海军一跳可达,
+    emBlkPinResReach: 20,
+    emTojoTurn: 8,         // [tojo_pressure] 开始袭扰日本地区的最早回合     // [allies_blockade_v2] 链级前插资源格的前沿半径(地面距离; 两栖目标经海军一跳可达,
                           //  地面距离 6 会漏掉全部 DEI/婆罗洲目标——放宽后由编队可行性过滤, 簇按距离仍就近优先)
 }
 

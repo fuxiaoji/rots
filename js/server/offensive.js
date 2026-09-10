@@ -1163,9 +1163,25 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
         // 盟军开局的事件/撤退战略可能没有地图焦点。旧的通用“最近敌军”退化会让
         // 夏威夷舰机跨海选择日本本土，形成图表外自杀攻势。只有当前实际战略焦点
         // 本身位于日本区域时，盟军才可把日本本土列为战斗格。
+        // [opt tojo_pressure] T8 起 TOJO 未激活时, 放行"日本地区海空袭扰"一次/攻势:
+        // 美航母航空(br) committed 到日本地区战斗格 → 引擎强制日随机弃牌
+        // (events.js Carrier raids on Japan), 弃 TOJO_RESIGNS 且 T≥8 → TOJO 激活。
+        // 限制: 仅空袭目标格无守军地面(纯海空战), 且本攻势尚未宣日本区格, 防自杀重复。
         const targetMd = get_map_data(hex)
         const focusMd = strategicFocus !== null ? get_map_data(strategicFocus) : null
-        if (faction === AP && targetMd && targetMd.region === "Japan" && (!focusMd || focusMd.region !== "Japan")) return null
+        let tojoPass = false
+        if (faction === AP && targetMd && targetMd.region === "Japan") {
+            const emcTJ = (typeof em_cfg === "function") ? em_cfg() : null
+            if (emcTJ && emcTJ.tojo_pressure && G.turn >= (Number(emcTJ.emTojoTurn) || 8)
+                && typeof is_event_active === "function" && typeof events !== "undefined"
+                && !is_event_active(events.TOJO)
+                && movingPiece && movingPiece.class === "naval" && Number(movingPiece.br) > 0) {
+                tojoPass = true
+            }
+        }
+        if (faction === AP && targetMd && targetMd.region === "Japan" && !tojoPass
+            && (!focusMd || focusMd.region !== "Japan")) return null
+        if (tojoPass && eu.count > 0) return [0, eu.naval, eu.count, nearKey(hex), hex]
         // 航空单位可从战斗格外参战。若后方基地不在目标战斗航程内，本次攻势先把
         // 它移动到更靠前的合法机场；到达后 choose_attack_hex 仍按 br/ebr 决定能否
         // 承诺到会战，不绕过任何移动或战斗航程检查。

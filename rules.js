@@ -11693,9 +11693,25 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
         // 盟军开局的事件/撤退战略可能没有地图焦点。旧的通用“最近敌军”退化会让
         // 夏威夷舰机跨海选择日本本土，形成图表外自杀攻势。只有当前实际战略焦点
         // 本身位于日本区域时，盟军才可把日本本土列为战斗格。
+        // [opt tojo_pressure] T8 起 TOJO 未激活时, 放行"日本地区海空袭扰"一次/攻势:
+        // 美航母航空(br) committed 到日本地区战斗格 → 引擎强制日随机弃牌
+        // (events.js Carrier raids on Japan), 弃 TOJO_RESIGNS 且 T≥8 → TOJO 激活。
+        // 限制: 仅空袭目标格无守军地面(纯海空战), 且本攻势尚未宣日本区格, 防自杀重复。
         const targetMd = get_map_data(hex)
         const focusMd = strategicFocus !== null ? get_map_data(strategicFocus) : null
-        if (faction === AP && targetMd && targetMd.region === "Japan" && (!focusMd || focusMd.region !== "Japan")) return null
+        let tojoPass = false
+        if (faction === AP && targetMd && targetMd.region === "Japan") {
+            const emcTJ = (typeof em_cfg === "function") ? em_cfg() : null
+            if (emcTJ && emcTJ.tojo_pressure && G.turn >= (Number(emcTJ.emTojoTurn) || 8)
+                && typeof is_event_active === "function" && typeof events !== "undefined"
+                && !is_event_active(events.TOJO)
+                && movingPiece && movingPiece.class === "naval" && Number(movingPiece.br) > 0) {
+                tojoPass = true
+            }
+        }
+        if (faction === AP && targetMd && targetMd.region === "Japan" && !tojoPass
+            && (!focusMd || focusMd.region !== "Japan")) return null
+        if (tojoPass && eu.count > 0) return [0, eu.naval, eu.count, nearKey(hex), hex]
         // 航空单位可从战斗格外参战。若后方基地不在目标战斗航程内，本次攻势先把
         // 它移动到更靠前的合法机场；到达后 choose_attack_hex 仍按 br/ebr 决定能否
         // 承诺到会战，不绕过任何移动或战斗航程检查。
@@ -20690,6 +20706,7 @@ const EM_FLAGS = [
     "capture_rate",           // 1=PBM/推进落点优先"空虚敌控格"(地面移入即夺, move.js:881 路径夺格); 0=基线落点表
     "island_sweep",           // 1=岛群清扫: 激活预算用满(链上轮换+推进兜底)+岛群多路登陆+申报窗多焦点; 0=基线
     "loss_optimal",           // 1=受击分配价值最优(一步受损损失最小化, 替换 CV→BB→CA→DD 词典序); 0=图表序
+    "tojo_pressure",          // 1=T8 起 CV 空袭日本地区(每次强制日随机弃牌, 弃 TOJO_RESIGNS 即激活 TOJO); 0=基线
 ]
 
 // 数值参数(敏感性问题分析对象; 均有工程注释)
@@ -20715,7 +20732,8 @@ const EM_PARAMS_BASE = {
     emBlkGarrisonSteps: 2,     // [allies_blockade_v2] 己控资源格 GARRISON 所需地面步数(防日本夺回)
     emBlkManchCutTurn: 5,      // [allies_blockade_v2] 满洲通路切断目标(Pusan CONQUEST)最早回合
     emBlkPinResTargets: 4,     // [allies_blockade_v2] 链级封锁主轴每次前插的 JP 资源格上限(按前沿距离取最近)
-    emBlkPinResReach: 20,     // [allies_blockade_v2] 链级前插资源格的前沿半径(地面距离; 两栖目标经海军一跳可达,
+    emBlkPinResReach: 20,
+    emTojoTurn: 8,         // [tojo_pressure] 开始袭扰日本地区的最早回合     // [allies_blockade_v2] 链级前插资源格的前沿半径(地面距离; 两栖目标经海军一跳可达,
                           //  地面距离 6 会漏掉全部 DEI/婆罗洲目标——放宽后由编队可行性过滤, 簇按距离仍就近优先)
 }
 
