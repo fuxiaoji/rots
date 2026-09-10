@@ -21323,6 +21323,12 @@ function ep_allocate_targets(role, view, targets, budget) {
         let mode = "GROUND_ATTACK"
         let value = (typeof em_target_value === "function") ? em_target_value(role, h) : 1
         try { mode = ep_attack_mode(role, h) } catch (e) {}
+        // §19 DESPERATE(T11/12) 资源格紧急加权: 原子弹/封锁门槛的最后通路,
+        // 实测 20260905 差一个资源格即胜的局存在 —— 末盘资源夺取是最高价值动作。
+        if (ps.posture === "DESPERATE" && role === "Allies") {
+            const mDr = (typeof get_map_data === "function") ? get_map_data(h) : null
+            if (mDr && mDr.resource) value *= 2.5
+        }
         if (mode === "CAPTURE_EMPTY") value *= 0.8 // 空格扫荡: 低成本高确定性, 轻微降权排序
         // 可行性: 编得出单位才入队(编不出地面组的两栖格跳过 —— 防 Vogelkop 死锁)
         let feasible = true, pWin = 0

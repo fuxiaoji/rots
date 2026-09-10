@@ -240,3 +240,10 @@ taskforce_math + allies_cv_preserve + allies_pow_quota + allies_resource_raid + 
 - P 门槛参数不敏感(0.50/0.55/0.60 同结果: P 分布双峰, 任务部队要么轻松过 0.6 要么彻底不行)——节奏差异来自结构而非阈值, min/desired 参数留作后续配合编队包搜索(§10 beam)再调
 - ERASMUS_PLUS 首批已交付(e610338): 解耦完成(erasmus_plus.js/erasmus_trace.js + 3 hooks), 基线逐位一致
 - 下轮接续: §25 行为测试自动化(Test1-10) → §10 beam search 编队包 → §14 前推/战区需求 → §17 OVERMATCH 专项
+
+## 02:25 定版（计划 v1.0 实施夜）
+- §22 解耦完成: erasmus_eval/taskforce/plan 三层 + trace; 稀缺度/估算器/战区需求/PlanScore 全部落地
+- DESPERATE 资源紧急加权实装; 16局: 资源 5.94、≤5 率 25%(4/16)、campaign 81%(13/16)
+- 结构确认(第三次独立验证): soviet/TOJO 门控 1/16 是胜率唯一硬顶; 封锁 trace 0/16 全断(需前方推进加速)
+- 100局 A/B: 基线 99-1 (capRate 0.43, AP 夺 0.1/局) vs PLUS 98-2 (capRate 1.50, AP 夺 4.6/局=46倍, actR 0.63)
+- 下轮: ①规则裁定(16.2 vs 引擎) ②TOJO 压力的前置推进加速 ③封锁全断工程 ④§25 测试扩展至 10 项
