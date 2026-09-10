@@ -48,12 +48,20 @@ const EM_PARAMS_BASE = {
 
 function em_profile_from_env() {
     // EOTS_OPT_PROFILE=all|baseline|逗号分隔开关列表
+    // EOTS_OPT_PARAMS=key=value,key=value (数值参数覆盖, 供参数扫描)
     if (typeof process === "undefined" || !process.env) return null
     const raw = process.env.EOTS_OPT_PROFILE
     if (!raw || raw === "baseline") return {}
-    if (raw === "all") { const p = {}; EM_FLAGS.forEach(f => p[f] = 1); return p }
     const p = {}
-    raw.split(",").map(s => s.trim()).filter(Boolean).forEach(f => { if (EM_FLAGS.includes(f)) p[f] = 1 })
+    if (raw === "all") { EM_FLAGS.forEach(f => p[f] = 1) }
+    else raw.split(",").map(s => s.trim()).filter(Boolean).forEach(f => { if (EM_FLAGS.includes(f)) p[f] = 1 })
+    const pv = process.env.EOTS_OPT_PARAMS
+    if (pv) {
+        pv.split(",").map(s => s.trim()).filter(Boolean).forEach(kv => {
+            const [k, v] = kv.split("=")
+            if (k in EM_PARAMS_BASE) { const n = Number(v); if (Number.isFinite(n)) p[k] = n }
+        })
+    }
     return p
 }
 
