@@ -20706,6 +20706,7 @@ const EM_FLAGS = [
     "capture_rate",           // 1=PBM/推进落点优先"空虚敌控格"(地面移入即夺, move.js:881 路径夺格); 0=基线落点表
     "island_sweep",           // 1=岛群清扫: 激活预算用满(链上轮换+推进兜底)+岛群多路登陆+申报窗多焦点; 0=基线
     "loss_optimal",           // 1=受击分配价值最优(一步受损损失最小化, 替换 CV→BB→CA→DD 词典序); 0=图表序
+    "erasmus_plus",           // 1=战役层(评估/姿态/紧急度/计划分配, erasmus_plus.js); 0=散件开关模式
     "tojo_pressure",          // 1=T8 起 CV 空袭日本地区(每次强制日随机弃牌, 弃 TOJO_RESIGNS 即激活 TOJO); 0=基线
 ]
 
@@ -21022,6 +21023,260 @@ function em_score_focus(role, pending) {
 }
 
 /** import server/bots/erasmus_math.js*/
+/** import server/bots/erasmus_plus.js*/
+// ============================================================================
+// ERASMUS_PLUS 战役层 (改进计划 v1.0 §4-§11) — erasmus-v2-opt 研究层
+// Decision Axis → CampaignAssessment → Posture → TargetSet → OffensivePlan
+//   → 多候选任务部队 → P(capture) 评估 → 全局激活分配 → 扫荡/前推
+// 全部在 em_cfg().erasmus_plus 开关后; STRICT_ERASMUS(配置关)不进本文件任何函数。
+// 复用 erasmus_math.js 的期望战斗模型(与引擎表值对齐)。
+// ============================================================================
+"use strict"
+
+// ---- 参数(计划 §32 初值, 全部可经 EOTS_OPT_PARAMS 覆盖) --------------------
+function ep_params() {
+    const c = em_cfg() || {}
+    return {
+        minP: c.epMinP !== undefined ? c.epMinP : 0.60,
+        desiredP: c.epDesiredP !== undefined ? c.epDesiredP : 0.75,
+        overmatchDesiredP: c.epOvermatchDesiredP !== undefined ? c.epOvermatchDesiredP : 0.85,
+        desperateMinP: c.epDesperateMinP !== undefined ? c.epDesperateMinP : 0.45,
+        pressureRatio: c.epPressureRatio !== undefined ? c.epPressureRatio : 1.35,
+        overmatchRatio: c.epOvermatchRatio !== undefined ? c.epOvermatchRatio : 1.80,
+        forwardTheaterDist: c.epForwardDist !== undefined ? c.epForwardDist : 12,
+    }
+}
+
+// ---- §4 CampaignAssessment --------------------------------------------------
+// 前沿有效兵力: 只统计距任意敌方单位 ≤ forwardTheaterDist 的单位 CF(计划 §4.1:
+// 不看全图总 CF, 只看能进入相关战区的有效兵力)。
+function ep_forward_cf(faction, enemyFaction, cls) {
+    const enemyLocs = []
+    for (let u = 1; u < pieces.length; ++u) {
+        const p = pieces[u]
+        if (p && p.faction === enemyFaction && p.class !== "hq") {
+            const h = G.location[u]
+            if (h >= 0 && h <= LAST_BOARD_HEX) enemyLocs.push(h)
+        }
+    }
+    let total = 0
+    for (let u = 1; u < pieces.length; ++u) {
+        const p = pieces[u]
+        if (!p || p.faction !== faction || p.class !== cls) continue
+        const h = G.location[u]
+        if (!(h >= 0 && h <= LAST_BOARD_HEX)) continue
+        const reduced = G.reduced && (typeof set_has === "function" ? set_has(G.reduced, u) : G.reduced.includes(u))
+        const cf = reduced ? (Number(p.rcf) || Math.ceil((Number(p.cf) || 0) / 2)) : (Number(p.cf) || 0)
+        for (const eh of enemyLocs) {
+            if (get_distance(h, eh) <= 12) { total += cf; break }
+        }
+    }
+    return total
+}
+
+// 替补潜力: 未部署+增援队列中的地面 CF 总量(计划 §4.2 交换价值的稀缺度代理)。
+function ep_replacement_cf(faction) {
+    let total = 0
+    for (let u = 1; u < pieces.length; ++u) {
+        const p = pieces[u]
+        if (!p || p.faction !== faction || p.class !== "ground") continue
+        const loc = G.location[u]
+        const pending = loc === 1481 || loc === 1483 || loc === 1484 || (loc >= 1490 && loc <= 1510)
+        if (pending) total += Number(p.cf) || 0
+    }
+    return total
+}
+
+// §4.3 Turn Urgency
+function ep_urgency(turn) {
+    if (turn >= 12) return 3.0
+    if (turn === 11) return 1.8
+    if (turn === 10) return 1.4
+    if (turn === 9) return 1.2
+    return 1.0
+}
+
+// §5 Strategic Posture
+function ep_posture(role) {
+    const P = ep_params()
+    const me = role === "Japan" ? JP : AP
+    const enemy = 1 - me
+    const myForward = ep_forward_cf(me, enemy, "ground") + 0.5 * ep_forward_cf(me, enemy, "air") + 0.5 * ep_forward_cf(me, enemy, "naval")
+    const enForward = ep_forward_cf(enemy, me, "ground") + 0.5 * ep_forward_cf(enemy, me, "air") + 0.5 * ep_forward_cf(enemy, me, "naval")
+    const myRepl = ep_replacement_cf(me), enRepl = ep_replacement_cf(enemy)
+    const ratio = enForward > 0 ? myForward / enForward : (myForward > 0 ? 9.9 : 1.0)
+    let posture = "NORMAL"
+    if (ratio >= P.overmatchRatio && myRepl >= enRepl) posture = "OVERMATCH"
+    else if (ratio >= P.pressureRatio) posture = "PRESSURE"
+    let desperate = false
+    if (role === "Allies" && (G.turn >= 11 || Number(G.political_will || 9) <= 2)) desperate = true
+    if (role === "Japan" && get_jp_resources && (() => { try { return get_jp_resources() <= 3 } catch (e) { return false } })()) desperate = true
+    if (desperate) posture = "DESPERATE"
+    return { posture, ratio: Number(ratio.toFixed(2)), myForward, enForward, myRepl, enRepl,
+        urgency: ep_urgency(Number(G.turn || 0)) }
+}
+
+// P(capture) 门槛(§8 三重门槛的姿态化取值)
+function ep_p_thresholds(posture) {
+    const P = ep_params()
+    if (posture === "DESPERATE") return { min: P.desperateMinP, desired: P.desiredP }
+    if (posture === "OVERMATCH") return { min: P.minP + 0.05, desired: P.overmatchDesiredP }
+    return { min: P.minP, desired: P.desiredP }
+}
+
+// ---- §7 AttackMode 分类 ------------------------------------------------------
+function ep_attack_mode(role, target) {
+    const mine = role === "Japan" ? JP : AP
+    const md = (typeof get_map_data === "function") ? get_map_data(target) : null
+    if (!md) return "GROUND_ATTACK"
+    let enemyUnits = 0
+    for (let u = 1; u < pieces.length; ++u) {
+        const p = pieces[u]
+        if (p && p.faction !== mine && G.location[u] === target) enemyUnits++
+    }
+    if (enemyUnits === 0 && is_space_controlled(target, 1 - mine)) return "CAPTURE_EMPTY"
+    if (md.port && !ep_land_reachable(target, mine)) return "AMPHIBIOUS_ASSAULT"
+    return "GROUND_ATTACK"
+}
+// 陆路可达粗判: 本方任一地面单位沿陆地距离 ≤ 6(地面移动力上限)可达。
+function ep_land_reachable(target, mine) {
+    if (typeof get_distance !== "function") return false
+    for (let u = 1; u < pieces.length; ++u) {
+        const p = pieces[u]
+        if (!p || p.faction !== mine || p.class !== "ground") continue
+        const h = G.location[u]
+        if (h >= 0 && h <= LAST_BOARD_HEX && get_distance(h, target) <= 6) return true
+    }
+    return false
+}
+
+// ---- §6/§10 OffensivePlan: 目标集合 + 价值密度分配 ---------------------------
+// targets: 候选目标 hex 数组(决策轴链 ∪ raid/资源/紧迫命名格 —— 调用方给全集,
+// 本函数不做战略选择, 只做"给定集合下的统一分配", 取代散落的焦点覆盖)。
+// 返回 {queue: [hex...]} 按价值密度排序; 激活窗按队列顺序编组, 编满一个再下一个。
+function ep_allocate_targets(role, view, targets, budget) {
+    const emc = em_cfg() || {}
+    if (!emc.erasmus_plus || !Array.isArray(targets) || !targets.length) return null
+    const ps = ep_posture(role)
+    const th = ep_p_thresholds(ps.posture)
+    const urgency = ps.urgency
+    const mine = role === "Japan" ? JP : AP
+    const scored = []
+    const avail = Array.isArray(view?.actions?.unit) ? view.actions.unit : []
+    for (const h of targets) {
+        let mode = "GROUND_ATTACK"
+        let value = (typeof em_target_value === "function") ? em_target_value(role, h) : 1
+        try { mode = ep_attack_mode(role, h) } catch (e) {}
+        if (mode === "CAPTURE_EMPTY") value *= 0.8 // 空格扫荡: 低成本高确定性, 轻微降权排序
+        // 可行性: 编得出单位才入队(编不出地面组的两栖格跳过 —— 防 Vogelkop 死锁)
+        let feasible = true, pWin = 0
+        try {
+            const plan = composeTaskForce(h, null, null, view, avail, role)
+            if (!plan || (plan.unit === undefined || plan.unit === null)) feasible = false
+            else if (plan.groundStrength !== undefined && mode === "AMPHIBIOUS_ASSAULT") {
+                // 登陆目标 P(capture) 评估(计划 §9: 枚举 D10, 已含反应折算的守军)
+                const defenders = (view?.ai?.units || []).filter(u => u.faction !== mine && u.location === h)
+                const as = em_amphib_assessment({
+                    attacker: mine, targetHex: h,
+                    attNavalCF: plan.strikeStrength, attNavalHasBr: true, attAirCF: 0,
+                    attGroundCF: plan.groundStrength, attGroundLfs: [3],
+                    defNavalCF: defenders.filter(u => u.class === "naval").reduce((s, u) => s + (u.cf || 0), 0),
+                    defNavalHasBr: defenders.some(u => u.class === "naval"),
+                    defAirCF: defenders.filter(u => u.class === "air").reduce((s, u) => s + (u.cf || 0), 0),
+                    defGroundCF: defenders.filter(u => u.class === "ground").reduce((s, u) => s + (u.cf || 0), 0),
+                    defGroundLfs: defenders.filter(u => u.class === "ground").map(u => Number(u.lf) || 3),
+                })
+                pWin = as.pWin
+                if (as.abort) feasible = false
+            }
+        } catch (e) { feasible = false }
+        if (!feasible) continue
+        // 门槛: 低于 min 且非 DESPERATE 的目标降权(不删除 —— OVERMATCH 交换逻辑仍可打)
+        if (pWin > 0 && pWin < th.min && ps.posture !== "DESPERATE") value *= 0.5
+        const density = value * (pWin > 0 ? Math.max(pWin, 0.15) : 0.5) * urgency
+        scored.push({ hex: h, mode, value: Number(value.toFixed(1)), pWin: Number(pWin.toFixed(2)), density: Number(density.toFixed(2)) })
+    }
+    scored.sort((a, b) => b.density - a.density || a.hex - b.hex)
+    const plan = { role, turn: Number(G.turn || 0), posture: ps.posture, urgency,
+        thresholds: th, force: { myForward: ps.myForward, enForward: ps.enForward },
+        queue: scored.map(x => x.hex), detail: scored, budget: budget || null }
+    if (typeof ep_trace_plan === "function") ep_trace_plan(plan)
+    return plan
+}
+
+// ---- §13 Exploitation: 空虚敌控格扫荡(队列全达标后的剩余预算消费者) ----------------
+// 扫描敌控且双方皆无单位的格: 资源/港口/机场/命名格优先, 需本方地面单位可达(≤6)。
+function ep_pick_exploitation_hex(role) {
+    const emc = em_cfg() || {}
+    if (!emc.erasmus_plus) return null
+    const mine = role === "Japan" ? JP : AP
+    if (typeof is_space_controlled !== "function" || typeof get_distance !== "function") return null
+    const occupied = new Set()
+    for (let u = 1; u < pieces.length; ++u) {
+        const p = pieces[u]
+        if (!p) continue
+        const h = G.location[u]
+        if (h >= 0 && h <= LAST_BOARD_HEX) occupied.add(h)
+    }
+    let best = null, bestScore = -Infinity
+    for (let h = 1; h <= LAST_BOARD_HEX; ++h) {
+        if (occupied.has(h)) continue
+        if (!is_space_controlled(h, 1 - mine)) continue
+        const md = (typeof get_map_data === "function") ? get_map_data(h) : null
+        if (!md) continue
+        // 本方地面可达性: 距任意己方地面 ≤6(一个攻势的移动力), 太远不扫
+        let reach = 99
+        for (let u = 1; u < pieces.length; ++u) {
+            const p = pieces[u]
+            if (!p || p.faction !== mine || p.class !== "ground") continue
+            const h2 = G.location[u]
+            if (h2 >= 0 && h2 <= LAST_BOARD_HEX) reach = Math.min(reach, get_distance(h2, h))
+        }
+        if (reach > 6) continue
+        let value = 1
+        if (md.resource) value += 6
+        if (md.port) value += 3
+        if (md.airfield) value += 3
+        if (md.named) value += 2
+        const score = value - reach * 0.5
+        if (score > bestScore) { bestScore = score; best = h }
+    }
+    return best
+}
+
+if (typeof module === "undefined" || !module.exports) { /* bundle 内联, 无导出 */ }
+/** import server/bots/erasmus_plus.js*/
+/** import server/bots/erasmus_trace.js*/
+// ERASMUS_PLUS 计划诊断 (改进计划 §24 Trace 模板) — 供对局审计与"为什么不打"解释。
+"use strict"
+
+let EP_LAST_PLAN = null
+
+function ep_trace_plan(plan) {
+    EP_LAST_PLAN = plan
+    if (typeof process !== "undefined" && process.env && process.env.EOTS_PLUS_DEBUG) {
+        try {
+            const nm = h => { try { return get_map_data(h).name || String(h) } catch (e) { return String(h) } }
+            console.log(`[PLUS] T${plan.turn} ${plan.role} posture=${plan.posture} urgency=${plan.urgency} ` +
+                `queue=[${plan.queue.slice(0, 5).map(nm).join(" > ")}] ` +
+                `detail=[${plan.detail.slice(0, 3).map(d => `${nm(d.hex)}:${d.mode}:P${d.pWin}:v${d.value}`).join(", ")}]`)
+        } catch (e) { /* 诊断失败不影响决策 */ }
+    }
+}
+
+function ep_last_plan() { return EP_LAST_PLAN }
+
+// 决策轨迹附加: erasmus.js 在 sm 轨迹上挂 plan 摘要(为什么打/为什么不打)。
+function ep_trace_of(role) {
+    const plan = EP_LAST_PLAN
+    if (!plan || plan.role !== role) return null
+    return {
+        plus: true, posture: plan.posture, urgency: plan.urgency,
+        queue: plan.queue.slice(0, 6),
+        detail: plan.detail.slice(0, 6).map(d => ({ hex: d.hex, mode: d.mode, pWin: d.pWin, value: d.value })),
+    }
+}
+/** import server/bots/erasmus_trace.js*/
 /** import server/erasmus_ops.js*/
 // 目标聚焦操作层 (Operational Target-Focus) — erasmus-v2.0-zh.6
 //
@@ -21357,7 +21612,7 @@ function eop_focus_faction(faction) {
 // OC 牌(new_battle_allowed 限 1)与焦点未宣时返回 undefined, 走基线 eop_pick_action_hex。
 function eop_pick_declare_hex(candidates, role) {
     const emc = (typeof em_cfg === "function") ? em_cfg() : null
-    if (!emc || !emc.island_sweep) return undefined
+    if (!emc || !(emc.island_sweep || emc.erasmus_plus)) return undefined
     if (!Array.isArray(candidates) || !candidates.length) return undefined
     if (typeof G === "undefined" || !G || !G.offensive) return undefined
     let multiAllowed = false
@@ -21711,7 +21966,7 @@ function eop_landing_no_escort(role, view) {
 // 兜底(纯海军组只会扑敌舰格单挑)。基线(配置关)直接返回 undefined, 维持原 done。
 function eop_pick_advance_unit(candidates, role, activeUnits) {
     const emc = (typeof em_cfg === "function") ? em_cfg() : null
-    if (!emc || !emc.island_sweep) return undefined
+    if (!emc || !(emc.island_sweep || emc.erasmus_plus)) return undefined
     if (!Array.isArray(candidates) || !candidates.length) return undefined
     if (typeof G === "undefined" || !G || !G.location) return undefined
     if (typeof is_space_controlled !== "function" || typeof get_distance !== "function") return undefined
@@ -21818,6 +22073,33 @@ function eop_activation_focus_faction(faction, selectedCount, view, candidates) 
     }
     const active=new Set((view?.offensive?.active_units || G.offensive?.active_units || []).flat())
     const available=Array.isArray(candidates)?candidates.filter(u=>!active.has(u)):null
+    // [opt ERASMUS_PLUS] 战役层统一分配: 候选全集(链)经 评估→姿态→价值密度 排序,
+    // 取代 target_scoring/island_sweep/PoW/资源 各自为政的焦点覆盖(计划 §6"不再依赖
+    // 多个互相不一致的 focus/target 变量")。队列空(全不可行)时回退链上原逻辑。
+    if(emcAFo&&emcAFo.erasmus_plus&&typeof ep_allocate_targets==="function"){
+        const pendingAll=(axis.chain||[]).filter(h=>eop_target_pending(role,h,eop_target_meta(role,h)))
+        const planQ=ep_allocate_targets(role,view,pendingAll,null)
+        if(planQ&&Array.isArray(planQ.queue)&&planQ.queue.length){
+            // §10 多目标: 按价值密度序, 返回第一个"编组未达标"的目标 —— 编满者自动
+            // 跳过, 预算自然扩散成多个任务部队(而非灌进单一目标)。
+            for(const h of planQ.queue){
+                try{
+                    const pl=composeTaskForce(h,null,null,view,available,role)
+                    if(pl&&!pl.complete&&pl.unit!==undefined&&pl.unit!==null)return h
+                }catch(e){}
+            }
+            // 主目标(min-P)已达标: §13 优先岛群簇分流(island_sweep 开时), 否则空虚格扫荡
+            if(emcAFo.island_sweep&&typeof eop_pick_cluster_landing==="function"){
+                const chx=eop_pick_cluster_landing(role,view,available,planQ.queue[0],false)
+                if(chx!==null&&chx!==undefined)return chx
+            }
+            if(typeof ep_pick_exploitation_hex==="function"){
+                const hx=ep_pick_exploitation_hex(role)
+                if(hx!==null&&hx!==undefined)return hx
+            }
+        }
+        // 队列全空/全达标且无扫荡: 落回下方传统循环(不 return, 保留推进兜底)
+    }
     // [opt W-PoW] 本回合 PoW 配额未达标 → 命名格夺占绝对优先(压过岛群簇分流)。
     // 验尸: island_sweep 扫荡无名礁格使 capRate 上升但 PoW 银行断供, PW 5-7 点/局
     // 流失、T8 条约败——B29(T9 到场)/封锁(T9+)全部活不到。bank≥pow 后自动恢复扫荡。
@@ -22573,9 +22855,42 @@ function composeTaskForce(target, card, hq, view, candidates, role, metaOverride
     } catch (e) { reactionStrengthOverride=f.potentialReactionStrength }
     const support=eop_meets_battle_support_standard(f.meta,committed,target,faction)
     const dmg=eop_evaluate_damage_level(f.meta,committed,defenders,reactionIds,byId,target,reactionStrengthOverride)
-    if(support.met&&dmg.met)return {complete:true,required:need,strength:math,unit:null,
-        formation:landing?"supported-amphibious-assault":f.suppress?"air-sea-strike":"minimum-sufficient",
-        groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
+    if(support.met&&(dmg.met||(em_cfg&&((typeof em_cfg==="function")?em_cfg():null)&&((typeof em_cfg==="function")?em_cfg():null).erasmus_plus))){
+        // [opt ERASMUS_PLUS §8] 三重门槛: support(兵种构成)达标后 —
+        //  plus 模式: P(capture) 取代 dmg 级 2x 生存闸门(P 模型已隐含兵力充分性,
+        //    旧闸门实测几乎永不达标导致单目标灌兵), min P 多目标放行/desired 独目标;
+        //  非 plus: 保持 dmg.met 规则口径。
+        const emcPP=(typeof em_cfg==="function")?em_cfg():null
+        if(emcPP&&emcPP.erasmus_plus&&typeof ep_p_thresholds==="function"&&typeof ep_posture==="function"
+            &&!f.suppress&&typeof em_ground_outcome==="function"){
+            try{
+                const psP=ep_posture(role), thP=ep_p_thresholds(psP.posture)
+                // §10 多目标分配: 队列还有其他目标时, 主目标编到 min P 即放行(剩余预算
+                // 扩散成更多任务部队); 独目标或 OVERMATCH 姿态才追 desired P。
+                const planNow=(typeof ep_last_plan==="function")?ep_last_plan():null
+                const soloTarget=!planNow||!Array.isArray(planNow.queue)||planNow.queue.length<=1
+                const targetP=(psP.posture==="OVERMATCH"||soloTarget)?thP.desired:thP.min
+                const attG=committed.filter(u=>u.class==="ground")
+                const attCFp=attG.reduce((s2,u)=>s2+(u.reduced?(Number(u.rcf)||Math.ceil((Number(u.cf)||0)/2)):(Number(u.cf)||0)),0)
+                const defGp=defenders.filter(u=>u.class==="ground")
+                const defCFp=defGp.reduce((s2,u)=>s2+(u.reduced?(Number(u.rcf)||Math.ceil((Number(u.cf)||0)/2)):(Number(u.cf)||0)),0)
+                const modsP=(typeof em_ground_mods==="function")?em_ground_mods({attacker:faction,targetHex:target,
+                    attAir:committed.some(u=>u.class==="air"),attNaval:committed.some(u=>u.class==="naval"),
+                    defAir:defenders.some(u=>u.class==="air"),defNaval:defenders.some(u=>u.class==="naval"),
+                    amphibious:!!landing}):{att:0,def:0}
+                const ocP=em_ground_outcome({attCF:attCFp,defCF:defCFp,attMods:modsP.att,defMods:modsP.def,
+                    attLfs:attG.map(u=>Number(u.lf)||3),defLfs:defGp.map(u=>Number(u.lf)||3)})
+                if(ocP.pWin>=targetP)return {complete:true,required:need,strength:math,unit:null,
+                    formation:landing?"supported-amphibious-assault":f.suppress?"air-sea-strike":"minimum-sufficient",
+                    groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired,
+                    pWin:Number(ocP.pWin.toFixed(2)),via:"ep-pwin"}
+                // pWin<desired: 不收工, 继续按边际效用加编(erasmus_plus 下 pick 走 em 边际)
+            }catch(e){/* 评估失败回退规则口径 */}
+        }
+        return {complete:true,required:need,strength:math,unit:null,
+            formation:landing?"supported-amphibious-assault":f.suppress?"air-sea-strike":"minimum-sufficient",
+            groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
+    }
     let pool=(candidates||[]).map(id=>byId.get(id)).filter(Boolean)
     pool=pool.filter(u=>{
         try{return typeof eop_preserve_rear_air!=="function"||!eop_preserve_rear_air(u.id,role,target)}catch(e){return true}

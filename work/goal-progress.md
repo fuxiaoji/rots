@@ -226,3 +226,12 @@ taskforce_math + allies_cv_preserve + allies_pow_quota + allies_resource_raid + 
 - tojo_pressure flag 实装(headless 攻击分支放行日本区海空袭扰, T8+ 且 TOJO 未激活)
 - 实测 0 次触发: T8 时盟军 CV 不在日本作战半径(Iwo/Okinawa 链 T9-11 才通)——杠杆前置=前沿推进加速, 属多会话工程
 - 基线逐位一致保持; flag 保留(晚局自然射程内会生效)
+
+## 06:45 ERASMUS_PLUS 战役层落地（计划 v1.0 首批 PR-A/B/C/D/E 骨架）
+
+- 新文件解耦: erasmus_plus.js(CampaignAssessment/Posture/urgency/AttackMode/价值密度分配/P门槛/Exploitation) + erasmus_trace.js(计划诊断); erasmus_ops.js 仅 3 个 hook
+- 统一分配器取代三套互相不一致的焦点覆盖(PoW/资源/岛群)——计划 §6 核心落地
+- P(capture) 门槛取代 dmg 级 2x 生存闸门(实测该闸门几乎永不达标导致单目标灌兵)
+- 8局探针: AP 夺 7.4/局(59), battleHexes 4.81/回合, 盟军两栖失败减半, 0 错误
+- 已知: capRate 1.19/回合(低于 ad-hoc 峰值 1.76——P 门槛的安全性换节奏, 微调空间=min P 0.60→0.55)
+- 基线逐位一致终验通过

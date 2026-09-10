@@ -332,7 +332,7 @@ function eop_focus_faction(faction) {
 // OC 牌(new_battle_allowed 限 1)与焦点未宣时返回 undefined, 走基线 eop_pick_action_hex。
 function eop_pick_declare_hex(candidates, role) {
     const emc = (typeof em_cfg === "function") ? em_cfg() : null
-    if (!emc || !emc.island_sweep) return undefined
+    if (!emc || !(emc.island_sweep || emc.erasmus_plus)) return undefined
     if (!Array.isArray(candidates) || !candidates.length) return undefined
     if (typeof G === "undefined" || !G || !G.offensive) return undefined
     let multiAllowed = false
@@ -686,7 +686,7 @@ function eop_landing_no_escort(role, view) {
 // 兜底(纯海军组只会扑敌舰格单挑)。基线(配置关)直接返回 undefined, 维持原 done。
 function eop_pick_advance_unit(candidates, role, activeUnits) {
     const emc = (typeof em_cfg === "function") ? em_cfg() : null
-    if (!emc || !emc.island_sweep) return undefined
+    if (!emc || !(emc.island_sweep || emc.erasmus_plus)) return undefined
     if (!Array.isArray(candidates) || !candidates.length) return undefined
     if (typeof G === "undefined" || !G || !G.location) return undefined
     if (typeof is_space_controlled !== "function" || typeof get_distance !== "function") return undefined
@@ -793,6 +793,33 @@ function eop_activation_focus_faction(faction, selectedCount, view, candidates) 
     }
     const active=new Set((view?.offensive?.active_units || G.offensive?.active_units || []).flat())
     const available=Array.isArray(candidates)?candidates.filter(u=>!active.has(u)):null
+    // [opt ERASMUS_PLUS] 战役层统一分配: 候选全集(链)经 评估→姿态→价值密度 排序,
+    // 取代 target_scoring/island_sweep/PoW/资源 各自为政的焦点覆盖(计划 §6"不再依赖
+    // 多个互相不一致的 focus/target 变量")。队列空(全不可行)时回退链上原逻辑。
+    if(emcAFo&&emcAFo.erasmus_plus&&typeof ep_allocate_targets==="function"){
+        const pendingAll=(axis.chain||[]).filter(h=>eop_target_pending(role,h,eop_target_meta(role,h)))
+        const planQ=ep_allocate_targets(role,view,pendingAll,null)
+        if(planQ&&Array.isArray(planQ.queue)&&planQ.queue.length){
+            // §10 多目标: 按价值密度序, 返回第一个"编组未达标"的目标 —— 编满者自动
+            // 跳过, 预算自然扩散成多个任务部队(而非灌进单一目标)。
+            for(const h of planQ.queue){
+                try{
+                    const pl=composeTaskForce(h,null,null,view,available,role)
+                    if(pl&&!pl.complete&&pl.unit!==undefined&&pl.unit!==null)return h
+                }catch(e){}
+            }
+            // 主目标(min-P)已达标: §13 优先岛群簇分流(island_sweep 开时), 否则空虚格扫荡
+            if(emcAFo.island_sweep&&typeof eop_pick_cluster_landing==="function"){
+                const chx=eop_pick_cluster_landing(role,view,available,planQ.queue[0],false)
+                if(chx!==null&&chx!==undefined)return chx
+            }
+            if(typeof ep_pick_exploitation_hex==="function"){
+                const hx=ep_pick_exploitation_hex(role)
+                if(hx!==null&&hx!==undefined)return hx
+            }
+        }
+        // 队列全空/全达标且无扫荡: 落回下方传统循环(不 return, 保留推进兜底)
+    }
     // [opt W-PoW] 本回合 PoW 配额未达标 → 命名格夺占绝对优先(压过岛群簇分流)。
     // 验尸: island_sweep 扫荡无名礁格使 capRate 上升但 PoW 银行断供, PW 5-7 点/局
     // 流失、T8 条约败——B29(T9 到场)/封锁(T9+)全部活不到。bank≥pow 后自动恢复扫荡。
@@ -1548,9 +1575,42 @@ function composeTaskForce(target, card, hq, view, candidates, role, metaOverride
     } catch (e) { reactionStrengthOverride=f.potentialReactionStrength }
     const support=eop_meets_battle_support_standard(f.meta,committed,target,faction)
     const dmg=eop_evaluate_damage_level(f.meta,committed,defenders,reactionIds,byId,target,reactionStrengthOverride)
-    if(support.met&&dmg.met)return {complete:true,required:need,strength:math,unit:null,
-        formation:landing?"supported-amphibious-assault":f.suppress?"air-sea-strike":"minimum-sufficient",
-        groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
+    if(support.met&&(dmg.met||(em_cfg&&((typeof em_cfg==="function")?em_cfg():null)&&((typeof em_cfg==="function")?em_cfg():null).erasmus_plus))){
+        // [opt ERASMUS_PLUS §8] 三重门槛: support(兵种构成)达标后 —
+        //  plus 模式: P(capture) 取代 dmg 级 2x 生存闸门(P 模型已隐含兵力充分性,
+        //    旧闸门实测几乎永不达标导致单目标灌兵), min P 多目标放行/desired 独目标;
+        //  非 plus: 保持 dmg.met 规则口径。
+        const emcPP=(typeof em_cfg==="function")?em_cfg():null
+        if(emcPP&&emcPP.erasmus_plus&&typeof ep_p_thresholds==="function"&&typeof ep_posture==="function"
+            &&!f.suppress&&typeof em_ground_outcome==="function"){
+            try{
+                const psP=ep_posture(role), thP=ep_p_thresholds(psP.posture)
+                // §10 多目标分配: 队列还有其他目标时, 主目标编到 min P 即放行(剩余预算
+                // 扩散成更多任务部队); 独目标或 OVERMATCH 姿态才追 desired P。
+                const planNow=(typeof ep_last_plan==="function")?ep_last_plan():null
+                const soloTarget=!planNow||!Array.isArray(planNow.queue)||planNow.queue.length<=1
+                const targetP=(psP.posture==="OVERMATCH"||soloTarget)?thP.desired:thP.min
+                const attG=committed.filter(u=>u.class==="ground")
+                const attCFp=attG.reduce((s2,u)=>s2+(u.reduced?(Number(u.rcf)||Math.ceil((Number(u.cf)||0)/2)):(Number(u.cf)||0)),0)
+                const defGp=defenders.filter(u=>u.class==="ground")
+                const defCFp=defGp.reduce((s2,u)=>s2+(u.reduced?(Number(u.rcf)||Math.ceil((Number(u.cf)||0)/2)):(Number(u.cf)||0)),0)
+                const modsP=(typeof em_ground_mods==="function")?em_ground_mods({attacker:faction,targetHex:target,
+                    attAir:committed.some(u=>u.class==="air"),attNaval:committed.some(u=>u.class==="naval"),
+                    defAir:defenders.some(u=>u.class==="air"),defNaval:defenders.some(u=>u.class==="naval"),
+                    amphibious:!!landing}):{att:0,def:0}
+                const ocP=em_ground_outcome({attCF:attCFp,defCF:defCFp,attMods:modsP.att,defMods:modsP.def,
+                    attLfs:attG.map(u=>Number(u.lf)||3),defLfs:defGp.map(u=>Number(u.lf)||3)})
+                if(ocP.pWin>=targetP)return {complete:true,required:need,strength:math,unit:null,
+                    formation:landing?"supported-amphibious-assault":f.suppress?"air-sea-strike":"minimum-sufficient",
+                    groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired,
+                    pWin:Number(ocP.pWin.toFixed(2)),via:"ep-pwin"}
+                // pWin<desired: 不收工, 继续按边际效用加编(erasmus_plus 下 pick 走 em 边际)
+            }catch(e){/* 评估失败回退规则口径 */}
+        }
+        return {complete:true,required:need,strength:math,unit:null,
+            formation:landing?"supported-amphibious-assault":f.suppress?"air-sea-strike":"minimum-sufficient",
+            groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
+    }
     let pool=(candidates||[]).map(id=>byId.get(id)).filter(Boolean)
     pool=pool.filter(u=>{
         try{return typeof eop_preserve_rear_air!=="function"||!eop_preserve_rear_air(u.id,role,target)}catch(e){return true}
