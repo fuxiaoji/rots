@@ -21325,7 +21325,19 @@ function ep_allocate_targets(role, view, targets, budget) {
         if (!feasible) continue
         // 门槛: 低于 min 且非 DESPERATE 的目标降权(不删除 —— OVERMATCH 交换逻辑仍可打)
         if (pWin > 0 && pWin < th.min && ps.posture !== "DESPERATE") value *= 0.5
-        const density = value * (pWin > 0 ? Math.max(pWin, 0.15) : 0.5) * urgency
+        // §11 PlanScore = ObjectiveValue×P + 交换价值(§18 稀缺度) − 失败成本
+        // 交换价值: OVERMATCH/PRESSURE 姿态下敌军损失价值加权(计划 §5 效果项)
+        let trade = 0
+        try {
+            const defenders = (view?.ai?.units || []).filter(u => u.faction !== mine && u.location === h)
+            if (defenders.length) {
+                const enemyLoss = defenders.reduce((s2, u) => s2 + (u.cf || 0) * (typeof ep_unit_scarcity === "function" ? ep_unit_scarcity(u, 1 - mine) : 0.5), 0)
+                trade = enemyLoss * (ps.posture === "OVERMATCH" ? 0.15 : ps.posture === "PRESSURE" ? 0.08 : 0)
+            }
+        } catch (e) {}
+        const planScore = value * (pWin > 0 ? Math.max(pWin, 0.15) : 0.5) + trade
+            - (pWin > 0 && pWin < th.min ? value * (th.min - pWin) * 0.5 : 0)
+        const density = planScore * urgency
         scored.push({ hex: h, mode, value: Number(value.toFixed(1)), pWin: Number(pWin.toFixed(2)), density: Number(density.toFixed(2)) })
     }
     scored.sort((a, b) => b.density - a.density || a.hex - b.hex)
