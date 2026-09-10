@@ -1425,6 +1425,30 @@ function headless_advance_one(self, kind, targetPlan) {
     if (plannedFocus === null && typeof eop_focus_faction === "function") {
         try { plannedFocus = eop_focus_faction(G.active) } catch (e) { plannedFocus = null }
     }
+    // [opt ERASMUS_PLUS §15] 战区需求导向: 焦点位于盈余战区且存在赤字战区时,
+    // 后方巡航目标改指赤字战区最近格(兵力 surplus→deficit 流动)。
+    if (plannedFocus !== null && typeof em_cfg === "function") {
+        const emcTD = em_cfg()
+        if (emcTD && emcTD.erasmus_plus && typeof ep_theater_demand === "function") {
+            try {
+                const demand = ep_theater_demand(G.active)
+                const deficit = demand.filter(d => d.surplus < -10).pop()
+                const surplus = demand[0]
+                if (deficit && surplus && surplus.surplus - deficit.surplus > 30
+                    && get_map_data(plannedFocus).region === surplus.theater && get_distance(loc, plannedFocus) > 8) {
+                    let best = null, bd = 99
+                    for (let h = 1; h < LAST_BOARD_HEX; ++h) {
+                        const m2 = get_map_data(h)
+                        if (m2 && m2.region === deficit.theater && is_space_controlled(h, G.active)) {
+                            const dd = get_distance(loc, h)
+                            if (dd < bd) { bd = dd; best = h }
+                        }
+                    }
+                    if (best !== null) plannedFocus = best
+                }
+            } catch (e) { /* 诊断不可用保持原焦点 */ }
+        }
+    }
     const focusDistance = plannedFocus !== null ? get_distance(loc, plannedFocus) : 0
     const farFromFocus = plannedFocus !== null && focusDistance > 8
     const semanticModes = kind === "attack" && Array.isArray(targetPlan?.movementModes) ? targetPlan.movementModes : []
