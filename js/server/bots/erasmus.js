@@ -1,6 +1,8 @@
 /** import server/bots/erasmus_config.js*/
 /** import server/bots/erasmus_math.js*/
-/** import server/bots/erasmus_plus.js*/
+/** import server/bots/erasmus_eval.js*/
+/** import server/bots/erasmus_taskforce.js*/
+/** import server/bots/erasmus_plan.js*/
 /** import server/bots/erasmus_trace.js*/
 /** import server/erasmus_ops.js*/
 /** import server/erasmus_data.js*/
