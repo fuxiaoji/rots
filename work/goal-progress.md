@@ -235,3 +235,8 @@ taskforce_math + allies_cv_preserve + allies_pow_quota + allies_resource_raid + 
 - 8局探针: AP 夺 7.4/局(59), battleHexes 4.81/回合, 盟军两栖失败减半, 0 错误
 - 已知: capRate 1.19/回合(低于 ad-hoc 峰值 1.76——P 门槛的安全性换节奏, 微调空间=min P 0.60→0.55)
 - 基线逐位一致终验通过
+
+## 07:15 定版结论
+- P 门槛参数不敏感(0.50/0.55/0.60 同结果: P 分布双峰, 任务部队要么轻松过 0.6 要么彻底不行)——节奏差异来自结构而非阈值, min/desired 参数留作后续配合编队包搜索(§10 beam)再调
+- ERASMUS_PLUS 首批已交付(e610338): 解耦完成(erasmus_plus.js/erasmus_trace.js + 3 hooks), 基线逐位一致
+- 下轮接续: §25 行为测试自动化(Test1-10) → §10 beam search 编队包 → §14 前推/战区需求 → §17 OVERMATCH 专项
