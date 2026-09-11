@@ -1,0 +1,30 @@
+63679ef (HEAD -> master, origin/master, origin/HEAD) feat: 盟军胜局复盤包——3局原子弹胜局录制(T9/T12/T8) + RTT 导入器与指南
+c7c31a7 data: B臂100局重跑定版(确认2胜/46倍夺格)
+0301362 feat(ai): DESPERATE 资源紧急加权 + §25 行为测试自动化 + 计划v1.0实施夜定版（zh.28）
+201a7e3 test(ai): §25 行为测试自动化(轰炸维持/非法动作/PW生存/资源压制)
+ebe803a feat(ai): §15 战区需求巡航导向(surplus→deficit 后方流动)
+35ade5e feat(ai): §11 PlanScore 接线(稀缺度加权交换价值+失败成本)
+ae216f9 refactor(ai): §22 文件解耦(erasmus_eval/taskforce/plan) + §18 稀缺度 + §9 估算器 + §15 战区需求
+78e325c docs: P门槛参数不敏感结论 + 定版记录
+e610338 feat(ai): ERASMUS_PLUS 战役层首批(计划v1.0 PR-A/B/C/D/E 骨架, zh.27)
+6d3a9dc chore: 清理误导性 replay 文件(当前代码下为日本胜, 非盟军胜局)
+d60f8c6 feat(ai): erasmus-v2-opt 内置默认推荐配置(可玩项化, 无环境变量即生效) + EOTS_OPT_PARAMS 通道
+f786d30 feat(infra): EOTS_OPT_PARAMS 数值参数环境通道(参数扫描基建)
+4e92693 data: 1943 dawn-final32 定版数据
+abac73f feat(ai): tojo_pressure 杠杆(日本区袭扰强制日弃牌→TOJO) + 05:00 快照（zh.26 续3）
+94bc71e docs: 04:30 收尾快照与下轮接续清单
+c1e12c4 docs: 官方规则16.2胜利条件核实记录（VP/轰炸4连/资源1-0 与引擎实现偏差待用户裁定）
+08d1ebf checkpoint(03:30): 夜间AI优化自动检查点
+f8a82bb feat(ai): 原子弹管线全打通 + PoW 资源焦点修复（zh.26 续2）
+e29ab90 feat(ai): PoW 资源格焦点优先 + blockade_v2 资源 raid + loss_optimal 注册（zh.26 续）
+fa63b49 feat(ai): W3.2 loss_optimal 受击分配价值最优(待注册flag) + 封锁最小割分析工具
+a17ad5b feat(ai): W1 岛群扫荡 island_sweep + W2 封锁图模型（zh.26）
+e9c6c98 (tag: beta-2.0) feat(ai): 测试版2.0——两胜利条件、ZOI 中和机制与封锁战略（zh.25）
+a99d12d test+docs: 对局评估 harness、统计与实验产物、论文初稿（zh.24）
+67c8637 feat(ai): 期望战斗数学优化层与科研评估基建（zh.24）
+4062aba fix(ai): REDEPLOY 战略移动不套用会战参与过滤，修复隔海撤离空攻势
+b69498b docs: 记录 PR1-PR6 代码化缺口整改与 50 局审计结论
+207534a feat(ai): PR6 fidelity 审计——五态 status 词汇 + predicate-fidelity.json + zh.23
+de4b0e6 feat(ai): PR5 战略层残余启发式精确化（isTargetComplete/IS_LAST_TARGET/CBI/Orange/大部队步数）
+0d32195 feat(ai): Page 6/12 反应+PBM 精确化（反应兵力标准/天气/神风/潜艇/优先级）
+61dc270 feat(ai): refactor composeTaskForce onto legal-participation + exact evaluators (PR3)

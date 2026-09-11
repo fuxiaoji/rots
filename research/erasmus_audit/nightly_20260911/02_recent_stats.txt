@@ -1,0 +1,194 @@
+commit 63679ef7db78072cf2d72b281133c96fe2e1a4ab
+Author: fwj <1105793864@qq.com>
+Date:   Fri Sep 11 04:04:43 2026 +0800
+
+    feat: 盟军胜局复盤包——3局原子弹胜局录制(T9/T12/T8) + RTT 导入器与指南
+
+ docs/setup/allied-win-replays.md       |     38 +
+ tests/results/replay-win-20261267.json | 102147 ++++++++++++++++++++++++++++++
+ tests/results/replay-win-20261428.json |  61993 ++++++++++++++++++
+ tools/import-replay-to-rtt.js          |     37 +
+ 4 files changed, 164215 insertions(+)
+
+commit c7c31a7dca7d95e4137f894234362747ab860090
+Author: fwj <1105793864@qq.com>
+Date:   Fri Sep 11 01:50:33 2026 +0800
+
+    data: B臂100局重跑定版(确认2胜/46倍夺格)
+
+ ...v2-opt-Aerasmus-v2-opt-headless-ab-plus100.json |  8743 +++
+ tests/results/replay-win-20261206.json             | 69721 +++++++++++++++++++
+ 2 files changed, 78464 insertions(+)
+
+commit 0301362d2bad29197bc1aa7208b2129465d85efe
+Author: fwj <1105793864@qq.com>
+Date:   Fri Sep 11 01:41:43 2026 +0800
+
+    feat(ai): DESPERATE 资源紧急加权 + §25 行为测试自动化 + 计划v1.0实施夜定版（zh.28）
+    
+    - §19 DESPERATE(T11/12) 资源格 ×2.5 紧急加权
+    - §25 行为测试: 轰炸维持/非法动作/PW生存/资源压制 四项自动化(全过)
+    - 16局: 资源≤5率 25%, campaign 维持 81%; soviet/TOJO 门控 1/16 再证为胜率硬顶
+    - 全部开关门控, 基线逐位一致保持
+
+ js/server/bots/erasmus_plan.js                     |    6 +
+ rules.js                                           |    6 +
+ ...2-Aerasmus-v2-opt-headless-desperate-res16.json | 1519 ++++++++++++++++++++
+ work/goal-progress.md                              |    7 +
+ 4 files changed, 1538 insertions(+)
+
+commit 201a7e390e146b52966cadd573fe85236e62bb4f
+Author: fwj <1105793864@qq.com>
+Date:   Fri Sep 11 01:01:53 2026 +0800
+
+    test(ai): §25 行为测试自动化(轰炸维持/非法动作/PW生存/资源压制)
+
+ tests/behavior-tests.js                            |   81 +
+ ...mus-v2-Aerasmus-v2-headless-ab-baseline100.json | 8743 ++++++++++++++++++++
+ 2 files changed, 8824 insertions(+)
+
+commit ebe803afad49284345c7275db705df389e2f4ddd
+Author: fwj <1105793864@qq.com>
+Date:   Fri Sep 11 00:40:07 2026 +0800
+
+    feat(ai): §15 战区需求巡航导向(surplus→deficit 后方流动)
+
+ js/server/offensive.js                             |  24 +
+ rules.js                                           |  24 +
+ ...mus-v2-Aerasmus-v2-opt-headless-p3-theater.json | 831 +++++++++++++++++++++
+ 3 files changed, 879 insertions(+)
+
+commit 35ade5efb77ff0278139c7b915507d0db3964943
+Author: fwj <1105793864@qq.com>
+Date:   Fri Sep 11 00:35:42 2026 +0800
+
+    feat(ai): §11 PlanScore 接线(稀缺度加权交换价值+失败成本)
+
+ js/server/bots/erasmus_plan.js                     |  14 +-
+ rules.js                                           |  14 +-
+ ...s-v2-Aerasmus-v2-opt-headless-p2-planscore.json | 831 +++++++++++++++++++++
+ 3 files changed, 857 insertions(+), 2 deletions(-)
+
+commit ae216f9e711d664b225876d6d730a2a1aaa80ee7
+Author: fwj <1105793864@qq.com>
+Date:   Fri Sep 11 00:28:23 2026 +0800
+
+    refactor(ai): §22 文件解耦(erasmus_eval/taskforce/plan) + §18 稀缺度 + §9 估算器 + §15 战区需求
+
+ js/server/bots/erasmus.js                          |   4 +-
+ js/server/bots/erasmus_eval.js                     | 134 ++++
+ js/server/bots/erasmus_plan.js                     |  72 ++
+ js/server/bots/erasmus_plus.js                     | 221 ------
+ js/server/bots/erasmus_taskforce.js                | 104 +++
+ rules.js                                           | 197 +++--
+ ...mus-v2-Aerasmus-v2-headless-basev-refactor.json | 487 ++++++++++++
+ ...asmus-v2-Aerasmus-v2-opt-headless-p2-smoke.json | 831 +++++++++++++++++++++
+ 8 files changed, 1776 insertions(+), 274 deletions(-)
+
+commit 78e325c7f9ea6c6f0b527f8bc5619f3896a97b85
+Author: fwj <1105793864@qq.com>
+Date:   Fri Sep 11 00:06:17 2026 +0800
+
+    docs: P门槛参数不敏感结论 + 定版记录
+
+ ...erasmus-v2-Aerasmus-v2-headless-basev-plus.json | 487 ++++++++++++
+ ...us-v2-Aerasmus-v2-opt-headless-plus-tune50.json | 831 +++++++++++++++++++++
+ ...us-v2-Aerasmus-v2-opt-headless-plus-tune55.json | 831 +++++++++++++++++++++
+ work/goal-progress.md                              |   5 +
+ 4 files changed, 2154 insertions(+)
+
+commit e61033880c703ab18aec44c59aa2c5e15ed2f01e
+Author: fwj <1105793864@qq.com>
+Date:   Thu Sep 10 23:55:26 2026 +0800
+
+    feat(ai): ERASMUS_PLUS 战役层首批(计划v1.0 PR-A/B/C/D/E 骨架, zh.27)
+    
+    - erasmus_plus.js: CampaignAssessment(前沿有效兵力/替补/紧急度) + Posture(NORMAL/PRESSURE/OVERMATCH/DESPERATE) + AttackMode 分类 + 价值密度多目标分配 + P(capture)门槛 + Exploitation 扫荡
+    - erasmus_trace.js: §24 计划诊断(EOTS_PLUS_DEBUG)
+    - P(capture) 取代 dmg 级 2x 生存闸门(实测几乎永不达标); min P 多目标放行/desired 独目标
+    - 8局: AP 夺 7.4/局, 盟军两栖失败减半, 基线逐位一致保持
+
+ js/server/bots/erasmus.js                          |   2 +
+ js/server/bots/erasmus_config.js                   |   1 +
+ js/server/bots/erasmus_plus.js                     | 221 ++++++
+ js/server/bots/erasmus_trace.js                    |  29 +
+ js/server/erasmus_ops.js                           |  70 +-
+ rules.js                                           | 325 +++++++-
+ ...2-Aerasmus-v2-headless-basev-final-morning.json | 487 ++++++++++++
+ ...us-v2-Aerasmus-v2-opt-headless-plus-ab-off.json | 831 +++++++++++++++++++++
+ ...mus-v2-Aerasmus-v2-opt-headless-plus-ab-on.json | 831 +++++++++++++++++++++
+ ...us-v2-Aerasmus-v2-opt-headless-plus-ab-on2.json | 831 +++++++++++++++++++++
+ ...us-v2-Aerasmus-v2-opt-headless-plus-probe1.json | 831 +++++++++++++++++++++
+ ...us-v2-Aerasmus-v2-opt-headless-plus-probe2.json | 831 +++++++++++++++++++++
+ ...us-v2-Aerasmus-v2-opt-headless-plus-probe3.json | 831 +++++++++++++++++++++
+ ...us-v2-Aerasmus-v2-opt-headless-plus-probe4.json | 831 +++++++++++++++++++++
+ ...us-v2-Aerasmus-v2-opt-headless-plus-probe5.json | 183 +++++
+ ...us-v2-Aerasmus-v2-opt-headless-plus-probe6.json | 831 +++++++++++++++++++++
+ work/goal-progress.md                              |   9 +
+ 17 files changed, 7965 insertions(+), 10 deletions(-)
+
+commit 6d3a9dc75499e38efeca64ab748d7316461745f9
+Author: fwj <1105793864@qq.com>
+Date:   Thu Sep 10 09:10:29 2026 +0800
+
+    chore: 清理误导性 replay 文件(当前代码下为日本胜, 非盟军胜局)
+
+ ...smus-v2-Aerasmus-v2-headless-basev-default.json | 487 +++++++++++++++++++++
+ ...mus-v2-Aerasmus-v2-headless-basev-default2.json | 487 +++++++++++++++++++++
+ tests/sweep-find-win.js                            |  48 ++
+ 3 files changed, 1022 insertions(+)
+
+commit d60f8c6662d48107947f88491df495c3fd513593
+Author: fwj <1105793864@qq.com>
+Date:   Thu Sep 10 09:10:02 2026 +0800
+
+    feat(ai): erasmus-v2-opt 内置默认推荐配置(可玩项化, 无环境变量即生效) + EOTS_OPT_PARAMS 通道
+
+ js/server/bots/erasmus_config.js | 13 +++++++++----
+ rules.js                         | 13 +++++++++----
+ 2 files changed, 18 insertions(+), 8 deletions(-)
+
+commit f786d30352f085349d7f7e7fb7df9079f3ad2c3a
+Author: fwj <1105793864@qq.com>
+Date:   Thu Sep 10 08:51:57 2026 +0800
+
+    feat(infra): EOTS_OPT_PARAMS 数值参数环境通道(参数扫描基建)
+
+ js/server/bots/erasmus_config.js                   |  12 +-
+ rules.js                                           |  12 +-
+ ...2-opt-Aerasmus-v2-opt-headless-param-smoke.json | 315 +++++++++++++++++++++
+ 3 files changed, 335 insertions(+), 4 deletions(-)
+
+commit 4e926933c61444d457738cfbef5403d95f8e05ff
+Author: fwj <1105793864@qq.com>
+Date:   Thu Sep 10 08:50:27 2026 +0800
+
+    data: 1943 dawn-final32 定版数据
+
+ ...v2-Aerasmus-v2-opt-headless-dawn43-final32.json | 2895 ++++++++++++++++++++
+ 1 file changed, 2895 insertions(+)
+
+commit abac73f7f59f3dd09b2e33862df089267b8f0643
+Author: fwj <1105793864@qq.com>
+Date:   Thu Sep 10 08:45:28 2026 +0800
+
+    feat(ai): tojo_pressure 杠杆(日本区袭扰强制日弃牌→TOJO) + 05:00 快照（zh.26 续3）
+
+ js/server/bots/erasmus_config.js                   |    4 +-
+ js/server/offensive.js                             |   18 +-
+ rules.js                                           |   22 +-
+ ...us-v2-Aerasmus-v2-opt-headless-tojo-probe1.json | 1519 ++++++++++++++++++++
+ ...erasmus-v2-Aerasmus-v2-headless-basev-tojo.json |  487 +++++++
+ work/goal-progress.md                              |    6 +
+ 6 files changed, 2052 insertions(+), 4 deletions(-)
+
+commit 94bc71e18c7e8d1e1ed580908f54d7fe9e244354
+Author: fwj <1105793864@qq.com>
+Date:   Thu Sep 10 08:33:50 2026 +0800
+
+    docs: 04:30 收尾快照与下轮接续清单
+
+ ...s-v2-Aerasmus-v2-opt-headless-sweep-pure16.json | 1519 ++++++++++
+ ...s-v2-Aerasmus-v2-opt-headless-dawn-final32.json | 2895 ++++++++++++++++++++
+ work/goal-progress.md                              |   14 +
+ 3 files changed, 4428 insertions(+)

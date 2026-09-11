@@ -1,0 +1,122 @@
+[
+ {
+  "seed": 20260903,
+  "surrenderTurn": {
+   "Philippines": 2
+  },
+  "zeroAct": 76,
+  "noReach": 79,
+  "final": {
+   "phil": "是",
+   "malaya": "否",
+   "dei": "否",
+   "burma": "否"
+  },
+  "turn": 11
+ },
+ {
+  "seed": 20260904,
+  "surrenderTurn": {
+   "Philippines": 3
+  },
+  "zeroAct": 67,
+  "noReach": 71,
+  "final": {
+   "phil": "是",
+   "malaya": "否",
+   "dei": "否",
+   "burma": "否"
+  },
+  "turn": 9
+ },
+ {
+  "seed": 20260905,
+  "surrenderTurn": {
+   "Philippines": 3
+  },
+  "zeroAct": 88,
+  "noReach": 84,
+  "final": {
+   "phil": "是",
+   "malaya": "否",
+   "dei": "否",
+   "burma": "否"
+  },
+  "turn": 12
+ },
+ {
+  "seed": 20260906,
+  "surrenderTurn": {
+   "Philippines": 3
+  },
+  "zeroAct": 88,
+  "noReach": 82,
+  "final": {
+   "phil": "是",
+   "malaya": "否",
+   "dei": "否",
+   "burma": "否"
+  },
+  "turn": 12
+ },
+ {
+  "seed": 20260907,
+  "surrenderTurn": {
+   "Philippines": 3
+  },
+  "zeroAct": 79,
+  "noReach": 68,
+  "final": {
+   "phil": "是",
+   "malaya": "否",
+   "dei": "否",
+   "burma": "否"
+  },
+  "turn": 10
+ },
+ {
+  "seed": 20260908,
+  "surrenderTurn": {
+   "Philippines": 3
+  },
+  "zeroAct": 85,
+  "noReach": 83,
+  "final": {
+   "phil": "是",
+   "malaya": "否",
+   "dei": "否",
+   "burma": "否"
+  },
+  "turn": 12
+ },
+ {
+  "seed": 20260909,
+  "surrenderTurn": {
+   "Philippines": 3
+  },
+  "zeroAct": 76,
+  "noReach": 87,
+  "final": {
+   "phil": "是",
+   "malaya": "否",
+   "dei": "否",
+   "burma": "否"
+  },
+  "turn": 12
+ },
+ {
+  "seed": 20260910,
+  "surrenderTurn": {
+   "Philippines": 3
+  },
+  "zeroAct": 80,
+  "noReach": 80,
+  "final": {
+   "phil": "是",
+   "malaya": "否",
+   "dei": "否",
+   "burma": "否"
+  },
+  "turn": 12
+ }
+]
