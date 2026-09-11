@@ -24774,6 +24774,25 @@ function esm_pin_strategy(view, context) {
         targetMeta = targetMeta.filter(x => !allDei.has(x.hex)).concat(exactDei)
         const order = new Map(chain.map((h, i) => [h, i]))
         targetMeta.sort((a, b) => (order.get(a.hex) ?? 9999) - (order.get(b.hex) ?? 9999))
+        // [opt japan_opening_conquest §3] 新加坡双条目修复: 目标链里新加坡可能同时有
+        // 「压制盟军HQ 0.5x」(SUPPRESS/SUPPRESS_HQ 空袭类) + 「马来亚投降」(CONQUEST 占领类)
+        // 两个条目。SUPPRESS 排在 CONQUEST 之前, 航空兵空袭即"达标" → 占领条目永远
+        // 轮不到 → 马来亚投降 8/8 局不触发(取证 07_opening_census)。
+        // 修复: 删 SUPPRESS 条目保留 CONQUEST; 或将唯一 SUPPRESS 转为 CONQUEST。
+        const emcSg = (typeof em_cfg === "function") ? em_cfg() : null
+        if (emcSg && emcSg.japan_opening_conquest && typeof esm_idx === "function") {
+            const sgHex = esm_idx("Singapore")
+            if (sgHex !== null && sgHex !== undefined && sgHex >= 0 && sgHex <= LAST_BOARD_HEX) {
+                const sgEntries = targetMeta.filter(t => t.hex === sgHex)
+                const sgSuppress = sgEntries.filter(t => /^SUPPRESS/.test(t.kind || ""))
+                const sgConquest = sgEntries.filter(t => t.kind === "CONQUEST" || t.requiresOccupation)
+                if (sgSuppress.length && sgConquest.length) {
+                    targetMeta = targetMeta.filter(t => !(t.hex === sgHex && /^SUPPRESS/.test(t.kind || "")))
+                } else if (sgSuppress.length && !sgConquest.length) {
+                    for (const t of sgSuppress) { t.kind = "CONQUEST"; t.requiresOccupation = true; t.damageLevel = 1 }
+                }
+            }
+        }
     }
     // 投降完成度只做审计，不覆盖第1页实际选出的空优、资源或事件战略。
     const openingSurrenderPlan = role === "Japan" && G.turn <= 4 ? {
@@ -26171,6 +26190,18 @@ function evaluateChart(chart, view, context) {
         const limit = volatileBonus ? Number(volatileBonus[2]) : progress ? Number(progress[2]) : selected + addable.length
         activationPlan = Object.assign({}, forcePlan || {}, { selected, limit, remaining: Math.max(0, limit - selected),
             mode: forcePlan?.complete ? "后续目标/前线调动" : "补足当前目标编队" })
+        // [Batch B §8] 候选漏斗观测(EOTS_FUNNEL_DEBUG=1)
+        if (process.env && process.env.EOTS_FUNNEL_DEBUG && context.role === "Japan") {
+            try {
+                const nm = id => { const u = (view.ai?.units || []).find(x => x.id === id); return u ? (u.name || u.id) + "@" + u.location : id }
+                console.log(`[FUNNEL] T${G.turn} focus=${activationFocus} addable=${addable.length} [${addable.slice(0, 6).map(nm).join(", ")}] ` +
+                    `plan=${JSON.stringify({ complete: forcePlan?.complete, unit: forcePlan?.unit ? nm(forcePlan.unit) : forcePlan?.unit,
+                        required: forcePlan?.required, strength: forcePlan?.strength, strict: forcePlan?.strict,
+                        meta: activationMeta ? { kind: activationMeta.kind, reqOcc: !!activationMeta.requiresOccupation,
+                            maxDistance: activationMeta.maxDistance ?? null } : null })} ` +
+                    `sel=${selected}/${limit} action=${action}`)
+            } catch (e) {}
+        }
         // 用户确认的运用原则：EC 当前目标达到最低标准后，不立即浪费剩余激活量；继续按
         // 战略链选择后续目标兵力，再把仍可激活的后方部队向前线调动。只有达到上限或
         // 没有新增合法候选时才结束。本规则不改变引擎给出的合法单位集合。

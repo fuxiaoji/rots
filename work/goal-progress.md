@@ -265,3 +265,8 @@ taskforce_math + allies_cv_preserve + allies_pow_quota + allies_resource_raid + 
 2. 新加坡反复进攻机制
 3. DEI keys 全集
 4. 拉包尔取证
+
+## 0912 凌晨 双条目修复
+- SUPPRESS_HQ 匹配修正落地: 0激活降至 5-24/局(基线76-88, 前96%+改善)
+- 马来亚 1/8(T8), DEI/缅甸待查; 菲律宾 8/8 T2-3 稳定
+- 新加坡攻势频率仍不足: 25军沿半岛陆路推进链待下一轮( land-connected BFS 已装但选择仍偏38军)

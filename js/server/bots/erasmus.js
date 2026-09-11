@@ -491,6 +491,18 @@ function evaluateChart(chart, view, context) {
         const limit = volatileBonus ? Number(volatileBonus[2]) : progress ? Number(progress[2]) : selected + addable.length
         activationPlan = Object.assign({}, forcePlan || {}, { selected, limit, remaining: Math.max(0, limit - selected),
             mode: forcePlan?.complete ? "后续目标/前线调动" : "补足当前目标编队" })
+        // [Batch B §8] 候选漏斗观测(EOTS_FUNNEL_DEBUG=1)
+        if (process.env && process.env.EOTS_FUNNEL_DEBUG && context.role === "Japan") {
+            try {
+                const nm = id => { const u = (view.ai?.units || []).find(x => x.id === id); return u ? (u.name || u.id) + "@" + u.location : id }
+                console.log(`[FUNNEL] T${G.turn} focus=${activationFocus} addable=${addable.length} [${addable.slice(0, 6).map(nm).join(", ")}] ` +
+                    `plan=${JSON.stringify({ complete: forcePlan?.complete, unit: forcePlan?.unit ? nm(forcePlan.unit) : forcePlan?.unit,
+                        required: forcePlan?.required, strength: forcePlan?.strength, strict: forcePlan?.strict,
+                        meta: activationMeta ? { kind: activationMeta.kind, reqOcc: !!activationMeta.requiresOccupation,
+                            maxDistance: activationMeta.maxDistance ?? null } : null })} ` +
+                    `sel=${selected}/${limit} action=${action}`)
+            } catch (e) {}
+        }
         // 用户确认的运用原则：EC 当前目标达到最低标准后，不立即浪费剩余激活量；继续按
         // 战略链选择后续目标兵力，再把仍可激活的后方部队向前线调动。只有达到上限或
         // 没有新增合法候选时才结束。本规则不改变引擎给出的合法单位集合。

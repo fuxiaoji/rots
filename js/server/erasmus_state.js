@@ -1462,6 +1462,25 @@ function esm_pin_strategy(view, context) {
         targetMeta = targetMeta.filter(x => !allDei.has(x.hex)).concat(exactDei)
         const order = new Map(chain.map((h, i) => [h, i]))
         targetMeta.sort((a, b) => (order.get(a.hex) ?? 9999) - (order.get(b.hex) ?? 9999))
+        // [opt japan_opening_conquest §3] 新加坡双条目修复: 目标链里新加坡可能同时有
+        // 「压制盟军HQ 0.5x」(SUPPRESS/SUPPRESS_HQ 空袭类) + 「马来亚投降」(CONQUEST 占领类)
+        // 两个条目。SUPPRESS 排在 CONQUEST 之前, 航空兵空袭即"达标" → 占领条目永远
+        // 轮不到 → 马来亚投降 8/8 局不触发(取证 07_opening_census)。
+        // 修复: 删 SUPPRESS 条目保留 CONQUEST; 或将唯一 SUPPRESS 转为 CONQUEST。
+        const emcSg = (typeof em_cfg === "function") ? em_cfg() : null
+        if (emcSg && emcSg.japan_opening_conquest && typeof esm_idx === "function") {
+            const sgHex = esm_idx("Singapore")
+            if (sgHex !== null && sgHex !== undefined && sgHex >= 0 && sgHex <= LAST_BOARD_HEX) {
+                const sgEntries = targetMeta.filter(t => t.hex === sgHex)
+                const sgSuppress = sgEntries.filter(t => /^SUPPRESS/.test(t.kind || ""))
+                const sgConquest = sgEntries.filter(t => t.kind === "CONQUEST" || t.requiresOccupation)
+                if (sgSuppress.length && sgConquest.length) {
+                    targetMeta = targetMeta.filter(t => !(t.hex === sgHex && /^SUPPRESS/.test(t.kind || "")))
+                } else if (sgSuppress.length && !sgConquest.length) {
+                    for (const t of sgSuppress) { t.kind = "CONQUEST"; t.requiresOccupation = true; t.damageLevel = 1 }
+                }
+            }
+        }
     }
     // 投降完成度只做审计，不覆盖第1页实际选出的空优、资源或事件战略。
     const openingSurrenderPlan = role === "Japan" && G.turn <= 4 ? {
