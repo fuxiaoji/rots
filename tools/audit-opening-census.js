@@ -3,7 +3,7 @@
 // 用法: node tools/audit-opening-census.js <seeds> [scenario=1942]
 // 输出: 每seed 菲/马来/DEI 投降回合, 马尼拉会战的陆路/两栖属性, 0激活次数。
 const rules = require("../rules.js")
-const policy = rules.bots["erasmus-v2"]
+const policy = rules.bots[process.env.EOTS_BOT || "erasmus-v2"]
 const ar = x => Array.isArray(x.active) ? x.active.slice().sort()[0] : x.active
 const n = Number(process.argv[2] || 8)
 const scenario = String(process.argv[3] || "1942-1945 (The Shortened Campaign)")

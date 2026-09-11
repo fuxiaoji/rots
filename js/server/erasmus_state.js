@@ -1393,6 +1393,23 @@ function esm_pin_strategy(view, context) {
     const seedText = `${context.seed}:${ord}:${role}:${phase}:${G.turn}`
     const ctx = esm_build_ctx(role, lock, seedText)
     let name = esm_eval(role, phase, ctx, lock)
+    // [opt japan_opening_conquest] 用户要求: 日本 T1 应让菲律宾+马来亚投降、T2-3 让
+    // DEI 投降。官方 JP01 图表在判定 A(盟军 HQ 断补给)为假时整段打空优战略(不登陆),
+    // 引擎里盟军 HQ 补给几乎从不断 → 马来亚/DEI 投降 8/8 局永不触发(取证 06)。
+    // ERASMUS_PLUS 修正: early 阶段 T≤3 且菲/马/DEI 任一未投降 → 强制钉
+    // 「激进的南方资源战略」(目标链带 requiresOccupation 占领元数据, 陆军登陆夺取)。
+    const emcOCJ = (typeof em_cfg === "function") ? em_cfg() : null
+    if (emcOCJ && emcOCJ.erasmus_plus && role === "Japan" && phase === "early" && Number(G.turn) >= 2 && Number(G.turn) <= 3
+        && /空优战略|事件战略/.test(name)
+        && G.surrender && (G.surrender[nations.MALAYA.id] === 0 || G.surrender[nations.DEI.id] === 0)
+        // 菲律宾keys全控(投降只差状态阶段)或已投降 → 才切马来亚/DEI轴; 否则空优轴
+        // 的陆路马尼拉攻势先行(基线实测 T2-3 菲投降; 激进链不含马尼拉, 硬切会丢菲)
+        && (G.surrender[nations.PHILIPPINES.id] !== 0
+            || (() => { try { return check_nation_controlled(nations.PHILIPPINES, JP) } catch (e) { return false } })())) {
+        const prev = name
+        name = "激进的南方资源战略"
+        if (ctx && ctx._nodePath) ctx._nodePath.push("JP-PLUS-OPENING-CONQUEST:" + prev + "->" + name)
+    }
     if ((role === "Japan" && phase === "early" && /南方资源战略/.test(name)) || (role === "Allies" && name === "反攻战略")) {
         const original = esm_strategy_entry(role,phase,name)
         const beforeRoll = esm_goal_target_meta(esm_parse_entry(original,role,phase))
