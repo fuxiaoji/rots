@@ -23064,12 +23064,27 @@ function composeTaskForce(target, card, hq, view, candidates, role, metaOverride
                     amphibious:!!landing}):{att:0,def:0}
                 const ocP=em_ground_outcome({attCF:attCFp,defCF:defCFp,attMods:modsP.att,defMods:modsP.def,
                     attLfs:attG.map(u=>Number(u.lf)||3),defLfs:defGp.map(u=>Number(u.lf)||3)})
-                if(ocP.pWin>=targetP)return {complete:true,required:need,strength:math,unit:null,
+                // [opt ERASMUS_PLUS] 占领目标必须已含地面部队才允许"P 达标收工":
+                // attGround=0 时 ocP.pWin=0(不产生地面战), 但守军地面亦 0 时旧公式
+                // defCF=0 → attCF=0 特判 pWin=1 → 海空军空"完成"。加 attCFp>0 硬条件。
+                if(f.requiresOccupation&&attCFp<=0){
+                    /* 占领目标无地面: 不收工, 继续选兵(落到下方 pool 排序) */
+                } else if(ocP.pWin>=targetP)return {complete:true,required:need,strength:math,unit:null,
                     formation:landing?"supported-amphibious-assault":f.suppress?"air-sea-strike":"minimum-sufficient",
                     groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired,
                     pWin:Number(ocP.pWin.toFixed(2)),via:"ep-pwin"}
                 // pWin<desired: 不收工, 继续按边际效用加编(erasmus_plus 下 pick 走 em 边际)
             }catch(e){/* 评估失败回退规则口径 */}
+        }
+        // [opt ERASMUS_PLUS] 占领目标无地面部队 → 编组不完成(落到 pool 选兵):
+        // 修复海空军"空完成"导致马来亚/新加坡永不登陆。
+        if(f.requiresOccupation&&groundStrength<=0){
+            const emcNG=(typeof em_cfg==="function")?em_cfg():null
+            if(emcNG&&emcNG.erasmus_plus){
+                return {complete:false,strict:true,required:need,strength:math,unit:undefined,
+                    formation:"needs-ground-occupation",
+                    groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
+            }
         }
         return {complete:true,required:need,strength:math,unit:null,
             formation:landing?"supported-amphibious-assault":f.suppress?"air-sea-strike":"minimum-sufficient",
@@ -23118,7 +23133,7 @@ function composeTaskForce(target, card, hq, view, candidates, role, metaOverride
         // queryGroundReachability, 防 26² 平方查询)。取证: 25军沿半岛陆路可下新加坡,
         // 旧排序按 hex 距离选了海峡对岸的 38军 → 激活后无法执行。
         let landOkMap=null
-        const emcLR2=emc
+        const emcLR2=(typeof em_cfg==="function")?em_cfg():null
         if(emcLR2&&emcLR2.erasmus_plus&&f.requiresOccupation&&target!==null&&target!==undefined
             &&typeof queryGroundReachability==="function"){
             landOkMap=new Map()
@@ -26200,6 +26215,7 @@ function evaluateChart(chart, view, context) {
                 console.log(`[FUNNEL] T${G.turn} focus=${activationFocus} addable=${addable.length} [${addable.slice(0, 6).map(nm).join(", ")}] ` +
                     `plan=${JSON.stringify({ complete: forcePlan?.complete, unit: forcePlan?.unit ? nm(forcePlan.unit) : forcePlan?.unit,
                         required: forcePlan?.required, strength: forcePlan?.strength, strict: forcePlan?.strict,
+                        groundStr: forcePlan?.groundStrength, strikeStr: forcePlan?.strikeStrength, via: forcePlan?.via ?? null,
                         meta: activationMeta ? { kind: activationMeta.kind, reqOcc: !!activationMeta.requiresOccupation,
                             maxDistance: activationMeta.maxDistance ?? null } : null })} ` +
                     `sel=${selected}/${limit} action=${action}`)
