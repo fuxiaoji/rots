@@ -111,7 +111,8 @@ function play(seed) {
         noBattleHex: 0, traceNodeMissing: 0, role: { Japan: emptyRole(), Allies: emptyRole() },
         logIndex: 0, curAttacker: null, pwMin: Number(state.political_will || 0), pwLog: [],
         actSum: 0, actLimitSum: 0,
-        capByTurn: { Japan: {}, Allies: {} } }
+        capByTurn: { Japan: {}, Allies: {} },
+        surrenderTurns: {} }
     let prev = snapshot(state)
 
     const scanNewLogLines = () => {
@@ -143,6 +144,9 @@ function play(seed) {
                 g.vp = Number(m[1])
             } else if ((m = line.match(/Political will changed to (\d+) \((-?\d+)\)/))) {
                 g.pwLog.push({ turn: g.turn, pw: Number(m[1]), delta: Number(m[2]) })
+            } else if ((m = line.match(/(Philippines|Malaya|Dutch East Ind\w+|Burma|India|China) surrender/))) {
+                const key = m[1]
+                if (!g.surrenderTurns[key]) g.surrenderTurns[key] = g.turn
             } else if ((m = line.match(/Activated \^(\d+) units\|[^^]*\^, (\d+) limit\./))) {
                 g.actSum += Number(m[1]); g.actLimitSum += Number(m[2])
             }
@@ -213,6 +217,8 @@ function play(seed) {
         capRate, blockade,
         activationRatio: g.actLimitSum > 0 ? Number((g.actSum / g.actLimitSum).toFixed(3)) : null,
         activationSum: g.actSum, activationLimit: g.actLimitSum,
+        surrenderTurns: g.surrenderTurns,
+        lateCapturesAllied: (() => { let total = 0; for (let t = 7; t <= g.turn; ++t) total += (g.capByTurn.Allies[t] || 0); return total })(),
         role: g.role }
 }
 
@@ -285,7 +291,8 @@ tally.inflicted = {
 const perGame = completed.map(x => ({ seed: x.seed, winner: x.winner, won_text: x.won_text, vp: x.vp,
     actions: x.actions, turn: x.turn, politicalWill: x.politicalWill, pwMin: x.pwMin,
     powRequired: x.powRequired, powBank: x.powBank, surrender: x.surrender, jpResources: x.jpResources,
-    finalAtomic: x.finalAtomic, capRate: x.capRate, blockade: x.blockade, activationRatio: x.activationRatio, role: x.role }))
+    finalAtomic: x.finalAtomic, capRate: x.capRate, blockade: x.blockade, activationRatio: x.activationRatio,
+    surrenderTurns: x.surrenderTurns || {}, lateCapturesAllied: x.lateCapturesAllied || 0, role: x.role }))
 const output = { generatedAt: new Date().toISOString(), tally, perGame,
     errors: games.filter(x => x.status === "error").map(x => ({ seed: x.seed, error: x.error, actions: x.actions })) }
 const slug = scenario.replace(/[^\w]+/g, "-").replace(/^-|-$/g, "")
