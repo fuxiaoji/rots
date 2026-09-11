@@ -97,7 +97,6 @@
         玩家阵营：
         <label><input type="radio" name="human_role" value="Allies" checked> 盟军</label>
         <label><input type="radio" name="human_role" value="Japan"> 日本</label>
-        <input type="hidden" name="bot_id" value="erasmus-v2">
     </p>
 </fieldset>
 <hr>
@@ -138,10 +137,47 @@
     fast_checkbox.onchange();
     document.querySelectorAll("input[name='mode']").forEach(function (input) {
         input.onchange = function () {
-            var pve = document.querySelector("input[name='mode']:checked").value === "pve"
+            var mode = document.querySelector("input[name='mode']:checked").value
+            var pve = mode === "pve"
+            var aivai = mode === "aivai"
             document.getElementById("pve_role").hidden = !pve
+            // 建局模板(create_title.pug)提供 bot_id/bot_id_jp/bot_id_ap 三个下拉,
+            // 默认 hidden, 这里按模式显示/隐藏。
+            var bp = document.getElementById("bot_picker_pve")
+            if (bp) bp.hidden = !pve
+            var ba = document.getElementById("bot_picker_aivai")
+            if (ba) ba.hidden = !aivai
             // PvE 也允许选 1942-1945 缩短战役等 bot 支持场景, 不再强制回南太平洋。
             scenario.onchange()
         }
+    })
+    // bot 支持的剧本(与 rules.js 中 bots[*].scenarios 一致)。
+    var BOT_SCENARIOS = {
+        "erasmus-v2": ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"],
+        "erasmus-v2-opt": ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"],
+    }
+    // 模板下拉默认选基线(erasmus-v2), 这里统一改为优化版作为默认 AI。
+    // 注意: 模板的 bot 下拉位于本片段注入点之后, 解析到本脚本时尚不存在,
+    // 必须等 DOMContentLoaded 再绑定, 否则 querySelector 拿到 null。
+    document.addEventListener("DOMContentLoaded", function () {
+        ;["bot_id", "bot_id_jp", "bot_id_ap"].forEach(function (name) {
+            var sel = document.querySelector("select[name='" + name + "']")
+            if (sel) sel.value = "erasmus-v2-opt"
+        })
+        // 提交前校验所选 AI 是否支持所选剧本, 避免 "Invalid AI vs AI configuration"。
+        document.querySelector("form").addEventListener("submit", function (evt) {
+            var mode = document.querySelector("input[name='mode']:checked").value
+            var scenario = document.querySelector("select[name='scenario']").value
+            var names = mode === "aivai" ? ["bot_id_jp", "bot_id_ap"] : mode === "pve" ? ["bot_id"] : []
+            for (var i = 0; i < names.length; ++i) {
+                var sel = document.querySelector("select[name='" + names[i] + "']")
+                var bot = sel ? sel.value : ""
+                if ((BOT_SCENARIOS[bot] || []).indexOf(scenario) < 0) {
+                    alert("所选 AI (" + (bot || "无") + ") 不支持剧本「" + scenario + "」。\n支持剧本: " + (BOT_SCENARIOS[bot] || ["(未知)"]).join(" / "))
+                    evt.preventDefault()
+                    return
+                }
+            }
+        })
     })
 </script>

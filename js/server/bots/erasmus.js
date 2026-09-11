@@ -642,7 +642,7 @@ function erasmus_sm_decision(strategy, pick, view, context) {
 var EOTS_BOTS = {
     "erasmus-v2": {
         name: "伊拉斯谟 v2.0", version: ERASMUS_VERSION,
-        scenarios: ["South Pacific", "1942-1945 (The Shortened Campaign)"], roles: ["Japan", "Allies"],
+        scenarios: ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Japan", "Allies"],
         decide(view, context) {
             // 完整全图剧本(1942-45 等): 回合级状态机选轴; 其余剧本(=gate 关)保持 zh.6。
             let sm = null
@@ -707,7 +707,7 @@ var EOTS_BOTS = {
     // profile 经 EOTS_OPT_PROFILE 环境变量注入(all|baseline|逗号分隔开关);
     // 每次决策前注入、finally 重置, 保证同进程与基线 bot 混跑互不串染(消融实验用)。
     "erasmus-v2-opt": {
-        name: "伊拉斯谟 v2.0-opt", version: ERASMUS_VERSION + "-opt",
+        name: "AI 3.0", version: ERASMUS_VERSION + "-opt",
         scenarios: ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Japan", "Allies"],
         decide(view, context) {
             const profile = (typeof em_profile_from_env === "function") ? em_profile_from_env() : {}
