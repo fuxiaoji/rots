@@ -32,3 +32,9 @@
 - 激进南方资源链中新加坡出现两次: 链首「压制新加坡(0.5x)」(SUPPRESS 空袭) + 马来亚投降条目(CONQUEST 占领)
 - AI 永远先空袭(22航空队被选中=压制类 classRank air-first) → 占领条目被锁
 - 已实装移除压制条目(japan_opening_conquest 门控) — 马来亚仍 1/8, 说明 25军激活-移动链另有断点(候选18含25军但编组/移动未消费) → 下夜首项: 漏斗插桩定位
+
+## 新加坡 25军冻结 调试交接(未解决)
+- 已排除: HQ覆盖(南方HQ@2212相邻25军@2112) ✓; 激活窗候选含25军 ✓; 压制条目锁 ✓已移除
+- 已试: 陆路优先排序(composeTaskForce+eop_pick_unit, queryGroundReachability 版本→ANY_MOVE 语义失效→改纯GROUND→未激活单位返回空→改静态 GROUND 边连通性 BFS)——选择仍为 38军(Sumatra)
+- 待查: ①ep_land_connected 的 GROUND 边 BFS 是否真连通 331→305(马来亚半岛 ROAD 边可能非 GROUND 位) ②focus=305 时 focusMeta.requiresOccupation 是否为真(激进链新加坡 dual-entry 转换是否生效) ③选择是否经 amphibiousPick/eop_pick_unit 路径(composeTaskForce sort 之外)
+- 侧证: "1st SN Brigade@535"(马尼拉)被选去打新加坡(305) = M2 目标分裂的另一标本

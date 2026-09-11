@@ -524,6 +524,30 @@ function eop_pick_unit(candidates, role, activeUnits, focusOverride) {
     // 目标（事件/一般前推）时才采用最近敌军排序。
     if (focusMeta) scored.sort((a, b) => a[2] - b[2] || a[1] - b[1] || a[0] - b[0])
     else scored.sort((a, b) => a[1] - b[1] || a[2] - b[2] || a[0] - b[0])
+    // [opt ERASMUS_PLUS M4] 占领目标: 地面候选中"陆路可达焦点"者优先, 防止跨海峡
+    // 两栖误选(取证: 25军沿马来半岛陆路可下新加坡, 却按 hex 距离选了海峡对岸的
+    // 38军/马尼拉卫戍——单位被激活但无法执行=浪费攻势)。基线(配置关)不变。
+    const emcLR = (typeof em_cfg === "function") ? em_cfg() : null
+    if (focusMeta && focusMeta.requiresOccupation && focus !== null
+        && emcLR && (emcLR.erasmus_plus || emcLR.taskforce_math)
+        && typeof queryGroundReachability === "function") {
+        const landScored = [], amphScored = []
+        for (const entry of scored) {
+            const u = entry[0]
+            const p = pieces[u]
+            if (!p || p.class !== "ground") { amphScored.push(entry); continue }
+            let land = false
+            try {
+                const locU=G.location[u]
+                land = (locU>=0&&locU<=LAST_BOARD_HEX&&typeof ep_land_connected==="function")?ep_land_connected(locU,focus):false
+            } catch (e) { land = false }
+            ;(land ? landScored : amphScored).push(entry)
+        }
+        if (landScored.length) {
+            landScored.sort((a, b) => a[1] - b[1] || a[2] - b[2] || a[0] - b[0])
+            return landScored[0][0]
+        }
+    }
     // B: 焦点是敌占格(需“夺占”而非纯消耗)时, 若候选里有“到最近敌军距离”不比最优单位远太多的
     // 两栖地面(海军陆战队 asp / 可战略海运 strat_move), 优先选它组成登陆力量 —— 否则每次
     // 攻势总挑最近敌军的纯空/海军, 只会对岛屿做远距空袭, 永远无法登岛占格。
@@ -1205,6 +1229,30 @@ const EOP_EXACT_TASKFORCE_PREDICATES = [
     "FORCE_MEETS_BATTLE_SUPPORT_STANDARD", "TARGET_DAMAGE_LEVEL_MET",
 ]
 
+// [opt ERASMUS_PLUS M4] 静态陆地连通性: GROUND 边 BFS(无视 ZOI/驻军/激活状态)。
+// queryGroundReachability 对未激活单位返回空集, 无法用于"陆路能否走到"的预判。
+const EP_LAND_CONN = new Map()
+function ep_land_connected(fromHex, toHex) {
+    if (fromHex === toHex) return true
+    let comp = EP_LAND_CONN.get(fromHex)
+    if (!comp) {
+        comp = new Set([fromHex])
+        const q = [fromHex]
+        while (q.length) {
+            const item = q.shift()
+            const m = (typeof get_map_data === "function") ? get_map_data(item) : null
+            if (!m) continue
+            const nh = m.nh || []
+            for (let j = 0; j < nh.length; ++j) {
+                const nb = nh[j]
+                if (!(nb > 0 && nb <= LAST_BOARD_HEX) || comp.has(nb)) continue
+                if (m.edges_int & (2 << (5 * j))) { comp.add(nb); q.push(nb) } // GROUND=2
+            }
+        }
+        EP_LAND_CONN.set(fromHex, comp)
+    }
+    return comp.has(toHex)
+}
 // 单位当前战斗值（减损用 rcf，否则 cf）。
 function eop_unit_cf(u) {
     return u.reduced ? (Number(u.rcf) || Math.ceil((Number(u.cf) || 0) / 2)) : (Number(u.cf) || 0)
@@ -1650,7 +1698,24 @@ function composeTaskForce(target, card, hq, view, candidates, role, metaOverride
         // 本攻势根本到不了菲律宾的陆军，最终形成“高激活、零会战”。
         const distance=u=>typeof get_distance==="function"&&target!==null&&target!==undefined
             ?get_distance(u.location,target):99
-        pool.sort((a,b)=>classRank(a)-classRank(b)||distance(a)-distance(b)||cf(b)-cf(a)||a.id-b.id)
+        // [opt ERASMUS_PLUS M4] 占领目标: 陆路可达焦点者优先于仅两栖可达者(预计算
+        // queryGroundReachability, 防 26² 平方查询)。取证: 25军沿半岛陆路可下新加坡,
+        // 旧排序按 hex 距离选了海峡对岸的 38军 → 激活后无法执行。
+        let landOkMap=null
+        const emcLR2=emc
+        if(emcLR2&&emcLR2.erasmus_plus&&f.requiresOccupation&&target!==null&&target!==undefined
+            &&typeof queryGroundReachability==="function"){
+            landOkMap=new Map()
+            for(const u of pool){
+                try{
+                    const locU=G.location[u.id]
+                    landOkMap.set(u.id,(locU>=0&&locU<=LAST_BOARD_HEX&&typeof ep_land_connected==="function")?ep_land_connected(locU,target):false)
+                }catch(e){landOkMap.set(u.id,false)}
+            }
+        }
+        pool.sort((a,b)=>classRank(a)-classRank(b)
+            ||(landOkMap?((landOkMap.get(b.id)?0:1)-(landOkMap.get(a.id)?0:1)):0)
+            ||distance(a)-distance(b)||cf(b)-cf(a)||a.id-b.id)
         emPick=pool[0]?.id
     }
     return {complete:false,strict:true,required:need,strength:math,unit:amphibiousPick??emPick,
