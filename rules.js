@@ -22715,7 +22715,10 @@ function eop_evaluate_damage_level(meta, attackers, defenders, reactionIds, byId
     const attackerGround = attackers.filter(u => u.class === "ground").reduce((s, u) => s + cf(u), 0)
     const relevantDefense = (requiresOccupation ? airSeaDefense : totalDefense) + reactionStrength
     const airSeaMet = attackerAirSea >= Math.ceil(relevantDefense / damageLevel)
-    const groundSurvivalMet = !requiresOccupation ? true : (attackerGround >= Math.max(1, 2 * groundDefense))
+    // [opt ERASMUS_PLUS] 占领目标必须有地面单位(攻击方地面 CF>0): 旧判定在守军无地面时
+    // attackerGround(0) >= 2*0 恒真 → 海空军"完成"编组 → 永不载兵登陆(马来亚 0/8 元凶之一)。
+    const groundSurvivalMet = !requiresOccupation ? true
+        : (attackerGround >= Math.max(1, 2 * groundDefense) && attackerGround > 0)
     const met = suppress ? airSeaMet : (requiresOccupation ? (airSeaMet && groundSurvivalMet) : airSeaMet)
     return { met, airSeaMet, groundSurvivalMet, attackerAirSea, attackerGround, airSeaDefense, groundDefense, reactionStrength }
 }
