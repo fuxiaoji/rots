@@ -9806,35 +9806,32 @@ function victory_1944() {
 // 成功轰炸序列的起始回合：从第 9 回合到当前回合每回合至少成功一次时，其值恒为 9；
 // 任一回合失败/未轰炸会清零，之后再成功则会以更晚回合重新起算。
 //
+// [规则修正 16.2 用户裁定 20260911] 官方第 16.2 条: 「在第 12 回合的结束阶段，如果
+// 连续 4 个回合日本被成功战略轰炸，且只有 1-0 个资源格，且东京在 B29 的范围内，
+// 则盟国玩家胜利」。原实现(任意回合≥9 即时判定 + soviet/TOJO 门控 + 资源≤5/3)
+// 与官方条文不符, 本函数按 16.2 忠实实现:
+//   met = T12 结束阶段 && campaign 自 T9 起无断线(=T9/T10/T11/T12 连续 4 回合成功)
+//         && 日资源 ≤1 && 有 B29 在东京 8 格航程内
 // 此函数是引擎和机器人共用的唯一判据，避免 bot 缓存与存档/回放结算发生分歧。
 function atomic_bomb_strategy_status() {
     var campaign_start = is_event_active(events.STRAT_BOMBING_CAMPAIGN) || 0
-    var bombing_required = G.turn >= 9
-    var no_strategic_bombing_failure = !bombing_required || campaign_start === 9
-    var soviet_occurred = !!(G.removed && G.removed[AP] && set_has(G.removed[AP], SOVIET_INVADE))
-    var soviet_in_hand = !!(G.hand && G.hand[AP] && set_has(G.hand[AP], SOVIET_INVADE))
-    var soviet_playable = false
-    if (!soviet_occurred && soviet_in_hand) {
-        try { soviet_playable = !!cards[SOVIET_INVADE].can_play() } catch (e) { /* false */ }
-    }
-    // get_victory() 会临时按补给重算控制。原子弹图表使用棋盘上实际控制权，因此结算期间
-    // 必须读取重算前保存在 G.original_control 的状态，才能与回合内 AI 谓词完全一致。
+    var campaign_ok = campaign_start !== 0 && campaign_start <= 9 // T9 起无断线(连续 4 回合)
+    var b29_in_range = [B_29_1, B_29_2].some(u => G.location[u] < LAST_BOARD_HEX
+        && get_distance(G.location[u], TOKYO) <= 8)
     var jp_controls = h => G.original_control ? is_space_controlled_originally(h, JP) : is_space_controlled(h, JP)
     var jp_resource_hexes = RESOURCE_HEX.filter(h => jp_controls(h) && get_map_data(h).resource)
     var jp_resources = jp_resource_hexes.length
-    var resource_limit = soviet_occurred ? 3 : 5
-    var soviet_ready = soviet_occurred || soviet_playable
+    var resource_limit = 1
+    var at_judgement = G.turn >= 12
+    var met = at_judgement && campaign_ok && jp_resources <= resource_limit && b29_in_range
     return {
-        met: no_strategic_bombing_failure && soviet_ready && jp_resources <= resource_limit,
+        met,
         turn: G.turn,
-        noStrategicBombingFailure: no_strategic_bombing_failure,
+        noStrategicBombingFailure: campaign_ok,
         bombingCampaignStart: campaign_start,
         bombingRequiredFromTurn: 9,
-        sovietOccurred: soviet_occurred,
-        sovietCardId: SOVIET_INVADE,
-        sovietInHand: soviet_in_hand,
-        sovietPlayable: soviet_playable,
-        sovietReady: soviet_ready,
+        b29InRangeOfTokyo: b29_in_range,
+        ruleVersion: "official-16.2",
         jpResources: jp_resources,
         jpResourceHexes: jp_resource_hexes,
         resourceLimit: resource_limit,
@@ -24004,7 +24001,9 @@ function esm_atomic_blockade_unreachable() {
     try { atomic = atomic_bomb_strategy_status() } catch (e) { return false }
     if (!atomic) return false
     if (atomic.met) return false
-    return !atomic.sovietReady || !atomic.resourcesSatisfied
+    // [规则修正 16.2] 原子弹判定移至 T12 且无 soviet/TOJO 门控: 资源未压到 ≤1
+    // 或轰炸断线时, 封锁是唯一剩余规则胜利前视。
+    return !atomic.noStrategicBombingFailure || !atomic.resourcesSatisfied
 }
 
 // [opt allies_blockade] 封锁推进目标链(诊断报告的最小切割集落地):
@@ -24853,7 +24852,8 @@ function esm_pin_strategy(view, context) {
     let victoryPreparation = victoryApproach
     if (role === "Allies" && phase === "late" && name === "登陆日本" && typeof atomic_bomb_strategy_status === "function") {
         const atomic = atomic_bomb_strategy_status()
-        if (atomic.noStrategicBombingFailure && atomic.sovietReady && !atomic.resourcesSatisfied) {
+        // [规则修正 16.2] 无 soviet/TOJO 门控: 轰炸维持且资源未压到 ≤1 即前视资源格
+        if (atomic.noStrategicBombingFailure && !atomic.resourcesSatisfied) {
             const resourceTargets = atomic.jpResourceHexes.map(hex => ({ hex, kind: "CONQUEST",
                 objective: "原子弹战略准备：夺取剩余日本资源格", damageLevel: 1,
                 requiresOccupation: true, victoryConstraint: "ATOMIC_RESOURCE_LIMIT" }))

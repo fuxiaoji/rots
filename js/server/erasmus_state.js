@@ -754,7 +754,9 @@ function esm_atomic_blockade_unreachable() {
     try { atomic = atomic_bomb_strategy_status() } catch (e) { return false }
     if (!atomic) return false
     if (atomic.met) return false
-    return !atomic.sovietReady || !atomic.resourcesSatisfied
+    // [规则修正 16.2] 原子弹判定移至 T12 且无 soviet/TOJO 门控: 资源未压到 ≤1
+    // 或轰炸断线时, 封锁是唯一剩余规则胜利前视。
+    return !atomic.noStrategicBombingFailure || !atomic.resourcesSatisfied
 }
 
 // [opt allies_blockade] 封锁推进目标链(诊断报告的最小切割集落地):
@@ -1603,7 +1605,8 @@ function esm_pin_strategy(view, context) {
     let victoryPreparation = victoryApproach
     if (role === "Allies" && phase === "late" && name === "登陆日本" && typeof atomic_bomb_strategy_status === "function") {
         const atomic = atomic_bomb_strategy_status()
-        if (atomic.noStrategicBombingFailure && atomic.sovietReady && !atomic.resourcesSatisfied) {
+        // [规则修正 16.2] 无 soviet/TOJO 门控: 轰炸维持且资源未压到 ≤1 即前视资源格
+        if (atomic.noStrategicBombingFailure && !atomic.resourcesSatisfied) {
             const resourceTargets = atomic.jpResourceHexes.map(hex => ({ hex, kind: "CONQUEST",
                 objective: "原子弹战略准备：夺取剩余日本资源格", damageLevel: 1,
                 requiresOccupation: true, victoryConstraint: "ATOMIC_RESOURCE_LIMIT" }))
