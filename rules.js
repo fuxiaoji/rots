@@ -22655,6 +22655,10 @@ function ep_land_connected(fromHex, toHex) {
             const item = q.shift()
             const m = (typeof get_map_data === "function") ? get_map_data(item) : null
             if (!m) continue
+            // [opt ERASMUS_PLUS M4-v2] 陆路 BFS 禁穿海格: data_map 把海峡两岸标了
+            // GROUND 边(克拉克海峡), 但引擎地面移动不允许跨海(海军 ZOI 阻隔)。
+            // 沿途 OCEAN 格(terrain 0)不入队, 保证"半岛陆路"不含海上跳步。
+            if (m.terrain === 0) continue
             const nh = m.nh || []
             for (let j = 0; j < nh.length; ++j) {
                 const nb = nh[j]
@@ -23147,6 +23151,13 @@ function composeTaskForce(target, card, hq, view, candidates, role, metaOverride
         pool.sort((a,b)=>classRank(a)-classRank(b)
             ||(landOkMap?((landOkMap.get(b.id)?0:1)-(landOkMap.get(a.id)?0:1)):0)
             ||distance(a)-distance(b)||cf(b)-cf(a)||a.id-b.id)
+        if(landOkMap&&typeof process!=="undefined"&&process.env.EOTS_FUNNEL_DEBUG){
+            try{
+                const nm2=id=>{const uu=byId.get(id);return uu?(uu.name||id)+"@"+uu.location:id}
+                console.log(`[LAND] T${G.turn} focus=${target} landTop=[${pool.filter(u=>landOkMap.get(u.id)).slice(0,4).map(u=>nm2(u.id)+"(rank"+classRank(u)+")").join(", ")}] `+
+                    `amphTop=[${pool.filter(u=>!landOkMap.get(u.id)).slice(0,3).map(u=>nm2(u.id)).join(", ")}] pool=${pool.length}`)
+            }catch(e){}
+        }
         emPick=pool[0]?.id
     }
     return {complete:false,strict:true,required:need,strength:math,unit:amphibiousPick??emPick,
@@ -26216,6 +26227,7 @@ function evaluateChart(chart, view, context) {
                     `plan=${JSON.stringify({ complete: forcePlan?.complete, unit: forcePlan?.unit ? nm(forcePlan.unit) : forcePlan?.unit,
                         required: forcePlan?.required, strength: forcePlan?.strength, strict: forcePlan?.strict,
                         groundStr: forcePlan?.groundStrength, strikeStr: forcePlan?.strikeStrength, via: forcePlan?.via ?? null,
+                        poolTop: Array.isArray(forcePlan?.poolTop3) ? forcePlan.poolTop3 : null,
                         meta: activationMeta ? { kind: activationMeta.kind, reqOcc: !!activationMeta.requiresOccupation,
                             maxDistance: activationMeta.maxDistance ?? null } : null })} ` +
                     `sel=${selected}/${limit} action=${action}`)

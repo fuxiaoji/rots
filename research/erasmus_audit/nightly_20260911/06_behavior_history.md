@@ -38,3 +38,10 @@
 - 已试: 陆路优先排序(composeTaskForce+eop_pick_unit, queryGroundReachability 版本→ANY_MOVE 语义失效→改纯GROUND→未激活单位返回空→改静态 GROUND 边连通性 BFS)——选择仍为 38军(Sumatra)
 - 待查: ①ep_land_connected 的 GROUND 边 BFS 是否真连通 331→305(马来亚半岛 ROAD 边可能非 GROUND 位) ②focus=305 时 focusMeta.requiresOccupation 是否为真(激进链新加坡 dual-entry 转换是否生效) ③选择是否经 amphibiousPick/eop_pick_unit 路径(composeTaskForce sort 之外)
 - 侧证: "1st SN Brigade@535"(马尼拉)被选去打新加坡(305) = M2 目标分裂的另一标本
+
+## 新加坡战役终局取证(0912)
+- 38军@1913 region 就是 Malaya(我此前误记苏门答腊)——它 T2 已攻下 KL(304) ✓
+- 新加坡 T3/T4 两次会战: JP fire 8-18 vs AP fire 36-38 → 攻方连败
+- 根因转化: 兵力集中问题——攻坡每轮仅 1-2 地面单位, 而盟军把增援(P125-127 cf36+)塞进坡
+- 下一杠杆: T2-3 对 305 连续多卡重攻(每卡≥3 地面激活)或先断新加坡增援航线
+- 附带: landOkMap TDZ+海格排除修复都已落地; 0激活 5-24/局维持

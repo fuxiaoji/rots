@@ -499,6 +499,7 @@ function evaluateChart(chart, view, context) {
                     `plan=${JSON.stringify({ complete: forcePlan?.complete, unit: forcePlan?.unit ? nm(forcePlan.unit) : forcePlan?.unit,
                         required: forcePlan?.required, strength: forcePlan?.strength, strict: forcePlan?.strict,
                         groundStr: forcePlan?.groundStrength, strikeStr: forcePlan?.strikeStrength, via: forcePlan?.via ?? null,
+                        poolTop: Array.isArray(forcePlan?.poolTop3) ? forcePlan.poolTop3 : null,
                         meta: activationMeta ? { kind: activationMeta.kind, reqOcc: !!activationMeta.requiresOccupation,
                             maxDistance: activationMeta.maxDistance ?? null } : null })} ` +
                     `sel=${selected}/${limit} action=${action}`)
