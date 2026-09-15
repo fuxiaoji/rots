@@ -296,3 +296,9 @@ taskforce_math + allies_cv_preserve + allies_pow_quota + allies_resource_raid + 
 2. 盟军两栖成功率: 31/(31+amphFail) 偏低
 3. 日本马来亚 1/16 → 稳定T3-4 (兵力集中)
 4. DEI keys 推广
+
+## v2.1 夜间迭代进行中
+- 7 项核心指标全部落地(歼敌step/夺格/两栖成功/战斗胜率/ZOC/空移动/无激活)
+- ZOC 覆盖: 日 158 格 盟 221 格(盟军反超——盟军后期 ZOC 优势已体现)
+- 空袭单位: 日 12.5/局 盟 16/局
+- 子代理正在迭代盟军两栖成功率+岛链夺格+DEI 推广
