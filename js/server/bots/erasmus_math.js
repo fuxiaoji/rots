@@ -93,13 +93,19 @@ function em_naval_outcome(args) {
 }
 
 // 两栖登陆可行性闸门: 无海军护航必败(broken_aa); 有护航时海空战失利登陆部队不得参战
-// (apply_naval_winner→ground_pbm), 守方掷骰+3。返回 {abort, reason, pNaval, pGround}。
+// (apply_naval_winner→ground_pbm), 守方掷骰+3。返回 {abort, reason, pNaval, pGround, pWin}。
 function em_amphib_assessment(args) {
     // args: {attNavalCF, attNavalHasBr, defNavalCF, defNavalHasBr, attAirCF, defAirCF,
-    //        attGroundCF, attGroundLfs[], defGroundCF, defGroundLfs[], targetHex}
+    //        attGroundCF, attGroundLfs[], defGroundCF, defGroundLfs[], targetHex,
+    //        defReactionCF}
+    // [opt amph-quality] 守军口径拆分: defNavalCF/defAirCF = 会战格上守军(全额,
+    // 决定 broken_aa 与海空战胜负); defReactionCF = 反应候选按 emReactionWeight 折算
+    // (需掷骰/天气/编制成立, 只折损期望, 不构成"必败")。
+    const atFocus = args.defNavalCF + args.defAirCF
+    const reaction = Number(args.defReactionCF) || 0
+    const defNavalTotal = atFocus + reaction
     const navalCF = args.attNavalCF + args.attAirCF
-    const defNavalTotal = args.defNavalCF + args.defAirCF
-    const naval = em_naval_outcome({ attCF: navalCF, defCF: defNavalTotal,
+    const naval = em_naval_outcome({ attCF: navalCF, defCF: atFocus,
         attHasBr: args.attNavalHasBr || args.attAirCF > 0, defHasBr: args.defNavalHasBr })
     const mods = em_ground_mods({ attacker: args.attacker, targetHex: args.targetHex,
         attAir: args.attAirCF > 0 || args.attNavalHasBr, attNaval: args.attNavalCF > 0,
@@ -107,22 +113,28 @@ function em_amphib_assessment(args) {
     const ground = em_ground_outcome({ attCF: args.attGroundCF, defCF: args.defGroundCF,
         attMods: mods.att, defMods: mods.def, attLfs: args.attGroundLfs, defLfs: args.defGroundLfs })
     // 引擎链: 海空战败 → 登陆部队不得参战 → 无地面会战 → 夺格失败; 概率上近似相乘。
-    const pWin = naval.pWin * ground.pWin
+    let pWin = naval.pWin * ground.pWin
     // [opt] 海空战优势边际: 引擎反应池(距离/编制细节)无法完全建模, 仅"力量多 1 点"
     // 的护航编队在 1943(联合舰队主力尚在)实测被反应舰队歼灭 → broken_aa/"could not
     // participate" + US_CASUALTIES(PW-1)。要求进攻方海空战力 ≥ margin × 防御方
-    // (含反应)才放行登陆。margin 为注册参数, 仅 em_cfg 开启时生效。
-    const margin = em_cfg() ? (Number(em_cfg().emAmphNavalMargin) || 1) : 1
-    // [opt amph-quality] 无护航裸登陆只在实际存在敌方海空威胁(守军/反应)时才必败
-    // (broken_aa 只在"守方海军在会战格+攻方无海军"时触发; 会战海空胜负也需双方有
-    // 空海单位)。守军无海空时, 陆战队单独登陆是合法且常胜的 —— 旧口径一律 abort
-    // 误杀大量空虚岛礁登陆。
-    const noEscortAborts = defNavalTotal > 0
+    // (含反应)才放行登陆。margin 为注册参数, 仅 em_cfg 开关生效。
+    const emcAA = em_cfg()
+    const margin = emcAA ? (Number(emcAA.emAmphNavalMargin) || 1) : 1
+    const reactW = emcAA ? (Number(emcAA.emReactionWeight) || 0.35) : 0.35
     let abort = false, reason = null
-    if (!(navalCF > 0) && noEscortAborts) { abort = true; reason = "no-escort" }
-    else if (navalCF > 0 && naval.pWin === 0) { abort = true; reason = "naval-unfavorable" }
-    else if (navalCF > 0 && defNavalTotal > 0 && navalCF < margin * defNavalTotal) { abort = true; reason = "naval-margin" }
-    else if (pWin < (em_cfg() ? em_cfg().emMinPWin : 0.30)) { abort = true; reason = "low-pwin" }
+    if (!(navalCF > 0)) {
+        // [opt amph-quality] 裸登陆(无护航): broken_aa 只在"守方海军在会战格+攻方无海军"
+        // 时必触发。守军纯地面(岛礁驻军)时裸登陆合法且常胜 —— 只需对反应风险折价。
+        if (atFocus > 0) { abort = true; reason = "no-escort" }
+        else if (defNavalTotal > 0 && (emcAA ? (emcAA.taskforce_math || emcAA.island_sweep || emcAA.erasmus_plus) : false)) {
+            pWin = ground.pWin * (1 - reactW)
+        }
+    }
+    else {
+        if (naval.pWin === 0) { abort = true; reason = "naval-unfavorable" }
+        else if (defNavalTotal > 0 && navalCF < margin * defNavalTotal) { abort = true; reason = "naval-margin" }
+    }
+    if (!abort && pWin < (emcAA ? emcAA.emMinPWin : 0.30)) { abort = true; reason = "low-pwin" }
     return { abort, reason, pNaval: naval.pWin, pGround: ground.pWin, pWin }
 }
 

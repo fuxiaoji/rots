@@ -249,7 +249,7 @@ function target_argument(action, value, seedText, role, view, strategy) {
         }
     }
     if (action === "action_hex") {
-        const picked = eop_pick_action_hex(value, role)
+        const picked = eop_pick_action_hex(value, role, view)
         return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
     }
     if (action === "unit" && /activate units/i.test(prompt)) {

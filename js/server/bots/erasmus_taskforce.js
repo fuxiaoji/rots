@@ -15,7 +15,8 @@ function ep_attack_mode(role, target) {
         if (p && p.faction !== mine && G.location[u] === target) enemyUnits++
     }
     if (enemyUnits === 0 && is_space_controlled(target, 1 - mine)) return "CAPTURE_EMPTY"
-    if (md.port && !ep_land_reachable(target, mine)) return "AMPHIBIOUS_ASSAULT"
+    // [opt amph-coast] 沿海敌控格(非仅 port)都可能是两栖登陆(Medan 等 DEI key 无 port 标记)
+    if ((md.port || md.coastal) && !ep_land_reachable(target, mine)) return "AMPHIBIOUS_ASSAULT"
     return "GROUND_ATTACK"
 }
 
