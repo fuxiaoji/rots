@@ -201,6 +201,16 @@ function play(seed) {
     const finalAtomic = (() => { try { const a = rules.query(state, "Allies", "atomic_bomb_strategy_status"); return a ? { met: !!a.met, jpResources: a.jpResources, sovietReady: !!a.sovietReady, campaign: a.bombingCampaignStart, noFail: !!a.noStrategicBombingFailure, resourcesSatisfied: !!a.resourcesSatisfied } : null } catch (e) { return null } })()
     const powBank = Array.isArray(state.capture) ? state.capture.length : 0
     // 每回合夺格率(含零回合)与封锁进度(JAPAN_TRACE_RESOURCES id=28, 值=首次断链回合)
+    // §26 ZOC 覆盖格数: 终局双方各自的 ZOI 覆盖(非中立)格数
+    const zoc = { Japan: 0, Allies: 0 }
+    {
+        const JP_ZOI = 1 << 0, AP_ZOI = 1 << 1, JP_ZOI_NTRL = 1 << 2
+        for (let h = 1; h < Math.min(state.supply_cache.length, 1478); ++h) {
+            const sc = state.supply_cache[h]
+            if (sc & JP_ZOI && !(sc & JP_ZOI_NTRL)) zoc.Japan++
+            if (sc & AP_ZOI && !(sc & (JP_ZOI_NTRL << 1))) zoc.Allies++
+        }
+    }
     const capRate = {}
     for (const side of ["Japan", "Allies"]) {
         const byTurn = g.capByTurn[side]
@@ -222,7 +232,7 @@ function play(seed) {
         traceNodeMissing: g.traceNodeMissing,
         politicalWill: Number(state.political_will || 0), pwMin: g.pwMin, pwLog: g.pwLog,
         powRequired: Number(state.pow || 0), powBank, surrender, jpResources, finalAtomic,
-        capRate, blockade,
+        capRate, blockade, zoc,
         activationRatio: g.actLimitSum > 0 ? Number((g.actSum / g.actLimitSum).toFixed(3)) : null,
         activationSum: g.actSum, activationLimit: g.actLimitSum,
         surrenderTurns: g.surrenderTurns,
@@ -281,6 +291,14 @@ const tally = {
             const total = sum(completed.map(x => x.role?.Allies || {}), r => (r.groundAttacksWon || 0) + (r.groundAttacksLost || 0) + (r.navalBattlesWon || 0) + (r.navalBattlesLost || 0) + (r.groundDefensesHeld || 0) + (r.groundDefensesFaced || 0))
             return total > 0 ? Number((won / total).toFixed(3)) : 0
         })(),
+    },
+    zocFinal: {
+        Japan: Number(mean(completed, x => x.zoc?.Japan).toFixed(1)),
+        Allies: Number(mean(completed, x => x.zoc?.Allies).toFixed(1)),
+    },
+    meanAirStrikeUnits: {
+        Japan: Number(mean(completed, x => x.role?.Japan?.airStrikeUnits || 0).toFixed(1)),
+        Allies: Number(mean(completed, x => x.role?.Allies?.airStrikeUnits || 0).toFixed(1)),
     },
     meanCapRate: {
         Japan: Number(mean(completed, x => x.capRate?.Japan?.mean).toFixed(2)),
