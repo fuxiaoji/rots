@@ -113,10 +113,15 @@ function em_amphib_assessment(args) {
     // participate" + US_CASUALTIES(PW-1)。要求进攻方海空战力 ≥ margin × 防御方
     // (含反应)才放行登陆。margin 为注册参数, 仅 em_cfg 开启时生效。
     const margin = em_cfg() ? (Number(em_cfg().emAmphNavalMargin) || 1) : 1
+    // [opt amph-quality] 无护航裸登陆只在实际存在敌方海空威胁(守军/反应)时才必败
+    // (broken_aa 只在"守方海军在会战格+攻方无海军"时触发; 会战海空胜负也需双方有
+    // 空海单位)。守军无海空时, 陆战队单独登陆是合法且常胜的 —— 旧口径一律 abort
+    // 误杀大量空虚岛礁登陆。
+    const noEscortAborts = defNavalTotal > 0
     let abort = false, reason = null
-    if (!(navalCF > 0)) { abort = true; reason = "no-escort" }
-    else if (naval.pWin === 0) { abort = true; reason = "naval-unfavorable" }
-    else if (defNavalTotal > 0 && navalCF < margin * defNavalTotal) { abort = true; reason = "naval-margin" }
+    if (!(navalCF > 0) && noEscortAborts) { abort = true; reason = "no-escort" }
+    else if (navalCF > 0 && naval.pWin === 0) { abort = true; reason = "naval-unfavorable" }
+    else if (navalCF > 0 && defNavalTotal > 0 && navalCF < margin * defNavalTotal) { abort = true; reason = "naval-margin" }
     else if (pWin < (em_cfg() ? em_cfg().emMinPWin : 0.30)) { abort = true; reason = "low-pwin" }
     return { abort, reason, pNaval: naval.pWin, pGround: ground.pWin, pWin }
 }

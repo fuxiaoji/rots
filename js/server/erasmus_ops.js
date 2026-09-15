@@ -648,12 +648,36 @@ function eop_landing_no_escort_for(role, view, targetHex) {
         const reducedSet = (typeof G !== "undefined" && G && typeof set_has === "function") ? set_has(G.reduced, u) : false
         return reducedSet ? (Number(p.rcf) || Math.ceil((Number(p.cf) || 0) / 2)) : (Number(p.cf) || 0) }
     const lfOf = u => { const p = byId(u); return Number(p && p.lf) || 3 }
+    // [opt amph-quality] 护航战力按"可真实参战"折算: 只有与两栖地面同格(引擎 AMPH 编组/
+    // pure-naval 进已宣战斗格)或 emAmphEscortDist 内可会合的海军计入全额, 其余候选海军
+    // 只按 emReactionWeight 计入(需要"已宣战斗格+海军航程可达"才成立, 非必然到场)。
+    // 旧口径把全部候选海军记全额 → 远方舰队虚增护航战力 → 裸陆战队被放行进敌舰港
+    // (broken_aa / "could not participate" 主因之一)。
+    const groundLocsG = new Set()
+    for (const u of cand) {
+        if (unsel.has(u)) continue
+        const p = byId(u)
+        if (p && p.class === "ground" && (p.asp || p.strat_move) && G.location[u] >= 0 && G.location[u] <= LAST_BOARD_HEX) groundLocsG.add(G.location[u])
+    }
+    const escortDistG = Number(emc.emAmphEscortDist) || 4
+    const pairedEscort = u => {
+        const loc = G.location[u]
+        if (groundLocsG.has(loc)) return true
+        if (typeof get_distance !== "function") return false
+        for (const gl of groundLocsG) if (get_distance(loc, gl) <= escortDistG) return true
+        return false
+    }
     let attNavalCF = 0, attAirCF = 0, attGroundCF = 0, attNavalHasBr = false
     const attGroundLfs = []
+    const reactW = Number(emc.emReactionWeight) || 0.35
     for (const u of cand) {
         if (unsel.has(u)) continue
         const p = byId(u); if (!p) continue
-        if (p.class === "naval") { attNavalCF += cfOf(u); if (Number(p.br) > 0) attNavalHasBr = true }
+        if (p.class === "naval") {
+            const paired = pairedEscort(u)
+            attNavalCF += paired ? cfOf(u) : cfOf(u) * reactW
+            if (Number(p.br) > 0) attNavalHasBr = true
+        }
         else if (p.class === "air") attAirCF += cfOf(u)
         else if (p.class === "ground") { attGroundCF += cfOf(u); attGroundLfs.push(lfOf(u)) }
     }
@@ -1200,7 +1224,12 @@ function evaluateTargetFeasibility(target, card, hq, view, metaOverride) {
     const damageLevel=meta?.damageLevel||0.5
     const suppress=meta?.kind==="SUPPRESS"||meta?.kind==="SUPPRESS_HQ"
     const requiresOccupation=!!meta?.requiresOccupation
-    const coastal=!!(md&&(md.port||md.island))
+    // [opt amph-coast] 引擎两栖路径(get_naval_move/move.js AMPH)可进入任意沿海敌控格,
+    // 不止 port/island(实证: Medan 无 port 标记, 却是 DEI 投降 key 的合法登陆点)。
+    // 优化层开启时把 md.coastal 计入登陆格判定; 基线(配置关)维持 port||island 逐位不变。
+    const emcCO=(typeof em_cfg==="function")?em_cfg():null
+    const coastal=!!(md&&(md.port||md.island
+        ||((emcCO&&(emcCO.taskforce_math||emcCO.island_sweep||emcCO.erasmus_plus))&&md.coastal)))
     // 第5/11页：兵力标准须把可能反应的敌军计入。以公开单位的战斗航程筛出能到目标的
     // 航空/海军，并计入其中最强一支，避免把一架飞机对现有守军刚好达标误判为完整编队。
     const reactionPool=units.filter(u=>u.faction!==roleFaction&&u.location!==target&&(u.class==="air"||u.class==="naval")
@@ -1280,7 +1309,10 @@ function eop_meets_battle_support_standard(meta, activeUnits, target, faction) {
     const requiresOccupation = !!(meta && meta.requiresOccupation)
     const suppress = !!(meta && (meta.kind === "SUPPRESS" || meta.kind === "SUPPRESS_HQ"))
     const md = (target !== null && target !== undefined && Number.isInteger(target)) ? get_map_data(target) : null
-    const coastal = !!(md && (md.port || md.island))
+    // [opt amph-coast] 与 evaluateTargetFeasibility 同口径: 沿海敌控格即登陆格。
+    const emcCS = (typeof em_cfg === "function") ? em_cfg() : null
+    const coastal = !!(md && (md.port || md.island
+        || ((emcCS && (emcCS.taskforce_math || emcCS.island_sweep || emcCS.erasmus_plus)) && md.coastal)))
     const landing = requiresOccupation && coastal && !is_space_controlled(target, faction)
     const missing = []
     if (requiresOccupation && !hasGround) missing.push("ground")
@@ -1550,9 +1582,13 @@ function eop_filter_legal_participants(unitsById, target, role) {
     if (emcAF && (emcAF.taskforce_math || emcAF.island_sweep)) {
         // [opt island_sweep 段2] 簇格(合成夺占 meta)与焦点敌占港口同样依赖该放行,
         // 否则两栖地面/护航海军被 BFS 过滤, 岛群分流永远编不出海陆对。
+        // [opt amph-coast] 引擎 AMPH 路径可达任意沿海敌控格(非仅 port/island):
+        // Medan/资源格等无 port 标记的沿海格过去把地面候选全部过滤掉, 编组只剩
+        // 海空 → 舰队年年开到却无人登陆(DEI 投降链停滞元凶)。
         const mineAF = role === "Japan" ? JP : AP
         const mdAF = (typeof get_map_data === "function") ? get_map_data(target) : null
-        amphLanding = !!mdAF && (mdAF.port || mdAF.island) && !is_space_controlled(target, mineAF)
+        amphLanding = !!mdAF && mdAF.terrain !== OCEAN && (mdAF.port || mdAF.island || mdAF.coastal)
+            && !is_space_controlled(target, mineAF)
     }
     return unitsById.filter(u => {
         try {
