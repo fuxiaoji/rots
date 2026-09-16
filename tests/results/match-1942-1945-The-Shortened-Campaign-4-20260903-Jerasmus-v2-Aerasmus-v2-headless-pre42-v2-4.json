@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-16T14:41:35.397Z",
+ "generatedAt": "2026-09-16T06:39:08.211Z",
  "tally": {
   "scenario": "1942-1945 (The Shortened Campaign)",
   "gameCount": 4,
@@ -10,7 +10,7 @@
   "alliesBot": "erasmus-v2",
   "japanBotVersion": "erasmus-v2.2-zh.29",
   "alliesBotVersion": "erasmus-v2.2-zh.29",
-  "elapsedSec": 24,
+  "elapsedSec": 23,
   "complete": 4,
   "japanWins": 4,
   "alliesWins": 0,

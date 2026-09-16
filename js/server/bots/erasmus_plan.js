@@ -37,6 +37,14 @@ function ep_allocate_targets(role, view, targets, budget) {
             const mDr = (typeof get_map_data === "function") ? get_map_data(h) : null
             if (mDr && mDr.resource) value *= 2.5
         }
+        // [opt 1943 PoW 缺口] 政治阶段 PoW 目标(G.pow, 通常 4)未达时命名格夺占加权:
+        // 缺口每回合 -1 PW(20260915 实测 8 局全灭于条约败的主因)。未命名格不计
+        // PoW(game.js capture_hex 只 toggle md.named), 不加权。资源格另有 ×3 主加权。
+        if (role === "Allies" && typeof G !== "undefined" && G && Number(G.pow || 0) > 0
+            && Array.isArray(G.capture) && G.capture.length < Number(G.pow)) {
+            const mdP = (typeof get_map_data === "function") ? get_map_data(h) : null
+            if (mdP && (mdP.name || mdP.resource)) value += 2
+        }
         if (mode === "CAPTURE_EMPTY") value *= 0.8 // 空格扫荡: 低成本高确定性, 轻微降权排序
         // 可行性: 编得出单位才入队(编不出地面组的两栖格跳过 —— 防 Vogelkop 死锁)
         let feasible = true, pWin = 0

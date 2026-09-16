@@ -169,6 +169,11 @@ function em_target_value(role, hex) {
             && Number(G.pow) > 0 && G.capture.length < Number(G.pow)) v += 4 // PoW 未达标: PW-1 风险
         if (emc && emc.allies_resource_raid && role === "Allies" && md.resource) v += 4
         if (emc && emc.japan_resource_defense && role === "Japan" && md.resource) v += 5
+        // [opt erasmus_plus 1943] 资源格大幅加权(×3): 16.2 胜利=资源≤1/封锁断链,
+        // 基线 +6 在命名格价值密度中被城市/机场稀释(实测盟军夺格分散在 8 个不同格)。
+        // ×3 后资源格在 ep_allocate_targets 价值密度排序稳定占据前 3, 每张 EC 的多支
+        // 任务部队优先分流到不同资源格。仅盟军侧生效(日本防守权重走专用 flag)。
+        if (emc && emc.erasmus_plus && role === "Allies" && md.resource) v *= 3
     } catch (e) { /* G 不可用时退化为基础价值 */ }
     return v
 }

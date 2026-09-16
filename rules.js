@@ -20974,6 +20974,11 @@ function em_target_value(role, hex) {
             && Number(G.pow) > 0 && G.capture.length < Number(G.pow)) v += 4 // PoW 未达标: PW-1 风险
         if (emc && emc.allies_resource_raid && role === "Allies" && md.resource) v += 4
         if (emc && emc.japan_resource_defense && role === "Japan" && md.resource) v += 5
+        // [opt erasmus_plus 1943] 资源格大幅加权(×3): 16.2 胜利=资源≤1/封锁断链,
+        // 基线 +6 在命名格价值密度中被城市/机场稀释(实测盟军夺格分散在 8 个不同格)。
+        // ×3 后资源格在 ep_allocate_targets 价值密度排序稳定占据前 3, 每张 EC 的多支
+        // 任务部队优先分流到不同资源格。仅盟军侧生效(日本防守权重走专用 flag)。
+        if (emc && emc.erasmus_plus && role === "Allies" && md.resource) v *= 3
     } catch (e) { /* G 不可用时退化为基础价值 */ }
     return v
 }
@@ -21345,6 +21350,14 @@ function ep_allocate_targets(role, view, targets, budget) {
             const mDr = (typeof get_map_data === "function") ? get_map_data(h) : null
             if (mDr && mDr.resource) value *= 2.5
         }
+        // [opt 1943 PoW 缺口] 政治阶段 PoW 目标(G.pow, 通常 4)未达时命名格夺占加权:
+        // 缺口每回合 -1 PW(20260915 实测 8 局全灭于条约败的主因)。未命名格不计
+        // PoW(game.js capture_hex 只 toggle md.named), 不加权。资源格另有 ×3 主加权。
+        if (role === "Allies" && typeof G !== "undefined" && G && Number(G.pow || 0) > 0
+            && Array.isArray(G.capture) && G.capture.length < Number(G.pow)) {
+            const mdP = (typeof get_map_data === "function") ? get_map_data(h) : null
+            if (mdP && (mdP.name || mdP.resource)) value += 2
+        }
         if (mode === "CAPTURE_EMPTY") value *= 0.8 // 空格扫荡: 低成本高确定性, 轻微降权排序
         // 可行性: 编得出单位才入队(编不出地面组的两栖格跳过 —— 防 Vogelkop 死锁)
         let feasible = true, pWin = 0
@@ -21652,25 +21665,52 @@ function eop_append_blockade_raid() {
         }
     }
     if (!conquests.length && !garrisons.length) return false
+    // [opt 1943 PW-survival] 被占领区紧急夺回: 政治阶段 ALASKA/HAWAII 占领计时
+    // (check_occupation)走到期即 -1 PW, 且日本不主动撤出。把占领事件 keys 中仍被
+    // 日本控制/驻军的格作为紧急 CONQUEST 前置(夺回即清计时), 插在 raid 资源格之前;
+    // 可行性仍由激活窗 composeTaskForce 过滤(编不出单位自动顺延, 不锁死预算)。
+    const urgent = []
+    try {
+        if (typeof events !== "undefined" && typeof hex_to_int === "function") {
+            for (const ev of [events.ALASKA_OCCUPATION, events.HAWAII_OCCUPATION]) {
+                if (!ev || !Array.isArray(ev.keys) || !is_event_active(ev)) continue
+                for (const k of ev.keys) {
+                    const h = hex_to_int(k)
+                    if (!(h >= 0 && h <= LAST_BOARD_HEX) || inChain.has(h)) continue
+                    if (!is_space_controlled(h, JP)) continue
+                    if (!urgent.includes(h)) urgent.push(h)
+                }
+            }
+        }
+    } catch (e) { /* 事件层不可用则跳过 */ }
     conquests.sort((a, b) => d(a) - d(b) || a - b)
     garrisons.sort((a, b) => d(a) - d(b) || a - b)
-    // 插入点: 链首连续 pending 夺占/压制目标计满 emBlkInsAfterPending(默认 2)个为止。
+    const ordered = urgent.sort((a, b) => d(a) - d(b) || a - b).concat(conquests)
+    // 插入点: [opt 1943 raid-first] 链首连续 pending 的"资源格夺占"目标才保留链首位
+    // (计满 emBlkInsAfterPending 个为止)。基线口径把任何 pending 夺占目标(如中太平洋
+    // 环礁/DEI战略的 Timor/Kendari)都计在前插让位数内, 实测 1943 链首被 2 个非资源
+    // 目标占位, 资源 raid 稳定排第 3 位之后 —— 与 16.2 资源主轴相悖。改为: 非资源
+    // pending(环礁/压制/普通命名格)一律让位, 资源格 CONQUEST 稳定占据链首前 3。
     let ins = 0
     const cap = Math.min(Number(emcBR.emBlkInsAfterPending) || 2, ov.chain.length)
     for (let i = 0; i < cap; ++i) {
         const m = meta0.find(t => t.hex === ov.chain[i])
-        if (m && m.kind !== "GARRISON" && m.kind !== "REDEPLOY"
+        const mdI = (typeof get_map_data === "function") ? get_map_data(ov.chain[i]) : null
+        if (m && m.kind !== "GARRISON" && m.kind !== "REDEPLOY" && mdI && mdI.resource
             && eop_target_pending("Allies", ov.chain[i], m)) ins = i + 1
         else break
     }
     const meta = meta0.slice()
     const newHexes = []
-    for (const h of conquests) {
+    for (const h of ordered) {
         const at = meta.findIndex(t => t.hex === h)
         if (at >= 0) meta.splice(at, 1)
+        const mdH = (typeof get_map_data === "function") ? get_map_data(h) : null
+        const isUrgent = urgent.includes(h)
         meta.push({ hex: h, kind: "CONQUEST", requiresOccupation: true, damageLevel: 1,
-            objective: "封锁 raid: 夺占日本资源格(16.47 trace 断链胜利主路)",
-            victoryConstraint: "JAPAN_RESOURCE_BLOCKADE" })
+            objective: isUrgent ? "紧急夺回被占领区(清除 ALASKA/HAWAII 占领 PW 计时)"
+                : "封锁 raid: 夺占日本资源格(16.47 trace 断链胜利主路)",
+            victoryConstraint: isUrgent ? "OCCUPATION_RETAKE" : "JAPAN_RESOURCE_BLOCKADE" })
         newHexes.push(h)
     }
     const garrisonSteps = Math.max(1, Number(emcBR.emBlkGarrisonSteps) || 1)
@@ -22352,15 +22392,22 @@ function eop_pick_advance_unit(candidates, role, activeUnits) {
         // 首键 = 到最近空虚敌控格的距离(越近越可能本回合就夺格; 超 emSweepAdvDist 不选);
         // 次键 = 两栖/可海运地面优先(岛屿格只有它们够得着); 再次 = 满编优先(减损单位
         // 推进遇敌易损); 末键 = id 保证确定性。
-        let d = 99
+        // [opt 1943 PoW] 命名空虚格优先: 政治阶段 PoW 只统计 md.named 夺格
+        // (game.js capture_hex set_toggle G.capture), 未命名格不计分。同距离下把编队
+        // 推向命名格(港/机场/城市/资源格), 使"推进夺格"兜底同时喂养 PoW 配额。
+        let d = 99, dNamed = 99
         for (const h of emptyEnemy) {
             const dd = get_distance(loc, h)
             if (dd < d) d = dd
+            const mdH = (typeof get_map_data === "function") ? get_map_data(h) : null
+            if (mdH && (mdH.name || mdH.resource || mdH.port || mdH.airfield) && dd < dNamed) dNamed = dd
         }
-        if (d > maxD) continue
+        const namedOk = dNamed <= maxD
+        const dEff = namedOk ? dNamed : d
+        if (dEff > maxD) continue
         // 减损地面不参与推进兜底(1 step 损失, 被敌反攻即歼灭; 留守待整编)。
         if (G.reduced && (typeof set_has === "function" ? set_has(G.reduced, u) : G.reduced.includes(u))) continue
-        const score = [d, (p.asp || p.strat_move) ? 0 : 1, u]
+        const score = [namedOk ? 0 : 1, dEff, (p.asp || p.strat_move) ? 0 : 1, u]
         if (bestScore === null || better(score, bestScore)) { best = u; bestScore = score }
     }
     if (best !== null) return best
@@ -22468,10 +22515,14 @@ function eop_activation_focus_faction(faction, selectedCount, view, candidates) 
                 return !!(m2&&m2.resource)
             })
             if(resPending.length){
+                // [opt 1943 驻守让位] CONQUEST(未夺资源格)恒先于 GARRISON(己控未驻满):
+                // 驻军补足只在"没有可夺资源格"时消费激活预算; 已驻满的格 pending=false
+                // 天然不占预算(eop_target_pending)。同组内仍按前沿距离就近。
+                const isGarrPending=h=>{const m3=eop_target_meta(role,h);return !!(m3&&m3.kind==="GARRISON")}
                 resPending.sort((a2,b2)=>{
                     const da=(typeof esm_front_distance==="function")?esm_front_distance(a2,AP):99
                     const db=(typeof esm_front_distance==="function")?esm_front_distance(b2,AP):99
-                    return da-db||a2-b2
+                    return (isGarrPending(a2)?1:0)-(isGarrPending(b2)?1:0)||da-db||a2-b2
                 })
                 // [可行性过滤] 就近优先但跳过"编不出地面组"的格子(str=0 死锁焦点,
                 // 实测 657 Vogelkop 无两栖可达地面时锁死整条 raid 链); 全不可行才回退最近格。
