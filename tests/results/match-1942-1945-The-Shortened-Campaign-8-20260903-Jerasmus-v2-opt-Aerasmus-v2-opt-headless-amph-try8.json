@@ -1,0 +1,952 @@
+{
+ "generatedAt": "2026-09-16T16:32:41.958Z",
+ "tally": {
+  "scenario": "1942-1945 (The Shortened Campaign)",
+  "gameCount": 8,
+  "baseSeed": 20260903,
+  "maxActions": 60000,
+  "headless_moves": true,
+  "japanBot": "erasmus-v2-opt",
+  "alliesBot": "erasmus-v2-opt",
+  "japanBotVersion": "erasmus-v2.2-zh.29-opt",
+  "alliesBotVersion": "erasmus-v2.2-zh.29-opt",
+  "elapsedSec": 392,
+  "complete": 8,
+  "japanWins": 8,
+  "alliesWins": 0,
+  "errors": 0,
+  "setupErrors": 0,
+  "actionLimit": 0,
+  "atomicBombWins": 0,
+  "blockadeWins": 0,
+  "homelandWins": 0,
+  "blockadeStarted": 0,
+  "elimStepsBySide": {
+   "Japan": 390,
+   "Allies": 317
+  },
+  "amphibSuccessBySide": {
+   "Japan": 57,
+   "Allies": 32
+  },
+  "battleWinRate": {
+   "Japan": 0.765,
+   "Allies": 0.738
+  },
+  "zocFinal": {
+   "Japan": 161,
+   "Allies": 218.3
+  },
+  "meanAirStrikeUnits": {
+   "Japan": 5.3,
+   "Allies": 5.4
+  },
+  "meanCapRate": {
+   "Japan": 1.34,
+   "Allies": 0.71,
+   "JapanMax": 10,
+   "AlliesMax": 4
+  },
+  "meanActivationRatio": 0.651,
+  "battleHexesPerTurn": 5.93,
+  "treatyWins": 4,
+  "meanTurn": 10.38,
+  "meanPW": 0.5,
+  "meanJpResources": 6.63,
+  "surrenderCounts": {
+   "philippines": 8,
+   "malaya": 4,
+   "dei": 0,
+   "burma": 0,
+   "japan": 0
+  },
+  "role": {
+   "Japan": {
+    "decisions": 8279,
+    "fire": 618,
+    "advance": 1281,
+    "hqActivations": 0,
+    "airStrikeUnits": 42,
+    "airStrikeHexes": 42,
+    "attacksInitiated": 323,
+    "groundAttacksWon": 57,
+    "groundDefensesHeld": 24,
+    "navalBattlesWon": 49,
+    "navalBattlesLost": 40,
+    "amphibAssaults": 0,
+    "amphibFailures": 60,
+    "eliminations": 159,
+    "reductions": 178,
+    "cfEliminated": 2205,
+    "cfReduced": 1171,
+    "capturedHexes": 108,
+    "lostHexes": 0,
+    "mean_decisions": 1034.88,
+    "mean_fire": 77.25,
+    "mean_advance": 160.13,
+    "mean_hqActivations": 0,
+    "mean_airStrikeUnits": 5.25,
+    "mean_airStrikeHexes": 5.25,
+    "mean_attacksInitiated": 40.38,
+    "mean_groundAttacksWon": 7.13,
+    "mean_groundDefensesHeld": 3,
+    "mean_navalBattlesWon": 6.13,
+    "mean_navalBattlesLost": 5,
+    "mean_amphibAssaults": 0,
+    "mean_amphibFailures": 7.5,
+    "mean_eliminations": 19.88,
+    "mean_reductions": 22.25,
+    "mean_cfEliminated": 275.63,
+    "mean_cfReduced": 146.38,
+    "mean_capturedHexes": 13.5,
+    "mean_lostHexes": 0
+   },
+   "Allies": {
+    "decisions": 9485,
+    "fire": 267,
+    "advance": 1215,
+    "hqActivations": 0,
+    "airStrikeUnits": 43,
+    "airStrikeHexes": 43,
+    "attacksInitiated": 176,
+    "groundAttacksWon": 32,
+    "groundDefensesHeld": 66,
+    "navalBattlesWon": 40,
+    "navalBattlesLost": 49,
+    "amphibAssaults": 0,
+    "amphibFailures": 48,
+    "eliminations": 203,
+    "reductions": 194,
+    "cfEliminated": 1309,
+    "cfReduced": 1104,
+    "capturedHexes": 60,
+    "lostHexes": 0,
+    "mean_decisions": 1185.63,
+    "mean_fire": 33.38,
+    "mean_advance": 151.88,
+    "mean_hqActivations": 0,
+    "mean_airStrikeUnits": 5.38,
+    "mean_airStrikeHexes": 5.38,
+    "mean_attacksInitiated": 22,
+    "mean_groundAttacksWon": 4,
+    "mean_groundDefensesHeld": 8.25,
+    "mean_navalBattlesWon": 5,
+    "mean_navalBattlesLost": 6.13,
+    "mean_amphibAssaults": 0,
+    "mean_amphibFailures": 6,
+    "mean_eliminations": 25.38,
+    "mean_reductions": 24.25,
+    "mean_cfEliminated": 163.63,
+    "mean_cfReduced": 138,
+    "mean_capturedHexes": 7.5,
+    "mean_lostHexes": 0
+   }
+  },
+  "inflicted": {
+   "Japan": {
+    "eliminations": 203,
+    "reductions": 194,
+    "cfEliminated": 1309,
+    "cfReduced": 1104
+   },
+   "Allies": {
+    "eliminations": 159,
+    "reductions": 178,
+    "cfEliminated": 2205,
+    "cfReduced": 1171
+   }
+  }
+ },
+ "perGame": [
+  {
+   "seed": 20260903,
+   "winner": "Japan",
+   "won_text": "Japan did not surrender",
+   "vp": null,
+   "actions": 2818,
+   "turn": 12,
+   "politicalWill": 2,
+   "pwMin": 1,
+   "powRequired": 4,
+   "powBank": 1,
+   "surrender": {
+    "philippines": true,
+    "malaya": false,
+    "dei": false,
+    "burma": false,
+    "japan": false
+   },
+   "jpResources": 5,
+   "finalAtomic": {
+    "met": false,
+    "jpResources": 5,
+    "sovietReady": false,
+    "campaign": 9,
+    "noFail": true,
+    "resourcesSatisfied": false
+   },
+   "capRate": {
+    "Japan": {
+     "mean": 1.08,
+     "max": 5,
+     "turnsWithCapture": 6
+    },
+    "Allies": {
+     "mean": 0.58,
+     "max": 2,
+     "turnsWithCapture": 6
+    }
+   },
+   "blockade": null,
+   "activationRatio": 0.674,
+   "surrenderTurns": {
+    "Philippines": 2,
+    "Malaya": 4
+   },
+   "lateCapturesAllied": 7,
+   "role": {
+    "Japan": {
+     "decisions": 1339,
+     "fire": 121,
+     "advance": 228,
+     "hqActivations": 0,
+     "airStrikeUnits": 5,
+     "airStrikeHexes": 5,
+     "attacksInitiated": 60,
+     "groundAttacksWon": 6,
+     "groundDefensesHeld": 4,
+     "navalBattlesWon": 4,
+     "navalBattlesLost": 8,
+     "amphibAssaults": 0,
+     "amphibFailures": 15,
+     "eliminations": 35,
+     "reductions": 31,
+     "cfEliminated": 511,
+     "cfReduced": 198,
+     "capturedHexes": 13,
+     "lostHexes": 0,
+     "elimSteps": 89,
+     "amphibSuccess": 6,
+     "zocHexes": 0,
+     "airMoves": 0
+    },
+    "Allies": {
+     "decisions": 1479,
+     "fire": 36,
+     "advance": 185,
+     "hqActivations": 0,
+     "airStrikeUnits": 4,
+     "airStrikeHexes": 4,
+     "attacksInitiated": 17,
+     "groundAttacksWon": 3,
+     "groundDefensesHeld": 11,
+     "navalBattlesWon": 8,
+     "navalBattlesLost": 4,
+     "amphibAssaults": 0,
+     "amphibFailures": 1,
+     "eliminations": 40,
+     "reductions": 32,
+     "cfEliminated": 265,
+     "cfReduced": 170,
+     "capturedHexes": 7,
+     "lostHexes": 0,
+     "elimSteps": 62,
+     "amphibSuccess": 3,
+     "zocHexes": 0,
+     "airMoves": 0
+    }
+   }
+  },
+  {
+   "seed": 20260904,
+   "winner": "Japan",
+   "won_text": "Japan did not surrender",
+   "vp": null,
+   "actions": 2317,
+   "turn": 12,
+   "politicalWill": 1,
+   "pwMin": 1,
+   "powRequired": 4,
+   "powBank": 0,
+   "surrender": {
+    "philippines": true,
+    "malaya": false,
+    "dei": false,
+    "burma": false,
+    "japan": false
+   },
+   "jpResources": 5,
+   "finalAtomic": {
+    "met": false,
+    "jpResources": 5,
+    "sovietReady": false,
+    "campaign": 9,
+    "noFail": true,
+    "resourcesSatisfied": false
+   },
+   "capRate": {
+    "Japan": {
+     "mean": 1.08,
+     "max": 5,
+     "turnsWithCapture": 6
+    },
+    "Allies": {
+     "mean": 0.83,
+     "max": 3,
+     "turnsWithCapture": 6
+    }
+   },
+   "blockade": null,
+   "activationRatio": 0.63,
+   "surrenderTurns": {
+    "Philippines": 3
+   },
+   "lateCapturesAllied": 9,
+   "role": {
+    "Japan": {
+     "decisions": 1063,
+     "fire": 77,
+     "advance": 162,
+     "hqActivations": 0,
+     "airStrikeUnits": 4,
+     "airStrikeHexes": 4,
+     "attacksInitiated": 36,
+     "groundAttacksWon": 7,
+     "groundDefensesHeld": 3,
+     "navalBattlesWon": 7,
+     "navalBattlesLost": 4,
+     "amphibAssaults": 0,
+     "amphibFailures": 5,
+     "eliminations": 17,
+     "reductions": 25,
+     "cfEliminated": 216,
+     "cfReduced": 168,
+     "capturedHexes": 13,
+     "lostHexes": 0,
+     "elimSteps": 35,
+     "amphibSuccess": 7,
+     "zocHexes": 0,
+     "airMoves": 0
+    },
+    "Allies": {
+     "decisions": 1254,
+     "fire": 47,
+     "advance": 140,
+     "hqActivations": 0,
+     "airStrikeUnits": 11,
+     "airStrikeHexes": 11,
+     "attacksInitiated": 31,
+     "groundAttacksWon": 7,
+     "groundDefensesHeld": 12,
+     "navalBattlesWon": 4,
+     "navalBattlesLost": 7,
+     "amphibAssaults": 0,
+     "amphibFailures": 6,
+     "eliminations": 25,
+     "reductions": 24,
+     "cfEliminated": 148,
+     "cfReduced": 145,
+     "capturedHexes": 10,
+     "lostHexes": 0,
+     "elimSteps": 38,
+     "amphibSuccess": 7,
+     "zocHexes": 0,
+     "airMoves": 0
+    }
+   }
+  },
+  {
+   "seed": 20260905,
+   "winner": "Japan",
+   "won_text": "Japanese Victory by Treaty Negotiations",
+   "vp": null,
+   "actions": 2353,
+   "turn": 11,
+   "politicalWill": 0,
+   "pwMin": 0,
+   "powRequired": 4,
+   "powBank": 2,
+   "surrender": {
+    "philippines": true,
+    "malaya": false,
+    "dei": false,
+    "burma": false,
+    "japan": false
+   },
+   "jpResources": 6,
+   "finalAtomic": {
+    "met": false,
+    "jpResources": 6,
+    "sovietReady": false,
+    "campaign": 9,
+    "noFail": true,
+    "resourcesSatisfied": false
+   },
+   "capRate": {
+    "Japan": {
+     "mean": 1.18,
+     "max": 4,
+     "turnsWithCapture": 8
+    },
+    "Allies": {
+     "mean": 1.36,
+     "max": 4,
+     "turnsWithCapture": 7
+    }
+   },
+   "blockade": null,
+   "activationRatio": 0.634,
+   "surrenderTurns": {
+    "Philippines": 2
+   },
+   "lateCapturesAllied": 12,
+   "role": {
+    "Japan": {
+     "decisions": 1096,
+     "fire": 82,
+     "advance": 172,
+     "hqActivations": 0,
+     "airStrikeUnits": 11,
+     "airStrikeHexes": 11,
+     "attacksInitiated": 44,
+     "groundAttacksWon": 5,
+     "groundDefensesHeld": 5,
+     "navalBattlesWon": 7,
+     "navalBattlesLost": 7,
+     "amphibAssaults": 0,
+     "amphibFailures": 6,
+     "eliminations": 23,
+     "reductions": 24,
+     "cfEliminated": 310,
+     "cfReduced": 155,
+     "capturedHexes": 13,
+     "lostHexes": 0,
+     "elimSteps": 56,
+     "amphibSuccess": 5,
+     "zocHexes": 0,
+     "airMoves": 0
+    },
+    "Allies": {
+     "decisions": 1257,
+     "fire": 39,
+     "advance": 143,
+     "hqActivations": 0,
+     "airStrikeUnits": 7,
+     "airStrikeHexes": 7,
+     "attacksInitiated": 24,
+     "groundAttacksWon": 11,
+     "groundDefensesHeld": 8,
+     "navalBattlesWon": 7,
+     "navalBattlesLost": 7,
+     "amphibAssaults": 0,
+     "amphibFailures": 5,
+     "eliminations": 23,
+     "reductions": 24,
+     "cfEliminated": 214,
+     "cfReduced": 148,
+     "capturedHexes": 15,
+     "lostHexes": 0,
+     "elimSteps": 41,
+     "amphibSuccess": 11,
+     "zocHexes": 0,
+     "airMoves": 0
+    }
+   }
+  },
+  {
+   "seed": 20260906,
+   "winner": "Japan",
+   "won_text": "Japanese Victory by Treaty Negotiations",
+   "vp": null,
+   "actions": 1647,
+   "turn": 8,
+   "politicalWill": 0,
+   "pwMin": 0,
+   "powRequired": 4,
+   "powBank": 2,
+   "surrender": {
+    "philippines": true,
+    "malaya": true,
+    "dei": false,
+    "burma": false,
+    "japan": false
+   },
+   "jpResources": 8,
+   "finalAtomic": {
+    "met": false,
+    "jpResources": 8,
+    "sovietReady": false,
+    "campaign": 0,
+    "noFail": false,
+    "resourcesSatisfied": false
+   },
+   "capRate": {
+    "Japan": {
+     "mean": 1.88,
+     "max": 8,
+     "turnsWithCapture": 5
+    },
+    "Allies": {
+     "mean": 0.63,
+     "max": 2,
+     "turnsWithCapture": 4
+    }
+   },
+   "blockade": null,
+   "activationRatio": 0.637,
+   "surrenderTurns": {
+    "Philippines": 2,
+    "Malaya": 2
+   },
+   "lateCapturesAllied": 3,
+   "role": {
+    "Japan": {
+     "decisions": 706,
+     "fire": 55,
+     "advance": 97,
+     "hqActivations": 0,
+     "airStrikeUnits": 2,
+     "airStrikeHexes": 2,
+     "attacksInitiated": 32,
+     "groundAttacksWon": 12,
+     "groundDefensesHeld": 0,
+     "navalBattlesWon": 1,
+     "navalBattlesLost": 4,
+     "amphibAssaults": 0,
+     "amphibFailures": 6,
+     "eliminations": 15,
+     "reductions": 19,
+     "cfEliminated": 196,
+     "cfReduced": 125,
+     "capturedHexes": 15,
+     "lostHexes": 0,
+     "elimSteps": 36,
+     "amphibSuccess": 12,
+     "zocHexes": 0,
+     "airMoves": 0
+    },
+    "Allies": {
+     "decisions": 941,
+     "fire": 19,
+     "advance": 123,
+     "hqActivations": 0,
+     "airStrikeUnits": 5,
+     "airStrikeHexes": 5,
+     "attacksInitiated": 11,
+     "groundAttacksWon": 2,
+     "groundDefensesHeld": 3,
+     "navalBattlesWon": 4,
+     "navalBattlesLost": 1,
+     "amphibAssaults": 0,
+     "amphibFailures": 0,
+     "eliminations": 21,
+     "reductions": 13,
+     "cfEliminated": 110,
+     "cfReduced": 71,
+     "capturedHexes": 5,
+     "lostHexes": 0,
+     "elimSteps": 33,
+     "amphibSuccess": 2,
+     "zocHexes": 0,
+     "airMoves": 0
+    }
+   }
+  },
+  {
+   "seed": 20260907,
+   "winner": "Japan",
+   "won_text": "Japanese Victory by Treaty Negotiations",
+   "vp": null,
+   "actions": 1651,
+   "turn": 8,
+   "politicalWill": 0,
+   "pwMin": 0,
+   "powRequired": 4,
+   "powBank": 2,
+   "surrender": {
+    "philippines": true,
+    "malaya": true,
+    "dei": false,
+    "burma": false,
+    "japan": false
+   },
+   "jpResources": 8,
+   "finalAtomic": {
+    "met": false,
+    "jpResources": 8,
+    "sovietReady": false,
+    "campaign": 0,
+    "noFail": false,
+    "resourcesSatisfied": false
+   },
+   "capRate": {
+    "Japan": {
+     "mean": 1.5,
+     "max": 4,
+     "turnsWithCapture": 6
+    },
+    "Allies": {
+     "mean": 0.38,
+     "max": 1,
+     "turnsWithCapture": 3
+    }
+   },
+   "blockade": null,
+   "activationRatio": 0.649,
+   "surrenderTurns": {
+    "Philippines": 3,
+    "Malaya": 3
+   },
+   "lateCapturesAllied": 1,
+   "role": {
+    "Japan": {
+     "decisions": 822,
+     "fire": 64,
+     "advance": 134,
+     "hqActivations": 0,
+     "airStrikeUnits": 7,
+     "airStrikeHexes": 7,
+     "attacksInitiated": 32,
+     "groundAttacksWon": 5,
+     "groundDefensesHeld": 2,
+     "navalBattlesWon": 5,
+     "navalBattlesLost": 2,
+     "amphibAssaults": 0,
+     "amphibFailures": 2,
+     "eliminations": 10,
+     "reductions": 16,
+     "cfEliminated": 118,
+     "cfReduced": 109,
+     "capturedHexes": 12,
+     "lostHexes": 0,
+     "elimSteps": 16,
+     "amphibSuccess": 5,
+     "zocHexes": 0,
+     "airMoves": 0
+    },
+    "Allies": {
+     "decisions": 829,
+     "fire": 18,
+     "advance": 108,
+     "hqActivations": 0,
+     "airStrikeUnits": 1,
+     "airStrikeHexes": 1,
+     "attacksInitiated": 11,
+     "groundAttacksWon": 1,
+     "groundDefensesHeld": 9,
+     "navalBattlesWon": 2,
+     "navalBattlesLost": 5,
+     "amphibAssaults": 0,
+     "amphibFailures": 5,
+     "eliminations": 16,
+     "reductions": 23,
+     "cfEliminated": 88,
+     "cfReduced": 154,
+     "capturedHexes": 3,
+     "lostHexes": 0,
+     "elimSteps": 26,
+     "amphibSuccess": 1,
+     "zocHexes": 0,
+     "airMoves": 0
+    }
+   }
+  },
+  {
+   "seed": 20260908,
+   "winner": "Japan",
+   "won_text": "Japan did not surrender",
+   "vp": null,
+   "actions": 2733,
+   "turn": 12,
+   "politicalWill": 1,
+   "pwMin": 1,
+   "powRequired": 4,
+   "powBank": 0,
+   "surrender": {
+    "philippines": true,
+    "malaya": true,
+    "dei": false,
+    "burma": false,
+    "japan": false
+   },
+   "jpResources": 7,
+   "finalAtomic": {
+    "met": false,
+    "jpResources": 7,
+    "sovietReady": false,
+    "campaign": 9,
+    "noFail": true,
+    "resourcesSatisfied": false
+   },
+   "capRate": {
+    "Japan": {
+     "mean": 1.17,
+     "max": 10,
+     "turnsWithCapture": 5
+    },
+    "Allies": {
+     "mean": 0.33,
+     "max": 2,
+     "turnsWithCapture": 3
+    }
+   },
+   "blockade": null,
+   "activationRatio": 0.629,
+   "surrenderTurns": {
+    "Philippines": 2,
+    "Malaya": 2
+   },
+   "lateCapturesAllied": 1,
+   "role": {
+    "Japan": {
+     "decisions": 1263,
+     "fire": 84,
+     "advance": 195,
+     "hqActivations": 0,
+     "airStrikeUnits": 8,
+     "airStrikeHexes": 8,
+     "attacksInitiated": 50,
+     "groundAttacksWon": 7,
+     "groundDefensesHeld": 1,
+     "navalBattlesWon": 12,
+     "navalBattlesLost": 7,
+     "amphibAssaults": 0,
+     "amphibFailures": 12,
+     "eliminations": 22,
+     "reductions": 32,
+     "cfEliminated": 346,
+     "cfReduced": 203,
+     "capturedHexes": 14,
+     "lostHexes": 0,
+     "elimSteps": 64,
+     "amphibSuccess": 7,
+     "zocHexes": 0,
+     "airMoves": 0
+    },
+    "Allies": {
+     "decisions": 1470,
+     "fire": 52,
+     "advance": 208,
+     "hqActivations": 0,
+     "airStrikeUnits": 12,
+     "airStrikeHexes": 12,
+     "attacksInitiated": 39,
+     "groundAttacksWon": 3,
+     "groundDefensesHeld": 10,
+     "navalBattlesWon": 7,
+     "navalBattlesLost": 12,
+     "amphibAssaults": 0,
+     "amphibFailures": 14,
+     "eliminations": 23,
+     "reductions": 33,
+     "cfEliminated": 119,
+     "cfReduced": 193,
+     "capturedHexes": 4,
+     "lostHexes": 0,
+     "elimSteps": 29,
+     "amphibSuccess": 3,
+     "zocHexes": 0,
+     "airMoves": 0
+    }
+   }
+  },
+  {
+   "seed": 20260909,
+   "winner": "Japan",
+   "won_text": "Japanese Victory by Treaty Negotiations",
+   "vp": null,
+   "actions": 1703,
+   "turn": 8,
+   "politicalWill": 0,
+   "pwMin": 0,
+   "powRequired": 4,
+   "powBank": 1,
+   "surrender": {
+    "philippines": true,
+    "malaya": true,
+    "dei": false,
+    "burma": false,
+    "japan": false
+   },
+   "jpResources": 7,
+   "finalAtomic": {
+    "met": false,
+    "jpResources": 7,
+    "sovietReady": false,
+    "campaign": 0,
+    "noFail": false,
+    "resourcesSatisfied": false
+   },
+   "capRate": {
+    "Japan": {
+     "mean": 1.5,
+     "max": 5,
+     "turnsWithCapture": 5
+    },
+    "Allies": {
+     "mean": 0.63,
+     "max": 2,
+     "turnsWithCapture": 3
+    }
+   },
+   "blockade": null,
+   "activationRatio": 0.676,
+   "surrenderTurns": {
+    "Philippines": 3,
+    "Malaya": 3
+   },
+   "lateCapturesAllied": 4,
+   "role": {
+    "Japan": {
+     "decisions": 793,
+     "fire": 55,
+     "advance": 112,
+     "hqActivations": 0,
+     "airStrikeUnits": 1,
+     "airStrikeHexes": 1,
+     "attacksInitiated": 29,
+     "groundAttacksWon": 8,
+     "groundDefensesHeld": 5,
+     "navalBattlesWon": 2,
+     "navalBattlesLost": 4,
+     "amphibAssaults": 0,
+     "amphibFailures": 7,
+     "eliminations": 14,
+     "reductions": 14,
+     "cfEliminated": 204,
+     "cfReduced": 88,
+     "capturedHexes": 12,
+     "lostHexes": 0,
+     "elimSteps": 38,
+     "amphibSuccess": 8,
+     "zocHexes": 0,
+     "airMoves": 0
+    },
+    "Allies": {
+     "decisions": 910,
+     "fire": 22,
+     "advance": 131,
+     "hqActivations": 0,
+     "airStrikeUnits": 1,
+     "airStrikeHexes": 1,
+     "attacksInitiated": 14,
+     "groundAttacksWon": 2,
+     "groundDefensesHeld": 5,
+     "navalBattlesWon": 4,
+     "navalBattlesLost": 2,
+     "amphibAssaults": 0,
+     "amphibFailures": 3,
+     "eliminations": 20,
+     "reductions": 15,
+     "cfEliminated": 94,
+     "cfReduced": 81,
+     "capturedHexes": 5,
+     "lostHexes": 0,
+     "elimSteps": 32,
+     "amphibSuccess": 2,
+     "zocHexes": 0,
+     "airMoves": 0
+    }
+   }
+  },
+  {
+   "seed": 20260910,
+   "winner": "Japan",
+   "won_text": "Japan did not surrender",
+   "vp": null,
+   "actions": 2542,
+   "turn": 12,
+   "politicalWill": 0,
+   "pwMin": 0,
+   "powRequired": 4,
+   "powBank": 1,
+   "surrender": {
+    "philippines": true,
+    "malaya": false,
+    "dei": false,
+    "burma": false,
+    "japan": false
+   },
+   "jpResources": 7,
+   "finalAtomic": {
+    "met": false,
+    "jpResources": 7,
+    "sovietReady": false,
+    "campaign": 0,
+    "noFail": false,
+    "resourcesSatisfied": false
+   },
+   "capRate": {
+    "Japan": {
+     "mean": 1.33,
+     "max": 8,
+     "turnsWithCapture": 7
+    },
+    "Allies": {
+     "mean": 0.92,
+     "max": 4,
+     "turnsWithCapture": 6
+    }
+   },
+   "blockade": null,
+   "activationRatio": 0.676,
+   "surrenderTurns": {
+    "Philippines": 2
+   },
+   "lateCapturesAllied": 5,
+   "role": {
+    "Japan": {
+     "decisions": 1197,
+     "fire": 80,
+     "advance": 181,
+     "hqActivations": 0,
+     "airStrikeUnits": 4,
+     "airStrikeHexes": 4,
+     "attacksInitiated": 40,
+     "groundAttacksWon": 7,
+     "groundDefensesHeld": 4,
+     "navalBattlesWon": 11,
+     "navalBattlesLost": 4,
+     "amphibAssaults": 0,
+     "amphibFailures": 7,
+     "eliminations": 23,
+     "reductions": 17,
+     "cfEliminated": 304,
+     "cfReduced": 125,
+     "capturedHexes": 16,
+     "lostHexes": 0,
+     "elimSteps": 56,
+     "amphibSuccess": 7,
+     "zocHexes": 0,
+     "airMoves": 0
+    },
+    "Allies": {
+     "decisions": 1345,
+     "fire": 34,
+     "advance": 177,
+     "hqActivations": 0,
+     "airStrikeUnits": 2,
+     "airStrikeHexes": 2,
+     "attacksInitiated": 29,
+     "groundAttacksWon": 3,
+     "groundDefensesHeld": 8,
+     "navalBattlesWon": 4,
+     "navalBattlesLost": 11,
+     "amphibAssaults": 0,
+     "amphibFailures": 14,
+     "eliminations": 35,
+     "reductions": 30,
+     "cfEliminated": 271,
+     "cfReduced": 142,
+     "capturedHexes": 11,
+     "lostHexes": 0,
+     "elimSteps": 56,
+     "amphibSuccess": 3,
+     "zocHexes": 0,
+     "airMoves": 0
+    }
+   }
+  }
+ ],
+ "errors": []
+}

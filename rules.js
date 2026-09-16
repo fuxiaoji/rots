@@ -24395,9 +24395,17 @@ function composeTaskForce(target, card, hq, view, candidates, role, metaOverride
         }
         // [opt ERASMUS_PLUS] 占领目标无地面部队 → 编组不完成(落到 pool 选兵):
         // 修复海空军"空完成"导致马来亚/新加坡永不登陆。
+        // v2.1 改进: pool 里如果有地面单位(哪怕陆路不可达=需两栖), 也选中它继续激活
+        // —— 每多激活一个两栖地面=多一次成功登陆机会(capture_landing_hexes 批量占领)。
         if(f.requiresOccupation&&groundStrength<=0){
             const emcNG=(typeof em_cfg==="function")?em_cfg():null
             if(emcNG&&emcNG.erasmus_plus){
+                // 从 pool 里找任意地面候选(含两栖): 激活它, 无头推进会引导它上岛
+                const gnd=pool.find(u=>u.class==="ground"&&(u.asp||u.strat_move))
+                if(gnd)return {complete:false,strict:true,required:need,strength:math,unit:gnd.id,
+                    formation:"needs-ground-occupation",
+                    groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
+                // pool 里无地面 → 也不提前 done, 让 call 方走推进兜底
                 return {complete:false,strict:true,required:need,strength:math,unit:undefined,
                     formation:"needs-ground-occupation",
                     groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
