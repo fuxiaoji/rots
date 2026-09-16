@@ -155,14 +155,16 @@
     var BOT_SCENARIOS = {
         "erasmus-v2": ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"],
         "erasmus-v2-opt": ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"],
+        "erasmus-v2-opt-v5": ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"],
     }
-    // 模板下拉默认选基线(erasmus-v2), 这里统一改为优化版作为默认 AI。
+    // 最新版 AI(5.0) 为默认选择; 模板下拉默认选基线, 这里统一改到新版本。
+    var DEFAULT_BOT = "erasmus-v2-opt-v5"
     // 注意: 模板的 bot 下拉位于本片段注入点之后, 解析到本脚本时尚不存在,
     // 必须等 DOMContentLoaded 再绑定, 否则 querySelector 拿到 null。
     document.addEventListener("DOMContentLoaded", function () {
         ;["bot_id", "bot_id_jp", "bot_id_ap"].forEach(function (name) {
             var sel = document.querySelector("select[name='" + name + "']")
-            if (sel) sel.value = "erasmus-v2-opt"
+            if (sel && sel.querySelector("option[value='" + DEFAULT_BOT + "']")) sel.value = DEFAULT_BOT
         })
         // 提交前校验所选 AI 是否支持所选剧本, 避免 "Invalid AI vs AI configuration"。
         document.querySelector("form").addEventListener("submit", function (evt) {

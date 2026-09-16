@@ -1068,6 +1068,50 @@ function headless_units_at(hex, faction) {
     return r
 }
 
+// [opt stack_limit_gate] 落点解析: 接受 unit id 或 piece 对象(引擎的落点评分一律传 piece)。
+function headless_stack_unit_id(pieceOrId) {
+    if (Number.isInteger(pieceOrId) && pieces[pieceOrId]) return pieceOrId
+    if (!pieceOrId || typeof pieceOrId !== "object") return null
+    for (let u=1; u<pieces.length; ++u) if (pieces[u] === pieceOrId) return u
+    return null
+}
+
+// [opt stack_limit_gate] 叠放闸门(引擎侧唯一判据): 把 movingPiece(及同源同格的整个编组
+// group)放进 hex 之后会不会超编 —— 直接复用引擎自身 is_overstack(move.js:672)。
+// 引擎在移动/推进/PBM 时完全不拦, 只在阶段末(check_overstacking)事后清罚: 位移到回合盒
+// (普通地面/航空 2 回合, 海军 1 回合)或对不可替换/断补单位直接歼灭。所以落点先避让。
+//   每格每方上限: 地面+航空 ≤3(共用同一 bucket)、HQ ≤1、海军 ≤6。
+// 返回 true = 可容纳(含单位/编组已在该格: 引擎 multiplier=0 语义, 原地不算新增)。
+function headless_stack_fits(hex, faction, movingPiece, group) {
+    if (typeof is_overstack !== "function") return true
+    if (!(hex === CHINA_BOX || (hex >= 0 && hex <= LAST_BOARD_HEX))) return true
+    const lead = headless_stack_unit_id(movingPiece)
+    if (lead === null) return true
+    if (pieces[lead].faction !== faction) return true
+    if (G.location[lead] === hex) return true
+    // 编组(同源同格整组同落 hex): 引擎 is_overstack 的 multip 只表达"这一个单位"的桶量,
+    // 组内同兵种按数量放大 multip(地面/航空 2/个, 海军 128/个), HQ 逐个数位判定。
+    const ids = []
+    if (Array.isArray(group) && group.length) for (const u of group) {
+        if (Number.isInteger(u) && pieces[u] && G.location[u] !== hex) ids.push(u)
+    }
+    if (!ids.includes(lead)) ids.push(lead)
+    let groundAir = 0, naval = 0, hq = 0
+    let groundAirUnit = null, navalUnit = null, hqUnit = null
+    for (const u of ids) {
+        const cls = pieces[u].class
+        if (cls === "hq") { hq++; if (hqUnit === null) hqUnit = u; continue }
+        if (cls === "naval") { naval++; if (navalUnit === null) navalUnit = u; continue }
+        groundAir++; if (groundAirUnit === null) groundAirUnit = u
+    }
+    // HQ 只占 bit0(每格每方 1 个), multip 在 hq 分支无效 → 组内 >1 个 HQ 必有超编。
+    if (hq > 1) return false
+    if (hq === 1 && is_overstack(hex, hqUnit)) return false
+    if (groundAir > 0 && is_overstack(hex, groundAirUnit, groundAir)) return false
+    if (naval > 0 && is_overstack(hex, navalUnit, naval)) return false
+    return true
+}
+
 // 第6/12页航空 PBM 六级目标、海上 PBM 三级目标、AA PBM 两级目标。
 // 这里的 candidates 已经过引擎 update_move_hex() 合法性过滤，因此评分只决定图表优先级，
 // 不会绕过航程、地形、控制、叠放或移动规则。
@@ -1093,9 +1137,15 @@ function erasmus_pbm_target_score(hex, faction, piece, source, targetPlan) {
         if (enemyZoi) return [3,-(Number(piece.cf)||0),dist,hex]
         if (own.ground>0 && enemyZoi) return [4,-(Number(piece.cf)||0),dist,hex]
         if (md.resource) return [5,dist,hex]
+        // [opt air_forward] 本回合被选定前推的这支航空: 首选它的前推机场(图表六级表
+        // 之外的定向落点, 置顶), 六级落地时也把"更靠近敌方"的己方机场排在前面 ——
+        // 让航空 PBM 不停在后方(航空 ZOI 前伸)。闸门是 bot 决策窗写入的前推记忆
+        // (见 erasmus_ops.js eop_air_forward_pref): flag 关时恒 null, 数值逐位不变。
+        const afw = (typeof eop_air_forward_pref === "function") ? eop_air_forward_pref(source, piece) : null
+        if (afw && hex === afw.hex) return [-1,dist,hex]
         // 六级表均不命中时才用战略前推作为平分键，避免参战航空每次 PBM 都退回
         // 最近后方机场；图表列明的 HQ/敌 HQ/AZOI/资源优先级仍严格在它之前。
-        return [6,goalDist,dist,hex]
+        return [6,afw ? headless_nearest_enemy_dist(hex, 1 - faction) : goalDist,dist,hex]
     }
     if (piece.class === "naval") {
         if (!md.port) return null
@@ -1113,7 +1163,14 @@ function erasmus_pbm_target_score(hex, faction, piece, source, targetPlan) {
         const emcCR = (typeof em_cfg === "function") ? em_cfg() : null
         if (emcCR && emcCR.capture_rate) {
             const enemyTotal = enemy.air + enemy.naval + enemy.ground + enemy.hq
-            if (enemyTotal === 0 && is_space_controlled(hex, 1 - faction)) return [0, dist, hex]
+            // [opt landing_value] 无价值空虚格不再置顶: Halmahera 这类无资源/无机场/
+            // 无港口/无名/无城市的礁格, 移入既不产资源也不推进任何投降(DEI keys 全是
+            // 资源格), 却因"空虚敌控格最高优先"被反复落脚成孤军(取证 game71:
+            // 3rd Australian Corps 落 H598; 16th Army 在 H598⇄H596 横跳)。
+            // 开关开启时只把【有价值】的空虚敌控格置顶, 其余回落到港口落点表。
+            const valuableHex = !emcCR.landing_value
+                || !!(md.resource || md.port || md.airfield || md.named || (md.city >= 1))
+            if (enemyTotal === 0 && is_space_controlled(hex, 1 - faction) && valuableHex) return [0, dist, hex]
         }
         if (!md.port) return null
         if (own.naval>0) return [0,dist,hex]
@@ -1122,7 +1179,14 @@ function erasmus_pbm_target_score(hex, faction, piece, source, targetPlan) {
     return null
 }
 
-function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece, source, targetPlan) {
+function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece, source, targetPlan, movingGroup) {
+    // [opt stack_limit_gate] 唯一漏斗闸门: 本函数是所有 headless 落点评分的必经之路
+    // (焦点格 / REDEPLOY / GARRISON / DEFEND_HONSHU / 空敌控推进 / 会战格 / 反应 /
+    //  岛群簇 / PBM 图表表 / 通用兜底), 在这里统一把"放进去会超编"的格子判为不可选。
+    // 引擎移动/推进时完全不拦, 事后 check_overstacking 才位移/歼灭 —— 故必须提前避让。
+    // flag 关时 em_flag 恒 0, 短路后逐位不变。
+    if (movingPiece && em_flag("stack_limit_gate")
+        && !headless_stack_fits(hex, faction, movingPiece, movingGroup)) return null
     const eu = headless_enemy_units_at(hex, 1 - faction)
     let strategicFocus = null, strategicMeta = null, strategicAxis = null
     if (targetPlan && Object.prototype.hasOwnProperty.call(targetPlan,"focus")) {
@@ -1190,6 +1254,16 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
             if (!md || !md.airfield || !is_space_controlled(hex, faction) || eu.count > 0) return null
             const range = Math.max(1, Number(movingPiece.br) || Number(movingPiece.ebr) || 1)
             const d = strategicFocus !== null ? get_distance(hex, strategicFocus) : headless_nearest_enemy_dist(hex, 1 - faction)
+            // [opt air_forward] 本回合被选定前推的这支航空: 首选它的前推机场(直接置顶),
+            // 同级机场里则优先"更靠近敌方"的己方机场(航空 ZOI 前伸)。闸门是 bot 决策窗
+            // 写入的前推记忆(见 erasmus_ops.js eop_air_forward_pref): flag 关时恒 null,
+            // 评分键与顺序逐位不变。
+            const afw = (typeof eop_air_forward_pref === "function") ? eop_air_forward_pref(source, movingPiece) : null
+            if (afw) {
+                if (hex === afw.hex) return [-5, d, get_distance(source, hex), hex]
+                return [strategicFocus !== null && d <= range ? -4 : 3,
+                    headless_nearest_enemy_dist(hex, 1 - faction), get_distance(source, hex), hex]
+            }
             return [strategicFocus !== null && d <= range ? -4 : 3, d, get_distance(source, hex), hex]
         }
         // 最终国防圈不是进攻目标表：只向己控驻军焦点移动；不可达时仅在己控格内
@@ -1214,7 +1288,12 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
         // [opt island_sweep 段3] 叠格闸门: 引擎每格每方非海军上限 3 个(is_overstack:
         // (cnt+2)%128>7), 超编单位在会战结算"could not participate/移除" = 白白损失。
         // 地面编队不落向已满格, 改投簇内其它格。基线(配置关)不变。
+        // [opt stack_limit_gate] 闸门开启时判据改走引擎权威 is_overstack(含航空共用
+        // bucket / HQ bit0 / 海军 ≤6 / 整组落格), 修掉旧式 (ground+hq)<3 漏算航空的错判;
+        // 闸门关时严格保持旧判据, 保证 island_sweep 单独开启的消融仍逐位一致。
         const swStackOk = h => {
+            if (movingPiece && em_flag("stack_limit_gate"))
+                return headless_stack_fits(h, faction, movingPiece, movingGroup)
             const own = headless_units_at(h, faction)
             return (own.ground + own.hq) < 3
         }
@@ -1490,7 +1569,7 @@ function headless_advance_one(self, kind, targetPlan) {
         if (hasGround && mode===GROUND_MOVE && !(path[0]&GROUND_MOVE)) return
         if (hasGround && mode===AMPH_MOVE && !(path[0]&AMPH_MOVE)) return
         if (mode===STRAT_MOVE && !(path[0]&STRAT_MOVE)) return
-        const sc = headless_target_score(h, hasGround, G.active, kind, steer, leadPiece, loc, targetPlan)
+        const sc = headless_target_score(h, hasGround, G.active, kind, steer, leadPiece, loc, targetPlan, group)
         if (!sc) return
         // 优先方式只在同样能完成目标时优先；不能因陆路只够前进一步而压过可直接登陆。
         sc.splice(1,0,modeIndex)
@@ -1508,6 +1587,9 @@ function headless_advance_one(self, kind, targetPlan) {
         // B: 两栖编成“空海巡航”。焦点是敌占/待夺格但本激活够不着(允许落点里没有任何敌控
         // 格)时, 原实现直接放弃该组 → 海军陆战队永远停在原地, 无法把跨洋远征拉近目标;
         // 这里改向“离焦点最近的合法落点”移动一格(逐激活/逐回合推进), 使登岛链条得以闭合。
+        // [opt stack_limit_gate] 该兜底直接 best=appr 绕过全部评分, 故必须在选点时同样
+        // 过叠放闸门: 超编格不计入候选, 取“离焦点最近的【可容纳】合法落点”(找不到就不移动,
+        // 与原 best===null → decline 同路径)。flag 关时判据完全不变。
         let foc = null
         if (targetPlan && Object.prototype.hasOwnProperty.call(targetPlan,"focus"))
             foc = Number.isInteger(targetPlan.focus) ? targetPlan.focus : null
@@ -1515,6 +1597,7 @@ function headless_advance_one(self, kind, targetPlan) {
         if (foc !== null && foc >= 0 && foc <= LAST_BOARD_HEX && typeof get_distance === "function") {
             let appr = null, apprD = Infinity
             map_for_each(L.allowed_hexes, (h) => {
+                if (em_flag("stack_limit_gate") && !headless_stack_fits(h, G.active, leadPiece, group)) return
                 const d = get_distance(h, foc)
                 if (d < apprD || (d === apprD && (appr === null || h < appr))) { apprD = d; appr = h }
             })
@@ -3610,6 +3693,9 @@ function get_emergency_retreat_hexes(unit) {
     var range = piece.class === "air" ? piece.ebr : 10
     var result = []
     for_each_hex_in_range(G.location[unit], range, h => {
+        // [opt stack_limit_gate] 紧急撤退落点先过叠放闸门: 撤退单位多是断补/无基地单位,
+        // 落进已满格会在 check_overstacking 被判 oos → 直接歼灭(比位移更狠), 故剔除满格。
+        if (em_flag("stack_limit_gate") && is_overstack(h, unit)) return
         if (is_space_controlled(h, piece.faction) && (get_map_data(h).port && piece.class === "naval"
             || get_map_data(h).airfield && piece.class === "air" && h !== AIR_FERRY)) {
             set_add(result, h)

@@ -79,6 +79,24 @@ function ep_allocate_targets(role, view, targets, budget) {
         scored.push({ hex: h, mode, value: Number(value.toFixed(1)), pWin: Number(pWin.toFixed(2)), density: Number(density.toFixed(2)) })
     }
     scored.sort((a, b) => b.density - a.density || a.hex - b.hex)
+    // [opt chain_prereq] 前置跳板闸门(战役层): 无前置跳板的纵深目标(己控相邻/陆路连通/
+    // 己控港口机场≤emChainPrereqDist/己方地面在旁 四者皆无)降权后移, 让价值密度序先在
+    // 已达战程的目标上编组; 只重排不删除(全部无前置 → 原序), 且只影响 focus 取用顺序,
+    // 不删目标、不改 detail 数值。flag 关 = scored 原序(逐位一致)。
+    if (emc.chain_prereq && scored.length > 1 && typeof eop_chain_prereq_defer === "function") {
+        const byHex = new Map()
+        for (const s of scored) {
+            if (!byHex.has(s.hex)) byHex.set(s.hex, [])
+            byHex.get(s.hex).push(s)
+        }
+        const ordered = eop_chain_prereq_defer(role, scored.map(s => s.hex))
+        const reordered = []
+        for (const h of ordered) {
+            const bucket = byHex.get(h)
+            if (bucket && bucket.length) reordered.push(bucket.shift())
+        }
+        if (reordered.length === scored.length) for (let i = 0; i < reordered.length; ++i) scored[i] = reordered[i]
+    }
     const plan = { role, turn: Number(G.turn || 0), posture: ps.posture, urgency,
         thresholds: th, force: { myForward: ps.myForward, enForward: ps.enForward },
         queue: scored.map(x => x.hex), detail: scored, budget: budget || null }

@@ -1653,6 +1653,59 @@ function esm_pin_strategy(view, context) {
     // [opt allies_blockade] 封锁推进计划落到审计字段(覆盖同族的规则胜利前视, 便于
     // 对局日志区分"封锁推进第三轴"与既有"登陆日本后置 overlay")。
     if (blockadePlan) victoryPreparation = blockadePlan
+    // =======================================================================
+    // [opt japan_south_opening] 南方开局硬目标 (T2-5): 未投降国家(菲律宾/马来亚/DEI)的
+    // 「投降 key 格」一律升级为夺占条目(CONQUEST + requiresOccupation), 并在窗口内剔除
+    // 非 key 格上的「盟军 HQ 压制」(SUPPRESS_HQ)追猎条目。
+    // 取证 (seed 14381526730, 默认档):
+    //   • T2 首位目标马尼拉(535) 因 esm_jp_hq_suppression_targets 的 `G.turn === 2` 特判
+    //     带 requiresOccupation → 被夺下(菲 T2 投降); 次位新加坡(305) 只有 SUPPRESS_HQ
+    //     (requiresOccupation=false) → 己方 AZOI 覆盖一次即被 eop_focus 的 SUPPRESS 分支
+    //     判"完成"(erasmus_ops.js eop_focus) → 整局只零星攻击新加坡(全部
+    //     "Defender won in ground combat H305") → 马来亚 key 恒缺 305 →
+    //     check_nation_surrender(MALAYA) 恒 false(5 抽样 seed 马来亚 0/5 投降)。
+    //   • 马尼拉陷落后菲律宾 HQ 位移到澳洲 Townsville(810), 压制条目跟着位移: T2-T3 的
+    //     [ERASMUS] 日志链首即 "Townsville(810盟)", 整条南方轴与 key 格无关(部队转打关丹/
+    //     棉兰/爪哇)。窗口内剔除非 key 格 SUPPRESS_HQ 即消除该位移追猎。
+    // flag 关(默认)时本块整体不执行, 逐位一致。
+    const emcSO = (typeof em_cfg === "function") ? em_cfg() : null
+    let southOpeningPlan = null
+    if (emcSO && emcSO.japan_south_opening && role === "Japan" && typeof nations !== "undefined"
+        && G.surrender && Number(G.turn) >= (Number(emcSO.emSouthOpenMinTurn) || 2)
+        && Number(G.turn) <= (Number(emcSO.emSouthOpenMaxTurn) || 5)) {
+        // 顺序 = 投降达成成本升序: 马尼拉(基线 T2 链首, 保持不动, 不扰动已生效的菲 T2 投降)
+        // → 马来亚两格(关丹/新加坡, 唯一缺格=新加坡) → 达沃 → 东印度 8 key。
+        // 国家已投降或该格已己控者跳过。
+        const southOpenOrder = [
+            [nations.PHILIPPINES, "Manila"], [nations.MALAYA, "Kuantan"], [nations.MALAYA, "Singapore"],
+            [nations.PHILIPPINES, "Davao"],
+            ...(emcSO.japan_south_opening_dei ? [
+                [nations.DEI, "Tjilatjap"], [nations.DEI, "Medan"], [nations.DEI, "Palembang"], [nations.DEI, "Bangka"],
+                [nations.DEI, "Miri"], [nations.DEI, "Tarakan"], [nations.DEI, "Balikpapan"], [nations.DEI, "Soerabaja"],
+            ] : []),
+        ]
+        const southOpenTargets = []
+        for (const [nat, keyName] of southOpenOrder) {
+            if (!nat || G.surrender[nat.id]) continue
+            const h = esm_idx(keyName)
+            if (!Number.isInteger(h) || !(h >= 0 && h <= LAST_BOARD_HEX)) continue
+            if (southOpenTargets.some(t => t.hex === h)) continue
+            if (is_space_controlled(h, JP)) continue
+            southOpenTargets.push({ hex: h, kind: "CONQUEST", requiresOccupation: true, damageLevel: 1,
+                objective: `开局南方 key 格: ${nat.name} ${keyName}(${typeof int_to_hex === "function" ? int_to_hex(h) : h})`,
+                victoryConstraint: "SOUTH_OPENING_KEY_HEX" })
+        }
+        if (southOpenTargets.length) {
+            const southOpenHexes = new Set(southOpenTargets.map(t => t.hex))
+            // 剔除 (a) 同格旧条目(马尼拉/新加坡的 SUPPRESS_HQ), (b) 非 key 格的 SUPPRESS_HQ
+            // (位移后的盟军 HQ 追猎)。东印度压制等其余条目原序保留在 key 格之后。
+            targetMeta = southOpenTargets.concat(targetMeta.filter(t => !southOpenHexes.has(t.hex) && t.kind !== "SUPPRESS_HQ"))
+            southOpeningPlan = { type: "JAPAN_SOUTH_OPENING", source: "RULE_VICTORY_OVERLAY", turn: G.turn,
+                window: [Number(emcSO.emSouthOpenMinTurn) || 2, Number(emcSO.emSouthOpenMaxTurn) || 5],
+                remaining: southOpenTargets.map(t => t.hex),
+                note: "开局南方 key 格夺占: 马尼拉/关丹/新加坡/达沃 + 东印度 key(投降链闭合)" }
+        }
+    }
     targetMeta = esm_semantic_targets(role, phase, name, targetMeta)
     chain = [...new Set(targetMeta.map(t=>t.hex))]
     dynamicTargets = targetMeta.filter(t=>t.requiredUnits || t.escortPairs || t.dynamicBase || t.extraActivationOnly)
@@ -1661,7 +1714,7 @@ function esm_pin_strategy(view, context) {
         phase, role, seed: seedText, ord, pinnedNow: true, goals, chain, dynamicTargets, targetMeta, ctx,
         nodePath: (ctx._nodePath || []).slice(), conditions: (ctx._conditions || []).slice(), d10Rolls: (ctx._dice || []).slice(),
         eventPhase: isEventStrat ? "early" : undefined,
-        openingSurrenderPlan, progressPlan, victoryPreparation,
+        openingSurrenderPlan, progressPlan, victoryPreparation, southOpeningPlan,
     } : {
         name, nameFull: name, kind: "EVENT", notes: [], targets: [], phase, role, ord,
         pinnedNow: true, goals: [], chain: [], targetMeta: [], ctx,
@@ -1785,6 +1838,37 @@ function esm_card_window_action(strategy, view, context) {
         }
     }
 
+    // [opt amphib_asp_gate] 空轴闸门: 钉住战略的目标已全部达成时, 用攻势卡只会
+    // 「启动 HQ → No units activated → No battle hexes declared」把卡白烧掉
+    // (取证: 撤离菲律宾/撤离马来亚 在目标全 ✓ 后仍每回合打 OC, 单局 4x 次)。
+    // 只需事件/Pass 的场合改打事件, 把攻势卡省到目标真的存在待办时再用。
+    const emcEmptyAxis = (typeof em_cfg === "function") ? em_cfg() : null
+    if (emcEmptyAxis && emcEmptyAxis.amphib_asp_gate) {
+        // 完成度口径: 撤离类战略有精确的"单位已就位"判定(图表注"如果单位已就位则视为
+        // 完成"), 其余(驻军/调动)用决策轴 pending 目标数。
+        let done = false
+        try {
+            if (strategy.kind === "EVENT" && typeof esm_redeploy_complete === "function" && ESM_REDEPLOY[strategy.name])
+                done = esm_redeploy_complete(strategy.name)
+            else if (strategy.kind === "REDEPLOY" || strategy.kind === "GARRISON" || strategy.kind === "EVENT")
+                // [无目标攻势] 事件战略(含无名轴的事件战略)在决策轴无任何 pending 目标时
+                // 打 OC 只会走成"启动 HQ + 激活地面单位 + 无战斗格"的空攻势, 部队还会被
+                // 落点偏好带着在两格间往返(取证 game71: 朝鲜军 H643⇄H671, 16th Army
+                // H598⇄H596)。此时只出事件/Pass, 省下攻势卡。
+                done = typeof eop_axis_pending_targets === "function" && eop_axis_pending_targets(strategy.role).length === 0
+        } catch (e) { done = false }
+        if (done) {
+            strategy.emptyAxis = true
+            if (typeof process !== "undefined" && process.env && process.env.EOTS_ASP_DEBUG)
+                console.log(`[EMPTY-AXIS] T${G.turn} ${strategy.role} "${strategy.name}" kind=${strategy.kind} done=${done} legal=${legal.join("|")}`)
+            const ev = esm_choose_card(hand, "event", legal, strategy)
+            if (ev) { ev.via = (ev.via ? ev.via + "；" : "") + "空轴:目标已全部达成,省下攻势卡"; return ev }
+            if (legal.includes("pass"))
+                return { action: "pass", argument: undefined, via: "空轴:战略目标已全部达成,省下攻势卡" }
+            return null
+        }
+    }
+
     const semanticPick = esm_semantic_card_pick(strategy, hand)
     if (semanticPick) return semanticPick
 
@@ -1828,6 +1912,21 @@ function esm_card_window_action(strategy, view, context) {
         return esm_choose_card(hand, "event", legal, strategy) || null
     }
     if (wantOps) {
+        // [opt amphib_asp_gate] 攻势卡前置闸门: 轴的 pending 目标全是"装不上 ASP 的
+        // 登陆"时, 打攻势卡只会空耗(卡 + HQ 启动 + 激活, 取证 seed 68 单局 24 次),
+        // 改为事件优先 / 交回图表选牌(可 Pass), 把攻势卡留给 ASP 回港的回合。
+        const emcAspCard = (typeof em_cfg === "function") ? em_cfg() : null
+        if (emcAspCard && emcAspCard.amphib_asp_gate && strategy.kind === "CONQUEST"
+            && typeof eop_axis_landing_blocked === "function") {
+            let blk = null
+            try { blk = eop_axis_landing_blocked(strategy.role, view) } catch (e) { blk = null }
+            if (blk && blk.blocked) {
+                strategy.aspBlockedReason = blk.reason
+                const ev = esm_choose_card(hand, "event", legal, strategy)
+                if (ev) return ev
+                return null
+            }
+        }
         const r = esm_choose_card(hand, "ops", legal, strategy)
         if (r) return r
         return esm_choose_card(hand, "event", legal, strategy) || null
@@ -2164,7 +2263,17 @@ function esm_card_action_window_action(strategy, view, context) {
     // 所选牌的受限事件/OC不可用时，按第4/10页的其余合法用途继续；
     // 第12回合禁止设置未来攻势。
     if (G.turn !== 12 && legal.includes("future_offensive")) return {action:"future_offensive",argument:undefined,via:strategy.name+":future-offensive"}
-    for (const action of ["inter_service","china_offensive","jarhat","imphal","ledo","return_hq","displace_hq","discard"])
+    // [opt hq_withdraw_guard] 兜底链里摘掉「自愿转移指挥部」(规则 6.13 displace_hq)。
+    // 取证: 攻势卡被拒(#GCard restriction unsatisfied → ops/event 从合法集消失)后,
+    // 本链把 displace_hq 排在 discard 之前, AI 就把自己的 HQ 撤回回合盒, 下一回合又
+    // 按固定母港返场回同一格(esm_hq_home → Oahu/Townsville 正是它原来待的格) →
+    // 纯 A→回原位 的零收益往返。74 局存档实测 44 次 withdraw(AI 从未有目的地用它),
+    // 且该动作可触发 check_sudden_death(在板 HQ 清零=立即判负)、notreplaceable 的
+    // Malaya/ABDA HQ 会被永久消灭。图表数据里也没有任何 HQ 撤回节点。
+    const emcHqW = (typeof em_cfg === "function") ? em_cfg() : null
+    const emHqWithdrawGuarded = !!(emcHqW && emcHqW.hq_withdraw_guard)
+    for (const action of ["inter_service","china_offensive","jarhat","imphal","ledo","return_hq"]
+        .concat(emHqWithdrawGuarded ? [] : ["displace_hq"]).concat(["discard"]))
         if (legal.includes(action)) return {action,argument:undefined,via:strategy.name+":"+action}
     return null
 }

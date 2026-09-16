@@ -206,6 +206,12 @@ function target_argument(action, value, seedText, role, view, strategy) {
         return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
     }
     if ((action === "action_hex" || action === "hex") && view?.ai?.windowKind === "pbm") {
+        // [opt air_forward] 航空前推的确定落点: 本回合为某支航空选定的"前推机场"若仍在
+        // 本窗合法候选里, 直接返回它(否则退回原 PBM 落点链/pick_argument 伪随机)。
+        if (typeof planAirForwardHex === "function") {
+            const airHex = planAirForwardHex(view, value, role)
+            if (airHex !== undefined) return airHex
+        }
         const picked = planPostBattleMovement(view,value,action,role)
         return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
     }
@@ -240,6 +246,14 @@ function target_argument(action, value, seedText, role, view, strategy) {
         return picked!==undefined?picked:pick_argument(value,seedText,action,view)
     }
     if (action === "action_hex" && esm_gate_on() && /declare battle hexes/i.test(prompt)) {
+        // [opt force_concentration] 集中兵力选格: 在本单位可达的候选战斗格里挑"我方引擎口径
+        // 兵力优势最大"的那格(而非"离焦点最近"), 让同一支攻势的单位收敛到同一格 —— 旧行为下
+        // 各单位各自就近宣战, 会把同一支编队拆到多个格上, 每格都不成优势。flag 关/无可比格
+        // 时返回 undefined, 原逻辑逐位不变。
+        if (typeof eop_pick_concentration_hex === "function") {
+            const concHex = eop_pick_concentration_hex(value, role, view)
+            if (concHex !== undefined) return concHex
+        }
         // [opt island_sweep 段3] EC 申报窗多焦点: 焦点已宣战后向岛群簇内下一敌控格
         // 申报第二战斗格; 非该场景(基线/OC/焦点未宣)返回 undefined 走基线选格。
         const emcDH = (typeof em_cfg === "function") ? em_cfg() : null
@@ -284,10 +298,22 @@ function target_argument(action, value, seedText, role, view, strategy) {
         }
         const activationFocus = typeof eop_activation_focus_faction === "function"
             ? eop_activation_focus_faction(role === "Japan" ? JP : AP, activeUnits.length, view, pickValue) : eop_focus(role)
+        const emcAdv = (typeof em_cfg === "function") ? em_cfg() : null
+        // [opt battle_decl_gate] 申报窗战斗前景闸门: 本窗候选既无任何引擎合法的会战
+        // 参与、又到不了焦点格 ⇒ 激活任何单位都只会得到 "No battle hexes declared"。
+        // 决策侧(evaluateChart 激活窗)用同一函数同一候选集判 done, 两侧保持一致。
+        if (typeof activation_battle_gate === "function"
+            && activation_battle_gate(role, view, activationFocus, pickValue, activeUnits.length))
+            return undefined
         const activationMeta = eop_target_meta(role, activationFocus)
         // [opt island_sweep 段1] 目标过滤前的原始候选, 供"推进夺格"兜底; 基线(配置关)不生成。
-        const emcAdv = (typeof em_cfg === "function") ? em_cfg() : null
         const rawPick = (emcAdv && emcAdv.island_sweep) ? pickValue.slice() : null
+        // [opt air_forward] 航空前推候选池 = 目标语义过滤前的引擎合法单位集(与
+        // island_sweep 的"推进夺格"兜底同源)。前推对象正是被 eop_unit_matches_target /
+        // eop_preserve_rear_air 判为"不属于本目标"的后方航空(它们本来只能窝在原地:
+        // 激活了也只是折返跑), 所以候选不能只看过滤后的 pickValue —— 过滤后实测
+        // 全是地面单位, 前推永不触发。flag 关时不生成, 行为与原来逐位一致。
+        const airPool = (emcAdv && emcAdv.air_forward) ? pickValue.slice() : null
         // [opt island_sweep 段2] 激活焦点为岛群簇格时注入夺占合成 meta(地面+护航编组)。
         const clusterMeta = (emcAdv && emcAdv.island_sweep && typeof eop_cluster_meta === "function")
             ? eop_cluster_meta(role, activationFocus) : null
@@ -299,6 +325,13 @@ function target_argument(action, value, seedText, role, view, strategy) {
         }
         const planned = composeTaskForce(activationFocus, null, null, view, pickValue, role, clusterMeta)
         if (planned?.strict && planned.unit == null) {
+            // [opt air_forward] 焦点编不出编队时, 先把后方航空前推到"更靠近敌方的己方
+            // 机场"(投射航空 ZOI), 让这次攻势变成航空前推而不是空转。flag 关时该函数
+            // 直接返回 undefined, 行为与原来逐位一致。候选 = 本窗引擎合法单位集。
+            if (typeof eop_pick_air_forward_redeploy === "function") {
+                const airFwd = eop_pick_air_forward_redeploy(role, view, airPool || pickValue)
+                if (airFwd !== undefined) return airFwd
+            }
             // [opt island_sweep 段1] 焦点编不出单位≠撤销/收工: 链上轮换已在
             // eop_activation_focus_faction 完成, 全链无产出时激活一支地面单位走
             // 无头推进"空虚敌控格"落点(offensive.js [1,nearKey] 分支)吃满预算夺格。
@@ -319,6 +352,46 @@ function target_argument(action, value, seedText, role, view, strategy) {
         return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
     }
     return pick_argument(value, seedText, action, view)
+}
+
+// [opt battle_decl_gate] 激活窗"战斗前景"闸门(决策与参数两侧共用, 必须同输入同输出)。
+// 引擎只在【已激活单位的战斗航程 ∩ 敌占格】处生成战斗格(offensive.js
+// compute_possible_battle_hexes); 交集为空 → declare_battle_hexes._begin 立即 end()
+// 并记 "No battle hexes declared: no active unit can reach a legal enemy battle hex."。
+// 返回 true 表示: 本窗候选对任何敌占格都没有引擎合法的会战参与, 且对焦点格也无法
+// 合法进入/夺占 —— 激活任何一支单位都只会白烧预算(取证 2 seed/232 攻势: 61 次
+// "激活后空转", 其中 56 次连一格都没夺到)。此时两侧都必须收工(done), 否则决策侧
+// 仍选 unit 而参数侧返回 undefined, 会把 undefined 写进 G.offensive.active_units。
+// 判据全部复用引擎只读查询, 见 erasmus_ops.js eop_battle_prospect / eop_focus_reach_ok。
+function activation_battle_gate(role, view, focus, candidateIds, activeCount) {
+    const emc = (typeof em_cfg === "function") ? em_cfg() : null
+    if (!emc || !emc.battle_decl_gate) return false
+    if (Number(activeCount) > 0) return false
+    if (!Array.isArray(candidateIds) || !candidateIds.length) return false
+    if (typeof eop_battle_prospect !== "function" || typeof eop_focus_reach_ok !== "function") return false
+    let prospect = null
+    try { prospect = eop_battle_prospect(role, view, candidateIds) } catch (e) { return false }
+    if (!prospect || prospect.fightIds.size > 0) return false
+    let reach = false
+    try { reach = eop_focus_reach_ok(role, view, candidateIds, focus) } catch (e) { return false }
+    if (reach) return false
+    // 焦点到不了 ≠ 无价值: 岛群清扫的"推进夺格"分支把地面单位推向最近的空虚敌控格
+    // (offensive.js headless_target_score [1,nearKey])。只要某候选地面有引擎合法的
+    // 夺格推进路径, 这次激活仍有结果, 不得拦截。
+    try {
+        if (typeof eop_sweep_reach_ok === "function" && eop_sweep_reach_ok(role, view, candidateIds)) return false
+    } catch (e) { return false }
+    if (process.env && process.env.EOTS_BATTLE_DECL_DEBUG) {
+        try {
+            const nm = id => { const u = (view.ai?.units || []).find(x => x.id === id); return u ? (u.name || u.id) + "@" + u.location + "(" + u.class + ")" : id }
+            console.log(`[BATTLE-DECL-GATE] T${view.turn} ${role} focus=${focus} cands=${candidateIds.length} [${candidateIds.slice(0, 8).map(nm).join(", ")}]`)
+        } catch (e) {}
+    }
+    // 只读取证开关(不改变行为, 也不是新 flag): 置 EOTS_BATTLE_DECL_GATE_SHADOW=1 时
+    // 闸门只打印 [BATTLE-DECL-GATE] 不拦截 —— 轨迹与 flag 关逐位一致, 便于量化
+    // "被拦下的攻势本来会不会夺格/宣战"(实测 8 seed: 23 个待拦窗口, 夺格 0)。
+    if (process.env && process.env.EOTS_BATTLE_DECL_GATE_SHADOW) return false
+    return true
 }
 
 function evaluateChart(chart, view, context) {
@@ -481,6 +554,9 @@ function evaluateChart(chart, view, context) {
         // [opt island_sweep 段1] 目标过滤前的候选副本(与 target_argument 的 rawPick 同集),
         // 供激活窗"推进夺格"兜底判定; 基线(配置关)为 null, 行为不变。
         const advCandidates = (emcWin && emcWin.island_sweep) ? baseAddable : null
+        // [opt air_forward] 航空前推候选池(与 target_argument 的 airPool 同集: 目标语义
+        // 过滤前的引擎合法单位), 两侧同函数同输入保证决策一致。flag 关时为 null。
+        const airCandidates = (emcWin && emcWin.air_forward) ? baseAddable : null
         const addable = baseAddable
             .filter(u => { try { return typeof eop_preserve_rear_air !== "function" || !eop_preserve_rear_air(u, context.role, activationFocus) } catch (e) { return true } })
             .filter(u => typeof eop_unit_matches_target !== "function" || eop_unit_matches_target(u, context.role, activationMeta, activationFocus))
@@ -508,19 +584,38 @@ function evaluateChart(chart, view, context) {
         // 用户确认的运用原则：EC 当前目标达到最低标准后，不立即浪费剩余激活量；继续按
         // 战略链选择后续目标兵力，再把仍可激活的后方部队向前线调动。只有达到上限或
         // 没有新增合法候选时才结束。本规则不改变引擎给出的合法单位集合。
-        if (selected < limit && addable.length > 0) action = "unit"
+        // [opt battle_decl_gate] 与 target_argument 同一闸门同一输入(baseAddable):
+        // 本窗候选既无战斗前景又到不了焦点 → 直接 done, 不可再选 unit(否则参数侧返回
+        // undefined, 会把 undefined 写进 active_units)。
+        const gateBlocked = typeof activation_battle_gate === "function"
+            && activation_battle_gate(context.role, view, activationFocus, baseAddable, selected)
+        if (gateBlocked) {
+            action = "done"
+            activationPlan.mode = "battle_decl_gate 无战斗前景"
+        } else if (selected < limit && addable.length > 0) action = "unit"
         else action = "done"
-        if (forcePlan?.strict && forcePlan.unit == null) {
-            // [opt island_sweep 段1] 编组收工前先试"推进夺格"兜底: 预算未满且有可激活
-            // 地面单位时继续 unit(与 target_argument 的 island_sweep 分支同函数同输入,
-            // 保证两侧决策一致); 无可用兜底才 done。基线(配置关)保持原 done。
-            let advPicked
-            if (advCandidates && selected < limit && advCandidates.length
-                && typeof eop_pick_advance_unit === "function")
-                advPicked = eop_pick_advance_unit(advCandidates, context.role, view.offensive?.active_units?.flat?.() || [])
-            if (advPicked !== undefined) {
+        if (!gateBlocked && forcePlan?.strict && forcePlan.unit == null) {
+            // [opt air_forward] 编组收工前先试"航空前推": 预算未满且有可前推的航空候选时
+            // 继续 unit(与 target_argument 同函数同输入, 保证两侧决策一致), 让本次攻势
+            // 落在航空前推上; flag 关时该函数恒 undefined, 行为与原来一致。
+            // 必须有 selected < limit 闸门: 激活预算已满时再 unit 只会来回 toggle
+            // ("3 of 3 (Done)"↔"4 of 3 (Too many units selected)") 死循环。
+            let airPicked
+            if (airCandidates && selected < limit && airCandidates.length && typeof eop_pick_air_forward_redeploy === "function")
+                airPicked = eop_pick_air_forward_redeploy(context.role, view, airCandidates)
+            if (airPicked !== undefined) {
                 action = "unit"
-                activationPlan.mode = "island_sweep 推进夺格兜底"
+                activationPlan.mode = "air_forward 航空前推"
+            } else if (advCandidates && selected < limit && advCandidates.length
+                && typeof eop_pick_advance_unit === "function") {
+                // [opt island_sweep 段1] 编组收工前先试"推进夺格"兜底: 预算未满且有可激活
+                // 地面单位时继续 unit(与 target_argument 的 island_sweep 分支同函数同输入,
+                // 保证两侧决策一致); 无可用兜底才 done。基线(配置关)保持原 done。
+                const advPicked = eop_pick_advance_unit(advCandidates, context.role, view.offensive?.active_units?.flat?.() || [])
+                if (advPicked !== undefined) {
+                    action = "unit"
+                    activationPlan.mode = "island_sweep 推进夺格兜底"
+                } else action = "done"
             } else action = "done"
         }
         // 两栖登陆无护航可用: 在本窗尚未激活任何单位时提前 done(空攻势), 避免把两栖地面
@@ -720,11 +815,29 @@ var EOTS_BOTS = {
     // 研究变体: 同一决策核心 + 参数注册中心(erasmus_config.js)开启优化层。
     // profile 经 EOTS_OPT_PROFILE 环境变量注入(all|baseline|逗号分隔开关);
     // 每次决策前注入、finally 重置, 保证同进程与基线 bot 混跑互不串染(消融实验用)。
+    // AI 4.0 = 冻结版(修复前默认档): 保持旧行为可复现、可与 5.0 对照。
     "erasmus-v2-opt": {
-        name: "AI 3.0", version: ERASMUS_VERSION + "-opt",
+        name: "AI 4.0", version: ERASMUS_VERSION + "-opt",
         scenarios: ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Japan", "Allies"],
         decide(view, context) {
             const profile = (typeof em_profile_from_env === "function") ? em_profile_from_env() : {}
+            em_set_config(profile)
+            try {
+                return EOTS_BOTS["erasmus-v2"].decide(view, context)
+            } finally {
+                em_reset_config()
+            }
+        },
+    },
+    // AI 5.0 = 4.0 + 两栖修复默认档(ASP 运输闸门 + 护航补到够)。
+    // 同一决策核心, 仅内置默认 profile 不同; EOTS_OPT_PROFILE 仍可整体覆盖(消融)。
+    "erasmus-v2-opt-v5": {
+        name: "AI 5.0", version: ERASMUS_VERSION + "-opt-v5",
+        scenarios: ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Japan", "Allies"],
+        decide(view, context) {
+            const profile = (typeof em_profile_from_env === "function")
+                ? em_profile_from_env(typeof EM_DEFAULT_PROFILE_V5 !== "undefined" ? EM_DEFAULT_PROFILE_V5 : undefined)
+                : {}
             em_set_config(profile)
             try {
                 return EOTS_BOTS["erasmus-v2"].decide(view, context)

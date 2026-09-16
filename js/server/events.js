@@ -698,7 +698,13 @@ P.guadalcanal_evacuation = {
                 }
             })
         } else {
-            G.offensive.active_units[JP].forEach(u => set_location(u, h))
+            // [opt stack_limit_gate] 撤离落格逐个过叠放闸门(引擎移动不拦, 事后清罚):
+            // 逐个 set_location → is_overstack 逐单位累积判定, 装满即停(剩余单位留原地,
+            // 不在已满格上再堆人)。flag 关时条件短路, 行为与改动前逐位一致。
+            G.offensive.active_units[JP].forEach(u => {
+                if (em_flag("stack_limit_gate") && is_overstack(h, u)) return
+                set_location(u, h)
+            })
             G.offensive.active_units[JP] = []
             goto("check_overstacking")
         }
@@ -1190,11 +1196,23 @@ cards[find_card(JP, 77)].event = function () {
     call("fuel_shortage")
 }
 
-function check_fuel_shortage_data() {
+function check_fuel_shortage_data(suppressEnd) {
     var result = []
     let location = L.target
     if (G.active_stack.length) {
         location = G.location[G.active_stack[0]]
+    }
+    // 死锁出口(见 P.fuel_shortage.prompt)会先清空 active_stack 再调用本函数; 若本次
+    // 选择还没落到具体格(L.target 为 undefined), location 就是 undefined ——
+    // 旧代码直接拿它建 BFS 队列, get_near_hexes(undefined) 读 get_map_data(undefined).nh
+    // 抛 TypeError, 整个无头对局以 "ERASMUS has no legal action" 收场(取证 seed 20260917
+    // T8 fuel_shortage 窗)。无有效起点时不产生任何候选, 并复用函数尾部同一条收尾判定
+    // (无栈 + 无候选 + 无落点 → end()), 使窗口正常结束而不是留一个只剩 undo 的死窗。
+    if (!Number.isInteger(location) || location < 0 || location > LAST_BOARD_HEX) {
+        L.allowed_hexes = []
+        L.allowed_units = result
+        if (!suppressEnd && G.active_stack.length === 0) end()
+        return result
     }
     if (has_non_n_zoi(location, 1 - R)) {
         return []
@@ -1269,7 +1287,12 @@ function check_fuel_shortage_data() {
     }
     L.allowed_units = result
     if (G.active_stack.length === 0 && L.allowed_units.length === 0 && L.allowed_hexes.length === 0) {
-        end()
+        // suppressEnd: 调用方是 P.fuel_shortage.prompt()。视图渲染顺序是
+        // V.actions={} → P[L.P].prompt() —— 在 prompt() 里 end() 会让 V 留在"半渲染"
+        // 状态(V.prompt 还是旧文案、V.actions 只剩框架补的 undo), 确定性 bot 没有合法
+        // 动作可选(真人会点 undo)。此时不在这里 end, 由 prompt() 补一个 done 按钮,
+        // 让窗口能被正常关闭而不是死窗。
+        if (!suppressEnd) end()
     }
 }
 
@@ -1316,12 +1339,14 @@ P.fuel_shortage = {
                 if (L.unmovable.indexOf(u) < 0) L.unmovable.push(u)
             })
             G.active_stack = []
-            check_fuel_shortage_data()
+            check_fuel_shortage_data(true)
             if (L.P !== "fuel_shortage") return // check_fuel_shortage_data 内部已 end(), 新窗口已渲染
         }
         L.allowed_units.forEach(u => action_unit(u))
         L.allowed_hexes.forEach(h => action_hex(h))
-        if (L.moved.length && !G.active_stack.length) {
+        // 无任何可搬迁候选(全部被标为 unmovable)时也必须给出出口: 否则窗口只剩 undo,
+        // 确定性 bot 会以 "ERASMUS has no legal action" 卡死(取证 seed 20260917 T8)。
+        if (!G.active_stack.length && (L.moved.length || (!L.allowed_units.length && !L.allowed_hexes.length))) {
             button("done")
         }
     },
