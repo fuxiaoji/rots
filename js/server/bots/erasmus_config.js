@@ -72,13 +72,13 @@ const EM_PARAMS_BASE = {
     emRaidResTrigger: 10,   // 日本资源 ≤ 该值时盟军追加资源 raid 目标(原子弹门槛 5/3)
     emRaidMaxTargets: 4,    // 每次战略链最多追加的 raid 资源格数
     emAmphNavalMargin: 1.0, // 两栖登陆放行所需海空战力优势倍数(对未建模反应的保守边际)
-    emAmphEscortDist: 4,    // 护航海军与登陆地面可会合的最大距离(同格或该距离内)
+    emAmphEscortDist: 6,    // 护航海军与登陆地面可会合的最大距离(同格或该距离内; 6=第二波集结半径)
     emReactionWeight: 0.35,  // 反应兵力折算系数(反应需掷骰/天气成立, 非必然到场)
     emBlockadeTurnMin: 7,   // [allies_blockade] 封锁推进启动的最早回合(1943=T7 只剩收尾, 1942=T7 余 6 回合)
-    emSweepAdvDist: 3,      // [island_sweep] 推进兜底: 地面到最近空虚敌控格超过该距离不选(防深腹地暴露行军)
+    emSweepAdvDist: 4,      // [island_sweep] 推进兜底: 地面到最近空虚敌控格超过该距离不选(防深腹地暴露行军)
     emSweepHarborNav: 6,    // [island_sweep] 港内敌舰 cf ≥ 该值(航母/战列级)的登陆目标跳过(港湾海空战风险)
-    emSweepCluster: 4,      // [island_sweep 段2] 岛群簇大小上限(焦点外次级登陆格数)
-    emSweepClusterDist: 2,  // [island_sweep 段2] 岛群簇收集半径(到焦点 hex 距离)
+    emSweepCluster: 6,      // [island_sweep 段2] 岛群簇大小上限(焦点外次级登陆格数)
+    emSweepClusterDist: 3,  // [island_sweep 段2] 岛群簇收集半径(到焦点 hex 距离)
     emBlkInsAfterPending: 2,   // [allies_blockade_v2] raid 格插到链首前 N 个 pending 夺占目标之后(不占绝对首位)
     emBlkGarrisonSteps: 2,     // [allies_blockade_v2] 己控资源格 GARRISON 所需地面步数(防日本夺回)
     emBlkManchCutTurn: 5,      // [allies_blockade_v2] 满洲通路切断目标(Pusan CONQUEST)最早回合

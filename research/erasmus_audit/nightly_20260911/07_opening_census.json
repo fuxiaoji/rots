@@ -2,10 +2,26 @@
  {
   "seed": 20260903,
   "surrenderTurn": {
-   "Philippines": 2
+   "Philippines": 2,
+   "Malaya": 4
   },
-  "zeroAct": 9,
-  "noReach": 27,
+  "zeroAct": 12,
+  "noReach": 41,
+  "final": {
+   "phil": "是",
+   "malaya": "是",
+   "dei": "否",
+   "burma": "否"
+  },
+  "turn": 8
+ },
+ {
+  "seed": 20260904,
+  "surrenderTurn": {
+   "Philippines": 3
+  },
+  "zeroAct": 32,
+  "noReach": 51,
   "final": {
    "phil": "是",
    "malaya": "否",
@@ -15,28 +31,60 @@
   "turn": 9
  },
  {
-  "seed": 20260904,
+  "seed": 20260905,
   "surrenderTurn": {
-   "Philippines": 3
+   "Philippines": 2
   },
-  "zeroAct": 21,
-  "noReach": 44,
+  "zeroAct": 19,
+  "noReach": 41,
   "final": {
    "phil": "是",
    "malaya": "否",
    "dei": "否",
    "burma": "否"
   },
-  "turn": 12
+  "turn": 9
  },
  {
-  "seed": 20260905,
+  "seed": 20260906,
   "surrenderTurn": {
    "Philippines": 2,
-   "Malaya": 8
+   "Malaya": 2
   },
-  "zeroAct": 24,
-  "noReach": 36,
+  "zeroAct": 26,
+  "noReach": 48,
+  "final": {
+   "phil": "是",
+   "malaya": "是",
+   "dei": "否",
+   "burma": "否"
+  },
+  "turn": 10
+ },
+ {
+  "seed": 20260907,
+  "surrenderTurn": {
+   "Philippines": 3,
+   "Malaya": 3
+  },
+  "zeroAct": 14,
+  "noReach": 53,
+  "final": {
+   "phil": "是",
+   "malaya": "是",
+   "dei": "否",
+   "burma": "否"
+  },
+  "turn": 11
+ },
+ {
+  "seed": 20260908,
+  "surrenderTurn": {
+   "Philippines": 2,
+   "Malaya": 2
+  },
+  "zeroAct": 20,
+  "noReach": 57,
   "final": {
    "phil": "是",
    "malaya": "是",
@@ -46,57 +94,28 @@
   "turn": 12
  },
  {
-  "seed": 20260906,
+  "seed": 20260909,
   "surrenderTurn": {
-   "Philippines": 2
+   "Philippines": 3,
+   "Malaya": 3
   },
-  "zeroAct": 17,
-  "noReach": 31,
+  "zeroAct": 11,
+  "noReach": 41,
   "final": {
    "phil": "是",
-   "malaya": "否",
+   "malaya": "是",
    "dei": "否",
    "burma": "否"
   },
   "turn": 8
  },
  {
-  "seed": 20260907,
-  "surrenderTurn": {
-   "Philippines": 3
-  },
-  "zeroAct": 5,
-  "noReach": 34,
-  "final": {
-   "phil": "是",
-   "malaya": "否",
-   "dei": "否",
-   "burma": "否"
-  },
-  "turn": 9
- },
- {
-  "seed": 20260908,
+  "seed": 20260910,
   "surrenderTurn": {
    "Philippines": 2
   },
-  "zeroAct": 16,
-  "noReach": 50,
-  "final": {
-   "phil": "是",
-   "malaya": "否",
-   "dei": "否",
-   "burma": "否"
-  },
-  "turn": 11
- },
- {
-  "seed": 20260909,
-  "surrenderTurn": {
-   "Philippines": 3
-  },
-  "zeroAct": 15,
-  "noReach": 46,
+  "zeroAct": 20,
+  "noReach": 66,
   "final": {
    "phil": "是",
    "malaya": "否",
@@ -104,20 +123,5 @@
    "burma": "否"
   },
   "turn": 12
- },
- {
-  "seed": 20260910,
-  "surrenderTurn": {
-   "Philippines": 2
-  },
-  "zeroAct": 14,
-  "noReach": 32,
-  "final": {
-   "phil": "是",
-   "malaya": "否",
-   "dei": "否",
-   "burma": "否"
-  },
-  "turn": 9
  }
 ]

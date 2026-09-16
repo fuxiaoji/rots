@@ -53,6 +53,10 @@ const METRIC_KEYS = ["decisions", "fire", "advance", "hqActivations", "airStrike
 function emptyRole() {
     const r = {}
     for (const k of METRIC_KEYS) r[k] = 0
+    r.elimSteps = 0
+    r.amphibSuccess = 0
+    r.zocHexes = 0
+    r.airMoves = 0
     return r
 }
 
@@ -80,6 +84,8 @@ function accumulateDeltas(prev, curr, g) {
         if (!wasElim && isElim) {
             g.role[side].eliminations++
             g.role[side].cfEliminated += Number(piece.cf || 0)
+            const steps = Number(piece.size || 1)
+            g.role[side].elimSteps += steps
         } else if (!isElim && !prev.reduced.includes(i) && curr.reduced.includes(i)) {
             g.role[side].reductions++
             g.role[side].cfReduced += Math.floor(Number(piece.cf || 0) / 2)
@@ -123,6 +129,8 @@ function play(seed) {
                 g.curAttacker = m[1] === "J" ? "Japan" : "Allies"
                 g.role[g.curAttacker].attacksInitiated++
             } else if (/Attacker won in ground combat/.test(line)) {
+                // 成功两栖: 前方有 AMPH_MOVE 标记的会战胜=成功登陆
+                if (g.curAttacker) g.role[g.curAttacker].amphibSuccess++
                 if (g.curAttacker) g.role[g.curAttacker].groundAttacksWon++
             } else if (/Defender won in ground combat/.test(line)) {
                 if (g.curAttacker) g.role[g.curAttacker === "Japan" ? "Allies" : "Japan"].groundDefensesHeld++
@@ -193,6 +201,16 @@ function play(seed) {
     const finalAtomic = (() => { try { const a = rules.query(state, "Allies", "atomic_bomb_strategy_status"); return a ? { met: !!a.met, jpResources: a.jpResources, sovietReady: !!a.sovietReady, campaign: a.bombingCampaignStart, noFail: !!a.noStrategicBombingFailure, resourcesSatisfied: !!a.resourcesSatisfied } : null } catch (e) { return null } })()
     const powBank = Array.isArray(state.capture) ? state.capture.length : 0
     // 每回合夺格率(含零回合)与封锁进度(JAPAN_TRACE_RESOURCES id=28, 值=首次断链回合)
+    // §26 ZOC 覆盖格数: 终局双方各自的 ZOI 覆盖(非中立)格数
+    const zoc = { Japan: 0, Allies: 0 }
+    {
+        const JP_ZOI = 1 << 0, AP_ZOI = 1 << 1, JP_ZOI_NTRL = 1 << 2
+        for (let h = 1; h < Math.min(state.supply_cache.length, 1478); ++h) {
+            const sc = state.supply_cache[h]
+            if (sc & JP_ZOI && !(sc & JP_ZOI_NTRL)) zoc.Japan++
+            if (sc & AP_ZOI && !(sc & (JP_ZOI_NTRL << 1))) zoc.Allies++
+        }
+    }
     const capRate = {}
     for (const side of ["Japan", "Allies"]) {
         const byTurn = g.capByTurn[side]
@@ -214,7 +232,7 @@ function play(seed) {
         traceNodeMissing: g.traceNodeMissing,
         politicalWill: Number(state.political_will || 0), pwMin: g.pwMin, pwLog: g.pwLog,
         powRequired: Number(state.pow || 0), powBank, surrender, jpResources, finalAtomic,
-        capRate, blockade,
+        capRate, blockade, zoc,
         activationRatio: g.actLimitSum > 0 ? Number((g.actSum / g.actLimitSum).toFixed(3)) : null,
         activationSum: g.actSum, activationLimit: g.actLimitSum,
         surrenderTurns: g.surrenderTurns,
@@ -254,6 +272,34 @@ const tally = {
     blockadeWins: completed.filter(x => /blockade/i.test(String(x.won_text || ""))).length,
     homelandWins: completed.filter(x => /mainland islands captured/i.test(String(x.won_text || ""))).length,
     blockadeStarted: completed.filter(x => x.blockade).length,
+    elimStepsBySide: {
+        Japan: sum(completed.map(x => x.role?.Japan || {}), r => r.elimSteps || 0),
+        Allies: sum(completed.map(x => x.role?.Allies || {}), r => r.elimSteps || 0),
+    },
+    amphibSuccessBySide: {
+        Japan: sum(completed.map(x => x.role?.Japan || {}), r => r.amphibSuccess || 0),
+        Allies: sum(completed.map(x => x.role?.Allies || {}), r => r.amphibSuccess || 0),
+    },
+    battleWinRate: {
+        Japan: (() => {
+            const won = sum(completed.map(x => x.role?.Japan || {}), r => (r.groundAttacksWon || 0) + (r.groundDefensesHeld || 0) + (r.navalBattlesWon || 0))
+            const total = sum(completed.map(x => x.role?.Japan || {}), r => (r.groundAttacksWon || 0) + (r.groundAttacksLost || 0) + (r.navalBattlesWon || 0) + (r.navalBattlesLost || 0) + (r.groundDefensesHeld || 0) + (r.groundDefensesFaced || 0))
+            return total > 0 ? Number((won / total).toFixed(3)) : 0
+        })(),
+        Allies: (() => {
+            const won = sum(completed.map(x => x.role?.Allies || {}), r => (r.groundAttacksWon || 0) + (r.groundDefensesHeld || 0) + (r.navalBattlesWon || 0))
+            const total = sum(completed.map(x => x.role?.Allies || {}), r => (r.groundAttacksWon || 0) + (r.groundAttacksLost || 0) + (r.navalBattlesWon || 0) + (r.navalBattlesLost || 0) + (r.groundDefensesHeld || 0) + (r.groundDefensesFaced || 0))
+            return total > 0 ? Number((won / total).toFixed(3)) : 0
+        })(),
+    },
+    zocFinal: {
+        Japan: Number(mean(completed, x => x.zoc?.Japan).toFixed(1)),
+        Allies: Number(mean(completed, x => x.zoc?.Allies).toFixed(1)),
+    },
+    meanAirStrikeUnits: {
+        Japan: Number(mean(completed, x => x.role?.Japan?.airStrikeUnits || 0).toFixed(1)),
+        Allies: Number(mean(completed, x => x.role?.Allies?.airStrikeUnits || 0).toFixed(1)),
+    },
     meanCapRate: {
         Japan: Number(mean(completed, x => x.capRate?.Japan?.mean).toFixed(2)),
         Allies: Number(mean(completed, x => x.capRate?.Allies?.mean).toFixed(2)),

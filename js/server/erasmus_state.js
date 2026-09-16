@@ -661,7 +661,18 @@ function esm_jp_hq_suppression_targets() {
 // 两者过去都被扁平化成一串 hex，日志很难证明层级，而且 Batavia 的脚注[6]
 // 没有执行。这里保存图表的四级顺序，并把条件证据写入目标元数据。
 function esm_jp_dei_surrender_targets() {
-    const groupNames = [
+    // [opt japan_opening_conquest] DEI 投降 keys = nations.DEI.keys(Tjilatjap/Medan/
+    // Palembang/Bangka/Miri/Tarakan/Balikpapan/Soerabaja)。图表转录的 4 组目标把
+    // Batavia(非 key, 仅脚注[6]条件占领)当作独立组, 却漏掉了 Borneo 的投降 key
+    // Miri —— 链上永远没有 Miri ⇒ DEI 投降 0/16 局。优化层把 Miri 归入第 1 组
+    // (婆罗洲同轴), Batavia 保留条件组; 基线(配置关)保持原分组逐位不变。
+    const emcDEI = (typeof em_cfg === "function") ? em_cfg() : null
+    const groupNames = (emcDEI && emcDEI.japan_opening_conquest) ? [
+        ["Balikpapan", "Tarakan", "Miri"],
+        ["Batavia"],
+        ["Tjilatjap", "Soerabaja"],
+        ["Bangka", "Palembang", "Medan"],
+    ] : [
         ["Balikpapan", "Tarakan"],
         ["Batavia"],
         ["Tjilatjap", "Soerabaja"],
@@ -1451,10 +1462,34 @@ function esm_pin_strategy(view, context) {
         const dynamicHexes = new Set(dynamicTargets.map(target => target.hex))
         targetMeta = dynamicTargets.concat(targetMeta.filter(target => !dynamicHexes.has(target.hex)))
     }
+    // [opt japan_opening_conquest §4] 中期「资源战略」链补全 DEI 投降 keys 并"夺而必守":
+    // 链上的「所有东印度资源」只覆盖带 resource 标记的格 —— Tjilatjap(ABDA HQ 港, DEI
+    // 投降 key)无 resource 标记, 永不入链 ⇒ DEI 投降差一格永远差着(ampv1 实测 DEI 0/16)。
+    // 且盟军 T7 起小部队反夺无人驻守的 Balikpapan/Tarakan, 投降判定在政治阶段前被翻盘
+    // (取证 v2 trace: T4-5 已夺 3-4 keys, T6-7 被夺回)。优化层: 8 keys 按投降组序整组
+    // 插到第一个东印度资源格之前, CONQUEST meta 加 retainWithGround(己控后无地面驻守
+    // 仍算 pending, 激活 1 step 地面留守); 基线(配置关)链不变。
+    if (role === "Japan" && name === "资源战略") {
+        const emcJOC = (typeof em_cfg === "function") ? em_cfg() : null
+        if (emcJOC && emcJOC.japan_opening_conquest) {
+            const allDeiNamesMid = ["Balikpapan", "Tarakan", "Batavia", "Tjilatjap", "Soerabaja", "Bangka", "Palembang", "Medan"]
+            const allDeiMid = new Set(allDeiNamesMid.map(esm_idx).filter(Number.isInteger))
+            const exactDeiMid = esm_jp_dei_surrender_targets()
+                .map(t => (t.kind === "CONQUEST" ? { ...t, retainWithGround: true } : t))
+            const firstMid = chain.findIndex(h => allDeiMid.has(h))
+            const withoutDeiMid = chain.filter(h => !allDeiMid.has(h))
+            const atMid = firstMid < 0 ? Math.min(withoutDeiMid.length, 3) : Math.min(firstMid, withoutDeiMid.length)
+            chain = withoutDeiMid.slice(0, atMid).concat(exactDeiMid.map(x => x.hex), withoutDeiMid.slice(atMid))
+            targetMeta = targetMeta.filter(x => !allDeiMid.has(x.hex)).concat(exactDeiMid)
+            const orderMid = new Map(chain.map((h, i) => [h, i]))
+            targetMeta.sort((a, b) => (orderMid.get(a.hex) ?? 9999) - (orderMid.get(b.hex) ?? 9999))
+        }
+    }
     if (role === "Japan" && name === "激进的南方资源战略") {
         const allDeiNames = ["Balikpapan", "Tarakan", "Batavia", "Tjilatjap", "Soerabaja", "Bangka", "Palembang", "Medan"]
         const allDei = new Set(allDeiNames.map(esm_idx).filter(Number.isInteger))
         const exactDei = esm_jp_dei_surrender_targets()
+            .map(t => (t.kind === "CONQUEST" ? { ...t, retainWithGround: true } : t))
         const first = chain.findIndex(h => allDei.has(h))
         const withoutDei = chain.filter(h => !allDei.has(h))
         const at = first < 0 ? withoutDei.length : Math.min(first, withoutDei.length)

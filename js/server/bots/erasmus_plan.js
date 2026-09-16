@@ -37,6 +37,14 @@ function ep_allocate_targets(role, view, targets, budget) {
             const mDr = (typeof get_map_data === "function") ? get_map_data(h) : null
             if (mDr && mDr.resource) value *= 2.5
         }
+        // [opt 1943 PoW 缺口] 政治阶段 PoW 目标(G.pow, 通常 4)未达时命名格夺占加权:
+        // 缺口每回合 -1 PW(20260915 实测 8 局全灭于条约败的主因)。未命名格不计
+        // PoW(game.js capture_hex 只 toggle md.named), 不加权。资源格另有 ×3 主加权。
+        if (role === "Allies" && typeof G !== "undefined" && G && Number(G.pow || 0) > 0
+            && Array.isArray(G.capture) && G.capture.length < Number(G.pow)) {
+            const mdP = (typeof get_map_data === "function") ? get_map_data(h) : null
+            if (mdP && (mdP.name || mdP.resource)) value += 2
+        }
         if (mode === "CAPTURE_EMPTY") value *= 0.8 // 空格扫荡: 低成本高确定性, 轻微降权排序
         // 可行性: 编得出单位才入队(编不出地面组的两栖格跳过 —— 防 Vogelkop 死锁)
         let feasible = true, pWin = 0
@@ -44,17 +52,49 @@ function ep_allocate_targets(role, view, targets, budget) {
             const plan = composeTaskForce(h, null, null, view, avail, role)
             if (!plan || (plan.unit === undefined || plan.unit === null)) feasible = false
             else if (plan.groundStrength !== undefined && mode === "AMPHIBIOUS_ASSAULT") {
-                // 登陆目标 P(capture) 评估(计划 §9: 枚举 D10, 已含反应折算的守军)
+                // 登陆目标 P(capture) 评估(计划 §9: 枚举 D10, 已含反应折算的守军)。
+                // [opt amph-quality] 输入改用候选池真实编成: committed 计划期为空, 旧口径
+                // attNavalCF/attGroundCF 恒 0 → 全部两栖目标被误判 infeasible/零胜率,
+                // 计划队列空 → Exploitation 扫荡(§13)永不触发, 激活预算空转。
                 const defenders = (view?.ai?.units || []).filter(u => u.faction !== mine && u.location === h)
+                const cfOf = u => u.reduced ? (Number(u.rcf) || Math.ceil((Number(u.cf) || 0) / 2)) : (Number(u.cf) || 0)
+                const lfOf = u => Number(u.lf) || Math.max(1, Math.ceil((Number(u.cf) || 1) / 3))
+                const groundCands = avail.filter(u => u.class === "ground" && (u.asp || u.strat_move))
+                // [opt amph-quality] 无两栖地面候选 = 本窗口无法夺取该格: 不得入队(防
+                // "海军追资源格"空转占预算 —— ampv1 实测 T7+ 夺格下滑主因之一)。
+                if (!groundCands.length) feasible = false
+                const groundLocsQ = new Set(groundCands.map(u => u.location))
+                let pairedNaval = 0, airCfQ = 0
+                for (const u of avail) {
+                    if (u.class === "naval" && groundLocsQ.has(u.location)) pairedNaval += cfOf(u)
+                    else if (u.class === "air") airCfQ += cfOf(u)
+                }
+                // [opt amph-quality] 反应战力单独折算(defReactionCF), 与守军分离。
+                let defReactionQ = 0
+                try {
+                    if (typeof queryReactionCandidates === "function") {
+                        const emcRq = (typeof em_cfg === "function") ? em_cfg() : null
+                        const rwQ = emcRq ? (Number(emcRq.emReactionWeight) || 0.35) : 0.35
+                        const rc = queryReactionCandidates({ reactionFaction: 1 - mine, targetHex: h })
+                        const defIds = new Set(defenders.map(u => u.id))
+                        for (const id of rc.air.concat(rc.carrier, rc.naval)) {
+                            if (defIds.has(id)) continue
+                            const p = (typeof pieces !== "undefined" && pieces[id]) ? pieces[id] : null
+                            if (p && (p.class === "air" || p.class === "naval")) defReactionQ += cfOf(p) * rwQ
+                        }
+                    }
+                } catch (e) { /* 查询不可用按无反应 */ }
                 const as = em_amphib_assessment({
                     attacker: mine, targetHex: h,
-                    attNavalCF: plan.strikeStrength, attNavalHasBr: true, attAirCF: 0,
-                    attGroundCF: plan.groundStrength, attGroundLfs: [3],
+                    attNavalCF: pairedNaval, attNavalHasBr: pairedNaval > 0, attAirCF: airCfQ,
+                    attGroundCF: groundCands.reduce((s, u) => s + cfOf(u), 0),
+                    attGroundLfs: groundCands.map(u => lfOf(u)),
                     defNavalCF: defenders.filter(u => u.class === "naval").reduce((s, u) => s + (u.cf || 0), 0),
                     defNavalHasBr: defenders.some(u => u.class === "naval"),
                     defAirCF: defenders.filter(u => u.class === "air").reduce((s, u) => s + (u.cf || 0), 0),
                     defGroundCF: defenders.filter(u => u.class === "ground").reduce((s, u) => s + (u.cf || 0), 0),
                     defGroundLfs: defenders.filter(u => u.class === "ground").map(u => Number(u.lf) || 3),
+                    defReactionCF: defReactionQ,
                 })
                 pWin = as.pWin
                 if (as.abort) feasible = false
