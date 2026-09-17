@@ -2522,7 +2522,30 @@ function esm_pick_placement(candidates, role, unit, piece) {
             return theaterPenalty + portPenalty + focusDistance * 100 + h
         })
     }
-    return esm_pick_nearest(candidates, h => esm_placement_score(h, piece, enemy))
+    // [opt ERASMUS_PLUS §16] 增援落位 theater demand: 非海军单位也要有 CBI 惩罚
+    return esm_pick_nearest(candidates, h => {
+        const base = esm_placement_score(h, piece, enemy)
+        const theater = (typeof esm_ground_theater_penalty === "function") ? esm_ground_theater_penalty(h, role) : 0
+        return base + theater
+    })
+}
+
+// [opt ERASMUS_PLUS §16] 增援落位 theater demand: 盟军地面/空军增援不再被"距最近敌人"
+// 吸到 CBI。当当前战略为太平洋轴(非 CBI)时, 对 CBI 区域 hex 施加惩罚, 优先太平洋前沿。
+function esm_ground_theater_penalty(h, role) {
+    if (role !== "Allies") return 0
+    if (typeof esm_is_cbi_hex !== "function") return 0
+    const focus = esm_ap_forward_focus()
+    if (focus === null) return 0
+    const focusMd = get_map_data(focus)
+    if (!focusMd) return 0
+    const focusIsCbi = /^(India|Burma|China)$/i.test(String(focusMd.region || ""))
+    // 如果当前焦点本身在 CBI, 不惩罚(允许 CBI 增援)
+    if (focusIsCbi) return 0
+    const md = get_map_data(h)
+    if (!md) return 0
+    // CBI 区域 hex 加大惩罚(把增援导向太平洋)
+    return /^(India|Burma|China)$/i.test(String(md.region || "")) ? 100000 : 0
 }
 
 // CDSS 补员选择(L161,185-186): 优先恢复被消灭部队(放回地图), 再翻正减损; 同类选最强战力。
