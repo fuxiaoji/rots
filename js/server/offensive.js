@@ -1511,14 +1511,15 @@ function headless_advance_one(self, kind, targetPlan) {
         if (emcTD && emcTD.erasmus_plus && typeof ep_theater_demand === "function") {
             try {
                 const demand = ep_theater_demand(G.active)
-                const deficit = demand.filter(d => d.surplus < -10).pop()
+                const deficit = demand.filter(d => d.surplus < -5).pop()
                 const surplus = demand[0]
-                if (deficit && surplus && surplus.surplus - deficit.surplus > 30
-                    && get_map_data(plannedFocus).region === surplus.theater && get_distance(loc, plannedFocus) > 8) {
+                if (deficit && surplus && surplus.surplus - deficit.surplus > 15
+                    && get_map_data(plannedFocus).region === surplus.theater && get_distance(loc, plannedFocus) > 6) {
                     let best = null, bd = 99
                     for (let h = 1; h < LAST_BOARD_HEX; ++h) {
                         const m2 = get_map_data(h)
-                        if (m2 && m2.region === deficit.theater && is_space_controlled(h, G.active)) {
+                        if (m2 && m2.region === deficit.theater
+                            && (is_space_controlled(h, G.active) || !is_space_controlled(h, 1 - G.active))) {
                             const dd = get_distance(loc, h)
                             if (dd < bd) { bd = dd; best = h }
                         }
