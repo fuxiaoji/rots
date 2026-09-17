@@ -24411,6 +24411,19 @@ function composeTaskForce(target, card, hq, view, candidates, role, metaOverride
                     groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
             }
         }
+        // [opt ERASMUS_PLUS v2.1] 两栖登陆最低兵力门槛: 占领目标(landing)必须有
+        // 足够地面 CF(≥ 2× 守军地面 CF, 即 2x 生存规则), 否则编组不完成。
+        // 这防止 1 支弱陆战队独闯强守军岛屿 → 必败两栖 → 浪费攻势。
+        // 只影响 landing=true 且 hasGround 的路径; 非占领/非登陆不进此分支。
+        if(landing&&hasGround){
+            const defG=defenders.filter(u=>u.class==="ground").reduce((s2,u)=>s2+(u.reduced?(Number(u.rcf)||Math.ceil((Number(u.cf)||0)/2)):(Number(u.cf)||0)),0)
+            const minGround=Math.max(2,defG*2)
+            if(groundStrength<minGround){
+                return {complete:false,strict:true,required:need,strength:math,unit:undefined,
+                    formation:"amphib-insufficient-ground",
+                    groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
+            }
+        }
         return {complete:true,required:need,strength:math,unit:null,
             formation:landing?"supported-amphibious-assault":f.suppress?"air-sea-strike":"minimum-sufficient",
             groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
