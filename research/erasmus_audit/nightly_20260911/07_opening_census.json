@@ -1,126 +1,53 @@
 [
  {
   "seed": 20260903,
-  "surrenderTurn": {
-   "Philippines": 2,
-   "Malaya": 4
-  },
+  "surrenderTurn": {},
   "zeroAct": 12,
-  "noReach": 41,
+  "noReach": 52,
   "final": {
    "phil": "是",
    "malaya": "是",
-   "dei": "否",
-   "burma": "否"
+   "dei": "是",
+   "burma": "是"
   },
-  "turn": 8
+  "turn": 9
  },
  {
   "seed": 20260904,
-  "surrenderTurn": {
-   "Philippines": 3
-  },
-  "zeroAct": 32,
-  "noReach": 51,
-  "final": {
-   "phil": "是",
-   "malaya": "否",
-   "dei": "否",
-   "burma": "否"
-  },
-  "turn": 9
- },
- {
-  "seed": 20260905,
-  "surrenderTurn": {
-   "Philippines": 2
-  },
-  "zeroAct": 19,
-  "noReach": 41,
-  "final": {
-   "phil": "是",
-   "malaya": "否",
-   "dei": "否",
-   "burma": "否"
-  },
-  "turn": 9
- },
- {
-  "seed": 20260906,
-  "surrenderTurn": {
-   "Philippines": 2,
-   "Malaya": 2
-  },
-  "zeroAct": 26,
-  "noReach": 48,
+  "surrenderTurn": {},
+  "zeroAct": 10,
+  "noReach": 28,
   "final": {
    "phil": "是",
    "malaya": "是",
-   "dei": "否",
-   "burma": "否"
-  },
-  "turn": 10
- },
- {
-  "seed": 20260907,
-  "surrenderTurn": {
-   "Philippines": 3,
-   "Malaya": 3
-  },
-  "zeroAct": 14,
-  "noReach": 53,
-  "final": {
-   "phil": "是",
-   "malaya": "是",
-   "dei": "否",
-   "burma": "否"
-  },
-  "turn": 11
- },
- {
-  "seed": 20260908,
-  "surrenderTurn": {
-   "Philippines": 2,
-   "Malaya": 2
-  },
-  "zeroAct": 20,
-  "noReach": 57,
-  "final": {
-   "phil": "是",
-   "malaya": "是",
-   "dei": "否",
-   "burma": "否"
-  },
-  "turn": 12
- },
- {
-  "seed": 20260909,
-  "surrenderTurn": {
-   "Philippines": 3,
-   "Malaya": 3
-  },
-  "zeroAct": 11,
-  "noReach": 41,
-  "final": {
-   "phil": "是",
-   "malaya": "是",
-   "dei": "否",
-   "burma": "否"
+   "dei": "是",
+   "burma": "是"
   },
   "turn": 8
  },
  {
-  "seed": 20260910,
-  "surrenderTurn": {
-   "Philippines": 2
-  },
-  "zeroAct": 20,
-  "noReach": 66,
+  "seed": 20260905,
+  "surrenderTurn": {},
+  "zeroAct": 2,
+  "noReach": 33,
   "final": {
    "phil": "是",
-   "malaya": "否",
-   "dei": "否",
-   "burma": "否"
+   "malaya": "是",
+   "dei": "是",
+   "burma": "是"
+  },
+  "turn": 8
+ },
+ {
+  "seed": 20260906,
+  "surrenderTurn": {},
+  "zeroAct": 8,
+  "noReach": 64,
+  "final": {
+   "phil": "是",
+   "malaya": "是",
+   "dei": "是",
+   "burma": "是"
   },
   "turn": 12
  }
