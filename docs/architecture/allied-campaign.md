@@ -24,6 +24,7 @@ node tests/campaign-planner.test.js
 node tests/campaign-garrison.test.js
 node tests/campaign-card-preview.test.js
 node tests/campaign-blockade.test.js
+node tests/campaign-homeland.test.js
 node --test tests/campaign-combat.test.js
 node tests/erasmus-move-continuation.test.js
 node --test tests/campaign-rules.test.js tests/atomic-bomb-strategy.test.js tests/campaign-metrics.test.js tests/campaign-replay.test.js tests/campaign-save.test.js
@@ -39,6 +40,8 @@ node tests/campaign-evaluate.js verify-replay path/to/game.replay.json
 ```
 
 输出目录有版本锁；修改代码后使用新目录。并发数可为 1–4。每局独立落盘，错误、动作上限和回退不得当作胜局或从胜率分母删除。两剧本各完成 32 个开发种子且都有可验证胜局后才能冻结；冻结验证种子禁止用于调参。
+
+所有自然合法胜局逐一完整回放，独立 `verification.json` 证据绑定逐局结果和录像哈希。未核验及核验失败的胜局不计入胜率。版本锁包含实际行为环境变量和执行上限。公开视图剔除撤销快照及临时抽牌内容；实际服务器撤销状态保留。
 
 ## 证据边界
 

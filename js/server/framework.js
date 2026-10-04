@@ -172,27 +172,60 @@ exports.view = function (state, role) {
 }
 
 exports.action = function (state, role, action, argument) {
+    // Legacy clients retain their existing argument and execution semantics.
+    if (!argument || !argument.__ai) return framework_apply_action(state, role, action, argument)
+    const meta = argument.__ai
+    if (meta.version !== 1 || meta.role !== role) throw new Error("AI metadata role/version mismatch")
+    if (meta.plan && (meta.plan.version !== 1 || meta.plan.role !== role)) throw new Error("Invalid AI plan")
+    if (meta.runtime && (meta.runtime.version !== 1 || meta.runtime.role !== role)) throw new Error("Invalid AI runtime")
+    if (meta.logs !== undefined && (!Array.isArray(meta.logs)
+        || meta.logs.some(line => typeof line !== "string" || !line.startsWith("[ERASMUS]"))))
+        throw new Error("Invalid AI trace log")
+    if (!ROLES.includes(role) || !(Array.isArray(state.active) ? state.active.includes(role) : state.active === role))
+        throw new Error("Invalid AI action role")
+
+    const priorConfig = typeof em_cfg === "function" && em_cfg() ? { ...em_cfg() } : null
+    let rollback = null
+    try {
+        // View generation can refresh caches and its frame. Generate the exact
+        // role's legal actions on an isolated copy, before touching real state.
+        const legal = exports.view(object_copy(state), role).actions || {}
+        let rawArgument = argument.action
+        if (rawArgument && rawArgument.oos) rawArgument = rawArgument.action
+        const candidates = legal[action]
+        if (!Object.prototype.hasOwnProperty.call(legal, action) || !candidates
+            || (Array.isArray(candidates) && !candidates.includes(rawArgument)))
+            throw new Error("Invalid action: " + action)
+        // Buttons such as headless advance legitimately carry a target-plan
+        // object. Candidate-list actions must match the original scalar ID.
+        // Keep a complete snapshot only once validation succeeds: handlers may
+        // still fail after altering the board, RNG, undo history or AI metadata.
+        rollback = object_copy(state)
+        return framework_apply_action(state, role, action, argument)
+    } catch (error) {
+        if (rollback) {
+            for (const key of Object.keys(state)) delete state[key]
+            Object.assign(state, rollback)
+        }
+        // Restore the caller's original object even if undo/redo replaced G.
+        G = state
+        L = state.L
+        R = ROLES.indexOf(role)
+        V = null
+        if (typeof eop_import_runtime === "function") eop_import_runtime(state.ai_runtime?.[role] || null, role)
+        if (priorConfig && typeof em_set_config === "function") em_set_config(priorConfig)
+        else if (typeof em_reset_config === "function") em_reset_config()
+        throw error
+    }
+}
+
+function framework_apply_action(state, role, action, argument) {
     G = state
     L = G.L
     R = role
     V = null
 
     var old_active = G.active
-
-    // Reject malformed envelopes before _load or any persistent metadata write.
-    // Legacy actions keep their existing argument format and validation path.
-    if (argument && argument.__ai) {
-        const meta = argument.__ai
-        if (meta.version !== 1 || meta.role !== role) throw new Error("AI metadata role/version mismatch")
-        if (meta.plan && (meta.plan.version !== 1 || meta.plan.role !== role)) throw new Error("Invalid AI plan")
-        if (meta.runtime && (meta.runtime.version !== 1 || meta.runtime.role !== role)) throw new Error("Invalid AI runtime")
-        if (meta.logs !== undefined && (!Array.isArray(meta.logs)
-            || meta.logs.some(line => typeof line !== "string" || !line.startsWith("[ERASMUS]"))))
-            throw new Error("Invalid AI trace log")
-        if (!(P[L.P] && typeof P[L.P][action] === "function")
-            && !(action === "undo" && G.undo.length > 0) && !(action === "redo" && G.redo))
-            throw new Error("Invalid action: " + action)
-    }
 
     _load()
 

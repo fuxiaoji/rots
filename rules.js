@@ -18167,7 +18167,16 @@ function create_view() {
     V.reinforcements = G.reinforcements
     V.burma_road = G.burma_road
     V.china_divisions = G.china_divisions
-    V.offensive = object_copy(G.offensive)
+    // Rollback snapshots contain the complete server state, including both
+    // hands, draw piles, RNG and private AI memory. Exclude them before copying
+    // the public offensive. Newly drawn cards remain private (5.0 and 5.35); the
+    // role-filtered V.hand projection below already exposes IDs to their owner
+    // and only the count to everyone else.
+    const publicOffensive = { ...G.offensive }
+    delete publicOffensive.card_rollback
+    delete publicOffensive.weather_rollback
+    delete publicOffensive.draw
+    V.offensive = object_copy(publicOffensive)
     V.move_type = L.move_type
     V.headless_moves = !!G.headless_moves
     // Read-only AI projection. It contains public state plus metadata for the
@@ -27801,7 +27810,10 @@ function ec_cbi(region) {
 
 function ec_map() {
     if (typeof map === "undefined" || !Array.isArray(map)) return []
-    return map.filter(m => m && (m.named || m.name || m.port || m.airfield || m.resource))
+    // Honshu surrender includes the unnamed 3606 hex. Keep every public
+    // national key without granting unnamed terrain any PoW credit.
+    const homelandKeys = new Set(typeof nations !== "undefined" ? nations.JAPAN?.keys || [] : [])
+    return map.filter(m => m && (m.named || m.name || m.port || m.airfield || m.resource || homelandKeys.has(m.id)))
         .map(m => ({ ...m, hex: typeof hex_to_int === "function" ? hex_to_int(m.id) : m.id }))
         .filter(m => Number.isInteger(m.hex) && (typeof LAST_BOARD_HEX === "undefined" || m.hex <= LAST_BOARD_HEX))
         .sort((a, b) => a.hex - b.hex)
@@ -27963,7 +27975,8 @@ function ec_score_target(m, env) {
     if (env.previousObjective === m.hex) score += 8
     if (env.campaignObjective === m.hex) score += 18
     if (env.victory.b29Bases.includes(m.hex) && Number(env.view.turn) >= 6) score += 22
-    if (env.victory.homelandKeys.includes(m.hex)) score += 40
+    if (env.victory.homelandKeys.includes(m.hex))
+        score += env.victory.routes.homeland.remainingKeys.length === 1 ? 500 : 40
     if (m.resource && Number(env.view.turn) >= 9 && env.victory.atomic?.noStrategicBombingFailure)
         score += env.victory.jpResources <= 4 ? 150 : 80
     if (defenders.some(u => u.class === "hq")) score += env.victory.routes.headquarters.enemyHqCount <= 1 ? 120 : 38
@@ -28068,7 +28081,9 @@ function ec_assess(group, support, target, amphibious, env) {
         : typeof queryZoi === "function" ? queryZoi(target, 1 - env.faction) : true)
     const specialReaction = env.specialReactions.get(target)
     const unopposedLanding = amphibious && defenders.length === 0 && groundDef.length === 0 && !specialReaction
-    const navalSafe = emptyLandCapture || unopposedLanding || naval.pWin > 0
+    // Losing the air/naval stage turns back amphibious troops only. Troops
+    // arriving overland still fight (apply_naval_winner).
+    const navalSafe = !amphibious || unopposedLanding || naval.pWin > 0
     const terrain = typeof get_map_data === "function" ? Number(get_map_data(target)?.terrain) : 0
     const terrainMod = terrain === 2 ? -1 : terrain === 3 ? -2 : terrain === 4 ? -3 : 0
     function groundChance(defendersSea) {
@@ -28088,11 +28103,17 @@ function ec_assess(group, support, target, amphibious, env) {
     const fullReactionNaval = typeof em_naval_outcome === "function"
         ? em_naval_outcome({ attCF: attSea, defCF: defSea + reactionCf, attHasBr, defHasBr }).pWin
         : attSea > defSea + reactionCf && (attHasBr || !defHasBr) ? 1 : reactionCf === 0 ? naval.pWin : 0
+    const noReactionNaval = typeof em_naval_outcome === "function"
+        ? em_naval_outcome({ attCF: attSea, defCF: defSea, attHasBr,
+            defHasBr: seaDef.some(u => u.class === "air" || Number(u.br) > 0) }).pWin
+        : defSea === 0 || attSea > defSea && (attHasBr || !seaDef.some(u => Number(u.br) > 0)) ? 1 : 0
     // Keep the existing battle estimator, but make its uncertainty explicit.
     // A group that loses against an actual reaction is not a certain capture
     // merely because it beats 35% of the reaction fleet on paper.
     const pCapture = emptyLandCapture || unopposedLanding ? 1 : reactionCf > 0
-        ? (1 - reactionWeight) * pGround + reactionWeight * fullReactionNaval * pGroundWithReaction : pGround
+        ? (1 - reactionWeight) * (amphibious ? noReactionNaval : 1) * pGround
+            + reactionWeight * (amphibious ? fullReactionNaval : 1) * pGroundWithReaction
+        : (amphibious ? noReactionNaval : 1) * pGround
     const minimum = env.powGap && Number(env.view.political_will) <= 2
         ? Number(config.epDesperateMinP ?? 0.45) : Number(config.epMinP ?? 0.6)
     const desiredProbability = Number(config.epDesiredP ?? 0.75)
@@ -28100,7 +28121,7 @@ function ec_assess(group, support, target, amphibious, env) {
         pCapture: Number(pCapture.toFixed(2)), requiredProbability: minimum, desiredProbability,
         attackingGround: ground.reduce((s, u) => s + ec_cf(u), 0), defendingGround: groundDef.reduce((s, u) => s + ec_cf(u), 0),
         defendingGarrisons: groundDef.filter(u => u.garrison).map(u => u.id),
-        pGround, pGroundWithReaction, pNavalWithReaction: fullReactionNaval,
+        pGround, pGroundWithReaction, pNaval: noReactionNaval, pNavalWithReaction: fullReactionNaval,
         attackingAirSea: attSea, defendingAirSea: defSea, potentialReaction: reactionCf, reactionWeight, emptyLandCapture, unopposedLanding,
         reactionEstimate: reactionPlan.estimate, reactionHq: reactionPlan.hq ?? null, reactionBudget: reactionPlan.budget ?? null,
         reactionUnitIds: reaction.map(u => u.id),
@@ -28179,7 +28200,8 @@ function ec_missions(env) {
             result.push(ec_make_task("CONQUEST", hex, group.units, force, group.mode, env,
                 { score, assessment, aspCost: group.mode === "AA" ? Number(reach.aspCost || 0) : 0,
                     declaresBattle: assessment.defendingGround > 0 || env.units.some(u => u.faction !== env.faction && u.location === hex),
-                    objective: env.powGap && m.named && !(env.view.capture || []).includes(hex) ? "POW" : m.resource ? "RESOURCES" : "FORWARD_BASE" }))
+                    objective: env.powGap && m.named && !(env.view.capture || []).includes(hex) ? "POW"
+                        : env.victory.homelandKeys.includes(hex) ? "HOMELAND" : m.resource ? "RESOURCES" : "FORWARD_BASE" }))
         }
     }
     return result.sort((a, b) => b.score - a.score || a.requiredUnits.length - b.requiredUnits.length || a.hex - b.hex || a.id.localeCompare(b.id))
@@ -29722,27 +29744,60 @@ exports.view = function (state, role) {
 }
 
 exports.action = function (state, role, action, argument) {
+    // Legacy clients retain their existing argument and execution semantics.
+    if (!argument || !argument.__ai) return framework_apply_action(state, role, action, argument)
+    const meta = argument.__ai
+    if (meta.version !== 1 || meta.role !== role) throw new Error("AI metadata role/version mismatch")
+    if (meta.plan && (meta.plan.version !== 1 || meta.plan.role !== role)) throw new Error("Invalid AI plan")
+    if (meta.runtime && (meta.runtime.version !== 1 || meta.runtime.role !== role)) throw new Error("Invalid AI runtime")
+    if (meta.logs !== undefined && (!Array.isArray(meta.logs)
+        || meta.logs.some(line => typeof line !== "string" || !line.startsWith("[ERASMUS]"))))
+        throw new Error("Invalid AI trace log")
+    if (!ROLES.includes(role) || !(Array.isArray(state.active) ? state.active.includes(role) : state.active === role))
+        throw new Error("Invalid AI action role")
+
+    const priorConfig = typeof em_cfg === "function" && em_cfg() ? { ...em_cfg() } : null
+    let rollback = null
+    try {
+        // View generation can refresh caches and its frame. Generate the exact
+        // role's legal actions on an isolated copy, before touching real state.
+        const legal = exports.view(object_copy(state), role).actions || {}
+        let rawArgument = argument.action
+        if (rawArgument && rawArgument.oos) rawArgument = rawArgument.action
+        const candidates = legal[action]
+        if (!Object.prototype.hasOwnProperty.call(legal, action) || !candidates
+            || (Array.isArray(candidates) && !candidates.includes(rawArgument)))
+            throw new Error("Invalid action: " + action)
+        // Buttons such as headless advance legitimately carry a target-plan
+        // object. Candidate-list actions must match the original scalar ID.
+        // Keep a complete snapshot only once validation succeeds: handlers may
+        // still fail after altering the board, RNG, undo history or AI metadata.
+        rollback = object_copy(state)
+        return framework_apply_action(state, role, action, argument)
+    } catch (error) {
+        if (rollback) {
+            for (const key of Object.keys(state)) delete state[key]
+            Object.assign(state, rollback)
+        }
+        // Restore the caller's original object even if undo/redo replaced G.
+        G = state
+        L = state.L
+        R = ROLES.indexOf(role)
+        V = null
+        if (typeof eop_import_runtime === "function") eop_import_runtime(state.ai_runtime?.[role] || null, role)
+        if (priorConfig && typeof em_set_config === "function") em_set_config(priorConfig)
+        else if (typeof em_reset_config === "function") em_reset_config()
+        throw error
+    }
+}
+
+function framework_apply_action(state, role, action, argument) {
     G = state
     L = G.L
     R = role
     V = null
 
     var old_active = G.active
-
-    // Reject malformed envelopes before _load or any persistent metadata write.
-    // Legacy actions keep their existing argument format and validation path.
-    if (argument && argument.__ai) {
-        const meta = argument.__ai
-        if (meta.version !== 1 || meta.role !== role) throw new Error("AI metadata role/version mismatch")
-        if (meta.plan && (meta.plan.version !== 1 || meta.plan.role !== role)) throw new Error("Invalid AI plan")
-        if (meta.runtime && (meta.runtime.version !== 1 || meta.runtime.role !== role)) throw new Error("Invalid AI runtime")
-        if (meta.logs !== undefined && (!Array.isArray(meta.logs)
-            || meta.logs.some(line => typeof line !== "string" || !line.startsWith("[ERASMUS]"))))
-            throw new Error("Invalid AI trace log")
-        if (!(P[L.P] && typeof P[L.P][action] === "function")
-            && !(action === "undo" && G.undo.length > 0) && !(action === "redo" && G.redo))
-            throw new Error("Invalid action: " + action)
-    }
 
     _load()
 

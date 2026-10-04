@@ -589,4 +589,21 @@ test("a viable late atomic route replaces a stalled non-resource campaign object
     assert.equal(ctx.ec_campaign_objective(view, ctx.ec_map(), view.ai.units, 1), 22)
 })
 
+test("landing odds include the actual defender fleet even without reinforcements", () => {
+    const { ctx, view } = fixture()
+    const group = view.ai.units.filter(u => [2,3].includes(u.id))
+    const env = { view, faction: 1, units: view.ai.units.concat(
+        { id: 8, faction: 0, class: "naval", cf: 20, location: 20 },
+        { id: 9, faction: 0, class: "ground", cf: 5, lf: 5, location: 20 }), powGap: 1 }
+    ctx.em_naval_outcome = () => ({ pWin: .2 })
+    ctx.em_ground_outcome = () => ({ pWin: .9 })
+    const landing = ctx.ec_assess(group, [], 20, true, env)
+    assert.equal(landing.pCapture, .18)
+    assert.equal(landing.executable, false)
+    ctx.em_naval_outcome = () => ({ pWin: 0 })
+    const overland = ctx.ec_assess(group.filter(u => u.class === "ground"), [], 20, false, env)
+    assert.equal(overland.pCapture, .9)
+    assert.equal(overland.executable, true, "naval defeat cannot turn back overland ground troops")
+})
+
 console.log(`Campaign planner: ${completed.length} source-level contracts passed`)

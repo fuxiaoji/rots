@@ -128,7 +128,8 @@ test("Wilson denominator retains invalid games; paired bootstrap is deterministi
 })
 test("evaluation keeps failed games in both paired and marginal denominators", () => {
     const { reportGroups } = require("./campaign-evaluate")
-    const good = seed => ({ seed, status: "complete", validNatural: true, winner: "Allies" })
+    const good = seed => ({ seed, status: "complete", natural: true, validNatural: true, winner: "Allies", fallback: 0,
+        traceNodeMissing: 0, verification: { status: "verified" } })
     const failed = { seed: 2, status: "error", validNatural: false, winner: "Allies", error: "test failure" }
     const report = reportGroups([{ scenario: "fixture", baseline: [good(1), failed], campaign: [good(1), failed] }], "develop")
     assert.equal(report.scenarios[0].campaign.winRate.n, 2)

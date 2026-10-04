@@ -28,7 +28,10 @@ function ec_cbi(region) {
 
 function ec_map() {
     if (typeof map === "undefined" || !Array.isArray(map)) return []
-    return map.filter(m => m && (m.named || m.name || m.port || m.airfield || m.resource))
+    // Honshu surrender includes the unnamed 3606 hex. Keep every public
+    // national key without granting unnamed terrain any PoW credit.
+    const homelandKeys = new Set(typeof nations !== "undefined" ? nations.JAPAN?.keys || [] : [])
+    return map.filter(m => m && (m.named || m.name || m.port || m.airfield || m.resource || homelandKeys.has(m.id)))
         .map(m => ({ ...m, hex: typeof hex_to_int === "function" ? hex_to_int(m.id) : m.id }))
         .filter(m => Number.isInteger(m.hex) && (typeof LAST_BOARD_HEX === "undefined" || m.hex <= LAST_BOARD_HEX))
         .sort((a, b) => a.hex - b.hex)
@@ -190,7 +193,8 @@ function ec_score_target(m, env) {
     if (env.previousObjective === m.hex) score += 8
     if (env.campaignObjective === m.hex) score += 18
     if (env.victory.b29Bases.includes(m.hex) && Number(env.view.turn) >= 6) score += 22
-    if (env.victory.homelandKeys.includes(m.hex)) score += 40
+    if (env.victory.homelandKeys.includes(m.hex))
+        score += env.victory.routes.homeland.remainingKeys.length === 1 ? 500 : 40
     if (m.resource && Number(env.view.turn) >= 9 && env.victory.atomic?.noStrategicBombingFailure)
         score += env.victory.jpResources <= 4 ? 150 : 80
     if (defenders.some(u => u.class === "hq")) score += env.victory.routes.headquarters.enemyHqCount <= 1 ? 120 : 38
@@ -295,7 +299,9 @@ function ec_assess(group, support, target, amphibious, env) {
         : typeof queryZoi === "function" ? queryZoi(target, 1 - env.faction) : true)
     const specialReaction = env.specialReactions.get(target)
     const unopposedLanding = amphibious && defenders.length === 0 && groundDef.length === 0 && !specialReaction
-    const navalSafe = emptyLandCapture || unopposedLanding || naval.pWin > 0
+    // Losing the air/naval stage turns back amphibious troops only. Troops
+    // arriving overland still fight (apply_naval_winner).
+    const navalSafe = !amphibious || unopposedLanding || naval.pWin > 0
     const terrain = typeof get_map_data === "function" ? Number(get_map_data(target)?.terrain) : 0
     const terrainMod = terrain === 2 ? -1 : terrain === 3 ? -2 : terrain === 4 ? -3 : 0
     function groundChance(defendersSea) {
@@ -315,11 +321,17 @@ function ec_assess(group, support, target, amphibious, env) {
     const fullReactionNaval = typeof em_naval_outcome === "function"
         ? em_naval_outcome({ attCF: attSea, defCF: defSea + reactionCf, attHasBr, defHasBr }).pWin
         : attSea > defSea + reactionCf && (attHasBr || !defHasBr) ? 1 : reactionCf === 0 ? naval.pWin : 0
+    const noReactionNaval = typeof em_naval_outcome === "function"
+        ? em_naval_outcome({ attCF: attSea, defCF: defSea, attHasBr,
+            defHasBr: seaDef.some(u => u.class === "air" || Number(u.br) > 0) }).pWin
+        : defSea === 0 || attSea > defSea && (attHasBr || !seaDef.some(u => Number(u.br) > 0)) ? 1 : 0
     // Keep the existing battle estimator, but make its uncertainty explicit.
     // A group that loses against an actual reaction is not a certain capture
     // merely because it beats 35% of the reaction fleet on paper.
     const pCapture = emptyLandCapture || unopposedLanding ? 1 : reactionCf > 0
-        ? (1 - reactionWeight) * pGround + reactionWeight * fullReactionNaval * pGroundWithReaction : pGround
+        ? (1 - reactionWeight) * (amphibious ? noReactionNaval : 1) * pGround
+            + reactionWeight * (amphibious ? fullReactionNaval : 1) * pGroundWithReaction
+        : (amphibious ? noReactionNaval : 1) * pGround
     const minimum = env.powGap && Number(env.view.political_will) <= 2
         ? Number(config.epDesperateMinP ?? 0.45) : Number(config.epMinP ?? 0.6)
     const desiredProbability = Number(config.epDesiredP ?? 0.75)
@@ -327,7 +339,7 @@ function ec_assess(group, support, target, amphibious, env) {
         pCapture: Number(pCapture.toFixed(2)), requiredProbability: minimum, desiredProbability,
         attackingGround: ground.reduce((s, u) => s + ec_cf(u), 0), defendingGround: groundDef.reduce((s, u) => s + ec_cf(u), 0),
         defendingGarrisons: groundDef.filter(u => u.garrison).map(u => u.id),
-        pGround, pGroundWithReaction, pNavalWithReaction: fullReactionNaval,
+        pGround, pGroundWithReaction, pNaval: noReactionNaval, pNavalWithReaction: fullReactionNaval,
         attackingAirSea: attSea, defendingAirSea: defSea, potentialReaction: reactionCf, reactionWeight, emptyLandCapture, unopposedLanding,
         reactionEstimate: reactionPlan.estimate, reactionHq: reactionPlan.hq ?? null, reactionBudget: reactionPlan.budget ?? null,
         reactionUnitIds: reaction.map(u => u.id),
@@ -406,7 +418,8 @@ function ec_missions(env) {
             result.push(ec_make_task("CONQUEST", hex, group.units, force, group.mode, env,
                 { score, assessment, aspCost: group.mode === "AA" ? Number(reach.aspCost || 0) : 0,
                     declaresBattle: assessment.defendingGround > 0 || env.units.some(u => u.faction !== env.faction && u.location === hex),
-                    objective: env.powGap && m.named && !(env.view.capture || []).includes(hex) ? "POW" : m.resource ? "RESOURCES" : "FORWARD_BASE" }))
+                    objective: env.powGap && m.named && !(env.view.capture || []).includes(hex) ? "POW"
+                        : env.victory.homelandKeys.includes(hex) ? "HOMELAND" : m.resource ? "RESOURCES" : "FORWARD_BASE" }))
         }
     }
     return result.sort((a, b) => b.score - a.score || a.requiredUnits.length - b.requiredUnits.length || a.hex - b.hex || a.id.localeCompare(b.id))

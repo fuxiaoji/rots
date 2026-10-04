@@ -195,7 +195,16 @@ function create_view() {
     V.reinforcements = G.reinforcements
     V.burma_road = G.burma_road
     V.china_divisions = G.china_divisions
-    V.offensive = object_copy(G.offensive)
+    // Rollback snapshots contain the complete server state, including both
+    // hands, draw piles, RNG and private AI memory. Exclude them before copying
+    // the public offensive. Newly drawn cards remain private (5.0 and 5.35); the
+    // role-filtered V.hand projection below already exposes IDs to their owner
+    // and only the count to everyone else.
+    const publicOffensive = { ...G.offensive }
+    delete publicOffensive.card_rollback
+    delete publicOffensive.weather_rollback
+    delete publicOffensive.draw
+    V.offensive = object_copy(publicOffensive)
     V.move_type = L.move_type
     V.headless_moves = !!G.headless_moves
     // Read-only AI projection. It contains public state plus metadata for the

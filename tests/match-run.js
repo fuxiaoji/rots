@@ -247,6 +247,9 @@ function verifyReplay(replay, options = {}) {
         resolvedBundlePaths: Object.fromEntries(Object.entries(bundles).map(([role, b]) => [role, b.filename])), ...end }
 }
 function gameStem(scenario, seed, japanBot, alliesBot) { return `game-${slug(scenario)}-${seed}-J${slug(japanBot)}-A${slug(alliesBot)}` }
+function shouldRecordReplay(result, mode = process.env.EOTS_RECORD_REPLAYS) {
+    return Boolean(result.status === "complete" && result.winner === "Allies" || result.error || mode === "all")
+}
 function summarize(games, header = {}) {
     const valid = games.filter(x => x.validNatural), complete = games.filter(x => x.status === "complete")
     const role = { Japan: metrics.emptyRole(), Allies: metrics.emptyRole() }
@@ -303,7 +306,7 @@ function main(argv = process.argv.slice(2)) {
     for (let index = 0; index < gameCount; index++) {
         const { result, replay } = play(baseSeed + index, options, runtime)
         const stem = gameStem(scenario, result.seed, japanBot, alliesBot)
-        if (result.validNatural && result.winner === "Allies" || result.error || process.env.EOTS_RECORD_REPLAYS === "all") {
+        if (shouldRecordReplay(result)) {
             result.replayFile = path.join(outputDir, `${stem}.replay.json`)
             fs.writeFileSync(result.replayFile, JSON.stringify(replay) + "\n")
             result.replaySha256 = fileSha(result.replayFile)
@@ -324,5 +327,5 @@ function main(argv = process.argv.slice(2)) {
     if (games.some(g => !g.validNatural)) process.exitCode = 1
 }
 module.exports = { createRuntime, play, verifyReplay, summarize, gameStem, fileSha, loadBundle, validateAction, stateDigest, main,
-    ADAPTER_VERSION, COMPAT_SOURCE, RULE_VERSION, ROOT, gameplayFingerprint, progressGuard, replayBundlePath }
+    ADAPTER_VERSION, COMPAT_SOURCE, RULE_VERSION, ROOT, gameplayFingerprint, progressGuard, replayBundlePath, shouldRecordReplay }
 if (require.main === module) main()
