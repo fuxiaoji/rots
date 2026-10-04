@@ -221,3 +221,54 @@ test("progress guard ignores growing logs and AI metadata but preserves actual r
     s.location[1] = 2
     assert.notEqual(gameplayFingerprint(s), before)
 })
+test("runtime counters and weather rollback snapshots cannot conceal a repeated gameplay state", () => {
+    const { gameplayFingerprint, progressGuard } = require("./match-run")
+    const s = { ...state(), seed: 123, L: { P: "commit_offensive_confirm", verify_error: "Declare the required battle." },
+        offensive: { offensive_card: 30, active_units: [[], []], battle: {} } }
+    const before = gameplayFingerprint(s), guard = progressGuard(3)
+    for (let attempt = 1; attempt <= 3; attempt++) {
+        s.ai_runtime = { Allies: { tick: attempt, move: { revision: attempt }, rng: attempt * 101 } }
+        // These snapshots may contain apparently live fields, but are only rollback history.
+        s.offensive.weather_rollback = { seed: attempt, location: [attempt], L: { P: `old_phase_${attempt}` },
+            ai_runtime: { Allies: { tick: attempt - 1 } } }
+        s.offensive.card_rollback = { seed: attempt + 1, log: Array(attempt).fill("cancelled") }
+        s.offensive.card_undo_len = attempt
+        s.log.push(`Attempt ${attempt}`)
+        assert.equal(gameplayFingerprint(s), before)
+        if (attempt < 3) guard(s, attempt * 4)
+        else assert.throws(() => guard(s, attempt * 4), error => {
+            assert.equal(error.progress.firstAction, 4)
+            assert.equal(error.progress.action, 12)
+            assert.equal(error.progress.count, 3)
+            return /repeated gameplay state 3 times/.test(error.message)
+        })
+    }
+})
+test("progress guard retains actual board, RNG, events and phase/battle changes", () => {
+    const { gameplayFingerprint, progressGuard } = require("./match-run")
+    const initial = { ...state(), seed: 123, events: [0], L: { P: "ground_combat", hits: 4 },
+        offensive: { battle: { battle_hex: 2, attacker_hits: 4 }, paths: [1, [AMPH_MOVE, 0, 1, 2]] } }
+    const changes = {
+        board: s => { s.location[1] = 2 },
+        rng: s => { s.seed++ },
+        event: s => { s.events[0] = 1 },
+        phase: s => { s.L.P = "ground_combat_losses" },
+        phaseHits: s => { s.L.hits = 3 },
+        battle: s => { s.offensive.battle.attacker_hits = 3 },
+        path: s => { s.offensive.paths[1][3] = 3 },
+    }
+    for (const [name, change] of Object.entries(changes)) {
+        const changed = JSON.parse(JSON.stringify(initial)), guard = progressGuard(2)
+        change(changed)
+        assert.notEqual(gameplayFingerprint(changed), gameplayFingerprint(initial), name)
+        guard(initial, 1)
+        assert.doesNotThrow(() => guard(changed, 2), name)
+    }
+})
+test("campaign metadata cannot disguise an unknown delegated chart", () => {
+    const { validDecisionTrace } = require("./match-run")
+    assert.equal(validDecisionTrace({ chart: "NO-CHART", node: "NO-CHART", campaign: { delegatedOffensive: true } }), false)
+    assert.equal(validDecisionTrace({ chart: "ERASMUS-AP-10", node: "AP10.1", campaign: { delegatedOffensive: true } }), true)
+    assert.equal(validDecisionTrace({ chart: "CAMPAIGN", node: "CAPTURE", policy: "campaign-v1", campaign: {} }), true)
+    assert.equal(validDecisionTrace({ chart: "CAMPAIGN", node: null, policy: "campaign-v1", campaign: {} }), false)
+})

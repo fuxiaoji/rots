@@ -181,7 +181,8 @@ function target_argument(action, value, seedText, role, view, strategy) {
     // advance 不是无参数的“随便走一步”：把当下图表焦点及目标类型写入回放参数，
     // 使无头移动在保存/恢复/复盘时不依赖进程内 EOP_OVERRIDE 的瞬时值。
     if (action === "advance" && esm_gate_on()) {
-        const focus = em_flag("campaign_planner") && view.ai?.plan ? view.ai.plan.focus : eop_focus(role)
+        const campaign = em_flag("campaign_planner") && view.ai?.plan && !view.ai.plan.delegatedOffensive ? view.ai.plan : null
+        const focus = campaign ? campaign.focus : eop_focus(role)
         const meta = focus === null ? null : eop_target_meta(role, focus)
         const axis = eop_axis(role)
         return {
@@ -193,8 +194,7 @@ function target_argument(action, value, seedText, role, view, strategy) {
             strictSequential: !!axis?.strictSequential || !!meta?.strictSequential,
             chain: Array.isArray(axis?.chain) ? axis.chain.slice() : [],
             targetMeta: Array.isArray(axis?.targetMeta) ? axis.targetMeta.map(x=>({...x})) : [],
-            ...(em_flag("campaign_planner") && view.ai?.plan?.positioning
-                ? { campaignPositioning: view.ai.plan.positioning } : {}),
+            ...(campaign?.positioning ? { campaignPositioning: campaign.positioning } : {}),
         }
     }
     // 通用: unit 候选里若混入“已选/将被撤销”的 unselect 单位(unselect_unit 塞进来的),
@@ -901,13 +901,14 @@ function erasmus_profile_decision(name, originalView, originalContext) {
             const publicVictory = JSON.parse(JSON.stringify(plan.victory))
             if (publicVictory?.routes?.atomic) delete publicVictory.routes.atomic.sovietDependency
             result.publicTrace.campaign = { version: plan.version, phase: plan.phase,
-                objective: plan.objective, focus: plan.focus, pow: publicPow, victory: publicVictory }
+                objective: plan.objective, focus: plan.focus, pow: publicPow, victory: publicVictory,
+                ...(plan.delegatedOffensive ? { delegatedOffensive: true, delegationReason: plan.delegatedOffensive.reason } : {}) }
             const active = new Set((originalView.offensive?.active_units?.[AP] || []).flat())
             const formed = plan.tasks.find(t => t.movementModes.includes("AA") && t.requiredUnits.every(id => active.has(id)))
             if (formed) result.publicTrace.campaign.formation = { ready: true, target: formed.hex,
                 ground: formed.movementUnitIds.filter(id => originalView.ai.units.find(u => u.id === id)?.class === "ground"),
                 escort: formed.escortUnitIds, support: formed.supportUnitIds }
-            result.publicTrace.sm = { phase: plan.phase, strategy: "战役规划：" + plan.phase,
+            if (!plan.delegatedOffensive) result.publicTrace.sm = { phase: plan.phase, strategy: "战役规划：" + plan.phase,
                 focus: plan.focus, diag: { turn: plan.turn, pow: plan.pow?.required, bank: plan.pow?.held },
                 priorityTargets: plan.targets.map((t, i) => ({ ...t, priority: i + 1,
                     name: get_map_data(t.hex)?.name || String(t.hex), id: int_to_hex(t.hex),

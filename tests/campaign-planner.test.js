@@ -606,4 +606,134 @@ test("landing odds include the actual defender fleet even without reinforcements
     assert.equal(overland.executable, true, "naval defeat cannot turn back overland ground troops")
 })
 
+test("final resource risk is confined to a live T12 victory route and cannot admit zero odds", () => {
+    const { ctx, view } = fixture()
+    view.turn = 12
+    const group = view.ai.units.filter(u => [2,3].includes(u.id))
+    const env = { view, faction: 1, units: view.ai.units.concat(
+        { id: 9, faction: 0, class: "ground", cf: 12, lf: 12, location: 20 }), powGap: 1,
+        victory: { jpResources: 2, resourceTargets: [20], atomic: {
+            noStrategicBombingFailure: true, b29InRangeOfTokyo: true } } }
+    ctx.em_naval_outcome = () => ({ pWin: 1 })
+    ctx.em_ground_outcome = () => ({ pWin: .2 })
+    const assess = () => ctx.ec_assess(group, [], 20, true, env)
+    assert.equal(assess().executable, true)
+    assert.equal(assess().riskPolicy, "final-resource-deadline")
+    for (const [object, key, value] of [[view,"turn",11], [view,"political_will",2],
+        [env.victory,"jpResources",3], [env.victory,"resourceTargets",[22]],
+        [env.victory.atomic,"noStrategicBombingFailure",false], [env.victory.atomic,"b29InRangeOfTokyo",false]]) {
+        const prior = object[key]; object[key] = value
+        assert.equal(assess().executable, false, `ordinary policy must apply when ${key} changes`)
+        object[key] = prior
+    }
+    ctx.em_ground_outcome = () => ({ pWin: 0 })
+    assert.equal(assess().executable, false)
+    assert.equal(assess().rejection, "capture-probability-below-threshold")
+    ctx.em_ground_outcome = () => ({ pWin: .9 })
+    ctx.em_naval_outcome = ({ defCF }) => ({ pWin: defCF >= 10 ? 0 : 1 })
+    env.units.push({ id: 30, faction: 0, class: "naval", cf: 32, br: 2, location: 15 })
+    ctx.queryReactionCandidates = () => ({ air: [], carrier: [30], naval: [] })
+    env.reactions = new Map()
+    assert(assess().pCapture > 0, "no-reaction branch remains a genuine opportunity")
+    assert.equal(assess().executable, true, "mean-reaction naval gate must not erase the final resource chance")
+    view.turn = 11
+    assert.equal(assess().executable, false, "ordinary turns retain the naval gate")
+})
+
+test("at the final resource deadline a legal risky capture outranks an irrelevant empty island", () => {
+    const { ctx, view } = fixture({ paths: (ids,c) => c.move_type === 8 && ids.includes(2) && ids.includes(3) ? [20,22] : [] })
+    ctx.map.push({ id: 22, name: "Empty island", named: true, port: true, region: "Pacific" })
+    ctx.querySpaceControlled = (h,f) => f === 0 ? [20,22].includes(h) : [0,5,10,15].includes(h)
+    view.ai.units.push({ id: 9, faction: 0, class: "ground", cf: 12, lf: 12, location: 20 })
+    view.turn = 12
+    view.ai.victory.jpResources = 2
+    view.ai.victory.homelandKeys = []
+    view.ai.victory.atomic = { noStrategicBombingFailure: true, b29InRangeOfTokyo: true }
+    ctx.em_naval_outcome = () => ({ pWin: 1 })
+    ctx.em_ground_outcome = () => ({ pWin: .2 })
+    const plan = ctx.ec_plan(view, { role: "Allies" })
+    assert.equal(plan.tasks[0].hex, 20)
+    assert.equal(plan.tasks[0].assessment.riskPolicy, "final-resource-deadline")
+    assert(plan.tasks[0].requiredUnits.includes(2))
+})
+
+test("unsupported EC delegates the complete offensive without clearing the chart axis", () => {
+    const { ctx, view } = fixture()
+    const prior = plain(ctx.ec_plan(view, { role: "Allies" }))
+    const originalAxis = { id: "original-event-chart", chain: [20], targetMeta: [{ hex: 20, kind: "CONQUEST" }] }
+    ctx.override = originalAxis
+    ctx.queryCardPreview = () => ({ eligible: false, reason: "event-hooks-not-previewable" })
+    Object.assign(view.offensive, { type: ctx.EC, attacker: 1, offensive_card: 30, active_cards: [30] })
+    view.ai.plan = prior
+    for (const [state, prompt, actions, windowKind] of [
+        ["choose_hq", "EC: 3 Ops. Choose HQ.", { unit: [1] }, "task-force"],
+        ["activate_units", "EC: 3 Ops. Activate units: 0 of 7.", { unit: [2,3], done: 1 }, "task-force"],
+        ["move_units", "Move units.", { unit: [2], advance: 1, done: 1, stop: 1 }, "task-force"],
+        ["commit_offensive_confirm", "Confirm offensive.", { cancel: 1 }, "task-force"],
+        ["move_units", "Post battle move units.", { unit: [3], advance: 1, done: 1 }, "pbm"],
+    ]) {
+        Object.assign(view.ai, { state, windowKind })
+        Object.assign(view, { prompt, actions })
+        const before = JSON.stringify(view)
+        const plan = ctx.ec_apply_plan(view, { role: "Allies" })
+        assert.equal(JSON.stringify(view), before, "delegation remains a pure plan transformation")
+        assert.deepEqual(plain(plan.delegatedOffensive), { cardId: 30, reason: "event-hooks-not-previewable" })
+        assert.equal(plan.phase, "DELEGATED")
+        assert.equal(plan.preferredHq, null)
+        assert.equal(plan.positioning, undefined)
+        assert.equal(ctx.ec_pick_action(view, { role: "Allies" }, plan), null, state + " stays with original Erasmus")
+        assert.equal(ctx.override, originalAxis, "must not replace the original chart with an empty campaign chain")
+        view.ai.plan = plain(plan) // Save/restore boundary between each window.
+    }
+    assert.equal(ctx.ec_pick_placement(view, [10,15], 3, "Allies"), null)
+    const botSource = source("bots/erasmus.js")
+    vm.runInContext(botSource.slice(botSource.indexOf("function target_argument"), botSource.indexOf("\nfunction activation_battle_gate")), ctx)
+    const advance = ctx.target_argument("advance", null, "", "Allies", view, "")
+    assert.equal(advance.focus, 20, "delegation restores the original chart focus")
+    assert.equal(advance.campaignPositioning, undefined, "PBM must not receive campaign positioning")
+    view.turn++
+    Object.assign(view.ai, { state: "reinforcement_segment", windowKind: "decision-axis" })
+    view.prompt = "Choose hex to place a reinforcement."
+    view.actions = { action_hex: [10,15] }
+    const afterTurn = ctx.ec_apply_plan(view, { role: "Allies" })
+    assert.equal(afterTurn.delegatedOffensive, undefined, "event delegation must not disable next turn's positioning")
+    assert(afterTurn.positioning)
+})
+
+test("the next supported card resumes campaign planning after a delegated EC", () => {
+    const { ctx, view } = fixture()
+    const prior = plain(ctx.ec_plan(view, { role: "Allies" }))
+    prior.delegatedOffensive = { cardId: 30, reason: "event-hooks-not-previewable" }
+    prior.cardId = 30
+    prior.phase = "DELEGATED"
+    view.ai.plan = prior
+    Object.assign(view.offensive, { type: ctx.EC, attacker: 1, offensive_card: 30 })
+    const plan = ctx.ec_apply_plan(view, { role: "Allies" })
+    assert.equal(plan.delegatedOffensive, undefined)
+    assert.equal(plan.cardId, 9)
+    assert(plan.tasks.length > 0)
+    assert.equal(ctx.ec_pick_action(view, { role: "Allies" }, plan).action, "card")
+    Object.assign(view.ai, { state: "choose_hq", plan: prior })
+    Object.assign(view, { prompt: "OC: 3 Ops. Choose HQ.", actions: { unit: [1] } })
+    Object.assign(view.offensive, { type: 0, offensive_card: 9, active_cards: [9] })
+    const resumed = ctx.ec_apply_plan(view, { role: "Allies" })
+    assert.equal(resumed.delegatedOffensive, undefined)
+    assert.equal(resumed.cardId, 9)
+    assert.equal(ctx.ec_pick_action(view, { role: "Allies" }, resumed).action, "unit")
+})
+
+test("a restored plan never applies another card's selected intent", () => {
+    const { ctx, view } = fixture()
+    const plan = plain(ctx.ec_plan(view, { role: "Allies" }))
+    plan.cardIntent = "event"
+    view.ai.state = "offensive_segment_card_action"
+    view.prompt = "C30: Select action."
+    view.actions = { event: 1, ops: 1, discard: 1 }
+    assert.equal(ctx.ec_pick_action(view, { role: "Allies" }, plan), null)
+    view.prompt = "C9: Select action."
+    assert.equal(ctx.ec_pick_action(view, { role: "Allies" }, plan).action, "event")
+    view.actions = { discard: 1 }
+    assert.equal(ctx.ec_pick_action(view, { role: "Allies" }, plan), null, "a denied intent is never retried")
+})
+
 console.log(`Campaign planner: ${completed.length} source-level contracts passed`)

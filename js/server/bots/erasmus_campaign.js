@@ -94,6 +94,25 @@ function ec_offensive_key(view, role) {
     return Number(off.attacker) === faction ? Number(off.offensive_card || 0) : Number(off.counter_offensive_card || 0)
 }
 
+function ec_selected_card(view) {
+    // The engine's public card-action prompt identifies the selected own card;
+    // offensive_card still identifies the previous offensive in this window.
+    const match = String(view.prompt || "").match(/^C(\d+):\s*Select action\./i)
+    return match ? Number(match[1]) : null
+}
+
+function ec_delegation_reason(view, role) {
+    if (typeof EC === "undefined" || view.offensive?.type !== EC
+        || Number(view.offensive?.attacker) !== (role === "Japan" ? 0 : 1)) return null
+    const cardId = ec_offensive_key(view, role)
+    if (cardId <= 0) return null
+    const prior = view.ai?.plan?.delegatedOffensive
+    if (prior?.cardId === cardId) return prior.reason
+    if (typeof queryCardPreview !== "function") return "event-preview-unavailable"
+    const preview = queryCardPreview(cardId, { faction: role === "Japan" ? 0 : 1, cardMode: "event" })
+    return preview?.reason === "event-hooks-not-previewable" ? preview.reason : null
+}
+
 function ec_victory(view, board, faction) {
     const visible = view.ai?.victory || {}
     const enemyResources = board.filter(m => m.resource && ec_control(m.hex, 1 - faction)).map(m => m.hex)
@@ -258,6 +277,16 @@ function ec_reaction(target, env) {
     return result
 }
 
+function ec_terminal_resource_target(target, env) {
+    // At the final deadline, passing up the last needed resource guarantees
+    // losing this victory route. Accept a real (possibly small) capture chance,
+    // while leaving immediate political survival and every legality gate intact.
+    const atomic = env.victory?.atomic
+    return Number(env.view.turn) === 12 && Number(env.view.political_will) > 2
+        && !!atomic?.noStrategicBombingFailure && !!atomic?.b29InRangeOfTokyo
+        && env.victory.jpResources === 2 && env.victory.resourceTargets.includes(target)
+}
+
 function ec_assess(group, support, target, amphibious, env) {
     const defenders = env.units.filter(u => u.faction !== env.faction && u.location === target)
     const attack = group.concat(support)
@@ -332,18 +361,22 @@ function ec_assess(group, support, target, amphibious, env) {
         ? (1 - reactionWeight) * (amphibious ? noReactionNaval : 1) * pGround
             + reactionWeight * (amphibious ? fullReactionNaval : 1) * pGroundWithReaction
         : (amphibious ? noReactionNaval : 1) * pGround
-    const minimum = env.powGap && Number(env.view.political_will) <= 2
+    const terminalResource = ec_terminal_resource_target(target, env)
+    const minimum = terminalResource ? 0 : env.powGap && Number(env.view.political_will) <= 2
         ? Number(config.epDesperateMinP ?? 0.45) : Number(config.epMinP ?? 0.6)
     const desiredProbability = Number(config.epDesiredP ?? 0.75)
-    return { executable: ground.length > 0 && navalSafe && pCapture >= minimum,
+    const viableNavalRoute = terminalResource ? pCapture > 0 : navalSafe
+    return { executable: ground.length > 0 && viableNavalRoute && pCapture > 0 && pCapture >= minimum,
         pCapture: Number(pCapture.toFixed(2)), requiredProbability: minimum, desiredProbability,
+        riskPolicy: terminalResource ? "final-resource-deadline" : "ordinary-capture",
         attackingGround: ground.reduce((s, u) => s + ec_cf(u), 0), defendingGround: groundDef.reduce((s, u) => s + ec_cf(u), 0),
         defendingGarrisons: groundDef.filter(u => u.garrison).map(u => u.id),
         pGround, pGroundWithReaction, pNaval: noReactionNaval, pNavalWithReaction: fullReactionNaval,
         attackingAirSea: attSea, defendingAirSea: defSea, potentialReaction: reactionCf, reactionWeight, emptyLandCapture, unopposedLanding,
         reactionEstimate: reactionPlan.estimate, reactionHq: reactionPlan.hq ?? null, reactionBudget: reactionPlan.budget ?? null,
         reactionUnitIds: reaction.map(u => u.id),
-        rejection: !navalSafe ? "insufficient-air-sea-cover" : pCapture < minimum ? "capture-probability-below-threshold" : null }
+        rejection: terminalResource && pCapture <= 0 ? "capture-probability-below-threshold"
+            : !viableNavalRoute ? "insufficient-air-sea-cover" : pCapture <= 0 || pCapture < minimum ? "capture-probability-below-threshold" : null }
 }
 
 function ec_make_task(kind, hex, group, support, mode, env, extra) {
@@ -413,6 +446,7 @@ function ec_missions(env) {
                 force.pop(); assessment = reduced
             }
             const score = ec_score_target(m, env) * assessment.pCapture
+                + (assessment.riskPolicy === "final-resource-deadline" ? 1000 + 1000 * assessment.pCapture : 0)
                 - (group.units.length + force.length) * 2 - ec_dist(group.units[0].location, hex)
                 - Math.max(0, assessment.desiredProbability - assessment.pCapture) * 40
             result.push(ec_make_task("CONQUEST", hex, group.units, force, group.mode, env,
@@ -664,19 +698,51 @@ function ec_apply_plan(view, context) {
     const cardWindow = ec_card_window(view), chooseHq = /choose hq/i.test(String(view.prompt || ""))
     const selectAction = /select action/i.test(String(view.prompt || ""))
     const ownOffensive = cardWindow || selectAction || chooseHq || /activate units|move units/i.test(String(view.prompt || ""))
+    // A hook-bearing EC is an entire original-Erasmus offensive, not merely a
+    // delegated card choice. Its activation constraints cannot be represented by
+    // the safe preview, so an empty campaign plan must not terminate its units.
+    const eventWindow = ownOffensive || view.ai?.windowKind === "task-force" || view.ai?.windowKind === "pbm"
+        || /battle|commit_offensive|disengagement/.test(String(view.ai?.state || ""))
+    const delegatedReason = !cardWindow && !selectAction && eventWindow ? ec_delegation_reason(view, role) : null
+    if (delegatedReason) {
+        const kept = prior ? JSON.parse(JSON.stringify(prior)) : ec_plan(view, context)
+        kept.turn = Number(view.turn)
+        kept.cardId = ec_offensive_key(view, role)
+        kept.cardIntent = "event"
+        kept.cardSpec = null
+        kept.activationBudget = 0
+        kept.preCard = false
+        kept.phase = "DELEGATED"
+        kept.delegatedOffensive = { cardId: kept.cardId, reason: delegatedReason }
+        kept.objective = { type: "ORIGINAL_ERASMUS_EVENT", hex: null }
+        kept.focus = null
+        kept.tasks = []
+        kept.targets = []
+        kept.preferredHq = null
+        delete kept.positioning
+        context.campaignPlan = kept
+        return kept // Preserve the original chart's strategy chain and focus.
+    }
     if (view.ai?.windowKind === "reaction" || view.ai?.windowKind === "pbm" || prior && !ownOffensive) {
         const kept = prior ? JSON.parse(JSON.stringify(prior)) : null
-        if (kept) {
+        if (kept?.delegatedOffensive && kept.turn !== Number(view.turn)) {
+            delete kept.delegatedOffensive
+            kept.phase = "POSITIONING"
+            kept.objective = { type: "POSITIONING", hex: kept.campaign?.objectiveHex ?? null }
+        }
+        if (kept && !kept.delegatedOffensive) {
             kept.campaign = { ...kept.campaign, redeployments: ec_redeploy_history(view, kept, faction) }
             kept.positioning = ec_positioning_context(view, kept)
         }
         context.campaignPlan = kept
         return kept
     }
-    const sameOffensive = prior && prior.version === 1 && prior.role === role && prior.turn === Number(view.turn)
-        && (prior.cardId === ec_offensive_key(view, role) || selectAction)
+    const selectedCard = selectAction ? ec_selected_card(view) : null
+    const sameSelection = selectAction && (selectedCard === null || prior?.cardId === selectedCard)
+    const sameOffensive = prior && !prior.delegatedOffensive && prior.version === 1 && prior.role === role && prior.turn === Number(view.turn)
+        && (prior.cardId === ec_offensive_key(view, role) || sameSelection)
     let plan = sameOffensive && !cardWindow && !chooseHq && !prior.preCard ? JSON.parse(JSON.stringify(prior)) : null
-    if (selectAction && prior && prior.turn === Number(view.turn)) plan = JSON.parse(JSON.stringify(prior))
+    if (sameSelection && prior && !prior.delegatedOffensive && prior.turn === Number(view.turn)) plan = JSON.parse(JSON.stringify(prior))
     if (!plan) {
         const axis = typeof eop_axis === "function" ? eop_axis(role) : null
         plan = ec_plan(view, { ...context, strategicTargets: axis?.targetMeta || axis?.chain || [] })
@@ -747,6 +813,7 @@ function ec_pick_action(view, context, plan) {
     const legalUnit = Array.isArray(actions.unit) ? actions.unit : []
     if (view.ai?.state === "strategic_bombing" && actions.all)
         return { action: "all", argument: undefined, via: "campaign-continuous-strategic-bombing" }
+    if (plan.delegatedOffensive) return null
     if (view.ai?.state === "move_units" && actions.stop)
         return { action: "stop", argument: undefined, via: "campaign-ground-stop" }
     if (/move units/i.test(prompt) && plan.focus === null && actions.done)
@@ -760,7 +827,9 @@ function ec_pick_action(view, context, plan) {
         if (plan.tasks.length && actions.card.includes(plan.cardId)) return { action: "card", argument: plan.cardId, via: "campaign-card-hq-task-plan" }
         return null
     }
-    if (/select action/i.test(prompt) && !plan.delegatedCard && plan.tasks.length && actions[plan.cardIntent || "ops"])
+    const selectedCard = ec_selected_card(view)
+    if (/select action/i.test(prompt) && !plan.delegatedCard && (selectedCard === null || selectedCard === plan.cardId)
+        && plan.tasks.length && actions[plan.cardIntent || "ops"])
         return { action: plan.cardIntent || "ops", argument: undefined, via: "campaign-card-intent" }
     if (/choose hq/i.test(prompt) && legalUnit.includes(plan.preferredHq))
         return { action: "unit", argument: plan.preferredHq, via: "campaign-executable-hq" }
@@ -849,7 +918,7 @@ function ec_position_score(hex, faction, piece, source, position) {
 function ec_pick_placement(view, candidates, unitId, role) {
     if (!ec_enabled(role) || !Array.isArray(candidates) || !candidates.length) return null
     const plan = view.ai?.plan
-    if (!plan || plan.role !== role) return null
+    if (!plan || plan.delegatedOffensive || plan.role !== role) return null
     // Piece definitions are public static data; no off-map location or enemy
     // private state is read when a reinforcement has no on-map view projection.
     const publicUnit = (view.ai?.units || []).find(u => u.id === unitId)

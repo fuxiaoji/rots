@@ -1449,7 +1449,7 @@ function eop_activation_focus_faction(faction, selectedCount, view, candidates) 
     if (!axis || !Array.isArray(axis.chain)) return eop_focus(role)
     // Campaign tasks own their activation assignments. A unit committed to one
     // landing cannot also satisfy every other target's task force.
-    if (axis.campaignPlan) {
+    if (axis.campaignPlan && !axis.campaignPlan.delegatedOffensive) {
         const active = new Set((view?.offensive?.active_units?.[faction] || []).flat())
         const legal = new Set(candidates || [])
         for (const target of axis.targetMeta || []) {
@@ -2954,7 +2954,7 @@ function composeTaskForce(target, card, hq, view, candidates, role, metaOverride
 function selectOperationalHq(view,candidates,role){
     if(!Array.isArray(candidates)||!candidates.length)return undefined
     const campaign = typeof em_cfg === "function" && em_cfg()?.campaign_planner ? view?.ai?.plan : null
-    if (campaign?.role === role && candidates.includes(campaign.preferredHq)) return campaign.preferredHq
+    if (campaign?.role === role && !campaign.delegatedOffensive && candidates.includes(campaign.preferredHq)) return campaign.preferredHq
     const byId=new Map((view?.ai?.units||[]).map(u=>[u.id,u])),focus=view?.ai?.focus
     const axis=eop_axis(role),name=String(axis?.id||axis?.note||"").toLowerCase()
     // axis.id 主要是中文战略名。旧代码只识别英文，结果除 CBI/DEI 等英文偶合外

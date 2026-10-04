@@ -90,8 +90,10 @@ function stateDigest(state) {
     return sha(JSON.stringify(copy))
 }
 function gameplayFingerprint(state) {
+    // Policy caches and rollback snapshots can grow during a cancelled/retried offense.
+    // Their contents are not progress; keep the live RNG, events and phase/battle state.
     const ignored = new Set(["log", "undo", "redo", "redo_count", "persisted_undo", "prepared_undo", "card_rollback", "card_undo_len",
-        "ai_plan", "ai_profile", "__ai", "publicTrace", "privateTrace", "campaignPlan", "targetPlan", "target_plan"])
+        "weather_rollback", "ai_runtime", "ai_plan", "ai_profile", "__ai", "publicTrace", "privateTrace", "campaignPlan", "targetPlan", "target_plan"])
     return sha(JSON.stringify(state, (key, value) => {
         if (ignored.has(key)) return undefined
         if (value && typeof value === "object" && !Array.isArray(value))
@@ -112,6 +114,12 @@ function progressGuard(limit = 32) {
             throw error
         }
     }
+}
+function validDecisionTrace(trace) {
+    if (!trace?.node) return false
+    const chart = String(trace.chart || "")
+    return /(?:JP-0[1-6]|AP-0[7-9]|AP-1[0-2])$/.test(chart)
+        || chart === "CAMPAIGN" && !!trace.campaign && trace.policy === "campaign-v1"
 }
 function play(seed, options, runtime = createRuntime(options)) {
     const { bundles, names, metadata } = runtime
@@ -146,8 +154,7 @@ function play(seed, options, runtime = createRuntime(options)) {
                         state: state.L?.P ?? null, prompt: view.prompt ?? null, action: decision.action,
                         node: decision.publicTrace.node ?? null, legalActions: JSON.parse(JSON.stringify(view.actions || {})) })
                 }
-                const chart = String(decision.publicTrace?.chart || "")
-                if (!decision.publicTrace?.node || !/JP-0[1-6]|AP-0[7-9]|AP-1[0-2]/.test(chart) && !decision.publicTrace?.campaign) traceNodeMissing++
+                if (!validDecisionTrace(decision.publicTrace)) traceNodeMissing++
                 meter.recordDecision(role, decision, view, actions + 1)
                 // Copy before action: rules may mutate the incoming plan object.
                 replay.replayActions.push(JSON.parse(JSON.stringify([role, decision.action, decision.argument ?? null])))
@@ -327,5 +334,5 @@ function main(argv = process.argv.slice(2)) {
     if (games.some(g => !g.validNatural)) process.exitCode = 1
 }
 module.exports = { createRuntime, play, verifyReplay, summarize, gameStem, fileSha, loadBundle, validateAction, stateDigest, main,
-    ADAPTER_VERSION, COMPAT_SOURCE, RULE_VERSION, ROOT, gameplayFingerprint, progressGuard, replayBundlePath, shouldRecordReplay }
+    ADAPTER_VERSION, COMPAT_SOURCE, RULE_VERSION, ROOT, gameplayFingerprint, progressGuard, replayBundlePath, shouldRecordReplay, validDecisionTrace }
 if (require.main === module) main()

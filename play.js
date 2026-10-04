@@ -11413,7 +11413,7 @@ function eots_ai_phase_label(phase) {
 		"card-selection": "卡牌选择", "task-force": "任务部队编成",
 		reaction: "反应", pbm: "战后移动", general: "通用行动",
 		CAPTURE: "夺占", ASSEMBLE: "运输与集结", GARRISON: "驻守", BLOCKED: "重新规划",
-		POW: "补齐战争进展", RESOURCES: "夺取资源", FORWARD_BASE: "夺取前沿基地",
+		POW: "补齐战争进展", RESOURCES: "夺取资源", FORWARD_BASE: "夺取前沿基地", HOMELAND: "本州占领",
 		ASSEMBLE_ESCORT: "集中护航", B29_DEPLOYMENT: "部署轰炸机", AIR_SUPPORT_BASE: "前推空中支援",
 	}
 	return labels[phase] || phase || "未知"
