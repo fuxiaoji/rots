@@ -27970,11 +27970,19 @@ function ec_service_compatible(units, view, faction) {
 function ec_garrison_reserve(view, board, units, faction) {
     const reserve = new Set()
     const recent = new Set(view.capture || [])
+    const atomic = view.ai?.victory?.atomic
+    const finalResourceChance = Number(view.turn) === 12 && Number(view.political_will) > 2
+        && atomic?.noStrategicBombingFailure && atomic?.b29InRangeOfTokyo
+        && Number(view.ai?.victory?.jpResources) === 2
     for (const m of board) {
         if (!(m.resource || recent.has(m.hex)) || !ec_control(m.hex, faction)) continue
         const at = units.filter(u => u.faction === faction && u.class === "ground" && u.location === m.hex)
             .sort((a, b) => ec_cf(a) - ec_cf(b) || a.id - b.id)
         const threatened = units.some(u => u.faction !== faction && u.class === "ground" && ec_dist(u.location, m.hex) <= 6)
+        // The last resource assault is a must-try on T12: reserving a sole
+        // ground unit guarantees failure of the atomic route. Its destination
+        // still needs an actual legal path and positive capture probability.
+        if (finalResourceChance) continue
         if (at.length && (m.resource || threatened)) reserve.add(at[0].id)
     }
     return reserve

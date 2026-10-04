@@ -640,6 +640,21 @@ test("final resource risk is confined to a live T12 victory route and cannot adm
     assert.equal(assess().executable, false, "ordinary turns retain the naval gate")
 })
 
+test("final resource assault can commit a garrison when the deadline makes holding back certain failure", () => {
+    const { ctx, view } = fixture()
+    ctx.map.find(m=>m.id===10).resource = 1
+    view.turn = 12
+    view.political_will = 8
+    view.ai.victory.jpResources = 2
+    view.ai.victory.atomic = { noStrategicBombingFailure: true, b29InRangeOfTokyo: true }
+    assert(!ctx.ec_garrison_reserve(view, ctx.ec_map(), view.ai.units, 1).has(2))
+    view.ai.units.push({ id: 88, faction: 0, class: "ground", location: 20, cf: 5 })
+    assert(!ctx.ec_garrison_reserve(view, ctx.ec_map(), view.ai.units, 1).has(2))
+    view.ai.units.pop()
+    view.turn = 11
+    assert(ctx.ec_garrison_reserve(view, ctx.ec_map(), view.ai.units, 1).has(2))
+})
+
 test("at the final resource deadline a legal risky capture outranks an irrelevant empty island", () => {
     const { ctx, view } = fixture({ paths: (ids,c) => c.move_type === 8 && ids.includes(2) && ids.includes(3) ? [20,22] : [] })
     ctx.map.push({ id: 22, name: "Empty island", named: true, port: true, region: "Pacific" })
