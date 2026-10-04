@@ -27,6 +27,8 @@ function ep_allocate_targets(role, view, targets, budget) {
     const mine = role === "Japan" ? JP : AP
     const scored = []
     const avail = Array.isArray(view?.actions?.unit) ? view.actions.unit : []
+    const byId = new Map((view?.ai?.units || []).map(u => [u.id, u]))
+    const availableUnits = avail.map(id => byId.get(id)).filter(Boolean)
     for (const h of targets) {
         let mode = "GROUND_ATTACK"
         let value = (typeof em_target_value === "function") ? em_target_value(role, h) : 1
@@ -59,13 +61,13 @@ function ep_allocate_targets(role, view, targets, budget) {
                 const defenders = (view?.ai?.units || []).filter(u => u.faction !== mine && u.location === h)
                 const cfOf = u => u.reduced ? (Number(u.rcf) || Math.ceil((Number(u.cf) || 0) / 2)) : (Number(u.cf) || 0)
                 const lfOf = u => Number(u.lf) || Math.max(1, Math.ceil((Number(u.cf) || 1) / 3))
-                const groundCands = avail.filter(u => u.class === "ground" && (u.asp || u.strat_move))
+                const groundCands = availableUnits.filter(u => u.class === "ground" && (u.asp || u.stratMove))
                 // [opt amph-quality] 无两栖地面候选 = 本窗口无法夺取该格: 不得入队(防
                 // "海军追资源格"空转占预算 —— ampv1 实测 T7+ 夺格下滑主因之一)。
                 if (!groundCands.length) feasible = false
                 const groundLocsQ = new Set(groundCands.map(u => u.location))
                 let pairedNaval = 0, airCfQ = 0
-                for (const u of avail) {
+                for (const u of availableUnits) {
                     if (u.class === "naval" && groundLocsQ.has(u.location)) pairedNaval += cfOf(u)
                     else if (u.class === "air") airCfQ += cfOf(u)
                 }

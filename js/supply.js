@@ -785,7 +785,11 @@ function check_unit_supply(location, i, piece) {
 }
 
 
-function check_japan_resource_trace() {
+function check_japan_resource_trace(resourceHexes) {
+    // Optional diagnostic collector. The rule's normal call keeps its original
+    // early return; diagnostics finish the same traversal to report endpoints.
+    const collect = Array.isArray(resourceHexes)
+    if (collect) resourceHexes.length = 0
     check_supply()
     const faction = JP
     let queue = []
@@ -828,13 +832,14 @@ function check_japan_resource_trace() {
             }
             if (reachable) {
                 if (get_map_data(nh).resource && is_space_controlled(nh, JP)) {
-                    return true
+                    if (!collect) return true
+                    set_add(resourceHexes, nh)
                 }
                 queue.push(nh)
             }
         }
     }
-    return false
+    return collect && resourceHexes.length > 0
 }
 
 function mark_activation_zone(hq) {

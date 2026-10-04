@@ -1,355 +1,328 @@
 "use strict"
 
-// 增强对局运行器 (match runner): AI vs AI 无头对局, 双方可配置不同 bot,
-// 指标 = 夺格数 / 成功作战数(进攻胜/防守守住/海空战胜负) / 损失数(歼灭+减编, 按 cf 加权)
-// / PW / 投降链 / 终局资源格 / 原子弹条件, 供"优化 AI vs 基线 AI"对比实验与论文统计。
-//
-// 用法:
-//   EOTS_HEADLESS_MOVES=1 node tests/match-run.js "<scenario>" <count> <baseSeed> [japanBot] [alliesBot] [maxActions] [tag]
-// 示例:
-//   EOTS_HEADLESS_MOVES=1 node tests/match-run.js "1942-1945 (The Shortened Campaign)" 30 20260903 erasmus-v2 erasmus-v2
-//
-// 指标口径:
-//   attacksInitiated  = 会战申报解析的战斗格数量(%J/%A 标记行, 每格一次交战)
-//   groundAttacksWon  = "Attacker won in ground combat" 归属进攻方
-//   groundDefensesHeld= "Defender won in ground combat" 归属防守方
-//   navalBattlesWon   = "Attacker/Defender won battle (x - y)" 海空战获胜归属
-//   eliminations      = 快照差分: 单位 location 变为 ELIMINATED/PERM_ELIMINATED, cfEliminated 累加单位 cf
-//   reductions        = 快照差分: reduced 从 falsy 变 truthy 事件, cfReduced 累加 floor(cf/2)
-//   capturedHexes     = 日志 "AP captured "/"JP captured " 行(命名格)
+// AI-WIN-01. Original positional CLI remains supported:
+// EOTS_HEADLESS_MOVES=1 node tests/match-run.js <scenario> <count> <seed> [Japan bot] [Allies bot] [maxActions] [tag]
+// EOTS_JAPAN_RULES / EOTS_ALLIES_RULES select independent bundles, including their server-side AI actions.
+// EOTS_MATCH_OUTPUT_DIR writes incremental game JSON + JSONL; EOTS_RECORD_REPLAYS=all also records losses.
 const fs = require("fs")
 const path = require("path")
-const rules = require("../rules.js")
-
-const scenario = String(process.argv[2] || "1942-1945 (The Shortened Campaign)")
-const gameCount = Number(process.argv[3] || 20)
-const baseSeed = Number(process.argv[4] || 20260903)
-const japanBotName = String(process.argv[5] || "erasmus-v2")
-const alliesBotName = String(process.argv[6] || "erasmus-v2")
-// argv[7] 为数字时是 maxActions, 否则是 tag(允许省略 maxActions 直接给 tag)。
-const arg7 = String(process.argv[7] || "")
-const maxActions = /^\d+$/.test(arg7) ? Number(arg7) : 60000
-const outputTag = String((/^\d+$/.test(arg7) ? process.argv[8] : arg7) || "").replace(/[^\w-]+/g, "-").replace(/^-|-$/g, "")
-
-const headlessMoves = process.env.EOTS_HEADLESS_MOVES === "1"
-const setupOptions = { headless_moves: headlessMoves }
-const ELIMINATED_BOX = 1482
-const PERM_ELIMINATED = 1485
-// 控制位与 js/common/constants.js:108-109 一致(该文件依赖 hex_to_int 无法独立 require)。
-const JP_CONTROLLED = 1 << 23
-
-const bots = {
-    Japan: rules.bots[japanBotName],
-    Allies: rules.bots[alliesBotName],
-}
-if (!bots.Japan) throw new Error(`unknown japan bot: ${japanBotName}`)
-if (!bots.Allies) throw new Error(`unknown allies bot: ${alliesBotName}`)
-
-const METRIC_KEYS = ["decisions", "fire", "advance", "hqActivations", "airStrikeUnits", "airStrikeHexes",
-    "attacksInitiated", "groundAttacksWon", "groundDefensesHeld", "navalBattlesWon", "navalBattlesLost",
-    "amphibAssaults", "amphibFailures", "eliminations", "reductions", "cfEliminated", "cfReduced",
-    "capturedHexes", "lostHexes"]
-
-function emptyRole() {
-    const r = {}
-    for (const k of METRIC_KEYS) r[k] = 0
-    r.elimSteps = 0
-    r.amphibSuccess = 0
-    r.zocHexes = 0
-    r.airMoves = 0
-    return r
-}
-
-function sideOfFaction(f) { return f === 0 ? "Japan" : "Allies" }
-function activeRole(state) {
-    return Array.isArray(state.active) ? state.active.slice().sort()[0] : state.active
-}
-
-function snapshot(state) {
-    return {
-        location: state.location.slice(),
-        reduced: state.reduced.slice(), // 值集合: 被减编的 piece id 列表(set_add/set_delete 语义)
-        supply: state.supply_cache.slice(),
+const crypto = require("crypto")
+const cp = require("child_process")
+const Module = require("module")
+const metrics = require("./campaign-metrics")
+const ROOT = path.resolve(__dirname, "..")
+const RULE_VERSION = "official-16.2"
+const ADAPTER_VERSION = "campaign-bundle-adapter-v1"
+const DEFAULT_SCENARIO = "1942-1945 (The Shortened Campaign)"
+// The old bundle has no config export. This in-memory shim reports the actual old behavior:
+// em_set_config(profile) ignores numeric params in its first argument. No frozen file is changed.
+const COMPAT_SOURCE = `\nexports.__campaignLegacyConfig = function(name) {
+  var p = name === "erasmus-v2" ? {} : em_profile_from_env(name === "erasmus-v2-opt-v5" ? EM_DEFAULT_PROFILE_V5 : undefined);
+  var c = Object.assign({}, EM_PARAMS_BASE); EM_FLAGS.forEach(function(f) { c[f] = p[f] ? 1 : 0; }); return c;
+};
+exports.__campaignRestoreLegacy = function(c) { em_set_config(c); em_reset_config(); };
+`
+const sha = input => crypto.createHash("sha256").update(input).digest("hex")
+const fileSha = filename => sha(fs.readFileSync(filename))
+const slug = value => String(value).replace(/[^\w-]+/g, "-").replace(/^-|-$/g, "")
+function activeRole(state) { return Array.isArray(state.active) ? state.active.slice().sort()[0] : state.active }
+function configEnv() { return Object.fromEntries(Object.entries(process.env).filter(([k]) => /^EOTS_OPT_(PROFILE|PARAMS)/.test(k)
+    || ["B_CRUISE", "B_BIAS", "EOTS_BATTLE_DECL_GATE_SHADOW"].includes(k))) }
+function withConfigEnv(env, fn) {
+    const previous = configEnv()
+    for (const k of Object.keys(previous)) delete process.env[k]
+    Object.assign(process.env, env)
+    try { return fn() } finally {
+        for (const k of Object.keys(configEnv())) delete process.env[k]
+        Object.assign(process.env, previous)
     }
 }
-
-// 差分封装: 以 prev 为基线统计本步损失(歼灭/减编)与夺格(控制位翻转)并归入 role, 返回新快照。
-function accumulateDeltas(prev, curr, g) {
-    for (let i = 1; i < curr.location.length; ++i) {
-        const piece = rules.pieces?.[i]
-        if (!piece) continue
-        const side = sideOfFaction(piece.faction)
-        const wasElim = prev.location[i] === ELIMINATED_BOX || prev.location[i] === PERM_ELIMINATED
-        const isElim = curr.location[i] === ELIMINATED_BOX || curr.location[i] === PERM_ELIMINATED
-        if (!wasElim && isElim) {
-            g.role[side].eliminations++
-            g.role[side].cfEliminated += Number(piece.cf || 0)
-            const steps = Number(piece.size || 1)
-            g.role[side].elimSteps += steps
-        } else if (!isElim && !prev.reduced.includes(i) && curr.reduced.includes(i)) {
-            g.role[side].reductions++
-            g.role[side].cfReduced += Math.floor(Number(piece.cf || 0) / 2)
-        }
-    }
-    const n = Math.min(prev.supply.length, curr.supply_cache.length)
-    for (let hex = 1; hex < n; ++hex) {
-        const wasJP = (prev.supply[hex] & JP_CONTROLLED) !== 0
-        const isJP = (curr.supply_cache[hex] & JP_CONTROLLED) !== 0
-        if (wasJP && !isJP) {
-            g.role.Allies.capturedHexes++
-            g.capByTurn.Allies[g.turn] = (g.capByTurn.Allies[g.turn] || 0) + 1
-        } else if (!wasJP && isJP) {
-            g.role.Japan.capturedHexes++
-            g.capByTurn.Japan[g.turn] = (g.capByTurn.Japan[g.turn] || 0) + 1
-        }
-    }
-    return snapshot(curr)
+function loadBundle(filename, frozen = false, env = configEnv()) {
+    filename = path.resolve(filename)
+    const source = fs.readFileSync(filename, "utf8")
+    const mod = new Module(filename, module)
+    mod.filename = filename; mod.paths = Module._nodeModulePaths(path.dirname(filename))
+    mod._compile(source + COMPAT_SOURCE, filename)
+    const rules = mod.exports, effectiveEnv = frozen ? {} : { ...env }
+    return { rules, filename, sha256: sha(source), frozen, env: effectiveEnv,
+        call: fn => withConfigEnv(effectiveEnv, fn),
+        config: (name, role) => withConfigEnv(effectiveEnv, () => rules.bot_config ? rules.bot_config(name, role) : rules.bots[name]?.getConfig ? rules.bots[name].getConfig(role) : rules.__campaignLegacyConfig(name)),
+        restore: config => { if (!rules.bot_config) rules.__campaignRestoreLegacy(config) } }
 }
-
-function play(seed) {
-    let state
-    try {
-        state = rules.setup(seed, scenario, setupOptions)
-    } catch (error) {
-        return { seed, status: "setup-error", error: error.message }
-    }
-    const g = { seed, status: "error", actions: 0, turn: Number(state.turn || 0), fallback: 0,
-        noBattleHex: 0, traceNodeMissing: 0, role: { Japan: emptyRole(), Allies: emptyRole() },
-        logIndex: 0, curAttacker: null, pwMin: Number(state.political_will || 0), pwLog: [],
-        actSum: 0, actLimitSum: 0,
-        capByTurn: { Japan: {}, Allies: {} },
-        surrenderTurns: {} }
-    let prev = snapshot(state)
-
-    const scanNewLogLines = () => {
-        for (; g.logIndex < state.log.length; ++g.logIndex) {
-            const line = String(state.log[g.logIndex])
-            let m
-            if ((m = line.match(/^%(J|A)Battle hex/))) {
-                g.curAttacker = m[1] === "J" ? "Japan" : "Allies"
-                g.role[g.curAttacker].attacksInitiated++
-            } else if (/Attacker won in ground combat/.test(line)) {
-                // 成功两栖: 前方有 AMPH_MOVE 标记的会战胜=成功登陆
-                if (g.curAttacker) g.role[g.curAttacker].amphibSuccess++
-                if (g.curAttacker) g.role[g.curAttacker].groundAttacksWon++
-            } else if (/Defender won in ground combat/.test(line)) {
-                if (g.curAttacker) g.role[g.curAttacker === "Japan" ? "Allies" : "Japan"].groundDefensesHeld++
-            } else if (/ won battle \(/.test(line)) {
-                const attackerWon = /^Attacker/.test(line)
-                const w = attackerWon ? g.curAttacker : (g.curAttacker === "Japan" ? "Allies" : "Japan")
-                const l = attackerWon ? (g.curAttacker === "Japan" ? "Allies" : "Japan") : g.curAttacker
-                if (w && l) { g.role[w].navalBattlesWon++; g.role[l].navalBattlesLost++ }
-            } else if (/Amphibious Assault failed/.test(line) || /could not participate ground combat/.test(line)) {
-                if (g.curAttacker) g.role[g.curAttacker].amphibFailures++
-            } else if (line.trim() === "+3 Amphibious assault.") {
-                if (g.curAttacker) g.role[g.curAttacker].amphibAssaults++
-            } else if (/ fire \(/.test(line)) {
-                const side = /^&A/i.test(line) ? "Allies" : /^&J/i.test(line) ? "Japan" : null
-                if (side) g.role[side].fire++
-            } else if (/No battle hexes declared/.test(line)) {
-                g.noBattleHex++
-            } else if ((m = line.match(/#GTotal VP: (\d+)/))) {
-                g.vp = Number(m[1])
-            } else if ((m = line.match(/Political will changed to (\d+) \((-?\d+)\)/))) {
-                g.pwLog.push({ turn: g.turn, pw: Number(m[1]), delta: Number(m[2]) })
-            } else if ((m = line.match(/(Philippines|Malaya|Dutch East Ind\w+|Burma|India|China) surrender/))) {
-                const key = m[1]
-                if (!g.surrenderTurns[key]) g.surrenderTurns[key] = g.turn
-            } else if ((m = line.match(/Activated \^(\d+) units\|[^^]*\^, (\d+) limit\./))) {
-                g.actSum += Number(m[1]); g.actLimitSum += Number(m[2])
-            }
-        }
-    }
-
-    try {
-        while (state.active !== "None" && g.actions < maxActions) {
-            const role = activeRole(state)
-            if (role !== "Japan" && role !== "Allies") throw new Error(`unexpected active role: ${JSON.stringify(state.active)}`)
-            const view = rules.view(state, role)
-            const decision = bots[role].decide(view, { role, seed, actionOrdinal: g.actions + 1 })
-            if (!view.actions || !(decision.action in view.actions))
-                throw new Error(`illegal policy action ${decision.action} @ ${view.prompt}`)
-            if (decision.publicTrace?.fallback) g.fallback++
-            const chart = String((decision.publicTrace || {}).chart || "")
-            if (/JP-0[1-6]|AP-1[0-2]/.test(chart) === false && decision.publicTrace?.node) g.traceNodeMissing++
-            const r = g.role[role]
-            r.decisions++
-            if (decision.action === "advance") r.advance++
-            if (decision.action === "unit" && /activate units/i.test(String(view.prompt || ""))) {
-                const picked = (view.ai?.units || []).find(u => u.id === decision.argument)
-                if (picked?.class === "hq") r.hqActivations++
-            }
-            if (/Declare battle hexes/.test(String(view.prompt || ""))) {
-                if (decision.action === "unit") r.airStrikeUnits++
-                else if (decision.action === "action_hex") r.airStrikeHexes++
-            }
-            state = rules.action(state, role, decision.action, decision.argument)
-            g.actions++
-            g.turn = Math.max(g.turn, Number(state.turn || 0))
-            g.pwMin = Math.min(g.pwMin, Number(state.political_will || 0))
-            scanNewLogLines()
-            prev = accumulateDeltas(prev, state, g)
-        }
-    } catch (error) {
-        return { seed, status: "error", error: `${error.message}\n${error.stack}`, actions: g.actions, turn: g.turn }
-    }
-    if (state.active !== "None")
-        return { seed, status: "action-limit", actions: g.actions, turn: g.turn }
-
-    // 对手损失 = 差分计数按受损方归属; capturedHexes 已按 AP/JP 前缀计数。
-    const jpResources = (() => { try { return rules.query(state, "Allies", "atomic_bomb_strategy_status")?.jpResources ?? null } catch (e) { return null } })()
-    const finalAtomic = (() => { try { const a = rules.query(state, "Allies", "atomic_bomb_strategy_status"); return a ? { met: !!a.met, jpResources: a.jpResources, sovietReady: !!a.sovietReady, campaign: a.bombingCampaignStart, noFail: !!a.noStrategicBombingFailure, resourcesSatisfied: !!a.resourcesSatisfied } : null } catch (e) { return null } })()
-    const powBank = Array.isArray(state.capture) ? state.capture.length : 0
-    // 每回合夺格率(含零回合)与封锁进度(JAPAN_TRACE_RESOURCES id=28, 值=首次断链回合)
-    // §26 ZOC 覆盖格数: 终局双方各自的 ZOI 覆盖(非中立)格数
-    const zoc = { Japan: 0, Allies: 0 }
-    {
-        const JP_ZOI = 1 << 0, AP_ZOI = 1 << 1, JP_ZOI_NTRL = 1 << 2
-        for (let h = 1; h < Math.min(state.supply_cache.length, 1478); ++h) {
-            const sc = state.supply_cache[h]
-            if (sc & JP_ZOI && !(sc & JP_ZOI_NTRL)) zoc.Japan++
-            if (sc & AP_ZOI && !(sc & (JP_ZOI_NTRL << 1))) zoc.Allies++
-        }
-    }
-    const capRate = {}
+function gitInfo() {
+    const run = args => cp.execFileSync("git", args, { cwd: ROOT, encoding: "utf8" }).trim()
+    return { gitSha: run(["rev-parse", "HEAD"]), gitDirty: !!run(["status", "--porcelain", "--untracked-files=no"]) }
+}
+function createRuntime(options = {}) {
+    const requestedEnv = configEnv()
+    const paths = { Japan: options.japanRules || process.env.EOTS_JAPAN_RULES || path.join(ROOT, "rules.js"),
+        Allies: options.alliesRules || process.env.EOTS_ALLIES_RULES || path.join(ROOT, "rules.js") }
+    const names = { Japan: options.japanBot || "erasmus-v2", Allies: options.alliesBot || "erasmus-v2" }
+    const bundles = {}
     for (const side of ["Japan", "Allies"]) {
-        const byTurn = g.capByTurn[side]
-        const vals = []
-        for (let t = 1; t <= g.turn; ++t) vals.push(byTurn[t] || 0)
-        const mean = vals.length ? vals.reduce((s, x) => s + x, 0) / vals.length : 0
-        capRate[side] = { mean: Number(mean.toFixed(2)), max: Math.max(0, ...vals), turnsWithCapture: vals.filter(x => x > 0).length }
+        const selected = side === "Japan" ? options.japanRules || process.env.EOTS_JAPAN_RULES : options.alliesRules || process.env.EOTS_ALLIES_RULES
+        // External old bundles are frozen by default; the evaluated current Allies bundle keeps its role config.
+        const frozen = Boolean(selected && (side === "Japan" || options.freezeAllies))
+        bundles[side] = loadBundle(paths[side], frozen, requestedEnv)
+        if (!bundles[side].rules.bots?.[names[side]]) throw new Error(`unknown ${side} bot ${names[side]} in ${paths[side]}`)
     }
-    const blockadeEvent = Array.isArray(state.events) ? Number(state.events[28] || 0) : 0
-    const blockade = blockadeEvent > 0 ? { startedTurn: blockadeEvent, progress: Math.max(0, Number(g.turn) - blockadeEvent + 1) } : null
-    const surrender = Array.isArray(state.surrender) ? {
-        philippines: !!state.surrender[0], malaya: !!state.surrender[1], dei: !!state.surrender[2],
-        burma: !!state.surrender[3], japan: !!state.surrender[12],
-    } : null
-    // 反攻格数(盟军)= 全局 AP 夺格; 日本夺格 = JP 夺格(已入 capturedHexes)。
-    const winner = state.result?.won_side || state.result || null
-    return { seed, status: "complete", winner, won_text: state.result ? (state.L?.message || null) : null,
-        vp: g.vp ?? null, actions: g.actions, turn: g.turn, fallback: g.fallback, noBattleHex: g.noBattleHex,
-        traceNodeMissing: g.traceNodeMissing,
-        politicalWill: Number(state.political_will || 0), pwMin: g.pwMin, pwLog: g.pwLog,
-        powRequired: Number(state.pow || 0), powBank, surrender, jpResources, finalAtomic,
-        capRate, blockade, zoc,
-        activationRatio: g.actLimitSum > 0 ? Number((g.actSum / g.actLimitSum).toFixed(3)) : null,
-        activationSum: g.actSum, activationLimit: g.actLimitSum,
-        surrenderTurns: g.surrenderTurns,
-        lateCapturesAllied: (() => { let total = 0; for (let t = 7; t <= g.turn; ++t) total += (g.capByTurn.Allies[t] || 0); return total })(),
-        role: g.role }
+    const metadata = { ...gitInfo(), rulesSha256: fileSha(path.join(ROOT, "rules.js")), ruleVersion: RULE_VERSION,
+        adapterVersion: ADAPTER_VERSION, adapterSha256: sha(COMPAT_SOURCE), runnerSha256: fileSha(__filename), metricsSha256: fileSha(require.resolve("./campaign-metrics")),
+        bundles: {}, runtimeModelRequests: 0 }
+    for (const side of ["Japan", "Allies"]) metadata.bundles[side] = { path: bundles[side].filename, sha256: bundles[side].sha256,
+        bot: names[side], version: bundles[side].rules.bots[names[side]].version,
+        frozen: bundles[side].frozen, environment: bundles[side].env, effectiveProfile: bundles[side].config(names[side], side) }
+    return { bundles, names, metadata }
 }
-
-// 差分封装(旧版, 已由 accumulateDeltas 取代): 保留占位避免悬挂引用。
-function accumulateLosses() { return null }
-
-const games = []
-const t0 = Date.now()
-for (let index = 0; index < gameCount; ++index) {
-    const seed = baseSeed + index
-    const result = play(seed)
-    games.push(result)
-    process.stderr.write(`\r${index + 1}/${gameCount} ${result.status} seed=${seed} actions=${result.actions ?? "-"} turn=${result.turn ?? "-"} winner=${result.winner ?? "-"} `)
+function validateAction(view, decision) {
+    if (!decision || typeof decision.action !== "string") throw new Error("policy returned no action")
+    const legal = view.actions?.[decision.action]
+    let argument = decision.argument
+    if (argument && typeof argument === "object" && argument.__ai) argument = argument.action
+    if (argument && typeof argument === "object" && argument.oos) argument = argument.action
+    if (!Object.hasOwn(view.actions || {}, decision.action) || legal === false || legal === 0 ||
+        (Array.isArray(legal) && !legal.includes(argument))) throw new Error(`illegal policy action ${decision.action}(${JSON.stringify(argument)}) @ ${view.prompt}`)
 }
-const elapsed = Date.now() - t0
-process.stderr.write(`\nelapsed ${((elapsed / 1000) / Math.max(1, gameCount)).toFixed(2)}s/game\n`)
-
-const completed = games.filter(x => x.status === "complete")
-const sum = (arr, f) => arr.reduce((s, x) => s + (f(x) || 0), 0)
-const mean = (arr, f) => arr.length ? sum(arr, f) / arr.length : 0
-const tally = {
-    scenario, gameCount, baseSeed, maxActions, headless_moves: headlessMoves,
-    japanBot: japanBotName, alliesBot: alliesBotName,
-    japanBotVersion: bots.Japan.version, alliesBotVersion: bots.Allies.version,
-    elapsedSec: Math.round(elapsed / 1000),
-    complete: completed.length,
-    japanWins: completed.filter(x => x.winner === "Japan").length,
-    alliesWins: completed.filter(x => x.winner === "Allies").length,
-    errors: games.filter(x => x.status === "error").length,
-    setupErrors: games.filter(x => x.status === "setup-error").length,
-    actionLimit: games.filter(x => x.status === "action-limit").length,
-    atomicBombWins: completed.filter(x => /atomic bomb/i.test(String(x.won_text || ""))).length,
-    blockadeWins: completed.filter(x => /blockade/i.test(String(x.won_text || ""))).length,
-    homelandWins: completed.filter(x => /mainland islands captured/i.test(String(x.won_text || ""))).length,
-    blockadeStarted: completed.filter(x => x.blockade).length,
-    elimStepsBySide: {
-        Japan: sum(completed.map(x => x.role?.Japan || {}), r => r.elimSteps || 0),
-        Allies: sum(completed.map(x => x.role?.Allies || {}), r => r.elimSteps || 0),
-    },
-    amphibSuccessBySide: {
-        Japan: sum(completed.map(x => x.role?.Japan || {}), r => r.amphibSuccess || 0),
-        Allies: sum(completed.map(x => x.role?.Allies || {}), r => r.amphibSuccess || 0),
-    },
-    battleWinRate: {
-        Japan: (() => {
-            const won = sum(completed.map(x => x.role?.Japan || {}), r => (r.groundAttacksWon || 0) + (r.groundDefensesHeld || 0) + (r.navalBattlesWon || 0))
-            const total = sum(completed.map(x => x.role?.Japan || {}), r => (r.groundAttacksWon || 0) + (r.groundAttacksLost || 0) + (r.navalBattlesWon || 0) + (r.navalBattlesLost || 0) + (r.groundDefensesHeld || 0) + (r.groundDefensesFaced || 0))
-            return total > 0 ? Number((won / total).toFixed(3)) : 0
-        })(),
-        Allies: (() => {
-            const won = sum(completed.map(x => x.role?.Allies || {}), r => (r.groundAttacksWon || 0) + (r.groundDefensesHeld || 0) + (r.navalBattlesWon || 0))
-            const total = sum(completed.map(x => x.role?.Allies || {}), r => (r.groundAttacksWon || 0) + (r.groundAttacksLost || 0) + (r.navalBattlesWon || 0) + (r.navalBattlesLost || 0) + (r.groundDefensesHeld || 0) + (r.groundDefensesFaced || 0))
-            return total > 0 ? Number((won / total).toFixed(3)) : 0
-        })(),
-    },
-    zocFinal: {
-        Japan: Number(mean(completed, x => x.zoc?.Japan).toFixed(1)),
-        Allies: Number(mean(completed, x => x.zoc?.Allies).toFixed(1)),
-    },
-    meanAirStrikeUnits: {
-        Japan: Number(mean(completed, x => x.role?.Japan?.airStrikeUnits || 0).toFixed(1)),
-        Allies: Number(mean(completed, x => x.role?.Allies?.airStrikeUnits || 0).toFixed(1)),
-    },
-    meanCapRate: {
-        Japan: Number(mean(completed, x => x.capRate?.Japan?.mean).toFixed(2)),
-        Allies: Number(mean(completed, x => x.capRate?.Allies?.mean).toFixed(2)),
-        JapanMax: Math.max(0, ...completed.map(x => x.capRate?.Japan?.max || 0)),
-        AlliesMax: Math.max(0, ...completed.map(x => x.capRate?.Allies?.max || 0)),
-    },
-    meanActivationRatio: Number(mean(completed.filter(x => x.activationRatio !== null), x => x.activationRatio).toFixed(3)),
-    battleHexesPerTurn: Number(mean(completed, x => (x.role ? (x.role.Japan.attacksInitiated + x.role.Allies.attacksInitiated) / Math.max(1, x.turn) : 0)).toFixed(2)),
-    treatyWins: completed.filter(x => /Treaty/i.test(String(x.won_text || ""))).length,
-    meanTurn: Number(mean(completed, x => x.turn).toFixed(2)),
-    meanPW: Number(mean(completed, x => x.politicalWill).toFixed(2)),
-    meanJpResources: Number(mean(completed, x => x.jpResources).toFixed(2)),
-    surrenderCounts: {
-        philippines: completed.filter(x => x.surrender?.philippines).length,
-        malaya: completed.filter(x => x.surrender?.malaya).length,
-        dei: completed.filter(x => x.surrender?.dei).length,
-        burma: completed.filter(x => x.surrender?.burma).length,
-        japan: completed.filter(x => x.surrender?.japan).length,
-    },
-    role: {},
+function stateDigest(state) {
+    // Undo/history caches are process-local mechanics; game state and its complete log are the replay contract.
+    const copy = JSON.parse(JSON.stringify(state))
+    for (const key of ["undo", "redo", "persisted_undo", "prepared_undo"]) delete copy[key]
+    return sha(JSON.stringify(copy))
 }
-for (const side of ["Japan", "Allies"]) {
-    tally.role[side] = {}
-    for (const k of METRIC_KEYS) tally.role[side][k] = sum(completed.map(x => x.role?.[side] || {}), r => r[k])
-    for (const k of METRIC_KEYS) tally.role[side][`mean_${k}`] = Number(mean(completed, x => x.role?.[side]?.[k]).toFixed(2))
+function gameplayFingerprint(state) {
+    const ignored = new Set(["log", "undo", "redo", "redo_count", "persisted_undo", "prepared_undo", "card_rollback", "card_undo_len",
+        "ai_plan", "ai_profile", "__ai", "publicTrace", "privateTrace", "campaignPlan", "targetPlan", "target_plan"])
+    return sha(JSON.stringify(state, (key, value) => {
+        if (ignored.has(key)) return undefined
+        if (value && typeof value === "object" && !Array.isArray(value))
+            return Object.fromEntries(Object.keys(value).sort().map(k => [k, value[k]]))
+        return value
+    }))
 }
-// 对方视角损失(给对方造成损失数 = 对方 eliminations+reductions 与 cf)
-tally.inflicted = {
-    Japan: { eliminations: tally.role.Allies.eliminations, reductions: tally.role.Allies.reductions,
-        cfEliminated: tally.role.Allies.cfEliminated, cfReduced: tally.role.Allies.cfReduced },
-    Allies: { eliminations: tally.role.Japan.eliminations, reductions: tally.role.Japan.reductions,
-        cfEliminated: tally.role.Japan.cfEliminated, cfReduced: tally.role.Japan.cfReduced },
+function progressGuard(limit = 32) {
+    if (!Number.isInteger(limit) || limit < 2) throw new Error("repeat-state limit must be an integer >= 2")
+    const seen = new Map()
+    return (state, action) => {
+        const fingerprint = gameplayFingerprint(state)
+        const prior = seen.get(fingerprint) || { firstAction: action, count: 0 }
+        prior.count++; seen.set(fingerprint, prior)
+        if (prior.count >= limit) {
+            const error = new Error(`repeated gameplay state ${prior.count} times (first action ${prior.firstAction}, current ${action}, phase ${state.L?.P}, turn ${state.turn})`)
+            error.progress = { fingerprint, firstAction: prior.firstAction, action, count: prior.count, limit }
+            throw error
+        }
+    }
 }
-
-const perGame = completed.map(x => ({ seed: x.seed, winner: x.winner, won_text: x.won_text, vp: x.vp,
-    actions: x.actions, turn: x.turn, politicalWill: x.politicalWill, pwMin: x.pwMin,
-    powRequired: x.powRequired, powBank: x.powBank, surrender: x.surrender, jpResources: x.jpResources,
-    finalAtomic: x.finalAtomic, capRate: x.capRate, blockade: x.blockade, activationRatio: x.activationRatio,
-    surrenderTurns: x.surrenderTurns || {}, lateCapturesAllied: x.lateCapturesAllied || 0, role: x.role }))
-const output = { generatedAt: new Date().toISOString(), tally, perGame,
-    errors: games.filter(x => x.status === "error").map(x => ({ seed: x.seed, error: x.error, actions: x.actions })) }
-const slug = scenario.replace(/[^\w]+/g, "-").replace(/^-|-$/g, "")
-const outputPath = path.join(__dirname, "results", `match-${slug}-${gameCount}-${baseSeed}-J${japanBotName}-A${alliesBotName}${headlessMoves ? "-headless" : ""}${outputTag ? `-${outputTag}` : ""}.json`)
-fs.mkdirSync(path.dirname(outputPath), { recursive: true })
-fs.writeFileSync(outputPath, JSON.stringify(output, null, 1) + "\n")
-console.log(JSON.stringify({ complete: tally.complete, japanWins: tally.japanWins, alliesWins: tally.alliesWins,
-    atomicBombWins: tally.atomicBombWins, treatyWins: tally.treatyWins, errors: tally.errors, actionLimit: tally.actionLimit,
-    meanTurn: tally.meanTurn, meanPW: tally.meanPW, meanJpResources: tally.meanJpResources,
-    captured: { AP: tally.role.Allies.capturedHexes, JP: tally.role.Japan.capturedHexes },
-    battlesWon: { Japan: tally.role.Japan.groundAttacksWon + tally.role.Japan.navalBattlesWon + tally.role.Japan.groundDefensesHeld,
-        Allies: tally.role.Allies.groundAttacksWon + tally.role.Allies.navalBattlesWon + tally.role.Allies.groundDefensesHeld },
-    lossesInflicted: tally.inflicted, elapsedSec: tally.elapsedSec }, null, 1))
-console.log(outputPath)
+function play(seed, options, runtime = createRuntime(options)) {
+    const { bundles, names, metadata } = runtime
+    const scenario = options.scenario || DEFAULT_SCENARIO, maxActions = options.maxActions || 60000
+    const setupOptions = { headless_moves: !!options.headlessMoves, ...(options.setupOptions || {}) }
+    const replay = { schemaVersion: 1, seed, scenario, setup: { seed, scenario, options: setupOptions }, metadata,
+        replayActions: [], actionBundles: [], decisionLogs: [], ruleVersion: RULE_VERSION }
+    let state, meter, actions = 0, fallback = 0, traceNodeMissing = 0, error = null
+    const fallbackDetails = []
+    const started = Date.now()
+    const repeatStateLimit = options.repeatStateLimit || Number(process.env.EOTS_REPEAT_STATE_LIMIT || 32)
+    const guard = progressGuard(repeatStateLimit)
+    let repeatedState = null
+    try { state = bundles.Allies.call(() => bundles.Allies.rules.setup(seed, scenario, setupOptions)) }
+    catch (e) { return { result: { seed, scenario, metadata, status: "setup-error", error: e.stack || String(e), actions, natural: false }, replay } }
+    meter = metrics.createMetrics(bundles.Allies.rules.pieces, state)
+    try {
+        while (state.active !== "None" && actions < maxActions) {
+            const role = activeRole(state), bundle = bundles[role]
+            if (!bundle) throw new Error(`unexpected active role: ${JSON.stringify(state.active)}`)
+            bundle.call(() => {
+                const view = bundle.rules.view(state, role)
+                const previousLog = state.log.slice()
+                const decision = bundle.rules.bots[names[role]].decide(view, { role, seed, actionOrdinal: actions + 1 })
+                if (state.log.length < previousLog.length || previousLog.some((line, i) => line !== state.log[i]))
+                    throw new Error("policy changed pre-existing log entries")
+                replay.decisionLogs.push(state.log.slice(previousLog.length))
+                validateAction(view, decision)
+                if (decision.publicTrace?.fallback) {
+                    fallback++
+                    if (fallbackDetails.length < 32) fallbackDetails.push({ role, ordinal: actions + 1, turn: state.turn,
+                        state: state.L?.P ?? null, prompt: view.prompt ?? null, action: decision.action,
+                        node: decision.publicTrace.node ?? null, legalActions: JSON.parse(JSON.stringify(view.actions || {})) })
+                }
+                const chart = String(decision.publicTrace?.chart || "")
+                if (!decision.publicTrace?.node || !/JP-0[1-6]|AP-0[7-9]|AP-1[0-2]/.test(chart) && !decision.publicTrace?.campaign) traceNodeMissing++
+                meter.recordDecision(role, decision, view, actions + 1)
+                // Copy before action: rules may mutate the incoming plan object.
+                replay.replayActions.push(JSON.parse(JSON.stringify([role, decision.action, decision.argument ?? null])))
+                replay.actionBundles.push(role)
+                state = bundle.rules.action(state, role, decision.action, decision.argument)
+            })
+            actions++
+            meter.observe(state, actions)
+            if (state.active !== "None") guard(state, actions)
+            if (options.onProgress && (actions % (options.progressEvery || 500) === 0 || state.active === "None"))
+                options.onProgress({ seed, actions, turn: state.turn, politicalWill: state.political_will, phase: state.L?.P, elapsedMs: Date.now() - started })
+        }
+    } catch (e) { error = e.stack || String(e); repeatedState = e.progress || null }
+    const report = meter.result(state)
+    const status = error ? "error" : state.active === "None" ? "complete" : "action-limit"
+    let finalAtomic = null
+    try { finalAtomic = bundles.Allies.call(() => bundles.Allies.rules.query(state, "Allies", "atomic_bomb_strategy_status")) }
+    catch (e) { error = [error, `atomic metric query: ${e.stack || e}`].filter(Boolean).join("\n") }
+    const zoc = { Japan: 0, Allies: 0 }
+    for (const sc of (state.supply_cache || []).slice(1, 1478)) {
+        if ((sc & 1) && !(sc & 4)) zoc.Japan++
+        if ((sc & 2) && !(sc & 8)) zoc.Allies++
+    }
+    const blockadeStart = Number(state.events?.[28] || 0)
+    const surrender = state.surrender ? { philippines: !!state.surrender[0], malaya: !!state.surrender[1], dei: !!state.surrender[2],
+        burma: !!state.surrender[3], japan: !!state.surrender[12] } : null
+    const result = { ...report, seed, scenario, metadata, zoc, surrender,
+        blockade: blockadeStart ? { startedTurn: blockadeStart, progress: Math.max(0, Number(state.turn) - blockadeStart + 1) } : null, status: error ? "error" : status, error,
+        actions, fallback, fallbackDetails, traceNodeMissing, repeatStateLimit, repeatedState, elapsedMs: Date.now() - started, politicalWill: Number(state.political_will),
+        powRequired: Number(state.pow || 0), powBank: metrics.retainedProgress(state), finalAtomic,
+        jpResources: finalAtomic?.jpResources ?? null, activationRatio: report.actLimitSum ? report.actSum / report.actLimitSum : null,
+        activationSum: report.actSum, activationLimit: report.actLimitSum,
+        lateCapturesAllied: Object.entries(report.capByTurn.Allies).reduce((n, [turn, count]) => n + (Number(turn) >= 7 ? count : 0), 0),
+        finalStateSha256: stateDigest(state), headless_moves: setupOptions.headless_moves, maxActions }
+    result.validNatural = result.status === "complete" && result.natural && result.fallback === 0 && result.traceNodeMissing === 0
+    replay.result = { status: result.status, winner: result.winner, won_text: result.won_text, natural: result.natural,
+        finalStateSha256: result.finalStateSha256, actions }
+    return { result, replay }
+}
+function replayBundlePath(info, role, options = {}) {
+    const override = options.bundlePaths?.[role]
+    if (override) {
+        const resolved = path.resolve(override)
+        if (fileSha(resolved) !== info.sha256) throw new Error(`${role} explicit replay bundle hash differs: ${resolved}`)
+        return resolved
+    }
+    const dirs = [options.bundleDirectory, path.join(ROOT, "tmp/ai-win-01/bundles")]
+    if (options.replayPath) dirs.push(path.resolve(path.dirname(options.replayPath), "../..", "bundles"))
+    const candidates = [info.path, ...dirs.filter(Boolean).map(d => path.join(d, `${info.sha256}.js`))]
+    for (const filename of candidates) if (fs.existsSync(filename) && fileSha(filename) === info.sha256) return path.resolve(filename)
+    throw new Error(`${role} replay bundle hash unavailable: ${info.sha256}; checked ${candidates.join(", ")}`)
+}
+function verifyReplay(replay, options = {}) {
+    if (replay.metadata.adapterSha256 !== sha(COMPAT_SOURCE)) throw new Error("replay adapter hash differs")
+    const bundles = {}
+    for (const role of ["Japan", "Allies"]) {
+        const info = replay.metadata.bundles[role]
+        const filename = replayBundlePath(info, role, options)
+        bundles[role] = loadBundle(filename, info.frozen, info.environment)
+    }
+    const modes = Object.fromEntries(["Japan", "Allies"].map(role => [role, bundles[role].rules.bot_config ? "actions-only" : "frozen-policy-assisted"]))
+    const legacyDecisionChecks = { Japan: 0, Allies: 0 }
+    let state = bundles.Allies.call(() => bundles.Allies.rules.setup(replay.setup.seed, replay.setup.scenario, replay.setup.options))
+    for (const [index, entry] of replay.replayActions.entries()) {
+        const [role, action, argument] = entry
+        if (state.active === "None" || (Array.isArray(state.active) ? !state.active.includes(role) : state.active !== role))
+            throw new Error(`replay active-role mismatch at action ${index + 1}`)
+        const b = bundles[role]
+        b.call(() => {
+            const view = b.rules.view(state, role)
+            const expectedLogs = replay.decisionLogs?.[index] || []
+            if (modes[role] === "frozen-policy-assisted") {
+                // Legacy advance depends on EOP_OVERRIDE and other process caches. Rebuild them
+                // with the exact frozen policy, verifying its output rather than editing game state.
+                const beforeLog = state.log.slice()
+                const decision = b.rules.bots[replay.metadata.bundles[role].bot].decide(view,
+                    { role, seed: replay.setup.seed, actionOrdinal: index + 1 })
+                if (state.log.length < beforeLog.length || beforeLog.some((line, i) => line !== state.log[i]))
+                    throw new Error(`legacy decision rewrote log at action ${index + 1}`)
+                if (decision.action !== action || JSON.stringify(decision.argument ?? null) !== JSON.stringify(argument ?? null))
+                    throw new Error(`legacy decision differs at action ${index + 1}: ${decision.action} != ${action}`)
+                if (JSON.stringify(state.log.slice(beforeLog.length)) !== JSON.stringify(expectedLogs))
+                    throw new Error(`legacy decision logs differ at action ${index + 1}`)
+                legacyDecisionChecks[role]++
+            } else if (expectedLogs.length) {
+                throw new Error(`new action-only bundle has external decision logs at action ${index + 1}`)
+            }
+            try { validateAction(view, { action, argument }) }
+            catch (error) { throw new Error(`replay action ${index + 1}: ${error.message}`, { cause: error }) }
+            state = b.rules.action(state, role, action, argument)
+        })
+    }
+    const actual = stateDigest(state)
+    if (actual !== replay.result.finalStateSha256) throw new Error(`replay state mismatch: ${actual} != ${replay.result.finalStateSha256}`)
+    const end = metrics.classifyEnd(state)
+    return { verified: true, actions: replay.replayActions.length, finalStateSha256: actual, modes, legacyDecisionChecks,
+        resolvedBundlePaths: Object.fromEntries(Object.entries(bundles).map(([role, b]) => [role, b.filename])), ...end }
+}
+function gameStem(scenario, seed, japanBot, alliesBot) { return `game-${slug(scenario)}-${seed}-J${slug(japanBot)}-A${slug(alliesBot)}` }
+function summarize(games, header = {}) {
+    const valid = games.filter(x => x.validNatural), complete = games.filter(x => x.status === "complete")
+    const role = { Japan: metrics.emptyRole(), Allies: metrics.emptyRole() }
+    for (const g of complete) for (const side of ["Japan", "Allies"]) for (const k of metrics.METRIC_KEYS) role[side][k] += g.role?.[side]?.[k] || 0
+    const mean = f => complete.length ? complete.reduce((n, g) => n + Number(f(g) || 0), 0) / complete.length : null
+    const tally = { ...header, gameCount: games.length, complete: complete.length, validNatural: valid.length,
+        japanWins: valid.filter(x => x.winner === "Japan").length, alliesWins: valid.filter(x => x.winner === "Allies").length,
+        errors: games.filter(x => x.status === "error").length, setupErrors: games.filter(x => x.status === "setup-error").length,
+        actionLimit: games.filter(x => x.status === "action-limit").length, invalid: games.length - valid.length,
+        atomicBombWins: valid.filter(x => /atomic bomb/i.test(x.won_text || "")).length,
+        blockadeWins: valid.filter(x => /blockade/i.test(x.won_text || "")).length,
+        homelandWins: valid.filter(x => /mainland islands captured/i.test(x.won_text || "")).length,
+        treatyWins: valid.filter(x => /Treaty/i.test(x.won_text || "")).length,
+        earlyTreatyDefeats: valid.filter(x => x.earlyTreatyDefeat).length,
+        meanTurn: mean(x => x.turn), meanPW: mean(x => x.politicalWill), meanJpResources: mean(x => x.jpResources),
+        meanActivationRatio: mean(x => x.activationRatio), meanCapRate: { Japan: mean(x => x.capRate?.Japan?.mean), Allies: mean(x => x.capRate?.Allies?.mean) },
+        role, battleWinRate: { Japan: metrics.battleRate(role.Japan).rate, Allies: metrics.battleRate(role.Allies).rate },
+        battleRateDetails: { Japan: metrics.battleRate(role.Japan), Allies: metrics.battleRate(role.Allies) },
+        amphibSuccessBySide: { Japan: role.Japan.amphibSuccess, Allies: role.Allies.amphibSuccess },
+        amphibSuccessRate: { Japan: role.Japan.amphibAssaults ? role.Japan.amphibSuccess / role.Japan.amphibAssaults : null,
+            Allies: role.Allies.amphibAssaults ? role.Allies.amphibSuccess / role.Allies.amphibAssaults : null } }
+    tally.blockadeStarted = complete.filter(x => x.blockade).length
+    tally.elimStepsBySide = { Japan: role.Japan.elimSteps, Allies: role.Allies.elimSteps }
+    tally.zocFinal = { Japan: mean(x => x.zoc?.Japan), Allies: mean(x => x.zoc?.Allies) }
+    tally.meanAirStrikeUnits = { Japan: mean(x => x.role?.Japan?.airStrikeUnits), Allies: mean(x => x.role?.Allies?.airStrikeUnits) }
+    tally.meanCapRate.JapanMax = Math.max(0, ...complete.map(x => x.capRate?.Japan?.max || 0))
+    tally.meanCapRate.AlliesMax = Math.max(0, ...complete.map(x => x.capRate?.Allies?.max || 0))
+    tally.battleHexesPerTurn = mean(x => ((x.role?.Japan?.attacksInitiated || 0) + (x.role?.Allies?.attacksInitiated || 0)) / Math.max(1, x.turn - x.startTurn + 1))
+    tally.surrenderCounts = Object.fromEntries(["philippines", "malaya", "dei", "burma", "japan"].map(k => [k, complete.filter(x => x.surrender?.[k]).length]))
+    tally.inflicted = {}
+    for (const side of ["Japan", "Allies"]) {
+        for (const k of metrics.METRIC_KEYS) role[side][`mean_${k}`] = mean(x => x.role?.[side]?.[k])
+        const opponent = side === "Japan" ? "Allies" : "Japan"
+        tally.inflicted[side] = Object.fromEntries(["eliminations", "reductions", "cfEliminated", "cfReduced"].map(k => [k, role[opponent][k]]))
+    }
+    tally.alliesWinInterval = metrics.wilson(tally.alliesWins, games.length) // invalid games remain in the denominator
+    return { generatedAt: new Date().toISOString(), tally, perGame: games, errors: games.filter(x => x.error) }
+}
+function main(argv = process.argv.slice(2)) {
+    const scenario = String(argv[0] || DEFAULT_SCENARIO), gameCount = Number(argv[1] || 20), baseSeed = Number(argv[2] || 20260903)
+    const japanBot = String(argv[3] || "erasmus-v2"), alliesBot = String(argv[4] || "erasmus-v2"), arg7 = String(argv[5] || "")
+    const maxActions = /^\d+$/.test(arg7) ? Number(arg7) : 60000, tag = slug((/^\d+$/.test(arg7) ? argv[6] : arg7) || "")
+    if (![gameCount, baseSeed, maxActions].every(Number.isSafeInteger) || gameCount < 1 || maxActions < 1) throw new Error("count, seed and maxActions must be positive integers")
+    const outputDir = path.resolve(process.env.EOTS_MATCH_OUTPUT_DIR || path.join(__dirname, "results"))
+    fs.mkdirSync(outputDir, { recursive: true })
+    const headlessMoves = process.env.EOTS_HEADLESS_MOVES === "1"
+    const options = { scenario, japanBot, alliesBot, maxActions, headlessMoves,
+        freezeAllies: process.env.EOTS_FREEZE_ALLIES === "1",
+        onProgress: p => process.stderr.write(`seed=${p.seed} action=${p.actions} turn=${p.turn} PW=${p.politicalWill} phase=${p.phase}\n`) }
+    const runtime = createRuntime(options), games = [], started = Date.now()
+    const runStem = `match-${slug(scenario)}-${gameCount}-${baseSeed}-J${japanBot}-A${alliesBot}${headlessMoves ? "-headless" : ""}${tag ? `-${tag}` : ""}`
+    const incremental = path.join(outputDir, `${runStem}.jsonl`)
+    fs.writeFileSync(incremental, "")
+    for (let index = 0; index < gameCount; index++) {
+        const { result, replay } = play(baseSeed + index, options, runtime)
+        const stem = gameStem(scenario, result.seed, japanBot, alliesBot)
+        if (result.validNatural && result.winner === "Allies" || result.error || process.env.EOTS_RECORD_REPLAYS === "all") {
+            result.replayFile = path.join(outputDir, `${stem}.replay.json`)
+            fs.writeFileSync(result.replayFile, JSON.stringify(replay) + "\n")
+            result.replaySha256 = fileSha(result.replayFile)
+            result.replayVerified = false
+        }
+        fs.writeFileSync(path.join(outputDir, `${stem}.json`), JSON.stringify(result, null, 1) + "\n")
+        fs.appendFileSync(incremental, JSON.stringify(result) + "\n")
+        games.push(result)
+        process.stderr.write(`${index + 1}/${gameCount} ${result.status} seed=${result.seed} turn=${result.turn ?? "-"} winner=${result.winner || "-"}${result.error ? ` ERROR: ${result.error}` : ""}\n`)
+    }
+    const output = summarize(games, { scenario, baseSeed, maxActions, headless_moves: headlessMoves, japanBot, alliesBot,
+        metadata: runtime.metadata, elapsedSec: (Date.now() - started) / 1000 })
+    const outputPath = path.join(outputDir, `${runStem}.json`)
+    fs.writeFileSync(outputPath, JSON.stringify(output, null, 1) + "\n")
+    console.log(JSON.stringify({ outputPath, complete: output.tally.complete, alliesWins: output.tally.alliesWins,
+        japanWins: output.tally.japanWins, invalid: output.tally.invalid, alliesWinInterval: output.tally.alliesWinInterval }))
+    console.log(outputPath)
+    if (games.some(g => !g.validNatural)) process.exitCode = 1
+}
+module.exports = { createRuntime, play, verifyReplay, summarize, gameStem, fileSha, loadBundle, validateAction, stateDigest, main,
+    ADAPTER_VERSION, COMPAT_SOURCE, RULE_VERSION, ROOT, gameplayFingerprint, progressGuard, replayBundlePath }
+if (require.main === module) main()

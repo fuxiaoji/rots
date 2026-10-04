@@ -7,6 +7,7 @@
 /** import server/erasmus_ops.js*/
 /** import server/erasmus_data.js*/
 /** import server/erasmus_state.js*/
+/** import server/bots/erasmus_campaign.js*/
 
 const ERASMUS_VERSION = "erasmus-v2.2-zh.29"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "delay", "unit", "hex", "strat_move", "ground_move", "roll", "eliminate", "continue", "next", "done", "skip", "pass", "cancel"]
@@ -131,8 +132,17 @@ function strategy_family(tag) {
     return "default"
 }
 
-function action_for_strategy(strategy, legal) {
+function action_for_strategy(strategy, legal, view) {
     const tag = String(strategy || "")
+    // A ground path may need a second engine action to commit its endpoint. In
+    // this exact window stop is the sole executable headless continuation;
+    // move still needs a client-supplied path. Keep the selected page 5/11
+    // movement strategy instead of misclassifying this missing mapping as a
+    // no-candidate fallback. The engine only exposes stop after a path exists.
+    if (/^(JP|AP)_(MOVE_TO_TARGET|ATTACK_WEAKEST_STACK)$/.test(tag)
+        && view?.ai?.state === "move_offensive_units"
+        && /move units/i.test(String(view.prompt || ""))
+        && legal.includes("stop") && legal.every(a => a === "stop" || a === "move")) return "stop"
     const family = strategy_family(tag)
     const preferred = FAMILY_ACTION_PRIORITY[family] || ACTION_PRIORITY
     return [...preferred, ...ACTION_PRIORITY].find(action => legal.includes(action)) || null
@@ -144,7 +154,7 @@ function first_executable_strategy(strategies, legal, view) {
     const attempts = []
     for (const item of strategies || []) {
         const id = typeof item === "string" ? item : item?.id
-        const action = action_for_strategy(id, legal)
+        const action = action_for_strategy(id, legal, view)
         attempts.push({ strategy: id, action })
         if (action) return { strategy: id, action, attempts }
     }
@@ -171,7 +181,7 @@ function target_argument(action, value, seedText, role, view, strategy) {
     // advance 不是无参数的“随便走一步”：把当下图表焦点及目标类型写入回放参数，
     // 使无头移动在保存/恢复/复盘时不依赖进程内 EOP_OVERRIDE 的瞬时值。
     if (action === "advance" && esm_gate_on()) {
-        const focus = eop_focus(role)
+        const focus = em_flag("campaign_planner") && view.ai?.plan ? view.ai.plan.focus : eop_focus(role)
         const meta = focus === null ? null : eop_target_meta(role, focus)
         const axis = eop_axis(role)
         return {
@@ -183,6 +193,8 @@ function target_argument(action, value, seedText, role, view, strategy) {
             strictSequential: !!axis?.strictSequential || !!meta?.strictSequential,
             chain: Array.isArray(axis?.chain) ? axis.chain.slice() : [],
             targetMeta: Array.isArray(axis?.targetMeta) ? axis.targetMeta.map(x=>({...x})) : [],
+            ...(em_flag("campaign_planner") && view.ai?.plan?.positioning
+                ? { campaignPositioning: view.ai.plan.positioning } : {}),
         }
     }
     // 通用: unit 候选里若混入“已选/将被撤销”的 unselect 单位(unselect_unit 塞进来的),
@@ -196,8 +208,10 @@ function target_argument(action, value, seedText, role, view, strategy) {
     // CDSS「增援或补员阶段」落位/补员选择 (zh.7 补全): 按优先级落位, 而非散打(随机/就近焦点)。
     // 仅完整全图剧本启用(gate on), 保持 SP/Burma 子图剧本行为不变(golden 不动)。
     if (esm_gate_on() && action === "action_hex" && /as a reinforcement|choose hex to place/i.test(prompt)) {
-        const u = (typeof G !== "undefined" && G && G.active_stack && G.active_stack[0]) || -1
+        const u = view.active_stack?.[0] ?? -1
         const piece = (u >= 0 && typeof pieces !== "undefined" && pieces[u]) ? pieces[u] : null
+        const campaign = typeof ec_pick_placement === "function" ? ec_pick_placement(view, value, u, role) : null
+        if (campaign) return campaign.hex
         const picked = esm_pick_placement(value, role, u, piece)
         return picked !== undefined ? picked : pick_argument(value, seedText, action, view)
     }
@@ -521,7 +535,7 @@ function evaluateChart(chart, view, context) {
         if (!strategy) fallback = true // no_candidate
     } else {
         strategy = current?.strategy || null
-        action = strategy ? action_for_strategy(strategy, legal) : null
+        action = strategy ? action_for_strategy(strategy, legal, view) : null
         if (!action) fallback = true
     }
     const progress = String(view.prompt || "").match(/(\d+)\s+of\s+(\d+)/i)
@@ -753,6 +767,9 @@ var EOTS_BOTS = {
         name: "伊拉斯谟 v2.0", version: ERASMUS_VERSION,
         scenarios: ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Japan", "Allies"],
         decide(view, context) {
+            return erasmus_profile_decision("erasmus-v2", view, context)
+        },
+        decideCore(view, context) {
             // 完整全图剧本(1942-45 等): 回合级状态机选轴; 其余剧本(=gate 关)保持 zh.6。
             let sm = null
             try {
@@ -775,6 +792,21 @@ var EOTS_BOTS = {
             } catch (e) {
                 if (typeof eop_clear_all_chains === "function") eop_clear_all_chains()
                 throw new Error(`ERASMUS_STATE_MACHINE_PAUSED:${e && e.message ? e.message : e}`)
+            }
+            if (em_flag("campaign_planner") && context.role === "Allies" && typeof ec_apply_plan === "function") {
+                const campaignPlan = ec_apply_plan(view, context)
+                if (campaignPlan) {
+                    context.campaignPlan = campaignPlan
+                    view.ai.plan = campaignPlan
+                    const pick = typeof ec_pick_action === "function" ? ec_pick_action(view, context, campaignPlan) : null
+                    if (pick) return {
+                        ...pick,
+                        publicTrace: { policy: "campaign-v1", role: context.role, chart: "CAMPAIGN",
+                            node: campaignPlan.phase, nodePath: ["CAMPAIGN", campaignPlan.phase],
+                            action: pick.action, fallback: false, explanation: campaignPlan.objective },
+                        privateTrace: { plan: campaignPlan },
+                    }
+                }
             }
             if (sm) {
                 // 选牌窗 / “Select action.” 窗: 按钉住战略的 kind 决定 PASS/OC/事件。
@@ -820,13 +852,7 @@ var EOTS_BOTS = {
         name: "AI 4.0", version: ERASMUS_VERSION + "-opt",
         scenarios: ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Japan", "Allies"],
         decide(view, context) {
-            const profile = (typeof em_profile_from_env === "function") ? em_profile_from_env() : {}
-            em_set_config(profile)
-            try {
-                return EOTS_BOTS["erasmus-v2"].decide(view, context)
-            } finally {
-                em_reset_config()
-            }
+            return erasmus_profile_decision("erasmus-v2-opt", view, context)
         },
     },
     // AI 5.0 = 4.0 + 两栖修复默认档(ASP 运输闸门 + 护航补到够)。
@@ -835,15 +861,60 @@ var EOTS_BOTS = {
         name: "AI 5.0", version: ERASMUS_VERSION + "-opt-v5",
         scenarios: ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Japan", "Allies"],
         decide(view, context) {
-            const profile = (typeof em_profile_from_env === "function")
-                ? em_profile_from_env(typeof EM_DEFAULT_PROFILE_V5 !== "undefined" ? EM_DEFAULT_PROFILE_V5 : undefined)
-                : {}
-            em_set_config(profile)
-            try {
-                return EOTS_BOTS["erasmus-v2"].decide(view, context)
-            } finally {
-                em_reset_config()
-            }
+            return erasmus_profile_decision("erasmus-v2-opt-v5", view, context)
         },
     },
+    "erasmus-campaign": {
+        name: "盟军战役 AI", version: ERASMUS_VERSION + "-campaign.1",
+        scenarios: ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Allies"],
+        decide(view, context) { return erasmus_profile_decision("erasmus-campaign", view, context) },
+    },
+}
+
+
+function erasmus_profile_decision(name, originalView, originalContext) {
+    // Preserve the pure chart API used by tools with a synthetic view and no
+    // loaded game. Runtime envelopes are only needed for real game actions.
+    if (name === "erasmus-v2" && (!Array.isArray(originalView?.location) || typeof G === "undefined" || !G))
+        return EOTS_BOTS["erasmus-v2"].decideCore(originalView, originalContext)
+    const context = { ...originalContext }
+    const view = { ...originalView, ai: { ...originalView.ai } }
+    const profile = em_bot_config(name, context.role) || {}
+    const logLength = G.log.length
+    em_set_config(profile)
+    try {
+        const result = EOTS_BOTS["erasmus-v2"].decideCore(view, context)
+        const plan = context.campaignPlan || null
+        const logs = G.log.slice(logLength)
+        const runtime = typeof eop_export_runtime === "function" ? eop_export_runtime(context.role) : null
+        result.argument = { __ai: { version: 1, role: context.role, profile, ...(runtime ? { runtime } : {}), ...(plan ? { plan } : {}), ...(logs.length ? { logs } : {}) },
+            action: result.argument === undefined ? null : result.argument }
+        result.publicTrace = { ...result.publicTrace, effectiveProfile: profile }
+        if (plan) {
+            result.publicTrace.engineStage = originalView.ai.stage
+            result.publicTrace.windowKind = originalView.ai.windowKind
+            // The diagnostic panel may be visible to the opponent. Keep hand
+            // identities and conditional own-card availability in privateTrace.
+            const publicPow = { required: plan.pow.required, held: plan.pow.held, gap: plan.pow.gap,
+                politicalWill: plan.pow.politicalWill, remainingCards: plan.pow.remainingCards,
+                requiredCapturesPerCard: plan.pow.requiredCapturesPerCard, quotaFeasibility: plan.pow.quotaFeasibility }
+            const publicVictory = JSON.parse(JSON.stringify(plan.victory))
+            if (publicVictory?.routes?.atomic) delete publicVictory.routes.atomic.sovietDependency
+            result.publicTrace.campaign = { version: plan.version, phase: plan.phase,
+                objective: plan.objective, focus: plan.focus, pow: publicPow, victory: publicVictory }
+            const active = new Set((originalView.offensive?.active_units?.[AP] || []).flat())
+            const formed = plan.tasks.find(t => t.movementModes.includes("AA") && t.requiredUnits.every(id => active.has(id)))
+            if (formed) result.publicTrace.campaign.formation = { ready: true, target: formed.hex,
+                ground: formed.movementUnitIds.filter(id => originalView.ai.units.find(u => u.id === id)?.class === "ground"),
+                escort: formed.escortUnitIds, support: formed.supportUnitIds }
+            result.publicTrace.sm = { phase: plan.phase, strategy: "战役规划：" + plan.phase,
+                focus: plan.focus, diag: { turn: plan.turn, pow: plan.pow?.required, bank: plan.pow?.held },
+                priorityTargets: plan.targets.map((t, i) => ({ ...t, priority: i + 1,
+                    name: get_map_data(t.hex)?.name || String(t.hex), id: int_to_hex(t.hex),
+                    resource: !!get_map_data(t.hex)?.resource, distanceToTokyo: get_distance(t.hex, TOKYO),
+                    achieved: t.kind === "CONQUEST" ? is_space_controlled(t.hex, AP) : plan.tasks.find(x => x.hex === t.hex)?.movementUnitIds.every(id => originalView.ai.units.find(u => u.id === id)?.location === t.hex),
+                    controlledBy: is_space_controlled(t.hex, AP) ? "Allies" : "Japan" })) }
+        }
+        return result
+    } finally { G.log.length = logLength; em_reset_config() }
 }

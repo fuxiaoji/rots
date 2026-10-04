@@ -1389,6 +1389,9 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
     }
     // PBM 严格使用双方图表的专属落点表；无匹配落点才用安全/距离次序，且会在轨迹中
     // 落到具体 JP06/AP12 PBM 节点，不再伪装成通用 reaction 排序。
+    const campaignScore = movingPiece && source !== undefined && typeof ec_pbm_score === "function"
+        ? ec_pbm_score(hex, faction, movingPiece, source, targetPlan) : null
+    if (campaignScore) return campaignScore.score
     const chartScore=movingPiece&&source!==undefined?erasmus_pbm_target_score(hex,faction,movingPiece,source,targetPlan):null
     if(chartScore)return chartScore
     const controlled = is_space_controlled(hex, faction)
@@ -1443,6 +1446,8 @@ function headless_advance_one(self, kind, targetPlan) {
     const need = u => {
         const p = pieces[u]
         if (!p || (p.class === "air" && kind !== "pbm" && kind !== "attack")) return false
+        if (kind === "attack" && targetPlan?.campaignTask && Array.isArray(targetPlan.movementUnitIds)
+            && !targetPlan.movementUnitIds.includes(u)) return false
         const h = G.location[u]
         if (!(h >= 0 && h <= LAST_BOARD_HEX)) return false
         if(kind==="attack" && targetPlan?.kind==="REDEPLOY" && h===targetPlan.focus)return false
@@ -1478,6 +1483,8 @@ function headless_advance_one(self, kind, targetPlan) {
     const group = L.movable_units.filter(u => {
         const p = pieces[u]
         if(!p||G.location[u]!==loc)return false
+        if(kind==="attack" && targetPlan?.campaignTask && Array.isArray(targetPlan.movementUnitIds)
+            && !targetPlan.movementUnitIds.includes(u))return false
         if(kind==="attack" && targetPlan && typeof eop_unit_matches_target === "function"
             && !eop_unit_matches_target(u,G.active===JP?"Japan":"Allies",targetPlan,targetPlan.focus))return false
         if(kind==="attack" && targetPlan?.escortPairs?.length){
@@ -1506,7 +1513,7 @@ function headless_advance_one(self, kind, targetPlan) {
     }
     // [opt ERASMUS_PLUS §15] 战区需求导向: 焦点位于盈余战区且存在赤字战区时,
     // 后方巡航目标改指赤字战区最近格(兵力 surplus→deficit 流动)。
-    if (plannedFocus !== null && typeof em_cfg === "function") {
+    if (plannedFocus !== null && !targetPlan?.campaignTask && typeof em_cfg === "function") {
         const emcTD = em_cfg()
         if (emcTD && emcTD.erasmus_plus && typeof ep_theater_demand === "function") {
             try {

@@ -208,18 +208,29 @@ function create_view() {
         : aiStage === ATTACK_STAGE && /choose_hq|activate_units|move_|declare_battle|choose_attack|confirm_bh|commit_offensive/.test(aiState) ? "task-force"
         : "decision-axis"
     const ownHand = Array.isArray(G.hand[R]) ? G.hand[R] : []
-    const ownCardMeta = ownHand.map(c => ({ id:c, name:cards[c].name, faction:cards[c].faction,
-        type:cards[c].type, ops:cards[c].ops, logistic:cards[c].logistic,
-        military:cards[c].type === MILITARY, reaction:!!cards[c].reaction,
-        intelligence:cards[c].intelligence, hq:cards[c].hq }))
+    const ownCardMeta = ownHand.map(c => {
+        // Some can_play predicates (notably Allied #38) run activation scans.
+        // Project the answer without changing the active player's frame/cache.
+        const allowed = typeof get_allowed_actions === "function"
+            ? rules_query_snapshot(() => get_allowed_actions(c), R) : []
+        return { id:c, name:cards[c].name, faction:cards[c].faction,
+            type:cards[c].type, ops:cards[c].ops, logistic:cards[c].logistic,
+            military:cards[c].type === MILITARY, reaction:!!cards[c].reaction,
+            intelligence:cards[c].intelligence, hq:cards[c].hq, logistic_alt:cards[c].logistic_alt,
+            previewEvent: rules_query_event_preview_eligible(cards[c]) && allowed.includes("event"), allowed }
+    })
     const aiHasCard = re => ownCardMeta.some(c => re.test(String(c.name || "")))
     const aiBattle = !!(G.offensive && (G.offensive.battle_hexes || []).length)
     const aiFocus = typeof eop_focus === "function" ? eop_focus(ROLES[R]) : null
     const aiFocusData = aiFocus !== null && aiFocus !== undefined ? get_map_data(aiFocus) : null
     const aiFocusMeta = aiFocus !== null && aiFocus !== undefined && typeof eop_target_meta === "function" ? eop_target_meta(ROLES[R], aiFocus) : null
     const publicUnits=[]
-    for(let u=1;u<pieces.length;++u){const h=G.location[u],p=pieces[u];if(h>=0&&h<=LAST_BOARD_HEX)publicUnits.push({id:u,name:p.name||p.id||String(u),faction:p.faction,class:p.class,type:p.type||null,service:p.service||null,cf:Number(p.cf)||0,rcf:Number(p.rcf)||0,lf:Number(p.lf)||0,br:Number(p.br)||0,ebr:Number(p.ebr)||0,cr:Number(p.cr)||0,cm:Number(p.cm)||0,supply:Number(p.supply)||0,asp:!!p.asp,stratMove:!!p.strat_move,reduced:!!(G.reduced&&set_has(G.reduced,u)),location:h})}
-    V.ai = { state:aiState, stage:aiStage, windowKind:aiWindow, focus:aiFocus, ownCards:ownCardMeta, units:publicUnits,
+    for(let u=1;u<pieces.length;++u){const h=G.location[u],p=pieces[u];if(h>=0&&h<=LAST_BOARD_HEX||h===CHINA_BOX&&p.faction===R)publicUnits.push({id:u,definitionId:p.id,name:p.name||p.id||String(u),faction:p.faction,class:p.class,type:p.type||null,service:p.service||null,cf:Number(p.cf)||0,rcf:Number(p.rcf)||0,lf:Number(p.lf)||0,oneStep:!!p.one_step,br:Number(p.br)||0,ebr:Number(p.ebr)||0,cr:Number(p.cr)||0,cm:Number(p.cm)||0,supply:Number(p.supply)||0,asp:!!p.asp,aspCost:Number(p.asp)||0,aspr:Number(p.aspr)||0,b29:p.b29||0,parenthetical:!!p.parenthetical,stratMove:!!p.strat_move,reduced:!!(G.reduced&&set_has(G.reduced,u)),location:h})}
+    V.ai = { plan: G.ai_plan?.[ROLES[R]] ? object_copy(G.ai_plan[ROLES[R]]) : null,
+        victory: { atomic: atomic_bomb_strategy_status(), jpResources: get_jp_resources(),
+            blockade: { startedTurn: G.events[events.JAPAN_TRACE_RESOURCES.id] || 0 },
+            homelandKeys: nations.JAPAN.keys.map(hex_to_int) },
+        state:aiState, stage:aiStage, windowKind:aiWindow, focus:aiFocus, ownCards:ownCardMeta, units:publicUnits,
         focusControlledBy: aiFocus === null || aiFocus === undefined ? null : (is_space_controlled(aiFocus, R) ? ROLES[R] : ROLES[1-R]),
         predicates: {
             TARGET_IS_SEACOAST_OR_ISLAND: !!(aiFocusData && (aiFocusData.port || aiFocusData.island)),
@@ -922,5 +933,3 @@ function print_reinforcements() {
     }
     return string
 }
-
-

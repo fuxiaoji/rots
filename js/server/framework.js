@@ -74,6 +74,7 @@ function end(result) {
 
 exports.roles ??= ROLES
 exports.bots ??= (typeof EOTS_BOTS !== "undefined") ? EOTS_BOTS : {}
+exports.bot_config = (name, role) => typeof em_bot_config === "function" ? em_bot_config(name, role) : null
 exports.pieces ??= (typeof pieces !== "undefined") ? pieces : null
 
 exports.scenarios ??= (typeof SCENARIOS !== "undefined") ? SCENARIOS : ["Standard"]
@@ -178,7 +179,48 @@ exports.action = function (state, role, action, argument) {
 
     var old_active = G.active
 
+    // Reject malformed envelopes before _load or any persistent metadata write.
+    // Legacy actions keep their existing argument format and validation path.
+    if (argument && argument.__ai) {
+        const meta = argument.__ai
+        if (meta.version !== 1 || meta.role !== role) throw new Error("AI metadata role/version mismatch")
+        if (meta.plan && (meta.plan.version !== 1 || meta.plan.role !== role)) throw new Error("Invalid AI plan")
+        if (meta.runtime && (meta.runtime.version !== 1 || meta.runtime.role !== role)) throw new Error("Invalid AI runtime")
+        if (meta.logs !== undefined && (!Array.isArray(meta.logs)
+            || meta.logs.some(line => typeof line !== "string" || !line.startsWith("[ERASMUS]"))))
+            throw new Error("Invalid AI trace log")
+        if (!(P[L.P] && typeof P[L.P][action] === "function")
+            && !(action === "undo" && G.undo.length > 0) && !(action === "redo" && G.redo))
+            throw new Error("Invalid action: " + action)
+    }
+
     _load()
+
+    // Optional AI metadata envelope. The actual action retains its original
+    // scalar/array/object argument, including the RTT client supply envelope.
+    if (argument && argument.__ai && argument.__ai.version === 1) {
+        const meta = argument.__ai
+        if (meta.profile && typeof em_set_config === "function") {
+            em_set_config(meta.profile)
+            G.ai_profile ||= {}
+            G.ai_profile[role] = { ...em_cfg() }
+        }
+        if (meta.plan) {
+            G.ai_plan ||= {}
+            G.ai_plan[role] = JSON.parse(JSON.stringify(meta.plan))
+        }
+        if (meta.runtime && typeof eop_import_runtime === "function") {
+            G.ai_runtime ||= {}
+            G.ai_runtime[role] = JSON.parse(JSON.stringify(meta.runtime))
+            eop_import_runtime(G.ai_runtime[role], role)
+        }
+        if (Array.isArray(meta.logs)) {
+            for (const line of meta.logs) {
+                G.log.push(line)
+            }
+        }
+        argument = argument.action
+    }
 
     var this_state = P[L.P]
     if (this_state && typeof this_state[action] === "function") {
@@ -199,6 +241,8 @@ exports.action = function (state, role, action, argument) {
         throw new Error("Invalid action: " + action)
     }
 
+    if (G.ai_runtime?.[role] && typeof eop_export_runtime === "function")
+        G.ai_runtime[role] = eop_export_runtime(role)
     _save()
 
     if (old_active !== G.active)
@@ -247,6 +291,8 @@ exports.assert = function (state) {
 
 function _load() {
     R = ROLES.indexOf(R)
+    if (typeof em_load_state_config === "function") em_load_state_config(ROLES[R])
+    if (typeof eop_import_runtime === "function") eop_import_runtime(G.ai_runtime?.[ROLES[R]] || null, ROLES[R])
     if (Array.isArray(G.active))
         G.active = G.active.map(r => ROLES.indexOf(r))
     else
@@ -254,6 +300,7 @@ function _load() {
 }
 
 function _save() {
+    if (typeof em_reset_config === "function") em_reset_config()
     if (Array.isArray(G.active))
         G.active = G.active.map(r => ROLES[r])
     else
