@@ -16,7 +16,11 @@ const { createRuntime, verifyReplay, gameStem, fileSha, ROOT, RULE_VERSION, COMP
 const { wilson, pairedBootstrap } = require("./campaign-metrics")
 const SCENARIOS = ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"]
 const BASELINE_BOT = "erasmus-v2-opt-v5", CANDIDATE_BOT = "erasmus-campaign"
-const RANGES = { develop: { first: 20261004, count: 32 }, holdout: { first: 20261101, count: 32 } }
+const TASK = process.env.EOTS_EVAL_TASK || "AI-WIN-01"
+if (!["AI-WIN-01", "AI-WIN-02"].includes(TASK)) throw new Error(`unknown evaluation task ${TASK}`)
+const RANGES = TASK === "AI-WIN-02"
+    ? { develop: { first: 20261201, count: 32 }, holdout: { first: 20261301, count: 32 } }
+    : { develop: { first: 20261004, count: 32 }, holdout: { first: 20261101, count: 32 } }
 const sha = x => crypto.createHash("sha256").update(x).digest("hex")
 const equal = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 const read = filename => JSON.parse(fs.readFileSync(filename, "utf8"))
@@ -62,14 +66,17 @@ const naturalWin = game => Boolean(game.validNatural && game.status === "complet
     && game.fallback === 0 && game.traceNodeMissing === 0)
 const verificationPath = filename => `${filename}.verification.json`
 const expectedVerifier = game => ({ runnerSha256: game.metadata?.runnerSha256, metricsSha256: game.metadata?.metricsSha256, adapterSha256: game.metadata?.adapterSha256 })
+const currentVerifier = game => ({ ...expectedVerifier(game), replayVerifierSha256: fileSha(require.resolve("./match-run")) })
 function loadVerification(game) {
     if (!naturalWin(game)) return { status: "not-required" }
     const filename = verificationPath(game.resultFile)
     if (!fs.existsSync(filename)) return { status: "unverified", file: filename }
     try {
         const evidence = read(filename), digest = fileSha(filename)
-        if (evidence.schemaVersion !== 1 || evidence.resultFile !== game.resultFile || evidence.resultSha256 !== game.resultSha256
-            || !equal(evidence.verifier, expectedVerifier(game))) throw new Error("verification sidecar result/verifier binding differs")
+        const verifier = evidence.schemaVersion === 1 ? expectedVerifier(game)
+            : evidence.schemaVersion === 2 ? currentVerifier(game) : null
+        if (!verifier || evidence.resultFile !== game.resultFile || evidence.resultSha256 !== game.resultSha256
+            || !equal(evidence.verifier, verifier)) throw new Error("verification sidecar result/verifier binding differs")
         if (!evidence.verified) return { status: "failed", file: filename, sha256: digest, error: evidence.error || "replay verification failed", evidence }
         if (!game.replayFile || evidence.replayFile !== game.replayFile || evidence.replaySha256 !== game.replaySha256
             || fileSha(game.replayFile) !== game.replaySha256) throw new Error("verified replay file/hash differs")
@@ -84,11 +91,12 @@ function verifyGameResult(filename, locked, arm, verifier = verifyReplay) {
     const game = { ...read(filename), resultFile: filename, resultSha256: fileSha(filename) }
     if (locked) validateProvenance(game, locked, arm)
     if (!naturalWin(game) || fs.existsSync(verificationPath(filename))) return loadVerification(game)
-    const evidence = { schemaVersion: 1, createdAt: new Date().toISOString(), resultFile: filename, resultSha256: game.resultSha256,
-        replayFile: game.replayFile || null, replaySha256: game.replaySha256 || null, verifier: expectedVerifier(game), verified: false, error: null }
+    const evidence = { schemaVersion: 2, createdAt: new Date().toISOString(), resultFile: filename, resultSha256: game.resultSha256,
+        replayFile: game.replayFile || null, replaySha256: game.replaySha256 || null, verifier: currentVerifier(game), verified: false, error: null }
     try {
-        const currentVerifier = { runnerSha256: fileSha(require.resolve("./match-run")), metricsSha256: fileSha(require.resolve("./campaign-metrics")), adapterSha256: sha(COMPAT_SOURCE) }
-        if (!equal(currentVerifier, evidence.verifier)) throw new Error("verification code differs from the recorded runner/metrics/adapter")
+        const current = { ...expectedVerifier(game), metricsSha256: fileSha(require.resolve("./campaign-metrics")),
+            adapterSha256: sha(COMPAT_SOURCE), replayVerifierSha256: fileSha(require.resolve("./match-run")) }
+        if (!equal(current, evidence.verifier)) throw new Error("verification code differs from the recorded runner/metrics/adapter")
         if (!game.replayFile || !game.replaySha256 || fileSha(game.replayFile) !== game.replaySha256) throw new Error("winning replay is missing or its hash differs")
         const replay = read(game.replayFile)
         if (!equal(replay.metadata, game.metadata) || replay.setup?.seed !== game.seed || replay.setup?.scenario !== game.scenario
@@ -268,7 +276,7 @@ function freeze(developmentDir, filename) {
         if (!verified.natural || verified.winner !== "Allies") throw new Error("winning replay did not verify as a natural Allies win")
         evidence.push({ scenario: g.scenario, seed: game.seed, replayFile: game.replayFile, replaySha256: game.replaySha256, verification: verified })
     }
-    const manifest = { schemaVersion: 1, task: "AI-WIN-01", frozenAt: new Date().toISOString(), locked, developmentDir: path.resolve(developmentDir),
+    const manifest = { schemaVersion: 1, task: TASK, frozenAt: new Date().toISOString(), locked, developmentDir: path.resolve(developmentDir),
         developmentResults: groups.flatMap(g => [...g.baseline, ...g.campaign]).map(g => ({ path: g.resultFile, sha256: g.resultSha256 })),
         developmentVerifications, winningReplayEvidence: evidence, holdout: RANGES.holdout, scenarios: SCENARIOS, bots: { Japan: BASELINE_BOT, baseline: BASELINE_BOT, candidate: CANDIDATE_BOT } }
     fs.mkdirSync(path.dirname(path.resolve(filename)), { recursive: true })
@@ -279,7 +287,8 @@ function freeze(developmentDir, filename) {
 function validateFreeze(filename) {
     const manifest = read(filename), current = locks()
     if (!equal(manifest.locked, current)) throw new Error("freeze mismatch: code, rules, effective profile, adapter or git SHA changed; holdout refused")
-    if (!equal(manifest.scenarios, SCENARIOS) || !equal(manifest.holdout, RANGES.holdout) || manifest.winningReplayEvidence?.length !== 2)
+    if (manifest.task !== TASK || !equal(manifest.scenarios, SCENARIOS) || !equal(manifest.holdout, RANGES.holdout)
+        || manifest.winningReplayEvidence?.length !== 2)
         throw new Error("freeze manifest does not satisfy the registered protocol")
     for (const e of manifest.developmentResults) if (fileSha(e.path) !== e.sha256) throw new Error(`development result changed after freeze: ${e.path}`)
     if (!Array.isArray(manifest.developmentVerifications)) throw new Error("freeze lacks all-win verification evidence")

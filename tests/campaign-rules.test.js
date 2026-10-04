@@ -138,6 +138,13 @@ function campaignCases() {
             state.inter_service[C.AP] = 0
             assert.deepEqual(Array.from(api.rivalCandidates(state, army.id, candidates)), candidates)
         }],
+        ["Manchurian resource hexes prohibit ground entry under the actual movement rule", () => {
+            const state = rules.setup(20261004, C.scenario1943, {})
+            assert.equal(api.groundDenied(state, 3302), true)
+            assert.equal(api.groundDenied(state, 3303), true)
+            assert.equal(api.groundDenied(state, 3304), false,
+                "the adjacent Korean mountain is legal but cannot lead to ground entry into Manchuria")
+        }],
         ["PoW starts at T4 and uses total available ASP capped at four", () => {
             const state = fresh()
             state.asp[C.AP] = [3, 2]

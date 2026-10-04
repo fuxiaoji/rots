@@ -27,14 +27,14 @@ function fixture(options = {}) {
         { id: 3, faction: 1, class: "naval", cf: 8, location: 10, service: "navy" },
         { id: 4, faction: 1, class: "ground", stratMove: true, cf: 10, lf: 12, location: 0, service: "army" },
     ]
-    const view = { active: "Allies", turn: 5, political_will: 4, pow: 1, capture: [],
+    const view = { active: "Allies", sid: 8, turn: 5, political_will: 4, pow: 1, capture: [],
         asp: [[7, 0], [4, 0]], oos: [], inter_service: [0, 0], resources: [4, 0],
         actions: { card: [9] }, offensive: { active_units: [[], []], active_hq: [], battle_hexes: [] },
         ai: { state: "offensive_segment", units, ownCards: [{ id: 9, ops: 3, allowed: ["ops"] }],
             victory: { homelandKeys: [20], atomic: { jpResources: 4, bombingCampaignStart: 0 } } } }
     const ctx = {
         map: board, hex_to_int: x => x, LAST_BOARD_HEX: 40, TOKYO: 40,
-        AMPH_MOVE: 8, GROUND_MOVE: 4, STRAT_MOVE: 1, EC: 1,
+        AMPH_MOVE: 8, GROUND_MOVE: 4, STRAT_MOVE: 1, EC: 1, EVEN_SHORT_CAMPAIGN_SCENARIO: 8,
         em_cfg: () => ({ campaign_planner: options.enabled === false ? 0 : 1 }),
         em_flag: () => options.enabled === false ? 0 : 1,
         get_distance: (a, b) => Math.ceil(Math.abs(a - b) / 2), get_map_data: h => board.find(m => m.id === h),
@@ -148,6 +148,131 @@ test("separate ports assemble an escort before amphibious capture", () => {
     const landing = ctx.ec_plan(view, { role: "Allies" })
     assert.equal(landing.phase, "CAPTURE")
     assert.deepEqual(plain(landing.tasks[0].movementUnitIds), [2, 3])
+})
+
+test("forward HQ relocation uses a legal card after the PoW quota is met", () => {
+    const { ctx, view } = fixture()
+    view.ai.units.push({ id: 30, faction: 1, class: "naval", cf: 8, location: 10, service: "navy" },
+        { id: 31, faction: 1, class: "naval", cf: 8, location: 10, service: "navy" })
+    view.turn = 8
+    view.pow = 0
+    view.ai.units.find(u => u.id === 1).cr = 1
+    ctx.map.find(m => m.id === 20).region = "JMandates"
+    ctx.map.push({ id: 30, name: "Homeland port", named: true, port: true, region: "Japan" })
+    view.ai.victory.homelandKeys = [30]
+    view.ai.ownCards.push({ id: 8, ops: 1, allowed: ["ops", "displace_hq"] })
+    view.actions.card.push(8)
+    const plan = ctx.ec_plan(view, { role: "Allies" })
+    assert.equal(plan.phase, "HQ_REDEPLOY")
+    assert.equal(plan.hqRelocation.hqId, 1)
+    assert.equal(plan.hqRelocation.cardId, 8)
+    assert.equal(ctx.ec_pick_action(view, { role: "Allies" }, plan).argument, 8)
+    const selected = { ...view, prompt: "C8: Select action.", actions: { ops: 1, displace_hq: 1 } }
+    assert.equal(ctx.ec_pick_action(selected, { role: "Allies" }, plan).action, "displace_hq")
+    const hq = { ...view, prompt: "Choose HQ to displace.", actions: { unit: [1] } }
+    assert.equal(ctx.ec_pick_action(hq, { role: "Allies" }, plan).argument, 1)
+    view.pow = 1
+    assert.notEqual(ctx.ec_plan(view, { role: "Allies" }).phase, "HQ_REDEPLOY")
+    view.pow = 0
+    view.ai.units.find(u => u.id === 1).cr = 10
+    assert.notEqual(ctx.ec_plan(view, { role: "Allies" }).phase, "HQ_REDEPLOY")
+})
+
+test("mainland assembly moves a second ground unit to its escort port even without a distance gain", () => {
+    const { ctx, view } = fixture({ paths: (ids, c) => c.move_type === 1 && ids[0] === 4 ? [10] : [] })
+    view.ai.units.push({ id: 30, faction: 1, class: "naval", cf: 8, location: 10, service: "navy" },
+        { id: 31, faction: 1, class: "naval", cf: 8, location: 10, service: "navy" })
+    view.turn = 8
+    view.pow = 0
+    view.ai.units.find(u => u.id === 4).location = 15
+    ctx.map.find(m => m.id === 15).port = false
+    ctx.map.find(m => m.id === 20).region = "Japan"
+    const plan = ctx.ec_plan(view, { role: "Allies" })
+    assert.equal(plan.tasks[0].objective, "HOMELAND_ASSEMBLE")
+    assert.equal(plan.tasks[0].hex, 10)
+    assert.equal(plan.tasks[0].followUpTarget, 20)
+    assert.deepEqual(plain(plan.tasks[0].movementUnitIds), [4])
+    view.inter_service[1] = 1
+    assert(!ctx.ec_plan(view, { role: "Allies" }).tasks.some(t => t.objective === "HOMELAND_ASSEMBLE"),
+        "army reinforcements cannot form a landing group with navy escorts during service rivalry")
+})
+
+test("reinforcement pairing respects active inter-service rivalry", () => {
+    const { ctx, view } = fixture()
+    view.turn = 8
+    view.inter_service[1] = 1
+    view.ai.units.find(u => u.id === 4).location = 15
+    const plan = { version: 1, role: "Allies", objective: { hex: 20 }, focus: 20, tasks: [], targets: [] }
+    const position = ctx.ec_positioning_context(view, plan)
+    const navy = ctx.ec_position_score(15, 1, { id: 6, class: "naval", service: "navy" }, 5, position)
+    assert.notEqual(navy.reason, "ground-escort-common-front-port")
+    view.ai.units.find(u => u.id === 4).service = "navy"
+    const compatible = ctx.ec_position_score(15, 1, { id: 6, class: "naval", service: "navy" }, 5,
+        ctx.ec_positioning_context(view, plan))
+    assert.equal(compatible.reason, "ground-escort-common-front-port")
+})
+
+test("late invasion escort stays near Honshu after PoW is met unless survival needs a capture", () => {
+    const { ctx, view } = fixture({ paths: (ids,c) => c.move_type === 8 && ids.includes(2) && ids.includes(3) ? [40] : [] })
+    view.ai.units.push({ id: 30, faction: 1, class: "naval", cf: 8, location: 10, service: "navy" },
+        { id: 31, faction: 1, class: "naval", cf: 8, location: 10, service: "navy" })
+    view.turn = 9
+    view.pow = 0
+    view.ai.victory.jpResources = 6
+    ctx.map.push({ id: 40, name: "Distant resource", named: true, port: true, resource: 1, region: "Pacific" })
+    ctx.querySpaceControlled = (h,f) => f === 1 ? [0,5,10,15].includes(h) : [20,40].includes(h)
+    assert(!ctx.ec_plan(view, { role: "Allies" }).tasks.some(t => t.kind === "CONQUEST" && t.hex === 40))
+    view.pow = 1
+    assert(ctx.ec_plan(view, { role: "Allies" }).tasks.some(t => t.kind === "CONQUEST" && t.hex === 40),
+        "an unmet PoW quota still permits the otherwise distant legal capture")
+})
+
+test("1943 resource campaign remains primary until a commandable invasion group assembles", () => {
+    const { ctx, view } = fixture()
+    view.turn = 7
+    view.pow = 0
+    assert.equal(ctx.ec_homeland_drive(view), false)
+    const resource = ctx.ec_map().find(m => m.hex === 20)
+    const ordinary = { ...resource, hex: 22, resource: 0 }
+    const env = { view, faction: 1, units: view.ai.units, powGap: 0, victory: { homelandKeys: [20],
+        routes: { homeland: { remainingKeys: [20] }, headquarters: { enemyHqCount: 3 } }, jpResources: 8,
+        b29Bases: [], atomic: {} }, axisTargets: new Set(), previousObjective: null, campaignObjective: null }
+    assert(ctx.ec_score_target(resource, env) > ctx.ec_score_target(ordinary, env))
+    view.ai.units.push({ id: 30, faction: 1, class: "naval", cf: 8, location: 10, service: "navy" },
+        { id: 31, faction: 1, class: "naval", cf: 8, location: 10, service: "navy" })
+    assert.equal(ctx.ec_homeland_drive(view), true)
+    view.ai.units.find(u => u.id === 1).cr = 1
+    view.ai.units.find(u => u.id === 1).location = 0
+    assert.equal(ctx.ec_homeland_drive(view), false, "escort without HQ command is not an invasion force")
+})
+
+test("1943 pivots away from unreachable Manchurian resources when the Soviet event is unavailable", () => {
+    const { ctx, view, owned } = fixture()
+    view.turn = 7
+    ctx.map.find(m => m.id === 20).region = "Korea"
+    ctx.map.push({ id: 22, name: "South resource", named: true, port: true, resource: 1, region: "Borneo" },
+        { id: 30, name: "Mukden", named: true, resource: 1, region: "Manchuria" },
+        { id: 32, name: "Harbin", named: true, resource: 1, region: "Manchuria" })
+    ctx.querySpaceControlled = (h, f) => f === 1 ? owned.has(h) : [20,22,30,32].includes(h) && !owned.has(h)
+    assert.equal(ctx.ec_manchuria_blocked(view, ctx.ec_map()), true)
+    assert.equal(ctx.ec_homeland_drive(view), true)
+    assert.equal(ctx.ec_homeland_approach(view, ctx.ec_map(), view.ai.units, 1), true)
+    assert(![30,32].includes(ctx.ec_campaign_objective(view, ctx.ec_map(), view.ai.units, 1)),
+        "a land march must not be planned into the permanently prohibited region")
+    view.ai.ownCards.push({ id: 79, name: "Soviet Invasion of Manchuria", allowed: ["event"] })
+    assert.equal(ctx.ec_manchuria_blocked(view, ctx.ec_map()), false,
+        "a currently playable Soviet event keeps the atomic route open")
+})
+
+test("the invasion rally port persists until control is lost", () => {
+    const { ctx, view, owned } = fixture()
+    view.turn = 8
+    ctx.map.find(m => m.id === 20).region = "Japan"
+    view.ai.units.find(u => u.id === 4).location = 15
+    view.ai.plan = { campaign: { rallyPort: 10 } }
+    assert.equal(ctx.ec_homeland_rally(view, ctx.ec_map(), view.ai.units, 1, true), 10)
+    owned.delete(10)
+    assert.equal(ctx.ec_homeland_rally(view, ctx.ec_map(), view.ai.units, 1, true), 15)
 })
 
 test("ASP is reserved across the whole plan", () => {
@@ -296,6 +421,19 @@ test("concentrated assault can allocate two ground units and three escorts", () 
     assert.equal(plan.tasks[0].movementUnitIds.length, 5)
     assert.equal(plan.tasks[0].escortUnitIds.length, 3)
     assert(plan.tasks[0].movementUnitIds.includes(2) && plan.tasks[0].movementUnitIds.includes(6))
+})
+
+test("a high-logistics card can keep six escorts together for a mainland assault", () => {
+    const { ctx, view } = fixture({ paths: (ids,c) => c.move_type === 8 && ids.length === 7 ? [20] : [] })
+    view.ai.units = view.ai.units.filter(u => u.id !== 4).concat(
+        Array.from({ length: 5 }, (_, i) => ({ id: 6+i, faction: 1, class: "naval", cf: 8,
+            br: i === 0 ? 2 : 0, location: 10, service: "navy" })))
+    view.ai.ownCards[0].ops = 6
+    view.pow = 0
+    const task = ctx.ec_plan(view, { role: "Allies" }).tasks.find(t => t.kind === "CONQUEST")
+    assert(task)
+    assert.equal(task.movementUnitIds.length, 7)
+    assert.equal(task.escortUnitIds.length, 6)
 })
 
 test("public HQ opportunities are reported as a distinct victory route", () => {
@@ -620,12 +758,20 @@ test("final resource risk is confined to a live T12 victory route and cannot adm
     assert.equal(assess().executable, true)
     assert.equal(assess().riskPolicy, "final-resource-deadline")
     for (const [object, key, value] of [[view,"turn",11], [view,"political_will",2],
-        [env.victory,"jpResources",3], [env.victory,"resourceTargets",[22]],
+        [env.victory,"jpResources",1], [env.victory,"resourceTargets",[22]],
         [env.victory.atomic,"noStrategicBombingFailure",false], [env.victory.atomic,"b29InRangeOfTokyo",false]]) {
         const prior = object[key]; object[key] = value
         assert.equal(assess().executable, false, `ordinary policy must apply when ${key} changes`)
         object[key] = prior
     }
+    env.victory.jpResources = 4
+    assert.equal(assess().riskPolicy, "final-resource-deadline",
+        "all remaining resource assaults matter on the final atomic turn")
+    view.sid = 7
+    assert.equal(assess().riskPolicy, "ordinary-capture",
+        "1942 keeps the validated last-resource-only desperation rule")
+    view.sid = 8
+    env.victory.jpResources = 2
     ctx.em_ground_outcome = () => ({ pWin: 0 })
     assert.equal(assess().executable, false)
     assert.equal(assess().rejection, "capture-probability-below-threshold")
@@ -638,6 +784,31 @@ test("final resource risk is confined to a live T12 victory route and cannot adm
     assert.equal(assess().executable, true, "mean-reaction naval gate must not erase the final resource chance")
     view.turn = 11
     assert.equal(assess().executable, false, "ordinary turns retain the naval gate")
+})
+
+test("1943 resource clock permits a bounded risky assault only after PoW is safe", () => {
+    const { ctx, view } = fixture()
+    view.turn = 10
+    view.pow = 0
+    const group = view.ai.units.filter(u => [2,3].includes(u.id))
+    const env = { view, faction: 1, units: view.ai.units.concat(
+        { id: 9, faction: 0, class: "ground", cf: 12, lf: 12, location: 20 }), powGap: 0,
+        victory: { jpResources: 5, resourceTargets: [20], atomic: {
+            noStrategicBombingFailure: true, b29InRangeOfTokyo: true }, blockade: { startedTurn: 0 } } }
+    ctx.em_naval_outcome = () => ({ pWin: 1 })
+    ctx.em_ground_outcome = () => ({ pWin: .4 })
+    const assess = () => ctx.ec_assess(group, [], 20, true, env)
+    assert.equal(assess().riskPolicy, "resource-clock")
+    assert.equal(assess().executable, true)
+    for (const [object, key, value] of [[view,"turn",8], [env,"powGap",1],
+        [view,"political_will",2], [env.victory.blockade,"startedTurn",9],
+        [env.victory.atomic,"noStrategicBombingFailure",false], [env.victory.atomic,"b29InRangeOfTokyo",false]]) {
+        const prior = object[key]; object[key] = value
+        assert.equal(assess().executable, false, `ordinary threshold applies when ${key} changes`)
+        object[key] = prior
+    }
+    ctx.em_ground_outcome = () => ({ pWin: .2 })
+    assert.equal(assess().executable, false, "the resource clock still requires meaningful capture odds")
 })
 
 test("final resource assault can commit a garrison when the deadline makes holding back certain failure", () => {
@@ -653,6 +824,26 @@ test("final resource assault can commit a garrison when the deadline makes holdi
     view.ai.units.pop()
     view.turn = 11
     assert(ctx.ec_garrison_reserve(view, ctx.ec_map(), view.ai.units, 1).has(2))
+})
+
+test("1943 resource sprint releases safe garrisons but protects threatened gains and blockade", () => {
+    const { ctx, view } = fixture()
+    ctx.map.find(m => m.id === 10).resource = 1
+    view.turn = 9
+    view.ai.victory.jpResources = 4
+    view.ai.victory.atomic = { noStrategicBombingFailure: true, b29InRangeOfTokyo: true }
+    const reserved = () => ctx.ec_garrison_reserve(view, ctx.ec_map(), view.ai.units, 1).has(2)
+    assert.equal(reserved(), false)
+    view.ai.units.push({ id: 91, faction: 0, class: "ground", location: 20, cf: 4 })
+    assert.equal(reserved(), true)
+    view.ai.units.pop()
+    view.ai.victory.blockade = { startedTurn: 8 }
+    assert.equal(reserved(), true)
+    view.ai.victory.blockade = { startedTurn: 0 }
+    view.turn = 12
+    view.political_will = 5
+    view.ai.units.push({ id: 91, faction: 0, class: "ground", location: 20, cf: 4 })
+    assert.equal(reserved(), false, "last-turn atomic push may use a threatened resource garrison")
 })
 
 test("at the final resource deadline a legal risky capture outranks an irrelevant empty island", () => {
