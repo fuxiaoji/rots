@@ -36,6 +36,9 @@ function eots_ai_phase_label(phase) {
 		early: "早期阶段", mid: "中期阶段", late: "终局阶段", all: "全阶段",
 		"card-selection": "卡牌选择", "task-force": "任务部队编成",
 		reaction: "反应", pbm: "战后移动", general: "通用行动",
+		CAPTURE: "夺占", ASSEMBLE: "运输与集结", GARRISON: "驻守", BLOCKED: "重新规划",
+		POW: "补齐战争进展", RESOURCES: "夺取资源", FORWARD_BASE: "夺取前沿基地", HOMELAND: "本州占领",
+		ASSEMBLE_ESCORT: "集中护航", B29_DEPLOYMENT: "部署轰炸机", AIR_SUPPORT_BASE: "前推空中支援",
 	}
 	return labels[phase] || phase || "未知"
 }
@@ -84,7 +87,14 @@ function eots_render_ai_current(panel, row) {
 	field("选定战略", sm.strategy || trace.axis || trace.strategy, "ai_trace_strategy")
 	field("正在执行", `${trace.action || "—"}${trace.argument === undefined ? "" : " → " + trace.argument}`)
 	field("当前首要目标", current ? `${current.name || current.id || "Hex " + current.hex}${current.id ? "（" + current.id + "）" : ""}` : "本战略没有地图目标", "ai_trace_focus")
-	field("图表节点", `${trace.chart || "—"} / ${trace.node || "—"}`)
+	field(trace.campaign ? "策略节点" : "图表节点", trace.chart === "CAMPAIGN"
+		? `战役规划 / ${eots_ai_phase_label(trace.node)}` : `${trace.chart || "—"} / ${trace.node || "—"}`)
+	if (trace.campaign?.pow) {
+		var pow = trace.campaign.pow
+		field("本回合战争进展", `${pow.held}/${pow.required}，尚缺 ${pow.gap}`)
+		field("政治意志", pow.politicalWill)
+		field("剩余手牌", pow.remainingCards)
+	}
 	if (trace.activationPlan) {
 		field("激活量使用", `${trace.activationPlan.selected}/${trace.activationPlan.limit}，剩余 ${trace.activationPlan.remaining}；${trace.activationPlan.mode}`)
 		field("编队标准", `需求 ${trace.activationPlan.required ?? "—"}，当前 ${trace.activationPlan.strength ?? 0}${trace.activationPlan.potentialReactionStrength ? "，潜在反应 " + trace.activationPlan.potentialReactionStrength : ""}`)
@@ -112,7 +122,7 @@ function eots_render_ai_current(panel, row) {
 			if (target.requiresOccupation) flags.push("夺占目标（需要地面部队）")
 			if (target.controlledBy) flags.push(`控制：${eots_t(target.controlledBy)}`)
 			if (target.distanceToTokyo !== undefined) flags.push(`距东京 ${target.distanceToTokyo} 格`)
-			if (target.objective) flags.unshift(`${target.objective}${target.damageLevel ? " · 伤害标准 " + target.damageLevel + "x" : ""}`)
+			if (target.objective) flags.unshift(`${eots_ai_phase_label(target.objective)}${target.damageLevel && !target.campaignTask ? " · 伤害标准 " + target.damageLevel + "x" : ""}`)
 			item.textContent = `${target.priority || index + 1}. ${target.name || target.id || "Hex " + target.hex}${target.id ? " [" + target.id + "]" : ""}${flags.length ? " · " + flags.join(" · ") : ""}`
 			list.appendChild(item)
 		})

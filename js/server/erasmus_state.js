@@ -31,6 +31,7 @@
 
 var ESM_GATE_CACHE = {}
 var ESM_LOCKED = {}          // key `${seed}|${sid}` -> { turn, role: {Japan:{...},Allies:{...}}, seenOrd, bombFail, lastTurn }
+var ESM_RUNTIME_KEY = null  // context.seed is stable; G.seed is the advancing game RNG.
 var ESM_PREP = {}            // key sid -> 预计算地理清单(一次性)
 
 // ===========================================================================
@@ -131,6 +132,7 @@ function esm_new_lock(seed, ord) {
 }
 function esm_lock(seed) {
     const k = esm_key(seed)
+    ESM_RUNTIME_KEY = k
     let e = ESM_LOCKED[k]
     if (!e) { e = esm_new_lock(seed, arguments[1]); ESM_LOCKED[k] = e }
     // 新对局检测: 回合回退 或 actionOrdinal 回退(多局同进程防串台)。
@@ -142,6 +144,27 @@ function esm_lock(seed) {
     }
     e.turn = G.turn
     return e
+}
+
+function esm_export_runtime(role) {
+    const lock = ESM_RUNTIME_KEY === null ? null : ESM_LOCKED[ESM_RUNTIME_KEY]
+    if (!lock || !lock.role?.[role]) return null
+    return JSON.parse(JSON.stringify({ key: ESM_RUNTIME_KEY, turn: lock.turn,
+        seenOrd: lock.seenOrd, lastOrdTurn: lock.lastOrdTurn, entry: lock.role[role] }))
+}
+
+function esm_import_runtime(runtime, role) {
+    ESM_LOCKED = {}
+    ESM_RUNTIME_KEY = null
+    // These are derived from scenario/map data, unlike the pinned strategy.
+    ESM_GATE_CACHE = {}
+    ESM_PREP = {}
+    if (!runtime || typeof runtime.key !== "string" || !runtime.entry
+        || (role !== "Japan" && role !== "Allies")) return
+    const saved = JSON.parse(JSON.stringify(runtime))
+    ESM_RUNTIME_KEY = saved.key
+    ESM_LOCKED[saved.key] = { turn: saved.turn, seenOrd: saved.seenOrd,
+        lastOrdTurn: saved.lastOrdTurn, role: { Japan: null, Allies: null, [role]: saved.entry } }
 }
 function esm_is_card_window(view) {
     const a = view && view.actions || {}

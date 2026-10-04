@@ -350,6 +350,12 @@ function get_allowed_actions(num) {
         result.push("event")
     }
     if (num === SANDCRAB && result.includes("event")) {
+        // Sandcrab keeps its event/discard-only choice, including after a
+        // failed offensive is rolled back. Do not reopen its rejected event
+        // or fall through and accidentally offer ordinary OC actions.
+        if (G.offensive.oc_denied && G.offensive.oc_denied[num]) {
+            array_delete_item(result, "event")
+        }
         return result
     }
     result.push("ops")

@@ -78,12 +78,66 @@ function eop_resolve_token(token) {
 // 每方首卡窗钉住整回合战略, 把该战略的优先目标链(epoch token 表)作为"外部主轴"
 // 覆盖固定 EOP_AXES。gate 关时必须清空(否则同进程跨剧本串台)。
 var EOP_OVERRIDE = { Japan: null, Allies: null }
+var EOP_GEOMETRY_SID = null
 
 function eop_set_strategy_chain(role, override) {
     EOP_OVERRIDE[role] = override || null
 }
 function eop_clear_all_chains() {
     EOP_OVERRIDE = { Japan: null, Allies: null }
+}
+
+// Only policy memory belongs in the save/replay envelope. Geometry is rebuilt
+// from compact cluster seeds; never serialize the live G reference or another
+// role's private strategy. Import also clears absent memory on game/role switches.
+function eop_export_runtime(role) {
+    if (role !== "Japan" && role !== "Allies") return null
+    const rec = EOP_AIR_FORWARD_LAST
+    const airForward = rec && rec.g === G && rec.role === role
+        ? { flag: rec.flag, role, turn: rec.turn, unit: rec.unit, hex: rec.hex, loc: rec.loc } : null
+    const clusterSeeds = []
+    for (const key of EOP_CLUSTER_CACHE.keys()) {
+        const [owner, turn, focus] = key.split("|")
+        if (owner === role && Number(turn) === Number(G.turn || 0))
+            clusterSeeds.push({ turn: Number(turn), focus: Number(focus), radius: EOP_CLUSTER_RADII.get(key) || 2 })
+    }
+    return JSON.parse(JSON.stringify({ version: 1, role, sid: G.sid,
+        override: EOP_OVERRIDE[role], airForward, clusterSeeds,
+        plusPlan: typeof EP_LAST_PLAN !== "undefined" && EP_LAST_PLAN?.role === role ? EP_LAST_PLAN : null,
+        stateMachine: typeof esm_export_runtime === "function" ? esm_export_runtime(role) : null,
+    }))
+}
+
+function eop_import_runtime(runtime, role) {
+    eop_clear_all_chains()
+    EOP_AIR_FORWARD_LAST = null
+    EOP_CLUSTER_CACHE.clear()
+    EOP_CLUSTER_RADII.clear()
+    // get_map_data selects scenario-specific geometry. Static caches can stay
+    // warm within a scenario, but cannot follow a switch to a different map.
+    if (EOP_GEOMETRY_SID !== G.sid) {
+        EOP_GEOMETRY_SID = G.sid
+        EOP_IDX_BY_NAME = null
+        EP_LAND_CONN.clear()
+        EOP_PREREQ_GEOM.portAir = null
+    }
+    if (typeof EP_LAST_PLAN !== "undefined") EP_LAST_PLAN = null
+    if (typeof esm_import_runtime === "function") esm_import_runtime(null, role)
+    if (!runtime || runtime.version !== 1 || runtime.role !== role || runtime.sid !== G.sid
+        || (role !== "Japan" && role !== "Allies")) return
+    const saved = JSON.parse(JSON.stringify(runtime))
+    EOP_OVERRIDE[role] = saved.override || null
+    if (saved.airForward?.role === role)
+        EOP_AIR_FORWARD_LAST = { ...saved.airForward, g: G }
+    if (typeof EP_LAST_PLAN !== "undefined" && saved.plusPlan?.role === role) EP_LAST_PLAN = saved.plusPlan
+    if (typeof esm_import_runtime === "function") esm_import_runtime(saved.stateMachine, role)
+    for (const seed of Array.isArray(saved.clusterSeeds) ? saved.clusterSeeds : []) {
+        if (!Number.isInteger(seed.focus) || seed.focus < 0 || seed.focus > LAST_BOARD_HEX
+            || seed.turn !== Number(G.turn || 0) || !(seed.radius > 0)) continue
+        const key = `${role}|${seed.turn}|${seed.focus}`
+        EOP_CLUSTER_CACHE.set(key, eop_cluster_geometry(seed.focus, seed.radius))
+        EOP_CLUSTER_RADII.set(key, seed.radius)
+    }
 }
 
 // [opt] allies_resource_raid: 原子弹/封锁胜利的日本资源格 raid 链补充。
@@ -284,7 +338,8 @@ function eop_axis(role) {
     if (ov) {
         return { id: ov.name || (role + "_AXIS"), role: role,
             note: ov.note ? `${ov.name} — ${ov.note}` : (ov.name || role + "轴"),
-            kind: ov.kind || null, tokens: ov.tokens || [], chain: ov.chain || [], targetMeta: ov.targetMeta || [] }
+            kind: ov.kind || null, tokens: ov.tokens || [], chain: ov.chain || [], targetMeta: ov.targetMeta || [],
+            ...(ov.campaignPlan ? { campaignPlan: ov.campaignPlan } : {}) }
     }
     if (role === "Allies") return EOP_AXES.AP
     // 日本: 控制资源 < 13 时抢南方资源; 达标后转入防守, 不再无谓远征。
@@ -1392,6 +1447,17 @@ function eop_activation_focus_faction(faction, selectedCount, view, candidates) 
     const role = faction === JP ? "Japan" : "Allies"
     const axis = eop_axis(role)
     if (!axis || !Array.isArray(axis.chain)) return eop_focus(role)
+    // Campaign tasks own their activation assignments. A unit committed to one
+    // landing cannot also satisfy every other target's task force.
+    if (axis.campaignPlan && !axis.campaignPlan.delegatedOffensive) {
+        const active = new Set((view?.offensive?.active_units?.[faction] || []).flat())
+        const legal = new Set(candidates || [])
+        for (const target of axis.targetMeta || []) {
+            if (!eop_target_pending(role, target.hex, target)) continue
+            if ((target.requiredUnits || []).some(id => !active.has(id) && legal.has(id))) return target.hex
+        }
+        return null
+    }
     const pending = eop_partition_retain(role, axis.chain.filter(h => eop_target_pending(role,h,eop_target_meta(role,h))))
     if (!pending.length) return null
     const first=eop_target_meta(role,pending[0])
@@ -1740,6 +1806,17 @@ function eop_next_focus_faction(faction, excludedHexes, recordedPlan) {
 // 缓存: 模块级 Map 按 role|turn|focus 键控几何(地图静态部分), 控制权/守军 CF 在
 // 读取时点过滤(防 turn 内易手), 防抖 = 超过 512 项整表清空。
 const EOP_CLUSTER_CACHE = new Map()
+const EOP_CLUSTER_RADII = new Map()
+
+function eop_cluster_geometry(focus, radius) {
+    const geo = []
+    for (let h = 0; h <= LAST_BOARD_HEX; ++h) {
+        if (h === focus) continue
+        const md = get_map_data(h)
+        if (md && (md.port || md.airfield || md.name) && get_distance(h, focus) <= radius) geo.push(h)
+    }
+    return geo
+}
 
 function eop_island_cluster(role, focus) {
     const emc = (typeof em_cfg === "function") ? em_cfg() : null
@@ -1753,16 +1830,10 @@ function eop_island_cluster(role, focus) {
     const key = `${role}|${turn}|${focus}`
     let geo = EOP_CLUSTER_CACHE.get(key)
     if (!geo) {
-        geo = []
-        for (let h = 0; h <= LAST_BOARD_HEX; ++h) {
-            if (h === focus) continue
-            const md = get_map_data(h)
-            if (!md || !(md.port || md.airfield || md.name)) continue
-            if (get_distance(h, focus) > radius) continue
-            geo.push(h)
-        }
-        if (EOP_CLUSTER_CACHE.size > 512) EOP_CLUSTER_CACHE.clear()
+        geo = eop_cluster_geometry(focus, radius)
+        if (EOP_CLUSTER_CACHE.size > 512) { EOP_CLUSTER_CACHE.clear(); EOP_CLUSTER_RADII.clear() }
         EOP_CLUSTER_CACHE.set(key, geo)
+        EOP_CLUSTER_RADII.set(key, radius)
     }
     const mine = role === "Japan" ? JP : AP
     const scored = []
@@ -2620,6 +2691,16 @@ function composeTaskForce(target, card, hq, view, candidates, role, metaOverride
     const units=Array.isArray(view?.ai?.units)?view.ai.units:[], byId=new Map(units.map(u=>[u.id,u]))
     const active=new Set((view?.offensive?.active_units||[]).flat()), f=evaluateTargetFeasibility(target,card,hq,view,metaOverride)
     candidates=(candidates||[]).filter(id=>eop_unit_matches_target(byId.get(id)||id,role,f.meta,target))
+    if (f.meta?.campaignTask && Array.isArray(f.meta.requiredUnits)) {
+        const assigned = f.meta.requiredUnits
+        const selected = assigned.filter(id => active.has(id))
+        const missing = assigned.filter(id => !active.has(id))
+        return { complete: missing.length === 0, strict: true, required: assigned.length,
+            strength: selected.length, unit: missing.find(id => candidates.includes(id)) ?? null,
+            formation: f.meta.kind === "REDEPLOY" ? "campaign-redeploy" : "campaign-assigned-task-force",
+            assignedUnits: assigned.slice(), blockedUnits: missing.filter(id => !candidates.includes(id)),
+            via: "campaign-plan" }
+    }
     const committed=[...active].map(id=>byId.get(id)).filter(Boolean)
     const cf=u=>u.reduced?(Number(u.rcf)||Math.ceil((Number(u.cf)||0)/2)):(Number(u.cf)||0)
     const strikeStrength=committed.filter(u=>u.class==="air"||u.class==="naval").reduce((s,u)=>s+cf(u),0)
@@ -2744,7 +2825,7 @@ function composeTaskForce(target, card, hq, view, candidates, role, metaOverride
             const emcNG=(typeof em_cfg==="function")?em_cfg():null
             if(emcNG&&emcNG.erasmus_plus){
                 // 从 pool 里找任意地面候选(含两栖): 激活它, 无头推进会引导它上岛
-                const gnd=pool.find(u=>u.class==="ground"&&(u.asp||u.strat_move))
+                const gnd=(candidates||[]).map(id=>byId.get(id)).find(u=>u&&u.class==="ground"&&(u.asp||u.stratMove))
                 if(gnd)return {complete:false,strict:true,required:need,strength:math,unit:gnd.id,
                     formation:"needs-ground-occupation",
                     groundStrength,strikeStrength,potentialReactionStrength:f.potentialReactionStrength,supportRequired}
@@ -2853,7 +2934,7 @@ function composeTaskForce(target, card, hq, view, candidates, role, metaOverride
             }
         }
         pool.sort((a,b)=>classRank(a)-classRank(b)
-            ||(landOkMap?((landOkMap.get(b.id)?0:1)-(landOkMap.get(a.id)?0:1)):0)
+            ||(landOkMap?((landOkMap.get(a.id)?0:1)-(landOkMap.get(b.id)?0:1)):0)
             ||distance(a)-distance(b)||cf(b)-cf(a)||a.id-b.id)
         if(landOkMap&&typeof process!=="undefined"&&process.env.EOTS_FUNNEL_DEBUG){
             try{
@@ -2872,6 +2953,8 @@ function composeTaskForce(target, card, hq, view, candidates, role, metaOverride
 
 function selectOperationalHq(view,candidates,role){
     if(!Array.isArray(candidates)||!candidates.length)return undefined
+    const campaign = typeof em_cfg === "function" && em_cfg()?.campaign_planner ? view?.ai?.plan : null
+    if (campaign?.role === role && !campaign.delegatedOffensive && candidates.includes(campaign.preferredHq)) return campaign.preferredHq
     const byId=new Map((view?.ai?.units||[]).map(u=>[u.id,u])),focus=view?.ai?.focus
     const axis=eop_axis(role),name=String(axis?.id||axis?.note||"").toLowerCase()
     // axis.id 主要是中文战略名。旧代码只识别英文，结果除 CBI/DEI 等英文偶合外

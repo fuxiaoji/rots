@@ -74,6 +74,7 @@ function end(result) {
 
 exports.roles ??= ROLES
 exports.bots ??= (typeof EOTS_BOTS !== "undefined") ? EOTS_BOTS : {}
+exports.bot_config = (name, role) => typeof em_bot_config === "function" ? em_bot_config(name, role) : null
 exports.pieces ??= (typeof pieces !== "undefined") ? pieces : null
 
 exports.scenarios ??= (typeof SCENARIOS !== "undefined") ? SCENARIOS : ["Standard"]
@@ -171,6 +172,54 @@ exports.view = function (state, role) {
 }
 
 exports.action = function (state, role, action, argument) {
+    // Legacy clients retain their existing argument and execution semantics.
+    if (!argument || !argument.__ai) return framework_apply_action(state, role, action, argument)
+    const meta = argument.__ai
+    if (meta.version !== 1 || meta.role !== role) throw new Error("AI metadata role/version mismatch")
+    if (meta.plan && (meta.plan.version !== 1 || meta.plan.role !== role)) throw new Error("Invalid AI plan")
+    if (meta.runtime && (meta.runtime.version !== 1 || meta.runtime.role !== role)) throw new Error("Invalid AI runtime")
+    if (meta.logs !== undefined && (!Array.isArray(meta.logs)
+        || meta.logs.some(line => typeof line !== "string" || !line.startsWith("[ERASMUS]"))))
+        throw new Error("Invalid AI trace log")
+    if (!ROLES.includes(role) || !(Array.isArray(state.active) ? state.active.includes(role) : state.active === role))
+        throw new Error("Invalid AI action role")
+
+    const priorConfig = typeof em_cfg === "function" && em_cfg() ? { ...em_cfg() } : null
+    let rollback = null
+    try {
+        // View generation can refresh caches and its frame. Generate the exact
+        // role's legal actions on an isolated copy, before touching real state.
+        const legal = exports.view(object_copy(state), role).actions || {}
+        let rawArgument = argument.action
+        if (rawArgument && rawArgument.oos) rawArgument = rawArgument.action
+        const candidates = legal[action]
+        if (!Object.prototype.hasOwnProperty.call(legal, action) || !candidates
+            || (Array.isArray(candidates) && !candidates.includes(rawArgument)))
+            throw new Error("Invalid action: " + action)
+        // Buttons such as headless advance legitimately carry a target-plan
+        // object. Candidate-list actions must match the original scalar ID.
+        // Keep a complete snapshot only once validation succeeds: handlers may
+        // still fail after altering the board, RNG, undo history or AI metadata.
+        rollback = object_copy(state)
+        return framework_apply_action(state, role, action, argument)
+    } catch (error) {
+        if (rollback) {
+            for (const key of Object.keys(state)) delete state[key]
+            Object.assign(state, rollback)
+        }
+        // Restore the caller's original object even if undo/redo replaced G.
+        G = state
+        L = state.L
+        R = ROLES.indexOf(role)
+        V = null
+        if (typeof eop_import_runtime === "function") eop_import_runtime(state.ai_runtime?.[role] || null, role)
+        if (priorConfig && typeof em_set_config === "function") em_set_config(priorConfig)
+        else if (typeof em_reset_config === "function") em_reset_config()
+        throw error
+    }
+}
+
+function framework_apply_action(state, role, action, argument) {
     G = state
     L = G.L
     R = role
@@ -179,6 +228,32 @@ exports.action = function (state, role, action, argument) {
     var old_active = G.active
 
     _load()
+
+    // Optional AI metadata envelope. The actual action retains its original
+    // scalar/array/object argument, including the RTT client supply envelope.
+    if (argument && argument.__ai && argument.__ai.version === 1) {
+        const meta = argument.__ai
+        if (meta.profile && typeof em_set_config === "function") {
+            em_set_config(meta.profile)
+            G.ai_profile ||= {}
+            G.ai_profile[role] = { ...em_cfg() }
+        }
+        if (meta.plan) {
+            G.ai_plan ||= {}
+            G.ai_plan[role] = JSON.parse(JSON.stringify(meta.plan))
+        }
+        if (meta.runtime && typeof eop_import_runtime === "function") {
+            G.ai_runtime ||= {}
+            G.ai_runtime[role] = JSON.parse(JSON.stringify(meta.runtime))
+            eop_import_runtime(G.ai_runtime[role], role)
+        }
+        if (Array.isArray(meta.logs)) {
+            for (const line of meta.logs) {
+                G.log.push(line)
+            }
+        }
+        argument = argument.action
+    }
 
     var this_state = P[L.P]
     if (this_state && typeof this_state[action] === "function") {
@@ -199,6 +274,8 @@ exports.action = function (state, role, action, argument) {
         throw new Error("Invalid action: " + action)
     }
 
+    if (G.ai_runtime?.[role] && typeof eop_export_runtime === "function")
+        G.ai_runtime[role] = eop_export_runtime(role)
     _save()
 
     if (old_active !== G.active)
@@ -247,6 +324,8 @@ exports.assert = function (state) {
 
 function _load() {
     R = ROLES.indexOf(R)
+    if (typeof em_load_state_config === "function") em_load_state_config(ROLES[R])
+    if (typeof eop_import_runtime === "function") eop_import_runtime(G.ai_runtime?.[ROLES[R]] || null, ROLES[R])
     if (Array.isArray(G.active))
         G.active = G.active.map(r => ROLES.indexOf(r))
     else
@@ -254,6 +333,7 @@ function _load() {
 }
 
 function _save() {
+    if (typeof em_reset_config === "function") em_reset_config()
     if (Array.isArray(G.active))
         G.active = G.active.map(r => ROLES[r])
     else

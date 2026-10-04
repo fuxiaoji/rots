@@ -4,6 +4,7 @@
 "use strict"
 
 const EM_FLAGS = [
+    "campaign_planner",     // AI-WIN-01: persisted operational plans, separate opt-in bot.
     "target_scoring",         // 1=链内未完成目标按 价值×可达性 重排焦点; 0=链首优先(基线)
     "taskforce_math",         // 1=编队边际效用选单位+两栖期望闸门; 0=兵种词典序贪心(基线)
     "allies_cv_preserve",     // 1=盟军非登陆场合避免消耗 CV; 0=不区分
@@ -62,6 +63,13 @@ const EM_FLAGS = [
 
 // 数值参数(敏感性问题分析对象; 均有工程注释)
 const EM_PARAMS_BASE = {
+    epMinP: 0.60,
+    epDesiredP: 0.75,
+    epOvermatchDesiredP: 0.85,
+    epDesperateMinP: 0.45,
+    epPressureRatio: 1.35,
+    epOvermatchRatio: 1.80,
+    epForwardDist: 12,
     emWWin: 1.0,            // 夺格/战胜概率效用权重
     emWLoss: 0.6,           // 己方期望损失惩罚权重(cf 加权)
     emWCost: 0.05,          // 单位激活固定成本
@@ -115,17 +123,18 @@ const EM_DEFAULT_PROFILE_V5 = EM_DEFAULT_PROFILE + ",amphib_asp_gate,amphib_esco
 // 但与上面全套开关组合时实测未生效(新加坡未被夺/马来亚仍 T0), 且开启后行为测试 2 项失败。
 // 待交互问题定位后再纳入。
 
-function em_profile_from_env(defaultProfile) {
+function em_profile_from_env(defaultProfile, role) {
     // EOTS_OPT_PROFILE=all|baseline|逗号分隔开关列表(未设=该 bot 的内置默认)
     // EOTS_OPT_PARAMS=key=value,key=value (数值参数覆盖, 供参数扫描)
     if (typeof process === "undefined" || !process.env) return {}
-    let raw = process.env.EOTS_OPT_PROFILE
+    const side = String(role || "").toUpperCase()
+    let raw = process.env["EOTS_OPT_PROFILE_" + side] || process.env.EOTS_OPT_PROFILE
     if (raw === "baseline") return {}
     if (!raw) raw = defaultProfile || EM_DEFAULT_PROFILE
     const p = {}
     if (raw === "all") { EM_FLAGS.forEach(f => p[f] = 1) }
     else raw.split(",").map(s => s.trim()).filter(Boolean).forEach(f => { if (EM_FLAGS.includes(f)) p[f] = 1 })
-    const pv = process.env.EOTS_OPT_PARAMS
+    const pv = process.env["EOTS_OPT_PARAMS_" + side] || process.env.EOTS_OPT_PARAMS
     if (pv) {
         pv.split(",").map(s => s.trim()).filter(Boolean).forEach(kv => {
             const [k, v] = kv.split("=")
@@ -142,19 +151,11 @@ function em_cfg() {
     return null
 }
 
-// [opt 跨窗读取] 引擎侧(offensive.js/events.js 等)在 bot.decide 之外运行, 而 em_cfg()
-// 只在 decide 期间有值(decide 结束 finally 里 em_reset_config 置 null) —— 实测引擎侧
-// 恒为 null, 任何挂在 em_cfg() 上的引擎闸门都是死代码(如旧 swStackOk)。故在每次
-// em_set_config 成功注入时同步一份模块级快照, 供引擎侧用 em_flag(name) 读取
-// "本回合/本局最近一次注入的 profile"; 快照随 decide 更新, 不随 reset 清除。
-// 基线 bot(erasmus-v2)从不调用 em_set_config → 快照恒空 → em_flag 恒 0 → 逐位不变。
-let EM_LAST_FLAGS = {}
-
-// 引擎侧/决策侧统一开关读取: decide 期内读当前注入配置, 期外读最近一次快照。
-// 未知 flag / 未注入 profile 一律 0。
+// Engine actions load the acting role's persisted configuration; a reset means
+// all optional AI helpers are off until an explicit scope is loaded.
 function em_flag(name) {
     const c = em_cfg()
-    return (c ? c[name] : (EM_LAST_FLAGS[name] || 0)) ? 1 : 0
+    return c && c[name] ? 1 : 0
 }
 
 // opt bot 每次决策前按角色注入; 决策结束必须 reset(防串染基线 bot)。
@@ -162,9 +163,27 @@ function em_set_config(flags, params) {
     const merged = { ...EM_PARAMS_BASE }
     EM_FLAGS.forEach(f => merged[f] = 0)
     if (flags) for (const k of Object.keys(flags)) if (EM_FLAGS.includes(flags[k] !== undefined ? k : k)) merged[k] = flags[k] ? 1 : 0
+    if (flags) for (const k of Object.keys(flags)) if (k in EM_PARAMS_BASE && Number.isFinite(flags[k])) merged[k] = flags[k]
     if (params) for (const k of Object.keys(params)) if (k in EM_PARAMS_BASE) merged[k] = params[k]
     em_current = merged
-    EM_LAST_FLAGS = { ...merged }
 }
 
 function em_reset_config() { em_current = null }
+
+// Resolved configuration is persisted by role with the action, never kept as a
+// process-wide last-writer flag set. This also makes save/replay independent of env.
+function em_bot_config(name, role) {
+    if (name === "erasmus-v2" || !name) return null
+    const defaults = name === "erasmus-campaign"
+        ? EM_DEFAULT_PROFILE_V5 + ",erasmus_plus,campaign_planner"
+        : name === "erasmus-v2-opt-v5" ? EM_DEFAULT_PROFILE_V5 : EM_DEFAULT_PROFILE
+    const saved = em_current
+    try { em_set_config(em_profile_from_env(defaults, role)); return { ...em_current } }
+    finally { em_current = saved }
+}
+
+function em_load_state_config(role) {
+    const profile = G && G.ai_profile && G.ai_profile[role]
+    if (profile) em_set_config(profile)
+    else em_reset_config()
+}

@@ -58,9 +58,70 @@ function em_ground_mods(opts) {
     return { att, def }
 }
 
-// 地面战斗期望结果。args: {attCF, defCF, attMods, defMods, attLfs[], defLfs[]}
+// Step-aware campaign estimate. Each assigned hit costs one effective LF and
+// removes one step: full 0->2->4, reduced 1->3 in apply_hits/apply_loss.
+// Full units take their first loss before reduced units (fill_hit_able_units).
+// Ties use lowest LF then input order; this is a stated allocation heuristic,
+// not a solver for either player's optimal casualty choices. A steps=1 entry
+// does not distinguish a reduced unit from special one_step priority, and the
+// model omits event/garrison target restrictions and earlier air/naval losses.
+function em_ground_step_losses(hits, lfs, steps) {
+    const remaining = steps.slice(), damaged = new Set()
+    let lost = 0, eliminated = 0
+    while (hits > 0) {
+        const fullPresent = remaining.some(n => n === 2)
+        let pick = -1
+        for (let i = 0; i < remaining.length; i++) {
+            if (!remaining[i] || fullPresent && remaining[i] !== 2 || lfs[i] > hits) continue
+            if (pick < 0 || lfs[i] < lfs[pick]) pick = i
+        }
+        if (pick < 0) break
+        hits -= lfs[pick]; remaining[pick]--; lost++; damaged.add(pick)
+        if (!remaining[pick]) eliminated++
+    }
+    return { lost, damaged: damaged.size, eliminated, survivors: remaining.filter(n => n > 0).length }
+}
+
+function em_ground_step_outcome(args) {
+    for (const side of ["att", "def"]) {
+        const lfs = args[side + "Lfs"], steps = args[side + "Steps"]
+        if (!Array.isArray(lfs) || !Array.isArray(steps) || lfs.length !== steps.length
+            || lfs.some(lf => !Number.isFinite(lf) || lf <= 0) || steps.some(n => n !== 1 && n !== 2))
+            throw new Error("step-aware ground estimate requires matching positive LFs and 1/2-step arrays for both sides")
+    }
+    const result = { pWin: 0, eOwnDamaged: 0, eEnemyDamaged: 0, eOwnElim: 0, eEnemyElim: 0,
+        eOwnHits: 0, eEnemyHits: 0, pAttackerSurvives: 0, eOwnStepsLost: 0, eEnemyStepsLost: 0,
+        model: "step-aware-full-first-lowest-lf", allocationApproximation: true }
+    if (!(args.attCF > 0) || !args.attSteps.length) return result
+    // Local caches only: repeated table values share allocation work, with no
+    // cross-game state. The probability still enumerates all 100 dice pairs.
+    const ownLosses = new Map(), enemyLosses = new Map()
+    for (let ra = 0; ra < 10; ra++) for (let rd = 0; rd < 10; rd++) {
+        const ha = Math.ceil(args.attCF * em_ground_table(ra + (args.attMods || 0)))
+        const hd = Math.ceil(Math.max(0, args.defCF || 0) * em_ground_table(rd + (args.defMods || 0)))
+        if (!ownLosses.has(hd)) ownLosses.set(hd, em_ground_step_losses(hd, args.attLfs, args.attSteps))
+        if (!enemyLosses.has(ha)) enemyLosses.set(ha, em_ground_step_losses(ha, args.defLfs, args.defSteps))
+        const own = ownLosses.get(hd), enemy = enemyLosses.get(ha)
+        const survives = own.survivors > 0
+        // get_hits_count counts lost steps, and apply_ground_winner explicitly
+        // denies occupation when every attacking ground unit is off the board.
+        if (survives && (enemy.lost > own.lost || enemy.survivors === 0)) result.pWin++
+        if (survives) result.pAttackerSurvives++
+        result.eOwnDamaged += own.damaged; result.eEnemyDamaged += enemy.damaged
+        result.eOwnElim += own.eliminated; result.eEnemyElim += enemy.eliminated
+        result.eOwnStepsLost += own.lost; result.eEnemyStepsLost += enemy.lost
+        result.eOwnHits += ha; result.eEnemyHits += hd
+    }
+    for (const key of Object.keys(result)) if (typeof result[key] === "number") result[key] /= 100
+    return result
+}
+
+// 地面战斗期望结果。args: {attCF, defCF, attMods, defMods, attLfs[], defLfs[], attSteps?, defSteps?}
+// New callers provide both step arrays and already-effective LF (including AA
+// halving). Calls without step arrays retain the frozen legacy approximation.
 // 返回 {pWin, eOwnDamaged, eEnemyDamaged, eOwnElim, eEnemyElim, eOwnHits, eEnemyHits}
 function em_ground_outcome(args) {
+    if (args.attSteps !== undefined || args.defSteps !== undefined) return em_ground_step_outcome(args)
     const zero = { pWin: 0, eOwnDamaged: 0, eEnemyDamaged: 0, eOwnElim: 0, eEnemyElim: 0, eOwnHits: 0, eEnemyHits: 0 }
     if (!(args.attCF > 0)) return zero
     if (!(args.defCF > 0)) return { pWin: 1, eOwnDamaged: 0, eEnemyDamaged: 0, eOwnElim: 0, eEnemyElim: 0, eOwnHits: 0, eEnemyHits: 0 }
@@ -260,4 +321,3 @@ function em_score_focus(role, pending) {
     })
     return best
 }
-
