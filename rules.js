@@ -23132,6 +23132,33 @@ function eop_activation_focus_faction(faction, selectedCount, view, candidates) 
                 if(hx!==null&&hx!==undefined)return hx
             }
         }
+        // [opt ERASMUS_PLUS Transport Planner] 队列全空/全达标/全不可达时, 不空手 done:
+        // 返回距本方地面单位最近的前沿已控格作为焦点, 让后方地面可经战略移动前推。
+        if(emcAFo&&emcAFo.erasmus_plus){
+            const myGnd=[]
+            for(let u=1;u<pieces.length;++u){
+                const p=pieces[u]
+                if(p&&p.faction===(role==="Japan"?0:1)&&p.class==="ground"){
+                    const h=G.location[u]
+                    if(h>=0&&h<=LAST_BOARD_HEX)myGnd.push(h)
+                }
+            }
+            if(myGnd.length){
+                let best=null,bd=99
+                for(let h=1;h<LAST_BOARD_HEX;++h){
+                    const md=(typeof get_map_data==="function")?get_map_data(h):null
+                    if(!md||!(md.named||md.port))continue
+                    if(!is_space_controlled(h,role==="Japan"?0:1))continue
+                    let hasGnd=false
+                    for(const gh of myGnd){if(gh===h){hasGnd=true;break}}
+                    if(hasGnd)continue
+                    let dd=99
+                    for(const gh of myGnd){const dist=get_distance(gh,h);if(dist<dd)dd=dist}
+                    if(dd<bd){bd=dd;best=h}
+                }
+                if(best!==null&&bd>=2)return best
+            }
+        }
         // 队列全空/全达标且无扫荡: 落回下方传统循环(不 return, 保留推进兜底)
     }
     // [opt W-PoW] 本回合 PoW 配额未达标 → 命名格夺占绝对优先(压过岛群簇分流)。
