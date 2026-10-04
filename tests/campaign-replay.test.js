@@ -87,6 +87,16 @@ test("a natural win is not counted until its sidecar proves full replay; raw res
     assert.equal(calls, 1)
 })
 
+test("verified schema-1 replay evidence remains readable after the verifier gains a separate code hash", t => {
+    const f = verificationFixture(t), game = f.loadGame()
+    fs.writeFileSync(verificationPath(f.resultFile), JSON.stringify({ schemaVersion: 1,
+        resultFile: f.resultFile, resultSha256: game.resultSha256,
+        replayFile: f.replayFile, replaySha256: game.replaySha256,
+        verifier: { runnerSha256: game.metadata.runnerSha256, metricsSha256: game.metadata.metricsSha256,
+            adapterSha256: game.metadata.adapterSha256 }, verified: true, verification: f.proof }))
+    assert.equal(f.loadGame().verification.status, "verified")
+})
+
 test("replay verification failure is preserved separately and never counted as a win", t => {
     const f = verificationFixture(t), originalHash = fileSha(f.resultFile)
     const verification = verifyGameResult(f.resultFile, f.locked, "campaign", () => { throw new Error("state digest mismatch fixture") })

@@ -1,7 +1,8 @@
 "use strict"
 
-// Verify the published AI-WIN-01 gzip replays against the bundled rule versions.
+// Verify a published AI-WIN gzip archive against its bundled rule versions.
 // Usage: node tools/verify-ai-win-archive.js [seed ...]
+//        node tools/verify-ai-win-archive.js --archive ai-win-02 [seed ...]
 const fs = require("fs")
 const path = require("path")
 const zlib = require("zlib")
@@ -9,14 +10,17 @@ const crypto = require("crypto")
 const os = require("os")
 const { verifyReplay } = require("../tests/match-run")
 
-const root = path.resolve(__dirname, "../replays/ai-win-01")
+const args = process.argv.slice(2)
+const archiveName = args[0] === "--archive" ? args.splice(0, 2)[1] : "ai-win-01"
+if (!["ai-win-01", "ai-win-02"].includes(archiveName)) throw new Error("unknown AI-WIN archive")
+const root = path.resolve(__dirname, "../replays", archiveName)
 const index = JSON.parse(fs.readFileSync(path.join(root, "index.json"), "utf8"))
-const selected = new Set(process.argv.slice(2).map(Number))
+const selected = new Set(args.map(Number))
 if (selected.size && [...selected].some(n => !Number.isSafeInteger(n))) throw new Error("seeds must be integers")
 const sha256 = bytes => crypto.createHash("sha256").update(bytes).digest("hex")
 
 let checked = 0
-const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ai-win-01-"))
+const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), archiveName + "-"))
 try {
     for (const entry of index.entries) {
         if (selected.size && !selected.has(entry.seed)) continue

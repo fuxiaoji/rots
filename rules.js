@@ -27814,15 +27814,72 @@ function ec_cbi(region) {
     return /^(India|NIndia|Burma|China|Ceylon)$/.test(String(region || ""))
 }
 
+function ec_manchuria_blocked(view, board) {
+    if (typeof EVEN_SHORT_CAMPAIGN_SCENARIO === "undefined"
+        || view.sid !== EVEN_SHORT_CAMPAIGN_SCENARIO || Number(view.turn || 0) < 7) return false
+    // ground_move_denied forbids all entry into Manchuria. Its resources can
+    // change hands only through an actual legal event, not a Korean land route.
+    const north = board.filter(m => m.resource && m.region === "Manchuria" && ec_control(m.hex, 0))
+    if (north.length < 2) return false
+    const soviet = (view.ai?.ownCards || []).find(c => /soviet/i.test(c.name || ""))
+    return !soviet?.allowed?.includes("event")
+}
+
 function ec_map() {
     if (typeof map === "undefined" || !Array.isArray(map)) return []
     // Honshu surrender includes the unnamed 3606 hex. Keep every public
     // national key without granting unnamed terrain any PoW credit.
     const homelandKeys = new Set(typeof nations !== "undefined" ? nations.JAPAN?.keys || [] : [])
-    return map.filter(m => m && (m.named || m.name || m.port || m.airfield || m.resource || homelandKeys.has(m.id)))
+    return map.filter(m => m && (m.named || m.name || m.port || m.airfield || m.resource
+        || homelandKeys.has(m.id)))
         .map(m => ({ ...m, hex: typeof hex_to_int === "function" ? hex_to_int(m.id) : m.id }))
         .filter(m => Number.isInteger(m.hex) && (typeof LAST_BOARD_HEX === "undefined" || m.hex <= LAST_BOARD_HEX))
         .sort((a, b) => a.hex - b.hex)
+}
+
+function ec_homeland_drive(view) {
+    if (typeof EVEN_SHORT_CAMPAIGN_SCENARIO !== "undefined" && view.sid === EVEN_SHORT_CAMPAIGN_SCENARIO) {
+        if (Number(view.turn || 0) < 7) return false
+        if (ec_manchuria_blocked(view, ec_map())) return true
+        // Otherwise do not abandon reachable resources until a real
+        // commandable ground/escort force is ready for the home islands.
+        const units = view.ai?.units || [], keys = view.ai?.victory?.homelandKeys || []
+        return units.some(g => g.faction === 1 && g.class === "ground" && (g.asp || g.aspCost)
+            && keys.some(key => ec_dist(g.location, key) <= 10)
+            && units.filter(n => n.faction === 1 && n.class === "naval" && n.location === g.location
+                && ec_service_compatible([g, n], view, 1)).length >= 3
+            && units.some(h => h.faction === 1 && h.class === "hq"
+                && ec_dist(h.location, g.location) <= Number(h.cr || 0)))
+    }
+    const atomic = view.ai?.victory?.atomic
+    const blockade = view.ai?.victory?.blockade
+    return Number(view.turn || 0) >= 10 && !atomic?.noStrategicBombingFailure && !blockade?.startedTurn
+}
+
+function ec_homeland_approach(view, board, units, faction) {
+    const keys = view.ai?.victory?.homelandKeys || []
+    if (!ec_homeland_drive(view) || Number(view.turn || 0) < 7 || !keys.length) return false
+    return board.some(m => m.port && !ec_cbi(m.region) && ec_control(m.hex, faction)
+        && units.some(u => u.faction === faction && u.location === m.hex
+            && (u.class === "ground" || u.class === "naval"))
+        && keys.some(key => !ec_control(key, faction) && ec_dist(m.hex, key) <= 10))
+}
+
+function ec_homeland_rally(view, board, units, faction, approach) {
+    if (!approach) return null
+    const keys = view.ai?.victory?.homelandKeys || []
+    const ports = board.filter(m => m.port && ec_control(m.hex, faction)
+        && keys.some(key => ec_dist(m.hex,key) <= 5))
+    const previous = view.ai?.plan?.campaign?.rallyPort
+    if (ports.some(m => m.hex === previous)) return previous
+    const staffed = ports.filter(m => units.some(u => u.faction === faction && u.location === m.hex
+        && (u.class === "ground" || u.class === "naval")))
+    staffed.sort((a,b) => {
+        const ad = Math.min(...keys.map(key => ec_dist(a.hex,key)))
+        const bd = Math.min(...keys.map(key => ec_dist(b.hex,key)))
+        return ad-bd || a.hex-b.hex
+    })
+    return staffed[0]?.hex ?? null
 }
 
 function ec_campaign_objective(view, board, units, faction) {
@@ -27834,19 +27891,31 @@ function ec_campaign_objective(view, board, units, faction) {
     const byHex = new Map(board.map(m => [m.hex, m]))
     const bases = board.filter(m => m.port && !ec_cbi(m.region) && ec_control(m.hex, faction)
         && units.some(u => u.faction === faction && u.location === m.hex && (u.class === "naval" || u.class === "ground" && (u.asp || u.aspCost))))
+    const homelandKeys = view.ai?.victory?.homelandKeys || []
+    const homelandDrive = ec_homeland_drive(view)
+    const homelandApproach = ec_homeland_approach(view, board, units, faction)
     if (Number.isInteger(previous) && byHex.has(previous) && objectiveAge < 2 && !ec_cbi(byHex.get(previous).region)
         && (!atomicApproach || byHex.get(previous).resource)
+        && (!homelandApproach || homelandKeys.some(key => ec_dist(previous, key) <= 8))
         && ec_control(previous, 1 - faction) && bases.some(b => ec_dist(b.hex, previous) <= 12)) return previous
     const targets = board.filter(m => m.named && (m.port || m.airfield || m.resource) && !ec_cbi(m.region)
-        && m.region !== "Manchuria" && ec_control(m.hex, 1 - faction))
+        && m.region !== "Manchuria"
+        && ec_control(m.hex, 1 - faction))
     const scored = targets.map(m => {
         const distance = Math.min(...bases.map(b => ec_dist(b.hex, m.hex)))
         const defenders = units.filter(u => u.faction !== faction && u.location === m.hex)
         const defense = defenders.reduce((sum, u) => sum + ec_cf(u) * (u.class === "ground" ? 1.2 : 0.5), 0)
         const tokyoDistance = typeof TOKYO === "undefined" ? 0 : ec_dist(m.hex, TOKYO)
+        const homeDistance = Math.min(...homelandKeys.map(key => ec_dist(m.hex, key)))
+        const mainland = homelandKeys.includes(m.hex)
+        const approachPort = m.port && m.region === "JMandates" && homeDistance <= 10
         return { hex: m.hex, distance, score: (m.port ? 12 : 0) + (m.airfield ? 8 : 0)
             + (!defenders.length ? 24 : 0) + (atomicApproach && m.resource ? 120 : 0)
+            + (turn >= 5 && typeof EVEN_SHORT_CAMPAIGN_SCENARIO !== "undefined"
+                && view.sid === EVEN_SHORT_CAMPAIGN_SCENARIO && m.resource ? 90 : 0)
             + (baseApproach && m.airfield && tokyoDistance <= 8 ? 45 : 0)
+            + (homelandApproach && mainland ? 135 : 0)
+            + (homelandDrive && turn >= 7 && approachPort ? 65 : 0)
             - (m.hex === previous && objectiveAge >= 2 ? objectiveAge * 20 : 0)
             - distance * 5 - defense - tokyoDistance * 0.2 }
     }).filter(m => m.distance <= 12)
@@ -27971,9 +28040,16 @@ function ec_garrison_reserve(view, board, units, faction) {
     const reserve = new Set()
     const recent = new Set(view.capture || [])
     const atomic = view.ai?.victory?.atomic
+    const resourceCount = Number(view.ai?.victory?.jpResources)
+    const bombingRoute = atomic?.noStrategicBombingFailure && atomic?.b29InRangeOfTokyo
+        && !view.ai?.victory?.blockade?.startedTurn
+    const evenShort = typeof EVEN_SHORT_CAMPAIGN_SCENARIO !== "undefined"
+        && view.sid === EVEN_SHORT_CAMPAIGN_SCENARIO
     const finalResourceChance = Number(view.turn) === 12 && Number(view.political_will) > 2
         && atomic?.noStrategicBombingFailure && atomic?.b29InRangeOfTokyo
-        && Number(view.ai?.victory?.jpResources) === 2
+        && (resourceCount === 2 || evenShort && resourceCount > 2 && !view.ai?.victory?.blockade?.startedTurn)
+    const earlyResourceSprint = evenShort && Number(view.turn) >= 9
+        && bombingRoute && resourceCount >= 4
     for (const m of board) {
         if (!(m.resource || recent.has(m.hex)) || !ec_control(m.hex, faction)) continue
         const at = units.filter(u => u.faction === faction && u.class === "ground" && u.location === m.hex)
@@ -27982,7 +28058,7 @@ function ec_garrison_reserve(view, board, units, faction) {
         // The last resource assault is a must-try on T12: reserving a sole
         // ground unit guarantees failure of the atomic route. Its destination
         // still needs an actual legal path and positive capture probability.
-        if (finalResourceChance) continue
+        if (finalResourceChance && !evenShort || m.resource && (finalResourceChance || earlyResourceSprint && !threatened)) continue
         if (at.length && (m.resource || threatened)) reserve.add(at[0].id)
     }
     return reserve
@@ -28008,10 +28084,18 @@ function ec_score_target(m, env) {
     if (env.previousObjective === m.hex) score += 8
     if (env.campaignObjective === m.hex) score += 18
     if (env.victory.b29Bases.includes(m.hex) && Number(env.view.turn) >= 6) score += 22
-    if (env.victory.homelandKeys.includes(m.hex))
+    if (env.victory.homelandKeys.includes(m.hex)) {
         score += env.victory.routes.homeland.remainingKeys.length === 1 ? 500 : 40
+        if (env.homelandApproach) score += env.homelandFoothold ? 150 : m.port ? 190 : 50
+    }
+    if (env.homelandApproach && Number(env.view.turn) >= 7 && m.port && m.region === "JMandates"
+        && env.victory.homelandKeys.some(key => ec_dist(m.hex, key) <= 10)) score += 65
     if (m.resource && Number(env.view.turn) >= 9 && env.victory.atomic?.noStrategicBombingFailure)
-        score += env.victory.jpResources <= 4 ? 150 : 80
+        score += env.victory.jpResources <= 4 ? 150
+            : typeof EVEN_SHORT_CAMPAIGN_SCENARIO !== "undefined" && env.view.sid === EVEN_SHORT_CAMPAIGN_SCENARIO ? 105 : 80
+    else if (m.resource && Number(env.view.turn) >= 5 && typeof EVEN_SHORT_CAMPAIGN_SCENARIO !== "undefined"
+        && env.view.sid === EVEN_SHORT_CAMPAIGN_SCENARIO)
+        score += 95
     if (defenders.some(u => u.class === "hq")) score += env.victory.routes.headquarters.enemyHqCount <= 1 ? 120 : 38
     // A reachable resource is useful, but proximity to Tokyo alone never makes
     // a distant or impossible invasion preferable to an executable landing.
@@ -28080,7 +28164,20 @@ function ec_terminal_resource_target(target, env) {
     const atomic = env.victory?.atomic
     return Number(env.view.turn) === 12 && Number(env.view.political_will) > 2
         && !!atomic?.noStrategicBombingFailure && !!atomic?.b29InRangeOfTokyo
-        && env.victory.jpResources === 2 && env.victory.resourceTargets.includes(target)
+        && (env.victory.jpResources === 2 || typeof EVEN_SHORT_CAMPAIGN_SCENARIO !== "undefined"
+            && env.view.sid === EVEN_SHORT_CAMPAIGN_SCENARIO && env.victory.jpResources > 2)
+        && env.victory.resourceTargets.includes(target)
+}
+
+function ec_resource_clock_target(target, env) {
+    const turn = Number(env.view.turn || 0)
+    const atomic = env.victory?.atomic
+    return typeof EVEN_SHORT_CAMPAIGN_SCENARIO !== "undefined" && env.view.sid === EVEN_SHORT_CAMPAIGN_SCENARIO
+        && turn >= 9 && turn < 12 && Number(env.view.political_will) > 2 && env.powGap === 0
+        && atomic?.noStrategicBombingFailure && atomic?.b29InRangeOfTokyo
+        && !env.victory.blockade?.startedTurn
+        && env.victory.jpResources - 1 >= 12 - turn
+        && env.victory.resourceTargets.includes(target)
 }
 
 function ec_assess(group, support, target, amphibious, env) {
@@ -28158,13 +28255,14 @@ function ec_assess(group, support, target, amphibious, env) {
             + reactionWeight * (amphibious ? fullReactionNaval : 1) * pGroundWithReaction
         : (amphibious ? noReactionNaval : 1) * pGround
     const terminalResource = ec_terminal_resource_target(target, env)
-    const minimum = terminalResource ? 0 : env.powGap && Number(env.view.political_will) <= 2
+    const resourceClock = ec_resource_clock_target(target, env)
+    const minimum = terminalResource ? 0 : resourceClock ? 0.35 : env.powGap && Number(env.view.political_will) <= 2
         ? Number(config.epDesperateMinP ?? 0.45) : Number(config.epMinP ?? 0.6)
     const desiredProbability = Number(config.epDesiredP ?? 0.75)
-    const viableNavalRoute = terminalResource ? pCapture > 0 : navalSafe
+    const viableNavalRoute = terminalResource || resourceClock ? pCapture > 0 : navalSafe
     return { executable: ground.length > 0 && viableNavalRoute && pCapture > 0 && pCapture >= minimum,
         pCapture: Number(pCapture.toFixed(2)), requiredProbability: minimum, desiredProbability,
-        riskPolicy: terminalResource ? "final-resource-deadline" : "ordinary-capture",
+        riskPolicy: terminalResource ? "final-resource-deadline" : resourceClock ? "resource-clock" : "ordinary-capture",
         attackingGround: ground.reduce((s, u) => s + ec_cf(u), 0), defendingGround: groundDef.reduce((s, u) => s + ec_cf(u), 0),
         defendingGarrisons: groundDef.filter(u => u.garrison).map(u => u.id),
         pGround, pGroundWithReaction, pNaval: noReactionNaval, pNavalWithReaction: fullReactionNaval,
@@ -28206,7 +28304,7 @@ function ec_missions(env) {
                 const carrier = compatibleEscorts.find(n => Number(n.br) > 0)
                 const orders = [compatibleEscorts]
                 if (carrier && compatibleEscorts[0] !== carrier) orders.push([carrier, ...compatibleEscorts.filter(n => n.id !== carrier.id)])
-                for (const order of orders) for (let ns = 1; ns <= Math.min(4, order.length); ns++)
+                for (const order of orders) for (let ns = 1; ns <= Math.min(6, order.length); ns++)
                     if (ng + ns <= env.budget) groups.push({ units: groundGroup.concat(order.slice(0, ns)), mode: "AA",
                         value: typeof AMPH_MOVE === "undefined" ? 8 : AMPH_MOVE })
             }
@@ -28222,6 +28320,15 @@ function ec_missions(env) {
         for (const hex of reach.reachableHexes || []) {
             const m = env.byHex.get(hex)
             if (!m || !ec_control(hex, 1 - env.faction)) continue
+            const nearHomeOrigin = env.byHex.get(group.units[0].location)?.port
+                && env.victory.homelandKeys.some(key => ec_dist(group.units[0].location,key) <= 5)
+            const nearHomeTarget = env.victory.homelandKeys.some(key => ec_dist(hex,key) <= 5)
+            // Once the current PoW quota is safe, do not spend the only
+            // assembled invasion escort on a distant late resource raid when
+            // too many Japanese resources remain for the atomic deadline.
+            if (env.homelandApproach && Number(env.view.turn) >= 9 && env.powGap === 0
+                && env.victory.jpResources > 4 && group.mode === "AA"
+                && group.units.some(u => u.class === "naval") && nearHomeOrigin && !nearHomeTarget) continue
             // 8.45D also applies to empty one-hex islands. Some old movement
             // paths omit this check in their empty-landing branch; do not use
             // that omission to grant the bot an illegal invasion.
@@ -28229,6 +28336,18 @@ function ec_missions(env) {
                 && !group.units.some(u => u.class === "ground" && u.service === "navy")) continue
             const support = ec_support(group.units, hex, env)
             let force = support.slice(), assessment = ec_assess(group.units, force, hex, group.mode === "AA", env)
+            if (env.victory.homelandKeys.includes(hex)) {
+                const candidate = { hex, hq: env.hq.id, cardId: env.cardId, pCapture: assessment.pCapture,
+                    requiredProbability: assessment.requiredProbability, reason: assessment.rejection,
+                    movementUnitIds: group.units.map(u => u.id), supportUnitIds: force.map(u => u.id),
+                    mode: group.mode, attackingGround: assessment.attackingGround,
+                    defendingGround: assessment.defendingGround, attackingAirSea: assessment.attackingAirSea,
+                    defendingAirSea: assessment.defendingAirSea, potentialReaction: assessment.potentialReaction }
+                const previous = env.homeAssaults.get(hex)
+                if (!previous || candidate.pCapture > previous.pCapture
+                    || candidate.pCapture === previous.pCapture && candidate.attackingGround > previous.attackingGround)
+                    env.homeAssaults.set(hex, candidate)
+            }
             if (group.mode === "AA" && !group.units.some(u => u.class === "naval") && !assessment.unopposedLanding) continue
             if (!assessment.executable) {
                 if (env.blockers.length < 12) env.blockers.push({ hex, reason: assessment.rejection,
@@ -28242,7 +28361,8 @@ function ec_missions(env) {
                 force.pop(); assessment = reduced
             }
             const score = ec_score_target(m, env) * assessment.pCapture
-                + (assessment.riskPolicy === "final-resource-deadline" ? 1000 + 1000 * assessment.pCapture : 0)
+                + (assessment.riskPolicy === "final-resource-deadline" ? 1000 + 1000 * assessment.pCapture
+                    : assessment.riskPolicy === "resource-clock" ? 60 + 120 * assessment.pCapture : 0)
                 - (group.units.length + force.length) * 2 - ec_dist(group.units[0].location, hex)
                 - Math.max(0, assessment.desiredProbability - assessment.pCapture) * 40
             result.push(ec_make_task("CONQUEST", hex, group.units, force, group.mode, env,
@@ -28261,7 +28381,11 @@ function ec_transport(env) {
         .sort((a, b) => ec_score_target(b, env) - ec_score_target(a, env) || a.hex - b.hex)
     if (!enemyTargets.length) return tasks
     const ownGround = env.units.filter(u => u.faction === env.faction && u.class === "ground")
-    for (const u of env.available.filter(u => u.class === "ground" && u.stratMove && !env.garrisonReserve.has(u.id)).slice(0, 12)) {
+    const transportCandidates = env.available.filter(u => u.class === "ground" && u.stratMove && !env.garrisonReserve.has(u.id))
+    const transports = env.homelandApproach ? transportCandidates.sort((a,b) => ec_dist(a.location, env.campaignObjective ?? a.location)
+        - ec_dist(b.location, env.campaignObjective ?? b.location) || ec_cf(b)-ec_cf(a) || a.id-b.id).slice(0, 18)
+        : transportCandidates.slice(0, 12)
+    for (const u of transports) {
         const cbi = h => ec_cbi(env.byHex.get(h)?.region)
         const campaignGoal = !cbi(u.location) && env.byHex.get(env.campaignObjective)
         const goal = campaignGoal || enemyTargets.filter(m => cbi(m.hex) === cbi(u.location))
@@ -28275,16 +28399,30 @@ function ec_transport(env) {
             const localEnemy = goal
             if (!localEnemy) continue
             const before = ec_dist(u.location, localEnemy.hex), after = ec_dist(hex, localEnemy.hex)
-            const fleet = env.units.some(n => n.faction === env.faction && n.class === "naval" && n.location === hex)
+            const escorts = env.units.filter(n => n.faction === env.faction && n.class === "naval" && n.location === hex)
+            const fleet = escorts.length > 0
+            const compatibleFleet = escorts.some(n => ec_service_compatible([u, n], env.view, env.faction))
             const held = (env.view.capture || []).includes(hex) || !!md.resource
             const groundCount = ownGround.filter(g => g.location === hex).length
+            const sourceReady = env.byHex.get(u.location)?.port && ec_control(u.location, env.faction)
+                && env.units.some(n => n.faction === env.faction && n.class === "naval" && n.location === u.location
+                    && ec_service_compatible([u,n], env.view, env.faction))
+                && before <= 8
+            const homelandAssembly = !sourceReady && env.homelandApproach && hex === env.homelandRallyPort
+                && env.victory.homelandKeys.includes(localEnemy.hex)
+                && compatibleFleet && groundCount < 2 && ec_dist(hex, localEnemy.hex) <= 8
             // Keep gains occupied, or assemble at a port that gets this unit
-            // closer to a real target. No nearest-friendly-port oscillation.
-            if (!(before >= after + 2 && after <= 8) && !(held && groundCount === 0 && after <= 6)) continue
-            const score = (held && groundCount === 0 ? 48 : 0) + (fleet ? 30 : 0)
+            // closer to a real target. A mainland landing also needs a port
+            // shared by ground and escort, even when it is no closer by hexes.
+            if (!(before >= after + 2 && after <= 8) && !(held && groundCount === 0 && after <= 6)
+                && !homelandAssembly) continue
+            const score = (held && groundCount === 0 ? 48 : 0)
+                + ((env.homelandApproach ? compatibleFleet : fleet) ? 30 : 0)
                 + Math.min(12, before - after) * 3 - after * 2 - groundCount * 12
+                + (homelandAssembly ? 120 + Math.min(30, ec_cf(u)) : 0)
             tasks.push(ec_make_task("REDEPLOY", hex, [u], [], "STRATEGIC", env,
-                { score, objective: held && groundCount === 0 ? "GARRISON" : "ASSEMBLE", followUpTarget: localEnemy.hex }))
+                { score, objective: held && groundCount === 0 ? "GARRISON"
+                    : homelandAssembly ? "HOMELAND_ASSEMBLE" : "ASSEMBLE", followUpTarget: localEnemy.hex }))
         }
     }
     // Rendezvous whole legal groups, including a carrier alternative when raw
@@ -28308,7 +28446,10 @@ function ec_transport(env) {
             if (!ec_cbi(env.byHex.get(origin)?.region) && ec_cbi(destination.region)) continue
             const present = env.units.filter(u => u.faction === env.faction && u.class === "naval" && u.location === hex)
             const presentCf = present.reduce((s,u)=>s+ec_cf(u),0)
-            if (present.length >= 2 && present.some(u => Number(u.br) > 0) && presentCf >= 30) continue
+            const sourceHomeDistance = Math.min(...env.victory.homelandKeys.map(key => ec_dist(origin,key)))
+            const destinationHomeDistance = Math.min(...env.victory.homelandKeys.map(key => ec_dist(hex,key)))
+            if (env.homelandApproach && env.byHex.get(origin)?.port && sourceHomeDistance <= 5
+                && destinationHomeDistance > sourceHomeDistance) continue
             if (present.length + group.length > 6 || !ec_service_compatible(at.concat(group), env.view, env.faction)) continue
             const candidateTargets = enemyTargets.filter(m => ec_cbi(m.region) === ec_cbi(destination.region))
             const campaignTarget = env.byHex.get(env.campaignObjective)
@@ -28317,22 +28458,32 @@ function ec_transport(env) {
             if (!target) continue
             const distance = ec_dist(hex, target.hex)
             if (distance > 8) continue
+            if (env.homelandApproach && env.homelandRallyPort
+                && env.victory.homelandKeys.includes(target.hex)
+                && (origin === env.homelandRallyPort || hex !== env.homelandRallyPort
+                    && ec_dist(hex, env.homelandRallyPort) >= ec_dist(origin, env.homelandRallyPort))) continue
+            const homelandEscort = env.homelandApproach && env.victory.homelandKeys.includes(target.hex)
+                && hex === env.homelandRallyPort
+            const reactionCf = homelandEscort ? ec_reaction(target.hex, env).units.reduce((s,u)=>s+ec_cf(u),0) : 0
+            const neededCf = homelandEscort ? Math.min(95, Math.max(60, Math.ceil(reactionCf * .9))) : 30
+            if (present.length >= 2 && present.some(u => Number(u.br) > 0) && presentCf >= neededCf) continue
             if ((env.redeployments || []).some(x => group.some(u => u.id === x.unit)
                 && x.from === hex && x.to === origin)) continue
             const sourceGround = ownGround.filter(g => g.location === origin && (g.asp || g.aspCost))
             const sourceReady = sourceGround.some(g => ec_service_compatible([g].concat(local), env.view, env.faction))
-                && local.length >= 2 && local.some(u => Number(u.br) > 0) && local.reduce((s,u)=>s+ec_cf(u),0) >= 30
+                && local.length >= 2 && local.some(u => Number(u.br) > 0) && local.reduce((s,u)=>s+ec_cf(u),0) >= neededCf
             const remaining = local.filter(u => !group.some(n => n.id === u.id))
             const remainingReady = remaining.length >= 2 && remaining.some(u => Number(u.br) > 0)
-                && remaining.reduce((s,u)=>s+ec_cf(u),0) >= 30
+                && remaining.reduce((s,u)=>s+ec_cf(u),0) >= neededCf
             // Keep a complete landing force together unless the new port makes
             // material progress toward its same explicit target.
             if (sourceReady && !remainingReady && ec_dist(origin, target.hex) < distance + 2) continue
             const combined = present.concat(group), cf = combined.reduce((s,u)=>s+ec_cf(u),0)
             const gainsCover = !present.some(u=>Number(u.br)>0) && group.some(u=>Number(u.br)>0)
-            const readiness = Math.min(30, cf) - Math.min(30, presentCf) + (gainsCover ? 18 : 0)
+            const readiness = Math.min(neededCf, cf) - Math.min(neededCf, presentCf) + (gainsCover ? 18 : 0)
             tasks.push(ec_make_task("REDEPLOY", hex, group, [], "STRATEGIC", env,
-                { score: 28 + readiness - distance * 2 - group.length * 2 + (target.hex === env.campaignObjective ? 10 : 0),
+                { score: 28 + readiness - distance * 2 - group.length * 2
+                    + (target.hex === env.campaignObjective ? 10 : 0) + (homelandEscort ? 75 : 0),
                     objective: "ASSEMBLE_ESCORT", followUpTarget: target.hex }))
             }
         }
@@ -28362,6 +28513,34 @@ function ec_transport(env) {
     return tasks.sort((a, b) => b.score - a.score || a.hex - b.hex || a.id.localeCompare(b.id))
 }
 
+function ec_hq_relocation(view, board, units, faction, powGap, ownCards, victory) {
+    const turn = Number(view.turn || 0)
+    if (!ec_homeland_drive(view) || turn < 7 || turn > 9 || powGap > 0 || ownCards.length < 2) return null
+    const prior = view.ai?.plan?.campaign?.hqRelocation
+    if (prior && turn <= Number(prior.turn) + 1) return null
+    const forward = board.filter(m => m.port && m.region === "JMandates"
+        && victory.homelandKeys.some(key => ec_dist(m.hex, key) <= 5))
+        .sort((a,b) => Math.min(...victory.homelandKeys.map(key => ec_dist(a.hex,key)))
+            - Math.min(...victory.homelandKeys.map(key => ec_dist(b.hex,key))) || a.hex-b.hex)[0]
+    if (!forward || units.some(u => u.faction === faction && u.class === "hq" && !view.oos?.includes(u.id)
+        && ec_dist(u.location, forward.hex) <= Number(u.cr || 0))) return null
+    const staging = board.filter(m => m.port && !ec_cbi(m.region) && ec_control(m.hex, faction)
+        && ec_dist(m.hex, forward.hex) <= 14
+        && units.some(u => u.faction === faction && u.class === "ground" && u.location === m.hex)
+        && units.some(u => u.faction === faction && u.class === "naval" && u.location === m.hex))
+        .sort((a,b) => ec_dist(a.hex, forward.hex)-ec_dist(b.hex, forward.hex) || a.hex-b.hex)[0]
+    if (!staging) return null
+    const hq = units.filter(u => u.faction === faction && u.class === "hq" && Number(u.cr) > 0)
+        .sort((a,b) => Number(b.cr)-Number(a.cr) || a.id-b.id)[0]
+    const card = ownCards.filter(c => (view.actions?.card || []).includes(c.id)
+        && c.allowed?.includes("displace_hq") && !/soviet/i.test(c.name || ""))
+        .sort((a,b) => Number(!!a.previewEvent)-Number(!!b.previewEvent)
+            || Number(a.ops || 0)-Number(b.ops || 0) || a.id-b.id)[0]
+    if (!hq || !card) return null
+    return { turn, hqId: hq.id, cardId: card.id, stagingHex: staging.hex, forwardHex: forward.hex,
+        reason: "forward landing port lies outside every on-map HQ command radius; redeploy next reinforcement phase" }
+}
+
 function ec_plan(view, context) {
     context = context || {}
     const role = context.role || view.active || "Allies", faction = role === "Japan" ? 0 : 1
@@ -28371,6 +28550,9 @@ function ec_plan(view, context) {
     const powGap = Math.max(0, Number(view.pow || 0) - capture.length)
     const victory = ec_victory(view, board, faction)
     const campaignObjective = ec_campaign_objective(view, board, units, faction)
+    const homelandApproach = ec_homeland_approach(view, board, units, faction)
+    const homelandRallyPort = ec_homeland_rally(view, board, units, faction, homelandApproach)
+    const homelandFoothold = victory.homelandKeys.some(key => ec_control(key, faction))
     const garrisonReserve = ec_garrison_reserve(view, board, units, faction)
     const preCard = ec_card_window(view), choosingHq = /choose hq/i.test(String(view.prompt || ""))
     const activeIds = (view.offensive?.active_units?.[faction] || []).flat()
@@ -28397,7 +28579,7 @@ function ec_plan(view, context) {
     const cardChoices = preCard ? ocChoices.concat(ecChoices)
         : [{ ...(view.ai?.plan?.cardId === currentCard ? view.ai.plan.cardSpec : {}), id: currentCard,
             mode: typeof EC !== "undefined" && view.offensive?.type === EC ? "event" : "ops" }]
-    const blockers = [], choices = [], attainable = new Map()
+    const blockers = [], choices = [], attainable = new Map(), homeAssaults = new Map()
     const axisTargets = new Set((context.strategicTargets || []).map(t => typeof t === "number" ? t : t.hex))
     for (const card of cardChoices) for (const hq of eligibleHqs) {
         if (card.mode === "event" && card.hq?.length && !card.hq.includes(hq.id)) continue
@@ -28416,7 +28598,8 @@ function ec_plan(view, context) {
         const budget = promptBudget ? Number(promptBudget[1]) : preview?.activationBudget ?? Math.max(1, Number(logistics || 0) + Number(hq.cm || 0))
         const env = { view, faction, units, board, byHex, available, hq, budget, cardId: card.id,
             cardMode: preCard ? card.mode : undefined, powGap, powPressure, victory, axisTargets, redeployments,
-            previousObjective: view.ai?.plan?.objective?.hex, campaignObjective, moves: new Map(), reactions: new Map(), blockers, garrisonReserve }
+            previousObjective: view.ai?.plan?.objective?.hex, campaignObjective, homelandApproach, homelandRallyPort, homelandFoothold,
+            moves: new Map(), reactions: new Map(), blockers, garrisonReserve, homeAssaults }
         const attack = ec_missions(env)
         const transport = ec_transport(env)
         const aspBudget = Math.max(0, Number(view.asp?.[faction]?.[0] || 0) - Number(view.asp?.[faction]?.[1] || 0))
@@ -28460,6 +28643,7 @@ function ec_plan(view, context) {
         "multiple-offensives-or-conflicting-forces": "Known targets are alternatives and can share units, ASP or card slots; their union is not a guaranteed sequence",
     }
     victory.routes.homeland.immediatelyExecutableKeys = tasks.filter(t => t.kind === "CONQUEST" && victory.homelandKeys.includes(t.hex)).map(t => t.hex)
+    victory.routes.homeland.bestKnownAssaults = [...homeAssaults.values()].sort((a,b)=>a.hex-b.hex)
     victory.routes.atomic.immediateResourceTargets = tasks.filter(t => t.kind === "CONQUEST" && victory.resourceTargets.includes(t.hex)).map(t => t.hex)
     victory.routes.headquarters.immediatelyExecutableTargets = tasks.filter(t => t.kind === "CONQUEST"
         && victory.routes.headquarters.targets.some(h => h.hex === t.hex)).map(t => t.hex)
@@ -28469,12 +28653,13 @@ function ec_plan(view, context) {
         movementModes: t.movementModes.slice(), campaignTask: true, taskId: t.id,
         objective: t.objective, damageLevel: 1 }))
     const first = tasks[0]
-    return { version: 1, role, turn: Number(view.turn || 0), cardId: best?.cardId || ec_offensive_key(view, role),
+    const plan = { version: 1, role, turn: Number(view.turn || 0), cardId: best?.cardId || ec_offensive_key(view, role),
         cardIntent: best?.cardMode || null, cardSpec: best?.cardSpec || null, preferredHq: best?.hq || null, activationBudget: best?.budget || 0,
         objective: first ? { type: first.objective, hex: first.followUpTarget ?? first.hex } : { type: "BLOCKED", hex: null },
         phase: first ? first.kind === "CONQUEST" ? "CAPTURE" : first.objective === "GARRISON" ? "GARRISON" : "ASSEMBLE" : "BLOCKED",
         focus: first?.hex ?? null, targets, tasks, blockers: blockers.slice(0, 16), garrisonReserveIds: [...garrisonReserve].sort((a,b)=>a-b),
-        campaign: { theater: "PACIFIC", objectiveHex: campaignObjective, redeployments,
+        campaign: { theater: "PACIFIC", objectiveHex: campaignObjective, rallyPort: homelandRallyPort, redeployments,
+            hqRelocation: view.ai?.plan?.campaign?.hqRelocation || null,
             objectiveSinceTurn: view.ai?.plan?.campaign?.objectiveHex === campaignObjective
                 ? view.ai.plan.campaign.objectiveSinceTurn ?? view.ai.plan.turn : Number(view.turn || 0) },
         pow: { required: Number(view.pow || 0), held: capture.length, gap: powGap, politicalWill: Number(view.political_will || 0),
@@ -28484,6 +28669,24 @@ function ec_plan(view, context) {
             selectedCaptureTargets: selectedCaptures.map(t=>t.hex), expectedSelectedCaptures: Number(selectedCaptures.reduce((s,t)=>s+t.assessment.pCapture,0).toFixed(2)),
             quotaFeasibility, reason: quotaReasons[quotaFeasibility], forecastScope: "current-public-position-and-evaluated-own-cards; no future-draw-or-sequence-guarantee" },
         victory, preCard, strategySource: "CAMPAIGN_PLANNER", rulesSource: "engine legality queries" }
+    if (preCard) {
+        const relocation = ec_hq_relocation(view, board, units, faction, powGap, ownCards, victory)
+        if (relocation) {
+            plan.hqRelocation = relocation
+            plan.campaign.hqRelocation = relocation
+            plan.cardId = relocation.cardId
+            plan.cardIntent = "displace_hq"
+            plan.cardSpec = ownCards.find(c => c.id === relocation.cardId) || null
+            plan.preferredHq = null
+            plan.activationBudget = 0
+            plan.tasks = []
+            plan.targets = []
+            plan.focus = relocation.stagingHex
+            plan.phase = "HQ_REDEPLOY"
+            plan.objective = { type: "HQ_REDEPLOY", hex: relocation.forwardHex }
+        }
+    }
+    return plan
 }
 
 function ec_apply_plan(view, context) {
@@ -28615,6 +28818,8 @@ function ec_pick_action(view, context, plan) {
     if (/move units/i.test(prompt) && plan.focus === null && actions.done)
         return { action: "done", argument: undefined, via: "campaign-no-pending-movement" }
     if (ec_card_window(view) && Array.isArray(actions.card)) {
+        if (plan.hqRelocation && actions.card.includes(plan.hqRelocation.cardId))
+            return { action: "card", argument: plan.hqRelocation.cardId, via: "campaign-forward-hq-relocation-card" }
         // Let the existing historical-event logic handle the Soviet card and
         // service-rivalry remedies; these are public own-hand choices.
         const important = (view.ai?.ownCards || []).some(c => /soviet|inter.?service|joint.*planning/i.test(c.name || "")
@@ -28624,6 +28829,12 @@ function ec_pick_action(view, context, plan) {
         return null
     }
     const selectedCard = ec_selected_card(view)
+    if (/select action/i.test(prompt) && plan.hqRelocation && actions.displace_hq
+        && (selectedCard === null || selectedCard === plan.hqRelocation.cardId))
+        return { action: "displace_hq", argument: undefined, via: "campaign-forward-hq-relocation" }
+    if (/choose hq to displace/i.test(prompt) && plan.hqRelocation
+        && legalUnit.includes(plan.hqRelocation.hqId))
+        return { action: "unit", argument: plan.hqRelocation.hqId, via: "campaign-forward-hq-selection" }
     if (/select action/i.test(prompt) && !plan.delegatedCard && (selectedCard === null || selectedCard === plan.cardId)
         && plan.tasks.length && actions[plan.cardIntent || "ops"])
         return { action: plan.cardIntent || "ops", argument: undefined, via: "campaign-card-intent" }
@@ -28655,8 +28866,12 @@ function ec_positioning_context(view, plan) {
         ?? plan.objective?.hex ?? plan.focus ?? view.ai?.focus ?? null
     const bases = ec_map().filter(m => (m.port || m.airfield) && ec_control(m.hex, faction))
         .map(m => ({ hex: m.hex, port: !!m.port, airfield: !!m.airfield, region: m.region || "", resource: !!m.resource }))
-    return { version: 1, role: plan.role, focus: next,
+    return { version: 1, role: plan.role, scenario: view.sid, focus: next,
         pacificFocus: plan.campaign?.objectiveHex ?? ec_campaign_objective(view, ec_map(), view.ai?.units || [], faction),
+        homelandKeys: (view.ai?.victory?.homelandKeys || []).slice(), interService: !!view.inter_service?.[faction],
+        homelandApproach: ec_homeland_approach(view, ec_map(), view.ai?.units || [], faction),
+        homelandRallyPort: plan.campaign?.rallyPort ?? null,
+        hqRelocation: plan.campaign?.hqRelocation || null,
         bases, units: own.map(u => ({ id: u.id, class: u.class, location: u.location, service: u.service || null,
             asp: !!u.asp, b29: !!u.b29 })), captured: (view.capture || []).slice(),
         assemblyPorts: (plan.tasks || []).filter(t => /ASSEMBLE/.test(t.objective || "")).map(t => t.hex),
@@ -28695,16 +28910,33 @@ function ec_position_score(hex, faction, piece, source, position) {
     const theaterPenalty = pacificUnit && ec_cbi(md.region) ? 1 : 0
     const ground = at.filter(u => u.class === "ground").length
     const naval = at.filter(u => u.class === "naval").length
-    const paired = piece.class === "naval" ? ground > 0 : piece.class === "ground" ? naval > 0 : false
+    const compatibleWith = other => !position.interService
+        || !position.homelandApproach && (typeof EVEN_SHORT_CAMPAIGN_SCENARIO === "undefined"
+            || position.scenario !== EVEN_SHORT_CAMPAIGN_SCENARIO)
+        || !["army", "navy"].includes(piece.service) || !["army", "navy"].includes(other.service)
+        || piece.service === other.service
+    const paired = piece.class === "naval" ? at.some(u => u.class === "ground" && compatibleWith(u))
+        : piece.class === "ground" ? at.some(u => u.class === "naval" && compatibleWith(u)) : false
     const assembly = (position.assemblyPorts || []).includes(hex)
     const recent = (position.captured || []).includes(hex)
     const front = focus === null || distance <= 8
+    const invasionPort = position.homelandApproach && hex === position.homelandRallyPort
+    if (piece.class === "hq" && (position.homelandApproach || position.hqRelocation)
+        && (position.homelandKeys || []).length && typeof piece.cr === "number") {
+        const home = Math.min(...position.homelandKeys.map(key => ec_dist(hex, key)))
+        const land = at.some(u => u.class === "ground"), escort = at.some(u => u.class === "naval")
+        const coversHome = home <= piece.cr
+        return { score: [theaterPenalty, coversHome && home <= 10 ? 0 : coversHome ? 1 : 2,
+                home * 3 - (land && escort ? 20 : 0) - (recent ? 4 : 0), occupied, hex],
+            reason: coversHome && home <= 10 ? "forward-hq-supports-homeland-landing" : "hq-covers-campaign-front" }
+    }
     if (piece.b29 && typeof TOKYO !== "undefined") {
         const tokyoDistance = ec_dist(hex, TOKYO)
         return { score: [tokyoDistance <= 8 ? 0 : 2, tokyoDistance, occupied, hex],
             reason: tokyoDistance <= 8 ? "b29-base-in-tokyo-range" : "b29-base-approach" }
     }
-    const priority = front && (paired || assembly) ? 0 : front ? 1 : 2
+    const priority = piece.class === "naval" && invasionPort ? 0
+        : front && (paired || assembly) ? 0 : front ? 1 : 2
     const proximity = distance * 4 - (paired ? 12 : 0) - (recent ? 4 : 0)
     return { score: [theaterPenalty, priority, proximity, occupied, hex],
         reason: paired && front ? "ground-escort-common-front-port" : assembly && front ? "planned-assembly-port"
