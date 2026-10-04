@@ -1,0 +1,996 @@
+{
+ "exportedAt": "2026-10-04T04:35:28.096Z",
+ "source": "rots-runtime-pve/db",
+ "games": [
+  {
+   "gameId": 8,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "pve",
+   "result": "Japan",
+   "turn": null,
+   "moves": 281,
+   "created": "2026-09-04 04:00:40",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "42439069",
+     "bot_id": null
+    }
+   ],
+   "file": "game-8.json"
+  },
+  {
+   "gameId": 15,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "pve",
+   "result": null,
+   "turn": null,
+   "moves": 64,
+   "created": "2026-09-04 13:23:47",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "42439069",
+     "bot_id": null
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-15.json"
+  },
+  {
+   "gameId": 17,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "pve",
+   "result": null,
+   "turn": null,
+   "moves": 81,
+   "created": "2026-09-04 14:36:30",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "fffffff",
+     "bot_id": null
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-17.json"
+  },
+  {
+   "gameId": 18,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "pve",
+   "result": "Japan",
+   "turn": null,
+   "moves": 341,
+   "created": "2026-09-05 03:52:48",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "fffffff",
+     "bot_id": null
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-18.json"
+  },
+  {
+   "gameId": 21,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": null,
+   "turn": null,
+   "moves": 99,
+   "created": "2026-09-05 10:08:01",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-21.json"
+  },
+  {
+   "gameId": 27,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": null,
+   "turn": null,
+   "moves": 481,
+   "created": "2026-09-05 12:35:10",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-27.json"
+  },
+  {
+   "gameId": 28,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": null,
+   "turn": null,
+   "moves": 208,
+   "created": "2026-09-05 12:50:02",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-28.json"
+  },
+  {
+   "gameId": 29,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": null,
+   "turn": null,
+   "moves": 60,
+   "created": "2026-09-05 13:00:26",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-29.json"
+  },
+  {
+   "gameId": 32,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "pve",
+   "result": null,
+   "turn": null,
+   "moves": 154,
+   "created": "2026-09-05 13:48:54",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "42439069",
+     "bot_id": null
+    }
+   ],
+   "file": "game-32.json"
+  },
+  {
+   "gameId": 34,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": null,
+   "turn": null,
+   "moves": 439,
+   "created": "2026-09-06 03:29:32",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-34.json"
+  },
+  {
+   "gameId": 36,
+   "scenario": "1943-1945 (The Even Shorter Campaign)",
+   "mode": "aivai",
+   "result": null,
+   "turn": null,
+   "moves": 365,
+   "created": "2026-09-06 07:50:15",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-36.json"
+  },
+  {
+   "gameId": 40,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": null,
+   "turn": null,
+   "moves": 175,
+   "created": "2026-09-06 08:41:56",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-40.json"
+  },
+  {
+   "gameId": 41,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": null,
+   "turn": null,
+   "moves": 94,
+   "created": "2026-09-06 08:47:39",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-41.json"
+  },
+  {
+   "gameId": 42,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": null,
+   "turn": null,
+   "moves": 44,
+   "created": "2026-09-06 09:26:12",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-42.json"
+  },
+  {
+   "gameId": 43,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": null,
+   "turn": null,
+   "moves": 302,
+   "created": "2026-09-06 09:29:45",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-43.json"
+  },
+  {
+   "gameId": 44,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": null,
+   "turn": null,
+   "moves": 162,
+   "created": "2026-09-06 10:11:41",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-44.json"
+  },
+  {
+   "gameId": 46,
+   "scenario": "1943-1945 (The Even Shorter Campaign)",
+   "mode": "pve",
+   "result": "Japan",
+   "turn": null,
+   "moves": 394,
+   "created": "2026-09-06 11:11:14",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "42439069",
+     "bot_id": null
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-46.json"
+  },
+  {
+   "gameId": 47,
+   "scenario": "1943-1945 (The Even Shorter Campaign)",
+   "mode": "aivai",
+   "result": "Japan",
+   "turn": null,
+   "moves": 240,
+   "created": "2026-09-09 03:27:33",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-47.json"
+  },
+  {
+   "gameId": 48,
+   "scenario": "1943-1945 (The Even Shorter Campaign)",
+   "mode": "aivai",
+   "result": "Japan",
+   "turn": null,
+   "moves": 326,
+   "created": "2026-09-09 05:04:30",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-48.json"
+  },
+  {
+   "gameId": 49,
+   "scenario": "1943-1945 (The Even Shorter Campaign)",
+   "mode": "aivai",
+   "result": "Japan",
+   "turn": null,
+   "moves": 262,
+   "created": "2026-09-09 07:22:16",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-49.json"
+  },
+  {
+   "gameId": 50,
+   "scenario": "1943-1945 (The Even Shorter Campaign)",
+   "mode": "aivai",
+   "result": "Japan",
+   "turn": null,
+   "moves": 179,
+   "created": "2026-09-09 08:22:37",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-50.json"
+  },
+  {
+   "gameId": 51,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": "Allies",
+   "turn": null,
+   "moves": 481,
+   "created": "2026-09-10 02:02:38",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    }
+   ],
+   "file": "game-51.json"
+  },
+  {
+   "gameId": 53,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": "Allies",
+   "turn": null,
+   "moves": 429,
+   "created": "2026-09-10 02:49:45",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    }
+   ],
+   "file": "game-53.json"
+  },
+  {
+   "gameId": 54,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": "Allies",
+   "turn": null,
+   "moves": 425,
+   "created": "2026-09-10 02:49:45",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    }
+   ],
+   "file": "game-54.json"
+  },
+  {
+   "gameId": 57,
+   "scenario": "1943-1945 (The Even Shorter Campaign)",
+   "mode": "aivai",
+   "result": "Japan",
+   "turn": null,
+   "moves": 425,
+   "created": "2026-09-10 03:00:43",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    }
+   ],
+   "file": "game-57.json"
+  },
+  {
+   "gameId": 58,
+   "scenario": "1943-1945 (The Even Shorter Campaign)",
+   "mode": "aivai",
+   "result": "Japan",
+   "turn": null,
+   "moves": 198,
+   "created": "2026-09-10 04:14:07",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-58.json"
+  },
+  {
+   "gameId": 59,
+   "scenario": "1943-1945 (The Even Shorter Campaign)",
+   "mode": "pve",
+   "result": null,
+   "turn": null,
+   "moves": 10,
+   "created": "2026-09-10 04:18:00",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "42439069",
+     "bot_id": null
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2"
+    }
+   ],
+   "file": "game-59.json"
+  },
+  {
+   "gameId": 60,
+   "scenario": "1943-1945 (The Even Shorter Campaign)",
+   "mode": "aivai",
+   "result": "Japan",
+   "turn": null,
+   "moves": 229,
+   "created": "2026-09-10 11:59:22",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    }
+   ],
+   "file": "game-60.json"
+  },
+  {
+   "gameId": 61,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": "Japan",
+   "turn": null,
+   "moves": 404,
+   "created": "2026-09-10 12:03:35",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    }
+   ],
+   "file": "game-61.json"
+  },
+  {
+   "gameId": 62,
+   "scenario": "1943-1945 (The Even Shorter Campaign)",
+   "mode": "aivai",
+   "result": "Japan",
+   "turn": null,
+   "moves": 427,
+   "created": "2026-09-10 12:10:17",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    }
+   ],
+   "file": "game-62.json"
+  },
+  {
+   "gameId": 63,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": "Allies",
+   "turn": null,
+   "moves": 387,
+   "created": "2026-09-11 01:51:47",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    }
+   ],
+   "file": "game-63.json"
+  },
+  {
+   "gameId": 64,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": "Allies",
+   "turn": null,
+   "moves": 550,
+   "created": "2026-09-11 01:51:47",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    }
+   ],
+   "file": "game-64.json"
+  },
+  {
+   "gameId": 65,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": "Allies",
+   "turn": null,
+   "moves": 346,
+   "created": "2026-09-11 01:51:48",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    }
+   ],
+   "file": "game-65.json"
+  },
+  {
+   "gameId": 66,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": "Japan",
+   "turn": null,
+   "moves": 458,
+   "created": "2026-09-11 02:01:23",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    }
+   ],
+   "file": "game-66.json"
+  },
+  {
+   "gameId": 67,
+   "scenario": "1943-1945 (The Even Shorter Campaign)",
+   "mode": "aivai",
+   "result": "Japan",
+   "turn": null,
+   "moves": 174,
+   "created": "2026-09-11 02:08:33",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    }
+   ],
+   "file": "game-67.json"
+  },
+  {
+   "gameId": 68,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": "Japan",
+   "turn": null,
+   "moves": 426,
+   "created": "2026-09-12 02:57:14",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    }
+   ],
+   "file": "game-68.json"
+  },
+  {
+   "gameId": 69,
+   "scenario": "1943-1945 (The Even Shorter Campaign)",
+   "mode": "aivai",
+   "result": null,
+   "turn": null,
+   "moves": 167,
+   "created": "2026-09-12 05:16:09",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt"
+    }
+   ],
+   "file": "game-69.json"
+  },
+  {
+   "gameId": 71,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": null,
+   "turn": null,
+   "moves": 309,
+   "created": "2026-09-12 06:23:03",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt-v5"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt-v5"
+    }
+   ],
+   "file": "game-71.json"
+  },
+  {
+   "gameId": 72,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": null,
+   "turn": null,
+   "moves": 40,
+   "created": "2026-09-12 09:17:48",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt-v5"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt-v5"
+    }
+   ],
+   "file": "game-72.json"
+  },
+  {
+   "gameId": 73,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": "Japan",
+   "turn": null,
+   "moves": 302,
+   "created": "2026-09-12 09:20:02",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt-v5"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt-v5"
+    }
+   ],
+   "file": "game-73.json"
+  },
+  {
+   "gameId": 74,
+   "scenario": "1943-1945 (The Even Shorter Campaign)",
+   "mode": "aivai",
+   "result": null,
+   "turn": null,
+   "moves": 320,
+   "created": "2026-09-12 11:53:32",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt-v5"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt-v5"
+    }
+   ],
+   "file": "game-74.json"
+  },
+  {
+   "gameId": 75,
+   "scenario": "1943-1945 (The Even Shorter Campaign)",
+   "mode": "aivai",
+   "result": null,
+   "turn": null,
+   "moves": 82,
+   "created": "2026-09-12 12:26:01",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt-v5"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt-v5"
+    }
+   ],
+   "file": "game-75.json"
+  },
+  {
+   "gameId": 76,
+   "scenario": "1943-1945 (The Even Shorter Campaign)",
+   "mode": "aivai",
+   "result": "Japan",
+   "turn": null,
+   "moves": 143,
+   "created": "2026-09-12 13:30:31",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt-v5"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt-v5"
+    }
+   ],
+   "file": "game-76.json"
+  },
+  {
+   "gameId": 77,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "aivai",
+   "result": "Japan",
+   "turn": null,
+   "moves": 277,
+   "created": "2026-09-12 13:33:07",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt-v5"
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt-v5"
+    }
+   ],
+   "file": "game-77.json"
+  },
+  {
+   "gameId": 78,
+   "scenario": "1942-1945 (The Shortened Campaign)",
+   "mode": "pve",
+   "result": "Allies",
+   "turn": null,
+   "moves": 400,
+   "created": "2026-09-12 13:39:08",
+   "players": [
+    {
+     "role": "Allies",
+     "user": "42439069",
+     "bot_id": null
+    },
+    {
+     "role": "Japan",
+     "user": "Deleted",
+     "bot_id": "erasmus-v2-opt-v5"
+    }
+   ],
+   "file": "game-78.json"
+  }
+ ]
+}
