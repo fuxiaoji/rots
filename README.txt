@@ -6,3 +6,6 @@ play.js & rules.js is read only compiled files. To compile run node .\tools\inli
 Import game: node bin/rtt-import game1.txt
 
 Contact me with mail danklipov97@gmail.com, tg @dklipov or discord fomelg#4134
+
+LLM local arena (Node.js 22+): run node tools/inline.js, then node tools/llm-arena.js.
+Open http://127.0.0.1:8090/ for human/FSM/LLM matches. Setup, memory, replay, and validation: docs/llm-interface.md.

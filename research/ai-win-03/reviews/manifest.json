@@ -1,0 +1,73 @@
+{
+  "task": "AI-WIN-03",
+  "recordedAt": "2026-10-05T08:01:14.998158+00:00",
+  "reviewedBundleSha256": "82a79baa7413584f008ed9748e23e1f4135ada2cd4a72ae62c188adbd6029b09",
+  "records": [
+    {
+      "name": "stacking-astra",
+      "configuredModel": "gpt-6-astra",
+      "reasoningEffort": "high",
+      "providerResolvedModel": null,
+      "modelProvenance": "explicit collaboration model selection; provider-resolved identifier and billing not exposed",
+      "promptFile": "stacking-astra-prompt.txt",
+      "promptSha256": "cef7160bd0877ef40a937c175c5f74841c49476a1b4925a5712e52c1ab9ddce1",
+      "responseFile": "stacking-astra-response.txt",
+      "responseSha256": "73d400ad8e74574d53728b7988485892242ca8e48557eb3bd043bffebb25e837",
+      "archiveScope": "final assessment and task-specific prompt excerpt; not the complete multi-turn transcript",
+      "elapsedMs": null,
+      "usage": null,
+      "decision": "采纳两个P1修复，加入真实动作与纯度回归；保留贪心搜索不完备边界。"
+    },
+    {
+      "name": "japan-opening-sol",
+      "configuredModel": "gpt-6.1-sol",
+      "reasoningEffort": "high",
+      "providerResolvedModel": null,
+      "modelProvenance": "explicit collaboration model selection; provider-resolved identifier and billing not exposed",
+      "promptFile": "japan-opening-sol-prompt.txt",
+      "promptSha256": "ae979daa6e85bbb45837880101c6cd7b36bc94b0701f102860bedd7a644786f5",
+      "responseFile": "japan-opening-sol-response.txt",
+      "responseSha256": "762994950e204a970cc144b5d93d92e4b3ddd33fcec946c8af18f037393c94e9",
+      "archiveScope": "final assessment and task-specific prompt excerpt; not the complete multi-turn transcript",
+      "elapsedMs": null,
+      "usage": null,
+      "decision": "修正OPS预算和API签名，保留原夺取阈值；仅三个已确认可skip的事件可预览；构造回归验证真实动作。"
+    },
+    {
+      "name": "pbm-loss-sol",
+      "configuredModel": "gpt-6.1-sol",
+      "reasoningEffort": "high",
+      "providerResolvedModel": null,
+      "modelProvenance": "explicit collaboration model selection; provider-resolved identifier and billing not exposed",
+      "promptFile": "pbm-loss-sol-prompt.txt",
+      "promptSha256": "183007ad7d77eaa54096e191736c91c17b8e2426f1bb289aa335c932184f665c",
+      "responseFile": "pbm-loss-sol-response.txt",
+      "responseSha256": "49e52e7406dbda0493e060c7158c1a64ef154589aafdc2fa194ea7ae671c3d34",
+      "archiveScope": "final assessment and task-specific prompt excerpt; not the complete multi-turn transcript",
+      "elapsedMs": null,
+      "usage": null,
+      "decision": "采纳公开损失回归、逐舰PBM、整组投影及兜底交集；不更改已存在且可用的舰队容量门。"
+    },
+    {
+      "name": "cache-sol",
+      "configuredModel": "gpt-6.1-sol",
+      "reasoningEffort": "high",
+      "providerResolvedModel": null,
+      "modelProvenance": "explicit collaboration model selection; provider-resolved identifier and billing not exposed",
+      "promptFile": "cache-sol-prompt.txt",
+      "promptSha256": "3fb3cac433b79557dc87b47748c2f07de77a506aad941a45fb49bde7bbc9b397",
+      "responseFile": "cache-sol-response.txt",
+      "responseSha256": "dbee6ef5ea181889116ba6f2fcb981381acda633e14f27a37e5872cf09de5cb3",
+      "archiveScope": "complete final response and immediate task prompt; earlier diagnostic turns not archived",
+      "elapsedMs": null,
+      "usage": null,
+      "reviewedBundleSha256": "d4b5a48aebdf576857125dddef06e3c6127df66b7f9e074a0f9740963d621b34",
+      "decision": "采纳限单次plan堆叠布尔缓存；两窗口动作、元数据、状态及全部缓存位置等价。局部开销不外推整局。"
+    }
+  ],
+  "externalReview": {
+    "GLM-5.3": "not performed; no audited project launcher",
+    "DeepSeek": "not performed; no audited project launcher"
+  },
+  "runtimeModelRequests": 0
+}

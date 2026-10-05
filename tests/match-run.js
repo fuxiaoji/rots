@@ -10,6 +10,7 @@ const crypto = require("crypto")
 const cp = require("child_process")
 const Module = require("module")
 const metrics = require("./campaign-metrics")
+const { createOpeningMetrics } = require("./japan-opening-metrics")
 const ROOT = path.resolve(__dirname, "..")
 const RULE_VERSION = "official-16.2"
 const ADAPTER_VERSION = "campaign-bundle-adapter-v1"
@@ -61,14 +62,15 @@ function createRuntime(options = {}) {
     const bundles = {}
     for (const side of ["Japan", "Allies"]) {
         const selected = side === "Japan" ? options.japanRules || process.env.EOTS_JAPAN_RULES : options.alliesRules || process.env.EOTS_ALLIES_RULES
-        // External old bundles are frozen by default; the evaluated current Allies bundle keeps its role config.
-        const frozen = Boolean(selected && (side === "Japan" || options.freezeAllies))
+        // Preserve the historical frozen-Japan default; a new Japan candidate
+        // can explicitly retain its environment, independently of the Allies.
+        const frozen = Boolean(selected && (side === "Japan" ? options.freezeJapan !== false : options.freezeAllies))
         bundles[side] = loadBundle(paths[side], frozen, requestedEnv)
         if (!bundles[side].rules.bots?.[names[side]]) throw new Error(`unknown ${side} bot ${names[side]} in ${paths[side]}`)
     }
     const metadata = { ...gitInfo(), rulesSha256: fileSha(path.join(ROOT, "rules.js")), ruleVersion: RULE_VERSION,
         adapterVersion: ADAPTER_VERSION, adapterSha256: sha(COMPAT_SOURCE), runnerSha256: fileSha(__filename), metricsSha256: fileSha(require.resolve("./campaign-metrics")),
-        bundles: {}, runtimeModelRequests: 0 }
+        openingMetricsSha256: fileSha(require.resolve("./japan-opening-metrics")), bundles: {}, runtimeModelRequests: 0 }
     for (const side of ["Japan", "Allies"]) metadata.bundles[side] = { path: bundles[side].filename, sha256: bundles[side].sha256,
         bot: names[side], version: bundles[side].rules.bots[names[side]].version,
         frozen: bundles[side].frozen, environment: bundles[side].env, effectiveProfile: bundles[side].config(names[side], side) }
@@ -136,6 +138,7 @@ function play(seed, options, runtime = createRuntime(options)) {
     try { state = bundles.Allies.call(() => bundles.Allies.rules.setup(seed, scenario, setupOptions)) }
     catch (e) { return { result: { seed, scenario, metadata, status: "setup-error", error: e.stack || String(e), actions, natural: false }, replay } }
     meter = metrics.createMetrics(bundles.Allies.rules.pieces, state)
+    const openingMeter = createOpeningMetrics(state)
     try {
         while (state.active !== "None" && actions < maxActions) {
             const role = activeRole(state), bundle = bundles[role]
@@ -163,6 +166,7 @@ function play(seed, options, runtime = createRuntime(options)) {
             })
             actions++
             meter.observe(state, actions)
+            openingMeter.observe(state, actions)
             if (state.active !== "None") guard(state, actions)
             if (options.onProgress && (actions % (options.progressEvery || 500) === 0 || state.active === "None"))
                 options.onProgress({ seed, actions, turn: state.turn, politicalWill: state.political_will, phase: state.L?.P, elapsedMs: Date.now() - started })
@@ -181,7 +185,7 @@ function play(seed, options, runtime = createRuntime(options)) {
     const blockadeStart = Number(state.events?.[28] || 0)
     const surrender = state.surrender ? { philippines: !!state.surrender[0], malaya: !!state.surrender[1], dei: !!state.surrender[2],
         burma: !!state.surrender[3], japan: !!state.surrender[12] } : null
-    const result = { ...report, seed, scenario, metadata, zoc, surrender,
+    const result = { ...report, seed, scenario, metadata, zoc, surrender, opening: openingMeter.result(state),
         blockade: blockadeStart ? { startedTurn: blockadeStart, progress: Math.max(0, Number(state.turn) - blockadeStart + 1) } : null, status: error ? "error" : status, error,
         actions, fallback, fallbackDetails, traceNodeMissing, repeatStateLimit, repeatedState, elapsedMs: Date.now() - started, politicalWill: Number(state.political_will),
         powRequired: Number(state.pow || 0), powBank: metrics.retainedProgress(state), finalAtomic,
@@ -220,6 +224,7 @@ function verifyReplay(replay, options = {}) {
     const legacyDecisionDrift = { Japan: 0, Allies: 0 }
     const legacyDecisionLogDrift = { Japan: 0, Allies: 0 }
     let state = bundles.Allies.call(() => bundles.Allies.rules.setup(replay.setup.seed, replay.setup.scenario, replay.setup.options))
+    const openingMeter = createOpeningMetrics(state)
     for (const [index, entry] of replay.replayActions.entries()) {
         const [role, action, argument] = entry
         if (state.active === "None" || (Array.isArray(state.active) ? !state.active.includes(role) : state.active !== role))
@@ -257,11 +262,12 @@ function verifyReplay(replay, options = {}) {
             catch (error) { throw new Error(`replay action ${index + 1}: ${error.message}`, { cause: error }) }
             state = b.rules.action(state, role, action, argument)
         })
+        openingMeter.observe(state, index + 1)
     }
     const actual = stateDigest(state)
     if (actual !== replay.result.finalStateSha256) throw new Error(`replay state mismatch: ${actual} != ${replay.result.finalStateSha256}`)
     const end = metrics.classifyEnd(state)
-    return { verified: true, actions: replay.replayActions.length, finalStateSha256: actual, modes, legacyDecisionChecks,
+    return { verified: true, actions: replay.replayActions.length, finalStateSha256: actual, opening: openingMeter.result(state), modes, legacyDecisionChecks,
         legacyDecisionDrift, legacyDecisionLogDrift, verificationMethod: "legal-actions-and-complete-final-state",
         resolvedBundlePaths: Object.fromEntries(Object.entries(bundles).map(([role, b]) => [role, b.filename])), ...end }
 }
@@ -316,6 +322,7 @@ function main(argv = process.argv.slice(2)) {
     fs.mkdirSync(outputDir, { recursive: true })
     const headlessMoves = process.env.EOTS_HEADLESS_MOVES === "1"
     const options = { scenario, japanBot, alliesBot, maxActions, headlessMoves,
+        freezeJapan: process.env.EOTS_FREEZE_JAPAN !== "0",
         freezeAllies: process.env.EOTS_FREEZE_ALLIES === "1",
         onProgress: p => process.stderr.write(`seed=${p.seed} action=${p.actions} turn=${p.turn} PW=${p.politicalWill} phase=${p.phase}\n`) }
     const runtime = createRuntime(options), games = [], started = Date.now()

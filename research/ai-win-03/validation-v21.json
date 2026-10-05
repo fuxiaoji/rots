@@ -1,0 +1,16 @@
+{
+  "task": "AI-WIN-03",
+  "bundleSha256": "82a79baa7413584f008ed9748e23e1f4135ada2cd4a72ae62c188adbd6029b09",
+  "command": "node --test tests/campaign-*.test.js tests/japan-*.test.js tests/atomic-bomb-strategy.test.js",
+  "nodeTests": 75,
+  "nodePass": 75,
+  "nodeFail": 0,
+  "sourceContracts": 81,
+  "logSha256": "7c7f849607058a0a08e771f2dbe0f4db11c699c55575115c0f46a03603ca92a7",
+  "legacyFullSuiteFailures": 5,
+  "legacyBaselineCommit": "64f276a",
+  "fullSuiteCurrentPassed": null,
+  "runtimeModelRequests": 0,
+  "holdoutOpened": false,
+  "fullSuiteCurrentStatus": "not run; focused suite passed, earlier baseline failures are separately recorded"
+}

@@ -21,7 +21,7 @@ for (const file of ["server/rules_query.js", "server/game.js"]) {
 source += `
 exports.__previewTest = {
     constants: { AP, JP, EC, OC, SURPRISE, HQ_CENTRAL_PACIFIC, HQ_SOUTH_WEST,
-        CHINA_BOX, NON_PLACED_BOX, NAVAL_MOVE },
+        CHINA_BOX, NON_PLACED_BOX, NAVAL_MOVE, GROUND_MOVE, HQ_SOUTH: HQ_JP_SOUTH, COL_TSUJI },
     withCardData(c, patch, run) {
         const saved = cards[c]; cards[c] = { ...saved, ...patch };
         try { return run(); } finally { cards[c] = saved; }
@@ -95,6 +95,11 @@ assert.equal(ec.activationBudget, played.offensive.logistic + played.L.hq_bonus)
 assert.deepEqual(ec.units, played.L.possible_units, "candidate IDs match actual unit activation")
 assert.equal(ask(played, "queryCardPreview", [45, { hqId: C.HQ_CENTRAL_PACIFIC }]).activationBudget, 11,
     "an active EC is recognized even without an explicit card mode")
+const postLoss=clone(played)
+postLoss.offensive.active_units[C.AP]=[naval]
+postLoss.location[naval]=C.NON_PLACED_BOX
+assert.equal(ask(postLoss,"queryCardPreview",[45,{hqId:C.HQ_CENTRAL_PACIFIC}]).eligible,true,
+    "a post-battle active-unit list may contain an eliminated off-map unit")
 
 // Hook-bearing military cards remain unsupported, ordinary political events do
 // not masquerade as a military preview, and rejected offenses stay rejected.
@@ -141,6 +146,42 @@ assert.equal(view.ai.ownCards.find(c => c.id === 45).previewEvent, true)
 assert.equal(view.ai.ownCards.find(c => c.id === 38).previewEvent, false)
 assert.equal(view.ai.ownCards.find(c => c.id === 1).previewEvent, false)
 assert.equal(rules.view(denied, "Allies").ai.ownCards.find(c => c.id === 45).previewEvent, false)
+
+// Tsuji's sole activation hook has a declarative preview; no hook or card
+// effect is executed. Compare it with the independent real event action path.
+let japan = rules.setup(20261401, "1942-1945 (The Shortened Campaign)", { headless_moves: true })
+for (let step = 0; step < 100 && !(japan.active === "Japan" && japan.L.P === "offensive_segment"); step++) {
+    const role = japan.active
+    const d = rules.bots["erasmus-v2-opt-v5"].decide(rules.view(japan, role), { role })
+    japan = rules.action(japan, role, d.action, d.argument)
+}
+japan.hand[C.JP] = [C.COL_TSUJI]
+assert.equal(japan.active, "Japan")
+assert.equal(japan.L.P, "offensive_segment")
+const tsuji = preview(japan, C.COL_TSUJI, C.HQ_SOUTH, "event", "Japan")
+assert.equal(tsuji.eligible, true)
+assert(tsuji.units.length > 0 && tsuji.units.every(u => rules.pieces[u].class === "ground"))
+rules.__previewTest.withCardData(C.COL_TSUJI, { before_unit_activation() { throw Error("preview executed Tsuji hook") } }, () => {
+    rules.__previewTest.withForbiddenEffects(() => assert.deepEqual(preview(japan, C.COL_TSUJI, C.HQ_SOUTH, "event", "Japan"), tsuji))
+})
+rules.__previewTest.withCardData(C.COL_TSUJI, { after_unit_activation() {} }, () => {
+    assert.equal(preview(japan, C.COL_TSUJI, C.HQ_SOUTH, "event", "Japan").eligible, false,
+        "a new hook invalidates the narrow declarative exception")
+})
+let tsujiPlayed = clone(japan)
+tsujiPlayed = rules.action(tsujiPlayed, "Japan", "card", C.COL_TSUJI)
+tsujiPlayed = rules.action(tsujiPlayed, "Japan", "event")
+assert.deepEqual(preview(tsujiPlayed, C.COL_TSUJI, C.HQ_SOUTH, "event", "Japan"), tsuji)
+const ground = tsuji.units.find(u => rules.pieces[u].id === "14army") || tsuji.units[0]
+const tsujiMovement = { cardId: C.COL_TSUJI, cardMode: "event", hqId: C.HQ_SOUTH, move_type: C.GROUND_MOVE }
+assert.deepEqual(ask(japan, "queryGroupMovementDestinations", [[ground], tsujiMovement], "Japan"),
+    ask(tsujiPlayed, "queryGroupMovementDestinations", [[ground], tsujiMovement], "Japan"))
+tsujiPlayed = rules.action(tsujiPlayed, "Japan", "unit", C.HQ_SOUTH)
+assert.deepEqual(tsuji.units, tsujiPlayed.L.possible_units)
+assert.equal(tsuji.activationBudget, tsujiPlayed.offensive.logistic + tsujiPlayed.L.hq_bonus)
+const japanNaval = rules.view(japan, "Japan").ai.units.find(u => u.class === "naval").id
+assert.equal(ask(japan, "queryGroupMovementDestinations", [[japanNaval], { ...tsujiMovement, move_type: C.NAVAL_MOVE }], "Japan").reason,
+    "hq-activation", "a ground-only EC cannot activate naval escorts")
 
 const boxed = clone(state)
 const b29 = rules.pieces.findIndex(p => p.b29)

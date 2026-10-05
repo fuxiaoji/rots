@@ -5,6 +5,7 @@
 
 const EM_FLAGS = [
     "campaign_planner",     // AI-WIN-01: persisted operational plans, separate opt-in bot.
+    "japan_campaign_planner", // AI-WIN-03: independent Japanese southern plans.
     "target_scoring",         // 1=链内未完成目标按 价值×可达性 重排焦点; 0=链首优先(基线)
     "taskforce_math",         // 1=编队边际效用选单位+两栖期望闸门; 0=兵种词典序贪心(基线)
     "allies_cv_preserve",     // 1=盟军非登陆场合避免消耗 CV; 0=不区分
@@ -175,7 +176,8 @@ function em_reset_config() { em_current = null }
 function em_bot_config(name, role) {
     if (name === "erasmus-v2" || !name) return null
     const defaults = name === "erasmus-campaign"
-        ? EM_DEFAULT_PROFILE_V5 + ",erasmus_plus,campaign_planner"
+        ? EM_DEFAULT_PROFILE_V5 + ",erasmus_plus,campaign_planner,stack_limit_gate"
+        : name === "erasmus-japan-campaign" ? EM_DEFAULT_PROFILE_V5 + ",erasmus_plus,japan_campaign_planner,stack_limit_gate"
         : name === "erasmus-v2-opt-v5" ? EM_DEFAULT_PROFILE_V5 : EM_DEFAULT_PROFILE
     const saved = em_current
     try { em_set_config(em_profile_from_env(defaults, role)); return { ...em_current } }

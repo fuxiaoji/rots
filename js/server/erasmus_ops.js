@@ -543,19 +543,19 @@ function eop_pick_action_hex(candidates, role, view) {
             ? G.active_stack[0] : null
         const fits = h => {
             try {
-                if (stackedUnit !== null) return !is_overstack(h, stackedUnit)
+                if (stackedUnit !== null) return headless_stack_fits(h,mine,pieces[stackedUnit],G.active_stack)
                 const r = headless_units_at(h, mine)
                 return (r.ground + r.air) < 3 && r.naval < 6
-            } catch (e) { return true }
+            } catch (e) { return false }
         }
         const fitList = candidates.filter(fits)
-        if (fitList.length) pool = fitList
+        pool = fitList
     }
     const focus = eop_focus(role)
     if (focus === null) return undefined
     const emcAH = (typeof em_cfg === "function") ? em_cfg() : null
     if (emcAH && (emcAH.island_sweep || emcAH.erasmus_plus) && typeof eop_amph_declare_blocked === "function") {
-        const safe = candidates.filter(h => !eop_amph_declare_blocked(role, h))
+        const safe = pool.filter(h => !eop_amph_declare_blocked(role, h))
         if (safe.length) pool = safe
     }
     let best = null, bestD = Infinity

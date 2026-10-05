@@ -12,7 +12,7 @@ const { verifyReplay } = require("../tests/match-run")
 
 const args = process.argv.slice(2)
 const archiveName = args[0] === "--archive" ? args.splice(0, 2)[1] : "ai-win-01"
-if (!["ai-win-01", "ai-win-02"].includes(archiveName)) throw new Error("unknown AI-WIN archive")
+if (!["ai-win-01", "ai-win-02", "ai-win-03"].includes(archiveName)) throw new Error("unknown AI-WIN archive")
 const root = path.resolve(__dirname, "../replays", archiveName)
 const index = JSON.parse(fs.readFileSync(path.join(root, "index.json"), "utf8"))
 const selected = new Set(args.map(Number))
@@ -20,6 +20,7 @@ if (selected.size && [...selected].some(n => !Number.isSafeInteger(n))) throw ne
 const sha256 = bytes => crypto.createHash("sha256").update(bytes).digest("hex")
 
 let checked = 0
+const foundSeeds = new Set()
 const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), archiveName + "-"))
 try {
     for (const entry of index.entries) {
@@ -45,9 +46,10 @@ try {
             result.actions !== entry.actions || result.won_text !== entry.victory)
             throw new Error(`result differs: ${entry.seed}`)
         console.log(`${entry.seed} verified: ${result.won_text} T${entry.turn}, ${result.actions} actions`)
+        foundSeeds.add(entry.seed)
         checked++
     }
 } finally { fs.rmSync(tempDir, { recursive: true, force: true }) }
-if (selected.size !== 0 && checked !== selected.size) throw new Error("one or more selected seeds are missing")
+if ([...selected].some(seed => !foundSeeds.has(seed))) throw new Error("one or more selected seeds are missing")
 if (checked === 0) throw new Error("no replay was selected")
 console.log(`Verified ${checked} archived Allied wins.`)

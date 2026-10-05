@@ -1,4 +1,26 @@
 function on_query(q, params, b) {
+    // Public definitions/control only. Callers must query a copied position.
+    if (q === "llm_public_data") {
+        const hexes = []
+        for (let h = 0; h <= LAST_BOARD_HEX; h++) {
+            const m = get_map_data(h)
+            if (!m || m.id !== int_to_hex(h)) continue
+            hexes.push({ hex: h, id: m.id, name: m.name || String(m.id), region: m.region || null,
+                terrain: m.terrain, port: !!m.port, airfield: !!m.airfield, resource: !!m.resource,
+                named: !!m.named, control: !is_controllable_hex(h) ? null : is_space_controlled(h, JP) ? "Japan" : is_space_controlled(h, AP) ? "Allies" : null })
+        }
+        return { hexes, cards: cards.map((c, id) => c ? { id, name: c.name, type: c.type,
+            ops: c.ops, logistic: c.logistic, hq: c.hq, reaction: !!c.reaction,
+            metadata: Object.fromEntries(Object.entries(c).filter(([k, v]) => !["name", "type", "ops", "logistic", "hq"].includes(k) && (typeof v === "number" || typeof v === "boolean" || Array.isArray(v) && v.every(x => typeof x === "number")))) } : null) }
+    }
+    if (q === "llm_legal_moves") {
+        // Reuse the actual selected group's client movement generator; no AI scoring.
+        if (R !== G.active || L.P !== "move_offensive_units" || !G.active_stack.length) return []
+        update_move_hex()
+        const paths = []
+        map_for_each(L.allowed_hexes || [], (hex, path) => paths.push({ hex, path: object_copy(path) }))
+        return paths
+    }
     if (q && typeof q === "object" && q.name === "rules_query") {
         return rules_query_dispatch(q)
     }

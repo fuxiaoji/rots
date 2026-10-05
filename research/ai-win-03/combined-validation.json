@@ -1,0 +1,32 @@
+{
+  "task": "AI-WIN-03+LLM-01",
+  "date": "2026-10-05",
+  "rulesSha256": "e6035f5dda64d91f5000e574aa83bade650b68e6e63745e730c7f6c9cbac199a",
+  "command": "/opt/homebrew/opt/node@22/bin/node --test tests/campaign-*.test.js tests/japan-*.test.js tests/atomic-bomb-strategy.test.js tests/llm-*.test.js",
+  "tests": 115,
+  "passed": 115,
+  "failed": 0,
+  "sourceContracts": 82,
+  "logSha256": "e63056ae76a33a820e6454f0b073383bf094f10a30898af3ebb6666291e006e1",
+  "llmOriginalCommit": "d6ade89",
+  "paidApiCallsThisIntegration": 0,
+  "aiRuntimeModelRequests": 0,
+  "fullSuiteRunThisIntegration": false,
+  "knownBaselineFullSuiteFailures": 5,
+  "baselineFailureCommit": "64f276a",
+  "holdoutOpened": false,
+  "publishedAlliedWins": 7,
+  "archiveIntegrity": "all compressed replays and rule bundles recover the original verified hashes",
+  "portableReplayChecks": [
+    {
+      "scenario": "1942",
+      "seed": 20261405,
+      "logSha256": "e939cb2092c09003a4fa4e9732ddb3f6b5cd2a813faf32eb74638f156d4cca10"
+    },
+    {
+      "scenario": "1943",
+      "seed": 20261418,
+      "logSha256": "299bc3c01988be1b45665d7c7584f0cbf73292ab54b5301570f982390a6c3968"
+    }
+  ]
+}

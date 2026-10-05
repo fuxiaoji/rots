@@ -1,0 +1,1 @@
+继续只读核验刚加入的单次 plan projectedStackFits（主代理已应用，ec_plan/ej_plan各new Map、ec_query_moves只STRAT最终堆叠布尔）。输入/公开窗口/490原动作上限保持不变，不跑整局或holdout。对 v21冻包与当前rules各fresh Module在相同a442/a491比较完整决策动作及__ai元数据、完整JSON纯度；计查询数和局部时间，仅作局部证据，无整局推断。记录精确方法/哈希并尽可能保存原始报告文本到聊天；不写任何文件、不改源码。若缓存作用域或当前位置变化使不等价，请立即报告。

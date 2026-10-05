@@ -1,0 +1,1 @@
+独立核 actual EC event→HQ→6 units→skip paratroopers→movement→special/define intelligence→choose defending HQ 的合法预算。核同一预览query修正后最强反应，给只读证明。不改源码/不跑整局。提供只含公开单位、状态与JP已知手牌的fixture，不含原PRNG、牌库、敌手牌或AI缓存。
