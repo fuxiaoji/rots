@@ -1,0 +1,18 @@
+{
+  "task": "AI-WIN-03",
+  "bundleSha256": "d4b5a48aebdf576857125dddef06e3c6127df66b7f9e074a0f9740963d621b34",
+  "command": "node --test tests/campaign-*.test.js tests/japan-*.test.js tests/atomic-bomb-strategy.test.js",
+  "nodeTests": 75,
+  "nodePass": 75,
+  "nodeFail": 0,
+  "sourceContracts": 82,
+  "logSha256": "3533b595644624009d432b7c133bb15fb148b49f460cebd50b2407056c9d864c",
+  "legacyFullSuiteFailures": 5,
+  "legacyBaselineCommit": "64f276a",
+  "fullSuiteCurrentPassed": null,
+  "runtimeModelRequests": 0,
+  "holdoutOpened": false,
+  "fullSuiteCurrentStatus": "not run; focused suite passed, earlier baseline failures are separately recorded",
+  "recordedAt": "2026-10-05T07:59:46.127443+00:00",
+  "scope": "v21 stacking and campaign changes plus v22 per-planning-call stacking cache; no complete v22 win-rate assessment"
+}

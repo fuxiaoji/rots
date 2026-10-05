@@ -34,7 +34,7 @@ function fixture(options = {}) {
             victory: { homelandKeys: [20], atomic: { jpResources: 4, bombingCampaignStart: 0 } } } }
     const ctx = {
         map: board, hex_to_int: x => x, LAST_BOARD_HEX: 40, TOKYO: 40,
-        AMPH_MOVE: 8, GROUND_MOVE: 4, STRAT_MOVE: 1, EC: 1, EVEN_SHORT_CAMPAIGN_SCENARIO: 8,
+        AMPH_MOVE: 8, GROUND_MOVE: 4, STRAT_MOVE: 1, NAVAL_MOVE: 2, EC: 1, EVEN_SHORT_CAMPAIGN_SCENARIO: 8,
         em_cfg: () => ({ campaign_planner: options.enabled === false ? 0 : 1 }),
         em_flag: () => options.enabled === false ? 0 : 1,
         get_distance: (a, b) => Math.ceil(Math.abs(a - b) / 2), get_map_data: h => board.find(m => m.id === h),
@@ -179,7 +179,8 @@ test("forward HQ relocation uses a legal card after the PoW quota is met", () =>
 })
 
 test("mainland assembly moves a second ground unit to its escort port even without a distance gain", () => {
-    const { ctx, view } = fixture({ paths: (ids, c) => c.move_type === 1 && ids[0] === 4 ? [10] : [] })
+    const { ctx, view } = fixture({ paths: (ids, c) => c.move_type === 1 && ids[0] === 4 ? [10]
+        : c.move_type===2 ? [20] : [] })
     view.ai.units.push({ id: 30, faction: 1, class: "naval", cf: 8, location: 10, service: "navy" },
         { id: 31, faction: 1, class: "naval", cf: 8, location: 10, service: "navy" })
     view.turn = 8
@@ -187,6 +188,9 @@ test("mainland assembly moves a second ground unit to its escort port even witho
     view.ai.units.find(u => u.id === 4).location = 15
     ctx.map.find(m => m.id === 15).port = false
     ctx.map.find(m => m.id === 20).region = "Japan"
+    view.ai.ownCards.push({id:11,ops:3,allowed:["ops"]})
+    for (const u of view.ai.units) if (u.faction===1) u.supply=1
+    ctx.queryCardPreview=()=>({eligible:true,units:view.ai.units.filter(u=>u.class!=="hq").map(u=>u.id),activationBudget:5})
     const plan = ctx.ec_plan(view, { role: "Allies" })
     assert.equal(plan.tasks[0].objective, "HOMELAND_ASSEMBLE")
     assert.equal(plan.tasks[0].hex, 10)
@@ -940,6 +944,426 @@ test("a restored plan never applies another card's selected intent", () => {
     assert.equal(ctx.ec_pick_action(view, { role: "Allies" }, plan).action, "event")
     view.actions = { discard: 1 }
     assert.equal(ctx.ec_pick_action(view, { role: "Allies" }, plan), null, "a denied intent is never retried")
+})
+
+test("convergence keeps independently legal ground and naval origins through movement", () => {
+    const {ctx,view,calls} = fixture({paths:(ids,c,v)=>ids.every(id=>v.ai.units.find(u=>u.id===id).location
+        ===v.ai.units.find(u=>u.id===ids[0]).location) && (c.move_type===4||c.move_type===2) ? [20]:[]})
+    view.ai.units.find(u=>u.id===3).location=15
+    const env={view,faction:1,units:view.ai.units,available:view.ai.units.filter(u=>u.class!=="hq"),
+        byHex:new Map(ctx.map.map(m=>[m.id,{...m,hex:m.id}])),hq:view.ai.units[0],budget:3,cardId:9,cardMode:"ops",
+        captureTargets:new Set([20]),axisTargets:new Set([20]),garrisonReserve:new Set(),moves:new Map(),reactions:new Map(),homeAssaults:new Map(),
+        victory:{homelandKeys:[20],b29Bases:[],resourceTargets:[],routes:{homeland:{remainingKeys:[20]},headquarters:{enemyHqCount:1}}},powGap:0}
+    const tasks=ctx.ec_ground_convergence(env)
+    const task=tasks.find(t=>t.movementUnitIds.length===3)
+    assert(task && task.assessment.executable)
+    assert.deepEqual(plain(task.movementGroups),[
+        {originHex:10,mode:"GROUND",unitIds:[2]},
+        {originHex:0,mode:"GROUND",unitIds:[4]},
+        {originHex:15,mode:"NAVAL",unitIds:[3]},
+    ])
+    const plan=plain(ctx.ec_plan(view,{role:"Allies"}))
+    plan.preCard=false
+    plan.tasks=[plain(task)]
+    plan.targets=[{hex:20,kind:"CONQUEST",requiredUnits:task.requiredUnits,movementUnitIds:task.movementUnitIds,
+        supportUnitIds:[],movementModes:["GROUND"],movementGroups:plain(task.movementGroups),taskId:task.id,campaignTask:true}]
+    view.ai.plan=plan;view.ai.state="move_units";view.prompt="Move units.";view.actions={unit:[2,3,4]}
+    Object.assign(view.offensive,{attacker:1,offensive_card:9,type:0,active_units:[[],[2,3,4]],active_hq:[null,1]})
+    const preserved=ctx.ec_apply_plan(view,{role:"Allies"})
+    assert.equal(preserved.tasks.length,1,"different origins are not revalidated as one illegal stack")
+    assert(calls.filter(c=>c.type==="move").every(c=>c.ids.every(id=>view.ai.units.find(u=>u.id===id).location
+        ===view.ai.units.find(u=>u.id===c.ids[0]).location)))
+})
+
+test("card choice assignments survive the HQ window while legal",()=>{
+    const {ctx,view}=fixture()
+    const prior=plain(ctx.ec_plan(view,{role:"Allies"}))
+    prior.tasks[0].score=987;prior.campaign.opportunity="only remaining executable card"
+    view.ai.plan=prior;view.ai.state="choose_hq";view.prompt="OC: 3 Ops. Choose HQ.";view.actions={unit:[1]}
+    Object.assign(view.offensive,{attacker:1,offensive_card:9,type:0,active_cards:[9]})
+    const kept=ctx.ec_apply_plan(view,{role:"Allies"})
+    assert.deepEqual(plain(kept.tasks),prior.tasks)
+    assert.equal(kept.preCard,false)
+    assert.equal(kept.campaign.opportunity,prior.campaign.opportunity)
+})
+
+test("an invalid path forces replanning before HQ activation",()=>{
+    let closed=false
+    const {ctx,view}=fixture({paths:(ids,c)=>!closed&&c.move_type===8&&ids.includes(2)&&ids.includes(3)?[20]:[]})
+    const prior=plain(ctx.ec_plan(view,{role:"Allies"}))
+    assert(prior.tasks.length)
+    view.ai.plan=prior;view.ai.state="choose_hq";view.prompt="OC: 3 Ops. Choose HQ.";view.actions={unit:[1]}
+    Object.assign(view.offensive,{attacker:1,offensive_card:9,type:0,active_cards:[9]})
+    closed=true
+    assert.equal(ctx.ec_apply_plan(view,{role:"Allies"}).tasks.length,0)
+})
+
+test("two-port amphibious convergence shares one combat estimate and sums ASP",()=>{
+    const {ctx,view}=fixture({paths:(ids,c,v)=>c.move_type===8&&ids.some(id=>v.ai.units.find(u=>u.id===id).class==="naval")
+        &&ids.every(id=>v.ai.units.find(u=>u.id===id).location===v.ai.units.find(u=>u.id===ids[0]).location)?[20]:[]})
+    Object.assign(view.ai.units.find(u=>u.id===4),{asp:true,aspCost:1,service:"navy"})
+    view.ai.units.push({id:6,faction:1,class:"naval",cf:10,location:0,service:"navy"},
+        {id:7,faction:0,class:"ground",cf:4,lf:12,location:20})
+    view.asp[1]=[2,0]
+    const estimates=[];ctx.em_ground_outcome=p=>{estimates.push(p);return {pWin:1}}
+    const env={view,faction:1,units:view.ai.units,available:view.ai.units.filter(u=>u.faction===1&&u.class!=="hq"),
+        byHex:new Map(ctx.map.map(m=>[m.id,{...m,hex:m.id}])),hq:view.ai.units[0],budget:4,cardId:9,cardMode:"ops",
+        captureTargets:new Set([20]),axisTargets:new Set([20]),garrisonReserve:new Set(),moves:new Map(),reactions:new Map(),homeAssaults:new Map(),
+        victory:{homelandKeys:[20],b29Bases:[],resourceTargets:[],routes:{homeland:{remainingKeys:[20]},headquarters:{enemyHqCount:1}}},powGap:0}
+    const tasks=ctx.ec_amphibious_convergence(env)
+    assert(tasks.length)
+    assert.equal(tasks[0].aspCost,2)
+    assert.equal(tasks[0].movementGroups.length,2)
+    assert(tasks[0].movementGroups.every(g=>g.mode==="AA"&&g.unitIds.some(id=>view.ai.units.find(u=>u.id===id).class==="naval")))
+    assert(estimates.every(p=>p.defMods===3 && p.attLfs.length===2 && p.attLfs.every(lf=>lf===6)))
+    assert.equal(ctx.ec_amphibious_convergence({...env,budget:3}).length,0)
+    view.asp[1]=[1,0]
+    assert.equal(ctx.ec_amphibious_convergence(env).length,0)
+    view.asp[1]=[2,0]
+    view.ai.units.push({id:8,faction:1,class:"air",location:20},{id:10,faction:1,class:"air",location:20})
+    assert.equal(ctx.ec_amphibious_convergence(env).length,0,"existing friendly air also occupies the landing slots")
+})
+
+test("outer homeland rally needs met PoW, a compatible amphibious force, and no nearer staffed port",()=>{
+    const {ctx,view,owned}=fixture()
+    ctx.get_distance=(a,b)=>a===b?0:a===10&&b===20||a===20&&b===10?7:9
+    view.capture=[15];view.pow=1
+    assert.equal(ctx.ec_homeland_rally(view,ctx.ec_map(),view.ai.units,1,true),10)
+    view.ai.plan={campaign:{rallyPort:10}};view.pow=2
+    assert.equal(ctx.ec_homeland_rally(view,ctx.ec_map(),view.ai.units,1,true),null,"cached outer rally cannot bypass new PoW gap")
+    view.pow=1;view.inter_service[1]=1;view.ai.units.find(u=>u.id===2).service="army"
+    assert.equal(ctx.ec_homeland_rally(view,ctx.ec_map(),view.ai.units,1,true),null)
+    view.inter_service[1]=0;view.ai.units.find(u=>u.id===2).asp=false;view.ai.units.find(u=>u.id===2).aspCost=0
+    assert.equal(ctx.ec_homeland_rally(view,ctx.ec_map(),view.ai.units,1,true),null)
+    view.ai.units.find(u=>u.id===2).asp=true;owned.delete(10)
+    assert.equal(ctx.ec_homeland_rally(view,ctx.ec_map(),view.ai.units,1,true),null)
+    owned.add(10);ctx.get_distance=(a,b)=>a===b?0:a===10&&b===20||a===20&&b===10?8:9
+    assert.equal(ctx.ec_homeland_rally(view,ctx.ec_map(),view.ai.units,1,true),10)
+    assert.equal(ctx.ec_homeland_rally(view,ctx.ec_map(),view.ai.units,1,false),null)
+    view.ai.units.push({id:25,faction:1,class:"naval",location:15})
+    ctx.get_distance=(a,b)=>a===b?0:a===15&&b===20||a===20&&b===15?4:a===10&&b===20||a===20&&b===10?8:9
+    assert.equal(ctx.ec_homeland_rally(view,ctx.ec_map(),view.ai.units,1,true),15,"new inner rally replaces outer one")
+    owned.add(20)
+    ctx.get_distance=(a,b)=>a===b?0:7
+    assert.equal(ctx.ec_homeland_rally(view,ctx.ec_map(),view.ai.units,1,true),null,"no new outer assault rally after all keys held")
+})
+
+test("empty landing includes a legal overland reaction, without a prior-ground defense modifier",()=>{
+    const {ctx,view}=fixture()
+    const enemy={id:70,faction:0,class:"ground",cf:9,lf:12,location:15,service:"army"}
+    view.ai.units.push(enemy);view.ai.units.find(u=>u.id===2).cf=4
+    ctx.querySpecialReaction=()=>({eligible:true})
+    ctx.queryReactionCandidates=opts=>{assert.equal(opts.targetOnly,true);return {ground:[70],groundOverland:[70],
+        hqOptions:[{hq:90,budget:1,units:[70]}]}}
+    let defenderModifier
+    ctx.em_ground_outcome=x=>{defenderModifier=x.defMods;return {pWin:x.attCF>x.defCF?1:0}}
+    const env={units:view.ai.units,view,faction:1,powGap:0,byHex:new Map(ctx.ec_map().map(m=>[m.hex,m]))}
+    const group=view.ai.units.filter(u=>[2,3].includes(u.id))
+    const result=ctx.ec_assess(group,[],20,true,env)
+    assert.equal(result.pCapture,.65);assert.equal(result.pGroundWithReaction,0)
+    assert.deepEqual(plain(result.reactionGroundUnitIds),[70]);assert.equal(defenderModifier,0)
+    assert.equal(ctx.ec_assess(group,[],20,true,{...env,requireGroundReactionCover:true}).rejection,"insufficient-ground-reaction-cover")
+    assert.equal(ctx.ec_assess(group,[],20,true,{...env,requireGroundReactionCover:true}).executable,false)
+    const land=ctx.ec_assess([group[0]],[],20,false,{...env,reactions:new Map()})
+    assert.equal(land.pCapture,1);assert.deepEqual(plain(land.reactionGroundUnitIds),[])
+    ctx.querySpecialReaction=()=>({eligible:false})
+    assert.equal(ctx.ec_assess(group,[],20,true,{...env,specialReactions:new Map()}).pCapture,1)
+})
+
+test("reaction ground and sea peaks from different HQs never form one force",()=>{
+    const {ctx,view}=fixture()
+    view.ai.units.push({id:70,faction:0,class:"ground",cf:30,lf:12,location:15},
+        {id:71,faction:0,class:"naval",cf:20,location:15})
+    view.ai.units.find(u=>u.id===3).cf=40
+    ctx.querySpecialReaction=()=>({eligible:true})
+    ctx.em_ground_outcome=x=>({pWin:x.attCF>x.defCF?1:0})
+    ctx.em_naval_outcome=x=>({pWin:x.attCF>x.defCF?1:0})
+    ctx.queryReactionCandidates=()=>({ground:[70],groundOverland:[70],naval:[71],
+        hqOptions:[{hq:90,budget:1,units:[71]},{hq:91,budget:1,units:[70]}]})
+    const r=ctx.ec_assess(view.ai.units.filter(u=>[2,3].includes(u.id)),[],20,true,
+        {units:view.ai.units,view,faction:1,powGap:0,byHex:new Map(ctx.ec_map().map(m=>[m.hex,m]))})
+    assert.equal(r.reactionHq,91);assert.equal(r.potentialReaction,0);assert.equal(r.potentialGroundReaction,30)
+    assert.equal(r.reactionBudget,1);assert.deepEqual(plain(r.reactionGroundUnitIds),[70])
+    view.ai.units.find(u=>u.id===3).cf=4
+    const tied=ctx.ec_assess(view.ai.units.filter(u=>[2,3].includes(u.id)),[],20,true,
+        {units:view.ai.units,view,faction:1,powGap:0,requireGroundReactionCover:true,byHex:new Map(ctx.ec_map().map(m=>[m.hex,m]))})
+    assert.equal(tied.reactionHq,90,"sea wins the tie without erasing a different legal ground threat")
+    assert.equal(tied.executable,false);assert.equal(tied.uncoveredGroundReaction.hq,91)
+})
+
+test("outer assembly rewards a single HQ that can command enough fleet, without requiring current ground range",()=>{
+    const {ctx,view}=fixture({paths:(ids,c)=>c.move_type===2?[20]:[]})
+    view.ai.units.push({id:30,faction:1,class:"naval",cf:8,location:10,supply:3},
+        {id:31,faction:1,class:"naval",cf:8,location:10,supply:3},
+        {id:8,faction:1,class:"hq",location:10,supply:1,cm:1},
+        {id:70,faction:0,class:"air",cf:20,br:2,location:20})
+    Object.assign(view.ai.units.find(u=>u.id===1),{supply:2,cm:3})
+    Object.assign(view.ai.units.find(u=>u.id===3),{supply:3,br:2})
+    const ground=view.ai.units.find(u=>u.id===4);ground.supply=1
+    view.ai.ownCards.push({id:11,ops:2,allowed:["ops"]})
+    ctx.queryCardPreview=(card,c)=>({eligible:true,units:[3,30,31],activationBudget:c.hqId===1?5:3})
+    ctx.em_naval_outcome=x=>({pWin:x.attCF>x.defCF?1:0})
+    const env={view,faction:1,units:view.ai.units,cardId:9,byHex:new Map(ctx.ec_map().map(m=>[m.hex,m])),powGap:0}
+    assert.equal(ctx.ec_assembly_command(ground,10,20,env),null,"small compatible HQ cannot borrow another HQ's budget")
+    ground.supply=2
+    const screen=ctx.ec_assembly_command(ground,10,20,{...env,assemblyCommands:new Map()})
+    assert.equal(screen.hqId,1);assert.equal(screen.cardId,11);assert.equal(screen.requiredActivations,4)
+    assert.equal(screen.navalReadinessEstimate,1);assert(screen.evidence.includes("revalidation"))
+    view.ai.ownCards=[view.ai.ownCards[0]]
+    assert.equal(ctx.ec_assembly_command(ground,10,20,{...env,assemblyCommands:new Map()}),null,"transport card is not also a next offensive")
+})
+
+test("effective Japanese ASP and movement history preserve each origin",()=>{
+    const {ctx,view}=fixture();view.asp[0]=[6,1];view.inter_service[0]=1
+    assert.equal(ctx.ec_asp_remaining(view,0),2);assert.equal(ctx.ec_asp_remaining(view,1),4)
+    view.ai.units.find(u=>u.id===2).location=15;view.ai.units.find(u=>u.id===4).location=15
+    const prior={turn:view.turn,tasks:[{kind:"REDEPLOY",originHex:10,hex:15,movementUnitIds:[2,4],
+        movementGroups:[{originHex:10,unitIds:[2]},{originHex:0,unitIds:[4]}]}]}
+    const history=plain(ctx.ec_redeploy_history(view,prior,1))
+    assert.deepEqual(history.map(x=>[x.unit,x.from,x.to]),[[2,10,15],[4,0,15]])
+})
+
+test("explicit next-card OC mode cannot inherit the current Tsuji event modifier",()=>{
+    const {ctx,view}=fixture();ctx.COL_TSUJI=87
+    ctx.map.find(m=>m.id===20).terrain=2
+    view.offensive.type=1
+    view.ai.units.push({id:70,faction:1,class:"ground",cf:4,lf:12,location:20})
+    const mods=[];ctx.em_ground_outcome=x=>{mods.push(x.attMods);return {pWin:1}}
+    const env={units:view.ai.units,view,faction:0,powGap:0,cardId:87,cardMode:"ops",byHex:new Map(ctx.ec_map().map(m=>[m.hex,m]))}
+    const ground={id:71,faction:0,class:"ground",cf:18,lf:12,location:15}
+    ctx.ec_assess([ground],[],20,false,env)
+    assert(mods.length>0 && mods.every(x=>x===-1),"OC uses terrain, never +4 from the previous EC")
+    mods.length=0;ctx.ec_assess([ground],[],20,false,{...env,cardMode:"event"})
+    assert(mods.length>0 && mods.every(x=>x===4))
+})
+
+test("land continuation uses a reserved homeland army to gain fresh PoW and exposes retention risk",()=>{
+    const {ctx,view}=fixture({paths:(ids,c)=>c.move_type===4 && ids.includes(2)?[20]:[]})
+    view.turn=8;view.capture=[10];view.pow=2;view.ai.victory.homelandKeys=[10,20]
+    ctx.map.find(m=>m.id===10).region="Japan";ctx.map.find(m=>m.id===20).region="Japan"
+    view.ai.units.push({id:70,faction:0,class:"ground",cf:6,lf:12,location:20})
+    ctx.em_ground_outcome=()=>({pWin:1})
+    const plan=ctx.ec_plan(view,{role:"Allies"})
+    const task=plan.tasks.find(t=>t.hex===20)
+    assert(task);assert(plan.garrisonReserveIds.includes(2));assert.equal(task.objective,"POW")
+    assert.equal(task.victoryObjective,"HOMELAND");assert.equal(plan.targets[0].victoryObjective,"HOMELAND")
+    assert(plan.pow.attainableCaptureTargets.some(t=>t.hex===20))
+    assert.deepEqual(plain(task.retentionRisks).map(r=>r.hex),[10]);assert.equal(plan.pow.retentionRisks.length,1)
+    ctx.map.find(m=>m.id===20).named=false
+    const unnamed=ctx.ec_plan(view,{role:"Allies"})
+    assert.equal(unnamed.tasks.find(t=>t.hex===20).objective,"HOMELAND")
+    assert(!unnamed.pow.attainableCaptureTargets.some(t=>t.hex===20))
+    ctx.map.find(m=>m.id===20).named=true;view.capture=[10,20]
+    assert.equal(ctx.ec_plan(view,{role:"Allies"}).tasks.find(t=>t.hex===20).objective,"HOMELAND","a recaptured ledger entry is not fresh credit")
+})
+
+test("a two-port homeland landing can itself fill a fresh PoW gap",()=>{
+    const {ctx,view}=fixture({paths:(ids,c)=>c.move_type===8
+        && (ids.includes(2)&&ids.includes(3)||ids.includes(4)&&ids.includes(5))?[20]:[]})
+    view.turn=11;view.pow=4;view.capture=[]
+    Object.assign(view.ai.units.find(u=>u.id===4),{asp:true,aspCost:1})
+    view.ai.units.push({id:5,faction:1,class:"naval",location:0,cf:12,service:"army"},
+        {id:70,faction:0,class:"ground",location:20,cf:20,lf:12})
+    ctx.em_ground_outcome=x=>({pWin:x.attCF>=20?1:0})
+    const plan=ctx.ec_plan(view,{role:"Allies"})
+    const task=plan.tasks.find(t=>t.hex===20 && t.movementGroups?.length===2)
+    assert(task);assert(plan.pow.gap>0);assert.equal(task.objective,"POW")
+    assert.equal(task.victoryObjective,"HOMELAND");assert.equal(task.aspCost,2)
+    assert(plan.pow.attainableCaptureTargets.some(t=>t.hex===20))
+    ctx.map.find(m=>m.id===20).named=false
+    const unnamed=ctx.ec_plan(view,{role:"Allies"})
+    assert.equal(unnamed.tasks.find(t=>t.movementGroups?.length===2).objective,"HOMELAND")
+    assert(!unnamed.pow.attainableCaptureTargets.some(t=>t.hex===20))
+    ctx.map.find(m=>m.id===20).named=true;view.capture=[20]
+    const retaken=ctx.ec_plan(view,{role:"Allies"})
+    assert.equal(retaken.tasks.find(t=>t.movementGroups?.length===2).objective,"HOMELAND")
+    assert(!retaken.pow.attainableCaptureTargets.some(t=>t.hex===20))
+    view.capture=[];view.inter_service[1]=1
+    assert(!ctx.ec_plan(view,{role:"Allies"}).tasks.some(t=>t.movementGroups?.length===2),"ISR cannot combine army and navy groups")
+})
+
+test("homeland reserve exception cannot release a foreign resource garrison",()=>{
+    const {ctx,view}=fixture({paths:(ids,c)=>c.move_type===4 && ids.includes(4)?[20]:[]})
+    view.turn=8;view.capture=[0];view.pow=2;ctx.map.find(m=>m.id===0).resource=1
+    view.ai.units=view.ai.units.filter(u=>u.id!==2)
+    const plan=ctx.ec_plan(view,{role:"Allies"})
+    assert(plan.garrisonReserveIds.includes(4))
+    assert(!plan.tasks.some(t=>t.kind==="CONQUEST" && t.requiredUnits.includes(4)))
+})
+
+test("an unmet PoW quota still evaluates fully legal amphibious homeland captures",()=>{
+    const {ctx,view}=fixture()
+    view.turn=8;view.pow=1;view.capture=[]
+    let calls=0
+    ctx.ec_amphibious_convergence=()=>{calls++;return []}
+    ctx.ec_plan(view,{role:"Allies"})
+    assert(calls>0,"a fresh named homeland landing may itself satisfy PoW")
+    view.pow=0
+    ctx.ec_plan(view,{role:"Allies"})
+    assert(calls>1,"the existing amphibious branch remains available after meeting PoW")
+})
+
+test("Japanese aircraft leave a ground assembly slot when another legal base exists",()=>{
+    const {ctx,view}=fixture()
+    const position={version:1,role:"Japan",focus:20,pacificFocus:20,groundAssemblyPorts:[10],
+        bases:[{hex:10,airfield:true,port:true},{hex:15,airfield:true,port:true}],
+        units:[{id:2,class:"ground",location:10},{id:3,class:"air",location:10}]}
+    const crowded=ctx.ec_position_score(10,0,{id:4,class:"air",service:"army"},null,position)
+    const alternate=ctx.ec_position_score(15,0,{id:4,class:"air",service:"army"},null,position)
+    assert.equal(crowded.reason,"preserve-ground-assembly-slots")
+    assert.equal(crowded.score[1],1);assert.equal(alternate.score[1],0)
+    position.units.push({id:5,class:"ground",location:10});position.units=position.units.filter(u=>u.id!==3)
+    assert.equal(ctx.ec_position_score(10,0,{id:4,class:"air"},null,position).score[1],0,"two armies can share their remaining slot with air support")
+})
+
+function preparationFixture() {
+    const {ctx,view,owned}=fixture({paths:(ids,c)=>c.move_type===1 && ids.includes(4)?[10,15]
+        : c.move_type===1 && ids.includes(90)?[15] : c.move_type===2?[20,30] : c.move_type===8?[20]:[]})
+    ctx.map.push({id:30,name:"Resource goal",named:true,resource:1,port:true,region:"Pacific"})
+    ctx.map.find(m=>m.id===15).airfield=true
+    ctx.querySpaceControlled=(hex,f)=>f===1?owned.has(hex):[20,30].includes(hex)
+    ctx.ec_homeland_drive=()=>true
+    view.turn=8;view.pow=0;view.ai.ownCards.push({id:11,ops:3,allowed:["ops"]})
+    for (const u of view.ai.units) if(u.faction===1)u.supply=1
+    Object.assign(view.ai.units.find(u=>u.id===4),{asp:true,aspCost:1,cf:18})
+    ctx.queryCardPreview=()=>({eligible:true,units:view.ai.units.filter(u=>u.class!=="hq").map(u=>u.id),activationBudget:5})
+    ctx.queryGroundPreparation=(id,port,target,c)=>({eligible:!!(view.ai.units.find(u=>u.id===id).supply
+        &view.ai.units.find(u=>u.id===c.hqId).supply),activationOnly:true})
+    const env={view,faction:1,units:view.ai.units,available:view.ai.units.filter(u=>u.faction===1&&u.class!=="hq"),board:ctx.ec_map(),
+        byHex:new Map(ctx.ec_map().map(m=>[m.hex,m])),hq:view.ai.units[0],budget:5,cardId:9,cardMode:"ops",powGap:0,powPressure:0,
+        garrisonReserve:new Set(),moves:new Map(),reactions:new Map(),redeployments:[],campaignObjective:30,homelandApproach:false,
+        homelandRallyPort:null,axisTargets:new Set(),homeAssaults:new Map(),blockers:[],
+        victory:{homelandKeys:[20],b29Bases:[],resourceTargets:[30],routes:{homeland:{remainingKeys:[20]},headquarters:{enemyHqCount:1}}}}
+    return {ctx,view,env}
+}
+
+test("1943 early preparation is separate from the existing homeland attack drive",()=>{
+    const {ctx,view}=fixture();view.turn=5
+    const north=[{hex:21,resource:1,region:"Manchuria"},{hex:22,resource:1,region:"Manchuria"}]
+    ctx.querySpaceControlled=(h,f)=>f===0 && [21,22].includes(h)
+    assert.equal(ctx.ec_homeland_preparation_enabled(view,north),true)
+    assert.equal(ctx.ec_homeland_drive(view),false)
+    view.turn=4;assert.equal(ctx.ec_homeland_preparation_enabled(view,north),false)
+    view.turn=5;view.ai.ownCards.push({id:79,name:"Soviet invasion",allowed:["event"]})
+    assert.equal(ctx.ec_homeland_preparation_enabled(view,north),false)
+    view.ai.ownCards.pop();view.sid=7
+    assert.equal(ctx.ec_homeland_preparation_enabled(view,north),false)
+})
+
+test("independent homeland preparation preserves resource transport and checks the actual witness HQ",()=>{
+    const {ctx,env}=preparationFixture()
+    env.homelandPreparation=ctx.ec_homeland_preparation(env)
+    assert(env.homelandPreparation?.preparationOnly)
+    assert.equal(env.homelandPreparation.rallyPort,10);assert.equal(env.homelandPreparation.targetHex,20)
+    const tasks=ctx.ec_transport(env)
+    assert(tasks.some(t=>t.hex===10 && t.followUpTarget===20 && t.objective==="HOMELAND_ASSEMBLE"))
+    assert(tasks.some(t=>t.hex===15 && t.followUpTarget===30),"resource candidates survive the independent goal")
+    env.units.find(u=>u.id===2).supply=2
+    const checked=ctx.ec_homeland_preparation({...env,assemblyCommands:new Map(),assemblyPreviews:new Map(),assemblyArrivals:new Map(),assemblyFrames:new Map()})
+    assert(checked);assert(!checked.groundIds.includes(2),"an uncommandable local army is not a second ground witness")
+    assert(checked.groundIds.includes(4))
+    assert.equal(ctx.ec_homeland_preparation({...env,powGap:1}),null,"preparation alone cannot spend a needed PoW card")
+    env.units.push({id:70,faction:1,class:"air",location:10},{id:71,faction:1,class:"air",location:10})
+    assert.equal(ctx.ec_homeland_preparation({...env,available:[env.units.find(u=>u.id===4)]}),null,"the receiving port needs a real slot")
+})
+
+test("an assault estimate cannot protect a source force without real AA reachability and effective ASP",()=>{
+    const {ctx,env}=preparationFixture(),ground=env.units.find(u=>u.id===2)
+    assert.equal(ctx.ec_source_assault_ready(ground,20,env),true)
+    ctx.queryAspRemaining=()=>0
+    assert.equal(ctx.ec_source_assault_ready(ground,20,env),false)
+    ctx.queryAspRemaining=()=>4
+    const move=ctx.queryGroupMovementDestinations
+    ctx.queryGroupMovementDestinations=(ids,c)=>c.move_type===8?{reachableHexes:[],aspCost:1}:move(ids,c)
+    assert.equal(ctx.ec_source_assault_ready(ground,20,env),false,"a legal naval route is not a ground AA route")
+})
+
+test("B29 priority also covers homeland preparation labelled as a garrison",()=>{
+    const {ctx,env}=preparationFixture()
+    env.units=env.units.filter(u=>u.id!==2);env.available=env.available.filter(u=>u.id!==2)
+    env.view.ai.units=env.units;env.view.capture=[10]
+    env.units.find(u=>u.id===4).cf=40
+    env.units.push({id:90,faction:1,class:"air",b29:true,location:0,supply:1})
+    env.available.push(env.units.at(-1));ctx.get_distance=(a,b)=>a===15&&b===40?7:Math.ceil(Math.abs(a-b)/2)
+    env.homelandPreparation=ctx.ec_homeland_preparation(env)
+    const tasks=ctx.ec_transport(env),b29=tasks.find(t=>t.objective==="B29_DEPLOYMENT")
+    const garrison=tasks.find(t=>t.hex===10 && t.preparationOnly)
+    assert(b29 && garrison);assert.equal(garrison.objective,"GARRISON")
+    assert(garrison.score<b29.score,"home preparation bonus cannot bypass B29 protection through its displayed label")
+})
+
+test("naval preparation keeps a resource escort alternative at the same port",()=>{
+    const {ctx,env}=preparationFixture()
+    Object.assign(env.units.find(u=>u.id===3),{location:5,cf:30,br:2})
+    env.units.push({id:31,faction:1,class:"naval",location:10,cf:8,supply:1})
+    env.available=[env.units.find(u=>u.id===3)]
+    const move=ctx.queryGroupMovementDestinations
+    ctx.queryGroupMovementDestinations=(ids,c)=>c.move_type===1&&ids.includes(3)?{reachableHexes:[10],aspCost:0}:move(ids,c)
+    ctx.get_distance=(a,b)=>a===10&&b===30?2:Math.ceil(Math.abs(a-b)/2)
+    env.homelandPreparation={targetHex:20,rallyPort:10,preparationOnly:true}
+    const tasks=ctx.ec_transport(env).filter(t=>t.movementUnitIds.includes(3)&&t.hex===10)
+    assert(tasks.some(t=>t.followUpTarget===20));assert(tasks.some(t=>t.followUpTarget===30))
+})
+
+test("Japanese air transport and placement reserve the same two-ground bridgehead capacity",()=>{
+    const {ctx,env}=preparationFixture()
+    env.faction=0;env.homelandPreparation=null;env.campaignObjective=20
+    env.board.find(m=>m.hex===10).airfield=true;env.byHex.get(10).airfield=true
+    for (const m of ctx.map) if([10,20].includes(m.id))m.region="Java"
+    env.board=ctx.ec_map();env.byHex=new Map(env.board.map(m=>[m.hex,m]))
+    env.units=[{id:2,faction:0,class:"ground",location:10,cf:4},{id:3,faction:0,class:"air",location:10,cf:8},
+        {id:90,faction:0,class:"air",location:0,cf:10,br:10}];env.available=[env.units[2]];env.view.ai.units=env.units
+    ctx.ej_nations=()=>[{missingKeys:[20]}];ctx.querySpaceControlled=(h,f)=>f===0?[10,15].includes(h):h===20
+    ctx.queryDefendingGround=()=>({units:[{id:71,cf:12}]})
+    const move=ctx.queryGroupMovementDestinations
+    ctx.queryGroupMovementDestinations=(ids,c)=>c.move_type===1&&ids.includes(90)?{reachableHexes:[10,15],aspCost:0}:move(ids,c)
+    const tasks=ctx.ec_transport(env)
+    assert(!tasks.some(t=>t.hex===10 && t.movementUnitIds.includes(90)))
+    assert(tasks.some(t=>t.hex===15 && t.movementUnitIds.includes(90)))
+})
+
+test("Japanese launch ports preserve ground slots even when they are outside Java",()=>{
+    const {ctx,env}=preparationFixture()
+    ctx.ej_nations=()=>[{missingKeys:[20]}];ctx.queryDefendingGround=()=>({units:[{id:71,cf:12}]})
+    for (const m of ctx.map) if(m.id===20)m.region="Java"
+    const bases=[{hex:10,port:true,airfield:true,region:"Malaya"}]
+    const own=[{id:2,class:"ground",location:10,cf:9},{id:3,class:"naval",location:10,cf:8},
+        {id:4,class:"naval",location:10,cf:12}]
+    assert.deepEqual(plain(ctx.ec_ground_assembly_ports(env.view,0,bases,own)),[10])
+    assert.deepEqual(plain(ctx.ec_ground_assembly_ports(env.view,1,bases,own)),[])
+    assert.deepEqual(plain(ctx.ec_ground_assembly_ports(env.view,0,bases,own.slice(0,2))),[])
+})
+
+test("battle estimation counts ebr air at effective CF without zeroing arriving naval CF",()=>{
+    const {ctx,view}=fixture()
+    const air={id:80,class:"air",faction:1,location:0,br:2,ebr:4,cf:20}
+    ctx.queryPotentialCombatStrength=ids=>ids.includes(80)?10:0
+    assert.equal(ctx.ec_battle_cf(air,20),10)
+    assert.equal(ctx.ec_battle_cf({id:3,class:"naval",location:10,cf:8},20),8)
+    const env={view,faction:1,units:[],budget:3,powGap:0,reactions:new Map(),groundDefenses:new Map(),
+        specialReactions:new Map(),byHex:new Map(),victory:{resourceTargets:[]}}
+    const estimate=ctx.ec_assess([{id:2,class:"ground",cf:12,lf:12},{id:3,class:"naval",cf:8,location:10}],[air],20,true,env)
+    assert.equal(estimate.attackingAirSea,18)
+})
+
+test("strategic stacking facts share one planning scope without caching card/HQ paths or later positions",()=>{
+    const {ctx}=fixture({paths:(ids,context)=>context.cardId===9?[10,15]:[15,20]})
+    const seen=[],shared=new Map()
+    let blocked=15
+    ctx.queryProjectedStack=(hex,ids,options)=>{
+        seen.push({hex,ids:[...ids],faction:options.faction})
+        return {fitsForIncoming:hex!==blocked}
+    }
+    const env=(cardId,faction=1,cache=shared)=>({faction,cardId,hq:{id:cardId},cardMode:"ops",
+        moves:new Map(),projectedStackFits:cache})
+    assert.deepEqual(plain(ctx.ec_query_moves([2,3],1,env(9)).reachableHexes),[10])
+    assert.deepEqual(plain(ctx.ec_query_moves([3,2,2],1,env(37)).reachableHexes),[20])
+    assert.equal(seen.length,3,"shared full and blocked hex facts are queried once; distinct card paths still matter")
+    assert.deepEqual(plain(ctx.ec_query_moves([2,3],1,env(37,0)).reachableHexes),[20])
+    assert.equal(seen.length,5,"factions cannot share stacking facts")
+    blocked=20
+    assert.deepEqual(plain(ctx.ec_query_moves([2,3],1,env(37,1,new Map())).reachableHexes),[15])
+    assert.equal(seen.length,7,"a later decision observes changed positions rather than the old cached rejection")
 })
 
 console.log(`Campaign planner: ${completed.length} source-level contracts passed`)

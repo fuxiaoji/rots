@@ -17,8 +17,10 @@ const { wilson, pairedBootstrap } = require("./campaign-metrics")
 const SCENARIOS = ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"]
 const BASELINE_BOT = "erasmus-v2-opt-v5", CANDIDATE_BOT = "erasmus-campaign"
 const TASK = process.env.EOTS_EVAL_TASK || "AI-WIN-01"
-if (!["AI-WIN-01", "AI-WIN-02"].includes(TASK)) throw new Error(`unknown evaluation task ${TASK}`)
-const RANGES = TASK === "AI-WIN-02"
+if (!["AI-WIN-01", "AI-WIN-02", "AI-WIN-03"].includes(TASK)) throw new Error(`unknown evaluation task ${TASK}`)
+const RANGES = TASK === "AI-WIN-03"
+    ? { develop: { first: 20261401, count: 32 }, holdout: { first: 20261501, count: 32 } }
+    : TASK === "AI-WIN-02"
     ? { develop: { first: 20261201, count: 32 }, holdout: { first: 20261301, count: 32 } }
     : { develop: { first: 20261004, count: 32 }, holdout: { first: 20261101, count: 32 } }
 const sha = x => crypto.createHash("sha256").update(x).digest("hex")
@@ -40,6 +42,7 @@ function locks() {
         candidate: { path: p.candidate, sha256: fileSha(p.candidate), effectiveProfile: r.metadata.bundles.Allies.effectiveProfile, environment: r.metadata.bundles.Allies.environment },
         runner: { path: require.resolve("./match-run"), sha256: fileSha(require.resolve("./match-run")) },
         metrics: { path: require.resolve("./campaign-metrics"), sha256: fileSha(require.resolve("./campaign-metrics")) },
+        openingMetrics: { path: require.resolve("./japan-opening-metrics"), sha256: fileSha(require.resolve("./japan-opening-metrics")) },
         evaluator: { path: __filename, sha256: fileSha(__filename) }, adapterSha256: r.metadata.adapterSha256, gitSha: r.metadata.gitSha }
 }
 function resultPath(directory, scenarioIndex, arm, seed) {
@@ -52,6 +55,8 @@ function validateProvenance(result, locked, arm) {
         !equal(bundles?.Japan?.effectiveProfile, locked.baseline.effectiveProfile) || !equal(bundles?.Allies?.effectiveProfile, expected.effectiveProfile) ||
         result.metadata?.runnerSha256 !== locked.runner.sha256 || result.metadata?.metricsSha256 !== locked.metrics.sha256 || result.metadata?.adapterSha256 !== locked.adapterSha256)
         throw new Error(`result provenance differs from locked run: seed=${result.seed} arm=${arm}`)
+    if (locked.openingMetrics && result.metadata?.openingMetricsSha256 !== locked.openingMetrics.sha256)
+        throw new Error(`opening metric provenance differs: seed=${result.seed}`)
     if (bundles.Japan.bot !== BASELINE_BOT || bundles.Allies.bot !== (arm === "baseline" ? BASELINE_BOT : CANDIDATE_BOT) || !result.headless_moves)
         throw new Error(`unexpected bots/options: seed=${result.seed}`)
     // Older smoke locks omit these fields and remain readable for historical
@@ -269,7 +274,8 @@ function freeze(developmentDir, filename) {
     }
     for (const g of groups) {
         const candidates = g.campaign.filter(x => win(x) && x.replayFile && x.replaySha256)
-        if (!candidates.length) throw new Error(`freeze gate failed: no recorded natural campaign win in ${g.scenario}`)
+        const required = TASK === "AI-WIN-01" ? 1 : 13
+        if (candidates.length < required) throw new Error(`freeze gate failed: ${candidates.length}/32 verified campaign wins in ${g.scenario}; requires ${required}/32`)
         const game = candidates[0]
         if (fileSha(game.replayFile) !== game.replaySha256) throw new Error("winning replay content changed")
         const verified = game.verification.evidence.verification

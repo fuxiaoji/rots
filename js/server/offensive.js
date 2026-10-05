@@ -329,7 +329,7 @@ function get_activatable_units(hq, hq_supply_type) {
 // AI 选 HQ 时的精确只读预检。此时 P.choose_hq._begin 已完成 check_supply，
 // 因而可以复用真正的 activation-zone 与事件牌过滤逻辑。所有临时缓存和
 // 牌面修正随后恢复；人类选择流程不会调用本函数。
-function erasmus_preview_activatable_units(hq) {
+function erasmus_preview_activatable_units(hq, groundOnly = false) {
     if (!hq || !pieces[hq] || !G.offensive) return []
     const supplyCache=Array.isArray(G.supply_cache)?G.supply_cache.slice():G.supply_cache
     const lKeys=["possible_units","reaction_able_units","asp_ground_units","cv_reaction_hex_map",
@@ -343,7 +343,8 @@ function erasmus_preview_activatable_units(hq) {
     try {
         G.offensive.active_hq[G.active]=hq
         L.possible_units=get_activatable_units(hq,pieces[hq].supply)
-        trigger_event("before_unit_activation")
+        if (groundOnly) L.possible_units = L.possible_units.filter(u => pieces[u].class === "ground")
+        else trigger_event("before_unit_activation")
         return Array.isArray(L.possible_units)?L.possible_units.slice():[]
     } finally {
         G.offensive.active_hq[G.active]=oldHq
@@ -1083,33 +1084,17 @@ function headless_stack_unit_id(pieceOrId) {
 //   每格每方上限: 地面+航空 ≤3(共用同一 bucket)、HQ ≤1、海军 ≤6。
 // 返回 true = 可容纳(含单位/编组已在该格: 引擎 multiplier=0 语义, 原地不算新增)。
 function headless_stack_fits(hex, faction, movingPiece, group) {
-    if (typeof is_overstack !== "function") return true
-    if (!(hex === CHINA_BOX || (hex >= 0 && hex <= LAST_BOARD_HEX))) return true
-    const lead = headless_stack_unit_id(movingPiece)
-    if (lead === null) return true
-    if (pieces[lead].faction !== faction) return true
-    if (G.location[lead] === hex) return true
-    // 编组(同源同格整组同落 hex): 引擎 is_overstack 的 multip 只表达"这一个单位"的桶量,
-    // 组内同兵种按数量放大 multip(地面/航空 2/个, 海军 128/个), HQ 逐个数位判定。
-    const ids = []
-    if (Array.isArray(group) && group.length) for (const u of group) {
-        if (Number.isInteger(u) && pieces[u] && G.location[u] !== hex) ids.push(u)
-    }
-    if (!ids.includes(lead)) ids.push(lead)
-    let groundAir = 0, naval = 0, hq = 0
-    let groundAirUnit = null, navalUnit = null, hqUnit = null
-    for (const u of ids) {
-        const cls = pieces[u].class
-        if (cls === "hq") { hq++; if (hqUnit === null) hqUnit = u; continue }
-        if (cls === "naval") { naval++; if (navalUnit === null) navalUnit = u; continue }
-        groundAir++; if (groundAirUnit === null) groundAirUnit = u
-    }
-    // HQ 只占 bit0(每格每方 1 个), multip 在 hq 分支无效 → 组内 >1 个 HQ 必有超编。
-    if (hq > 1) return false
-    if (hq === 1 && is_overstack(hex, hqUnit)) return false
-    if (groundAir > 0 && is_overstack(hex, groundAirUnit, groundAir)) return false
-    if (naval > 0 && is_overstack(hex, navalUnit, naval)) return false
-    return true
+    const lead=headless_stack_unit_id(movingPiece)
+    if(lead===null || pieces[lead].faction!==faction)return true
+    const ids=[...new Set([...(Array.isArray(group)?group:[]),lead])]
+    if(typeof queryProjectedStack!=="function")return false
+    return !!queryProjectedStack(hex,ids,{faction}).fitsForIncoming
+}
+
+function headless_pbm_needed(unit) {
+    const piece=pieces[unit]
+    if(piece.class==="air" || !could_unit_stop_here(unit))return true
+    return !!em_flag("stack_limit_gate") && !headless_stack_fits(G.location[unit],piece.faction,piece,[unit])
 }
 
 // 第6/12页航空 PBM 六级目标、海上 PBM 三级目标、AA PBM 两级目标。
@@ -1186,7 +1171,15 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
     // 引擎移动/推进时完全不拦, 事后 check_overstacking 才位移/歼灭 —— 故必须提前避让。
     // flag 关时 em_flag 恒 0, 短路后逐位不变。
     if (movingPiece && em_flag("stack_limit_gate")
-        && !headless_stack_fits(hex, faction, movingPiece, movingGroup)) return null
+        && !headless_stack_fits(hex, faction, movingPiece, movingGroup)) {
+        const lead=headless_stack_unit_id(movingPiece),ids=movingGroup?.length?movingGroup:[lead]
+        const path=map_get(L.allowed_hexes || [],hex,[])
+        const battle=["attack","reaction"].includes(kind)
+            &&[ATTACK_STAGE,REACTION_STAGE].includes(G.offensive.stage)
+            &&(set_has(G.offensive.battle_hexes,hex)||!!is_faction_units(hex,1-faction))
+        if(!battle || !path.length || path[0]&STRAT_MOVE
+            || !queryPbmStackRecovery(hex,ids,{faction,move_type:path[0]}).recoverable)return null
+    }
     const eu = headless_enemy_units_at(hex, 1 - faction)
     let strategicFocus = null, strategicMeta = null, strategicAxis = null
     if (targetPlan && Object.prototype.hasOwnProperty.call(targetPlan,"focus")) {
@@ -1205,7 +1198,7 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
     // 同一战斗格。远程航空/航母在稍后的 choose_attack_hex 窗仍可选择并支援
     // 已宣告的首要战斗格，不要求进入该格。
     if(kind==="attack"&&strategicFocus!==null&&G.offensive&&
-        set_has(G.offensive.battle_hexes,strategicFocus)&&typeof eop_next_focus_faction==="function"){
+        !strategicMeta?.campaignTask && set_has(G.offensive.battle_hexes,strategicFocus)&&typeof eop_next_focus_faction==="function"){
         const next=eop_next_focus_faction(faction,G.offensive.battle_hexes,targetPlan)
         if(next){strategicFocus=next.hex;strategicMeta=next.meta}
     }
@@ -1421,7 +1414,7 @@ function headless_advance_has_candidates(kind) {
             if (!relocation && f !== null && get_distance(h, f) <= Math.max(1, br || 1)) continue
         }
         if (kind === "attack") return true
-        if (kind === "pbm" && (p.class === "air" || !could_unit_stop_here(u))) return true
+        if (kind === "pbm" && headless_pbm_needed(u)) return true
         if (kind === "reaction" && !set_has(G.offensive.battle_hexes, h)) return true
     }
     return false
@@ -1461,7 +1454,7 @@ function headless_advance_one(self, kind, targetPlan) {
             if (!relocation && f !== null && get_distance(h, f) <= Math.max(1, br || 1)) return false
         }
         if (kind === "attack") return true
-        if (kind === "pbm") return p.class === "air" || !could_unit_stop_here(u)
+        if (kind === "pbm") return headless_pbm_needed(u)
         if (kind === "reaction") return !set_has(G.offensive.battle_hexes, h)
         return false
     }
@@ -1480,11 +1473,13 @@ function headless_advance_one(self, kind, targetPlan) {
     }
     if (loc < 0) return { type: "none" }
     const leadPiece=pieces[lead]
-    const group = L.movable_units.filter(u => {
+    const movementGroup = kind === "attack" && targetPlan?.movementGroups?.find(g => g.unitIds.includes(lead))
+    let group = L.movable_units.filter(u => {
         const p = pieces[u]
         if(!p||G.location[u]!==loc)return false
         if(kind==="attack" && targetPlan?.campaignTask && Array.isArray(targetPlan.movementUnitIds)
             && !targetPlan.movementUnitIds.includes(u))return false
+        if (movementGroup && !movementGroup.unitIds.includes(u)) return false
         if(kind==="attack" && targetPlan && typeof eop_unit_matches_target === "function"
             && !eop_unit_matches_target(u,G.active===JP?"Japan":"Allies",targetPlan,targetPlan.focus))return false
         if(kind==="attack" && targetPlan?.escortPairs?.length){
@@ -1496,6 +1491,10 @@ function headless_advance_one(self, kind, targetPlan) {
         if(kind==="pbm")return p.class===leadPiece.class
         return p.class!=="air"
     })
+    // A seven-ship stack cannot move to any six-ship port as one group. PBM
+    // moves one ship at a time so actual reserved destinations can be used,
+    // leaving the other ships available until their current port is safe.
+    if(kind==="pbm" && leadPiece.class==="naval" && em_flag("stack_limit_gate"))group=group.slice(0,1)
     if (!group.length) return { type: "none" }
     if(kind==="attack" && targetPlan?.escortRequired && targetPlan.escortPairs?.length
         && !targetPlan.escortPairs.some(p=>group.includes(p.ground)&&group.includes(p.carrier)))return {type:"none"}
@@ -1538,8 +1537,11 @@ function headless_advance_one(self, kind, targetPlan) {
     }
     const focusDistance = plannedFocus !== null ? get_distance(loc, plannedFocus) : 0
     const farFromFocus = plannedFocus !== null && focusDistance > 8
-    const semanticModes = kind === "attack" && Array.isArray(targetPlan?.movementModes) ? targetPlan.movementModes : []
-    if (semanticModes.includes("STRATEGIC") || semanticModes.includes("SR")) {
+    const semanticModes = movementGroup ? [movementGroup.mode]
+        : kind === "attack" && Array.isArray(targetPlan?.movementModes) ? targetPlan.movementModes : []
+    if (semanticModes.includes("NAVAL")) {
+        plannedMoveType = NAVAL_MOVE
+    } else if (semanticModes.includes("STRATEGIC") || semanticModes.includes("SR")) {
         plannedMoveType = STRAT_MOVE
     } else if (kind === "attack" && leadPiece.class === "air" && leadPiece.parenthetical && farFromFocus) {
         plannedMoveType = AIR_EXTENDED_MOVE

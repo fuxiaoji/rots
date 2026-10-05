@@ -1,0 +1,59 @@
+两窗口均通过：完整决策及完整 `__ai` 逐字 JSON 相等，完整状态前后纯度通过。所有缓存命中时的位置均与入库时相同，未发现作用域导致的不等价。
+
+方法：公开 v16 seed20261424，用其冻结日/盟包预热策略并执行 **490 个已录原动作**，保存 a442/a491 前状态；v21 与当前构建各 fresh Module、各帧单次 decide。计数器仅在内存，另逐次核对缓存命中时完整 `G.location`。没有新整局或文件写入。
+
+原始结果摘要：
+
+```json
+{
+  "a442": {
+    "fullDecisionEqual": true,
+    "fullAiEqual": true,
+    "action": "card",
+    "argument": 9,
+    "decisionBytes": 70696,
+    "aiBytes": 45959,
+    "v21": {"queries": 3334, "queryMs": 359.925571, "decideMs": 1128.764250, "pure": true},
+    "current": {"queries": 830, "queryMs": 96.829540, "decideMs": 893.592167, "pure": true},
+    "cacheHits": 2504,
+    "cacheBoardMismatch": 0
+  },
+  "a491": {
+    "fullDecisionEqual": true,
+    "fullAiEqual": true,
+    "action": "card",
+    "argument": 37,
+    "decisionBytes": 71974,
+    "aiBytes": 46776,
+    "v21": {"queries": 2602, "queryMs": 304.314567, "decideMs": 945.752500, "pure": true},
+    "current": {"queries": 726, "queryMs": 86.315915, "decideMs": 725.391167, "pure": true},
+    "cacheHits": 1876,
+    "cacheBoardMismatch": 0
+  }
+}
+```
+
+可复核哈希：
+
+```text
+replay:
+ff49c08f973ea20d17a6d3c56a74e4b325660d2d8597a7bd92062137097ecf51
+v21:
+82a79baa7413584f008ed9748e23e1f4135ada2cd4a72ae62c188adbd6029b09
+current rules.js:
+d4b5a48aebdf576857125dddef06e3c6127df66b7f9e074a0f9740963d621b34
+restore Japan:
+df4afef8e7705a960e05a4de99443d9663f32cc9c76632a65e4a538044266e43
+restore Allies:
+7a26acce5f2767f9bd0a5e6095df28129005a4372713036f0473c48e8247afb0
+a442 input JSON:
+e064637b18b353159fc91b5dac618f1bea10e302799961fef266a9a6edabb6cd
+a491 input JSON:
+770f846d82d7dc631814f910f9164824923b3280394cbef91a794be40dd49d7d
+a442 equal full decision:
+d774ac24dcfb666187522f2a2de1b5e00bd47ad3c807b4bd53f0adc12649fee1
+a491 equal full decision:
+8450adb3511a876427d268c76f55a26549397587786f74d1a06dd1dac8478709
+```
+
+查询数减少 75.1%/72.1%；仅为两个窗口的局部等价与开销证据。时间包含计数器、JIT 和并发负载，不能外推整局速度或胜率。

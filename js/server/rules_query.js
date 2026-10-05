@@ -47,7 +47,8 @@ function rules_query_snapshot(fn, activeOverride) {
     const control = G.control ? object_copy(G.control) : G.control
     const nonControl = G.non_control ? object_copy(G.non_control) : G.non_control
     const lSaved = {}
-    for (const k of RULES_QUERY_L_KEYS) lSaved[k] = { had: Object.prototype.hasOwnProperty.call(L, k), value: L[k] }
+    for (const k of RULES_QUERY_L_KEYS) lSaved[k] = { had: Object.prototype.hasOwnProperty.call(L, k),
+        value: k==="supply" && L[k] && typeof L[k]==="object" ? object_copy(L[k]) : L[k] }
     let result
     try {
         if (activeOverride !== undefined) G.active = activeOverride
@@ -97,6 +98,72 @@ function queryGroundMoveCost(from, to, faction) {
 // 某单位是否在补给状态下（HQ 恒真、已激活恒真、否则看补给位）。
 function querySupplyStatus(unit) {
     return !!check_unit_supply(G.location[unit], unit, pieces[unit])
+}
+
+function queryAspRemaining(faction) {
+    return faction===AP || faction===JP ? get_asp_limit(faction) : 0
+}
+
+// Stacking facts only: this does not authorize movement, activation or a
+// temporary combat exception. Project the whole own group, including pairs,
+// and rebuild the engine's stacking cache rather than multiply a lead unit.
+function queryProjectedStack(hex, incomingIds, ctx) {
+    const faction=rules_query_own_faction(ctx),ids=[...new Set(incomingIds || [])]
+    const empty=reason=>({eligible:false,fits:false,fitsForIncoming:false,reason})
+    if(faction===null||ids.some(u=>!Number.isInteger(u)||pieces[u]?.faction!==faction))return empty("unauthorized-units")
+    if(hex!==CHINA_BOX&&(!Number.isInteger(hex)||hex<0||hex>LAST_BOARD_HEX))return empty("invalid-target")
+    return rules_query_snapshot(()=>{
+        for(const u of ids)G.location[u]=hex
+        L.overstack=null;fill_overstack(faction)
+        const local=[];for_each_unit((u,p,loc)=>{if(p.faction===faction&&loc===hex)local.push(u)})
+        const hqCount=local.filter(u=>pieces[u].class==="hq").length
+        const groundAir=local.filter(u=>!["naval","hq"].includes(pieces[u].class))
+        const naval=local.filter(u=>pieces[u].class==="naval")
+        const buckets={groundAir:groundAir.every(u=>!is_overstack(hex,u,0)),naval:naval.every(u=>!is_overstack(hex,u,0)),hq:hqCount<=1}
+        const relevant=new Set(ids.map(u=>pieces[u].class==="naval"?"naval":pieces[u].class==="hq"?"hq":"groundAir"))
+        return {eligible:true,reason:null,fits:Object.values(buckets).every(Boolean),fitsForIncoming:[...relevant].every(k=>buckets[k]),buckets,
+            counts:{engineGroundAirSlots:(L.overstack[hex]%128)>>1,naval:naval.length,hq:hqCount},
+            unitIds:local,incomingIds:ids,evidence:"engine projected stacking; no movement permission"}
+    },faction)
+}
+
+// A temporary combat stack needs a real public PBM escape, not an assumption
+// that losses will free slots. Greedily reserve safe legal final destinations;
+// every actual post-battle move will still be queried again in its real state.
+function queryPbmStackRecovery(hex,incomingIds,ctx) {
+    ctx=ctx || {}
+    const faction=rules_query_own_faction(ctx),ids=[...new Set(incomingIds || [])]
+    const empty=reason=>({recoverable:false,reason,moves:[]})
+    if(faction===null||!ids.length||ids.some(u=>pieces[u]?.faction!==faction))return empty("unauthorized-units")
+    if(!G.offensive?.active_cards?.[0] || ![ATTACK_STAGE,REACTION_STAGE].includes(G.offensive.stage)
+        ||ctx.move_type&STRAT_MOVE)return empty("not-temporary-battle-movement")
+    const active=G.offensive.active_units[faction] || []
+    if(ids.some(u=>!active.includes(u)))return empty("units-not-activated")
+    return rules_query_snapshot(()=>{
+        for(const u of ids)G.location[u]=hex
+        // Participants at this projected battle cannot use the extended PBM
+        // reserved for units that neither entered nor joined any battle.
+        G.offensive.all_bh ||= []
+        set_add(G.offensive.all_bh,hex)
+        const local=()=>active.filter(u=>G.location[u]===hex)
+        const relevant=new Set(ids.map(u=>pieces[u].class==="naval"?"naval":pieces[u].class==="hq"?"hq":"groundAir"))
+        const fits=()=>{const p=queryProjectedStack(hex,[],{faction});return [...relevant].every(k=>p.buckets[k])}
+        if(fits())return {recoverable:true,reason:null,moves:[]}
+        const movable=local().filter(u=>["air","naval"].includes(pieces[u].class)
+            &&!(map_get(G.offensive.paths,u,[0])[0]&STRAT_MOVE))
+            .sort((a,b)=>Number(pieces[a].cf||0)-Number(pieces[b].cf||0)||a-b)
+        const moves=[]
+        for(const unit of movable) {
+            const targets=queryPbmDestinations(unit,{move_type:pieces[unit].class==="air"?AIR_MOVE:NAVAL_MOVE})
+                .filter(h=>h!==hex&&queryProjectedStack(h,[unit],{faction}).fitsForIncoming)
+                .sort((a,b)=>get_distance(hex,a)-get_distance(hex,b)||a-b)
+            if(!targets.length)continue
+            const destination=targets[0];G.location[unit]=destination;L.overstack=null
+            moves.push({unit,hex:destination})
+            if(fits())return {recoverable:true,reason:null,moves,evidence:"projected legal PBM destinations reserved; recheck after battle"}
+        }
+        return {recoverable:false,reason:"no-complete-safe-pbm-recovery",moves}
+    },faction)
 }
 
 // 一组单位对某会战格的潜在战斗力合计（复用引擎 sum_combat_factor）。
@@ -207,7 +274,7 @@ function queryActivationCandidates(hq, ctx) {
     if (ownPreview && (faction === null || !pieces[hq] || pieces[hq].faction !== faction)) return []
     return rules_query_snapshot(() => {
         if (!rules_query_prepare_card(ctx && { ...ctx, hqId: hq })) return []
-        return erasmus_preview_activatable_units(hq)
+        return rules_query_preview_activation_units(hq)
     }, faction)
 }
 
@@ -220,12 +287,31 @@ function rules_query_own_faction(ctx) {
     return faction
 }
 
-// Only ordinary military events have a complete deterministic setup described
-// by card data. Hook-bearing events must actually be played before querying
-// their altered activation/movement rules. Never execute a card to preview it.
+// Ordinary military cards and the declarative ground-only Tsuji exception
+// have an exact preview. Other hook-bearing cards must actually be played.
+// The exception never executes the hook, draw, discard or random effects.
 function rules_query_event_preview_eligible(card) {
-    return !!card && card.type === MILITARY
-        && !Object.keys(card).some(key => /^(before_|after_)/.test(key) && typeof card[key] === "function")
+    if (!card || card.type !== MILITARY) return false
+    const hooks = Object.keys(card).filter(key => /^(before_|after_)/.test(key) && typeof card[key] === "function")
+    return hooks.length === 0 || rules_query_optional_paratroopers(card)
+        || card.c === COL_TSUJI && card.faction === JP && !scenario_data().before_unit_activation
+        && hooks.length === 1 && hooks[0] === "before_unit_activation"
+}
+
+// These three cards have exactly one optional window. The enhanced Japanese
+// planner commits to its legal skip action; no other hook is previewed.
+function rules_query_optional_paratroopers(card) {
+    const hooks=Object.keys(card || {}).filter(k=>/^(before_|after_)/.test(k) && typeof card[k]==="function")
+    return card?.faction===JP && [58,59,60].some(n=>card.c===find_card(JP,n))
+        && hooks.length===1 && hooks[0]==="before_movement"
+        && card.before_movement===cards[find_card(JP,58)].before_movement
+        && !scenario_data().before_movement
+}
+
+function rules_query_preview_activation_units(hq) {
+    const groundOnly = G.offensive.type === EC && G.offensive.offensive_card === COL_TSUJI
+        && !scenario_data().before_unit_activation
+    return erasmus_preview_activatable_units(hq, groundOnly)
 }
 
 function rules_query_preview_hq(hq, card) {
@@ -295,7 +381,7 @@ function queryCardPreview(cardId, ctx) {
         const hq = ctx.hqId || G.offensive.active_hq[faction]
         if (hq && !rules_query_preview_hq(hq, isEvent ? card : null)) return empty("illegal-hq")
         const piece = pieces[hq]
-        const units = hq ? erasmus_preview_activatable_units(hq) : []
+        const units = hq ? rules_query_preview_activation_units(hq) : []
         let hqBonus = piece ? Number(piece.cm || 0) : 0
         L.supply = {}
         const jointDisadvantage = !!piece && (piece.service === "joint" || piece.service === "us")
@@ -304,13 +390,14 @@ function queryCardPreview(cardId, ctx) {
         const kwaiModifier = piece ? Number(get_kwai_modifier(piece) || 0) : 0
         const selected = Array.isArray(ctx.units) ? ctx.units : G.offensive.active_units[faction]
         const kwaiApplied = kwaiModifier && selected.some(u => pieces[u]?.faction === faction
-            && KWAI_HQ_MOD.includes(get_map_data(G.location[u]).region)) ? kwaiModifier : 0
+            && KWAI_HQ_MOD.includes(get_map_data(G.location[u])?.region)) ? kwaiModifier : 0
         hqBonus += kwaiApplied
         return { eligible: true, reason: null, cardId: Number(cardId), cardMode: isEvent ? "event" : "ops",
             hqId: hq || null, logistic: G.offensive.logistic, hqBonus,
             activationBudget: hq ? Math.max(0, G.offensive.logistic + hqBonus) : null,
             jointDisadvantage, kwaiModifier, kwaiApplied, units,
             intelligence: G.offensive.intelligence,
+            skippedOptionalPhase: isEvent && rules_query_optional_paratroopers(card) ? "paratroopers" : null,
             navalMoveDistance: G.offensive.naval_move_distance,
             groundMoveDistance: G.offensive.ground_move_distance,
             airMoveDistance: G.offensive.air_move_distance }
@@ -330,7 +417,7 @@ function queryGroupMovementDestinations(units, ctx) {
         const services = new Set(units.map(u => pieces[u].service).filter(s => s === "army" || s === "navy"))
         if (G.inter_service[G.active] && services.size > 1) return empty("inter-service-rivalry")
         if (ctx && ctx.hqId) {
-            const available = erasmus_preview_activatable_units(ctx.hqId)
+            const available = rules_query_preview_activation_units(ctx.hqId)
             const selected = (G.offensive.active_units[G.active] || [])
             if (units.some(u => !available.includes(u) && !selected.includes(u)))
                 return empty(units.some(u => set_has(G.oos, u)) ? "out-of-supply" : "hq-activation")
@@ -424,7 +511,7 @@ function queryCombatParticipation(unit, target, ctx) {
     const piece = pieces[unit]
     const loc = G.location[unit]
     if (!piece || !Number.isInteger(loc)) return base
-    const cf = piece.reduced ? (Number(piece.rcf) || Math.ceil((Number(piece.cf) || 0) / 2)) : (Number(piece.cf) || 0)
+    const cf = set_has(G.reduced,unit) ? (Number(piece.rcf) || Math.ceil((Number(piece.cf) || 0) / 2)) : (Number(piece.cf) || 0)
     const faction = piece.faction
     if (piece.class === "ground") {
         if (loc === target) return { legal: true, moveMode: "already", path: [loc], usesExtendedRange: false, effectiveAttack: cf }
@@ -438,7 +525,7 @@ function queryCombatParticipation(unit, target, ctx) {
         const normal = in_range_on_map(loc, br, [target], faction).length > 0
         const extended = ebr > br && in_range_on_map(loc, ebr, [target], faction).length > 0
         return { legal: normal || extended, moveMode: normal ? "air" : (extended ? "air-extended" : null),
-            path: null, usesExtendedRange: !normal && extended, effectiveAttack: cf }
+            path: null, usesExtendedRange: !normal && extended, effectiveAttack: normal ? cf : extended ? Math.ceil(cf/2) : 0 }
     }
     if (piece.class === "naval") {
         if (loc === target) return { legal: true, moveMode: "already", path: [loc], usesExtendedRange: false, effectiveAttack: cf }
@@ -464,6 +551,9 @@ function queryReactionCandidates(opts) {
             G.active = R
             if (!rules_query_prepare_card(cardContext))
                 return { air: [], carrier: [], naval: [], ground: [], hq: [], specialReaction: [] }
+            // define_intelligence_condition resets the defender's logistics
+            // to the offensive card's OPS, including when played as an EC.
+            G.offensive.logistic=cards[G.offensive.offensive_card].ops
             G.active = reactionFaction
         }
         if (!G.offensive || !Array.isArray(G.offensive.battle_hexes)) {
@@ -472,6 +562,7 @@ function queryReactionCandidates(opts) {
         const prevR = R
         R = reactionFaction
         if (targetHex !== undefined && targetHex !== null) {
+            if (opts.targetOnly) G.offensive.battle_hexes = []
             // 把假设目标临时并入会战格集合，供反应格标记使用（快照会恢复）。
             if (!set_has(G.offensive.battle_hexes, targetHex)) set_add(G.offensive.battle_hexes, targetHex)
         }
@@ -483,7 +574,7 @@ function queryReactionCandidates(opts) {
         const air = []
         const carrier = []
         const naval = []
-        const ground = []
+        const ground = [], groundOverland = []
         for_each_unit_on_map((u, piece) => {
             if (piece.faction !== reactionFaction) return
             const reactionAble = set_has(L.reaction_able_units, u) || set_has(L.asp_ground_units, u)
@@ -495,6 +586,7 @@ function queryReactionCandidates(opts) {
                 if (reactionAble) naval.push(u)
             } else if (piece.class === "ground") {
                 if (reactionAble) ground.push(u)
+                if (G.supply_cache[G.location[u]] & HEX_TEMP_FLAG3) groundOverland.push(u)
             }
         })
         // Reactions must be activated under one supplied HQ and share a card's
@@ -514,8 +606,74 @@ function queryReactionCandidates(opts) {
             hqOptions.push({ hq, units, budget: Math.max(0, Number(G.offensive.logistic || 0) + Number(piece.cm || 0) - jointDisadvantage) })
         }
         R = prevR
-        return { air, carrier, naval, ground, hq: hqOptions.map(x => x.hq), hqOptions, specialReaction: [] }
+        return { air, carrier, naval, ground, groundOverland, aspGround: L.asp_ground_units.slice(),
+            hq: hqOptions.map(x => x.hq), hqOptions, specialReaction: [] }
     }, reactionFaction)
+}
+
+// A preparation estimate after one OWN ground unit reaches a friendly hex.
+// This does not authorize its transport or its later attack. Both actions
+// still require ordinary queries in their actual positions and card windows.
+function queryGroundPreparation(unit, originHex, targetHex, ctx) {
+    ctx=ctx || {}
+    const faction=rules_query_own_faction(ctx), piece=pieces[unit]
+    const empty=reason=>({eligible:false,reason,projection:"friendly-ground-arrival",reachable:false})
+    if (faction===null || piece?.faction!==faction || piece.class!=="ground"
+        || G.location[unit]<0 || G.location[unit]>LAST_BOARD_HEX) return empty("unauthorized-unit")
+    if (!Number.isInteger(originHex) || !Number.isInteger(targetHex) || originHex<0 || originHex>LAST_BOARD_HEX
+        || targetHex<0 || targetHex>LAST_BOARD_HEX || !is_space_controlled(originHex,faction)) return empty("invalid-friendly-origin")
+    return rules_query_snapshot(()=>{
+        G.location[unit]=originHex
+        const preview=queryCardPreview(ctx.cardId,{...ctx,faction})
+        if (!preview.eligible || !preview.units.includes(unit)) return empty(preview.reason || "arrival-not-commandable")
+        if (ctx.activationOnly) return {eligible:true,reason:null,projection:"friendly-ground-arrival",hqId:ctx.hqId,cardId:ctx.cardId,
+            activationBudget:preview.activationBudget,activationOnly:true,reachable:null,path:null}
+        const movement=queryGroupMovementDestinations([unit],{...ctx,faction,move_type:GROUND_MOVE})
+        return {eligible:true,reason:null,projection:"friendly-ground-arrival",hqId:ctx.hqId,cardId:ctx.cardId,
+            activationBudget:preview.activationBudget,reachable:movement.reachableHexes.includes(targetHex),
+            path:movement.paths[targetHex] || null}
+    },faction)
+}
+
+// A preparation estimate may relocate only public own ground to a currently
+// friendly port. Escorts must already be there. The transaction grants no
+// action: current transport and eventual assault are checked separately.
+function queryAmphibiousPreparation(unitIds,originHex,targetHex,ctx) {
+    ctx=ctx || {}
+    const faction=rules_query_own_faction(ctx)
+    const empty=reason=>({eligible:false,reason,projection:"friendly-ground-arrival-for-AA",reachable:false,units:[]})
+    if (faction===null || !Array.isArray(unitIds) || unitIds.length<2 || unitIds.length>9
+        || unitIds.some(id=>!Number.isInteger(id)) || new Set(unitIds).size!==unitIds.length) return empty("invalid-own-group")
+    if (!Number.isInteger(originHex) || !Number.isInteger(targetHex) || originHex<0 || originHex>LAST_BOARD_HEX
+        || targetHex<0 || targetHex>LAST_BOARD_HEX || !get_map_data(originHex)?.port
+        || !is_space_controlled(originHex,faction)) return empty("invalid-friendly-port")
+    const ground=[]
+    for (const id of unitIds) {
+        const piece=pieces[id]
+        if (!piece || piece.faction!==faction || G.location[id]<0 || G.location[id]>LAST_BOARD_HEX
+            || !["ground","naval"].includes(piece.class)) return empty("unauthorized-unit")
+        if (piece.class==="ground") ground.push(id)
+        else if (G.location[id]!==originHex) return empty("escort-not-at-origin")
+    }
+    if (!ground.length || ground.length===unitIds.length) return empty("ground-and-escort-required")
+    const present=G.location.reduce((count,hex,id)=>count+Number(hex===originHex && pieces[id]?.faction===faction
+        && ["ground","air"].includes(pieces[id]?.class)),0)
+    if (present+ground.filter(id=>G.location[id]!==originHex).length>3) return empty("arrival-overstack")
+    return rules_query_snapshot(()=>{
+        for (const id of ground) G.location[id]=originHex
+        check_supply()
+        const preview=queryCardPreview(ctx.cardId,{...ctx,faction})
+        if (!preview.eligible || unitIds.some(id=>!preview.units.includes(id))) return empty(preview.reason || "arrival-not-commandable")
+        const movement=queryGroupMovementDestinations(unitIds,{...ctx,faction,move_type:AMPH_MOVE})
+        if (!rules_query_prepare_card({...ctx,faction})) return empty("card-preview-unavailable")
+        const supportIds=preview.units.filter(id=>!unitIds.includes(id) && (pieces[id]?.class==="air" && !pieces[id].b29
+            && queryCombatParticipation(id,targetHex,{}).legal || pieces[id]?.class==="naval" && pieces[id].br>0
+            && in_range_on_map(G.location[id],pieces[id].br,[targetHex],faction).length>0))
+        return {eligible:true,reason:null,projection:"friendly-ground-arrival-for-AA",units:preview.units,
+            supportIds,effectiveSupportCF:Object.fromEntries(supportIds.map(id=>[id,sum_combat_factor([id],targetHex)])),
+            activationBudget:preview.activationBudget,reachable:movement.reachableHexes.includes(targetHex),
+            path:movement.paths[targetHex] || null,aspCost:Number(movement.aspCost || 0)}
+    },faction)
 }
 
 // 反应候选强度合计（空海 + 地面），供 potentialReactionStrength 使用。
@@ -533,12 +691,16 @@ function querySpecialReaction(opts) {
     const reactingFaction = (opts && opts.reactingFaction !== undefined)
         ? opts.reactingFaction : (1 - (G.offensive ? G.offensive.attacker : R))
     const target = opts && opts.target
+    if (reactingFaction!==JP && reactingFaction!==AP) return {eligible:false,reason:"invalid-faction",respondingHq:null,legalUnits:[]}
     return rules_query_snapshot(() => {
         if (target === null || target === undefined || !Number.isInteger(target)) {
             return { eligible: false, reason: "no-target", respondingHq: null, legalUnits: [] }
         }
         const md = get_map_data(target)
         if (!md || !md.named) return { eligible: false, reason: "not-named", respondingHq: null, legalUnits: [] }
+        // Match special_reaction._begin: the defending side recomputes supply
+        // and ZOI. Pre-card caches can otherwise hide a real reaction trigger.
+        check_supply()
         if (!has_zoi(target, reactingFaction)) return { eligible: false, reason: "no-zoi", respondingHq: null, legalUnits: [] }
         let respondingHq = null
         for_each_unit_on_map((u, piece) => {
@@ -551,7 +713,59 @@ function querySpecialReaction(opts) {
         return respondingHq !== null
             ? { eligible: true, reason: null, respondingHq, legalUnits: [] }
             : { eligible: false, reason: "out-of-range", respondingHq: null, legalUnits: [] }
-    })
+    }, reactingFaction)
+}
+
+// Public baseline only: unknown enemy intelligence/counter cards are never
+// read. Unprojected movement can change ZOI, so expose an interval rather than
+// claim an exact reaction chance from static target geometry.
+function queryPublicReactionChance(target, ctx) {
+    ctx=ctx || {}
+    const faction=rules_query_own_faction(ctx)
+    const empty=reason=>({eligible:false,reason,pTargetReinforcement:null,unknownReasons:[reason]})
+    if(faction===null)return empty("unauthorized-faction")
+    return rules_query_snapshot(()=>{
+        if(!rules_query_prepare_card(ctx))return empty("no-playable-card")
+        if(!Number.isInteger(target)||!get_map_data(target))return empty("invalid-target")
+        const card=cards[G.offensive.offensive_card],eventMode=G.offensive.type===EC,enemy=1-faction
+        check_supply()
+        const unknownReasons=["enemy-intelligence-and-counter-cards-unobserved"]
+        let modifier=0,unknownModifier=false
+        const hookCards=G.offensive.active_cards.filter(c=>c!==G.offensive.offensive_card || eventMode)
+        for(const c of hookCards)if(cards[c]?.before_intelligence_roll){
+            if(c===find_card(JP,12)){
+                let ca=false
+                for_each_unit((u,p,loc)=>{if(p.type==="ca"&&p.faction===AP&&p.service==="navy"
+                    &&get_distance(FRENCH_FRIGATE_SHOALS,loc)<=3)ca=true})
+                if(!(G.supply_cache[FRENCH_FRIGATE_SHOALS]&AP_ZOI)&&!ca)modifier+=4
+            }else unknownModifier=true
+        }
+        if(scenario_data().before_intelligence_roll)unknownModifier=true
+        const value=eventMode&&card.ec ? card.ec : card.oc
+        const chance=m=>Math.max(0,Math.min(9,Math.floor(Number(value)-m)+1))/10
+        const zoiKnown=!!G.offensive.zoi_intelligence_modifier
+        if(!zoiKnown)unknownReasons.push("future-movement-zoi-not-projected")
+        if(unknownModifier)unknownReasons.push("public-modifier-hook-not-modeled")
+        const qRoll=unknownModifier ? {low:0,high:.9} : zoiKnown
+            ? {low:chance(modifier-2),high:chance(modifier-2)}
+            : {low:chance(modifier),high:chance(modifier-2)}
+        const intelligence=eventMode&&card.intelligence ? card.intelligence : null
+        const qIntel=intelligence===INTERCEPT||intelligence===AMBUSH ? {low:1,high:1}
+            : intelligence===SURPRISE ? {low:0,high:0} : qRoll
+        const defended=!!is_faction_units(target,enemy)
+        const special=!defended&&ctx.amphibious && querySpecialReaction({target,reactingFaction:enemy}).eligible
+        const qSpecial=special?qRoll:{low:1,high:1}
+        G.offensive.logistic=card.ops
+        const candidates=queryReactionCandidates({reactionFaction:enemy,targetHex:target,targetOnly:true})
+        const legal=new Set([...(candidates.air||[]),...(candidates.carrier||[]),...(candidates.naval||[]),...(candidates.ground||[])])
+        const hasLegalHqReaction=(candidates.hqOptions||[]).some(h=>h.budget>0&&h.units.some(u=>legal.has(u)))
+        const trigger=(defended||special)&&hasLegalHqReaction&&!(eventMode&&card.c===CARRIER_RAID)
+        const pTargetReinforcement=trigger ? {low:qIntel.low*qSpecial.low,high:qIntel.high*qSpecial.high} : {low:0,high:0}
+        return {eligible:true,reason:null,cardId:card.c,cardMode:eventMode?"event":"ops",qRoll,qIntel,qSpecial,
+            pTargetReinforcement,defended,specialReaction:special,hasLegalHqReaction,
+            zoiEvidence:zoiKnown?"already-crossed":"future-movement-unknown",modifierEvidence:{value:modifier,unknown:unknownModifier},
+            estimate:"public-baseline-bounds",unknownReasons}
+    },faction)
 }
 
 // 神风攻击标准 (清单 #14)：镜像引擎 set_kamikaze_able_battles + kamikaze_attack._begin 的
@@ -641,12 +855,12 @@ function queryPbmDestinations(unit, ctx) {
 // ============================================================================
 
 const RULES_QUERY_FNS = [
-    "queryZoi", "queryNonNeutralZoi", "queryGroundMoveCost", "querySupplyStatus",
+    "queryZoi", "queryNonNeutralZoi", "queryGroundMoveCost", "querySupplyStatus", "queryAspRemaining", "queryProjectedStack", "queryPbmStackRecovery",
     "queryPotentialCombatStrength", "queryDefendingGround", "queryBlockadeStatus", "queryBattleTable", "querySpaceControlled",
     "queryFactionUnits", "queryLegalReinforcementHexes", "queryEmergencyRetreatHexes",
-    "queryCardPreview", "queryActivationCandidates", "queryGroupMovementDestinations", "queryGroundReachability", "queryNavalReachability",
+    "queryCardPreview", "queryActivationCandidates", "queryGroupMovementDestinations", "queryGroundPreparation", "queryAmphibiousPreparation", "queryGroundReachability", "queryNavalReachability",
     "queryCombatParticipation", "queryReactionCandidates",
-    "queryReactionStrength", "querySpecialReaction",
+    "queryReactionStrength", "querySpecialReaction", "queryPublicReactionChance",
     "queryKamikazeStandard", "querySubmarineTargets", "queryPbmDestinations",
 ]
 
@@ -654,12 +868,12 @@ function rules_query_dispatch(q) {
     if (!q || typeof q !== "object") return null
     const fn = q.fn || q.query
     const impl = {
-        queryZoi, queryNonNeutralZoi, queryGroundMoveCost, querySupplyStatus,
+        queryZoi, queryNonNeutralZoi, queryGroundMoveCost, querySupplyStatus, queryAspRemaining, queryProjectedStack, queryPbmStackRecovery,
         queryPotentialCombatStrength, queryDefendingGround, queryBlockadeStatus, queryBattleTable, querySpaceControlled,
         queryFactionUnits, queryLegalReinforcementHexes, queryEmergencyRetreatHexes,
-        queryCardPreview, queryActivationCandidates, queryGroupMovementDestinations, queryGroundReachability, queryNavalReachability,
+        queryCardPreview, queryActivationCandidates, queryGroupMovementDestinations, queryGroundPreparation, queryAmphibiousPreparation, queryGroundReachability, queryNavalReachability,
         queryCombatParticipation, queryReactionCandidates,
-        queryReactionStrength, querySpecialReaction,
+        queryReactionStrength, querySpecialReaction, queryPublicReactionChance,
         queryKamikazeStandard, querySubmarineTargets, queryPbmDestinations,
         queryJapanResourceTrace: () => rules_query_snapshot(() => {
             try { return !!check_japan_resource_trace() } catch (e) { return null }

@@ -8,6 +8,7 @@
 /** import server/erasmus_data.js*/
 /** import server/erasmus_state.js*/
 /** import server/bots/erasmus_campaign.js*/
+/** import server/bots/erasmus_japan_campaign.js*/
 
 const ERASMUS_VERSION = "erasmus-v2.2-zh.29"
 const ACTION_PRIORITY = ["event", "ops", "play_card", "card", "action_hex", "delay", "unit", "hex", "strat_move", "ground_move", "roll", "eliminate", "continue", "next", "done", "skip", "pass", "cancel"]
@@ -762,6 +763,40 @@ function erasmus_sm_decision(strategy, pick, view, context) {
         privateTrace: { ...base, sm: smPrivate, argument: pick.argument, legalActions: Object.keys(view.actions || {}) } }
 }
 
+// Final placement is filtered before any cached destination, chart fallback
+// or strategic focus can select it. Empty safe sets use an actual legal exit;
+// forced placement without an exit is explicitly recorded as unavoidable.
+function erasmus_stacking_destinations(view,role) {
+    if(!em_flag("stack_limit_gate"))return {view}
+    const faction=role==="Japan"?JP:AP,ids=view.active_stack?.length?view.active_stack:G.active_stack
+    if(!Array.isArray(ids)||!ids.length||ids.some(u=>pieces[u]?.faction!==faction))return {view}
+    const final=view.ai?.windowKind==="pbm" || [POST_BATTLE_STAGE,EMERGENCY_STAGE,EVENT_STAGE].includes(G.offensive?.stage)
+        || L.move_type===STRAT_MOVE || /as a reinforcement|choose hex to place/i.test(String(view.prompt||""))
+    if(!final)return {view}
+    let actions={...view.actions}
+    for(const action of ["action_hex","hex"]) {
+        const candidates=actions[action]
+        if(!Array.isArray(candidates)||!candidates.length)continue
+        const safe=candidates.filter(h=>queryProjectedStack(h,ids,{faction}).fitsForIncoming)
+        if(safe.length){actions[action]=safe;continue}
+        const currentSafe=queryProjectedStack(G.location[ids[0]],ids,{faction}).fitsForIncoming
+        const exit=["cancel","delay","skip","turn_box","eliminate",...(currentSafe?["no_move","done"]:[])]
+            .find(a=>actions[a] && (!Array.isArray(actions[a])||actions[a].length))
+        const picked=exit || action
+        const overflow=h=>{const p=queryProjectedStack(h,ids,{faction});if(!p.eligible)return Infinity
+            return Math.max(0,p.counts.engineGroundAirSlots-3)*2+Math.max(0,p.counts.naval-6)+Math.max(0,p.counts.hq-1)*3}
+        const argument=exit ? Array.isArray(actions[exit])?actions[exit][0]:undefined
+            : candidates.slice().sort((a,b)=>overflow(a)-overflow(b)||a-b)[0]
+        const trace={policy:"campaign-v1",role,chart:"CAMPAIGN",node:"STACKING_SAFE_EXIT",nodePath:["CAMPAIGN","STACKING_SAFE_EXIT"],
+            action:picked,fallback:false,inferred:false,
+            campaign:{version:1,phase:"STACKING_SAFE_EXIT",objective:{type:"AVOID_OVERSTACK",hex:exit?null:argument},focus:exit?null:argument},
+            explanation:exit?"无可容纳本编组的合法终点，使用当前窗口的合法退出动作。"
+                :"此窗口没有安全终点或退出动作，选择堆叠超额最小的合法落点；损失无法在本窗口避免。"}
+        return {view,decision:{action:picked,argument,publicTrace:trace,privateTrace:{...trace,rejectedHexes:candidates}}}
+    }
+    return {view:{...view,actions}}
+}
+
 var EOTS_BOTS = {
     "erasmus-v2": {
         name: "伊拉斯谟 v2.0", version: ERASMUS_VERSION,
@@ -770,6 +805,9 @@ var EOTS_BOTS = {
             return erasmus_profile_decision("erasmus-v2", view, context)
         },
         decideCore(view, context) {
+            const stacking=erasmus_stacking_destinations(view,context.role)
+            if(stacking.decision)return stacking.decision
+            view=stacking.view
             // 完整全图剧本(1942-45 等): 回合级状态机选轴; 其余剧本(=gate 关)保持 zh.6。
             let sm = null
             try {
@@ -793,7 +831,7 @@ var EOTS_BOTS = {
                 if (typeof eop_clear_all_chains === "function") eop_clear_all_chains()
                 throw new Error(`ERASMUS_STATE_MACHINE_PAUSED:${e && e.message ? e.message : e}`)
             }
-            if (em_flag("campaign_planner") && context.role === "Allies" && typeof ec_apply_plan === "function") {
+            if (ec_enabled(context.role) && typeof ec_apply_plan === "function") {
                 const campaignPlan = ec_apply_plan(view, context)
                 if (campaignPlan) {
                     context.campaignPlan = campaignPlan
@@ -869,6 +907,11 @@ var EOTS_BOTS = {
         scenarios: ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Allies"],
         decide(view, context) { return erasmus_profile_decision("erasmus-campaign", view, context) },
     },
+    "erasmus-japan-campaign": {
+        name: "日军战役 AI", version: ERASMUS_VERSION + "-japan-campaign.1",
+        scenarios: ["1942-1945 (The Shortened Campaign)"], roles: ["Japan"],
+        decide(view, context) { return erasmus_profile_decision("erasmus-japan-campaign", view, context) },
+    },
 }
 
 
@@ -882,7 +925,7 @@ function erasmus_profile_decision(name, originalView, originalContext) {
     const profile = em_bot_config(name, context.role) || {}
     const logLength = G.log.length
     em_set_config(profile)
-    try {
+    const compute = () => {
         const result = EOTS_BOTS["erasmus-v2"].decideCore(view, context)
         const plan = context.campaignPlan || null
         const logs = G.log.slice(logLength)
@@ -903,7 +946,8 @@ function erasmus_profile_decision(name, originalView, originalContext) {
             result.publicTrace.campaign = { version: plan.version, phase: plan.phase,
                 objective: plan.objective, focus: plan.focus, pow: publicPow, victory: publicVictory,
                 ...(plan.delegatedOffensive ? { delegatedOffensive: true, delegationReason: plan.delegatedOffensive.reason } : {}) }
-            const active = new Set((originalView.offensive?.active_units?.[AP] || []).flat())
+            const faction = context.role === "Japan" ? JP : AP
+            const active = new Set((originalView.offensive?.active_units?.[faction] || []).flat())
             const formed = plan.tasks.find(t => t.movementModes.includes("AA") && t.requiredUnits.every(id => active.has(id)))
             if (formed) result.publicTrace.campaign.formation = { ready: true, target: formed.hex,
                 ground: formed.movementUnitIds.filter(id => originalView.ai.units.find(u => u.id === id)?.class === "ground"),
@@ -913,9 +957,16 @@ function erasmus_profile_decision(name, originalView, originalContext) {
                 priorityTargets: plan.targets.map((t, i) => ({ ...t, priority: i + 1,
                     name: get_map_data(t.hex)?.name || String(t.hex), id: int_to_hex(t.hex),
                     resource: !!get_map_data(t.hex)?.resource, distanceToTokyo: get_distance(t.hex, TOKYO),
-                    achieved: t.kind === "CONQUEST" ? is_space_controlled(t.hex, AP) : plan.tasks.find(x => x.hex === t.hex)?.movementUnitIds.every(id => originalView.ai.units.find(u => u.id === id)?.location === t.hex),
+                    achieved: t.kind === "CONQUEST" ? is_space_controlled(t.hex, faction) : plan.tasks.find(x => x.hex === t.hex)?.movementUnitIds.every(id => originalView.ai.units.find(u => u.id === id)?.location === t.hex),
                     controlledBy: is_space_controlled(t.hex, AP) ? "Allies" : "Japan" })) }
         }
         return result
+    }
+    try {
+        // Enhanced decisions must be action-only replayable. Legacy selectors
+        // may lazily populate supply caches; retain those facts in the returned
+        // plan while restoring the live position, including rollback inputs.
+        return profile.campaign_planner || profile.japan_campaign_planner
+            ? rules_query_snapshot(compute,G.active) : compute()
     } finally { G.log.length = logLength; em_reset_config() }
 }

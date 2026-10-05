@@ -1,0 +1,1 @@
+复核收口：两项P1已修于新worktree当前source，all_bh初始化+加入hex，PBM nav逐舰。4项stack回归过：7舰全active真实advance原港剩6；parenthetical98只有br外ebr内友机场拒恢复。请仅只读检查对应diff与tests-v21-stacking-repair.log，给修复已核/剩余实质问题。保留贪心恢复可能漏可行分配、战后须重查的边界。不新整局/不修改。

@@ -1,0 +1,1 @@
+C142 EC流程合法：HQ7六激活→跳过伞兵→移动→逐个声明远程支援。进入情报窗口时物流5→OPS3，AP80实际反应预算3+2=5；此前EC预算7估计错误。单Army34+Nagato14，支援25/11/9/52，共六激活、CF62；正确最强反应为50，加原防6。概率API传错queryReactionCandidates参数会把权重误为0，已指出。内存修正后选择C142 EC、CF57编组，pNavalWithReaction1、pCapture1，state纯。原OPS中CV11被裁剪，因为加减它都记pCapture0.65；基础反应实际60%，固定35%高估反应后必败攻击。未执行新战斗或整局，生产文件未修改。

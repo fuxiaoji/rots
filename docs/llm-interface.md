@@ -7,7 +7,7 @@ node tools/inline.js
 node tools/llm-arena.js
 ```
 
-打开 http://127.0.0.1:8090/。配置 Japan / Allies，支持人类 vs LLM、状态机 vs LLM、LLM vs LLM。建局默认暂停，“AI 下一步”执行一个动作；快进最多20步，遇人类窗口停止。South Pacific为默认剧本，状态机支持范围按原配置校验。
+打开 http://127.0.0.1:8090/。配置 Japan / Allies，支持人类 vs LLM、状态机 vs LLM、LLM vs LLM。建局默认暂停，“AI 下一步”执行一个动作；快进最多20步，遇人类窗口停止。South Pacific为默认剧本，状态机支持范围按原配置校验。1942/1943可选增强盟军 `erasmus-campaign`；1942可选增强日军 `erasmus-japan-campaign`，原Erasmus和AI5继续作为独立选项。
 
 ## 配置与模型
 
