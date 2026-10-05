@@ -1,0 +1,73 @@
+{
+  "taskId": "LLM-EVAL-01",
+  "cost": "unknown",
+  "phases": {
+    "pilot": {
+      "requests": 31,
+      "totalTokens": 232284,
+      "latencyMs": 136686,
+      "retries": 2,
+      "invalidResponses": 2,
+      "usageUnknown": 0
+    },
+    "vision": {
+      "requests": 1,
+      "retries": 0,
+      "failedRequests": 0,
+      "invalidResponses": 0,
+      "totalTokens": 8406,
+      "promptTokens": 7366,
+      "completionTokens": 1040,
+      "usageUnknown": 0,
+      "latencyMs": 13047,
+      "forcedActions": 0,
+      "assistedActions": 0,
+      "cost": "unknown"
+    },
+    "review": {
+      "requests": 2,
+      "totalTokens": 1251,
+      "latencyMs": 14235
+    },
+    "httpUI": {
+      "requests": 3,
+      "totalTokens": 20907,
+      "latencyMs": 12777,
+      "usageUnknown": 0
+    },
+    "glmAvailability": {
+      "requests": 1,
+      "totalTokens": 0,
+      "usageUnknown": 1,
+      "latencyMs": 564
+    },
+    "v2Diagnostic": {
+      "requests": 171,
+      "totalTokens": 1368178,
+      "latencyMs": 883981,
+      "retries": 13,
+      "invalidResponses": 15,
+      "usageUnknown": 0
+    },
+    "v3Diagnostic": {
+      "requests": 177,
+      "totalTokens": 1336571,
+      "latencyMs": 569277,
+      "retries": 7,
+      "invalidResponses": 9,
+      "usageUnknown": 0
+    }
+  },
+  "total": {
+    "requests": 386,
+    "totalTokens": 2967597,
+    "latencyMs": 1630567,
+    "usageUnknown": 1
+  },
+  "withFormalV4": {
+    "requests": 3594,
+    "totalTokens": 27440480,
+    "latencyMs": 12725660,
+    "usageUnknown": 10
+  }
+}

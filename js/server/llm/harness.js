@@ -6,7 +6,9 @@ function parseAnswer(content, packet, decisionId) {
     let text = content.trim().replace(/<think>[\s\S]*?<\/think>/g, "").trim()
     if (/^```(?:json)?\s/.test(text)) text = text.replace(/^```(?:json)?\s*/, "").replace(/\s*```$/, "")
     let answer; try { answer = JSON.parse(text) } catch { throw fail("FORMAT", "响应必须是单个JSON对象") }
-    if (!answer || Array.isArray(answer) || answer.decisionId !== decisionId) throw fail("FORMAT", "decisionId不匹配")
+    if (!answer || typeof answer !== "object" || Array.isArray(answer)) throw fail("FORMAT", "响应必须是JSON对象")
+    // The request is bound to this packet by the session's revision/role checks.
+    // Model-echoed nonces are neither authentication nor stale-response control.
     const candidate = packet.candidates.find(c => c.id === answer.candidateId)
     if (!candidate) throw fail("FORMAT", "candidateId不在当前合法候选表")
     const m = answer.memory || {}

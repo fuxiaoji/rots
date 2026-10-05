@@ -16,14 +16,17 @@ function visible(rules, state, role) {
     const ownFuture = side >= 0 ? view.future_offensive?.[side] : -1
     if (ownFuture > 0 && !ownIds.includes(ownFuture)) ownIds.push(ownFuture)
     const cardMeta = new Map((view.ai?.ownCards || []).map(c => [c.id, c]))
-    const observation = { schemaVersion: 1, role, scenario: state.scenario, active: view.active, turn: view.turn,
+    const observation = { schemaVersion: 1, role, scenario: publicData.scenario || state.scenario, active: view.active, turn: view.turn,
         window: view.ai?.windowKind || null, state: view.ai?.state || null, prompt: view.prompt,
         politicalWill: view.political_will, pow: view.pow, resources: clone(view.resources || []),
         asp: clone(view.asp || []), passes: clone(view.passes || []),
         handCounts: (view.hand || []).map(h => Array.isArray(h) ? h.length : h),
         ownFutureOffensive: ownFuture > 0 ? ownFuture : null,
         ownCards: ownIds.map(id => pick({ ...(publicData.cards[id] || { id }), ...(cardMeta.get(id) || {}) }, CARD_KEYS)),
-        selectedUnits: clone(view.active_stack || []), units: (view.ai?.units || []).map(u => pick(u, UNIT_KEYS)),
+        selectedUnits: clone(view.active_stack || []), selectedMovementUnits: clone(view.active_stack || []),
+        activeUnits: side >= 0 ? clone(view.offensive?.active_units?.[side] || []) : [],
+        activation: publicData.activation,
+        unselectableUnits: clone(view.unselect || []), units: (view.ai?.units || []).map(u => pick(u, UNIT_KEYS)),
         hexes: publicData.hexes,
         battle: { hexes: clone(view.offensive?.battle_hexes || []),
             activatedUnits: clone(view.offensive?.active_units || []),
@@ -39,19 +42,24 @@ function observe(rules, state, role, revision) {
     const units = new Map(observation.units.map(u => [u.id, u]))
     const cards = new Map(observation.ownCards.map(c => [c.id, c]))
     const hexes = new Map(observation.hexes.map(h => [h.hex, h]))
+    const unselect = new Set(view.unselect || [])
     const add = (action, argument, label, assisted = false) => {
         // Short exact symbols are reliably copied by small/text models. The
         // decision nonce and revision bind these indices to this candidate table.
         candidates.push({ id: `r${revision}-a${candidates.length}`,
             action, ...(argument !== undefined ? { argument: clone(argument) } : {}), label, assisted })
     }
-    // Undo/redo create strategic loops. Raw move needs an engine-generated path.
+    // General undo/redo can loop; a stranded movement escape is handled below.
+    // Raw move needs an engine-generated path.
     for (const [action, options] of Object.entries(view.actions || {})) {
         if (["undo", "redo", "move"].includes(action) || !options) continue
         if (Array.isArray(options)) for (const arg of options) {
             const name = /card|event|ops|discard/.test(action) ? cards.get(arg)?.name
                 : /unit|eliminate|unselect/.test(action) ? units.get(arg)?.name : hexes.get(arg)?.name
-            add(action, arg, `${action} ${arg}${name ? " — " + name : ""}`)
+            const verb = action === "unit" && unselect.has(arg)
+                ? observation.state === "activate_units" ? "取消激活" : "取消选择"
+                : action === "unit" && observation.state === "activate_units" ? "激活单位" : action
+            add(action, arg, `${verb} ${arg}${name ? " — " + name : ""}`)
         } else if (options === 1 || options === true) add(action, undefined,
             action === "advance" ? "advance — 程序选择编队和合法落点" : action, action === "advance")
     }
@@ -59,6 +67,11 @@ function observe(rules, state, role, revision) {
         for (const m of rules.query(clone(state), role, "llm_legal_moves") || [])
             add("move", m.path, `move → ${hexes.get(m.hex)?.name || m.hex} (${hexes.get(m.hex)?.id || m.hex})`)
     }
+    // A selected movement mode may have no reachable destination. The native
+    // client can undo that selection; retain this sole legal escape, not general undo.
+    if (!candidates.length && observation.state === "move_offensive_units"
+        && view.active_stack?.length && view.move_type && view.actions?.move && view.actions?.undo)
+        add("undo", undefined, "撤销当前移动选择：所选方式无合法落点")
     return { observation, observationHash, candidates }
 }
 module.exports = { observe, visible, activeRole, hash, clone, ROLES }

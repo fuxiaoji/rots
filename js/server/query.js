@@ -9,7 +9,22 @@ function on_query(q, params, b) {
                 terrain: m.terrain, port: !!m.port, airfield: !!m.airfield, resource: !!m.resource,
                 named: !!m.named, control: !is_controllable_hex(h) ? null : is_space_controlled(h, JP) ? "Japan" : is_space_controlled(h, AP) ? "Allies" : null })
         }
-        return { hexes, cards: cards.map((c, id) => c ? { id, name: c.name, type: c.type,
+        let activation = null
+        if (R === G.active && L.P === "activate_units") {
+            const activeCount = G.offensive.active_units[R].length
+            const limit = G.offensive.logistic + L.hq_bonus
+            activation = { hqId: G.offensive.active_hq[R] || null, logistic: G.offensive.logistic,
+                hqBonus: L.hq_bonus, limit, activeCount, remaining: Math.max(0, limit - activeCount), overBudget: activeCount > limit }
+        }
+        const scenario = { id: G.sid, name: scenario_data().name, lastTurn: scenario_data().last_turn }
+        if (G.sid === SOUTH_PACIFIC_SCENARIO) {
+            const scoring = rules_query_snapshot(() => get_victory(), G.active)
+            scenario.victoryMode = "south-pacific-vp"
+            scenario.victory = { basis: "current-engine-implementation", evaluation: "if-scored-now",
+                vp: scoring.vp, breakdown: scoring.text, winningSideIfScoredNow: scoring.won_side,
+                alliesMaximumVP: 5, japanMinimumVP: 6, politicalWillZeroWinner: "Japan" }
+        }
+        return { hexes, scenario, activation, cards: cards.map((c, id) => c ? { id, name: c.name, type: c.type,
             ops: c.ops, logistic: c.logistic, hq: c.hq, reaction: !!c.reaction,
             metadata: Object.fromEntries(Object.entries(c).filter(([k, v]) => !["name", "type", "ops", "logistic", "hq"].includes(k) && (typeof v === "number" || typeof v === "boolean" || Array.isArray(v) && v.every(x => typeof x === "number")))) } : null) }
     }

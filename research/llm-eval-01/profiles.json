@@ -1,0 +1,52 @@
+[
+  {
+    "id": "minimax",
+    "provider": "minimax",
+    "baseUrl": "https://api.minimaxi.com/v1",
+    "model": "MiniMax-M3",
+    "vision": false,
+    "timeoutMs": 60000,
+    "maxTokens": 4096,
+    "extraBody": {
+      "thinking": {
+        "type": "disabled"
+      },
+      "reasoning_split": true
+    }
+  },
+  {
+    "id": "deepseek",
+    "provider": "deepseek",
+    "baseUrl": "https://api.deepseek.com",
+    "model": "deepseek-flash",
+    "vision": false,
+    "timeoutMs": 60000,
+    "maxTokens": 4096,
+    "extraBody": {
+      "thinking": {
+        "type": "disabled"
+      },
+      "response_format": {
+        "type": "json_object"
+      }
+    }
+  },
+  {
+    "id": "glm",
+    "provider": "glm",
+    "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
+    "model": "glm-5.3",
+    "vision": false,
+    "timeoutMs": 60000,
+    "maxTokens": 4096,
+    "extraBody": {
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "low",
+      "response_format": {
+        "type": "json_object"
+      }
+    }
+  }
+]

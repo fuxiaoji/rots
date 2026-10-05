@@ -1,0 +1,440 @@
+{
+  "schemaVersion": 1,
+  "taskId": "LLM-EVAL-01",
+  "sourceCommit": "2138eba263cb89f1bd8a891685f41f18452bcd36",
+  "jobs": [
+    {
+      "id": "minimax-1",
+      "index": 0,
+      "profile": "minimax",
+      "scenario": "South Pacific",
+      "seed": 20262201,
+      "role": "Japan",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "deepseek-1",
+      "index": 0,
+      "profile": "deepseek",
+      "scenario": "South Pacific",
+      "seed": 20262201,
+      "role": "Japan",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "glm-1",
+      "index": 0,
+      "profile": "glm",
+      "scenario": "South Pacific",
+      "seed": 20262201,
+      "role": "Japan",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "minimax-2",
+      "index": 1,
+      "profile": "minimax",
+      "scenario": "South Pacific",
+      "seed": 20262202,
+      "role": "Allies",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "deepseek-2",
+      "index": 1,
+      "profile": "deepseek",
+      "scenario": "South Pacific",
+      "seed": 20262202,
+      "role": "Allies",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "glm-2",
+      "index": 1,
+      "profile": "glm",
+      "scenario": "South Pacific",
+      "seed": 20262202,
+      "role": "Allies",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "minimax-3",
+      "index": 2,
+      "profile": "minimax",
+      "scenario": "South Pacific",
+      "seed": 20262203,
+      "role": "Japan",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "deepseek-3",
+      "index": 2,
+      "profile": "deepseek",
+      "scenario": "South Pacific",
+      "seed": 20262203,
+      "role": "Japan",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "glm-3",
+      "index": 2,
+      "profile": "glm",
+      "scenario": "South Pacific",
+      "seed": 20262203,
+      "role": "Japan",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "minimax-4",
+      "index": 3,
+      "profile": "minimax",
+      "scenario": "South Pacific",
+      "seed": 20262204,
+      "role": "Allies",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "deepseek-4",
+      "index": 3,
+      "profile": "deepseek",
+      "scenario": "South Pacific",
+      "seed": 20262204,
+      "role": "Allies",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "glm-4",
+      "index": 3,
+      "profile": "glm",
+      "scenario": "South Pacific",
+      "seed": 20262204,
+      "role": "Allies",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "minimax-5",
+      "index": 4,
+      "profile": "minimax",
+      "scenario": "South Pacific",
+      "seed": 20262205,
+      "role": "Japan",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "deepseek-5",
+      "index": 4,
+      "profile": "deepseek",
+      "scenario": "South Pacific",
+      "seed": 20262205,
+      "role": "Japan",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "glm-5",
+      "index": 4,
+      "profile": "glm",
+      "scenario": "South Pacific",
+      "seed": 20262205,
+      "role": "Japan",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "minimax-6",
+      "index": 5,
+      "profile": "minimax",
+      "scenario": "South Pacific",
+      "seed": 20262206,
+      "role": "Allies",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "deepseek-6",
+      "index": 5,
+      "profile": "deepseek",
+      "scenario": "South Pacific",
+      "seed": 20262206,
+      "role": "Allies",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "glm-6",
+      "index": 5,
+      "profile": "glm",
+      "scenario": "South Pacific",
+      "seed": 20262206,
+      "role": "Allies",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "minimax-7",
+      "index": 6,
+      "profile": "minimax",
+      "scenario": "South Pacific",
+      "seed": 20262207,
+      "role": "Japan",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "deepseek-7",
+      "index": 6,
+      "profile": "deepseek",
+      "scenario": "South Pacific",
+      "seed": 20262207,
+      "role": "Japan",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "glm-7",
+      "index": 6,
+      "profile": "glm",
+      "scenario": "South Pacific",
+      "seed": 20262207,
+      "role": "Japan",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "minimax-8",
+      "index": 7,
+      "profile": "minimax",
+      "scenario": "South Pacific",
+      "seed": 20262208,
+      "role": "Allies",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "deepseek-8",
+      "index": 7,
+      "profile": "deepseek",
+      "scenario": "South Pacific",
+      "seed": 20262208,
+      "role": "Allies",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "glm-8",
+      "index": 7,
+      "profile": "glm",
+      "scenario": "South Pacific",
+      "seed": 20262208,
+      "role": "Allies",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "minimax-9",
+      "index": 8,
+      "profile": "minimax",
+      "scenario": "South Pacific",
+      "seed": 20262209,
+      "role": "Japan",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "deepseek-9",
+      "index": 8,
+      "profile": "deepseek",
+      "scenario": "South Pacific",
+      "seed": 20262209,
+      "role": "Japan",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "glm-9",
+      "index": 8,
+      "profile": "glm",
+      "scenario": "South Pacific",
+      "seed": 20262209,
+      "role": "Japan",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "minimax-10",
+      "index": 9,
+      "profile": "minimax",
+      "scenario": "South Pacific",
+      "seed": 20262210,
+      "role": "Allies",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "deepseek-10",
+      "index": 9,
+      "profile": "deepseek",
+      "scenario": "South Pacific",
+      "seed": 20262210,
+      "role": "Allies",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    },
+    {
+      "id": "glm-10",
+      "index": 9,
+      "profile": "glm",
+      "scenario": "South Pacific",
+      "seed": 20262210,
+      "role": "Allies",
+      "opponent": "erasmus-v2-opt-v5",
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      }
+    }
+  ],
+  "phase": "v4-frozen",
+  "frozenAt": "2026-10-05T09:16:28.926Z",
+  "fileHashes": {
+    "rules.js": "9e7cca94fb567af6533a553b7f0b8e6ba5d80c6bcfaf9ffc0dc854317bedb591",
+    "tools/llm-evaluate.js": "a1f02169efbc49cb2ec0c4bee0f2b2e151a5bba78e09c61c18c031e90db47795",
+    "docs/rules/llm-south-pacific.md": "6185270b3173bd3f5305056ef43cf8a164fdfa25e4880a23bc3e6ec9463032de",
+    "js/server/llm/observation.js": "82d116a50ec643490df236fda0f4dcfde6dd1a77a9490ccc30691053683e466b",
+    "js/server/llm/prompt.js": "5426f420782e2e15ec6ebf69ed0db350df686c1a100c75c6517e7e138278b00e",
+    "js/server/llm/board.js": "e0e9dea1f024af2036abb4c9e035fff586a1c1148faa4d1c79a3b56ebeb3af96",
+    "js/server/llm/providers.js": "8c3792075b16a74c7f5ca3de1331061798f9d742bbca23a2ba390e51b41526e7",
+    "js/server/llm/harness.js": "077c51ef76d954c6813221cdbb20f6b79c612edb9ee5b447cb213813a150ba09",
+    "js/server/llm/session.js": "140406f70e5835d9fd346fff16fdeed43bcadabbd27690886f0c0755e40763b8"
+  }
+}
