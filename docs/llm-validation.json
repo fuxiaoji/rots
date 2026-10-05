@@ -1,0 +1,328 @@
+{
+  "task": "LLM-01",
+  "date": "2026-10-05",
+  "node": "22.22.0",
+  "tests": {
+    "cases": 40,
+    "passed": 40,
+    "failed": 0,
+    "logSha256": "fac852d1b6c107234bc21099d0e3273f17db5618087e595ed3b140f4158eb229",
+    "coverage": [
+      "hidden hand/deck/PRNG/memory invariance in text and PNG",
+      "human legality/stale/busy/commit atomicity",
+      "bounded repair/request/token budget/paid failed usage",
+      "isolated and restored memories",
+      "real movement paths",
+      "server save failure and restart creator auth",
+      "complete FSM match and scripted LLM-protocol match with exact replay",
+      "explicit module policy migration"
+    ],
+    "engineRegressionPrograms": [
+      "tests/rules-query.test.js",
+      "tests/erasmus-save-replay.test.js",
+      "tests/erasmus.test.js"
+    ],
+    "engineRegressionExitCode": 0
+  },
+  "smokes": [
+    {
+      "name": "deepseek-smoke",
+      "rulesSha256": "dfefd7bbbc8c977d9a58a6b000da29434919873b7fd62f28123b30be9c47a002",
+      "moduleHashes": null,
+      "actions": 4,
+      "stats": {
+        "requests": 4,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 29012,
+        "promptTokens": 27867,
+        "completionTokens": 1145,
+        "usageUnknown": 0,
+        "latencyMs": 8297,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "complete": false,
+      "finalStateHash": "ed84ca64baabb9b61662c7465f461850af18748695e7e7198f248649500ab223",
+      "traceModels": [
+        "deepseek-flash"
+      ],
+      "images": 0,
+      "artifactSha256": "cd0c2bc93cad5ca774396d21de4b5d24d6e0acbaa98a08496f10a4f6f24fb32c"
+    },
+    {
+      "name": "minimax-smoke",
+      "rulesSha256": "dfefd7bbbc8c977d9a58a6b000da29434919873b7fd62f28123b30be9c47a002",
+      "moduleHashes": null,
+      "actions": 5,
+      "stats": {
+        "requests": 3,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 21114,
+        "promptTokens": 20441,
+        "completionTokens": 673,
+        "usageUnknown": 0,
+        "latencyMs": 16777,
+        "forcedActions": 1,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "complete": false,
+      "finalStateHash": "1300ca5c721f03f696b8ae1b33437c81c38bc745946a10d4822ca9e32fa3531e",
+      "traceModels": [
+        "MiniMax-M3"
+      ],
+      "images": 0,
+      "artifactSha256": "b7c2b8f7b9c6213db294daa6226ca363e43209b0cfe0c172a72af3ef58a629cc"
+    },
+    {
+      "name": "glm-smoke",
+      "rulesSha256": "dfefd7bbbc8c977d9a58a6b000da29434919873b7fd62f28123b30be9c47a002",
+      "moduleHashes": null,
+      "actions": 1,
+      "stats": {
+        "requests": 3,
+        "retries": 1,
+        "failedRequests": 0,
+        "invalidResponses": 2,
+        "totalTokens": 21188,
+        "promptTokens": 20449,
+        "completionTokens": 739,
+        "usageUnknown": 0,
+        "latencyMs": 15358,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "complete": false,
+      "finalStateHash": "c673f33cc9393fbb314b0d96a156aa944d9cfb9777035d3781dbe5f88e3156fd",
+      "traceModels": [
+        "glm-5.3"
+      ],
+      "images": 0,
+      "artifactSha256": "54bc3ed06cdc5423aaa0f5ac1247e5b3b8f070c1558047eba177cc36bf2de6e0"
+    },
+    {
+      "name": "glm-v2-smoke",
+      "rulesSha256": "7d676ed82f8d9c25282e5a9968a92880a4f99e7a2e8a12f06737a017265e8d0c",
+      "moduleHashes": null,
+      "actions": 5,
+      "stats": {
+        "requests": 5,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 36510,
+        "promptTokens": 34835,
+        "completionTokens": 1675,
+        "usageUnknown": 0,
+        "latencyMs": 29633,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "complete": false,
+      "finalStateHash": "e7fd2afd0f79d9a48b22191193cfdc7e35ef673baa6e3b63896c628ac76bf38f",
+      "traceModels": [
+        "glm-5.3"
+      ],
+      "images": 0,
+      "artifactSha256": "679d100422c0cc21a0d38257034c4716e0b7497a9efbad45a98712cdd882b2f4"
+    },
+    {
+      "name": "glm-vision-smoke",
+      "rulesSha256": "dfefd7bbbc8c977d9a58a6b000da29434919873b7fd62f28123b30be9c47a002",
+      "moduleHashes": null,
+      "actions": 2,
+      "stats": {
+        "requests": 2,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 17075,
+        "promptTokens": 15605,
+        "completionTokens": 1470,
+        "usageUnknown": 0,
+        "latencyMs": 19741,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "complete": false,
+      "finalStateHash": "e2d54a63e3bb8b590e37dfca0b28c869173b1719898cfd7aba817176c106753e",
+      "traceModels": [
+        "glm-4.6v"
+      ],
+      "images": 2,
+      "artifactSha256": "70cba31e6d6551d760a05fa118faa2a4dd50a05b35d81f672e46f6fbc263a4e2"
+    },
+    {
+      "name": "deepseek-final-smoke",
+      "rulesSha256": "c8e37c80ce129aa0d3bdce006443b1eb644d9a07bcfe66e70fbb505087c5418e",
+      "moduleHashes": {
+        "observation": "8d9d57f9913265873ff9c78275f7b2a47e0e8b7df23ca5fd9470796959b64569",
+        "prompt": "954790510078b1bf2f57dfb6c002d6e90e929c5d0f57c0cae16f8f3b04f1b42c",
+        "board": "c56b08fe287e21feedd5023e10397144d22e9f299450c7a9e70ecebd38e114a8",
+        "providers": "a5125c375f59173090fb7eca0f6494967776aa3de6ac721687115014dd7e2e1b",
+        "harness": "c9ef29b95865dbd862aa3e3c0c4845a72f20a7df8c0e95d54f9b6777b64541d4",
+        "session": "c0967ea9acc8d7b77654a3494c1f023d1ab273a950421fda7bf2487e543aebde"
+      },
+      "actions": 3,
+      "stats": {
+        "requests": 3,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 21887,
+        "promptTokens": 20848,
+        "completionTokens": 1039,
+        "usageUnknown": 0,
+        "latencyMs": 7282,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "complete": false,
+      "finalStateHash": "c4d656d4176719b78c810b009c434368fb7af38b6dd38f3833af2f0659a72f92",
+      "traceModels": [
+        "deepseek-flash"
+      ],
+      "images": 0,
+      "artifactSha256": "f6fdea15a02fb8af9df5d3274cd062f8def255fe875f1c5253f6ea638e0edc55"
+    },
+    {
+      "name": "minimax-final-smoke",
+      "rulesSha256": "c8e37c80ce129aa0d3bdce006443b1eb644d9a07bcfe66e70fbb505087c5418e",
+      "moduleHashes": {
+        "observation": "8d9d57f9913265873ff9c78275f7b2a47e0e8b7df23ca5fd9470796959b64569",
+        "prompt": "954790510078b1bf2f57dfb6c002d6e90e929c5d0f57c0cae16f8f3b04f1b42c",
+        "board": "c56b08fe287e21feedd5023e10397144d22e9f299450c7a9e70ecebd38e114a8",
+        "providers": "a5125c375f59173090fb7eca0f6494967776aa3de6ac721687115014dd7e2e1b",
+        "harness": "c9ef29b95865dbd862aa3e3c0c4845a72f20a7df8c0e95d54f9b6777b64541d4",
+        "session": "c0967ea9acc8d7b77654a3494c1f023d1ab273a950421fda7bf2487e543aebde"
+      },
+      "actions": 2,
+      "stats": {
+        "requests": 2,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 13612,
+        "promptTokens": 13257,
+        "completionTokens": 355,
+        "usageUnknown": 0,
+        "latencyMs": 10814,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "complete": false,
+      "finalStateHash": "b8e3a36445ccd648e6e0cbab01ef16ea951ab5ea00284fa52bdb40a6df2db05d",
+      "traceModels": [
+        "MiniMax-M3"
+      ],
+      "images": 0,
+      "artifactSha256": "f8fe1875b7b6a9228f8a14a6fd6e2b70794c34330d1cc158efe640514f7f66b5"
+    },
+    {
+      "name": "glm-final-smoke",
+      "rulesSha256": "c8e37c80ce129aa0d3bdce006443b1eb644d9a07bcfe66e70fbb505087c5418e",
+      "moduleHashes": {
+        "observation": "8d9d57f9913265873ff9c78275f7b2a47e0e8b7df23ca5fd9470796959b64569",
+        "prompt": "954790510078b1bf2f57dfb6c002d6e90e929c5d0f57c0cae16f8f3b04f1b42c",
+        "board": "c56b08fe287e21feedd5023e10397144d22e9f299450c7a9e70ecebd38e114a8",
+        "providers": "a5125c375f59173090fb7eca0f6494967776aa3de6ac721687115014dd7e2e1b",
+        "harness": "c9ef29b95865dbd862aa3e3c0c4845a72f20a7df8c0e95d54f9b6777b64541d4",
+        "session": "c0967ea9acc8d7b77654a3494c1f023d1ab273a950421fda7bf2487e543aebde"
+      },
+      "actions": 1,
+      "stats": {
+        "requests": 2,
+        "retries": 1,
+        "failedRequests": 0,
+        "invalidResponses": 1,
+        "totalTokens": 13932,
+        "promptTokens": 13428,
+        "completionTokens": 504,
+        "usageUnknown": 0,
+        "latencyMs": 10595,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "complete": false,
+      "finalStateHash": "c673f33cc9393fbb314b0d96a156aa944d9cfb9777035d3781dbe5f88e3156fd",
+      "traceModels": [
+        "glm-5.3"
+      ],
+      "images": 0,
+      "artifactSha256": "9a463a7ce5ad313ee31af122f6ba52299a57f6692fd2fec257242f7e2a6ab539",
+      "requestResultCodes": [
+        "FORMAT",
+        "OK"
+      ]
+    },
+    {
+      "name": "glm-vision-final-smoke",
+      "rulesSha256": "c8e37c80ce129aa0d3bdce006443b1eb644d9a07bcfe66e70fbb505087c5418e",
+      "moduleHashes": {
+        "observation": "8d9d57f9913265873ff9c78275f7b2a47e0e8b7df23ca5fd9470796959b64569",
+        "prompt": "954790510078b1bf2f57dfb6c002d6e90e929c5d0f57c0cae16f8f3b04f1b42c",
+        "board": "c56b08fe287e21feedd5023e10397144d22e9f299450c7a9e70ecebd38e114a8",
+        "providers": "a5125c375f59173090fb7eca0f6494967776aa3de6ac721687115014dd7e2e1b",
+        "harness": "c9ef29b95865dbd862aa3e3c0c4845a72f20a7df8c0e95d54f9b6777b64541d4",
+        "session": "c0967ea9acc8d7b77654a3494c1f023d1ab273a950421fda7bf2487e543aebde"
+      },
+      "actions": 1,
+      "stats": {
+        "requests": 1,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 9106,
+        "promptTokens": 7728,
+        "completionTokens": 1378,
+        "usageUnknown": 0,
+        "latencyMs": 15376,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "complete": false,
+      "finalStateHash": "c673f33cc9393fbb314b0d96a156aa944d9cfb9777035d3781dbe5f88e3156fd",
+      "traceModels": [
+        "glm-4.6v"
+      ],
+      "images": 1,
+      "artifactSha256": "b7ea9414779fb26717377da8a6eed58ba8416ffcd4c42c157bd4edb1f4fb8442"
+    }
+  ],
+  "browser": {
+    "mode": "human Allies vs deepseek Japan",
+    "humanActions": 2,
+    "realOpponentRequests": 1,
+    "revision": 3,
+    "fixedPerspective": true,
+    "screenshot": "tmp/llm-arena-board.jpg"
+  },
+  "limits": [
+    "Short live trajectories only; no real LLM natural complete match or playing-strength estimate",
+    "Card effect full text and window-specific complete rule retrieval are not implemented",
+    "Advance is labeled program-assisted",
+    "Money cost is unknown; reported usage only, unknown usage cannot be treated as zero"
+  ],
+  "finalGlmNote": "Final build: one legal executed action, one successful format repair, then deliberate two-request budget pause; prior v2 five-decision clean sequence is retained separately.",
+  "isolatedStagedBuild": {
+    "baseCommit": "64f276a57d4836fb6eb2adb7d47eced3042ce2f9",
+    "tests": 40,
+    "passed": 40,
+    "failed": 0,
+    "logSha256": "6c62540e3e90a67032e7e5eff64eea03fafe2e4326bf016a7885d5fa0d3d86d8",
+    "rulesSha256": "bf7be2c9cf53c321d15c382d39aa9d8e6586e8c37b4958376fb4cf44b28ec498"
+  },
+  "workingTreeEngineIncludesPreExistingAiChanges": true
+}

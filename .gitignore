@@ -5,3 +5,7 @@ tmp/
 *.zip
 __pycache__/
 *.pyc
+.env
+.env.*
+!.env.llm.example
+llm-private/

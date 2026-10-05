@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>太阳帝国 · 本地 LLM 对战</title>
+<style>
+:root{color-scheme:light;--ink:#172c39;--muted:#526673;--line:#d8e0e2;--accent:#176766}*{box-sizing:border-box}body{margin:0;background:#eef2f1;color:var(--ink);font:15px/1.5 system-ui,sans-serif}header{padding:22px 28px;background:#172c39;color:white}h1{margin:0;font-size:24px}header p{margin:5px 0 0;color:#d3e3e4}main{max-width:1500px;margin:auto;padding:20px;display:grid;grid-template-columns:minmax(280px,350px) minmax(0,1fr);gap:18px}.panel{background:white;border:1px solid var(--line);border-radius:12px;padding:18px}h2{font-size:18px;margin:0 0 14px}h3{font-size:15px;margin:18px 0 8px}label{display:block;margin:10px 0 4px}select,input,button{font:inherit;border:1px solid #afbec4;border-radius:7px;padding:8px 10px}select,input{width:100%;background:white;color:var(--ink)}button{cursor:pointer;color:white;background:var(--accent)}button.secondary{color:var(--ink);background:#f0f5f5}button:disabled{opacity:.45;cursor:default}.row{display:flex;gap:8px;align-items:center}.row>*{min-width:0;flex:1}.row label{margin-top:0}.controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.muted{color:var(--muted);font-size:13px}.badge{background:#e7f2f0;border-radius:5px;padding:4px 8px;display:inline-block;margin-right:5px}#error{background:#fff0e8;color:#942f16;padding:12px;border-radius:8px;white-space:pre-wrap;margin-bottom:14px}#error:empty{display:none}#board{overflow:auto;border:1px solid var(--line);border-radius:8px;min-height:160px;background:#f8faf8}#board svg{display:block;width:100%;height:auto;min-width:540px}#prompt{font-size:17px;white-space:pre-wrap;margin:12px 0}#candidates{display:flex;flex-wrap:wrap;gap:7px;max-height:350px;overflow:auto}#candidates button{text-align:left}.cards{display:flex;gap:6px;flex-wrap:wrap}.card{border:1px solid var(--line);padding:8px;border-radius:6px;max-width:100%;white-space:pre-wrap}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.55 ui-monospace,monospace;background:#f5f7f7;padding:10px;border-radius:6px;max-height:270px;overflow:auto}.empty{padding:35px 10px;text-align:center;color:var(--muted)}details{margin-top:12px}summary{cursor:pointer}#activity{min-height:20px}.content .panel+.panel{margin-top:16px}@media(max-width:800px){main{grid-template-columns:1fr;padding:12px}header{padding:18px}#board svg{min-width:480px}}
+</style>
+<header><h1>太阳帝国 · 本地对战</h1><p>人类、伊拉斯谟状态机与大模型，在同一规则引擎中行动。</p></header>
+<main><aside class="panel"><h2>创建对局</h2><form id="setup">
+<label for="mode">对战方式</label><select id="mode"><option value="human">人类 vs LLM</option><option value="fsm">状态机 vs LLM</option><option value="llm">LLM vs LLM</option><option value="local">状态机 vs 状态机（无需模型）</option></select>
+<label for="humanSide">玩家 / 状态机阵营</label><select id="humanSide"><option value="Japan">日本 Japan</option><option value="Allies">盟军 Allies</option></select>
+<label for="japan">日本 Japan</label><select id="japan" required></select><label for="allies">盟军 Allies</label><select id="allies" required></select>
+<label for="scenario">剧本</label><select id="scenario" required></select><label for="seed">随机种子</label><input id="seed" type="number" min="1" max="2147483647" value="20261005" required>
+<div class="row"><div><label for="requests">模型请求上限</label><input id="requests" type="number" min="1" max="1000" value="40" required></div><div><label for="actions">动作上限</label><input id="actions" type="number" min="1" max="20000" value="2000" required></div></div>
+<p class="muted">每次点击最多执行一个合法动作。模型请求可能产生费用；快进也受本局预算约束。观察者只看公开信息。</p>
+<button id="create" type="submit">创建并暂停</button></form>
+<h3>对局操作</h3><div class="controls"><button id="next" disabled>AI 下一步</button><button id="refresh" class="secondary" disabled>刷新</button></div>
+<label for="count">有界快进步数（1–20）</label><input id="count" type="number" min="1" max="20" value="5"><div class="controls"><button id="forward" class="secondary" disabled>推进至人类决策 / 上限</button><button id="pause" class="secondary" disabled>暂停后续步骤</button></div>
+<div class="controls"><button id="download" class="secondary" disabled>终局下载回放</button><button id="release" class="secondary" disabled>释放对局</button></div>
+<p id="identity" class="muted">尚未创建对局。</p><p id="activity" class="muted" aria-live="polite"></p><p class="muted">令牌保存在当前标签页。刷新可恢复对局；服务器私有存档保存模型记忆，重启后核对规则哈希再恢复。完整回放仅在终局后下载。</p>
+</aside><section class="content"><div id="error" role="alert"></div><div class="panel"><h2>当前局面</h2><div id="status"><span class="badge">等待建局</span></div><p id="budget" class="muted"></p><div id="prompt"></div><div id="board"><div class="empty">建局后显示服务端生成的地图与公开单位。</div></div><h3>合法候选</h3><div id="candidates"><p class="muted">人类行动时，点击这里的候选执行。</p></div></div><div class="panel"><h2>己方信息与轨迹</h2><h3>己方手牌</h3><div id="hand" class="cards"></div><details open><summary>可见单位与公开局面</summary><pre id="observation">尚无局面。</pre></details><details><summary>最近决策</summary><pre id="decision">尚无决策。</pre></details><details open><summary>日志</summary><pre id="log"></pre></details><details><summary>请求与动作统计</summary><pre id="stats"></pre></details></div></section></main>
+<script nonce="__ARENA_NONCE__">
+"use strict";
+(() => {
+const $ = id => document.getElementById(id), roles = ["Japan", "Allies"];
+let config, game = null, current = null, busy = false, stop = false;
+const savePage = () => { if (game) sessionStorage.setItem("eots-arena", JSON.stringify({ id: game.id, sessionToken: game.sessionToken, viewRole: game.viewRole, options: game.options })); else sessionStorage.removeItem("eots-arena"); };
+const names = { Japan: "日本", Allies: "盟军", Observer: "公开观战", None: "无" };
+const printable = value => typeof value === "string" ? value : JSON.stringify(value, null, 2);
+function error(value = "") { $("error").textContent = value; }
+async function request(url, options = {}) {
+    const headers = { ...options.headers };
+    if (options.body !== undefined) headers["Content-Type"] = "application/json";
+    if (game && url.startsWith("/api/games/")) headers.Authorization = `Bearer ${game.sessionToken}`;
+    const res = await fetch(url, { ...options, headers, cache: "no-store", credentials: "omit" });
+    const data = await res.json();
+    if (!res.ok) { const e = Error(`${data.error?.message || "请求失败"} (${data.error?.code || res.status})`); e.code = data.error?.code; throw e; }
+    return data;
+}
+function activeRoles() { return Array.isArray(current?.active) ? current.active : [current?.active]; }
+function actionableRole() {
+    const active = activeRoles().filter(r => roles.includes(r));
+    return active.includes(game?.viewRole) ? game.viewRole : active[0];
+}
+function humanTurn() { const role = actionableRole(); return !!role && game.options.players[role] === "human"; }
+function canStep() { return !!game && !!actionableRole() && !current.result && !["complete", "finished", "ended", "game_over", "budget_exceeded", "paused_error"].includes(current.status); }
+function controls() {
+    $("create").disabled = busy || !!game || !config;
+    for (const id of ["refresh", "download", "release"]) $(id).disabled = busy || !game;
+    $("download").disabled = busy || !game || current?.status !== "complete";
+    for (const field of $("setup").querySelectorAll("input,select")) field.disabled = busy || !!game;
+    $("next").disabled = busy || !canStep() || humanTurn(); $("forward").disabled = $("next").disabled;
+    $("pause").disabled = !busy;
+    for (const button of $("candidates").querySelectorAll("button")) button.disabled = busy || !humanTurn() || !canStep();
+}
+function setBoard(svg) {
+    $("board").replaceChildren();
+    if (!svg) { const p = document.createElement("p"); p.className = "empty"; p.textContent = "此窗口暂无地图。"; $("board").append(p); return; }
+    // SVG comes from the trusted server renderer; also strip active content defensively.
+    const doc = new DOMParser().parseFromString(svg, "image/svg+xml"), root = doc.documentElement;
+    if (root.localName !== "svg" || doc.querySelector("parsererror")) { $("board").textContent = "地图暂不可用。"; return; }
+    for (const el of root.querySelectorAll("script,foreignObject,iframe,object,embed,animate,set")) el.remove();
+    for (const el of [root, ...root.querySelectorAll("*")]) for (const attr of [...el.attributes]) {
+        if (/^on/i.test(attr.name) || (/href$/i.test(attr.name) && !attr.value.startsWith("#"))) el.removeAttribute(attr.name);
+    }
+    $("board").append(document.importNode(root, true));
+}
+function render() {
+    $("identity").textContent = `对局 ${game.id.slice(0, 8)} · ${names[game.viewRole] || game.viewRole}视角`;
+    const active = activeRoles().map(r => names[r] || r).join(" / ");
+    $("status").replaceChildren();
+    for (const text of [`回合 ${current.turn ?? "—"}`, `行动方 ${active || "—"}`, `版本 ${current.revision}`, current.status || "暂停等待操作"]) {
+        const badge = document.createElement("span"); badge.className = "badge"; badge.textContent = text; $("status").append(badge);
+    }
+    if (current.result) { const p = document.createElement("p"); p.textContent = `对局结果：${printable(current.result)}`; $("status").append(p); }
+    $("budget").textContent = `已用 ${current.stats?.requests || 0} / ${game.options.maxRequests} 次模型请求，${current.revision} / ${game.options.maxActions} 个动作；token 与费用状态见统计。`;
+    $("prompt").textContent = current.prompt || "等待下一步"; setBoard(current.boardSvg);
+    if (current.error) error(`${current.error.message || "上次决策失败"} (${current.error.code || "ERROR"})`);
+    $("candidates").replaceChildren();
+    for (const candidate of current.candidates || []) {
+        const b = document.createElement("button"); b.type = "button"; b.textContent = candidate.label || `${candidate.action} ${printable(candidate.argument ?? "")}`;
+        b.onclick = () => run(() => oneStep(candidate.id)); $("candidates").append(b);
+    }
+    if (!$("candidates").children.length) { const p = document.createElement("p"); p.className = "muted"; p.textContent = humanTurn() ? "此窗口没有可执行候选。" : "机器人行动时，点击 AI 下一步。"; $("candidates").append(p); }
+    const observation = current.observation || {}, cards = observation.ownCards || [];
+    $("hand").replaceChildren();
+    for (const card of Array.isArray(cards) ? cards : [cards]) { const el = document.createElement("div"); el.className = "card"; el.textContent = `#${card.id} ${card.name || ""}
+OC ${card.ops ?? "—"} · LV ${card.logistic ?? "—"}${card.reaction ? " · 反应牌" : ""}
+${(card.allowed || []).join(" / ")}`; $("hand").append(el); }
+    if (!$("hand").children.length) $("hand").textContent = game.viewRole === "Observer" ? "观战视角不显示任何私有手牌。" : "暂无可见手牌。";
+    const hexNames = new Map((observation.hexes || []).map(h => [h.hex, `${h.id} ${h.name}`])); const visible = { politicalWill: observation.politicalWill, pow: observation.pow, resources: observation.resources, asp: observation.asp, handCounts: observation.handCounts, units: (observation.units || []).map(u => ({ id: u.id, name: u.name, side: u.faction === 0 ? "Japan" : "Allies", class: u.class, location: hexNames.get(u.location) || u.location, strength: u.reduced ? u.rcf : u.cf, reduced: u.reduced })) };
+    $("observation").textContent = printable(visible); $("decision").textContent = printable(current.lastDecision || "尚无决策。");
+    $("log").textContent = Array.isArray(current.log) ? current.log.map(printable).join("\n") : printable(current.log || "");
+    $("stats").textContent = printable(current.stats || {}); controls();
+}
+async function run(task) {
+    if (busy) return; busy = true; stop = false; error(); controls(); $("activity").textContent = "处理中；模型请求可能需要片刻…";
+    try { await task(); }
+    catch (e) { error(e.message); if (["STALE", "STALE_REVISION", "REVISION_MISMATCH"].includes(e.code) && game) { try { current = await request(`/api/games/${game.id}`); render(); } catch {} } }
+    finally { busy = false; $("activity").textContent = stop ? "已停止后续步骤；当前请求已经处理完毕。" : "已暂停，等待你的下一次操作。"; controls(); }
+}
+async function oneStep(candidateId) {
+    if (!canStep()) return;
+    const payload = { revision: current.revision, role: actionableRole() };
+    if (candidateId !== undefined) payload.candidateId = candidateId;
+    current = await request(`/api/games/${game.id}/step`, { method: "POST", body: JSON.stringify(payload) }); render();
+}
+function applyMode() {
+    if (!config || game) return;
+    const llm = config.profiles.find(p => p.configured), model = llm ? `llm:${llm.id}` : "";
+    const fsm = config.bots.includes("erasmus-v2-opt-v5") ? "erasmus-v2-opt-v5" : config.bots[0];
+    const side = $("humanSide").value, other = side === "Japan" ? "Allies" : "Japan", select = r => $(r === "Japan" ? "japan" : "allies");
+    if ($("mode").value === "local") { select(side).value = fsm || ""; select(other).value = fsm || ""; }
+    else if ($("mode").value === "llm") { select(side).value = model; select(other).value = model; }
+    else { select(side).value = $("mode").value === "human" ? "human" : fsm || ""; select(other).value = model; }
+}
+$("setup").onsubmit = event => {
+    event.preventDefault(); run(async () => {
+        const input = { scenario: $("scenario").value, seed: Number($("seed").value), maxRequests: Number($("requests").value), maxActions: Number($("actions").value), players: { Japan: $("japan").value, Allies: $("allies").value } };
+        game = await request("/api/games", { method: "POST", body: JSON.stringify(input) }); current = game.snapshot; savePage(); render();
+    });
+};
+$("mode").onchange = applyMode; $("humanSide").onchange = applyMode;
+$("next").onclick = () => run(() => oneStep());
+$("refresh").onclick = () => run(async () => { current = await request(`/api/games/${game.id}`); render(); });
+$("forward").onclick = () => run(async () => {
+    const count = Number($("count").value);
+    if (!Number.isInteger(count) || count < 1 || count > 20) throw Error("快进步数必须为 1–20。" );
+    let done = 0;
+    while (!stop && done < count && canStep() && !humanTurn()) { await oneStep(); ++done; $("activity").textContent = `已执行 ${done}/${count} 步…`; }
+});
+$("pause").onclick = () => { stop = true; $("activity").textContent = "当前请求完成后暂停。"; };
+$("download").onclick = () => run(async () => {
+    const data = await request(`/api/games/${game.id}/replay`), blob = new Blob([JSON.stringify(data, null, 2) + "\n"], { type: "application/json" });
+    const url = URL.createObjectURL(blob), a = document.createElement("a"); a.href = url; a.download = `eots-${game.id.slice(0,8)}-replay.json`; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+$("release").onclick = () => run(async () => { await request(`/api/games/${game.id}`, { method: "DELETE" }); game = null; current = null; savePage(); $("identity").textContent = "对局已释放。可以创建新局。"; $("prompt").textContent = "对局已释放。"; $("candidates").replaceChildren(); $("hand").replaceChildren(); $("observation").textContent = "尚无局面。"; $("decision").textContent = "尚无决策。"; $("log").textContent = ""; $("stats").textContent = ""; $("status").textContent = "等待建局"; $("budget").textContent = ""; setBoard(null); });
+request("/api/config").then(async data => {
+    config = data;
+    const add = (select, value, label, disabled = false) => { const o = document.createElement("option"); o.value = value; o.textContent = label; o.disabled = disabled; select.append(o); };
+    for (const scenario of config.scenarios) add($("scenario"), scenario, scenario);
+    $("scenario").value = config.scenarios.includes("South Pacific") ? "South Pacific" : config.scenarios[0];
+    for (const id of ["japan", "allies"]) {
+        add($(id), "human", "人类");
+        for (const bot of config.bots) add($(id), bot, `状态机 · ${bot}`);
+        for (const p of config.profiles) add($(id), `llm:${p.id}`, `${p.id} · ${p.model}${p.vision ? " · 视觉" : ""}${p.configured ? "" : " · 未配置"}`, !p.configured);
+    }
+    if (!config.profiles.some(p => p.configured)) { $("mode").value = "local"; error("尚未配置 LLM。可先运行状态机对战；配置本地凭据后重启服务。" ); }
+    applyMode(); controls();
+    try { const stored = sessionStorage.getItem("eots-arena"); if (stored) { game = JSON.parse(stored); current = await request(`/api/games/${game.id}`); render(); } }
+    catch { game = null; current = null; savePage(); error("原对局未恢复，可重新建局；服务器保留不兼容的私有存档。"); controls(); }
+}).catch(e => error(e.message));
+})();
+</script></html>

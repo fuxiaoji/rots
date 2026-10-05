@@ -1,0 +1,73 @@
+{
+  "task": "LLM-01",
+  "date": "2026-10-05",
+  "scope": "Bounded read-only API reviews, not external autonomous workers; first rounds did not share the other model opinion. Reviews used different code snapshots.",
+  "reviews": [
+    {
+      "profile": "deepseek",
+      "requestedModel": "deepseek-flash",
+      "model": "deepseek-flash",
+      "promptHash": "e0afa7bdde350994f6a0bea308cfded5cd766506f984d8a1c40f2cde49fc12c8",
+      "outputHash": "0fc14691a914bbd35e18c58dabec68f617db9e973e9365d3922890d0283c3917",
+      "elapsedMs": 5848,
+      "usage": {
+        "prompt_tokens": 11174,
+        "completion_tokens": 1021,
+        "total_tokens": 12195
+      },
+      "ok": true,
+      "code": null,
+      "content": "# EOTS LLM 对战关键缺陷\n\n## 1. 信息泄漏：`visible()` 把对手私有数据塞进 observation（严重）\n`observation.js` 中 `view.hand`、`view.future_offensive`、`view.ai.ownCards` 直接来自 `rules.view(state, role)`。若引擎的 `view` 对非活动方或 Observer 未严格裁剪，`handCounts` 会暴露对手手牌数，`ownFutureOffensive` 逻辑用 `ROLES.indexOf(role)` 取 `view.hand[side]`——当 `role=\"Observer\"` 时 `side=-1`，`view.hand[-1]` 为 `undefined` 被静默忽略，但 `ownCards` 仍可能通过 `publicData.cards` 泄漏全部牌面。**证据**：`ownCards: ownIds.map(id => ({...(publicData.cards[id]||{id}), ...(cardMeta.get(id)||{})}))`，`publicData` 来自 `rules.query(..., \"llm_public_data\")`，其内容未在代码内校验是否仅含公开牌。**最小修复**：对 `role===\"Observer\"` 或非活动方，强制 `ownIds=[]`、`ownFuture=-1`，并对 `publicData.cards` 做白名单字段过滤（仅 id/name/公开属性）。\n\n## 2. async 并发：`step` 的 `busy` 与 arena `pending` 双闸不一致（严重）\n`session.step` 用 `s.busy` 防重入，但 `decide` 是 `await`，期间 `s.busy=true`。arena 层 `entry.pending` 在 `await body()` **之前**置位，看似安全。但 `persist()` 在 `finally` 中执行，若 `api.step` 抛错，`entry.pending=false` 后 `persist` 仍写盘——**若 `serializeSession` 依赖 `s.state` 而 `step` 已 `s.status=\"paused\"`，存档会记录暂停态**。更关键：`restoreSession` 后 `s.busy` 未重置（默认 `false`，OK），但 `s.cache` 未清空，`packet` 可能返回旧 revision 的缓存。**证据**：`restoreSession` 未 `s.cache.clear()`。**最小修复**：`restoreSession` 末尾加 `s.cache.clear()`；`persist` 仅在 `entry.session.status!==\"paused\"` 或明确允许时写盘。\n\n## 3. 预算：token 超限后动作已计费但未回滚（中）\n`harness.decide` 中 `if (stats.totalTokens > limits.maxTotalTokens) throw fail(\"BUDGET\",...)` 在 `parseAnswer` 之前抛出，此时 `stats.totalTokens` 已累加，但 `stats.requests` 也已 `++`。**问题**：抛错后 `session.step` 的 `catch` 设 `s.status=\"paused\"`，但 `stats` 已污染，`replay` 会记录超预算的 stats。**证据**：`stats.totalTokens += total` 后立即检查并抛错，无回滚。**最小修复**：超限时先 `stats.totalTokens -= total` 再抛，或标记 `stats.budgetExceeded=true` 并在 replay 中排除。\n\n## 4. 复现步骤\n- 缺陷1：`createSession({players:{Japan:\"human\",Allies:\"llm:deepseek\"}})`，`snapshot(s,\"Observer\")`，检查 `observation.ownCards` 是否含 Allies 手牌。\n- 缺陷2：`restoreSession(saved)` 后立即 `packet(s, role)`，对比 `s.revision` 与缓存 key。\n- 缺陷3：设 `maxTotalTokens=1`，调 `decide`，捕获 BUDGET 后查 `stats.totalTokens`。\n\n## 5. 未验证假设\n- `rules.view` 是否已裁剪对手手牌——代码未证明，需引擎侧确认。\n- `boardPng` 是否只渲染公开棋盘——未在给定文件中。\n- GLM 的 candidateId 不在表：`parseAnswer` 已正确拒绝，属提示词/模型问题，非代码缺陷。\n\n**结论**：测试通过不覆盖 Observer 视角、restore 缓存、预算回滚三条路径，存在真实阻断缺陷。"
+    },
+    {
+      "profile": "glm",
+      "requestedModel": "glm-5.3",
+      "model": null,
+      "promptHash": "e0afa7bdde350994f6a0bea308cfded5cd766506f984d8a1c40f2cde49fc12c8",
+      "outputHash": null,
+      "elapsedMs": 45023,
+      "usage": null,
+      "ok": false,
+      "code": "EOTS_LLM_TIMEOUT",
+      "content": null
+    },
+    {
+      "profile": "glm",
+      "requestedModel": "glm-5.3",
+      "model": "glm-5.3",
+      "promptHash": "5b738fbe08df4b925e214dcd04eee05b3561f6b628f086f4a07ba32c70e56ca5",
+      "outputHash": "37ddcdc43b388c53920e6a8e360f893aff50ff628ceacd26060cb8323279fc99",
+      "elapsedMs": 60003,
+      "usage": {
+        "prompt_tokens": 5892,
+        "completion_tokens": 3446,
+        "total_tokens": 9338
+      },
+      "ok": true,
+      "code": null,
+      "content": "**缺陷（按严重度）**\n\n1.【中】`step` catch 将任何异常都置 `status=\"paused\"`（session.js）。人类玩家点一个非法/过期候选（ILLEGAL）或非本人窗口（ROLE）也会暂停整局，LLM对手被卡死。复现：human传错误candidateId两次。修复：STALE/ILLEGAL/ROLE类错误不改status。\n\n2.【中】`restoreSession` 盲目接受 `saved.moduleHashes` 覆盖当前值，且不校验当前模块哈希与存档一致（session.js）。存档声称的 provenance 可被伪造，回放“可验证”性打折。修复：对比当前真实哈希，不一致报错。\n\n3.【中·假设】`activeRole` 取 `sort()[0]`，双方同活动时永远 Allies 先行（observation.js）。若引擎语义不是字典序（如Japan先手），会轮错阵营。需对照规则验证；建议显式优先级表。\n\n4.【低】`repeats` 只增不清零、按 gameplayDigest 全局计数（session.js）。长局中天气/补给等自然重复局面累计超16次即误报 NO_PROGRESS 暂停。复现：构造17次相同局面的合法循环。修复：按revision窗口衰减或仅计连续重复。\n\n5.【低】harness 重试循环：首次 FORMAT 失败后若预算已尽，第二次循环顶部抛 BUDGET，真实原因（FORMAT/invalidResponses）被吞，排障误导。修复：区分“预算阻止重试”与原始错误。\n\n6.【低】`restoreSession` 不恢复 `lastDecision/error`，恢复后 snapshot 的 lastDecision 恒为 null，UI 语义不一致；原“paused”状态被静默改回“playing”。\n\n**未发现**隐藏信息泄露（视图均经 rules.view 过滤，log 过滤 [ERASMUS]）；预算计量含失败请求与重试，符合“真实计量”；memory 仅成功后提交。"
+    }
+  ],
+  "adjudication": {
+    "rejected": [
+      "DeepSeek Observer full-card leakage: ownIds empty and wrong-role snapshot denied",
+      "DeepSeek restore stale cache: fresh Map before replay",
+      "DeepSeek subtract paid tokens: would falsify usage"
+    ],
+    "accepted": [
+      "GLM routine input errors retain prior status",
+      "GLM restore status/error/lastDecision and check policy hashes",
+      "GLM bounded progress window and explicit failed repair budget reason"
+    ],
+    "astra_findings_fixed": [
+      "Paid truncated/empty response usage accounting",
+      "Persist before successful HTTP response, always unlock",
+      "Post-commit projection error distinguished",
+      "Per-request audit ledger including failures/retries"
+    ],
+    "limits": [
+      "Alphabetical simultaneous scheduling follows existing runner; not asserted as a rule priority",
+      "Strategy quality and complete card/rules understanding not established"
+    ]
+  }
+}
