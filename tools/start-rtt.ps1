@@ -5,7 +5,9 @@ param(
 
     [switch]$Rebuild,
 
-    [int]$Port = 8080
+    [int]$Port = 8080,
+
+    [string]$LlmEnvFile = ''
 )
 
 $ErrorActionPreference = 'Stop'
@@ -16,6 +18,7 @@ $NodeExe = 'C:\Users\fwj\tools\node-v22.23.2-win-x64\node.exe'
 $ServerScript = Join-Path $RuntimeRoot 'server.js'
 $StdoutLog = Join-Path $RuntimeRoot 'rtt-stdout.log'
 $StderrLog = Join-Path $RuntimeRoot 'rtt-stderr.log'
+$LlmConfigPointer = Join-Path $env:USERPROFILE '.codex\private\eots-rtt-env-path.txt'
 
 function Get-RttListener {
     Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue |
@@ -122,6 +125,15 @@ function Start-Rtt {
         throw "游戏目录 Junction 不正确：$junction -> $($junctionItem.Target)；期望 $resolvedGameRoot"
     }
 
+    & $NodeExe (Join-Path $GameRoot 'tools/install-rtt-llm.js') $RuntimeRoot
+    if ($LASTEXITCODE) { throw 'RTT LLM 接口安装失败。' }
+    if ($LlmEnvFile) {
+        if (-not (Test-Path -LiteralPath $LlmEnvFile)) { throw 'LLM 私有配置不存在。' }
+        $env:EOTS_LLM_ENV_FILE = [System.IO.Path]::GetFullPath($LlmEnvFile)
+        [System.IO.File]::WriteAllText($LlmConfigPointer, $env:EOTS_LLM_ENV_FILE)
+    } elseif (Test-Path -LiteralPath $LlmConfigPointer) {
+        $env:EOTS_LLM_ENV_FILE = [System.IO.File]::ReadAllText($LlmConfigPointer).Trim()
+    }
     Write-Host '正在后台启动 RTT……' -ForegroundColor Cyan
     $process = Start-Process -FilePath $NodeExe -ArgumentList 'server.js' `
         -WorkingDirectory $RuntimeRoot -WindowStyle Hidden -PassThru `

@@ -61,8 +61,9 @@ function eots_ai_text(parent, className, text) {
 	return node
 }
 
-function eots_render_ai_current(panel, row) {
+function eots_render_ai_current(panel, row, inference) {
 	var trace = row.trace || {}
+	if (trace.llm) return eots_render_llm_current(panel, row, inference)
 	var sm = trace.sm || {}
 	var diag = sm.diag || {}
 	var targets = Array.isArray(sm.priorityTargets) ? sm.priorityTargets : []
@@ -132,19 +133,59 @@ function eots_render_ai_current(panel, row) {
 	panel.appendChild(card)
 }
 
+function eots_render_llm_current(panel, row, inference) {
+	var t = row.trace, card = document.createElement("section")
+	card.className = "ai_trace_current"
+	eots_ai_text(card, "ai_trace_title", `${eots_t(row.role)} · LLM 决策摘要 · #${row.replay_id}`)
+	eots_ai_text(card, "ai_trace_value", `${t.model} · 回合 ${t.turn} · ${t.windowKind}`)
+	eots_ai_text(card, "ai_trace_subtitle", "选定动作")
+	eots_ai_text(card, "ai_trace_value", t.label || t.action)
+	if (t.explanation !== undefined) {
+		eots_ai_text(card, "ai_trace_label", "创建者专用 · 模型简短说明（不是规则裁定）")
+		eots_ai_text(card, "ai_trace_value", t.explanation || "未提供说明")
+		eots_ai_text(card, "ai_trace_subtitle", "当前计划（模型记忆，可能失效）")
+		eots_ai_text(card, "ai_trace_value", t.objective || "尚无计划")
+		;(t.notes || []).forEach(note => eots_ai_text(card, "ai_trace_value", "• " + note))
+	}
+	eots_ai_text(card, "ai_trace_label", t.policy === "forced" ? "唯一合法候选 · 程序执行 · 本步不调用模型" : `本步模型请求 · ${t.latencyMs || 0} ms · ${t.usage?.total_tokens ?? "未知"} tokens`)
+	if (t.assisted) eots_ai_text(card, "ai_trace_label", "程序协助编队和合法落点")
+	if (t.policy === "forced" && inference?.trace.explanation !== undefined) {
+		eots_ai_text(card, "ai_trace_subtitle", `最近一次模型选择 · #${inference.replay_id}`)
+		eots_ai_text(card, "ai_trace_value", inference.trace.label + "：" + inference.trace.explanation)
+	}
+	if (t.stats && t.limits) eots_ai_text(card, "ai_trace_value", `双方累计：请求 ${t.stats.requests}/${t.limits.maxRequests} · 报告 tokens ${t.stats.totalTokens}/${t.limits.maxTotalTokens} · 用量未知 ${t.stats.usageUnknown}`)
+	if (t.sources?.length) eots_ai_text(card, "ai_trace_label", "提示提供的资料：" + t.sources.map(s => s.file).join("、") + "（不表示模型实际采用）")
+	panel.appendChild(card)
+}
+
 async function eots_refresh_ai_trace() {
 	var panel = document.getElementById("ai_trace")
 	if (!panel) return
 	var gameId = new URLSearchParams(location.search).get("game")
 	if (!gameId) return
 	try {
+		var statusResponse = await fetch(`/api/llm-status/${encodeURIComponent(gameId)}`)
+		if (statusResponse.ok) {
+			var status = await statusResponse.json()
+			if (status) {
+				var statusNode = document.getElementById("llm_runtime_status")
+				if (!statusNode) { statusNode = document.createElement("div"); statusNode.id = "llm_runtime_status"; panel.before(statusNode) }
+				statusNode.className = "ai_trace_current"
+				statusNode.textContent = `LLM 双方累计：请求 ${status.stats.requests}/${status.limits.maxRequests} · 报告 tokens ${status.stats.totalTokens}/${status.limits.maxTotalTokens} · 用量未知 ${status.stats.usageUnknown}` + (status.error ? `\n阶段未完成，已暂停：${status.error}` : "")
+				document.getElementById("ai_trace_panel").open = true
+			}
+		}
 		var response = await fetch(`/api/ai-trace/${encodeURIComponent(gameId)}`)
 		if (!response.ok) return
 		var rows = await response.json()
-		if (!rows.length || rows[rows.length - 1].replay_id === eots_last_trace_replay) return
+		if (!rows.length) { panel.replaceChildren(); eots_last_trace_replay = 0; return }
+		if (rows[rows.length - 1].replay_id === eots_last_trace_replay) return
 		eots_last_trace_replay = rows[rows.length - 1].replay_id
 		panel.replaceChildren()
-		eots_render_ai_current(panel, rows[rows.length - 1])
+		var latest = new Map(), inferences = new Map()
+		rows.forEach(row => { latest.set(row.role, row); if (row.trace.llm && row.trace.policy === "llm") inferences.set(row.role, row) })
+		Array.from(latest.values()).sort((a, b) => Number(!!b.trace.llm) - Number(!!a.trace.llm)).forEach(row => eots_render_ai_current(panel, row, inferences.get(row.role)))
+		if (rows.some(row => row.trace.llm)) document.getElementById("ai_trace_panel").open = true
 		var history = document.createElement("details")
 		history.className = "ai_trace_history"
 		var summary = document.createElement("summary")
@@ -154,6 +195,11 @@ async function eots_refresh_ai_trace() {
 			var trace = row.trace
 			var item = document.createElement("p")
 			var sm = trace.sm || {}
+			if (trace.llm) {
+				item.textContent = `#${row.replay_id} ${eots_t(row.role)} · ${trace.model} · ${trace.label || trace.action} · ${trace.explanation || trace.policy}`
+				history.appendChild(item)
+				return
+			}
 			item.textContent = `#${row.replay_id} ${eots_t(row.role)} · ${eots_ai_phase_label(sm.phase || trace.phase)} · ${sm.strategy || trace.axis || trace.strategy || "未标明战略"} · ${trace.chart}/${trace.node} · 动作：${trace.action}${trace.argument === undefined ? "" : " → " + trace.argument}`
 			item.title = trace.explanation || ""
 			if (trace.fallback) item.className = "error"
