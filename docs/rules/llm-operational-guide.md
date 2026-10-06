@@ -5,7 +5,7 @@
 ## 规则来源
 
 - 中文 V3.2：`docs/rules/sources/pdf/eots-v3.2-zh-rules-202402.pdf`，HQ/补给/启动 PDF11–15页 §6.0；攻势17–19页 §7.21–7.29；移动20–25页 §8.0；夺占16页 §6.5；战役胜利41–42页 §16.1–16.4。
-- 原英文 V3.2（2021）：https://gmtwebsiteassets.s3.us-west-2.amazonaws.com/EOTS_Rules-2021-LR.pdf ，PDF3页 §1.25、13–15页 §7.21–7.24，用于核对牌面数值与攻势流程。其他窗口随请求提供相关中文来源页，不把本说明当完整规则书。
+- 原英文 V3.2（2021）：https://gmtwebsiteassets.s3.us-west-2.amazonaws.com/EOTS_Rules-2021-LR.pdf ，PDF3页 §1.25、13–15页 §7.21–7.24，用于核对牌面数值与攻势流程。南太平洋按窗口提供相关中文来源页；大战役按每项coverage提供指南和章节来源引用，不表示已经发送章节全文。本说明不是完整规则书。
 
 ## 容易误解的事实
 

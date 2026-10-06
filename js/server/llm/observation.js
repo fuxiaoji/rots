@@ -55,9 +55,66 @@ function visible(rules, state, role) {
             instance: `${observation.turn}:${p.offensive?.attacker || "none"}:${cardId || "between"}:${p.currentCardMode || "unselected"}:${plays}:${observation.state === "offensive_segment_card_action" ? "pending" : "played"}` } }
     return { view, observation }
 }
-function observe(rules, state, role, revision) {
+// Facts for the model's own plans; never select a target, formation or action.
+// Queries run on copies and use only the current own card plus public units.
+function taskFacts(rules, state, o, memory) {
+    const side = ROLES.indexOf(o.role), own = new Map(o.units.filter(u => u.faction === side).map(u => [u.id, u]))
+    const ask = (fn, args) => rules.query(clone(state), o.role, { name: "rules_query", fn, args })
+    const tasks = (memory?.offensive?.tasks || []).slice(0, 4)
+    const targets = [...new Set([...(o.scenario?.nations || []).flatMap(n => n.remainingKeys || []), ...tasks.map(t => t.targetHex)])].filter(h => o.hexes.some(x => x.hex === h)).slice(0, 20)
+    const defenders = targets.map(hex => {
+        const g = ask("queryDefendingGround", [hex, { faction: 1 - side }])
+        return { hex, ground: g ? { ...pick(g, ["hex", "faction", "cf", "lfs"]), units: (g.units || []).map(u => pick(u, ["id", "definitionId", "name", "class", "faction", "service", "location", "reduced", "garrison", "oneStep", "cf", "fullCf", "rcf", "lf"])) } : null }
+    })
+    const d = o.currentDecision, card = d.currentCard
+    const usable = card?.faction === side && ["ops", "event"].includes(card.selectedMode) && d.ownHQ && d.attacker === o.role && !["reaction", "pbm"].includes(o.window)
+    const ctx = usable ? { faction: side, cardId: card.id, cardMode: card.selectedMode, hqId: d.ownHQ } : null
+    const route = (ids, hex, mode) => {
+        if (!ctx) return { checked: false, reason: "no-current-own-card-hq-context" }
+        if (ids.some(id => own.get(id)?.location === hex)) return { checked: false, reason: "group-has-unit-already-at-target" }
+        const r = ask("queryGroupMovementDestinations", [ids, { ...ctx, move_type: mode }])
+        return r ? { checked: r.reason !== "no-playable-card", pathToTarget: r.paths?.[hex] || null, ...(mode === 8 ? { aspCost: r.aspCost ?? null } : {}), reason: r.paths?.[hex] ? null : r.reason || "no-target-path-under-current-conditions" } : { checked: false, reason: "query-unavailable" }
+    }
+    const planned = tasks.map(t => {
+        const ids = [...new Set([...(t.ground || []), ...(t.escort || []), ...(t.support || [])])]
+        const invalidIds = ids.filter(id => !own.has(id)), ground = (t.ground || []).filter(id => own.get(id)?.class === "ground")
+        const origins = [...new Set(ground.map(id => own.get(id).location))]
+        const groups = origins.map(origin => {
+            const g = ground.filter(id => own.get(id).location === origin), escorts = (t.escort || []).filter(id => own.get(id)?.class === "naval" && own.get(id).location === origin)
+            return { origin, ground: g, colocatedEscorts: escorts, otherOriginEscortIds: (t.escort || []).filter(id => own.has(id) && own.get(id).location !== origin), groundRoute: route(g, t.targetHex, 4), amphibiousRoute: route([...g, ...escorts], t.targetHex, 8) }
+        })
+        const air = (t.support || []).filter(id => own.get(id)?.class === "air").map(id => {
+            const r = ctx ? ask("queryCombatParticipation", [id, t.targetHex, {}]) : null
+            return { id, range: r ? { withinRange: !!r.legal, ...pick(r, ["moveMode", "usesExtendedRange", "effectiveAttack"]), eligibilityNotChecked: "activation, commitment and parenthetical extended-range restrictions" } : null }
+        })
+        const reaction = ctx ? ask("queryReactionCandidates", [{ reactionFaction: 1 - side, targetHex: t.targetHex, targetOnly: true, cardContext: ctx }]) : null
+        const reacting = new Set([...(reaction?.ground || []), ...(reaction?.air || []), ...(reaction?.naval || []), ...(reaction?.carrier || [])])
+        const groundCF = ground.reduce((n, id) => n + (own.get(id).reduced ? own.get(id).rcf : own.get(id).cf), 0)
+        return { targetHex: t.targetHex, invalidIds, groups, airRange: air,
+            unassignedEscortIds: (t.escort || []).filter(id => own.has(id) && !origins.includes(own.get(id).location)),
+            groundArithmetic: { assumption: "all listed own ground can legally fight; no reaction or support included; not feasibility or capture probability", plannedCF: groundCF, hitsByMultiplier: [0.5, 1, 1.5, 2].map(m => [m, Math.ceil(groundCF * m)]), defenderLFs: defenders.find(d => d.hex === t.targetHex)?.ground?.lfs || [] },
+            currentCounterCF: ids.filter(id => own.has(id)).map(id => ({ id, class: own.get(id).class, cf: own.get(id).reduced ? own.get(id).rcf : own.get(id).cf, parenthetical: own.get(id).parenthetical, atTarget: own.get(id).location === t.targetHex, activated: o.activeUnits.includes(id), moved: d.movedUnitIds.includes(id) })),
+            unqueriedNavalSupportIds: (t.support || []).filter(id => own.get(id)?.class === "naval"),
+            publicReaction: reaction ? { groundOverland: reaction.groundOverland || [], hqOptions: (reaction.hqOptions || []).map(h => ({ hq: h.hq, budget: h.budget, unitIds: h.units.filter(id => reacting.has(id)) })) } : null,
+            publicReactionBaseline: ctx ? { nonAmphibious: ask("queryPublicReactionChance", [t.targetHex, { ...ctx, amphibious: false }]), amphibious: ask("queryPublicReactionChance", [t.targetHex, { ...ctx, amphibious: true }]), basis: "two conditional movement assumptions; actual movement is not inferred from the plan" } : null }
+    })
+    let landCaptureCoverage = null
+    if (ctx && /activate_units|choose_hq/.test(o.state)) {
+        const preview = o.cardPreviews.find(p => p.cardId === ctx.cardId && p.cardMode === ctx.cardMode && p.hqId === ctx.hqId && p.eligible)
+        landCaptureCoverage = { checked: !!preview, reason: preview ? null : "exact-activation-preview-unavailable", units: [] }
+        for (const id of preview?.units || []) if (own.get(id)?.class === "ground") {
+            const r = ask("queryGroupMovementDestinations", [[id], { ...ctx, move_type: 4 }])
+            const reachableKeys = targets.filter(hex => r?.paths?.[hex])
+            if (reachableKeys.length) landCaptureCoverage.units.push({ id, reachableKeys })
+        }
+    }
+    return { binding: { revision: d.revision, cardId: card?.id || null, mode: card?.selectedMode || null, hqId: d.ownHQ || null }, defenders, planned, landCaptureCoverage,
+        limits: "Public facts, not a strategy or victory prediction. Routes are current-card projections, not execution authorization; activation, already moved, shared ASP and whole-plan budget still require current candidates. Air range is not a commitment; original-position naval support is unqueried. Reaction alternatives share one HQ budget; baseline excludes unknown enemy-card intervention. Single-unit land coverage does not check amphibious groups." }
+}
+function observe(rules, state, role, revision, { directOnly = false, memory = null } = {}) {
     const { view, observation } = visible(rules, state, role)
     observation.currentDecision.revision = revision
+    if (ROLES.includes(role) && observation.scenario?.victoryMode === "campaign") observation.taskFacts = taskFacts(rules, state, observation, memory)
     const observationHash = hash(observation)
     const candidates = []
     if (role !== activeRole(state)) return { observation, observationHash, candidates }
@@ -74,7 +131,7 @@ function observe(rules, state, role, revision) {
     // General undo/redo can loop; a stranded movement escape is handled below.
     // Raw move needs an engine-generated path.
     for (const [action, options] of Object.entries(view.actions || {})) {
-        if (["undo", "redo", "move"].includes(action) || !options) continue
+        if (["undo", "redo", "move"].includes(action) || directOnly && action === "advance" || !options) continue
         if (Array.isArray(options)) for (const arg of options) {
             const name = /card|event|ops|discard/.test(action) ? cards.get(arg)?.name
                 : /unit|eliminate|unselect/.test(action) ? units.get(arg)?.name : hexes.get(arg)?.name
@@ -86,7 +143,8 @@ function observe(rules, state, role, revision) {
                 : unselect.has(arg) ? observation.state === "activate_units" ? "deactivate" : "deselect"
                 : observation.state === "activate_units" ? "activate" : "selectUnit" : action
             add(action, arg, `${verb} ${arg}${name || def?.name ? " — " + (name || def.name) : ""}`, false,
-                { kind, ...(action === "unit" ? { unitId: arg, unit: def ? pick(def, UNIT_KEYS) : null } : {}) })
+                { kind, ...(action === "unit" ? { unitId: arg, unit: def ? pick(def, UNIT_KEYS) : null } : {}),
+                    ...(action === "action_hex" ? { targetHex: arg, mapId: hexes.get(arg)?.id || null, state: observation.state } : {}) })
         } else if (options === 1 || options === true) {
             const label = action === "advance" ? "advance — 程序选择编队和合法落点（协助，不代表模型计划会执行）"
                 : action === "done" && observation.state === "activate_units" ? "done — 结束激活，保留当前单位；接下来才移动"
@@ -107,4 +165,4 @@ function observe(rules, state, role, revision) {
         add("undo", undefined, "撤销当前移动选择：所选方式无合法落点")
     return { observation, observationHash, candidates }
 }
-module.exports = { observe, visible, activeRole, hash, clone, ROLES }
+module.exports = { observe, visible, activeRole, hash, clone, ROLES, taskFacts }

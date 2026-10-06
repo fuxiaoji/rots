@@ -18943,7 +18943,20 @@ function on_query(q, params, b) {
             activation = { hqId: G.offensive.active_hq[R] || null, logistic: G.offensive.logistic,
                 hqBonus: L.hq_bonus, limit, activeCount, remaining: Math.max(0, limit - activeCount), overBudget: activeCount > limit }
         }
-        const scenario = { id: G.sid, name: scenario_data().name, lastTurn: scenario_data().last_turn }
+        const scenario = { id: G.sid, name: scenario_data().name, lastTurn: scenario_data().last_turn,
+            nations: ["PHILIPPINES", "MALAYA", "DEI", "BURMA"].map(key => {
+                const nation = nations[key], keys = nation.keys.map(mapId => {
+                    const hex = hex_to_int(mapId)
+                    return { hex, mapId, name: get_map_data(hex)?.name || String(mapId),
+                        control: is_space_controlled(hex, JP) ? "Japan" : is_space_controlled(hex, AP) ? "Allies" : null }
+                }), surrenderedTurn = Number(G.surrender[nation.id] || 0)
+                return { id: nation.id, key, name: nation.name, surrenderedTurn, keys,
+                    allJapanControlled: keys.every(h => h.control === "Japan"), engineReady: keys.every(h => h.control !== "Allies"),
+                    // check_nation_controlled requires no opposite controlled key.
+                    remainingKeys: keys.filter(h => h.control === "Allies").map(h => h.hex),
+                    status: surrenderedTurn ? "surrendered" : keys.some(h => h.control === "Allies") ? "capture-required" : "await-national-status",
+                    basis: "public national status; source PDF35-36 sections13.22/13.32/13.42/13.52; engine key-control check" }
+            }) }
         if (G.sid === SOUTH_PACIFIC_SCENARIO) {
             const scoring = rules_query_snapshot(() => get_victory(), G.active)
             scenario.victoryMode = "south-pacific-vp"

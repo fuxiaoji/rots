@@ -39,7 +39,7 @@ function createSession(options = {}, deps = {}) {
     const limits = { maxRequests: options.maxRequests ?? 200, maxTotalTokens: options.maxTotalTokens ?? 2000000,
         maxActions: options.maxActions ?? 60000 }
     for (const n of Object.values(limits)) if (!Number.isSafeInteger(n) || n < 1 || n > 10000000) throw fail("CONFIG", "预算必须为有界正整数")
-    const normalized = { seed, scenario, players: { ...players }, ...limits }
+    const normalized = { seed, scenario, players: { ...players }, ...limits, directOnly: options.directOnly === true }
     return { id: crypto.randomUUID(), revision: 0, options: normalized, limits, rules,
         rulesSha256: deps.rulesSha256 || (deps.rules ? "injected-test-engine" : LOADED_HASH),
         moduleHashes: Object.fromEntries(["observation", "prompt", "memory", "board", "providers", "harness", "session"].map(n => [n, hash(fs.readFileSync(path.join(__dirname, n + ".js"), "utf8"))])),
@@ -51,7 +51,7 @@ function createSession(options = {}, deps = {}) {
 function viewer(s) { return ROLES.find(r => s.options.players[r] === "human") || "Observer" }
 function packet(s, role) {
     const key = s.revision + ":" + role
-    if (!s.cache.has(key)) s.cache.set(key, observe(s.rules, s.state, role, s.revision))
+    if (!s.cache.has(key)) s.cache.set(key, observe(s.rules, s.state, role, s.revision, { directOnly: s.options.directOnly, memory: s.memories[role] }))
     return s.cache.get(key)
 }
 function snapshot(s, role = viewer(s)) {

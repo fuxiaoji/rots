@@ -35,15 +35,15 @@ function mergeMemory(patch, previous, o) {
             const next = { ...old }
             for (const k of ["objective", "victoryBasis"]) if (p[k] !== undefined) next[k] = text(p[k], 300)
             if (p.targets !== undefined) {
-                if (!Array.isArray(p.targets) || p.targets.length > 3) bad("战役目标最多3项")
+                if (!Array.isArray(p.targets) || p.targets.length > 4) bad("战役目标最多4项")
                 next.targets = p.targets.map(t => { object(t, ["hex", "purpose"]); return { hex: id(t.hex, hexes, "地图目标"), purpose: text(t.purpose) } })
             }
             result[field] = next
         } else if (field === "turnPlan") {
             object(p, ["objectives", "constraints"])
             result[field] = { ...old, turn: p.objectives !== undefined || old.turn === undefined ? o.turn : old.turn,
-                ...(p.objectives !== undefined ? { objectives: strings(p.objectives, 3) } : {}),
-                ...(p.constraints !== undefined ? { constraints: strings(p.constraints, 4) } : {}) }
+                ...(p.objectives !== undefined ? { objectives: strings(p.objectives, 4) } : {}),
+                ...(p.constraints !== undefined ? { constraints: strings(p.constraints, 5) } : {}) }
         } else {
             object(p, ["objective", "cardId", "mode", "hqId", "tasks", "stopOrReplan"])
             const scope = o.currentDecision?.offensiveScope || { turn: o.turn }
@@ -54,7 +54,7 @@ function mergeMemory(patch, previous, o) {
             if (p.mode !== undefined) { if (!["ops", "event", "reaction", null].includes(p.mode)) bad("攻势模式错误"); next.mode = p.mode }
             if (p.hqId !== undefined) { next.hqId = id(p.hqId, own, "己方HQ", true); if (next.hqId !== null && own.get(next.hqId)?.class !== "hq") bad("hqId不是HQ") }
             if (p.tasks !== undefined) {
-                if (!Array.isArray(p.tasks) || p.tasks.length > 3) bad("攻势任务最多3项")
+                if (!Array.isArray(p.tasks) || p.tasks.length > 4) bad("攻势任务最多4项")
                 next.tasks = p.tasks.map(t => {
                     object(t, ["targetHex", "intent", "ground", "escort", "support", "stage", "nextStep"])
                     if (!["capture", "assemble", "defend", "support", "relocate", "withdraw"].includes(t.intent)) bad("任务intent错误")
@@ -68,7 +68,7 @@ function mergeMemory(patch, previous, o) {
                     if (t.support.some(id => !["air", "naval"].includes(own.get(id).class))) bad("support列表只能引用己方空海支援单位")
                 }
             }
-            if (p.stopOrReplan !== undefined) next.stopOrReplan = strings(p.stopOrReplan, 3)
+            if (p.stopOrReplan !== undefined) next.stopOrReplan = strings(p.stopOrReplan, 4)
             result[field] = next
         }
     }
@@ -99,7 +99,7 @@ function commitMemory(memory, before, after, event) {
             activeUnitIds: after.activeUnits.slice(), selectedMovementUnitIds: after.selectedMovementUnits.slice(),
             battleHexes: after.battle.hexes.slice(), ownASPRemaining: after.ownASPRemaining, activationRemaining: after.activation?.remaining ?? null } : null }
     result.schemaVersion = 2; result.recent = [...(result.recent || []), row].slice(-12)
-    if (after && result.offensive && /^(ops|event|future_offensive)$/.test(event.action) && result.offensive.cardId === after.currentDecision?.currentCard?.id && result.offensive.mode === after.currentDecision.currentCard.selectedMode)
+    if (after?.currentDecision?.currentCard && result.offensive && /^(ops|event|future_offensive)$/.test(event.action) && result.offensive.cardId === after.currentDecision.currentCard.id && result.offensive.mode === after.currentDecision.currentCard.selectedMode)
         result.offensive.scope = copy(after.currentDecision.offensiveScope)
     return result
 }

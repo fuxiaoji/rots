@@ -3,7 +3,7 @@
 const fs = require("node:fs"), path = require("node:path")
 const providers = require("./providers"), { observe, hash, activeRole } = require("./observation"), harness = require("./harness")
 const { visible } = require("./observation"), { commitMemory, assessment, progressSignature } = require("./memory")
-const VERSION = "eots-rtt-llm-v2"
+const VERSION = "eots-rtt-llm-v3"
 const isLLM = id => typeof id === "string" && id.startsWith("llm-")
 const scenarios = ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"]
 const blankStats = () => ({ requests: 0, retries: 0, failedRequests: 0, invalidResponses: 0, totalTokens: 0, promptTokens: 0, completionTokens: 0, usageUnknown: 0, latencyMs: 0, actions: 0, forced: 0, assisted: 0 })
@@ -67,7 +67,7 @@ function createBridge(db, { env = process.env, clientFactory = providers.createC
         const { apiKey, ...safe } = profile
         return hash({ profile: safe, bridge: VERSION, rules: hash(fs.readFileSync(rulesFile, "utf8")),
             sources: ["rtt.js", "harness.js", "observation.js", "prompt.js", "memory.js", "providers.js", "board.js"].map(f => hash(fs.readFileSync(path.join(__dirname, f), "utf8"))),
-            rulesText: ["docs/rules/llm-south-pacific.md", "docs/rules/llm-operational-guide.md", ...fs.readdirSync(path.resolve(__dirname, "../../../docs/rules/normalized/eots-v3.2-zh-rules/chapters")).filter(f => f.endsWith(".md")).sort().map(f => "docs/rules/normalized/eots-v3.2-zh-rules/chapters/" + f)]
+            rulesText: ["docs/rules/llm-south-pacific.md", "docs/rules/llm-operational-guide.md", "docs/rules/llm-campaign-guide.md", ...fs.readdirSync(path.resolve(__dirname, "../../../docs/rules/normalized/eots-v3.2-zh-rules/chapters")).filter(f => f.endsWith(".md")).sort().map(f => "docs/rules/normalized/eots-v3.2-zh-rules/chapters/" + f)]
                 .map(f => hash(fs.readFileSync(path.resolve(__dirname, "../../..", f), "utf8"))) })
     }
     function init(id, options, seats) {
@@ -87,7 +87,7 @@ function createBridge(db, { env = process.env, clientFactory = providers.createC
         const profile = providers.getProfile(botId.slice(4), env)
         if (ctx.profiles[role] !== fingerprint(profile)) throw harness.fail("POLICY_CHANGED", "模型或规则版本已改变；请新建对局")
         if (ctx.stats.actions >= ctx.limits.maxActions) throw harness.fail("BUDGET", "本局动作额度已耗尽")
-        const packet = observe(rules, state, role, revision)
+        const packet = observe(rules, state, role, revision, { memory: ctx.memories[role] })
         if (activeRole(state) !== role) throw harness.fail("STALE", "活动阵营已改变")
         const client = { async complete(messages) {
             // Harness has already charged the request and added its hash-only ledger entry.
@@ -106,7 +106,7 @@ function createBridge(db, { env = process.env, clientFactory = providers.createC
         }
         ctx.pending = null; ctx.prepared = { binding, answer }; ctx.status = "paused"; ctx.error = null; saveCurrent()
         if (!stillCurrent()) throw harness.fail("STALE", "等待期间棋局发生变化，响应未执行")
-        const fresh = observe(rules, state, role, revision).candidates
+        const fresh = observe(rules, state, role, revision, { memory: ctx.memories[role] }).candidates
         if (!fresh.some(c => c.id === answer.candidate.id && c.action === answer.candidate.action && hash(c.argument ?? null) === hash(answer.candidate.argument ?? null)))
             throw harness.fail("STALE", "候选动作已经失效")
         const c = answer.candidate
