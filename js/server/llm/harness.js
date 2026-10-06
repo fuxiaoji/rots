@@ -1,7 +1,8 @@
 "use strict"
 const { hash } = require("./observation"), { messagesFor } = require("./prompt"), { boardPng } = require("./board")
+const { mergeMemory } = require("./memory")
 function fail(code, message) { const e = new Error(message); e.code = code; return e }
-function parseAnswer(content, packet, decisionId) {
+function parseAnswer(content, packet, decisionId, previousMemory) {
     if (typeof content !== "string" || content.length > 16000) throw fail("FORMAT", "JSON响应为空或过长")
     let text = content.trim().replace(/<think>[\s\S]*?<\/think>/g, "").trim()
     if (/^```(?:json)?\s/.test(text)) text = text.replace(/^```(?:json)?\s*/, "").replace(/\s*```$/, "")
@@ -11,11 +12,8 @@ function parseAnswer(content, packet, decisionId) {
     // Model-echoed nonces are neither authentication nor stale-response control.
     const candidate = packet.candidates.find(c => c.id === answer.candidateId)
     if (!candidate) throw fail("FORMAT", "candidateId不在当前合法候选表")
-    const m = answer.memory || {}
-    if (typeof m !== "object" || Array.isArray(m) || m.objective !== undefined && typeof m.objective !== "string"
-        || m.notes !== undefined && (!Array.isArray(m.notes) || m.notes.some(n => typeof n !== "string"))) throw fail("FORMAT", "memory字段格式错误")
     return { candidate, reason: typeof answer.reason === "string" ? answer.reason.slice(0, 300) : "",
-        memory: { objective: (m.objective || "").slice(0, 300), notes: (m.notes || []).slice(0, 6).map(s => s.slice(0, 240)) } }
+        memory: mergeMemory(answer.memory, previousMemory, packet.observation || {}) }
 }
 function account(stats, result, elapsedMs) {
     stats.latencyMs += result.latencyMs || elapsedMs
@@ -26,7 +24,7 @@ function account(stats, result, elapsedMs) {
 async function decide(packet, { client, profile, memory, stats, limits, decisionId, ledger = [] }) {
     if (!packet.candidates.length) throw fail("NO_CANDIDATES", "当前窗口没有可执行候选，需检查规则接口")
     // A forced action does not need model inference; keep memory intact.
-    if (packet.candidates.length === 1) return { candidate: packet.candidates[0], memory,
+    if (packet.candidates.length === 1) return { candidate: packet.candidates[0], memory: mergeMemory(undefined, memory, packet.observation),
         reason: "唯一可执行候选", trace: { policy: "forced", requests: 0, assisted: packet.candidates[0].assisted } }
     const imageUrl = profile.vision ? "data:image/png;base64," + boardPng(packet.observation).toString("base64") : undefined
     let repair = null
@@ -52,11 +50,11 @@ async function decide(packet, { client, profile, memory, stats, limits, decision
             outputHash: hash(result.content) })
         if (stats.totalTokens > limits.maxTotalTokens) { record.code = "BUDGET"; throw fail("BUDGET", "响应已计费，但超过本局token预算；动作未执行") }
         try {
-            const parsed = parseAnswer(result.content, packet, decisionId)
+            const parsed = parseAnswer(result.content, packet, decisionId, memory)
             record.code = "OK"
             return { ...parsed, trace: { policy: "llm", provider: profile.provider, model: result.model || profile.model,
                 promptVersion: p.version, promptHash: p.promptHash, outputHash: hash(result.content), observationHash: packet.observationHash,
-                sources: p.sources.map(({ file, sha256 }) => ({ file, sha256 })), usage: result.usage || null,
+                sources: p.sources.map(({ file, sha256, pdfPages, ruleIds, coverage }) => ({ file, sha256, pdfPages, ruleIds, coverage })), usage: result.usage || null,
                 requests: attempt + 1, latencyMs: result.latencyMs, image: !!imageUrl, assisted: parsed.candidate.assisted } }
         } catch (e) { record.code = e.code || "FORMAT"; stats.invalidResponses++; repair = e.message; if (attempt) throw e }
     }

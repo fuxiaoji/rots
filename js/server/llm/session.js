@@ -2,6 +2,7 @@
 const crypto = require("node:crypto"), fs = require("node:fs"), path = require("node:path")
 const { observe, visible, activeRole, clone, hash, ROLES } = require("./observation")
 const { boardSvg } = require("./board"), { decide, fail } = require("./harness")
+const { commitMemory } = require("./memory")
 const ENGINE = path.resolve(__dirname, "../../../rules.js")
 const LOADED_SOURCE = fs.readFileSync(ENGINE, "utf8"), LOADED_HASH = hash(LOADED_SOURCE)
 function compileRules(source) { const Module = require("node:module"), m = new Module(ENGINE, module); m.filename = ENGINE; m.paths = Module._nodeModulePaths(path.dirname(ENGINE)); m._compile(source, ENGINE); return m.exports }
@@ -41,7 +42,7 @@ function createSession(options = {}, deps = {}) {
     const normalized = { seed, scenario, players: { ...players }, ...limits }
     return { id: crypto.randomUUID(), revision: 0, options: normalized, limits, rules,
         rulesSha256: deps.rulesSha256 || (deps.rules ? "injected-test-engine" : LOADED_HASH),
-        moduleHashes: Object.fromEntries(["observation", "prompt", "board", "providers", "harness", "session"].map(n => [n, hash(fs.readFileSync(path.join(__dirname, n + ".js"), "utf8"))])),
+        moduleHashes: Object.fromEntries(["observation", "prompt", "memory", "board", "providers", "harness", "session"].map(n => [n, hash(fs.readFileSync(path.join(__dirname, n + ".js"), "utf8"))])),
         state: rules.setup(seed, scenario, { headless_moves: true }), memories: { Japan: null, Allies: null },
         stats: { requests: 0, retries: 0, failedRequests: 0, invalidResponses: 0, totalTokens: 0, promptTokens: 0,
             completionTokens: 0, usageUnknown: 0, latencyMs: 0, forcedActions: 0, assistedActions: 0, cost: "unknown" },
@@ -110,12 +111,13 @@ async function step(s, request = {}) {
         const nextState = s.rules.action(next, role, choice.action, clone(choice.argument ?? null))
         const progressHash = gameplayDigest(nextState), recentStates = s.progressWindow.slice(-127), repeatCount = recentStates.filter(h => h === progressHash).length + 1
         if (repeatCount > 16) throw fail("NO_PROGRESS", "重复相同局面超过16次；对局暂停供调试")
-        const oldMemory = s.memories[role] || { objective: "", notes: [], recent: [] }
-        const recent = [...(oldMemory.recent || []), { turn: p.observation.turn, window: p.observation.window,
-            action: choice.action, label: choice.label || choice.action, reason }].slice(-12)
+        let afterObservation = null
+        if (player.startsWith("llm:")) { try { afterObservation = visible(s.rules, nextState, role).observation } catch (_) { /* Projection failure is not a failed legal action. */ } }
+        const finalMemory = player.startsWith("llm:") ? commitMemory(nextMemory, p.observation, afterObservation,
+            { revision: revision + 1, action: choice.action, label: choice.label, effect: choice.effect, reason, policy: trace.policy, assisted: trace.assisted }) : null
         s.state = nextState
         s.progressWindow = [...recentStates, progressHash]
-        if (player.startsWith("llm:")) s.memories[role] = { ...(nextMemory || oldMemory), recent }
+        if (player.startsWith("llm:")) s.memories[role] = finalMemory
         s.actions.push({ role, action: choice.action, argument: clone(choice.argument ?? null), logs,
             revision, trace, reason, stateHash: digest(nextState), progressHash })
         s.revision++; s.cache.clear(); s.error = null

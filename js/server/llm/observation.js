@@ -16,14 +16,14 @@ function visible(rules, state, role) {
     const ownFuture = side >= 0 ? view.future_offensive?.[side] : -1
     if (ownFuture > 0 && !ownIds.includes(ownFuture)) ownIds.push(ownFuture)
     const cardMeta = new Map((view.ai?.ownCards || []).map(c => [c.id, c]))
-    const observation = { schemaVersion: 1, role, scenario: publicData.scenario || state.scenario, active: view.active, turn: view.turn,
+    const observation = { schemaVersion: 2, role, scenario: publicData.scenario || state.scenario, active: view.active, turn: view.turn,
         window: view.ai?.windowKind || null, state: view.ai?.state || null, prompt: view.prompt,
         politicalWill: view.political_will, pow: view.pow, resources: clone(view.resources || []),
         asp: clone(view.asp || []), passes: clone(view.passes || []),
         handCounts: (view.hand || []).map(h => Array.isArray(h) ? h.length : h),
         ownFutureOffensive: ownFuture > 0 ? ownFuture : null,
         ownCards: ownIds.map(id => pick({ ...(publicData.cards[id] || { id }), ...(cardMeta.get(id) || {}) }, CARD_KEYS)),
-        selectedUnits: clone(view.active_stack || []), selectedMovementUnits: clone(view.active_stack || []),
+        selectedUnits: clone(view.active_stack || []), selectedMovementUnits: view.ai?.state === "move_offensive_units" ? clone(view.active_stack || []) : [],
         activeUnits: side >= 0 ? clone(view.offensive?.active_units?.[side] || []) : [],
         activation: publicData.activation,
         unselectableUnits: clone(view.unselect || []), units: (view.ai?.units || []).map(u => pick(u, UNIT_KEYS)),
@@ -32,10 +32,32 @@ function visible(rules, state, role) {
             activatedUnits: clone(view.offensive?.active_units || []),
             attacker: ROLES[view.offensive?.attacker] || null, type: view.offensive?.type ?? null },
         log: (view.log || []).slice(-24).filter(x => typeof x === "string" && !x.startsWith("[ERASMUS]")) }
+    const p = publicData.planning || {}, hexes = new Map(observation.hexes.map(h => [h.hex, h])), supplies = new Map((p.ownSupply || []).map(s => [s.id, s.supplied]))
+    observation.units = observation.units.map(u => ({ ...u, locationMapId: hexes.get(u.location)?.id || null, locationName: hexes.get(u.location)?.name || null,
+        ...(u.faction === side ? { supplied: supplies.get(u.id) ?? null } : {}) }))
+    observation.ownUnitDefinitions = clone(p.ownUnitDefinitions || [])
+    observation.ownASP = side >= 0 ? clone(view.asp?.[side] ?? null) : null
+    observation.ownASPRemaining = p.ownASPRemaining ?? null
+    observation.ownPasses = side >= 0 ? view.passes?.[side] ?? null : null
+    observation.progressOfWar = clone(p.pow || null)
+    observation.cardPreviews = clone(p.cardPreviews || [])
+    observation.cardPreviewsLimited = !!p.previewsLimited
+    observation.ownHQDistances = clone(p.ownHQDistances || [])
+    const cardId = observation.state === "offensive_segment" ? null : p.currentCardId
+    const card = cardId ? pick({ ...publicData.cards[cardId], ...(cardMeta.get(cardId) || {}) }, CARD_KEYS) : null
+    const plays = (view.log || []).filter(x => /^C\d+ played as (operation card|event)\./.test(x)).length
+    observation.currentDecision = { role, turn: observation.turn, state: observation.state, window: observation.window,
+        currentCard: card ? { ...card, selectedMode: p.currentCardMode, eventLogistic: card.logistic ?? null,
+            intelligenceThresholds: { ops: card.metadata?.oc ?? null, event: card.metadata?.ec ?? null } } : null,
+        currentCardBasis: p.currentCardBasis,
+        ...pick(p.offensive, ["attacker", "cardId", "ownReactionCardId", "stage", "ownHQ", "logistic", "intelligence", "navalMoveDistance", "groundMoveDistance", "airMoveDistance", "movedUnitIds", "battleHexes"]),
+        offensiveScope: { turn: observation.turn, basis: "public-play-epoch; conservative revalidation, not stable engine offensive ID",
+            instance: `${observation.turn}:${p.offensive?.attacker || "none"}:${cardId || "between"}:${p.currentCardMode || "unselected"}:${plays}:${observation.state === "offensive_segment_card_action" ? "pending" : "played"}` } }
     return { view, observation }
 }
 function observe(rules, state, role, revision) {
     const { view, observation } = visible(rules, state, role)
+    observation.currentDecision.revision = revision
     const observationHash = hash(observation)
     const candidates = []
     if (role !== activeRole(state)) return { observation, observationHash, candidates }
@@ -43,11 +65,11 @@ function observe(rules, state, role, revision) {
     const cards = new Map(observation.ownCards.map(c => [c.id, c]))
     const hexes = new Map(observation.hexes.map(h => [h.hex, h]))
     const unselect = new Set(view.unselect || [])
-    const add = (action, argument, label, assisted = false) => {
+    const add = (action, argument, label, assisted = false, effect = null) => {
         // Short exact symbols are reliably copied by small/text models. The
         // decision nonce and revision bind these indices to this candidate table.
         candidates.push({ id: `r${revision}-a${candidates.length}`,
-            action, ...(argument !== undefined ? { argument: clone(argument) } : {}), label, assisted })
+            action, ...(argument !== undefined ? { argument: clone(argument) } : {}), label, assisted, effect })
     }
     // General undo/redo can loop; a stranded movement escape is handled below.
     // Raw move needs an engine-generated path.
@@ -59,13 +81,24 @@ function observe(rules, state, role, revision) {
             const verb = action === "unit" && unselect.has(arg)
                 ? observation.state === "activate_units" ? "取消激活" : "取消选择"
                 : action === "unit" && observation.state === "activate_units" ? "激活单位" : action
-            add(action, arg, `${verb} ${arg}${name ? " — " + name : ""}`)
-        } else if (options === 1 || options === true) add(action, undefined,
-            action === "advance" ? "advance — 程序选择编队和合法落点" : action, action === "advance")
+            const def = units.get(arg) || observation.ownUnitDefinitions.find(u => u.id === arg)
+            const kind = action === "unit" ? observation.state === "choose_hq" ? "selectHQ"
+                : unselect.has(arg) ? observation.state === "activate_units" ? "deactivate" : "deselect"
+                : observation.state === "activate_units" ? "activate" : "selectUnit" : action
+            add(action, arg, `${verb} ${arg}${name || def?.name ? " — " + (name || def.name) : ""}`, false,
+                { kind, ...(action === "unit" ? { unitId: arg, unit: def ? pick(def, UNIT_KEYS) : null } : {}) })
+        } else if (options === 1 || options === true) {
+            const label = action === "advance" ? "advance — 程序选择编队和合法落点（协助，不代表模型计划会执行）"
+                : action === "done" && observation.state === "activate_units" ? "done — 结束激活，保留当前单位；接下来才移动"
+                : action === "done" && observation.state === "move_offensive_units" ? "done — 结束移动；未移动单位留在原地，不是结束激活"
+                : action
+            add(action, undefined, label, action === "advance", { kind: action === "done" ? "finishCurrentWindow" : action,
+                state: observation.state, selectedUnitIds: observation.selectedMovementUnits, activeUnitIds: observation.activeUnits })
+        }
     }
     if (view.actions?.move) {
         for (const m of rules.query(clone(state), role, "llm_legal_moves") || [])
-            add("move", m.path, `move → ${hexes.get(m.hex)?.name || m.hex} (${hexes.get(m.hex)?.id || m.hex})`)
+            add("move", m.path, `move → ${hexes.get(m.hex)?.name || m.hex} (${hexes.get(m.hex)?.id || m.hex})`, false, { kind: "move", targetHex: m.hex, unitIds: observation.selectedMovementUnits })
     }
     // A selected movement mode may have no reachable destination. The native
     // client can undo that selection; retain this sole legal escape, not general undo.

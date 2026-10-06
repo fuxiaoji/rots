@@ -2,7 +2,8 @@
 // RTT owns the only game state. This bridge owns private accounting/memory.
 const fs = require("node:fs"), path = require("node:path")
 const providers = require("./providers"), { observe, hash, activeRole } = require("./observation"), harness = require("./harness")
-const VERSION = "eots-rtt-llm-v1"
+const { visible } = require("./observation"), { commitMemory, assessment, progressSignature } = require("./memory")
+const VERSION = "eots-rtt-llm-v2"
 const isLLM = id => typeof id === "string" && id.startsWith("llm-")
 const scenarios = ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"]
 const blankStats = () => ({ requests: 0, retries: 0, failedRequests: 0, invalidResponses: 0, totalTokens: 0, promptTokens: 0, completionTokens: 0, usageUnknown: 0, latencyMs: 0, actions: 0, forced: 0, assisted: 0 })
@@ -22,7 +23,7 @@ function creatorAllowed(game, user, seats) {
 function summary(trace) {
     if (!trace?.llm) return null
     // Explicit whitelist: never expose the observation, ledger, full memory or reasoning_content.
-    const keys = ["llm", "model", "provider", "role", "turn", "windowKind", "action", "label", "explanation", "objective", "notes", "policy", "assisted", "usage", "latencyMs", "stats", "limits", "sources"]
+    const keys = ["llm", "model", "provider", "role", "turn", "windowKind", "action", "label", "explanation", "objective", "notes", "policy", "assisted", "usage", "latencyMs", "stats", "limits", "sources", "campaign", "turnPlan", "offensive", "memoryAssessment", "recent", "promptVersion"]
     return Object.fromEntries(keys.filter(k => trace[k] !== undefined).map(k => [k, trace[k]]))
 }
 function createBridge(db, { env = process.env, clientFactory = providers.createClient, rulesFile = path.resolve(__dirname, "../../../rules.js") } = {}) {
@@ -65,8 +66,8 @@ function createBridge(db, { env = process.env, clientFactory = providers.createC
     function fingerprint(profile) {
         const { apiKey, ...safe } = profile
         return hash({ profile: safe, bridge: VERSION, rules: hash(fs.readFileSync(rulesFile, "utf8")),
-            sources: ["rtt.js", "harness.js", "observation.js", "prompt.js", "providers.js", "board.js"].map(f => hash(fs.readFileSync(path.join(__dirname, f), "utf8"))),
-            rulesText: ["docs/rules/llm-south-pacific.md", ...fs.readdirSync(path.resolve(__dirname, "../../../docs/rules/normalized/eots-v3.2-zh-rules/chapters")).filter(f => f.endsWith(".md")).sort().map(f => "docs/rules/normalized/eots-v3.2-zh-rules/chapters/" + f)]
+            sources: ["rtt.js", "harness.js", "observation.js", "prompt.js", "memory.js", "providers.js", "board.js"].map(f => hash(fs.readFileSync(path.join(__dirname, f), "utf8"))),
+            rulesText: ["docs/rules/llm-south-pacific.md", "docs/rules/llm-operational-guide.md", ...fs.readdirSync(path.resolve(__dirname, "../../../docs/rules/normalized/eots-v3.2-zh-rules/chapters")).filter(f => f.endsWith(".md")).sort().map(f => "docs/rules/normalized/eots-v3.2-zh-rules/chapters/" + f)]
                 .map(f => hash(fs.readFileSync(path.resolve(__dirname, "../../..", f), "utf8"))) })
     }
     function init(id, options, seats) {
@@ -111,17 +112,27 @@ function createBridge(db, { env = process.env, clientFactory = providers.createC
         const c = answer.candidate
         const publicTrace = { llm: true, role, model: answer.trace.model || profile.model, provider: profile.provider,
             turn: packet.observation.turn, windowKind: packet.observation.state, action: c.action,
-            policy: answer.trace.policy, assisted: !!c.assisted, usage: answer.trace.usage || null, latencyMs: answer.trace.latencyMs || 0 }
+            policy: answer.trace.policy, promptVersion: require("./prompt").VERSION, assisted: !!c.assisted, usage: answer.trace.usage || null, latencyMs: answer.trace.latencyMs || 0 }
         const privateTrace = { ...publicTrace, label: c.label, explanation: answer.reason,
             objective: answer.memory.objective, notes: answer.memory.notes, memory: answer.memory,
             stats: { ...ctx.stats, actions: ctx.stats.actions + 1 }, limits: ctx.limits,
             sources: answer.trace.sources || [], observationHash: packet.observationHash }
         return { action: c.action, argument: c.argument, publicTrace, privateTrace, version: VERSION,
-            commit(replayId) {
+            commit(replayId, nextState) {
                 // Called INSIDE RTT's action transaction. Memory and replay commit together.
-                ctx.memories[role] = answer.memory; ctx.stats.actions++
+                let after = null
+                if (nextState) { try { after = visible(rules, nextState, role).observation } catch (_) { /* Keep committed action distinct from failed projection. */ } }
+                else after = packet.observation // Unit adapter tests without a native board.
+                const progress = after ? progressSignature(after) : null, recentProgress = (ctx.progressWindow || []).slice(-127)
+                if (progress && recentProgress.filter(h => h === progress).length >= 16) throw harness.fail("NO_PROGRESS", "重复相同公开决策局面超过16次，已暂停供检查")
+                const finalMemory = commitMemory(answer.memory, packet.observation, after,
+                    { revision: replayId, action: c.action, label: c.label, effect: c.effect, reason: answer.reason, policy: answer.trace.policy, assisted: c.assisted })
+                ctx.memories[role] = finalMemory; ctx.stats.actions++
+                ctx.progressWindow = [...recentProgress, progress].filter(Boolean)
                 if (answer.trace.policy === "forced") ctx.stats.forced++
                 if (c.assisted) ctx.stats.assisted++
+                Object.assign(privateTrace, { memory: finalMemory, campaign: finalMemory.campaign, turnPlan: finalMemory.turnPlan,
+                    offensive: finalMemory.offensive, recent: finalMemory.recent, memoryAssessment: after ? assessment(finalMemory, after) : { issues: ["执行后投影不可用，需刷新核对"] } })
                 ctx.lastReplay = replayId; ctx.prepared = null; saveCurrent()
             } }
     }
@@ -133,7 +144,7 @@ function createBridge(db, { env = process.env, clientFactory = providers.createC
             const trace = JSON.parse(row.private_trace)
             if (trace?.llm && trace.memory) ctx.memories[row.role] = trace.memory
         }
-        ctx.lastReplay = replayId; ctx.prepared = null; ctx.status = "paused"; save(id, ctx)
+        ctx.lastReplay = replayId; ctx.prepared = null; ctx.progressWindow = []; ctx.status = "paused"; save(id, ctx)
         // Costs and any uncertain request remain charged even after rewind.
     }
     return { bots, init, decide, rewind, get, pause, isLLM, limits, summary, creatorAllowed, activeRole }

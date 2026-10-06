@@ -1,0 +1,528 @@
+{
+  "task": "LLM-PROMPT-01",
+  "date": "2026-10-06",
+  "scope": "bounded windows; no full real-LLM match",
+  "protocol": "research/llm-prompt-01/protocol.md",
+  "manifest": {
+    "date": "2026-10-06T04:58:36.103Z",
+    "profiles": [
+      {
+        "id": "deepseek",
+        "provider": "deepseek",
+        "model": "deepseek-flash",
+        "vision": false,
+        "configured": true
+      }
+    ],
+    "files": {
+      "js/server/llm/prompt.js": "d88c059b5c4b6ca92b70b9dc728c020ea08de99d443f49f04cc327ac7cd8a3e0",
+      "js/server/llm/memory.js": "83209d8f8f4cbe8e29e0593315e2fd8dc944257228da414227830a673214698c",
+      "js/server/llm/harness.js": "be561ec45d47496480c962955168a92a87d308219bd3939dd9dcf54f1dbbfaf1",
+      "js/server/llm/observation.js": "e2dec94bfb818f9c01ae1a51015d50040b74fd314139bc8b2c459f8ff3069fc7",
+      "js/server/llm/rtt.js": "6fe5980223e355ed32bd125e337e9c22a426650f878b24840fa3b6b665f1f633",
+      "js/server/query.js": "2146cec434c214eafa6598f28155d1714ee6672c68abd6a4d777df6da68dcdfb",
+      "rules.js": "ff43c4f96e69a334c1faebf5c84ea8abc4c9437b1c26093f78065eff12e0e56e",
+      "docs/rules/llm-operational-guide.md": "bbf06d1f9796096d005f57d2bd21d40e854f946e405fad10f314c689173a9da4"
+    },
+    "fixtureHash": "b5ebcf447d986f9bbf6df3553e572fe4d97897c066c16d26501cf91b90ec3276"
+  },
+  "totals": {
+    "requests": 14,
+    "failedRequests": 0,
+    "promptTokens": 401042,
+    "completionTokens": 7208,
+    "totalTokens": 408250,
+    "latencyMs": 66292,
+    "usageUnknown": 0,
+    "currencyCost": "unknown"
+  },
+  "phases": {
+    "review": {
+      "requests": 2,
+      "failedRequests": 0,
+      "promptTokens": 20675,
+      "completionTokens": 3415,
+      "totalTokens": 24090,
+      "latencyMs": 35678,
+      "usageUnknown": 0,
+      "currencyCost": "unknown"
+    },
+    "development": {
+      "requests": 6,
+      "failedRequests": 0,
+      "promptTokens": 148578,
+      "completionTokens": 2103,
+      "totalTokens": 150681,
+      "latencyMs": 14776,
+      "usageUnknown": 0,
+      "currencyCost": "unknown"
+    },
+    "refinement": {
+      "requests": 2,
+      "failedRequests": 0,
+      "promptTokens": 62466,
+      "completionTokens": 99,
+      "totalTokens": 62565,
+      "latencyMs": 2727,
+      "usageUnknown": 0,
+      "currencyCost": "unknown"
+    },
+    "validation": {
+      "requests": 4,
+      "failedRequests": 0,
+      "promptTokens": 169323,
+      "completionTokens": 1591,
+      "totalTokens": 170914,
+      "latencyMs": 13111,
+      "usageUnknown": 0,
+      "currencyCost": "unknown"
+    }
+  },
+  "requests": [
+    {
+      "ordinal": 1,
+      "profile": "glm",
+      "model": "glm-5.3",
+      "phase": "review",
+      "promptHash": "a62f14f239d7ff37eaaf799c44b311b8c26591870099f9c82d45d6685a5f7a96",
+      "pending": false,
+      "code": "OK",
+      "actualModel": "glm-5.3",
+      "usage": {
+        "prompt_tokens": 9879,
+        "completion_tokens": 1861,
+        "total_tokens": 11740
+      },
+      "latencyMs": 27611,
+      "outputHash": "62fe5643bf545037085393538192dd651f7b60e2327bc9c36c9891313e7cacef"
+    },
+    {
+      "ordinal": 2,
+      "profile": "deepseek",
+      "model": "deepseek-flash",
+      "phase": "review",
+      "promptHash": "a62f14f239d7ff37eaaf799c44b311b8c26591870099f9c82d45d6685a5f7a96",
+      "pending": false,
+      "code": "OK",
+      "actualModel": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 10796,
+        "completion_tokens": 1554,
+        "total_tokens": 12350
+      },
+      "latencyMs": 8067,
+      "outputHash": "7caecbeeb97d657d4cbdd2f20d9aa3638bac1ac8eeafd68f463e6b9814f41e54"
+    },
+    {
+      "ordinal": 3,
+      "profile": "deepseek",
+      "model": "deepseek-flash",
+      "phase": "development",
+      "promptHash": "8f039e19b6974cf5fa99145a2848760a488a081743a01be0629f68bcb7e74882",
+      "pending": false,
+      "code": "OK",
+      "actualModel": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 6655,
+        "completion_tokens": 175,
+        "total_tokens": 6830
+      },
+      "latencyMs": 1168,
+      "outputHash": "56144eeb1f4f9e542736e4a96a4570150364697738540a07c9b4a79aa8270f5c"
+    },
+    {
+      "ordinal": 4,
+      "profile": "deepseek",
+      "model": "deepseek-flash",
+      "phase": "development",
+      "promptHash": "1ebb150432000db46e6a553433efa29b55cbd3e8be8198309b8c2cfd59498f3f",
+      "pending": false,
+      "code": "OK",
+      "actualModel": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 40097,
+        "completion_tokens": 567,
+        "total_tokens": 40664
+      },
+      "latencyMs": 3757,
+      "outputHash": "900e83a22d902e2c3039e72f8fc726522dbcaa93a28f1e86212df40edf480c7f"
+    },
+    {
+      "ordinal": 5,
+      "profile": "deepseek",
+      "model": "deepseek-flash",
+      "phase": "development",
+      "promptHash": "40524546b3c8169a7b80714253717f2fa7b8866f814ed28c1086196efcc8693f",
+      "pending": false,
+      "code": "OK",
+      "actualModel": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 6433,
+        "completion_tokens": 152,
+        "total_tokens": 6585
+      },
+      "latencyMs": 1363,
+      "outputHash": "234b850f8f63c0d6aa4777408c64f1f09aadbcc8f9d97b6bf2bdbf677bea7f9c"
+    },
+    {
+      "ordinal": 6,
+      "profile": "deepseek",
+      "model": "deepseek-flash",
+      "phase": "development",
+      "promptHash": "74ae749e427f9abbf19fa28a5249987a30a65cd729b3e9cb410b8517f90cb241",
+      "pending": false,
+      "code": "OK",
+      "actualModel": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 43313,
+        "completion_tokens": 529,
+        "total_tokens": 43842
+      },
+      "latencyMs": 3704,
+      "outputHash": "e33a447cf1da215360f96fd9d0d83b093ac757ebb00912ee2471591d7800e2dd"
+    },
+    {
+      "ordinal": 7,
+      "profile": "deepseek",
+      "model": "deepseek-flash",
+      "phase": "development",
+      "promptHash": "dc5e51c0b90d048b9354d1f886da435d4e28bc03a02c9f3f6c1b811a09ff1598",
+      "pending": false,
+      "code": "OK",
+      "actualModel": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 6353,
+        "completion_tokens": 145,
+        "total_tokens": 6498
+      },
+      "latencyMs": 1038,
+      "outputHash": "7bfa3ab5afa8ffd8696850cd32fc030433ae874c6106467dc56a4fd7e41b18dc"
+    },
+    {
+      "ordinal": 8,
+      "profile": "deepseek",
+      "model": "deepseek-flash",
+      "phase": "development",
+      "promptHash": "ebe868d75051c99e94387fa54b8053a4893529ad0b85d6e6a1de7a1c72cfdfdb",
+      "pending": false,
+      "code": "OK",
+      "actualModel": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 45727,
+        "completion_tokens": 535,
+        "total_tokens": 46262
+      },
+      "latencyMs": 3746,
+      "outputHash": "5f055d97068c9487dff1787cd44b82c520a1669d50fc39fb18c16d005d1a5e0e"
+    },
+    {
+      "ordinal": 9,
+      "profile": "deepseek",
+      "model": "deepseek-flash",
+      "phase": "refinement",
+      "promptHash": "649d48371e7cb3c2a4ab0b955579e6204e3e16c0dae071d369637c157cf79aa6",
+      "pending": false,
+      "code": "OK",
+      "actualModel": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 30026,
+        "completion_tokens": 51,
+        "total_tokens": 30077
+      },
+      "latencyMs": 1348,
+      "outputHash": "2224c9b2fe0efb7073c3090b67b9dd7ca800f6dac569d1e21f946d3ce9e65b8f"
+    },
+    {
+      "ordinal": 10,
+      "profile": "deepseek",
+      "model": "deepseek-flash",
+      "phase": "refinement",
+      "promptHash": "d83bdf3ea7a067136703e955a11bdec972a727db8a410d88e807f7141540a970",
+      "pending": false,
+      "code": "OK",
+      "actualModel": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 32440,
+        "completion_tokens": 48,
+        "total_tokens": 32488
+      },
+      "latencyMs": 1379,
+      "outputHash": "1f8c0c8eeb42542e71b470aea3d83f976fdf6534bacf28422dfd152f0856fb3a"
+    },
+    {
+      "ordinal": 11,
+      "profile": "deepseek",
+      "model": "deepseek-flash",
+      "phase": "validation",
+      "promptHash": "294d42fe7dfdd9956aa78eb2684e6f5e83f7503d971ad546d49d9d20158c3e35",
+      "pending": false,
+      "code": "OK",
+      "actualModel": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 27647,
+        "completion_tokens": 439,
+        "total_tokens": 28086
+      },
+      "latencyMs": 3657,
+      "outputHash": "5614549244547c783835067f47dda3b94f91f497b8bb2c9d8f77d3dd7d00fd9f"
+    },
+    {
+      "ordinal": 12,
+      "profile": "deepseek",
+      "model": "deepseek-flash",
+      "phase": "validation",
+      "promptHash": "17af2ab0a110222df4b2866e01d856f4c3cd3a04969a44f2dd22368157e0912e",
+      "pending": false,
+      "code": "OK",
+      "actualModel": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 27067,
+        "completion_tokens": 41,
+        "total_tokens": 27108
+      },
+      "latencyMs": 660,
+      "outputHash": "cafd19efb22955dccc436ef0dffae3b5627d3573879213eda093addd56f02536"
+    },
+    {
+      "ordinal": 13,
+      "profile": "deepseek",
+      "model": "deepseek-flash",
+      "phase": "validation",
+      "promptHash": "9692ddab231d71eb83b74cdba37d343aabdee8cff82b8736f18d209dc27dd5af",
+      "pending": false,
+      "code": "OK",
+      "actualModel": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 82338,
+        "completion_tokens": 491,
+        "total_tokens": 82829
+      },
+      "latencyMs": 4443,
+      "outputHash": "cc36ab6cf1cfab6d284f813365e3e2f3262625574699d6c5d515c7697852bdf5"
+    },
+    {
+      "ordinal": 14,
+      "profile": "deepseek",
+      "model": "deepseek-flash",
+      "phase": "validation",
+      "promptHash": "0326e8a9662faf2adde54b24827f806ffd53dcbabf9d152d04fac63fca237b0e",
+      "pending": false,
+      "code": "OK",
+      "actualModel": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 32271,
+        "completion_tokens": 620,
+        "total_tokens": 32891
+      },
+      "latencyMs": 4351,
+      "outputHash": "05d30cbb1e855430880515f66bc586dc1c63819746b1efbf37460d3764d3d2dc"
+    }
+  ],
+  "validation": [
+    {
+      "seed": 20262501,
+      "scenario": "South Pacific",
+      "role": "Allies",
+      "step": 0,
+      "error": null,
+      "action": "unit",
+      "argument": 195,
+      "assisted": false,
+      "policy": "llm",
+      "stats": {
+        "requests": 1,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 28086,
+        "promptTokens": 27647,
+        "completionTokens": 439,
+        "usageUnknown": 0,
+        "latencyMs": 3657
+      },
+      "beforeHash": "9f43fcb1a36faf60d5c6c7273ce17f770cd1a16579d187a3e512043f440b60b1",
+      "afterHash": "7dcc833f0bc586e18f5b484d6b5bc3b8a3c71054c791cc14d4a7823b40ff5503",
+      "programHistoryLength": 1,
+      "campaignPreserved": null
+    },
+    {
+      "seed": 20262501,
+      "scenario": "South Pacific",
+      "role": "Allies",
+      "step": 1,
+      "error": null,
+      "action": "unit",
+      "argument": 88,
+      "assisted": false,
+      "policy": "llm",
+      "stats": {
+        "requests": 1,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 27108,
+        "promptTokens": 27067,
+        "completionTokens": 41,
+        "usageUnknown": 0,
+        "latencyMs": 660
+      },
+      "beforeHash": "7dcc833f0bc586e18f5b484d6b5bc3b8a3c71054c791cc14d4a7823b40ff5503",
+      "afterHash": "8f3a2ddb5eff34cd80f1850900bfaf5aef67eee561622d8efab0dc11d37163fd",
+      "programHistoryLength": 2,
+      "campaignPreserved": true
+    },
+    {
+      "seed": 20262502,
+      "scenario": "1943-1945 (The Even Shorter Campaign)",
+      "role": "Japan",
+      "step": 0,
+      "error": null,
+      "action": "ops",
+      "argument": null,
+      "assisted": false,
+      "policy": "llm",
+      "stats": {
+        "requests": 1,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 82829,
+        "promptTokens": 82338,
+        "completionTokens": 491,
+        "usageUnknown": 0,
+        "latencyMs": 4443
+      },
+      "beforeHash": "a3aaf7946b80e301fa6e228c3172d53d0e6ee476e033602a1afb6b967f6fe352",
+      "afterHash": "f3a5a96deb742f6098f9ab9de618d583cfc913bb01f18de31e5c0bc9d1d25bba",
+      "programHistoryLength": 1,
+      "campaignPreserved": null
+    },
+    {
+      "seed": 20262503,
+      "scenario": "South Pacific",
+      "role": "Allies",
+      "step": 0,
+      "error": null,
+      "action": "done",
+      "argument": null,
+      "assisted": false,
+      "policy": "llm",
+      "stats": {
+        "requests": 1,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 32891,
+        "promptTokens": 32271,
+        "completionTokens": 620,
+        "usageUnknown": 0,
+        "latencyMs": 4351
+      },
+      "beforeHash": "a9d1a828c99594c00b70e7e462dcc7dcebf6d8039eb502d2a2d02249a8ccea48",
+      "afterHash": "a917e493245306ef3aab733104221f69921ef69b305994c3f49df57d9167754d",
+      "programHistoryLength": 1,
+      "campaignPreserved": null
+    }
+  ],
+  "checks": {
+    "old92ReplayCount": 113,
+    "old92StateHash": "cc04de8990ff91ef16f8eb3a8151ce9e02d597974833196e5837619dc9983095",
+    "old92Unchanged": true,
+    "installerSyntax": true,
+    "installerIdempotent": true,
+    "pendingRequests": 0,
+    "contexts": [
+      {
+        "gameId": 91,
+        "status": "paused",
+        "error": "BUDGET",
+        "requests": 3
+      },
+      {
+        "gameId": 92,
+        "status": "paused",
+        "error": null,
+        "requests": 57
+      },
+      {
+        "gameId": 93,
+        "status": "paused",
+        "error": null,
+        "requests": 81
+      }
+    ]
+  },
+  "native": {
+    "gameId": 94,
+    "url": "http://localhost:8080/empire-of-the-sun/play.html?game=94&role=Observer",
+    "owner": 2,
+    "version": "eots-rtt-llm-v2",
+    "promptVersion": "eots-llm-v6",
+    "status": {
+      "stats": {
+        "requests": 0,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 0,
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "usageUnknown": 0,
+        "latencyMs": 0,
+        "actions": 0,
+        "forced": 0,
+        "assisted": 0
+      },
+      "limits": {
+        "maxRequests": 600,
+        "maxTotalTokens": 10000000,
+        "maxActions": 20000
+      },
+      "error": null,
+      "pending": false
+    },
+    "requests": 0,
+    "rulesHash": "ff43c4f96e69a334c1faebf5c84ea8abc4c9437b1c26093f78065eff12e0e56e"
+  },
+  "mock": {
+    "kind": "mock",
+    "gameId": 1,
+    "scenario": "South Pacific",
+    "seed": 3378156861,
+    "opponent": "erasmus-v2-opt-v5",
+    "requests": 6,
+    "llmActions": 13,
+    "fsmActions": 23,
+    "authorizedOwner": 2,
+    "strangerDenied": true,
+    "mutationLocked": true,
+    "stageBoundary": "已暂停在下一阶段边界。",
+    "replayVerified": true,
+    "completeGame": false,
+    "realApiRequests": 0
+  },
+  "reviewOutputs": [
+    {
+      "id": "glm",
+      "model": "glm-5.3",
+      "usage": {
+        "prompt_tokens": 9879,
+        "completion_tokens": 1861,
+        "total_tokens": 11740
+      },
+      "latencyMs": 27611,
+      "outputHash": "62fe5643bf545037085393538192dd651f7b60e2327bc9c36c9891313e7cacef"
+    },
+    {
+      "id": "deepseek",
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 10796,
+        "completion_tokens": 1554,
+        "total_tokens": 12350
+      },
+      "latencyMs": 8067,
+      "outputHash": "7caecbeeb97d657d4cbdd2f20d9aa3638bac1ac8eeafd68f463e6b9814f41e54"
+    }
+  ]
+}

@@ -81,6 +81,7 @@ test("rewind restores earlier per-side memory while retaining actual costs", asy
     })()
     s.bridge.rewind(1, 1)
     assert.deepEqual(s.bridge.get(1).memories, {})
+    assert.deepEqual(s.bridge.get(1).progressWindow, [])
     assert.equal(s.bridge.get(1).stats.requests, 1)
     s.bridge.rewind(1, 2)
     assert.equal(s.bridge.get(1).memories.Allies.objective, "目标甲")
@@ -134,9 +135,12 @@ test("native transaction commits replay/state/memory before failed socket delive
         is_nobody_active: () => false, send_your_turn_notification_to_offline_users: () => { throw Error("offline notification") }, console: { log() {} },
     }
     vm.runInNewContext(fn, host)
-    host.put_new_state("test", 1, { active: "Allies", log: [] }, "Allies", "Allies", decision.action, decision.argument, 1, false,
+    const nextState = rules.action(JSON.parse(JSON.stringify(s.args.state)), "Allies", decision.action, decision.argument)
+    host.put_new_state("test", 1, nextState, "Allies", "Allies", decision.action, decision.argument, 1, false,
         { bot_id: "llm-deepseek", policy_version: decision.version, public_trace: decision.publicTrace, private_trace: decision.privateTrace, commit: decision.commit })
     assert.equal(deliveries, 1); assert.equal(s.db.prepare("SELECT count(*) FROM test_replay").pluck().get(), 1)
     assert.equal(s.db.prepare("SELECT count(*) FROM test_state").pluck().get(), 1)
     assert.equal(s.bridge.get(1).memories.Allies.objective, "目标甲"); assert.equal(s.bridge.get(1).prepared, null)
+    assert.equal(decision.privateTrace.memory.recent.at(-1).afterObserved, true)
+    assert.deepEqual(decision.privateTrace.memory, s.bridge.get(1).memories.Allies)
 })
