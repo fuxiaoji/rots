@@ -90,6 +90,30 @@ function on_query(q, params, b) {
         map_for_each(L.allowed_hexes || [], (hex, path) => paths.push({ hex, path: object_copy(path) }))
         return paths
     }
+    if (q === "llm_semi_catalog") {
+        // [LLM-SEMI-01] 半自动模式战略目录: 当前阶段可命名的伊拉斯谟战略与默认有序
+        // 目标链(纯解析, 不钉选、不掷骰、不改任何缓存)。执行引用仍以钉选时的引擎
+        // 展开为准; 空优/最终防御等动态目标在真实钉选时由引擎补充。
+        const role = ROLES[R]
+        if ((role !== "Japan" && role !== "Allies") || typeof esm_phase !== "function" || typeof esm_lib !== "function") return null
+        const phase = esm_phase(role)
+        const lib = (esm_lib(role) || {})[phase] || {}
+        const describe = t => {
+            const m = get_map_data(t.hex) || {}
+            return { hex: t.hex, mapId: m.id || (typeof int_to_hex === "function" ? int_to_hex(t.hex) : String(t.hex)),
+                name: m.name || m.id || String(t.hex),
+                control: is_space_controlled(t.hex, JP) ? "Japan" : is_space_controlled(t.hex, AP) ? "Allies" : null,
+                kind: t.kind || null, requiresOccupation: !!t.requiresOccupation, damageLevel: t.damageLevel ?? null,
+                resource: !!m.resource, port: !!m.port, airfield: !!m.airfield }
+        }
+        const strategies = Object.entries(lib).map(([key, entry]) => {
+            let defaultChain = []
+            try { defaultChain = esm_goal_target_meta(esm_parse_entry(entry, role, phase)).map(describe) } catch (e) { defaultChain = [] }
+            return { name: key, kind: entry.kind, targets: entry.targets, notes: entry.notes, defaultChain }
+        })
+        return { role, phase, turn: G.turn, strategies,
+            basis: "erasmus v2.0 chart strategy library, current phase only; defaultChain is chart order — the model may return a subset/reordering of these mapIds, execution priority follows the returned order" }
+    }
     if (q && typeof q === "object" && q.name === "rules_query") {
         return rules_query_dispatch(q)
     }
