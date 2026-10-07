@@ -1164,7 +1164,7 @@ function erasmus_pbm_target_score(hex, faction, piece, source, targetPlan) {
     return null
 }
 
-function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece, source, targetPlan, movingGroup) {
+function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece, source, targetPlan, movingGroup, campaignProjectionScope) {
     // [opt stack_limit_gate] 唯一漏斗闸门: 本函数是所有 headless 落点评分的必经之路
     // (焦点格 / REDEPLOY / GARRISON / DEFEND_HONSHU / 空敌控推进 / 会战格 / 反应 /
     //  岛群簇 / PBM 图表表 / 通用兜底), 在这里统一把"放进去会超编"的格子判为不可选。
@@ -1383,7 +1383,7 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
     // PBM 严格使用双方图表的专属落点表；无匹配落点才用安全/距离次序，且会在轨迹中
     // 落到具体 JP06/AP12 PBM 节点，不再伪装成通用 reaction 排序。
     const campaignScore = movingPiece && source !== undefined && typeof ec_pbm_score === "function"
-        ? ec_pbm_score(hex, faction, movingPiece, source, targetPlan) : null
+        ? (em_flag("campaign_v2") ? EOTS_CAMPAIGN_V2.pbmScore(hex, faction, movingPiece, source, targetPlan, campaignProjectionScope) : ec_pbm_score(hex, faction, movingPiece, source, targetPlan)) : null
     if (campaignScore) return campaignScore.score
     const chartScore=movingPiece&&source!==undefined?erasmus_pbm_target_score(hex,faction,movingPiece,source,targetPlan):null
     if(chartScore)return chartScore
@@ -1431,8 +1431,14 @@ function headless_advance_one(self, kind, targetPlan) {
         for (const h of targetPlan.chain || []) {
             const meta=targetPlan.targetMeta.find(m=>m.hex===h)
             if(!meta || typeof eop_target_pending!=="function" || !eop_target_pending(role,h,meta))continue
-            const matching=L.movable_units.some(u=>G.location[u]!==h && eop_unit_matches_target(u,role,meta,h))
-            if(matching){targetPlan={...targetPlan,...meta,focus:h};break}
+            const matching=L.movable_units.some(u=>G.location[u]!==h
+                && (!em_flag("campaign_v2") || !meta.campaignTask || meta.movementUnitIds?.includes(u)) && eop_unit_matches_target(u,role,meta,h))
+            if(matching){
+                targetPlan=em_flag("campaign_v2") && meta.campaignTask ? {chain:targetPlan.chain,targetMeta:targetPlan.targetMeta,
+                    campaignPositioning:targetPlan.campaignPositioning,strictSequential:targetPlan.strictSequential,
+                    ...meta,focus:h,axisKind:meta.kind} : {...targetPlan,...meta,focus:h}
+                break
+            }
             if(meta.strictSequential)break
         }
     }
@@ -1574,12 +1580,16 @@ function headless_advance_one(self, kind, targetPlan) {
         L.move_type=mode
         L.move_data=get_move_data()
         update_move_hex()
+        const candidateHexes=[]
+        map_for_each(L.allowed_hexes,h=>candidateHexes.push(h))
+        const campaignProjectionScope=kind==="pbm" && em_flag("campaign_v2")
+            ? EOTS_CAMPAIGN_V2.positionProjectionScope(targetPlan?.campaignPositioning,leadPiece,loc,candidateHexes) : null
         map_for_each(L.allowed_hexes, (h) => {
         const path=map_get(L.allowed_hexes,h)
         if (hasGround && mode===GROUND_MOVE && !(path[0]&GROUND_MOVE)) return
         if (hasGround && mode===AMPH_MOVE && !(path[0]&AMPH_MOVE)) return
         if (mode===STRAT_MOVE && !(path[0]&STRAT_MOVE)) return
-        const sc = headless_target_score(h, hasGround, G.active, kind, steer, leadPiece, loc, targetPlan, group)
+        const sc = headless_target_score(h, hasGround, G.active, kind, steer, leadPiece, loc, targetPlan, group,campaignProjectionScope)
         if (!sc) return
         // 优先方式只在同样能完成目标时优先；不能因陆路只够前进一步而压过可直接登陆。
         sc.splice(1,0,modeIndex)

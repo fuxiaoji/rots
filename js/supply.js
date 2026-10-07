@@ -785,7 +785,7 @@ function check_unit_supply(location, i, piece) {
 }
 
 
-function check_japan_resource_trace(resourceHexes) {
+function check_japan_resource_trace(resourceHexes, diagnostics) {
     // Optional diagnostic collector. The rule's normal call keeps its original
     // early return; diagnostics finish the same traversal to report endpoints.
     const collect = Array.isArray(resourceHexes)
@@ -839,6 +839,7 @@ function check_japan_resource_trace(resourceHexes) {
             }
         }
     }
+    if (diagnostics) diagnostics.reachableSeaHexes = oversea_set.slice()
     return collect && resourceHexes.length > 0
 }
 

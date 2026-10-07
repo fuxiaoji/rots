@@ -4,6 +4,7 @@
 "use strict"
 
 const EM_FLAGS = [
+    "campaign_v2", // AI-CAMPAIGN-02: explicit bot ID selects isolated 2.0 strategy.
     "campaign_planner",     // AI-WIN-01: persisted operational plans, separate opt-in bot.
     "japan_campaign_planner", // AI-WIN-03: independent Japanese southern plans.
     "target_scoring",         // 1=链内未完成目标按 价值×可达性 重排焦点; 0=链首优先(基线)
@@ -166,6 +167,7 @@ function em_set_config(flags, params) {
     if (flags) for (const k of Object.keys(flags)) if (EM_FLAGS.includes(flags[k] !== undefined ? k : k)) merged[k] = flags[k] ? 1 : 0
     if (flags) for (const k of Object.keys(flags)) if (k in EM_PARAMS_BASE && Number.isFinite(flags[k])) merged[k] = flags[k]
     if (params) for (const k of Object.keys(params)) if (k in EM_PARAMS_BASE) merged[k] = params[k]
+    if (!flags?.campaign_v2) delete merged.campaign_v2
     em_current = merged
 }
 
@@ -175,12 +177,18 @@ function em_reset_config() { em_current = null }
 // process-wide last-writer flag set. This also makes save/replay independent of env.
 function em_bot_config(name, role) {
     if (name === "erasmus-v2" || !name) return null
-    const defaults = name === "erasmus-campaign"
+    const defaults = (name === "erasmus-campaign" || name === "erasmus-campaign-v2")
         ? EM_DEFAULT_PROFILE_V5 + ",erasmus_plus,campaign_planner,stack_limit_gate"
-        : name === "erasmus-japan-campaign" ? EM_DEFAULT_PROFILE_V5 + ",erasmus_plus,japan_campaign_planner,stack_limit_gate"
+        : (name === "erasmus-japan-campaign" || name === "erasmus-japan-campaign-v2") ? EM_DEFAULT_PROFILE_V5 + ",erasmus_plus,japan_campaign_planner,stack_limit_gate"
         : name === "erasmus-v2-opt-v5" ? EM_DEFAULT_PROFILE_V5 : EM_DEFAULT_PROFILE
     const saved = em_current
-    try { em_set_config(em_profile_from_env(defaults, role)); return { ...em_current } }
+    try {
+        em_set_config(em_profile_from_env(defaults, role))
+        const profile={...em_current}
+        if (name==="erasmus-campaign-v2" || name==="erasmus-japan-campaign-v2") profile.campaign_v2=1
+        else delete profile.campaign_v2 // old action envelopes remain byte-compatible
+        return profile
+    }
     finally { em_current = saved }
 }
 
