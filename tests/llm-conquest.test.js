@@ -17,6 +17,12 @@ test("campaign input labels compact source references and keeps every country ke
  for(const u of p.observation.units)if(p.observation.hexes.some(h=>h.hex===u.location))assert(sent.has(u.location))
  const reduced=p.observation.units.find(u=>u.id===36);assert(reduced.reduced);assert.equal(reduced.cf,18);assert.equal(reduced.currentCF,9);assert.equal(reduced.aspCost,2);assert.equal(reduced.currentBaseASP,1)
  assert(o.observation.unitColumns.includes("currentCF"));assert(o.observation.unitColumns.includes("currentBaseASP"));assert.deepEqual(o.outputGuide.unchangedMemory,{})
+ // An auto-selected offboard reinforcement has no unit candidate in its place window.
+ const reinforcement=observe(rules,s,"Japan",0);reinforcement.observation.selectedUnits=[51]
+ assert(!reinforcement.observation.units.some(u=>u.id===51))
+ const placed=JSON.parse(messagesFor(reinforcement,null,"reinforce").messages[1].content).observation
+ const row=placed.ownUnitDefinitions.find(u=>u[placed.unitColumns.indexOf("id")]===51)
+ assert(row);assert.equal(row[placed.unitColumns.indexOf("name")],reinforcement.observation.ownUnitDefinitions.find(u=>u.id===51).name)
 })
 test("direct-only candidate table cannot delegate movement to the headless program",()=>{
  const fake={view:()=>({actions:{advance:1,done:1},ai:{state:"move_offensive_units"}}),query:()=>({cards:[],hexes:[]})}
@@ -80,6 +86,17 @@ test("conquest acceptance needs four formal surrenders and the specified campaig
  s.options.players.Allies="erasmus-v2-opt-v5";assert(!goal(s).achieved)
  s.options.players.Allies="erasmus-campaign";nations[3].surrenderedTurn=0;assert(!goal(s).achieved)
  nations[3].surrenderedTurn=4;nations[3].allJapanControlled=false;assert(!goal(s).achieved)
+})
+
+test("explicit development token budget migration preserves counters and replay actions",()=>{
+ const {migrateTokenBudget}=require("../tools/llm-goal-run"),saved={replay:{setup:{maxTotalTokens:10000000},stats:{requests:215,totalTokens:7907931,failedRequests:3},actions:[{action:"unit"}]}},config={setup:{maxTotalTokens:10000000}},before=JSON.parse(JSON.stringify(saved))
+ assert.throws(()=>migrateTokenBudget(saved,config,20000000,false),/TOKEN_BUDGET_CHANGED/);assert.deepEqual(saved,before)
+ for(const value of [7000000,20000001,NaN])assert.throws(()=>migrateTokenBudget(saved,config,value,true),/TOKEN_BUDGET_RANGE/)
+ migrateTokenBudget(saved,config,20000000,true)
+ assert.deepEqual(saved.replay.stats,before.replay.stats);assert.deepEqual(saved.replay.actions,before.replay.actions)
+ assert.equal(saved.replay.setup.maxTotalTokens,20000000);assert.equal(config.budgetHistory[0].from,10000000);assert.equal(config.budgetHistory[0].totalTokens,7907931)
+ const api=require("../js/server/llm/session"),s=api.createSession({seed:20262602,scenario,maxTotalTokens:20000000,players:{Japan:"llm:deepseek",Allies:"erasmus-campaign"}},{clients:{deepseek:{}}})
+ const restored=api.restoreSession(api.serializeSession(s),{clients:{deepseek:{}}});assert.equal(restored.limits.maxTotalTokens,20000000);assert(api.verifyReplay(api.replay(restored)).verified)
 })
 
 test("task facts bind public defenders, conditional routes and separate HQ reaction budgets without secrets or mutation",async()=>{

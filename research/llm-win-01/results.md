@@ -24,6 +24,7 @@
 | dev-02 / 同局请求106 | 同上 | 106（累计） | 3,703,653（累计） | 265 | 第2回合末PH/MAL正式投降，标记2/2；DEI/BURMA0/0，完整回放通过 |
 | dev-02 / 同局请求170 | 同上 | 170（累计） | 6,213,134（累计） | 422 | PH/MAL标记2/2；关丹失守，DEI余5/BURMA余4；完整回放通过 |
 | dev-02 / 同局请求198 | 同上 | 198（累计） | 7,329,673（累计） | 500 | 关丹收复，PH/MAL正控制；DEI/BURMA未完成；下一选牌请求截断，完整回放通过 |
+| dev-02 / 同局尝试247 | 同上 | 246次网络请求+1本地配置失败（累计） | 9,277,836（累计） | 642 | Tarakan/Rangoon已夺，Miri被夺回；DEI余5/BURMA余3；完整回放通过 |
 
 dev-02 各行是同一局的累计检查点，不能相加。请求59的失败仍计入：生成16,384tokens、耗时93,603ms，status paused。第169动作后显式迁移v7.2，生成上限32,768、超时240秒，继续缅甸与东印度；当前仍在运行，没有整局胜率结论。上限在[官方API允许范围](https://api-docs.deepseek.com/api/create-chat-completion/)内。
 
@@ -65,3 +66,10 @@ dev-02 各行是同一局的累计检查点，不能相加。请求59的失败�
 - Astra只读裁决继续当前局一段，未发现1943盟军更易成功证据。root实现10 conquest+9 prompt通过；最初缺省计划字段误标stale的测试失败已修复并重跑。补充16 provider+19 harness+9 RTT，共63唯一相关检查分次通过，全部本地/mock，不新增云CI。
 - DeepSeek官方API允许64K生成；规划请求扩大至65,536/480秒，微步骤仍32,768/240秒。应用provider仅DeepSeek放宽到65,536/600秒的有界上限；其余提供商原上限保留。配置预检在步进计数/账本前执行，实际planningOverrides进入config迁移与每请求账本。
 - 最初调整runner时，provider旧本地整数上限拒绝第199次尝试（CONFIG_INTEGER），没有发送网络API、tokens无增量。原记录保留：通用stats将其计failed3/usageUnknown1；这是已证实本地配置故障，不能称第199次付费请求或未知在途。后续继续同局，目标仍未达。
+
+### v7.8：增援定义与显式累计预算迁移
+
+- 第642动作/247次provider尝试完整回放通过；其中199是上述未发送网络配置错误，真实网络请求246。累计9,277,836tokens、5,905,555ms、forced129/assisted0、invalid13/failed3，通用usageUnknown1全部来自199本地故障，实际已发送请求均有报告用量；货币unknown。
+- v7.7按两栖路径夺Tarakan，下一回合夺Rangoon；Miri被盟军重新夺走。PH/MAL仍2/2且正控制，DEI5/BURMA3缺口，目标未达。第4回合124 ops计划的守军冲突摘要只有Rangoon一个主动战斗格需求，其余拟攻点无公开地面/HQ，没有把独立合法路径等同整套计划执行成功。
+- 原增援自动选中的场外51只显示P51，提示压缩未引用selectedUnits导致定义漏发；v7.8将己方selected/active单位加入定义引用，不把场外定义当可部署。11 conquest+9 prompt受影响检查通过；19 harness含原预算暂停/恢复通过，复用16 provider/9 RTT，总64唯一相关检查。
+- 用户未设置token/金额上限且要求持续到一个目标，Astra裁决继续有新战果的原局更有依据。第642动作后显式累计上限10m→20m，config.budgetHistory记录revision/request/累计用量/from/to/原因，费用/失败/动作不清零；20m是暂停上限，不须耗尽。新的有界64请求段继续，仍是多版本开发轨迹。

@@ -1,8 +1,8 @@
 {
   "task": "LLM-WIN-01",
   "status": "in_progress",
-  "recordedAt": "2026-10-07T07:02:50.031Z",
-  "scope": "development checkpoints; PH/MAL formal surrender, MAL lost key, DEI/BURMA incomplete",
+  "recordedAt": "2026-10-07T07:26:21.523Z",
+  "scope": "development checkpoints; PH/MAL formal and controlled; DEI5/BURMA3 incomplete",
   "setup": {
     "seed": 20262602,
     "scenario": "1942-1945 (The Shortened Campaign)",
@@ -10,8 +10,12 @@
       "Japan": "llm:deepseek",
       "Allies": "erasmus-campaign"
     },
+    "semiBots": {
+      "Japan": "erasmus-v2-opt-v5",
+      "Allies": "erasmus-v2-opt-v5"
+    },
     "maxRequests": 2000,
-    "maxTotalTokens": 10000000,
+    "maxTotalTokens": 20000000,
     "maxActions": 30000,
     "directOnly": true
   },
@@ -31,6 +35,10 @@
       "response_format": {
         "type": "json_object"
       }
+    },
+    "planningOverrides": {
+      "maxTokens": 65536,
+      "timeoutMs": 480000
     }
   },
   "profileHistory": [
@@ -72,18 +80,61 @@
           }
         }
       }
+    },
+    {
+      "revision": 500,
+      "from": {
+        "id": "deepseek",
+        "provider": "deepseek",
+        "baseUrl": "https://api.deepseek.com",
+        "model": "deepseek-flash",
+        "vision": false,
+        "timeoutMs": 240000,
+        "maxTokens": 32768,
+        "extraBody": {
+          "thinking": {
+            "type": "enabled"
+          },
+          "reasoning_effort": "high",
+          "response_format": {
+            "type": "json_object"
+          }
+        }
+      },
+      "to": {
+        "id": "deepseek",
+        "provider": "deepseek",
+        "baseUrl": "https://api.deepseek.com",
+        "model": "deepseek-flash",
+        "vision": false,
+        "timeoutMs": 240000,
+        "maxTokens": 32768,
+        "extraBody": {
+          "thinking": {
+            "type": "enabled"
+          },
+          "reasoning_effort": "high",
+          "response_format": {
+            "type": "json_object"
+          }
+        },
+        "planningOverrides": {
+          "maxTokens": 65536,
+          "timeoutMs": 480000
+        }
+      }
     }
   ],
   "rulesSha256": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233",
   "sourceHashes": {
     "js/server/llm/observation.js": "dc55dcc91e4bd15a4a30e8a653962385b155ad9839b649da3c97203573349a13",
-    "js/server/llm/prompt.js": "fbb7d074cc8221d6df4297b1ca20ec2933114592d4bd26f82fa3db488c94b303",
+    "js/server/llm/prompt.js": "de3b1c2bd1694607c662eeffe7f354d3f7d03778c143954c61ac318e13479b77",
     "js/server/llm/memory.js": "11b59ecb924cc7c41ad953e6980dbe19b2f2d56079a54db76a63c9fbc1271d63",
-    "js/server/llm/session.js": "e8b7f57b1c85d46f49c4a27585a371bda25aab8c596ca0d8ecfcba8f7b46a2cf",
+    "js/server/llm/session.js": "a20f77ba6448284d75b841e347aab6844c874e6069e5f1f0ce9053569ee1ed89",
     "js/server/llm/rtt.js": "b7ee6c8a3caa28ab7dc070c64c78906d395383cdcd3b436b74aed3dfb9b5b1b6",
     "js/server/query.js": "da228b4f73073b7056ba260311df6bb0f6e88ecdc385c9c5bac8066d4560e3aa",
-    "tools/llm-goal-run.js": "8594d8a2f02e34e398db14a52a95da01797c01850c01e7cd357fcea578c28e17",
-    "tests/llm-conquest.test.js": "9d76a5af9b5c1cbe31887d9c704824a08bc1f0db2845fc09fb5e9dda4b718c97",
+    "tools/llm-goal-run.js": "b72d282b23338c294b626b1cfc57e9f2f2c63d1b6dbfe6c250a0f3b388f1c4aa",
+    "tests/llm-conquest.test.js": "c4b620b78fa11049b8ebdb24d071efc394d63327b353dda9ba439a426dbc0d23",
     "docs/rules/llm-campaign-guide.md": "78287a0f69b24a2007a53a4665a0dfbbd767a90ee07183195d80c484e92cf01a",
     "docs/rules/llm-operational-guide.md": "96dbbf88ac2b53577b0b242a525e8d331fd0820ae7bf57ba17705cff9a7c3730",
     "rules.js": "157f93e75bf7bf19189d0d409061d8849d999808a026569c37144cb4d48bd1dd",
@@ -728,6 +779,76 @@
       "segmentSha256": "41ea32a47de8dc25da4a7d076f7d941063ac564ab8a1f4e17a0f46e7f5d01d4a",
       "networkRequestSent": false,
       "audit": "CONFIG_INTEGER from createClient before complete/fetch; local preflight failure, conservative original stats preserved"
+    },
+    {
+      "requests": 247,
+      "networkRequests": 246,
+      "localConfigFailures": 1,
+      "revision": 642,
+      "turn": 4,
+      "stats": {
+        "requests": 247,
+        "retries": 12,
+        "failedRequests": 3,
+        "invalidResponses": 13,
+        "totalTokens": 9277836,
+        "promptTokens": 8160326,
+        "completionTokens": 1117510,
+        "usageUnknown": 1,
+        "latencyMs": 5905555,
+        "forcedActions": 129,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              277,
+              307,
+              421,
+              368
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              325,
+              354,
+              382
+            ]
+          }
+        ],
+        "naturalComplete": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 642,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "059943fa571701ce1b6f100cebdb1333a669f59a4dff859f34df33f16358ed68"
+      },
+      "segmentSha256": "050db0168672866eb18705a84c08fc1d0fc7a26628ec1a0675ebcbce02dcbac4"
     }
   ],
   "localVerification": {
@@ -798,6 +919,31 @@
       "timeoutMs": 240000
     },
     "officialSource": "https://api-docs.deepseek.com/api/create-chat-completion/",
+    "goalAchieved": false
+  },
+  "budgetHistory": [
+    {
+      "revision": 642,
+      "requests": 247,
+      "totalTokens": 9277836,
+      "from": 10000000,
+      "to": 20000000,
+      "at": "2026-10-07T07:24:17.159Z",
+      "reason": "explicit bounded continuation of the same development trial; counters and costs preserved"
+    }
+  ],
+  "v78": {
+    "version": "eots-llm-v7.8",
+    "migrationRevision": 642,
+    "tests": {
+      "conquest": 11,
+      "prompt": 9,
+      "harness": 19,
+      "providers": 16,
+      "rtt": 9,
+      "totalUnique": 64,
+      "channel": "local; separate affected runs plus unchanged-input reuse"
+    },
     "goalAchieved": false
   }
 }

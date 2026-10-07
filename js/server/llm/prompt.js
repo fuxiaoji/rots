@@ -1,7 +1,7 @@
 "use strict"
 const fs = require("node:fs"), path = require("node:path")
 const { hash } = require("./observation"), { assessment } = require("./memory")
-const ROOT = path.resolve(__dirname, "../../.."), VERSION = "eots-llm-v7.7"
+const ROOT = path.resolve(__dirname, "../../.."), VERSION = "eots-llm-v7.8"
 const CHAPTERS = { cards: "05-strategy-cards.md", supply: "06-zoi-supply-activation-control.md", offensive: "07-offensives.md", movement: "08-movement-stacking.md",
     combat: "09-combat.md", reinforcement: "10-reinforcements-asp.md", replacements: "11-replacements.md", victory: "16-campaign-victory.md" }
 function rulesContext(o) {
@@ -37,7 +37,7 @@ function rulesContext(o) {
 }
 function messagesFor(packet, memory, decisionId, repair, imageUrl) {
     const sources = rulesContext(packet.observation), o = packet.observation
-    const referenced = new Set(o.units.map(u => u.id))
+    const referenced = new Set([...o.units.map(u => u.id), ...(o.selectedUnits || []), ...(o.activeUnits || [])])
     for (const c of packet.candidates) if (c.effect?.unitId !== undefined) referenced.add(c.effect.unitId)
     for (const t of memory?.offensive?.tasks || []) for (const id of [...(t.ground || []), ...(t.escort || []), ...(t.support || [])]) referenced.add(id)
     const offboard = o.ownUnitDefinitions.filter(u => referenced.has(u.id) && !o.units.some(on => on.id === u.id))

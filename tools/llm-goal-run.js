@@ -6,6 +6,15 @@ const {hash,visible}=require("../js/server/llm/observation")
 const {classifyEnd}=require("../tests/campaign-metrics")
 function write(file,value){fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o700});fs.writeFileSync(file+".tmp",JSON.stringify(value),{mode:0o600});fs.renameSync(file+".tmp",file)}
 const read=f=>JSON.parse(fs.readFileSync(f,"utf8"))
+function migrateTokenBudget(saved,config,value,allowed){
+ if(value===undefined)return
+ const cap=Number(value),from=saved.replay.setup.maxTotalTokens,usage=saved.replay.stats.totalTokens
+ if(!Number.isSafeInteger(cap)||cap<1||cap>20000000||cap<usage)throw Error("TOKEN_BUDGET_RANGE")
+ if(cap===from)return
+ if(!allowed)throw Error("TOKEN_BUDGET_CHANGED")
+ config.budgetHistory=[...(config.budgetHistory||[]),{revision:saved.replay.actions.length,requests:saved.replay.stats.requests,totalTokens:usage,from,to:cap,at:new Date().toISOString(),reason:"explicit bounded continuation of the same development trial; counters and costs preserved"}]
+ saved.replay.setup={...saved.replay.setup,maxTotalTokens:cap};config.setup={...saved.replay.setup}
+}
 function goal(s){const facts=visible(s.rules,s.state,"Observer").observation.scenario.nations
  const conquest=s.options.players.Japan==="llm:deepseek"&&s.options.players.Allies==="erasmus-campaign"&&s.options.scenario==="1942-1945 (The Shortened Campaign)"&&facts.length===4&&facts.every(n=>n.surrenderedTurn>0&&n.allJapanControlled)
  const allies=s.options.players.Allies==="llm:deepseek"&&s.options.players.Japan==="erasmus-japan-campaign"&&s.options.scenario==="1943-1945 (The Even Shorter Campaign)"&&s.state.active==="None"&&s.state.result==="Allies"&&classifyEnd(s.state).natural
@@ -23,6 +32,7 @@ async function main(){const o={};for(let i=2;i<process.argv.length;i+=2){if(!pro
  let s
  if(fs.existsSync(saveFile)){
    const saved=read(saveFile),config=read(configFile)
+   migrateTokenBudget(saved,config,o["max-total-tokens"],o.migrate==="true")
    if(hash(config.profile)!==hash(publicProfile)){if(o.migrate!=="true")throw Error("PROFILE_CHANGED");config.profileHistory=[...(config.profileHistory||[]),{revision:saved.replay.actions.length,from:config.profile,to:publicProfile}];config.profile=publicProfile}
    if(config.runnerHash&&config.runnerHash!==runnerHash){if(o.migrate!=="true")throw Error("RUNNER_CHANGED");config.runnerHistory=[...(config.runnerHistory||[]),{revision:saved.replay.actions.length,from:config.runnerHash,to:runnerHash}];config.runnerHash=runnerHash}
    const reqdir=path.join(out,"requests")
@@ -61,4 +71,4 @@ async function main(){const o={};for(let i=2;i<process.argv.length;i+=2){if(!pro
  if(error)process.exitCode=1
 }
 if(require.main===module)main().catch(e=>{console.error(/^[A-Z_]+$/.test(e.message)?e.message:"GOAL_RUN_ERROR");process.exitCode=1})
-module.exports={goal}
+module.exports={goal,migrateTokenBudget}

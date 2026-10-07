@@ -673,3 +673,10 @@
 - dev-02第500动作/198真实请求完整回放通过，关丹收复、PH/MAL正式2/2且正控制；DEI余5/BURMA余4。累计7,329,673tokens/4,630,115ms、forced102/assisted0/unknown0，high选牌再截断32,768，费用保留，未称目标成功。
 - v7.7按PDF17§7.24提醒同一OC若多个任务均攻击守军格会冲突，不自动判备选/后续任务非法；稀疏表明确检查集合及完整单兵陆进否定语义。Astra只读裁决，root实现；10 conquest+9 prompt+16 provider+19 harness+9 RTT共63唯一相关本地检查分次通过。
 - 规划请求65,536生成/480秒、微步骤原32,768/240秒；provider仅DeepSeek有界上限放宽，其余不变。最初第199尝试被旧本地上限拒绝，网络API未发送，tokens0；通用失败/unknown原记录及单列审计保留。修复后预检在步进之前，同局迁移保留费用和哈希，长期目标继续。
+
+### 2026-10-07 — LLM-WIN-01 仰光推进与增援定义阶段（目标未达）
+
+- 第642动作完整回放通过，provider尝试247中真实网络246、199本地配置失败无网络。9,277,836累计tokens/5,905,555ms，forced129/assisted0；unknown1为保留的本地错误统计，已发送请求报告用量完整，货币unknown。
+- v7.7真实夺Tarakan、Rangoon；Miri被夺回，PH/MAL2/2正控制，DEI余5/BURMA余3。原局多版本开发，不声明四国达成或自然终局胜。
+- v7.8将自动selected/active己方场外单位定义保留，修复增援P51只有编号的问题；11 conquest+9 prompt、受影响19 harness通过，16 provider/9 RTT未变成功证据复用，共64唯一检查。
+- 第642动作后显式累计预算10m→20m，history记录完整，费用/失败/动作不重置；Astra裁决继续当前有进展的局，root整合。20m为暂停上限，新有界段继续，长期任务in_progress。
