@@ -14,5 +14,19 @@
   "fullSuiteRunThisIntegration": false,
   "knownBaselineFullSuiteFailures": 5,
   "baselineFailureCommit": "64f276a",
-  "holdoutOpened": false
+  "holdoutOpened": false,
+  "publishedAlliedWins": 7,
+  "archiveIntegrity": "all compressed replays and rule bundles recover the original verified hashes",
+  "portableReplayChecks": [
+    {
+      "scenario": "1942",
+      "seed": 20261405,
+      "logSha256": "e939cb2092c09003a4fa4e9732ddb3f6b5cd2a813faf32eb74638f156d4cca10"
+    },
+    {
+      "scenario": "1943",
+      "seed": 20261418,
+      "logSha256": "299bc3c01988be1b45665d7c7584f0cbf73292ab54b5301570f982390a6c3968"
+    }
+  ]
 }

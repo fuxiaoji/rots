@@ -22875,24 +22875,4226 @@
           "seed": 20261004
         }
       }
+    },
+    {
+      "candidate": "v21",
+      "side": "allies",
+      "sourcePath": "/Users/Zhuanz1/Desktop/code/eots/ai-win-03-worktree/tmp/ai-win-03/allies-v21-development/summary.json",
+      "sourceSha256": "a108bcbb55c6c2f01dc41d061536063bdfda7d0c94eff825c7544ad1f56b7e1e",
+      "phase": "develop",
+      "generatedAt": "2026-10-05T08:41:43.314Z",
+      "runLockSha256": "83631a24768449b820a0b34a2d0e71986853a82160675f9250a5584703a9e2e5",
+      "locked": {
+        "ruleVersion": "official-16.2",
+        "limits": {
+          "maxActions": 60000,
+          "repeatStateLimit": 32
+        },
+        "baseline": {
+          "path": "/Users/Zhuanz1/Desktop/code/eots/rots/tmp/ai-win-01/baseline-rules.js",
+          "sha256": "df4afef8e7705a960e05a4de99443d9663f32cc9c76632a65e4a538044266e43",
+          "effectiveProfile": {
+            "emWWin": 1,
+            "emWLoss": 0.6,
+            "emWCost": 0.05,
+            "emMinPWin": 0.3,
+            "emScoreDistDecay": 0.9,
+            "emDoctrineDecay": 0.92,
+            "emCvReserveMinAdv": 1.5,
+            "emRaidResTrigger": 10,
+            "emRaidMaxTargets": 4,
+            "emAmphNavalMargin": 1,
+            "emAmphEscortDist": 6,
+            "emReactionWeight": 0.35,
+            "emBlockadeTurnMin": 7,
+            "emSweepAdvDist": 4,
+            "emSweepHarborNav": 6,
+            "emSweepCluster": 6,
+            "emSweepClusterDist": 3,
+            "emBlkInsAfterPending": 2,
+            "emBlkGarrisonSteps": 2,
+            "emBlkManchCutTurn": 5,
+            "emBlkPinResTargets": 4,
+            "emBlkPinResReach": 20,
+            "emChainPrereqDist": 6,
+            "emSouthOpenMinTurn": 2,
+            "emSouthOpenMaxTurn": 5,
+            "emConcentrationMargin": 1.5,
+            "emConcentrationMinUnits": 3,
+            "emTojoTurn": 8,
+            "target_scoring": 0,
+            "taskforce_math": 1,
+            "allies_cv_preserve": 1,
+            "allies_pow_quota": 1,
+            "allies_resource_raid": 1,
+            "japan_resource_defense": 0,
+            "allies_blockade": 0,
+            "allies_blockade_v2": 1,
+            "capture_rate": 0,
+            "island_sweep": 1,
+            "loss_optimal": 1,
+            "erasmus_plus": 0,
+            "japan_opening_conquest": 0,
+            "tojo_pressure": 0,
+            "amphib_asp_gate": 1,
+            "amphib_escort_math": 1,
+            "landing_value": 1,
+            "card_hq_priority": 0,
+            "chain_prereq": 1,
+            "air_forward": 1,
+            "hq_withdraw_guard": 1,
+            "stack_limit_gate": 0,
+            "japan_south_opening": 0,
+            "japan_south_opening_dei": 0,
+            "battle_decl_gate": 0,
+            "force_concentration": 0
+          },
+          "environment": {}
+        },
+        "candidate": {
+          "path": "/Users/Zhuanz1/Desktop/code/eots/ai-win-03-worktree/tmp/ai-win-03/candidate-v21-bundle.js",
+          "sha256": "82a79baa7413584f008ed9748e23e1f4135ada2cd4a72ae62c188adbd6029b09",
+          "effectiveProfile": {
+            "epMinP": 0.6,
+            "epDesiredP": 0.75,
+            "epOvermatchDesiredP": 0.85,
+            "epDesperateMinP": 0.45,
+            "epPressureRatio": 1.35,
+            "epOvermatchRatio": 1.8,
+            "epForwardDist": 12,
+            "emWWin": 1,
+            "emWLoss": 0.6,
+            "emWCost": 0.05,
+            "emMinPWin": 0.3,
+            "emScoreDistDecay": 0.9,
+            "emDoctrineDecay": 0.92,
+            "emCvReserveMinAdv": 1.5,
+            "emRaidResTrigger": 10,
+            "emRaidMaxTargets": 4,
+            "emAmphNavalMargin": 1,
+            "emAmphEscortDist": 6,
+            "emReactionWeight": 0.35,
+            "emBlockadeTurnMin": 7,
+            "emSweepAdvDist": 4,
+            "emSweepHarborNav": 6,
+            "emSweepCluster": 6,
+            "emSweepClusterDist": 3,
+            "emBlkInsAfterPending": 2,
+            "emBlkGarrisonSteps": 2,
+            "emBlkManchCutTurn": 5,
+            "emBlkPinResTargets": 4,
+            "emBlkPinResReach": 20,
+            "emChainPrereqDist": 6,
+            "emSouthOpenMinTurn": 2,
+            "emSouthOpenMaxTurn": 5,
+            "emConcentrationMargin": 1.5,
+            "emConcentrationMinUnits": 3,
+            "emTojoTurn": 8,
+            "campaign_planner": 1,
+            "japan_campaign_planner": 0,
+            "target_scoring": 0,
+            "taskforce_math": 1,
+            "allies_cv_preserve": 1,
+            "allies_pow_quota": 1,
+            "allies_resource_raid": 1,
+            "japan_resource_defense": 0,
+            "allies_blockade": 0,
+            "allies_blockade_v2": 1,
+            "capture_rate": 0,
+            "island_sweep": 1,
+            "loss_optimal": 1,
+            "erasmus_plus": 1,
+            "japan_opening_conquest": 0,
+            "tojo_pressure": 0,
+            "amphib_asp_gate": 1,
+            "amphib_escort_math": 1,
+            "landing_value": 1,
+            "card_hq_priority": 0,
+            "chain_prereq": 1,
+            "air_forward": 1,
+            "hq_withdraw_guard": 1,
+            "stack_limit_gate": 1,
+            "japan_south_opening": 0,
+            "japan_south_opening_dei": 0,
+            "battle_decl_gate": 0,
+            "force_concentration": 0
+          },
+          "environment": {}
+        },
+        "runner": {
+          "path": "/Users/Zhuanz1/Desktop/code/eots/ai-win-03-worktree/tests/match-run.js",
+          "sha256": "73246608b5ada9ea9254ad2bb357151a59f1ed73e0811d1ba3040237a015b1a8"
+        },
+        "metrics": {
+          "path": "/Users/Zhuanz1/Desktop/code/eots/ai-win-03-worktree/tests/campaign-metrics.js",
+          "sha256": "f54192a55dd17a575475fc6d5b1b1de2292e5fde81a40f1d40f664bde3ea16ca"
+        },
+        "openingMetrics": {
+          "path": "/Users/Zhuanz1/Desktop/code/eots/ai-win-03-worktree/tests/japan-opening-metrics.js",
+          "sha256": "82663605f8d1da15d1843b0c6e903c837c9888a920cdb3334bf5825c5ca77488"
+        },
+        "evaluator": {
+          "path": "/Users/Zhuanz1/Desktop/code/eots/ai-win-03-worktree/tests/campaign-evaluate.js",
+          "sha256": "dbf8ae54a76901f5193e5bf24f65d87cba3c8c049a066522496e4e71a59efd63"
+        },
+        "adapterSha256": "01234bfdb63a8105fb5002614f68a21556afe469e55f0218e5b129a9e0aad257",
+        "gitSha": "64f276a57d4836fb6eb2adb7d47eced3042ce2f9"
+      },
+      "denominatorPolicy": "all scheduled games; invalid/unfinished/unverified games remain non-wins and are separately reported",
+      "winPolicy": "legal natural Allies wins count only after complete replay verification bound to the original result and replay hashes",
+      "scenarios": [
+        {
+          "scenario": "1942-1945 (The Shortened Campaign)",
+          "baseline": {
+            "winRate": {
+              "n": 32,
+              "successes": 0,
+              "estimate": 0,
+              "low": 0,
+              "high": 0.1071791982550706
+            },
+            "invalid": 0,
+            "naturalWinsBeforeVerification": 0,
+            "unverifiedWins": 0,
+            "verificationFailedWins": 0,
+            "verificationProblems": [],
+            "earlyTreatyDefeats": 23,
+            "pow": {
+              "eligibleTurns": 210,
+              "metTurns": 5,
+              "rate": 0.023809523809523808
+            },
+            "amphibious": {
+              "attempts": 271,
+              "successes": 99,
+              "rate": 0.36531365313653136
+            },
+            "netCaptures": [
+              {
+                "seed": 20261401,
+                "value": -10
+              },
+              {
+                "seed": 20261402,
+                "value": -7
+              },
+              {
+                "seed": 20261403,
+                "value": -13
+              },
+              {
+                "seed": 20261404,
+                "value": -7
+              },
+              {
+                "seed": 20261405,
+                "value": -10
+              },
+              {
+                "seed": 20261406,
+                "value": -7
+              },
+              {
+                "seed": 20261407,
+                "value": -15
+              },
+              {
+                "seed": 20261408,
+                "value": -8
+              },
+              {
+                "seed": 20261409,
+                "value": -10
+              },
+              {
+                "seed": 20261410,
+                "value": -8
+              },
+              {
+                "seed": 20261411,
+                "value": 1
+              },
+              {
+                "seed": 20261412,
+                "value": -9
+              },
+              {
+                "seed": 20261413,
+                "value": 0
+              },
+              {
+                "seed": 20261414,
+                "value": -10
+              },
+              {
+                "seed": 20261415,
+                "value": -12
+              },
+              {
+                "seed": 20261416,
+                "value": -11
+              },
+              {
+                "seed": 20261417,
+                "value": -8
+              },
+              {
+                "seed": 20261418,
+                "value": -6
+              },
+              {
+                "seed": 20261419,
+                "value": -13
+              },
+              {
+                "seed": 20261420,
+                "value": 6
+              },
+              {
+                "seed": 20261421,
+                "value": -6
+              },
+              {
+                "seed": 20261422,
+                "value": -7
+              },
+              {
+                "seed": 20261423,
+                "value": -11
+              },
+              {
+                "seed": 20261424,
+                "value": -5
+              },
+              {
+                "seed": 20261425,
+                "value": -6
+              },
+              {
+                "seed": 20261426,
+                "value": -3
+              },
+              {
+                "seed": 20261427,
+                "value": -1
+              },
+              {
+                "seed": 20261428,
+                "value": -1
+              },
+              {
+                "seed": 20261429,
+                "value": -5
+              },
+              {
+                "seed": 20261430,
+                "value": -12
+              },
+              {
+                "seed": 20261431,
+                "value": -11
+              },
+              {
+                "seed": 20261432,
+                "value": -7
+              }
+            ],
+            "firstExecutedLandingFormation": [
+              {
+                "seed": 20261401,
+                "value": null
+              },
+              {
+                "seed": 20261402,
+                "value": null
+              },
+              {
+                "seed": 20261403,
+                "value": null
+              },
+              {
+                "seed": 20261404,
+                "value": null
+              },
+              {
+                "seed": 20261405,
+                "value": null
+              },
+              {
+                "seed": 20261406,
+                "value": {
+                  "turn": 7,
+                  "action": 1440,
+                  "target": 535,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    135
+                  ],
+                  "source": "executed-paths",
+                  "origin": 480
+                }
+              },
+              {
+                "seed": 20261407,
+                "value": null
+              },
+              {
+                "seed": 20261408,
+                "value": {
+                  "turn": 6,
+                  "action": 998,
+                  "target": 480,
+                  "ground": [
+                    189
+                  ],
+                  "escort": [
+                    132,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 686
+                }
+              },
+              {
+                "seed": 20261409,
+                "value": {
+                  "turn": 6,
+                  "action": 941,
+                  "target": 304,
+                  "ground": [
+                    158
+                  ],
+                  "escort": [
+                    132
+                  ],
+                  "source": "executed-paths",
+                  "origin": 308
+                }
+              },
+              {
+                "seed": 20261410,
+                "value": null
+              },
+              {
+                "seed": 20261411,
+                "value": null
+              },
+              {
+                "seed": 20261412,
+                "value": null
+              },
+              {
+                "seed": 20261413,
+                "value": null
+              },
+              {
+                "seed": 20261414,
+                "value": {
+                  "turn": 11,
+                  "action": 2339,
+                  "target": 304,
+                  "ground": [
+                    198
+                  ],
+                  "escort": [
+                    134,
+                    135
+                  ],
+                  "source": "battle-participants"
+                }
+              },
+              {
+                "seed": 20261415,
+                "value": {
+                  "turn": 6,
+                  "action": 1054,
+                  "target": 277,
+                  "ground": [
+                    189
+                  ],
+                  "escort": [
+                    132
+                  ],
+                  "source": "executed-paths",
+                  "origin": 308
+                }
+              },
+              {
+                "seed": 20261416,
+                "value": null
+              },
+              {
+                "seed": 20261417,
+                "value": {
+                  "turn": 7,
+                  "action": 1226,
+                  "target": 274,
+                  "ground": [
+                    189
+                  ],
+                  "escort": [
+                    124
+                  ],
+                  "source": "executed-paths",
+                  "origin": 278
+                }
+              },
+              {
+                "seed": 20261418,
+                "value": {
+                  "turn": 7,
+                  "action": 1193,
+                  "target": 535,
+                  "ground": [
+                    165
+                  ],
+                  "escort": [
+                    125
+                  ],
+                  "source": "executed-paths",
+                  "origin": 686
+                }
+              },
+              {
+                "seed": 20261419,
+                "value": null
+              },
+              {
+                "seed": 20261420,
+                "value": {
+                  "turn": 8,
+                  "action": 1536,
+                  "target": 672,
+                  "ground": [
+                    160,
+                    161
+                  ],
+                  "escort": [
+                    139
+                  ],
+                  "source": "executed-paths",
+                  "origin": 535
+                }
+              },
+              {
+                "seed": 20261421,
+                "value": {
+                  "turn": 7,
+                  "action": 1306,
+                  "target": 304,
+                  "ground": [
+                    195
+                  ],
+                  "escort": [
+                    91,
+                    92,
+                    129,
+                    134,
+                    135
+                  ],
+                  "source": "executed-paths",
+                  "origin": 421
+                }
+              },
+              {
+                "seed": 20261422,
+                "value": null
+              },
+              {
+                "seed": 20261423,
+                "value": {
+                  "turn": 6,
+                  "action": 1021,
+                  "target": 277,
+                  "ground": [
+                    196
+                  ],
+                  "escort": [
+                    129
+                  ],
+                  "source": "executed-paths",
+                  "origin": 308
+                }
+              },
+              {
+                "seed": 20261424,
+                "value": {
+                  "turn": 8,
+                  "action": 1645,
+                  "target": 245,
+                  "ground": [
+                    202
+                  ],
+                  "escort": [
+                    140
+                  ],
+                  "source": "executed-paths",
+                  "origin": 308
+                }
+              },
+              {
+                "seed": 20261425,
+                "value": null
+              },
+              {
+                "seed": 20261426,
+                "value": {
+                  "turn": 4,
+                  "action": 619,
+                  "target": 421,
+                  "ground": [
+                    195
+                  ],
+                  "escort": [
+                    123
+                  ],
+                  "source": "executed-paths",
+                  "origin": 535
+                }
+              },
+              {
+                "seed": 20261427,
+                "value": {
+                  "turn": 11,
+                  "action": 2042,
+                  "target": 562,
+                  "ground": [
+                    195
+                  ],
+                  "escort": [
+                    128
+                  ],
+                  "source": "executed-paths",
+                  "origin": 508
+                }
+              },
+              {
+                "seed": 20261428,
+                "value": null
+              },
+              {
+                "seed": 20261429,
+                "value": {
+                  "turn": 9,
+                  "action": 1814,
+                  "target": 508,
+                  "ground": [
+                    198
+                  ],
+                  "escort": [
+                    139
+                  ],
+                  "source": "executed-paths",
+                  "origin": 278
+                }
+              },
+              {
+                "seed": 20261430,
+                "value": null
+              },
+              {
+                "seed": 20261431,
+                "value": null
+              },
+              {
+                "seed": 20261432,
+                "value": {
+                  "turn": 7,
+                  "action": 1339,
+                  "target": 421,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    124,
+                    132,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 686
+                }
+              }
+            ],
+            "firstLandingFormation": [
+              {
+                "seed": 20261401,
+                "value": null
+              },
+              {
+                "seed": 20261402,
+                "value": null
+              },
+              {
+                "seed": 20261403,
+                "value": null
+              },
+              {
+                "seed": 20261404,
+                "value": null
+              },
+              {
+                "seed": 20261405,
+                "value": null
+              },
+              {
+                "seed": 20261406,
+                "value": null
+              },
+              {
+                "seed": 20261407,
+                "value": null
+              },
+              {
+                "seed": 20261408,
+                "value": null
+              },
+              {
+                "seed": 20261409,
+                "value": null
+              },
+              {
+                "seed": 20261410,
+                "value": null
+              },
+              {
+                "seed": 20261411,
+                "value": null
+              },
+              {
+                "seed": 20261412,
+                "value": null
+              },
+              {
+                "seed": 20261413,
+                "value": null
+              },
+              {
+                "seed": 20261414,
+                "value": null
+              },
+              {
+                "seed": 20261415,
+                "value": null
+              },
+              {
+                "seed": 20261416,
+                "value": null
+              },
+              {
+                "seed": 20261417,
+                "value": null
+              },
+              {
+                "seed": 20261418,
+                "value": null
+              },
+              {
+                "seed": 20261419,
+                "value": null
+              },
+              {
+                "seed": 20261420,
+                "value": null
+              },
+              {
+                "seed": 20261421,
+                "value": null
+              },
+              {
+                "seed": 20261422,
+                "value": null
+              },
+              {
+                "seed": 20261423,
+                "value": null
+              },
+              {
+                "seed": 20261424,
+                "value": null
+              },
+              {
+                "seed": 20261425,
+                "value": null
+              },
+              {
+                "seed": 20261426,
+                "value": null
+              },
+              {
+                "seed": 20261427,
+                "value": null
+              },
+              {
+                "seed": 20261428,
+                "value": null
+              },
+              {
+                "seed": 20261429,
+                "value": null
+              },
+              {
+                "seed": 20261430,
+                "value": null
+              },
+              {
+                "seed": 20261431,
+                "value": null
+              },
+              {
+                "seed": 20261432,
+                "value": null
+              }
+            ],
+            "invalidGames": []
+          },
+          "campaign": {
+            "winRate": {
+              "n": 32,
+              "successes": 4,
+              "estimate": 0.125,
+              "low": 0.04970134387480073,
+              "high": 0.2806830548165022
+            },
+            "invalid": 0,
+            "naturalWinsBeforeVerification": 4,
+            "unverifiedWins": 0,
+            "verificationFailedWins": 0,
+            "verificationProblems": [],
+            "earlyTreatyDefeats": 2,
+            "pow": {
+              "eligibleTurns": 282,
+              "metTurns": 152,
+              "rate": 0.5390070921985816
+            },
+            "amphibious": {
+              "attempts": 798,
+              "successes": 757,
+              "rate": 0.9486215538847118
+            },
+            "netCaptures": [
+              {
+                "seed": 20261401,
+                "value": 32
+              },
+              {
+                "seed": 20261402,
+                "value": 21
+              },
+              {
+                "seed": 20261403,
+                "value": 26
+              },
+              {
+                "seed": 20261404,
+                "value": 30
+              },
+              {
+                "seed": 20261405,
+                "value": 29
+              },
+              {
+                "seed": 20261406,
+                "value": 34
+              },
+              {
+                "seed": 20261407,
+                "value": 29
+              },
+              {
+                "seed": 20261408,
+                "value": 26
+              },
+              {
+                "seed": 20261409,
+                "value": 21
+              },
+              {
+                "seed": 20261410,
+                "value": 27
+              },
+              {
+                "seed": 20261411,
+                "value": 21
+              },
+              {
+                "seed": 20261412,
+                "value": 24
+              },
+              {
+                "seed": 20261413,
+                "value": 30
+              },
+              {
+                "seed": 20261414,
+                "value": 29
+              },
+              {
+                "seed": 20261415,
+                "value": 25
+              },
+              {
+                "seed": 20261416,
+                "value": 17
+              },
+              {
+                "seed": 20261417,
+                "value": 19
+              },
+              {
+                "seed": 20261418,
+                "value": 20
+              },
+              {
+                "seed": 20261419,
+                "value": 26
+              },
+              {
+                "seed": 20261420,
+                "value": 28
+              },
+              {
+                "seed": 20261421,
+                "value": 31
+              },
+              {
+                "seed": 20261422,
+                "value": 24
+              },
+              {
+                "seed": 20261423,
+                "value": 25
+              },
+              {
+                "seed": 20261424,
+                "value": 31
+              },
+              {
+                "seed": 20261425,
+                "value": 18
+              },
+              {
+                "seed": 20261426,
+                "value": 28
+              },
+              {
+                "seed": 20261427,
+                "value": 25
+              },
+              {
+                "seed": 20261428,
+                "value": 34
+              },
+              {
+                "seed": 20261429,
+                "value": 23
+              },
+              {
+                "seed": 20261430,
+                "value": 2
+              },
+              {
+                "seed": 20261431,
+                "value": 23
+              },
+              {
+                "seed": 20261432,
+                "value": 14
+              }
+            ],
+            "firstExecutedLandingFormation": [
+              {
+                "seed": 20261401,
+                "value": {
+                  "turn": 7,
+                  "action": 1068,
+                  "target": 1088,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    130,
+                    134,
+                    135,
+                    136
+                  ],
+                  "source": "executed-paths",
+                  "origin": 825
+                }
+              },
+              {
+                "seed": 20261402,
+                "value": {
+                  "turn": 7,
+                  "action": 1052,
+                  "target": 891,
+                  "ground": [
+                    164,
+                    188
+                  ],
+                  "escort": [
+                    87,
+                    124
+                  ],
+                  "source": "executed-paths",
+                  "origin": 890
+                }
+              },
+              {
+                "seed": 20261403,
+                "value": {
+                  "turn": 8,
+                  "action": 1247,
+                  "target": 589,
+                  "ground": [
+                    164
+                  ],
+                  "escort": [
+                    124,
+                    139,
+                    140,
+                    141
+                  ],
+                  "source": "executed-paths",
+                  "origin": 825
+                }
+              },
+              {
+                "seed": 20261404,
+                "value": {
+                  "turn": 7,
+                  "action": 981,
+                  "target": 1088,
+                  "ground": [
+                    202
+                  ],
+                  "escort": [
+                    129,
+                    132
+                  ],
+                  "source": "executed-paths",
+                  "origin": 803
+                }
+              },
+              {
+                "seed": 20261405,
+                "value": {
+                  "turn": 7,
+                  "action": 1123,
+                  "target": 887,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    134,
+                    135,
+                    136
+                  ],
+                  "source": "executed-paths",
+                  "origin": 825
+                }
+              },
+              {
+                "seed": 20261406,
+                "value": {
+                  "turn": 7,
+                  "action": 1128,
+                  "target": 732,
+                  "ground": [
+                    163
+                  ],
+                  "escort": [
+                    87
+                  ],
+                  "source": "executed-paths",
+                  "origin": 594
+                }
+              },
+              {
+                "seed": 20261407,
+                "value": {
+                  "turn": 6,
+                  "action": 892,
+                  "target": 245,
+                  "ground": [
+                    203
+                  ],
+                  "escort": [
+                    132,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 508
+                }
+              },
+              {
+                "seed": 20261408,
+                "value": {
+                  "turn": 6,
+                  "action": 785,
+                  "target": 302,
+                  "ground": [
+                    196
+                  ],
+                  "escort": [
+                    87,
+                    128
+                  ],
+                  "source": "executed-paths",
+                  "origin": 452
+                }
+              },
+              {
+                "seed": 20261409,
+                "value": {
+                  "turn": 8,
+                  "action": 1253,
+                  "target": 703,
+                  "ground": [
+                    189,
+                    190
+                  ],
+                  "escort": [
+                    130,
+                    134
+                  ],
+                  "source": "executed-paths",
+                  "origin": 686
+                }
+              },
+              {
+                "seed": 20261410,
+                "value": {
+                  "turn": 8,
+                  "action": 1190,
+                  "target": 887,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    88,
+                    139,
+                    140
+                  ],
+                  "source": "executed-paths",
+                  "origin": 594
+                }
+              },
+              {
+                "seed": 20261411,
+                "value": {
+                  "turn": 7,
+                  "action": 1022,
+                  "target": 360,
+                  "ground": [
+                    190
+                  ],
+                  "escort": [
+                    128,
+                    129,
+                    134,
+                    135
+                  ],
+                  "source": "executed-paths",
+                  "origin": 535
+                }
+              },
+              {
+                "seed": 20261412,
+                "value": {
+                  "turn": 7,
+                  "action": 1210,
+                  "target": 277,
+                  "ground": [
+                    165
+                  ],
+                  "escort": [
+                    91,
+                    132,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261413,
+                "value": {
+                  "turn": 7,
+                  "action": 1097,
+                  "target": 887,
+                  "ground": [
+                    167
+                  ],
+                  "escort": [
+                    87,
+                    124
+                  ],
+                  "source": "executed-paths",
+                  "origin": 712
+                }
+              },
+              {
+                "seed": 20261414,
+                "value": {
+                  "turn": 7,
+                  "action": 1165,
+                  "target": 826,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    130
+                  ],
+                  "source": "executed-paths",
+                  "origin": 535
+                }
+              },
+              {
+                "seed": 20261415,
+                "value": {
+                  "turn": 7,
+                  "action": 1153,
+                  "target": 1088,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    88,
+                    135,
+                    136
+                  ],
+                  "source": "executed-paths",
+                  "origin": 825
+                }
+              },
+              {
+                "seed": 20261416,
+                "value": {
+                  "turn": 6,
+                  "action": 937,
+                  "target": 672,
+                  "ground": [
+                    190
+                  ],
+                  "escort": [
+                    130,
+                    132,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 647
+                }
+              },
+              {
+                "seed": 20261417,
+                "value": {
+                  "turn": 7,
+                  "action": 965,
+                  "target": 887,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    136,
+                    139,
+                    140,
+                    141
+                  ],
+                  "source": "executed-paths",
+                  "origin": 769
+                }
+              },
+              {
+                "seed": 20261418,
+                "value": {
+                  "turn": 7,
+                  "action": 1052,
+                  "target": 304,
+                  "ground": [
+                    190
+                  ],
+                  "escort": [
+                    88,
+                    135,
+                    137
+                  ],
+                  "source": "executed-paths",
+                  "origin": 712
+                }
+              },
+              {
+                "seed": 20261419,
+                "value": {
+                  "turn": 7,
+                  "action": 1132,
+                  "target": 452,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    134
+                  ],
+                  "source": "executed-paths",
+                  "origin": 512
+                }
+              },
+              {
+                "seed": 20261420,
+                "value": {
+                  "turn": 8,
+                  "action": 1285,
+                  "target": 732,
+                  "ground": [
+                    188
+                  ],
+                  "escort": [
+                    87,
+                    128
+                  ],
+                  "source": "executed-paths",
+                  "origin": 647
+                }
+              },
+              {
+                "seed": 20261421,
+                "value": {
+                  "turn": 7,
+                  "action": 1167,
+                  "target": 480,
+                  "ground": [
+                    187
+                  ],
+                  "escort": [
+                    134,
+                    135
+                  ],
+                  "source": "executed-paths",
+                  "origin": 594
+                }
+              },
+              {
+                "seed": 20261422,
+                "value": {
+                  "turn": 5,
+                  "action": 857,
+                  "target": 1088,
+                  "ground": [
+                    196
+                  ],
+                  "escort": [
+                    87,
+                    128
+                  ],
+                  "source": "executed-paths",
+                  "origin": 803
+                }
+              },
+              {
+                "seed": 20261423,
+                "value": {
+                  "turn": 6,
+                  "action": 915,
+                  "target": 672,
+                  "ground": [
+                    187
+                  ],
+                  "escort": [
+                    88,
+                    130,
+                    132
+                  ],
+                  "source": "executed-paths",
+                  "origin": 594
+                }
+              },
+              {
+                "seed": 20261424,
+                "value": {
+                  "turn": 6,
+                  "action": 960,
+                  "target": 360,
+                  "ground": [
+                    190
+                  ],
+                  "escort": [
+                    132,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 647
+                }
+              },
+              {
+                "seed": 20261425,
+                "value": {
+                  "turn": 6,
+                  "action": 910,
+                  "target": 887,
+                  "ground": [
+                    194
+                  ],
+                  "escort": [
+                    124,
+                    129
+                  ],
+                  "source": "executed-paths",
+                  "origin": 890
+                }
+              },
+              {
+                "seed": 20261426,
+                "value": {
+                  "turn": 7,
+                  "action": 1097,
+                  "target": 826,
+                  "ground": [
+                    202
+                  ],
+                  "escort": [
+                    87,
+                    135
+                  ],
+                  "source": "executed-paths",
+                  "origin": 535
+                }
+              },
+              {
+                "seed": 20261427,
+                "value": {
+                  "turn": 6,
+                  "action": 889,
+                  "target": 245,
+                  "ground": [
+                    196
+                  ],
+                  "escort": [
+                    87,
+                    128
+                  ],
+                  "source": "executed-paths",
+                  "origin": 452
+                }
+              },
+              {
+                "seed": 20261428,
+                "value": {
+                  "turn": 7,
+                  "action": 1201,
+                  "target": 887,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    87,
+                    128,
+                    134,
+                    135
+                  ],
+                  "source": "executed-paths",
+                  "origin": 825
+                }
+              },
+              {
+                "seed": 20261429,
+                "value": {
+                  "turn": 6,
+                  "action": 811,
+                  "target": 887,
+                  "ground": [
+                    196
+                  ],
+                  "escort": [
+                    88,
+                    129
+                  ],
+                  "source": "executed-paths",
+                  "origin": 745
+                }
+              },
+              {
+                "seed": 20261430,
+                "value": {
+                  "turn": 7,
+                  "action": 929,
+                  "target": 732,
+                  "ground": [
+                    189,
+                    196
+                  ],
+                  "escort": [
+                    123,
+                    132,
+                    134
+                  ],
+                  "source": "executed-paths",
+                  "origin": 825
+                }
+              },
+              {
+                "seed": 20261431,
+                "value": {
+                  "turn": 8,
+                  "action": 1287,
+                  "target": 452,
+                  "ground": [
+                    189
+                  ],
+                  "escort": [
+                    136,
+                    138,
+                    141,
+                    142
+                  ],
+                  "source": "executed-paths",
+                  "origin": 712
+                }
+              },
+              {
+                "seed": 20261432,
+                "value": {
+                  "turn": 7,
+                  "action": 1122,
+                  "target": 245,
+                  "ground": [
+                    164
+                  ],
+                  "escort": [
+                    87,
+                    128
+                  ],
+                  "source": "executed-paths",
+                  "origin": 368
+                }
+              }
+            ],
+            "firstLandingFormation": [
+              {
+                "seed": 20261401,
+                "value": {
+                  "turn": 9,
+                  "action": 1339,
+                  "target": 732,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 732,
+                    "ground": [
+                      187,
+                      191,
+                      190
+                    ],
+                    "escort": [
+                      140,
+                      128,
+                      135
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261402,
+                "value": {
+                  "turn": 7,
+                  "action": 1049,
+                  "target": 891,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 891,
+                    "ground": [
+                      188,
+                      164
+                    ],
+                    "escort": [
+                      87,
+                      124
+                    ],
+                    "support": [
+                      117
+                    ]
+                  }
+                }
+              },
+              {
+                "seed": 20261403,
+                "value": {
+                  "turn": 9,
+                  "action": 1408,
+                  "target": 788,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 788,
+                    "ground": [
+                      191,
+                      198,
+                      192
+                    ],
+                    "escort": [
+                      141,
+                      135,
+                      143
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261404,
+                "value": {
+                  "turn": 7,
+                  "action": 979,
+                  "target": 1088,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 1088,
+                    "ground": [
+                      202
+                    ],
+                    "escort": [
+                      132,
+                      129
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261405,
+                "value": {
+                  "turn": 7,
+                  "action": 1121,
+                  "target": 887,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 887,
+                    "ground": [
+                      197
+                    ],
+                    "escort": [
+                      134,
+                      135,
+                      136
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261406,
+                "value": {
+                  "turn": 7,
+                  "action": 1127,
+                  "target": 732,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 732,
+                    "ground": [
+                      189,
+                      190,
+                      163
+                    ],
+                    "escort": [
+                      123,
+                      134,
+                      87
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261407,
+                "value": {
+                  "turn": 6,
+                  "action": 891,
+                  "target": 245,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 245,
+                    "ground": [
+                      203
+                    ],
+                    "escort": [
+                      132,
+                      133
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261408,
+                "value": {
+                  "turn": 6,
+                  "action": 783,
+                  "target": 302,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 302,
+                    "ground": [
+                      196
+                    ],
+                    "escort": [
+                      128,
+                      87
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261409,
+                "value": {
+                  "turn": 8,
+                  "action": 1252,
+                  "target": 703,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 703,
+                    "ground": [
+                      187,
+                      189,
+                      190
+                    ],
+                    "escort": [
+                      135,
+                      130,
+                      134
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261410,
+                "value": {
+                  "turn": 8,
+                  "action": 1187,
+                  "target": 887,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 887,
+                    "ground": [
+                      197
+                    ],
+                    "escort": [
+                      139,
+                      140,
+                      88
+                    ],
+                    "support": [
+                      109
+                    ]
+                  }
+                }
+              },
+              {
+                "seed": 20261411,
+                "value": {
+                  "turn": 7,
+                  "action": 1020,
+                  "target": 360,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 360,
+                    "ground": [
+                      190
+                    ],
+                    "escort": [
+                      128,
+                      134,
+                      135,
+                      129
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261412,
+                "value": {
+                  "turn": 7,
+                  "action": 1209,
+                  "target": 277,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 277,
+                    "ground": [
+                      165
+                    ],
+                    "escort": [
+                      132,
+                      133,
+                      91
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261413,
+                "value": {
+                  "turn": 7,
+                  "action": 1096,
+                  "target": 887,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 887,
+                    "ground": [
+                      167
+                    ],
+                    "escort": [
+                      87,
+                      124
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261414,
+                "value": {
+                  "turn": 7,
+                  "action": 1162,
+                  "target": 826,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 826,
+                    "ground": [
+                      197
+                    ],
+                    "escort": [
+                      130
+                    ],
+                    "support": [
+                      115
+                    ]
+                  }
+                }
+              },
+              {
+                "seed": 20261415,
+                "value": {
+                  "turn": 7,
+                  "action": 1151,
+                  "target": 1088,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 1088,
+                    "ground": [
+                      197
+                    ],
+                    "escort": [
+                      135,
+                      88,
+                      136
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261416,
+                "value": {
+                  "turn": 6,
+                  "action": 936,
+                  "target": 672,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 672,
+                    "ground": [
+                      190
+                    ],
+                    "escort": [
+                      133,
+                      130,
+                      132
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261417,
+                "value": {
+                  "turn": 7,
+                  "action": 963,
+                  "target": 887,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 887,
+                    "ground": [
+                      197
+                    ],
+                    "escort": [
+                      139,
+                      140,
+                      141,
+                      136
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261418,
+                "value": {
+                  "turn": 7,
+                  "action": 1175,
+                  "target": 277,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 277,
+                    "ground": [
+                      202
+                    ],
+                    "escort": [
+                      130,
+                      134
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261419,
+                "value": {
+                  "turn": 7,
+                  "action": 1130,
+                  "target": 452,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 452,
+                    "ground": [
+                      197
+                    ],
+                    "escort": [
+                      134
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261420,
+                "value": {
+                  "turn": 8,
+                  "action": 1283,
+                  "target": 732,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 732,
+                    "ground": [
+                      188,
+                      190,
+                      164
+                    ],
+                    "escort": [
+                      87,
+                      128,
+                      140
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261421,
+                "value": {
+                  "turn": 7,
+                  "action": 1165,
+                  "target": 480,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 480,
+                    "ground": [
+                      187
+                    ],
+                    "escort": [
+                      134,
+                      135
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261422,
+                "value": {
+                  "turn": 6,
+                  "action": 1030,
+                  "target": 245,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 245,
+                    "ground": [
+                      203
+                    ],
+                    "escort": [
+                      126,
+                      131
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261423,
+                "value": {
+                  "turn": 6,
+                  "action": 912,
+                  "target": 672,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 672,
+                    "ground": [
+                      187
+                    ],
+                    "escort": [
+                      130,
+                      132,
+                      88
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261424,
+                "value": {
+                  "turn": 6,
+                  "action": 958,
+                  "target": 360,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 360,
+                    "ground": [
+                      190
+                    ],
+                    "escort": [
+                      132,
+                      133
+                    ],
+                    "support": [
+                      114
+                    ]
+                  }
+                }
+              },
+              {
+                "seed": 20261425,
+                "value": {
+                  "turn": 7,
+                  "action": 1072,
+                  "target": 1088,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 1088,
+                    "ground": [
+                      197
+                    ],
+                    "escort": [
+                      129,
+                      124
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261426,
+                "value": {
+                  "turn": 7,
+                  "action": 1096,
+                  "target": 826,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 826,
+                    "ground": [
+                      202
+                    ],
+                    "escort": [
+                      135,
+                      87
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261427,
+                "value": {
+                  "turn": 6,
+                  "action": 887,
+                  "target": 245,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 245,
+                    "ground": [
+                      196
+                    ],
+                    "escort": [
+                      128,
+                      87
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261428,
+                "value": {
+                  "turn": 7,
+                  "action": 1198,
+                  "target": 887,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 887,
+                    "ground": [
+                      197
+                    ],
+                    "escort": [
+                      128,
+                      134,
+                      135,
+                      87
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261429,
+                "value": {
+                  "turn": 7,
+                  "action": 928,
+                  "target": 1088,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 1088,
+                    "ground": [
+                      197
+                    ],
+                    "escort": [
+                      134
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261430,
+                "value": {
+                  "turn": 7,
+                  "action": 927,
+                  "target": 732,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 732,
+                    "ground": [
+                      189,
+                      196
+                    ],
+                    "escort": [
+                      132,
+                      123,
+                      134
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261431,
+                "value": {
+                  "turn": 8,
+                  "action": 1286,
+                  "target": 452,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 452,
+                    "ground": [
+                      189
+                    ],
+                    "escort": [
+                      141,
+                      136,
+                      142,
+                      138
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261432,
+                "value": {
+                  "turn": 8,
+                  "action": 1268,
+                  "target": 732,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 732,
+                    "ground": [
+                      187,
+                      188,
+                      190
+                    ],
+                    "escort": [
+                      135,
+                      139,
+                      140
+                    ],
+                    "support": []
+                  }
+                }
+              }
+            ],
+            "invalidGames": []
+          },
+          "pairedWinRateDifference": {
+            "n": 32,
+            "estimate": 0.125,
+            "low": 0.03125,
+            "high": 0.25,
+            "iterations": 10000,
+            "seed": 20261004,
+            "discordantPairs": 4,
+            "method": "paired percentile bootstrap",
+            "caveat": null
+          }
+        },
+        {
+          "scenario": "1943-1945 (The Even Shorter Campaign)",
+          "baseline": {
+            "winRate": {
+              "n": 32,
+              "successes": 0,
+              "estimate": 0,
+              "low": 0,
+              "high": 0.1071791982550706
+            },
+            "invalid": 0,
+            "naturalWinsBeforeVerification": 0,
+            "unverifiedWins": 0,
+            "verificationFailedWins": 0,
+            "verificationProblems": [],
+            "earlyTreatyDefeats": 32,
+            "pow": {
+              "eligibleTurns": 135,
+              "metTurns": 0,
+              "rate": 0
+            },
+            "amphibious": {
+              "attempts": 43,
+              "successes": 25,
+              "rate": 0.5813953488372093
+            },
+            "netCaptures": [
+              {
+                "seed": 20261401,
+                "value": 0
+              },
+              {
+                "seed": 20261402,
+                "value": 1
+              },
+              {
+                "seed": 20261403,
+                "value": 4
+              },
+              {
+                "seed": 20261404,
+                "value": 2
+              },
+              {
+                "seed": 20261405,
+                "value": 0
+              },
+              {
+                "seed": 20261406,
+                "value": -2
+              },
+              {
+                "seed": 20261407,
+                "value": 0
+              },
+              {
+                "seed": 20261408,
+                "value": 0
+              },
+              {
+                "seed": 20261409,
+                "value": -1
+              },
+              {
+                "seed": 20261410,
+                "value": -2
+              },
+              {
+                "seed": 20261411,
+                "value": 1
+              },
+              {
+                "seed": 20261412,
+                "value": -1
+              },
+              {
+                "seed": 20261413,
+                "value": 0
+              },
+              {
+                "seed": 20261414,
+                "value": -2
+              },
+              {
+                "seed": 20261415,
+                "value": -1
+              },
+              {
+                "seed": 20261416,
+                "value": 0
+              },
+              {
+                "seed": 20261417,
+                "value": -5
+              },
+              {
+                "seed": 20261418,
+                "value": 0
+              },
+              {
+                "seed": 20261419,
+                "value": 0
+              },
+              {
+                "seed": 20261420,
+                "value": 3
+              },
+              {
+                "seed": 20261421,
+                "value": 0
+              },
+              {
+                "seed": 20261422,
+                "value": 0
+              },
+              {
+                "seed": 20261423,
+                "value": 2
+              },
+              {
+                "seed": 20261424,
+                "value": 2
+              },
+              {
+                "seed": 20261425,
+                "value": -1
+              },
+              {
+                "seed": 20261426,
+                "value": -1
+              },
+              {
+                "seed": 20261427,
+                "value": 0
+              },
+              {
+                "seed": 20261428,
+                "value": -1
+              },
+              {
+                "seed": 20261429,
+                "value": 2
+              },
+              {
+                "seed": 20261430,
+                "value": -3
+              },
+              {
+                "seed": 20261431,
+                "value": 2
+              },
+              {
+                "seed": 20261432,
+                "value": -2
+              }
+            ],
+            "firstExecutedLandingFormation": [
+              {
+                "seed": 20261401,
+                "value": null
+              },
+              {
+                "seed": 20261402,
+                "value": null
+              },
+              {
+                "seed": 20261403,
+                "value": {
+                  "turn": 9,
+                  "action": 870,
+                  "target": 628,
+                  "ground": [
+                    194,
+                    197
+                  ],
+                  "escort": [
+                    134
+                  ],
+                  "source": "executed-paths",
+                  "origin": 834
+                }
+              },
+              {
+                "seed": 20261404,
+                "value": null
+              },
+              {
+                "seed": 20261405,
+                "value": null
+              },
+              {
+                "seed": 20261406,
+                "value": null
+              },
+              {
+                "seed": 20261407,
+                "value": null
+              },
+              {
+                "seed": 20261408,
+                "value": null
+              },
+              {
+                "seed": 20261409,
+                "value": null
+              },
+              {
+                "seed": 20261410,
+                "value": null
+              },
+              {
+                "seed": 20261411,
+                "value": {
+                  "turn": 7,
+                  "action": 541,
+                  "target": 304,
+                  "ground": [
+                    196
+                  ],
+                  "escort": [
+                    124,
+                    129,
+                    132
+                  ],
+                  "source": "executed-paths",
+                  "origin": 432
+                }
+              },
+              {
+                "seed": 20261412,
+                "value": null
+              },
+              {
+                "seed": 20261413,
+                "value": null
+              },
+              {
+                "seed": 20261414,
+                "value": null
+              },
+              {
+                "seed": 20261415,
+                "value": null
+              },
+              {
+                "seed": 20261416,
+                "value": null
+              },
+              {
+                "seed": 20261417,
+                "value": null
+              },
+              {
+                "seed": 20261418,
+                "value": {
+                  "turn": 9,
+                  "action": 1154,
+                  "target": 514,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    129
+                  ],
+                  "source": "executed-paths",
+                  "origin": 460
+                }
+              },
+              {
+                "seed": 20261419,
+                "value": null
+              },
+              {
+                "seed": 20261420,
+                "value": {
+                  "turn": 7,
+                  "action": 698,
+                  "target": 891,
+                  "ground": [
+                    187
+                  ],
+                  "escort": [
+                    134
+                  ],
+                  "source": "executed-paths",
+                  "origin": 835
+                }
+              },
+              {
+                "seed": 20261421,
+                "value": null
+              },
+              {
+                "seed": 20261422,
+                "value": null
+              },
+              {
+                "seed": 20261423,
+                "value": null
+              },
+              {
+                "seed": 20261424,
+                "value": null
+              },
+              {
+                "seed": 20261425,
+                "value": null
+              },
+              {
+                "seed": 20261426,
+                "value": {
+                  "turn": 6,
+                  "action": 297,
+                  "target": 603,
+                  "ground": [
+                    195
+                  ],
+                  "escort": [
+                    128
+                  ],
+                  "source": "executed-paths",
+                  "origin": 432
+                }
+              },
+              {
+                "seed": 20261427,
+                "value": null
+              },
+              {
+                "seed": 20261428,
+                "value": null
+              },
+              {
+                "seed": 20261429,
+                "value": {
+                  "turn": 8,
+                  "action": 667,
+                  "target": 298,
+                  "ground": [
+                    165
+                  ],
+                  "escort": [
+                    139,
+                    140,
+                    141,
+                    142
+                  ],
+                  "source": "executed-paths",
+                  "origin": 266
+                }
+              },
+              {
+                "seed": 20261430,
+                "value": {
+                  "turn": 9,
+                  "action": 1006,
+                  "target": 298,
+                  "ground": [
+                    165
+                  ],
+                  "escort": [
+                    125
+                  ],
+                  "source": "executed-paths",
+                  "origin": 266
+                }
+              },
+              {
+                "seed": 20261431,
+                "value": null
+              },
+              {
+                "seed": 20261432,
+                "value": {
+                  "turn": 7,
+                  "action": 619,
+                  "target": 245,
+                  "ground": [
+                    200
+                  ],
+                  "escort": [
+                    125
+                  ],
+                  "source": "executed-paths",
+                  "origin": 266
+                }
+              }
+            ],
+            "firstLandingFormation": [
+              {
+                "seed": 20261401,
+                "value": null
+              },
+              {
+                "seed": 20261402,
+                "value": null
+              },
+              {
+                "seed": 20261403,
+                "value": null
+              },
+              {
+                "seed": 20261404,
+                "value": null
+              },
+              {
+                "seed": 20261405,
+                "value": null
+              },
+              {
+                "seed": 20261406,
+                "value": null
+              },
+              {
+                "seed": 20261407,
+                "value": null
+              },
+              {
+                "seed": 20261408,
+                "value": null
+              },
+              {
+                "seed": 20261409,
+                "value": null
+              },
+              {
+                "seed": 20261410,
+                "value": null
+              },
+              {
+                "seed": 20261411,
+                "value": null
+              },
+              {
+                "seed": 20261412,
+                "value": null
+              },
+              {
+                "seed": 20261413,
+                "value": null
+              },
+              {
+                "seed": 20261414,
+                "value": null
+              },
+              {
+                "seed": 20261415,
+                "value": null
+              },
+              {
+                "seed": 20261416,
+                "value": null
+              },
+              {
+                "seed": 20261417,
+                "value": null
+              },
+              {
+                "seed": 20261418,
+                "value": null
+              },
+              {
+                "seed": 20261419,
+                "value": null
+              },
+              {
+                "seed": 20261420,
+                "value": null
+              },
+              {
+                "seed": 20261421,
+                "value": null
+              },
+              {
+                "seed": 20261422,
+                "value": null
+              },
+              {
+                "seed": 20261423,
+                "value": null
+              },
+              {
+                "seed": 20261424,
+                "value": null
+              },
+              {
+                "seed": 20261425,
+                "value": null
+              },
+              {
+                "seed": 20261426,
+                "value": null
+              },
+              {
+                "seed": 20261427,
+                "value": null
+              },
+              {
+                "seed": 20261428,
+                "value": null
+              },
+              {
+                "seed": 20261429,
+                "value": null
+              },
+              {
+                "seed": 20261430,
+                "value": null
+              },
+              {
+                "seed": 20261431,
+                "value": null
+              },
+              {
+                "seed": 20261432,
+                "value": null
+              }
+            ],
+            "invalidGames": []
+          },
+          "campaign": {
+            "winRate": {
+              "n": 32,
+              "successes": 3,
+              "estimate": 0.09375,
+              "low": 0.032401551298366194,
+              "high": 0.24218154728387864
+            },
+            "invalid": 0,
+            "naturalWinsBeforeVerification": 3,
+            "unverifiedWins": 0,
+            "verificationFailedWins": 0,
+            "verificationProblems": [],
+            "earlyTreatyDefeats": 1,
+            "pow": {
+              "eligibleTurns": 252,
+              "metTurns": 228,
+              "rate": 0.9047619047619048
+            },
+            "amphibious": {
+              "attempts": 992,
+              "successes": 934,
+              "rate": 0.9415322580645161
+            },
+            "netCaptures": [
+              {
+                "seed": 20261401,
+                "value": 40
+              },
+              {
+                "seed": 20261402,
+                "value": 43
+              },
+              {
+                "seed": 20261403,
+                "value": 42
+              },
+              {
+                "seed": 20261404,
+                "value": 40
+              },
+              {
+                "seed": 20261405,
+                "value": 16
+              },
+              {
+                "seed": 20261406,
+                "value": 46
+              },
+              {
+                "seed": 20261407,
+                "value": 26
+              },
+              {
+                "seed": 20261408,
+                "value": 40
+              },
+              {
+                "seed": 20261409,
+                "value": 41
+              },
+              {
+                "seed": 20261410,
+                "value": 39
+              },
+              {
+                "seed": 20261411,
+                "value": 39
+              },
+              {
+                "seed": 20261412,
+                "value": 45
+              },
+              {
+                "seed": 20261413,
+                "value": 40
+              },
+              {
+                "seed": 20261414,
+                "value": 33
+              },
+              {
+                "seed": 20261415,
+                "value": 41
+              },
+              {
+                "seed": 20261416,
+                "value": 33
+              },
+              {
+                "seed": 20261417,
+                "value": 40
+              },
+              {
+                "seed": 20261418,
+                "value": 48
+              },
+              {
+                "seed": 20261419,
+                "value": 32
+              },
+              {
+                "seed": 20261420,
+                "value": 44
+              },
+              {
+                "seed": 20261421,
+                "value": 37
+              },
+              {
+                "seed": 20261422,
+                "value": 35
+              },
+              {
+                "seed": 20261423,
+                "value": 38
+              },
+              {
+                "seed": 20261424,
+                "value": 43
+              },
+              {
+                "seed": 20261425,
+                "value": 42
+              },
+              {
+                "seed": 20261426,
+                "value": 37
+              },
+              {
+                "seed": 20261427,
+                "value": 42
+              },
+              {
+                "seed": 20261428,
+                "value": 37
+              },
+              {
+                "seed": 20261429,
+                "value": 39
+              },
+              {
+                "seed": 20261430,
+                "value": 54
+              },
+              {
+                "seed": 20261431,
+                "value": 41
+              },
+              {
+                "seed": 20261432,
+                "value": 43
+              }
+            ],
+            "firstExecutedLandingFormation": [
+              {
+                "seed": 20261401,
+                "value": {
+                  "turn": 8,
+                  "action": 679,
+                  "target": 788,
+                  "ground": [
+                    195
+                  ],
+                  "escort": [
+                    128
+                  ],
+                  "source": "executed-paths",
+                  "origin": 647
+                }
+              },
+              {
+                "seed": 20261402,
+                "value": {
+                  "turn": 6,
+                  "action": 346,
+                  "target": 368,
+                  "ground": [
+                    165
+                  ],
+                  "escort": [
+                    132,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261403,
+                "value": {
+                  "turn": 8,
+                  "action": 652,
+                  "target": 452,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    136,
+                    137,
+                    138
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261404,
+                "value": {
+                  "turn": 6,
+                  "action": 355,
+                  "target": 480,
+                  "ground": [
+                    195
+                  ],
+                  "escort": [
+                    128,
+                    130,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261405,
+                "value": {
+                  "turn": 6,
+                  "action": 262,
+                  "target": 452,
+                  "ground": [
+                    165
+                  ],
+                  "escort": [
+                    132,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261406,
+                "value": {
+                  "turn": 7,
+                  "action": 521,
+                  "target": 368,
+                  "ground": [
+                    165,
+                    197
+                  ],
+                  "escort": [
+                    134,
+                    135
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261407,
+                "value": {
+                  "turn": 6,
+                  "action": 287,
+                  "target": 452,
+                  "ground": [
+                    165
+                  ],
+                  "escort": [
+                    132,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261408,
+                "value": {
+                  "turn": 7,
+                  "action": 557,
+                  "target": 452,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    132,
+                    137
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261409,
+                "value": {
+                  "turn": 8,
+                  "action": 631,
+                  "target": 535,
+                  "ground": [
+                    195
+                  ],
+                  "escort": [
+                    128,
+                    134
+                  ],
+                  "source": "executed-paths",
+                  "origin": 647
+                }
+              },
+              {
+                "seed": 20261410,
+                "value": {
+                  "turn": 7,
+                  "action": 600,
+                  "target": 452,
+                  "ground": [
+                    165
+                  ],
+                  "escort": [
+                    134,
+                    135
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261411,
+                "value": {
+                  "turn": 7,
+                  "action": 512,
+                  "target": 789,
+                  "ground": [
+                    196,
+                    202
+                  ],
+                  "escort": [
+                    129
+                  ],
+                  "source": "executed-paths",
+                  "origin": 769
+                }
+              },
+              {
+                "seed": 20261412,
+                "value": {
+                  "turn": 6,
+                  "action": 344,
+                  "target": 368,
+                  "ground": [
+                    165
+                  ],
+                  "escort": [
+                    130,
+                    132,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261413,
+                "value": {
+                  "turn": 7,
+                  "action": 492,
+                  "target": 304,
+                  "ground": [
+                    194
+                  ],
+                  "escort": [
+                    129,
+                    132,
+                    134,
+                    135,
+                    136
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261414,
+                "value": {
+                  "turn": 6,
+                  "action": 308,
+                  "target": 452,
+                  "ground": [
+                    165
+                  ],
+                  "escort": [
+                    128,
+                    130,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261415,
+                "value": {
+                  "turn": 9,
+                  "action": 817,
+                  "target": 535,
+                  "ground": [
+                    194
+                  ],
+                  "escort": [
+                    132,
+                    134,
+                    135,
+                    139,
+                    140
+                  ],
+                  "source": "executed-paths",
+                  "origin": 647
+                }
+              },
+              {
+                "seed": 20261416,
+                "value": {
+                  "turn": 7,
+                  "action": 640,
+                  "target": 452,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    87,
+                    128,
+                    134
+                  ],
+                  "source": "executed-paths",
+                  "origin": 460
+                }
+              },
+              {
+                "seed": 20261417,
+                "value": {
+                  "turn": 7,
+                  "action": 536,
+                  "target": 421,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    128,
+                    132,
+                    134,
+                    135
+                  ],
+                  "source": "executed-paths",
+                  "origin": 535
+                }
+              },
+              {
+                "seed": 20261418,
+                "value": {
+                  "turn": 6,
+                  "action": 300,
+                  "target": 452,
+                  "ground": [
+                    196
+                  ],
+                  "escort": [
+                    128,
+                    130,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 686
+                }
+              },
+              {
+                "seed": 20261419,
+                "value": {
+                  "turn": 7,
+                  "action": 391,
+                  "target": 480,
+                  "ground": [
+                    165,
+                    195
+                  ],
+                  "escort": [
+                    128,
+                    134
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261420,
+                "value": {
+                  "turn": 7,
+                  "action": 533,
+                  "target": 732,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    134,
+                    135
+                  ],
+                  "source": "executed-paths",
+                  "origin": 535
+                }
+              },
+              {
+                "seed": 20261421,
+                "value": {
+                  "turn": 8,
+                  "action": 653,
+                  "target": 368,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    137,
+                    139,
+                    140,
+                    141
+                  ],
+                  "source": "executed-paths",
+                  "origin": 712
+                }
+              },
+              {
+                "seed": 20261422,
+                "value": {
+                  "turn": 7,
+                  "action": 526,
+                  "target": 277,
+                  "ground": [
+                    165,
+                    197
+                  ],
+                  "escort": [
+                    134,
+                    135,
+                    136
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261423,
+                "value": {
+                  "turn": 6,
+                  "action": 261,
+                  "target": 452,
+                  "ground": [
+                    165
+                  ],
+                  "escort": [
+                    132,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261424,
+                "value": {
+                  "turn": 8,
+                  "action": 685,
+                  "target": 368,
+                  "ground": [
+                    197
+                  ],
+                  "escort": [
+                    87,
+                    134,
+                    136
+                  ],
+                  "source": "executed-paths",
+                  "origin": 460
+                }
+              },
+              {
+                "seed": 20261425,
+                "value": {
+                  "turn": 6,
+                  "action": 304,
+                  "target": 452,
+                  "ground": [
+                    194
+                  ],
+                  "escort": [
+                    88,
+                    128,
+                    130
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261426,
+                "value": {
+                  "turn": 5,
+                  "action": 56,
+                  "target": 452,
+                  "ground": [
+                    165
+                  ],
+                  "escort": [
+                    87,
+                    128,
+                    130
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261427,
+                "value": {
+                  "turn": 6,
+                  "action": 273,
+                  "target": 452,
+                  "ground": [
+                    196
+                  ],
+                  "escort": [
+                    128,
+                    132,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 460
+                }
+              },
+              {
+                "seed": 20261428,
+                "value": {
+                  "turn": 7,
+                  "action": 483,
+                  "target": 452,
+                  "ground": [
+                    194
+                  ],
+                  "escort": [
+                    132,
+                    134,
+                    135,
+                    136
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261429,
+                "value": {
+                  "turn": 8,
+                  "action": 758,
+                  "target": 535,
+                  "ground": [
+                    168
+                  ],
+                  "escort": [
+                    132,
+                    134,
+                    135
+                  ],
+                  "source": "executed-paths",
+                  "origin": 647
+                }
+              },
+              {
+                "seed": 20261430,
+                "value": {
+                  "turn": 8,
+                  "action": 686,
+                  "target": 535,
+                  "ground": [
+                    194
+                  ],
+                  "escort": [
+                    87,
+                    128,
+                    130
+                  ],
+                  "source": "executed-paths",
+                  "origin": 647
+                }
+              },
+              {
+                "seed": 20261431,
+                "value": {
+                  "turn": 6,
+                  "action": 293,
+                  "target": 452,
+                  "ground": [
+                    194
+                  ],
+                  "escort": [
+                    124,
+                    128,
+                    129,
+                    132,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              },
+              {
+                "seed": 20261432,
+                "value": {
+                  "turn": 6,
+                  "action": 357,
+                  "target": 452,
+                  "ground": [
+                    165
+                  ],
+                  "escort": [
+                    132,
+                    133
+                  ],
+                  "source": "executed-paths",
+                  "origin": 603
+                }
+              }
+            ],
+            "firstLandingFormation": [
+              {
+                "seed": 20261401,
+                "value": {
+                  "turn": 8,
+                  "action": 678,
+                  "target": 788,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 788,
+                    "ground": [
+                      195,
+                      168
+                    ],
+                    "escort": [
+                      128,
+                      135
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261402,
+                "value": {
+                  "turn": 6,
+                  "action": 344,
+                  "target": 368,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 368,
+                    "ground": [
+                      165
+                    ],
+                    "escort": [
+                      132,
+                      133
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261403,
+                "value": {
+                  "turn": 8,
+                  "action": 651,
+                  "target": 452,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 452,
+                    "ground": [
+                      197
+                    ],
+                    "escort": [
+                      136,
+                      137,
+                      138
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261404,
+                "value": {
+                  "turn": 6,
+                  "action": 354,
+                  "target": 480,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 480,
+                    "ground": [
+                      195
+                    ],
+                    "escort": [
+                      133,
+                      128,
+                      130
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261405,
+                "value": {
+                  "turn": 7,
+                  "action": 607,
+                  "target": 368,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 368,
+                    "ground": [
+                      203
+                    ],
+                    "escort": [
+                      128,
+                      134,
+                      135
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261406,
+                "value": {
+                  "turn": 7,
+                  "action": 520,
+                  "target": 368,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 368,
+                    "ground": [
+                      165,
+                      197
+                    ],
+                    "escort": [
+                      134,
+                      135
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261407,
+                "value": {
+                  "turn": 6,
+                  "action": 285,
+                  "target": 452,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 452,
+                    "ground": [
+                      165
+                    ],
+                    "escort": [
+                      132,
+                      133
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261408,
+                "value": {
+                  "turn": 8,
+                  "action": 740,
+                  "target": 421,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 421,
+                    "ground": [
+                      193
+                    ],
+                    "escort": [
+                      139,
+                      123,
+                      140
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261409,
+                "value": {
+                  "turn": 8,
+                  "action": 630,
+                  "target": 535,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 535,
+                    "ground": [
+                      195
+                    ],
+                    "escort": [
+                      128,
+                      134
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261410,
+                "value": {
+                  "turn": 7,
+                  "action": 598,
+                  "target": 452,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 452,
+                    "ground": [
+                      165
+                    ],
+                    "escort": [
+                      134,
+                      135
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261411,
+                "value": {
+                  "turn": 7,
+                  "action": 510,
+                  "target": 789,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 789,
+                    "ground": [
+                      202,
+                      196
+                    ],
+                    "escort": [
+                      129
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261412,
+                "value": {
+                  "turn": 6,
+                  "action": 343,
+                  "target": 368,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 368,
+                    "ground": [
+                      165
+                    ],
+                    "escort": [
+                      130,
+                      132,
+                      133
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261413,
+                "value": {
+                  "turn": 7,
+                  "action": 490,
+                  "target": 304,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 304,
+                    "ground": [
+                      194
+                    ],
+                    "escort": [
+                      132,
+                      134,
+                      135,
+                      136,
+                      129
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261414,
+                "value": {
+                  "turn": 6,
+                  "action": 306,
+                  "target": 452,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 452,
+                    "ground": [
+                      165
+                    ],
+                    "escort": [
+                      133,
+                      128,
+                      130
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261415,
+                "value": {
+                  "turn": 9,
+                  "action": 815,
+                  "target": 535,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 535,
+                    "ground": [
+                      194
+                    ],
+                    "escort": [
+                      132,
+                      139,
+                      134,
+                      135,
+                      140
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261416,
+                "value": {
+                  "turn": 7,
+                  "action": 639,
+                  "target": 452,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 452,
+                    "ground": [
+                      197
+                    ],
+                    "escort": [
+                      128,
+                      134,
+                      87
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261417,
+                "value": {
+                  "turn": 7,
+                  "action": 534,
+                  "target": 421,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 421,
+                    "ground": [
+                      197
+                    ],
+                    "escort": [
+                      128,
+                      132,
+                      134,
+                      135
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261418,
+                "value": {
+                  "turn": 6,
+                  "action": 298,
+                  "target": 452,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 452,
+                    "ground": [
+                      196
+                    ],
+                    "escort": [
+                      133,
+                      128,
+                      130
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261419,
+                "value": {
+                  "turn": 7,
+                  "action": 390,
+                  "target": 480,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 480,
+                    "ground": [
+                      165,
+                      195
+                    ],
+                    "escort": [
+                      134,
+                      128
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261420,
+                "value": {
+                  "turn": 7,
+                  "action": 532,
+                  "target": 732,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 732,
+                    "ground": [
+                      196,
+                      197
+                    ],
+                    "escort": [
+                      132,
+                      87,
+                      134,
+                      135
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261421,
+                "value": {
+                  "turn": 8,
+                  "action": 651,
+                  "target": 368,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 368,
+                    "ground": [
+                      197
+                    ],
+                    "escort": [
+                      139,
+                      140,
+                      141,
+                      137
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261422,
+                "value": {
+                  "turn": 7,
+                  "action": 525,
+                  "target": 277,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 277,
+                    "ground": [
+                      165,
+                      197
+                    ],
+                    "escort": [
+                      134,
+                      135,
+                      136
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261423,
+                "value": {
+                  "turn": 6,
+                  "action": 259,
+                  "target": 452,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 452,
+                    "ground": [
+                      165
+                    ],
+                    "escort": [
+                      132,
+                      133
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261424,
+                "value": {
+                  "turn": 9,
+                  "action": 941,
+                  "target": 788,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 788,
+                    "ground": [
+                      196,
+                      198
+                    ],
+                    "escort": [
+                      143
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261425,
+                "value": {
+                  "turn": 6,
+                  "action": 301,
+                  "target": 452,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 452,
+                    "ground": [
+                      194
+                    ],
+                    "escort": [
+                      128,
+                      130,
+                      88
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261426,
+                "value": {
+                  "turn": 5,
+                  "action": 54,
+                  "target": 452,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 452,
+                    "ground": [
+                      165
+                    ],
+                    "escort": [
+                      128,
+                      130,
+                      87
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261427,
+                "value": {
+                  "turn": 6,
+                  "action": 272,
+                  "target": 452,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 452,
+                    "ground": [
+                      196
+                    ],
+                    "escort": [
+                      128,
+                      132,
+                      133
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261428,
+                "value": {
+                  "turn": 7,
+                  "action": 481,
+                  "target": 452,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 452,
+                    "ground": [
+                      194
+                    ],
+                    "escort": [
+                      132,
+                      134,
+                      135,
+                      136
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261429,
+                "value": {
+                  "turn": 8,
+                  "action": 757,
+                  "target": 535,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 535,
+                    "ground": [
+                      168
+                    ],
+                    "escort": [
+                      132,
+                      134,
+                      135
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261430,
+                "value": {
+                  "turn": 8,
+                  "action": 809,
+                  "target": 484,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 484,
+                    "ground": [
+                      197
+                    ],
+                    "escort": [
+                      134,
+                      135
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261431,
+                "value": {
+                  "turn": 6,
+                  "action": 291,
+                  "target": 452,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 452,
+                    "ground": [
+                      194
+                    ],
+                    "escort": [
+                      128,
+                      132,
+                      133,
+                      129,
+                      124
+                    ],
+                    "support": []
+                  }
+                }
+              },
+              {
+                "seed": 20261432,
+                "value": {
+                  "turn": 6,
+                  "action": 355,
+                  "target": 452,
+                  "source": "publicTrace",
+                  "formation": {
+                    "ready": true,
+                    "target": 452,
+                    "ground": [
+                      165
+                    ],
+                    "escort": [
+                      132,
+                      133
+                    ],
+                    "support": []
+                  }
+                }
+              }
+            ],
+            "invalidGames": []
+          },
+          "pairedWinRateDifference": {
+            "n": 32,
+            "estimate": 0.09375,
+            "low": 0,
+            "high": 0.21875,
+            "iterations": 10000,
+            "seed": 20261004,
+            "discordantPairs": 3,
+            "method": "paired percentile bootstrap",
+            "caveat": null
+          }
+        }
+      ]
     }
   ],
   "publication": {
-    "status": "authorized by latest user request; integration verified; preparing GitHub upload",
-    "committed": false,
-    "pushed": false,
-    "pullRequestCreated": false,
+    "status": "uploaded; draft PR created at user request",
+    "implementationCommit": "2138eba263cb89f1bd8a891685f41f18452bcd36",
+    "llmCommit": "d6ade89",
+    "committed": true,
+    "pushed": true,
+    "pullRequestCreated": true,
+    "pullRequestUrl": "https://github.com/fuxiaoji/rots/pull/3",
+    "branch": "feat/AI-WIN-03-both-campaigns",
+    "base": "feat/AI-WIN-02-honshu",
     "supersedes": "previous user pause; historical records preserved"
   },
   "currentWorktree": "/Users/Zhuanz1/Desktop/code/eots/ai-win-03-worktree",
   "currentFrozenCandidate": {
     "version": "v21",
     "sha256": "82a79baa7413584f008ed9748e23e1f4135ada2cd4a72ae62c188adbd6029b09",
-    "status": "v21 complete evaluations running; source separately adds v22 per-plan cache"
+    "status": "complete v21 development; all seven Allies wins verified, goals unmet"
   },
   "currentSourceCandidate": {
     "version": "combined AI-WIN-03 and LLM-01",
     "sha256": "e6035f5dda64d91f5000e574aa83bade650b68e6e63745e730c7f6c9cbac199a",
     "status": "115 related Node tests and 82 source contracts passed; current full-game win rates not established for this combined bundle"
-  }
+  },
+  "publishedReplayArchive": "replays/ai-win-03/index.json"
 }
