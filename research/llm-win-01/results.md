@@ -27,6 +27,8 @@
 | dev-02 / 同局尝试247 | 同上 | 246次网络请求+1本地配置失败（累计） | 9,277,836（累计） | 642 | Tarakan/Rangoon已夺，Miri被夺回；DEI余5/BURMA余3；完整回放通过 |
 | dev-02 / 同局尝试311 | 同上 | 310次网络请求+1本地配置失败（累计） | 11,905,682（累计） | 823 | Burma要求格全控但标记0；DEI仅余Tjilatjap/Miri，完整回放通过 |
 | dev-02 / 同局尝试334 | 同上 | 333次网络请求+1本地配置失败（累计） | 12,760,653（累计） | 860 | DEI仍余2/Burma全控待结算；HTTP402，余额-0.05元；完整回放通过 |
+| dev-02 / GLM接续尝试345 | 同上 | 总344网络调用，其中GLM11 | 13,134,484（累计） | 902 | Burma正式4且控制；GLM首次high选牌300秒超时，完整回放通过 |
+| dev-02 / GLM接续尝试361 | 同上 | 总360网络调用，其中GLM27 | 13,809,494（累计） | 918 | low16次全部完成，Miri方向集结；DEI余2，完整回放通过 |
 
 dev-02 各行是同一局的累计检查点，不能相加。请求59的失败仍计入：生成16,384tokens、耗时93,603ms，status paused。第169动作后显式迁移v7.2，生成上限32,768、超时240秒，继续缅甸与东印度；当前仍在运行，没有整局胜率结论。上限在[官方API允许范围](https://api-docs.deepseek.com/api/create-chat-completion/)内。
 
@@ -95,3 +97,7 @@ dev-02 各行是同一局的累计检查点，不能相加。请求59的失败�
 - 切换前save/config/replay三文件私有归档；controllerHistory保存stateHash、seed、冻结rules、对手、继承己方记忆哈希和priorStats。原333次网络调用、全部tokens/失败/费用保留，程序不能静默换模型。goal入口允许明确支持的DeepSeek/GLM，结果附mixedProviders与阶段用量；不称混合轨迹GLM独立整局胜。
 - 12 conquest本地检查通过，新增provider切换测试证明棋局/动作/记忆/统计与终态哈希不变、完整恢复回放一致；Astra只读裁决同意，root实施。未改变规则/对手/PRNG，没有新增开发协作外部模型调用。
 - 第335请求首次实际GLM响应glm-5.3，37,494报告tokens/5,189ms；后续合法推进至第5回合，Burma标记由0→4，PH/MAL仍2/2且正控制。DEI仍余309/421，目标未达；GLM新的有界段运行中，完整结算证据待该段检查点，货币unknown。
+
+- GLM第345请求首次high选牌300,006ms超时，pending=false、原进程退出、未执行动作、用量unknown，902动作完整回放通过；未知费用保留，不称免费。随后显式planningEffort改low、profile/runner历史登记，仍GLM-5.3同一冻结局面。
+- 第361尝试/918动作完整回放通过。GLM接续累计27网络请求：1,048,841已报告tokens、506,055ms、1超时/usageUnknown1、0格式无效/重试、forced7/assisted0；最新low16请求全部完成，675,010tokens/133,168ms。窗口不同、仅描述，不作high/low因果棋力比较；货币unknown。
+- PH/MAL/Burma正式2/2/4且控制，DEI仍缺309/421。Army43实际至394做集结，没有把无Miri路径的前推称夺占；原异起点护航在taskFacts明确未同港，当前整套登陆未验证成功。新32请求有界段继续，不改规则或下注未来随机数。

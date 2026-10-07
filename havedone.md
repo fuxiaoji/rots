@@ -709,3 +709,9 @@
 - 用户“用glm”后，rev860显式Japan DeepSeek→GLM-5.3，controllerHistory记录状态/冻结规则/对手/记忆哈希及priorStats；原保存点三文件归档，费用/失败/动作不重置。实际响应model与profile分开记录，结果混合归因，不称GLM独立整局/纯DeepSeek胜。
 - 12项conquest通过，新增切换保持状态/记忆/统计/完整回放检查；Astra只读裁决、root实施，真实开发协作外部API0。GLM首请求335实际glm-5.3，37,494tokens/5,189ms。
 - 实际接续进入第5回合，Burma正式4、PH/MAL2/2正控制；DEI余Tjilatjap/Miri。新有界段进行中，目标未达，完整结算与GLM阶段用量待该段结束，货币unknown。
+
+### 2026-10-07 — LLM-WIN-01 GLM接续检查点（目标未达）
+
+- 902动作/345尝试完整回放，GLM首次high选牌300秒超时，pending=false/进程退出、未执行动作、用量unknown保留。显式规划effort改low后16次全部完成、无新增格式错误，918动作完整回放。
+- GLM阶段27真实请求，1,048,841报告tokens/506,055ms、1超时unknown、0格式无效/重试、forced7/assisted0；货币unknown。不同窗口时延不作因果棋力结论。
+- PH/MAL/Burma正式2/2/4且控制，DEI余Tjilatjap/Miri。低推理当前只实际集结至394，未称Miri夺控；下一32请求有界段继续，同规则、同对手、原费用全保留。

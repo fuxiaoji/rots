@@ -1,13 +1,13 @@
 {
   "task": "LLM-WIN-01",
   "status": "in_progress",
-  "recordedAt": "2026-10-07T08:11:17.255Z",
-  "scope": "goal incomplete; same trial saved860; PH/MAL formal, Burma controlled but unprocessed, DEI2 missing; API account needs recharge",
+  "recordedAt": "2026-10-07T09:04:50.470Z",
+  "scope": "DeepSeek to GLM mixed development continuation; 3 formal surrenders, DEI2 missing; goal incomplete",
   "setup": {
     "seed": 20262602,
     "scenario": "1942-1945 (The Shortened Campaign)",
     "players": {
-      "Japan": "llm:deepseek",
+      "Japan": "llm:glm",
       "Allies": "erasmus-campaign"
     },
     "semiBots": {
@@ -20,10 +20,10 @@
     "directOnly": true
   },
   "profile": {
-    "id": "deepseek",
-    "provider": "deepseek",
-    "baseUrl": "https://api.deepseek.com",
-    "model": "deepseek-flash",
+    "id": "glm",
+    "provider": "glm",
+    "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
+    "model": "glm-5.3",
     "vision": false,
     "timeoutMs": 240000,
     "maxTokens": 32768,
@@ -37,9 +37,10 @@
       }
     },
     "planningOverrides": {
-      "maxTokens": 65536,
-      "timeoutMs": 480000
-    }
+      "maxTokens": 32768,
+      "timeoutMs": 300000
+    },
+    "planningEffort": "low"
   },
   "profileHistory": [
     {
@@ -123,6 +124,101 @@
           "timeoutMs": 480000
         }
       }
+    },
+    {
+      "revision": 860,
+      "from": {
+        "id": "deepseek",
+        "provider": "deepseek",
+        "baseUrl": "https://api.deepseek.com",
+        "model": "deepseek-flash",
+        "vision": false,
+        "timeoutMs": 240000,
+        "maxTokens": 32768,
+        "extraBody": {
+          "thinking": {
+            "type": "enabled"
+          },
+          "reasoning_effort": "high",
+          "response_format": {
+            "type": "json_object"
+          }
+        },
+        "planningOverrides": {
+          "maxTokens": 65536,
+          "timeoutMs": 480000
+        }
+      },
+      "to": {
+        "id": "glm",
+        "provider": "glm",
+        "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
+        "model": "glm-5.3",
+        "vision": false,
+        "timeoutMs": 240000,
+        "maxTokens": 32768,
+        "extraBody": {
+          "thinking": {
+            "type": "enabled"
+          },
+          "reasoning_effort": "high",
+          "response_format": {
+            "type": "json_object"
+          }
+        },
+        "planningOverrides": {
+          "maxTokens": 32768,
+          "timeoutMs": 300000
+        }
+      }
+    },
+    {
+      "revision": 902,
+      "from": {
+        "id": "glm",
+        "provider": "glm",
+        "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
+        "model": "glm-5.3",
+        "vision": false,
+        "timeoutMs": 240000,
+        "maxTokens": 32768,
+        "extraBody": {
+          "thinking": {
+            "type": "enabled"
+          },
+          "reasoning_effort": "high",
+          "response_format": {
+            "type": "json_object"
+          }
+        },
+        "planningOverrides": {
+          "maxTokens": 32768,
+          "timeoutMs": 300000
+        }
+      },
+      "to": {
+        "id": "glm",
+        "provider": "glm",
+        "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
+        "model": "glm-5.3",
+        "vision": false,
+        "timeoutMs": 240000,
+        "maxTokens": 32768,
+        "extraBody": {
+          "thinking": {
+            "type": "enabled"
+          },
+          "reasoning_effort": "high",
+          "response_format": {
+            "type": "json_object"
+          }
+        },
+        "planningOverrides": {
+          "maxTokens": 32768,
+          "timeoutMs": 300000
+        },
+        "planningEffort": "low"
+      }
     }
   ],
   "rulesSha256": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233",
@@ -133,8 +229,8 @@
     "js/server/llm/session.js": "a20f77ba6448284d75b841e347aab6844c874e6069e5f1f0ce9053569ee1ed89",
     "js/server/llm/rtt.js": "b7ee6c8a3caa28ab7dc070c64c78906d395383cdcd3b436b74aed3dfb9b5b1b6",
     "js/server/query.js": "da228b4f73073b7056ba260311df6bb0f6e88ecdc385c9c5bac8066d4560e3aa",
-    "tools/llm-goal-run.js": "b72d282b23338c294b626b1cfc57e9f2f2c63d1b6dbfe6c250a0f3b388f1c4aa",
-    "tests/llm-conquest.test.js": "c4b620b78fa11049b8ebdb24d071efc394d63327b353dda9ba439a426dbc0d23",
+    "tools/llm-goal-run.js": "598200d070adef50a3b72fb8c513f062560a42c33a968d6427aa675a035737b1",
+    "tests/llm-conquest.test.js": "0fa8adf1262c394502299b76c08895ec98bf9f25e0988f4c7e678acf91d46b35",
     "docs/rules/llm-campaign-guide.md": "78287a0f69b24a2007a53a4665a0dfbbd767a90ee07183195d80c484e92cf01a",
     "docs/rules/llm-operational-guide.md": "96dbbf88ac2b53577b0b242a525e8d331fd0820ae7bf57ba17705cff9a7c3730",
     "rules.js": "157f93e75bf7bf19189d0d409061d8849d999808a026569c37144cb4d48bd1dd",
@@ -979,6 +1075,230 @@
         "httpStatus": 402,
         "actionCommitted": false
       }
+    },
+    {
+      "requests": 345,
+      "networkRequests": 344,
+      "localConfigFailures": 1,
+      "revision": 902,
+      "turn": 5,
+      "stats": {
+        "requests": 345,
+        "retries": 16,
+        "failedRequests": 5,
+        "invalidResponses": 17,
+        "totalTokens": 13134484,
+        "promptTokens": 11664226,
+        "completionTokens": 1470258,
+        "usageUnknown": 3,
+        "latencyMs": 8171015,
+        "forcedActions": 169,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              421
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 4,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          }
+        ],
+        "naturalComplete": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 902,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "a2a76e4efc381681dc104788daca1e11c58753618594f3bb38fa1eccacad1e40"
+      },
+      "attribution": {
+        "profileId": "glm",
+        "model": "glm-5.3",
+        "mixedProviders": true,
+        "controllerHistory": [
+          {
+            "revision": 860,
+            "requests": 334,
+            "role": "Japan",
+            "from": "llm:deepseek",
+            "to": "llm:glm",
+            "seed": 20262602,
+            "rulesSha256": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233",
+            "opponent": "erasmus-campaign",
+            "stateHash": "e21402b91b7ebf53cae2f03d994159dc24a231d42e0ae71181e7c7f94b4e3467",
+            "inheritedMemoryHash": "26f7bfed484d3a1ea9eca53ef532bc540ac7b337201df3e5f25364b1faee0782",
+            "priorStats": {
+              "requests": 334,
+              "retries": 16,
+              "failedRequests": 4,
+              "invalidResponses": 17,
+              "totalTokens": 12760653,
+              "promptTokens": 11293566,
+              "completionTokens": 1467087,
+              "usageUnknown": 2,
+              "latencyMs": 7798128,
+              "forcedActions": 162,
+              "assistedActions": 0,
+              "cost": "unknown"
+            },
+            "at": "2026-10-07T08:39:47.376Z",
+            "reason": "explicit user-authorized model continuation; board, PRNG, memory and costs preserved"
+          }
+        ],
+        "profileStageStats": {
+          "requests": 11,
+          "retries": 0,
+          "failedRequests": 1,
+          "invalidResponses": 0,
+          "totalTokens": 373831,
+          "promptTokens": 370660,
+          "completionTokens": 3171,
+          "usageUnknown": 1,
+          "latencyMs": 372887,
+          "forcedActions": 7,
+          "assistedActions": 0,
+          "cost": "unknown"
+        }
+      },
+      "segmentSha256": "48fbe1bf461de1aaffacbc43d5a44972ea30217b7e94e5ede456a468b91ce1ad"
+    },
+    {
+      "requests": 361,
+      "networkRequests": 360,
+      "localConfigFailures": 1,
+      "revision": 918,
+      "turn": 5,
+      "stats": {
+        "requests": 361,
+        "retries": 16,
+        "failedRequests": 5,
+        "invalidResponses": 17,
+        "totalTokens": 13809494,
+        "promptTokens": 12333802,
+        "completionTokens": 1475692,
+        "usageUnknown": 3,
+        "latencyMs": 8304183,
+        "forcedActions": 169,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              421
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 4,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          }
+        ],
+        "naturalComplete": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 918,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "d437c1900cd9258bffa0d7ca10aeddc55c342d313250cf9741b5967a0a014486"
+      },
+      "attribution": {
+        "profileId": "glm",
+        "model": "glm-5.3",
+        "mixedProviders": true,
+        "controllerHistory": [
+          {
+            "revision": 860,
+            "requests": 334,
+            "role": "Japan",
+            "from": "llm:deepseek",
+            "to": "llm:glm",
+            "seed": 20262602,
+            "rulesSha256": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233",
+            "opponent": "erasmus-campaign",
+            "stateHash": "e21402b91b7ebf53cae2f03d994159dc24a231d42e0ae71181e7c7f94b4e3467",
+            "inheritedMemoryHash": "26f7bfed484d3a1ea9eca53ef532bc540ac7b337201df3e5f25364b1faee0782",
+            "priorStats": {
+              "requests": 334,
+              "retries": 16,
+              "failedRequests": 4,
+              "invalidResponses": 17,
+              "totalTokens": 12760653,
+              "promptTokens": 11293566,
+              "completionTokens": 1467087,
+              "usageUnknown": 2,
+              "latencyMs": 7798128,
+              "forcedActions": 162,
+              "assistedActions": 0,
+              "cost": "unknown"
+            },
+            "at": "2026-10-07T08:39:47.376Z",
+            "reason": "explicit user-authorized model continuation; board, PRNG, memory and costs preserved"
+          }
+        ],
+        "profileStageStats": {
+          "requests": 27,
+          "retries": 0,
+          "failedRequests": 1,
+          "invalidResponses": 0,
+          "totalTokens": 1048841,
+          "promptTokens": 1040236,
+          "completionTokens": 8605,
+          "usageUnknown": 1,
+          "latencyMs": 506055,
+          "forcedActions": 7,
+          "assistedActions": 0,
+          "cost": "unknown"
+        }
+      },
+      "segmentSha256": "4b04200ee5f4d92536268964773ca6d36dc63e8984454c9025503048aa6465b8"
     }
   ],
   "localVerification": {
@@ -1082,7 +1402,9 @@
     "isAvailable": false,
     "currency": "CNY",
     "balance": "-0.05",
-    "sameKeyRechargeRequested": true
+    "sameKeyRechargeRequested": true,
+    "resolvedByUserModelSwitch": "glm",
+    "rechargeNotAssumed": true
   },
   "nativeDeployment": {
     "promptVersion": "eots-llm-v7.8",
@@ -1092,5 +1414,46 @@
     "trialRulesKept": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233",
     "browserVisualCheck": false,
     "realNativeRequests": 0
+  },
+  "controllerHistory": [
+    {
+      "revision": 860,
+      "requests": 334,
+      "role": "Japan",
+      "from": "llm:deepseek",
+      "to": "llm:glm",
+      "seed": 20262602,
+      "rulesSha256": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233",
+      "opponent": "erasmus-campaign",
+      "stateHash": "e21402b91b7ebf53cae2f03d994159dc24a231d42e0ae71181e7c7f94b4e3467",
+      "inheritedMemoryHash": "26f7bfed484d3a1ea9eca53ef532bc540ac7b337201df3e5f25364b1faee0782",
+      "priorStats": {
+        "requests": 334,
+        "retries": 16,
+        "failedRequests": 4,
+        "invalidResponses": 17,
+        "totalTokens": 12760653,
+        "promptTokens": 11293566,
+        "completionTokens": 1467087,
+        "usageUnknown": 2,
+        "latencyMs": 7798128,
+        "forcedActions": 162,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "at": "2026-10-07T08:39:47.376Z",
+      "reason": "explicit user-authorized model continuation; board, PRNG, memory and costs preserved"
+    }
+  ],
+  "glmContinuation": {
+    "startRevision": 860,
+    "tests": {
+      "conquest": 12,
+      "channel": "local; API0"
+    },
+    "firstActualResponseModel": "glm-5.3",
+    "firstResponseTokens": 37494,
+    "firstResponseLatencyMs": 5189,
+    "attribution": "mixed DeepSeek to GLM; not solo GLM or pure DeepSeek"
   }
 }

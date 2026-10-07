@@ -38,9 +38,11 @@ async function main(){const o={};for(let i=2;i<process.argv.length;i+=2){if(!pro
  if(!["deepseek","glm"].includes(profileId))throw Error("PROFILE_UNSUPPORTED")
  providers.loadEnv(path.resolve(o["env-file"]))
  const profile={...providers.getProfile(profileId),...(profileId==="deepseek"?{model:"deepseek-flash"}:{}),vision:false,extraBody:{thinking:{type:"enabled"},reasoning_effort:"high",response_format:{type:"json_object"}},maxTokens:32768,timeoutMs:240000}
+ const planningEffort=o["planning-effort"]||(profileId==="glm"?"low":"high")
+ if(!["low","high"].includes(planningEffort))throw Error("EFFORT_UNSUPPORTED")
  const planningOverrides=profileId==="deepseek"?{maxTokens:65536,timeoutMs:480000}:{maxTokens:32768,timeoutMs:300000}
  providers.createClient({...profile,...planningOverrides}) // Preflight before session request counters/journal; no transport.
- const {apiKey,...safeProfile}=profile,publicProfile={...safeProfile,planningOverrides}
+ const {apiKey,...safeProfile}=profile,publicProfile={...safeProfile,planningOverrides,planningEffort}
  const runnerHash=hash(fs.readFileSync(__filename,"utf8")),maxNewRequests=Number(o.requests||64);if(!Number.isSafeInteger(maxNewRequests)||maxNewRequests<1||maxNewRequests>512)throw Error("SEGMENT_LIMIT")
  let s
  if(fs.existsSync(saveFile)){
@@ -63,7 +65,7 @@ async function main(){const o={};for(let i=2;i<process.argv.length;i+=2){if(!pro
  }
  s.profiles[profileId]=profile
  s.clients[profileId]={complete:async messages=>{const p=JSON.parse(messages[1].content.split("\n上次输出无效：")[0]),planning=/offensive_segment|choose_hq/.test(p.observation.state)||p.observation.state==="activate_units"&&p.observation.activation?.activeCount===0
-   const effort=planning?"high":"low",requestProfile={...profile,...(planning?planningOverrides:{}),extraBody:{...profile.extraBody,reasoning_effort:effort}}
+   const effort=planning?planningEffort:"low",requestProfile={...profile,...(planning?planningOverrides:{}),extraBody:{...profile.extraBody,reasoning_effort:effort}}
    const ordinal=s.stats.requests,file=path.join(out,"requests",String(ordinal).padStart(6,"0")+".json"),record={ordinal,pending:true,profileId,provider:profile.provider,role:s.state.active,revision:s.revision,promptHash:hash(messages),model:profile.model,effort,maxTokens:requestProfile.maxTokens,timeoutMs:requestProfile.timeoutMs,runnerHash,at:new Date().toISOString(),messages}
    write(file,record);const begin=Date.now()
    try{const r=await providers.createClient(requestProfile).complete(messages);write(file,{...record,pending:false,content:r.content,outputHash:hash(r.content),model:r.model,usage:r.usage,latencyMs:r.latencyMs});return r}
