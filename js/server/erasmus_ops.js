@@ -1691,11 +1691,25 @@ function eop_target_meta(role, hex) {
 // Shared by activation, task-force composition and actual movement. Semantic
 // restrictions remain hard filters even when a preferred candidate is unavailable.
 function eop_unit_matches_target(unit, role, meta, target) {
-    if (!meta) return true
+    const enhancedJapan=role==="Japan" && typeof em_cfg==="function" && !!em_cfg()?.japan_campaign_planner
+    if (!meta && !enhancedJapan) return true
     const id = typeof unit === "number" ? unit : unit?.id
     const p = typeof unit === "number" ? pieces[unit] : unit
     if (!p || p.faction !== (role === "Japan" ? JP : AP)) return false
     const location = Number.isInteger(p.location) ? p.location : G.location[id]
+    // Enhanced Japan retains one ground defender (the weakest) even when an
+    // offensive is delegated to the original chart. Reaction/forced retreats
+    // are unaffected; only proactive departures are screened.
+    if (enhancedJapan && G.offensive?.attacker===JP
+        && p.class==="ground" && location!==target && is_space_controlled(location,JP)
+        && [2909,3009,3209,3709,3813,3814].map(hex_to_int).includes(location)) {
+        const guards=pieces.map((other,u)=>({piece:other,id:u})).filter(g=>g.piece?.faction===JP
+            && g.piece.class==="ground" && G.location[g.id]===location)
+        const strength=g=>set_has(G.reduced,g.id) ? Number(g.piece.rcf)||Math.ceil(Number(g.piece.cf)/2) : Number(g.piece.cf)||0
+        guards.sort((a,b)=>strength(a)-strength(b)||a.id-b.id)
+        if (guards[0]?.id===id) return false
+    }
+    if (!meta) return true
     if (Array.isArray(meta.requiredUnits) && !meta.requiredUnits.includes(id)) return false
     if (meta.unitFilter === "COMMONWEALTH_OR_US_ARMY" && !["army", "br", "au", "ind", "bu"].includes(p.service)) return false
     if (meta.requiresFriendlyControl && !is_space_controlled(target, p.faction)) return false

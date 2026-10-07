@@ -957,7 +957,7 @@ function erasmus_profile_decision(name, originalView, originalContext) {
                 priorityTargets: plan.targets.map((t, i) => ({ ...t, priority: i + 1,
                     name: get_map_data(t.hex)?.name || String(t.hex), id: int_to_hex(t.hex),
                     resource: !!get_map_data(t.hex)?.resource, distanceToTokyo: get_distance(t.hex, TOKYO),
-                    achieved: t.kind === "CONQUEST" ? is_space_controlled(t.hex, faction) : plan.tasks.find(x => x.hex === t.hex)?.movementUnitIds.every(id => originalView.ai.units.find(u => u.id === id)?.location === t.hex),
+                    achieved: ec_task_complete(plan.tasks.find(x=>x.id===t.taskId) || t, originalView, faction),
                     controlledBy: is_space_controlled(t.hex, AP) ? "Allies" : "Japan" })) }
         }
         return result

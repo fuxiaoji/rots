@@ -1,3 +1,54 @@
+// Cover the central Pacific approach while keeping southern conquest distinct.
+function ej_island_defense(view,board,units) {
+    const ring=typeof hex_to_int==="function" ? [2909,3009,3209,3709,3813,3814].map(hex_to_int) : []
+    return board.filter(m=>ring.includes(m.hex) && ec_control(m.hex,0)).map(m=>{
+        const ground=units.filter(u=>u.faction===0 && u.class==="ground" && u.location===m.hex)
+            .sort((a,b)=>ec_cf(a)-ec_cf(b)||a.id-b.id)
+        const assault=units.some(u=>u.faction===1 && u.class==="ground" && ec_dist(u.location,m.hex)<=8
+            && (ec_dist(u.location,m.hex)<=2 || units.some(n=>n.faction===1 && n.class==="naval" && n.location===u.location)))
+        return {hex:m.hex,name:m.name,groundCount:ground.length,reserveId:ground[0]?.id ?? null,
+            priority:100+(Number(view.turn)>=5 ? 170 : 0)+(assault ? 180 : 0),threatened:assault}
+    }).sort((a,b)=>b.priority-a.priority||a.hex-b.hex)
+}
+function ej_defense_tasks(env,defense) {
+    const tasks=[]
+    for (const gap of defense.filter(d=>d.groundCount===0)) {
+        for (const u of env.available.filter(u=>u.class==="ground" && !env.garrisonReserve.has(u.id))) {
+            const ground=ec_query_moves([u.id],GROUND_MOVE,env).reachableHexes?.includes(gap.hex)
+            const strategic=!ground && u.stratMove && ec_query_moves([u.id],STRAT_MOVE,env).reachableHexes?.includes(gap.hex)
+            let group=[u],mode=ground?"GROUND":strategic?"STRATEGIC":null,aspCost=0
+            // Friendly empty coastal hexes permit solo ASP transport (8.45).
+            // A normal escort can actually block the no-port landing branch.
+            // Ask the engine first; never grant strategic airfield transport.
+            if (!mode && (u.asp || u.aspCost)) {
+                if (!env.units.some(x=>x.faction!==0 && x.location===gap.hex)) {
+                    const solo=ec_query_moves([u.id],AMPH_MOVE,env)
+                    if (solo.reachableHexes?.includes(gap.hex)) {
+                        mode="AA";aspCost=Number(solo.aspCost || 0)
+                    }
+                }
+                const navy=env.available.filter(n=>n.class==="naval" && n.location===u.location)
+                    .sort((a,b)=>ec_cf(a)-ec_cf(b)||a.id-b.id)
+                for (const escort of mode ? [] : navy) {
+                    const force=[u,escort]
+                    if (force.length>env.budget || !ec_service_compatible(force,env.view,0)) continue
+                    const reach=ec_query_moves(force.map(x=>x.id),AMPH_MOVE,env)
+                    if (!reach.reachableHexes?.includes(gap.hex)) continue
+                    group=force;mode="AA";aspCost=Number(reach.aspCost || 0);break
+                }
+            }
+            if (!mode || group.length>env.budget || aspCost>ec_asp_remaining(env.view,0)) continue
+            const at=env.units.filter(x=>x.faction===0 && x.location===gap.hex && (x.class==="ground" || x.class==="air"))
+            if (at.length>=3 || typeof queryProjectedStack==="function"
+                && !queryProjectedStack(gap.hex,group.map(x=>x.id),{faction:0}).fitsForIncoming) continue
+            tasks.push(ec_make_task("REDEPLOY",gap.hex,group,[],mode,env,
+                {score:gap.priority-ec_dist(u.location,gap.hex)*2-ec_cf(u)*.25,
+                    aspCost,objective:"PACIFIC_ISLAND_GARRISON",followUpTarget:gap.hex,defenseEvidence:gap}))
+        }
+    }
+    return tasks
+}
+
 // AI-WIN-03: Japanese public-view southern campaign. Shared helpers keep
 // card/HQ/ISR/ASP/movement/combat legality in the existing rule queries.
 "use strict"
@@ -262,9 +313,11 @@ function ej_plan(view, context) {
     const role = "Japan", faction = 0, turn = Number(view.turn || 0)
     const units = (view.ai?.units || []).map(u => ({ ...u }))
     const board = ec_map(), byHex = new Map(board.map(m => [m.hex, m])), national = ej_nations(view)
-    const targetNation = new Map(national.flatMap(n => n.missingKeys.map(hex => [hex, n])))
+    const opening=typeof SHORT_CAMPAIGN_SCENARIO==="undefined" || view.sid===SHORT_CAMPAIGN_SCENARIO
+    const defense=ej_island_defense(view,board,units)
+    const targetNation = new Map(opening ? national.flatMap(n => n.missingKeys.map(hex => [hex, n])) : [])
     const dei = national.find(n=>n.name === "DEI")
-    const javaPending = dei.missingKeys.some(hex=>byHex.get(hex)?.region === "Java")
+    const javaPending = opening && dei.missingKeys.some(hex=>byHex.get(hex)?.region === "Java")
     const javaPorts = board.filter(m=>m.region === "Java" && m.port && ec_control(m.hex, faction))
     // A national key list omits the landing gateway. Evaluate a port on the
     // same island before repeatedly assaulting inland keys from overseas.
@@ -297,10 +350,10 @@ function ej_plan(view, context) {
     const activeIds = new Set((view.offensive?.active_units?.[faction] || []).flat())
     const blockers = [], choices = [], pools = [], preparationRoutes=new Map(), preparationEnvs=new Map(),invasionPreparations=new Map(), redeployments = ec_redeploy_history(view, prior, faction)
     const projectedStackFits=new Map()
-    const garrisonReserve = new Set()
+    const garrisonReserve = new Set(defense.filter(d=>d.reserveId!==null).map(d=>d.reserveId))
     // Hold completed national keys through their deadline. The opponent may
     // stage an amphibious attack from beyond nearby ground-unit range.
-    for (const n of national.filter(n => turn <= n.deadline && !n.missingKeys.length)) for (const hex of n.keys) {
+    for (const n of national.filter(n => opening && turn <= n.deadline && !n.missingKeys.length)) for (const hex of n.keys) {
         const ground = units.filter(u => u.faction === 0 && u.class === "ground" && u.location === hex)
         if (ground.length === 1) garrisonReserve.add(ground[0].id)
     }
@@ -339,9 +392,10 @@ function ej_plan(view, context) {
                 objective: "SOUTHERN_ASSEMBLE" }))
         transport.push(...ej_bridgehead_reinforcements(env,targetNation,targetPriority,attack))
         transport.push(...ej_invasion_assembly(env,targetNation,targetPriority))
+        transport.push(...ej_defense_tasks(env,defense))
         if (javaPending) transport.push(...ej_java_advances(env,
             dei.missingKeys.filter(h=>byHex.get(h)?.region==="Java"),targetPriority(dei.missingKeys.find(h=>byHex.get(h)?.region==="Java"))))
-        for (const n of national.filter(n=>turn<=n.deadline && !n.missingKeys.length)) for (const hex of n.keys) {
+        for (const n of national.filter(n=>opening && turn<=n.deadline && !n.missingKeys.length)) for (const hex of n.keys) {
             if (units.some(u=>u.faction===faction && u.class==="ground" && u.location===hex)) continue
             for (const u of available.filter(u=>u.class==="ground" && !garrisonReserve.has(u.id))) {
                 const groundMove=ec_query_moves([u.id],GROUND_MOVE,env).reachableHexes?.includes(hex)
@@ -416,10 +470,10 @@ function ej_plan(view, context) {
         movementModes: t.movementModes.slice(), ...(t.movementGroups ? {movementGroups:t.movementGroups} : {}), campaignTask: true, taskId: t.id, objective: t.objective, damageLevel: 1 }))
     return { version: 1, role, turn, cardId: best?.cardId || currentCard, cardIntent: best?.cardMode || null, cardSpec: best?.cardSpec || null,
         preferredHq: best?.hq || null, activationBudget: best?.budget || 0,
-        objective: { type: first ? "SOUTHERN_CONQUEST" : captureTargets.size ? "BLOCKED" : "AWAIT_NATIONAL_STATUS", hex: first?.followUpTarget ?? first?.hex ?? objective },
+        objective: { type: first ? first.objective==="PACIFIC_ISLAND_GARRISON" ? "PACIFIC_ISLAND_GARRISON" : "SOUTHERN_CONQUEST" : captureTargets.size ? "BLOCKED" : "AWAIT_NATIONAL_STATUS", hex: first?.followUpTarget ?? first?.hex ?? objective },
         phase: first ? first.kind === "CONQUEST" ? "CAPTURE" : "ASSEMBLE" : "BLOCKED",
         focus: first?.hex ?? null, targets, tasks, blockers, garrisonReserveIds: [...garrisonReserve].sort((a,b)=>a-b),
-        campaign: { theater: "SOUTHERN", objectiveHex: objective, rallyPort: null, redeployments,
+        campaign: { theater: first?.objective==="PACIFIC_ISLAND_GARRISON" ? "PACIFIC_DEFENSE" : "SOUTHERN", islandDefense:defense, objectiveHex: objective, rallyPort: null, redeployments,
             objectiveSinceTurn: previous === objective ? prior?.campaign?.objectiveSinceTurn ?? turn : turn },
         pow: { required: 0, held: 0, gap: 0, politicalWill: Number(view.political_will || 0), remainingCards: ownCards.length,
             remainingOffensives: ownCards.length, requiredCapturesPerCard: 0, quotaFeasibility: "not-applicable-to-japan" },
