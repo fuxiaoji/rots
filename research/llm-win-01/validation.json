@@ -1,8 +1,8 @@
 {
   "task": "LLM-WIN-01",
   "status": "in_progress",
-  "recordedAt": "2026-10-07T06:10:00.114Z",
-  "scope": "development checkpoints; PH/MAL surrendered, four-country goal not achieved",
+  "recordedAt": "2026-10-07T06:48:04.316Z",
+  "scope": "development checkpoints; PH/MAL formal surrender, MAL lost key, DEI/BURMA incomplete",
   "setup": {
     "seed": 20262602,
     "scenario": "1942-1945 (The Shortened Campaign)",
@@ -76,14 +76,14 @@
   ],
   "rulesSha256": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233",
   "sourceHashes": {
-    "js/server/llm/observation.js": "8bf85d4979078f69ceadf286519d921b39ad552aff68f8010fb87038a4beb894",
-    "js/server/llm/prompt.js": "952de297400b2d7b4bf4678e9bf8fee5308fe4e173891081c6dc074f41237c2f",
+    "js/server/llm/observation.js": "560c973cf6fcb2b6fb009c55e5d0cbc377c9876eda486280f1268ef7f2b92fe1",
+    "js/server/llm/prompt.js": "de800e4a25f67b7239178de4e0f628a521a1a91d4e2ed40a8bbceab0f7f7b360",
     "js/server/llm/memory.js": "11b59ecb924cc7c41ad953e6980dbe19b2f2d56079a54db76a63c9fbc1271d63",
     "js/server/llm/session.js": "e8b7f57b1c85d46f49c4a27585a371bda25aab8c596ca0d8ecfcba8f7b46a2cf",
     "js/server/llm/rtt.js": "b7ee6c8a3caa28ab7dc070c64c78906d395383cdcd3b436b74aed3dfb9b5b1b6",
     "js/server/query.js": "da228b4f73073b7056ba260311df6bb0f6e88ecdc385c9c5bac8066d4560e3aa",
     "tools/llm-goal-run.js": "14594a149cbcb774ec85b55116b170d22f5339a83516a88fe5a96f8581d47e0a",
-    "tests/llm-conquest.test.js": "895ca5e2d0249cbd537274aa067ee063d5cbc747c18302631dfb23a33e84dd6e",
+    "tests/llm-conquest.test.js": "f330ac5e798a3a918591ffeb110f6e2ea702f883065c9375ceafb6c50d9519d5",
     "docs/rules/llm-campaign-guide.md": "78287a0f69b24a2007a53a4665a0dfbbd767a90ee07183195d80c484e92cf01a",
     "docs/rules/llm-operational-guide.md": "96dbbf88ac2b53577b0b242a525e8d331fd0820ae7bf57ba17705cff9a7c3730",
     "rules.js": "157f93e75bf7bf19189d0d409061d8849d999808a026569c37144cb4d48bd1dd"
@@ -515,6 +515,77 @@
         "finalStateHash": "ac025e58fcba4051d8e91890c909753f6cfe2396419f63a147ee01067863827c"
       },
       "error": null
+    },
+    {
+      "requests": 170,
+      "revision": 422,
+      "turn": 3,
+      "stats": {
+        "requests": 170,
+        "retries": 10,
+        "failedRequests": 1,
+        "invalidResponses": 11,
+        "totalTokens": 6213134,
+        "promptTokens": 5467154,
+        "completionTokens": 745980,
+        "usageUnknown": 0,
+        "latencyMs": 3953221,
+        "forcedActions": 83,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 2,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              304
+            ]
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              277,
+              307,
+              480,
+              368
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              298,
+              325,
+              354,
+              382
+            ]
+          }
+        ],
+        "naturalComplete": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 422,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "48df66c13c56d4400c3b72a8ba66535576310c65adedaf8db6337fc75c22e459"
+      },
+      "segmentSha256": "da3587347a75132174615f0f336d21fd35b5e1638e4da0082ead0799a95b951f"
     }
   ],
   "localVerification": {
@@ -525,5 +596,43 @@
     "externalAuditScope": "Astra and Sol readonly; successful independent DeepSeek review; GLM timeout, usage unknown",
     "latestCombinedCases45": true,
     "latestConquest8": true
+  },
+  "v76": {
+    "version": "eots-llm-v7.6",
+    "migrationRevision": 422,
+    "tests": {
+      "conquest": 10,
+      "prompt": 9,
+      "rtt": 9,
+      "totalUnique": 28,
+      "channel": "local JavaScript; API0; unchanged-input checks reused"
+    },
+    "measurement": {
+      "task": "LLM-WIN-01",
+      "apiRequests": 0,
+      "fixtureSeed": 20262602,
+      "basis": "one deterministic public initial Japan card window; timings descriptive, UTF8 bytes are not tokens",
+      "rows": [
+        {
+          "version": "v7.5",
+          "state": "offensive_segment",
+          "queryMs": 16.011600000000044,
+          "inputUtf8Bytes": 84577,
+          "queries": 0,
+          "promptHash": "071d24c0c2d8dd1189cc43c606b238fc089f0f1d02f6139f7d66bd56b263d7fc",
+          "observationHash": "ed18e8bb6202fe7273ab5601f92f563c610d1127d2ba6f19ddcbe0d25877b6c3"
+        },
+        {
+          "version": "v7.6",
+          "state": "offensive_segment",
+          "queryMs": 49.9529,
+          "inputUtf8Bytes": 97777,
+          "queries": 128,
+          "promptHash": "26c5871cbf366ad68e1ff9a3ba57fc71a4db80c4f82969bdb90071dc2f617ba2",
+          "observationHash": "49c43657b129cd336af7a0eaaa0e7a7ba6a98110d5ee34346f2430f54e8c66ff"
+        }
+      ]
+    },
+    "review": "Astra strategy advice; Sol readonly source/HQ query audit; root integration; no new external review requests"
   }
 }

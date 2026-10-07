@@ -36,7 +36,13 @@ function visible(rules, state, role) {
     observation.units = observation.units.map(u => ({ ...u, locationMapId: hexes.get(u.location)?.id || null, locationName: hexes.get(u.location)?.name || null,
         currentCF: u.reduced ? u.rcf : u.cf,
         currentBaseASP: u.class === "ground" && u.asp ? u.reduced ? u.aspr : u.aspCost : null,
-        ...(u.faction === side ? { supplied: supplies.get(u.id) ?? null } : {}) }))
+        ...(u.faction === side ? {
+            outOfSupplyMarker: Array.isArray(view.oos) ? view.oos.includes(u.id) : null,
+            supplied: view.oos?.includes(u.id) ? false : supplies.get(u.id) === true ? true : null,
+            supplyBasis: view.oos?.includes(u.id) ? "public-oos-marker" : supplies.get(u.id) === true
+                ? u.class === "hq" ? "engine-hq-exemption" : observation.activeUnits.includes(u.id) ? "engine-active-exemption" : "positive-engine-probe"
+                : "fast-cache-negative-is-unknown"
+        } : {}) }))
     observation.ownUnitDefinitions = clone(p.ownUnitDefinitions || [])
     observation.ownASP = side >= 0 ? clone(view.asp?.[side] ?? null) : null
     observation.ownASPRemaining = p.ownASPRemaining ?? null
@@ -119,7 +125,33 @@ function taskFacts(rules, state, o, memory) {
             if (reachableKeys.length) landCaptureCoverage.units.push({ id, reachableKeys })
         }
     }
-    return { binding: { revision: d.revision, cardId: card?.id || null, mode: card?.selectedMode || null, hqId: d.ownHQ || null }, defenders, planned, landCaptureCoverage,
+    let conditionalLandReachability = null
+    if (state.active === o.role && ["offensive_segment", "offensive_segment_card_action", "choose_hq"].includes(o.state) && !["reaction", "pbm"].includes(o.window)) {
+        const enemyHexes = [...new Set(o.units.filter(u => u.faction === 1 - side && o.hexes.some(h => h.hex === u.location)).map(u => u.location))]
+        const rows = [], maxQueries = 128
+        let queries = 0, partial = o.cardPreviewsLimited || o.cardPreviews.length > 96
+        for (const p of o.cardPreviews.slice(0, 96)) {
+            const row = { cardId: p.cardId, mode: p.cardMode, hqId: p.hqId, checked: false, coverage: "unknown", reason: null, units: [] }
+            const ownCard = o.ownCards.some(c => c.id === p.cardId && c.faction === side) || card?.id === p.cardId && card.faction === side
+            if (!p.eligible || !["ops", "event"].includes(p.cardMode) || !ownCard || own.get(p.hqId)?.class !== "hq") row.reason = "exact-own-activation-preview-unavailable"
+            else {
+                row.checked = true; row.coverage = "complete"
+                for (const id of p.units || []) if (own.get(id)?.class === "ground" && o.hexes.some(h => h.hex === own.get(id).location)) {
+                    if (queries >= maxQueries) { row.coverage = "partial"; row.reason = "query-limit"; partial = true; break }
+                    ++queries
+                    const r = ask("queryGroupMovementDestinations", [[id], { faction: side, cardId: p.cardId, cardMode: p.cardMode, hqId: p.hqId, move_type: 4 }])
+                    if (!r || r.reason === "no-playable-card") { row.coverage = "partial"; row.reason = "query-unavailable"; partial = true; continue }
+                    const reachableNationalKeys = targets.filter(hex => r.paths?.[hex])
+                    const reachableEnemyOccupiedHexes = enemyHexes.filter(hex => r.paths?.[hex])
+                    if (reachableNationalKeys.length || reachableEnemyOccupiedHexes.length) row.units.push({ id, reachableNationalKeys, reachableEnemyOccupiedHexes })
+                }
+            }
+            rows.push(row)
+        }
+        conditionalLandReachability = { rows, queries, maxQueries, coverage: partial ? "partial" : "complete",
+            basis: "single own eligible ground unit, exact own card/mode/HQ, land mode 4; endpoints only, no ranking; empty complete row excludes immediate land endpoints only, not staging or amphibious value" }
+    }
+    return { binding: { revision: d.revision, cardId: card?.id || null, mode: card?.selectedMode || null, hqId: d.ownHQ || null }, defenders, planned, landCaptureCoverage, conditionalLandReachability,
         limits: "Public facts, not a strategy or victory prediction. Routes are current-card projections, not execution authorization; activation, already moved, shared ASP and whole-plan budget still require current candidates. Air range is not a commitment; original-position naval support is unqueried. Reaction alternatives share one HQ budget; baseline excludes unknown enemy-card intervention. Single-unit land coverage does not check amphibious groups." }
 }
 function observe(rules, state, role, revision, { directOnly = false, memory = null } = {}) {

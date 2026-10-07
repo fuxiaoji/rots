@@ -23,6 +23,40 @@ test("direct-only candidate table cannot delegate movement to the headless progr
  const ordinary=observe(fake,{active:"Japan"},"Japan",1),direct=observe(fake,{active:"Japan"},"Japan",1,{directOnly:true})
  assert(ordinary.candidates.some(c=>c.action==="advance"));assert(!direct.candidates.some(c=>c.action==="advance"));assert.deepEqual(direct.candidates.map(c=>c.action),["done"])
 })
+
+test("supply observation preserves unknown cache evidence and explicit own public markers",()=>{
+ const base=rules.setup(20262602,scenario,{headless_moves:true}),view=rules.view(base,"Japan"),data=rules.query(base,"Japan","llm_public_data")
+ data.planning.ownSupply=data.planning.ownSupply.map(s=>({...s,supplied:[7,35].includes(s.id)}))
+ const fake={view:()=>({...view,oos:[36,167],offensive:{...view.offensive,active_units:[[35],[]]}}),query:()=>data}
+ const o=visible(fake,base,"Japan").observation,unit=id=>o.units.find(u=>u.id===id)
+ assert.equal(unit(43).supplied,null);assert.equal(unit(43).outOfSupplyMarker,false)
+ assert.equal(unit(36).supplied,false);assert.equal(unit(36).supplyBasis,"public-oos-marker")
+ assert.equal(unit(7).supplyBasis,"engine-hq-exemption");assert.equal(unit(35).supplyBasis,"engine-active-exemption")
+ assert(!Object.hasOwn(unit(167),"supplied"));assert(!Object.hasOwn(unit(167),"outOfSupplyMarker"))
+})
+
+test("pre-card land endpoints expose public blockers, remain pure/private-independent and bound query cost",async()=>{
+ const api=require("../js/server/llm/session"),s=api.createSession({seed:20262602,scenario,players:{Japan:"llm:deepseek",Allies:"erasmus-campaign"}},{clients:{deepseek:{}}})
+ while(s.state.active==="Allies")await api.step(s,{revision:s.revision})
+ const before=hash(s.state),o=observe(s.rules,s.state,"Japan",s.revision).observation,f=o.taskFacts.conditionalLandReachability
+ assert.equal(hash(s.state),before);assert(f&&f.queries>0&&f.queries<=128)
+ const row=f.rows.find(r=>r.cardId===101&&r.mode==="ops"&&r.hqId===7),u=row.units.find(u=>u.id===35)
+ assert(row.checked);assert(u.reachableEnemyOccupiedHexes.includes(327));assert(!u.reachableNationalKeys.some(h=>[298,325,354,382].includes(h)))
+ const hidden=JSON.parse(JSON.stringify(s.state));hidden.hand[1]=[1,2,3];hidden.future_offensive[1]=19;hidden.seed=54321;hidden.draw[1]=[4,5,6]
+ assert.deepEqual(observe(s.rules,hidden,"Japan",s.revision).observation.taskFacts.conditionalLandReachability,f)
+ const {taskFacts}=require("../js/server/llm/observation"),copy=JSON.parse(JSON.stringify(o)),preview=copy.cardPreviews.find(p=>p.cardId===101&&p.cardMode==="ops"&&p.hqId===7)
+ copy.cardPreviews=Array.from({length:96},()=>preview)
+ const bounded=taskFacts(s.rules,s.state,copy,null).conditionalLandReachability
+ assert.equal(bounded.queries,128);assert.equal(bounded.coverage,"partial");assert(bounded.rows.some(r=>r.reason==="query-limit"))
+ copy.cardPreviews=[{...preview,eligible:false}]
+ assert.equal(taskFacts(s.rules,s.state,copy,null).conditionalLandReachability.rows[0].coverage,"unknown")
+ for(const window of ["reaction","pbm"]){copy.window=window;assert.equal(taskFacts(s.rules,s.state,copy,null).conditionalLandReachability,null)}
+ copy.window=o.window;copy.state="move_offensive_units";assert.equal(taskFacts(s.rules,s.state,copy,null).conditionalLandReachability,null)
+ for(const [a,b]of[["card",101],["ops",null]])s.state=s.rules.action(s.state,"Japan",a,b)
+ const hq=observe(s.rules,s.state,"Japan",s.revision+2).observation
+ assert.equal(hq.state,"choose_hq");assert(!hq.ownCards.some(c=>c.id===101))
+ assert(hq.taskFacts.conditionalLandReachability.rows.some(r=>r.cardId===101&&r.hqId===7&&r.checked))
+})
 test("editable model memory omits program-owned fields while exact execution history remains readonly",async()=>{
  const api=require("../js/server/llm/session"),session=api.createSession({seed:20262602,scenario,players:{Japan:"llm:deepseek",Allies:"erasmus-campaign"}},{clients:{deepseek:{}}})
  for(let i=0;session.state.active==="Allies"&&i<32;i++)await api.step(session,{revision:session.revision})
