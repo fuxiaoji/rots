@@ -1895,5 +1895,22 @@
     "artifactPrivate": true,
     "artifactSha256": "d8cf6c22099003ca03c0db06727215ec4ccce0b950382cb982223987fe0a397c",
     "dedup": "canonical session UUID; current checkpoint only; provider phases from ledger; native DB scanned completely; pure FSM and mocks excluded"
+  },
+  "release": {
+    "taskId": "LLM-RELEASE-01",
+    "status": "complete",
+    "branch": "feat/LLM-RELEASE-01-rtt",
+    "pullRequest": "https://github.com/fuxiaoji/rots/pull/4",
+    "draft": true,
+    "uploadedVerifiedSha": "96f76ec1ee8d4ca7eb44adb4170e690a07540a5c",
+    "latestIntegratedUpstream": "395bb31",
+    "publicCredentialPatternMatches": 0,
+    "changedFilesScanned": 79,
+    "generatedUncommittedFilesExcluded": [
+      "rules.js",
+      "play.js"
+    ],
+    "runtimePaused": true,
+    "goalStatus": "user-paused; no successful goal claimed"
   }
 }

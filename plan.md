@@ -1,8 +1,8 @@
-## LLM-RELEASE-01：RTT模式上传与全部LLM收费明细（2026-10-07，主要任务 in_progress）
+## LLM-RELEASE-01：RTT模式上传与全部LLM收费明细（2026-10-07，本轮收尾完成 complete）
 
 - [x] 停止真实实验并保留暂停存档、失败、重试和累计用量。
 - [x] v7.11提示与观察收尾，70项相关本地检查通过，无新增付费API。
-- [ ] 本地RTT部署、GitHub上传及交付完整/未完局分列收费表。
+- [x] 本地RTT v7.11 PID21008/HTTP200/pending0；已上传feat/LLM-RELEASE-01-rtt并创建草稿PR #4（https://github.com/fuxiaoji/rots/pull/4），源码合并远端395bb31。私有收费表完整73/未完33分列、开发审查去重；现金实扣未知。
 
 # 太阳帝国兵棋引擎与 AI 研究计划
 
