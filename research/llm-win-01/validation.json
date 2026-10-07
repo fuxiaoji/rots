@@ -1,8 +1,8 @@
 {
   "task": "LLM-WIN-01",
   "status": "in_progress",
-  "recordedAt": "2026-10-07T07:26:21.523Z",
-  "scope": "development checkpoints; PH/MAL formal and controlled; DEI5/BURMA3 incomplete",
+  "recordedAt": "2026-10-07T07:55:25.304Z",
+  "scope": "development checkpoint823; PH/MAL formal+controlled, Burma controlled but unprocessed, DEI2 missing; goal incomplete",
   "setup": {
     "seed": 20262602,
     "scenario": "1942-1945 (The Shortened Campaign)",
@@ -849,6 +849,69 @@
         "finalStateHash": "059943fa571701ce1b6f100cebdb1333a669f59a4dff859f34df33f16358ed68"
       },
       "segmentSha256": "050db0168672866eb18705a84c08fc1d0fc7a26628ec1a0675ebcbce02dcbac4"
+    },
+    {
+      "requests": 311,
+      "networkRequests": 310,
+      "localConfigFailures": 1,
+      "revision": 823,
+      "turn": 4,
+      "stats": {
+        "requests": 311,
+        "retries": 14,
+        "failedRequests": 3,
+        "invalidResponses": 15,
+        "totalTokens": 11905682,
+        "promptTokens": 10517102,
+        "completionTokens": 1388580,
+        "usageUnknown": 1,
+        "latencyMs": 7360097,
+        "forcedActions": 157,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              421
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          }
+        ],
+        "naturalComplete": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 823,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "f3e395a280dbed8322938c9526160d8a63f4baa0025e2508dd73c9bbe041c720"
+      },
+      "segmentSha256": "c1d795fdddb984c6739dd5d4087dacb831bb59ba033f6c443750c78716bbf50c"
     }
   ],
   "localVerification": {
