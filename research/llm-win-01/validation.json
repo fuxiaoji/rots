@@ -1,8 +1,8 @@
 {
   "task": "LLM-WIN-01",
   "status": "in_progress",
-  "recordedAt": "2026-10-07T09:04:50.470Z",
-  "scope": "DeepSeek to GLM mixed development continuation; 3 formal surrenders, DEI2 missing; goal incomplete",
+  "recordedAt": "2026-10-07T09:23:32.868Z",
+  "scope": "Mixed DeepSeek to GLM development; paused GLM weekly/monthly quota (429/1310), DEI309/421 and BURMA354 missing; goal incomplete",
   "setup": {
     "seed": 20262602,
     "scenario": "1942-1945 (The Shortened Campaign)",
@@ -1407,13 +1407,14 @@
     "rechargeNotAssumed": true
   },
   "nativeDeployment": {
-    "promptVersion": "eots-llm-v7.8",
-    "pid": 50376,
+    "promptVersion": "eots-llm-v7.9",
+    "pid": 55708,
     "httpStatus": 200,
-    "rulesSha256": "157f93e75bf7bf19189d0d409061d8849d999808a026569c37144cb4d48bd1dd",
+    "rulesSha256": "48a620f5552b448d95abaa20d937388c9b985c8c3ad279c02ac555f8669ef921",
     "trialRulesKept": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233",
     "browserVisualCheck": false,
-    "realNativeRequests": 0
+    "realNativeRequests": 0,
+    "oldContexts": "Existing native contexts reject policy changes; new games load v7.9. Offline trial migrated explicitly."
   },
   "controllerHistory": [
     {
@@ -1455,5 +1456,137 @@
     "firstResponseTokens": 37494,
     "firstResponseLatencyMs": 5189,
     "attribution": "mixed DeepSeek to GLM; not solo GLM or pure DeepSeek"
+  },
+  "glmLatest": {
+    "revision": 1015,
+    "turn": 5,
+    "totalNetworkCalls": 380,
+    "oneLocalAttempt": 199,
+    "stats": {
+      "requests": 381,
+      "retries": 17,
+      "failedRequests": 7,
+      "invalidResponses": 18,
+      "totalTokens": 14541840,
+      "promptTokens": 13055639,
+      "completionTokens": 1486201,
+      "usageUnknown": 5,
+      "latencyMs": 8538075,
+      "forcedActions": 187,
+      "assistedActions": 0,
+      "cost": "unknown"
+    },
+    "stageStats": {
+      "requests": 47,
+      "retries": 1,
+      "failedRequests": 3,
+      "invalidResponses": 1,
+      "totalTokens": 1781187,
+      "promptTokens": 1762073,
+      "completionTokens": 19114,
+      "usageUnknown": 3,
+      "latencyMs": 739947,
+      "forcedActions": 25,
+      "assistedActions": 0,
+      "cost": "unknown"
+    },
+    "goal": {
+      "achieved": false,
+      "kind": null,
+      "nations": [
+        {
+          "key": "PHILIPPINES",
+          "surrenderedTurn": 2,
+          "allJapanControlled": true,
+          "remainingKeys": []
+        },
+        {
+          "key": "MALAYA",
+          "surrenderedTurn": 2,
+          "allJapanControlled": true,
+          "remainingKeys": []
+        },
+        {
+          "key": "DEI",
+          "surrenderedTurn": 0,
+          "allJapanControlled": false,
+          "remainingKeys": [
+            309,
+            421
+          ]
+        },
+        {
+          "key": "BURMA",
+          "surrenderedTurn": 4,
+          "allJapanControlled": false,
+          "remainingKeys": [
+            354
+          ]
+        }
+      ],
+      "naturalComplete": false
+    },
+    "verified": {
+      "verified": true,
+      "actions": 1015,
+      "complete": false,
+      "result": null,
+      "finalStateHash": "9b6889a0e10c55053eafb1f41bf83a0a14ffd0032ddaf71356b777d8f9f8d2a4"
+    },
+    "error": {
+      "attempt": 381,
+      "httpStatus": 429,
+      "providerCode": "1310",
+      "pending": false,
+      "quotaResetTimeKnown": false,
+      "source": "https://docs.z.ai/api-reference/api-code"
+    }
+  },
+  "v79": {
+    "version": "eots-llm-v7.9",
+    "preparedRevision": 1015,
+    "realAPIAfterChange": 0,
+    "semanticImprovementVerified": false,
+    "verified": {
+      "verified": true,
+      "actions": 1015,
+      "complete": false,
+      "result": null,
+      "finalStateHash": "9b6889a0e10c55053eafb1f41bf83a0a14ffd0032ddaf71356b777d8f9f8d2a4"
+    },
+    "payloadBytes": 87392,
+    "priorPayloadBytes": 85888,
+    "byteComparison": "Same saved card-mode window, UTF8 bytes only, not token or latency estimate",
+    "sourceHashes": {
+      "observation": "111385f93185591a83bcb6657aabe41d5649fffdba206934873f165f611494b7",
+      "prompt": "cbe63d86a0cd55f5142afbbc0d004064fc0912cd9ce8185483a868f3e37509e1",
+      "memory": "11b59ecb924cc7c41ad953e6980dbe19b2f2d56079a54db76a63c9fbc1271d63",
+      "board": "e0e9dea1f024af2036abb4c9e035fff586a1c1148faa4d1c79a3b56ebeb3af96",
+      "providers": "f7bcc7a657bb5737eea9668ef3ad6ba1d3028d3e2430e4fefe74f06ad1493df6",
+      "harness": "be561ec45d47496480c962955168a92a87d308219bd3939dd9dcf54f1dbbfaf1",
+      "session": "a20f77ba6448284d75b841e347aab6844c874e6069e5f1f0ce9053569ee1ed89",
+      "semi": "74b58214f07e2e06140f13b204e50fa85b2f3f7ac1559eac5db6a6f8b064a55e"
+    },
+    "ownedFileHashes": {
+      "js/server/llm/providers.js": "f7bcc7a657bb5737eea9668ef3ad6ba1d3028d3e2430e4fefe74f06ad1493df6",
+      "js/server/llm/observation.js": "111385f93185591a83bcb6657aabe41d5649fffdba206934873f165f611494b7",
+      "js/server/llm/prompt.js": "cbe63d86a0cd55f5142afbbc0d004064fc0912cd9ce8185483a868f3e37509e1",
+      "tools/llm-goal-run.js": "39b487bfdf691a6a5d1395daf37827247ead25efd30f2b5a167fc278bca8b2bd",
+      "docs/rules/llm-operational-guide.md": "8152bf4c2cd2ee44fb6910bdb9ba782fff52ba7d377054848cc0845e143ed342",
+      "tests/llm-conquest.test.js": "2fcd312c266b33655d8bf1f6e37bbbb22a95532490c4b261c13a2400f65fde1d",
+      "tests/llm-providers.test.js": "7262d06016ea8f21803be6c599cf6c096b16dd55769fac88fcea6029832239d4"
+    },
+    "tests": {
+      "conquest": 13,
+      "prompt": 9,
+      "harness": 19,
+      "providers": 17,
+      "rtt": 9,
+      "totalUnique": 67,
+      "channel": "local/mock; affected runs and unchanged-source success reuse",
+      "fixtureRulesSha256": "48a620f5552b448d95abaa20d937388c9b985c8c3ad279c02ac555f8669ef921",
+      "replayRulesSha256": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233"
+    },
+    "failedTestConstruction": "First reused moved ground unit; second chose enemy-controlled Tarakan as strategic endpoint. Corrected independent unmoved fixture and actual own-port candidate; final 13 pass."
   }
 }

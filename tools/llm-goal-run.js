@@ -69,7 +69,7 @@ async function main(){const o={};for(let i=2;i<process.argv.length;i+=2){if(!pro
    const ordinal=s.stats.requests,file=path.join(out,"requests",String(ordinal).padStart(6,"0")+".json"),record={ordinal,pending:true,profileId,provider:profile.provider,role:s.state.active,revision:s.revision,promptHash:hash(messages),model:profile.model,effort,maxTokens:requestProfile.maxTokens,timeoutMs:requestProfile.timeoutMs,runnerHash,at:new Date().toISOString(),messages}
    write(file,record);const begin=Date.now()
    try{const r=await providers.createClient(requestProfile).complete(messages);write(file,{...record,pending:false,content:r.content,outputHash:hash(r.content),model:r.model,usage:r.usage,latencyMs:r.latencyMs});return r}
-   catch(e){write(file,{...record,pending:false,code:e.code||"PROVIDER",httpStatus:e.status||null,usage:e.usage||null,latencyMs:Date.now()-begin});throw e}
+   catch(e){write(file,{...record,pending:false,code:e.code||"PROVIDER",httpStatus:e.status||null,providerCode:e.providerCode||null,usage:e.usage||null,latencyMs:Date.now()-begin});throw e}
  }}
  const startRequests=s.stats.requests;let lastPrint=startRequests,error=null,g=goal(s)
  while(!g.achieved&&s.status!=="complete"&&s.stats.requests-startRequests<maxNewRequests){

@@ -20,3 +20,5 @@
 - 第642动作/247次尝试（246网络请求+1本地配置错误）后v7.8保留selected/active己方场外定义。累计token上限显式10m→20m，budgetHistory记录完整边界，原费用/请求/失败不重置；不是规则变更或额外成功门，继续按有界段验收真实进展。用户未指定金额/token上限，Astra复核同意继续原开发局；账单未知仍unknown。
 - 2026-10-07用户明确“用glm”，模型限定改为GLM接续：第860动作/334尝试后显式Japan llm:deepseek→llm:glm，config.controllerHistory记录原seed/rules/对手/状态哈希/继承记忆哈希/既有费用与请求。原DeepSeek保存点三文件私有归档；逐请求记profileId/provider/实际返回model，阶段用量从切换统计差分，原费用不清零。若达标，称DeepSeek→GLM接续目标，不称GLM独立整局或纯DeepSeek胜；四国/自然盟军胜条件不变。
 - GLM第345首次high选牌300秒超时，账本pending=false且原进程退出，无动作提交、用量unknown保留；第902动作完整回放后显式planningEffort=low续跑，profile/runnerHistory登记。不是更换模型，不能把未知费用删掉或把不同窗口的时延当棋力比较。
+
+- v7.9在1015动作/381尝试GLM429/1310资源暂停后零API迁移：只修预算说明、候选路径方式解码与公开事实核对，不改动作参数/规则；既有动作/费用/记忆哈希相同，原档归档。尚无v7.9真模型决策或语义效果证据，恢复GLM周/月额度后继续原局。

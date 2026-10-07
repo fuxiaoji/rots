@@ -186,8 +186,15 @@ function createClient(profile, { fetchImpl = fetch } = {}) {
                     response = await fetchImpl(url, { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${profile.apiKey}` }, body, signal: controller.signal, redirect: "error" })
                 } catch { throw fail(controller.signal.aborted ? "EOTS_LLM_TIMEOUT" : "EOTS_LLM_NETWORK_ERROR") }
                 if (response.status !== 200) {
-                    await response.body?.cancel().catch(() => {})
-                    throw fail("EOTS_LLM_HTTP_ERROR", response.status)
+                    // Keep only a bounded numeric business code. Provider error
+                    // messages/body may contain credentials or private prompts.
+                    let providerCode
+                    try {
+                        const data = await readBody(response, controller.signal)
+                        providerCode = numericCode(data?.error?.code ?? data?.base_resp?.status_code ?? data?.code)
+                    } catch { /* Malformed/oversized error bodies retain HTTP status. */ }
+                    if (controller.signal.aborted) throw fail("EOTS_LLM_TIMEOUT")
+                    throw fail("EOTS_LLM_HTTP_ERROR", response.status, providerCode)
                 }
                 const data = await readBody(response, controller.signal)
                 const businessCode = data?.base_resp?.status_code ?? data?.code

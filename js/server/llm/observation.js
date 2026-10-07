@@ -165,6 +165,10 @@ function taskFacts(rules, state, o, memory) {
     return { binding: { revision: d.revision, cardId: card?.id || null, mode: card?.selectedMode || null, hqId: d.ownHQ || null }, defenders, planned, landCaptureCoverage, conditionalLandReachability, planConsistency,
         limits: "Public facts, not a strategy or victory prediction. Routes are current-card projections, not execution authorization; activation, already moved, shared ASP and whole-plan budget still require current candidates. Air range is not a commitment; original-position naval support is unqueried. Reaction alternatives share one HQ budget; baseline excludes unknown enemy-card intervention. Single-unit land coverage does not check amphibious groups." }
 }
+function movementLabels(mode) {
+    // Decode the public path bitmask defined in js/common/constants.js.
+    return [[1,"战略移动"],[2,"海上移动"],[4,"陆路移动"],[8,"两栖突击"],[16,"航空战略移动"],[32,"航空移动"],[64,"驳船"],[128,"战后移动"],[256,"反应移动"],[512,"延长航程"],[2048,"避开ZOI"],[4096,"仅建制运输"],[8192,"脱离"],[16384,"手动移动"],[32768,"进入ZOI"]].filter(([bit]) => mode & bit).map(([,label]) => label)
+}
 function observe(rules, state, role, revision, { directOnly = false, memory = null } = {}) {
     const { view, observation } = visible(rules, state, role)
     observation.currentDecision.revision = revision
@@ -212,8 +216,10 @@ function observe(rules, state, role, revision, { directOnly = false, memory = nu
         }
     }
     if (view.actions?.move) {
-        for (const m of rules.query(clone(state), role, "llm_legal_moves") || [])
-            add("move", m.path, `move → ${hexes.get(m.hex)?.name || m.hex} (${hexes.get(m.hex)?.id || m.hex})`, false, { kind: "move", targetHex: m.hex, unitIds: observation.selectedMovementUnits })
+        for (const m of rules.query(clone(state), role, "llm_legal_moves") || []) {
+            const modeLabels = movementLabels(m.path[0])
+            add("move", m.path, `move [${modeLabels.join("/")}] → ${hexes.get(m.hex)?.name || m.hex} (${hexes.get(m.hex)?.id || m.hex})`, false, { kind: "move", targetHex: m.hex, unitIds: observation.selectedMovementUnits, modeLabels, pathMovementValue: m.path[1] })
+        }
     }
     // A selected movement mode may have no reachable destination. The native
     // client can undo that selection; retain this sole legal escape, not general undo.

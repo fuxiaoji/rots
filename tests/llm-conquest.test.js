@@ -176,9 +176,31 @@ test("advanced movement exposes an otherwise missing amphibious target; origin-o
  apply("advanced_move",null);assert.equal(s.state.location[28],location);assert(packet().candidates.some(c=>c.action==="amphibious"))
  apply("amphibious",null);assert.equal(s.state.location[28],location)
  const p=packet(),move=p.candidates.find(c=>c.action==="move"&&c.effect.targetHex===480);assert(move);assert.equal(p.observation.currentDecision.moveMode,8)
+ assert(move.effect.modeLabels.includes("两栖突击"));assert.equal(move.effect.pathMovementValue,move.argument[1])
  s.state=s.rules.action(s.state,"Japan","move",move.argument);assert.equal(s.state.location[28],480);assert(packet().observation.currentDecision.movedUnitIds.includes(28))
  apply("unit",43);apply("no_move",null);assert(!packet().observation.currentDecision.movedUnitIds.includes(43))
  const publicView=s.rules.view(s.state,"Japan"),fake={view:()=>({...publicView,ai:{...publicView.ai,state:"post_battle_movement",windowKind:"pbm"},actions:{unit:[28]},offensive:{...publicView.offensive,paths:[28,[8,2,479,508,480],167,[4,1,305,304]]}}),query:(...args)=>s.rules.query(...args)},pbm=observe(fake,s.state,"Japan",31,{directOnly:true})
  assert.deepEqual(pbm.observation.currentDecision.movedUnitIds,[28]);assert(pbm.candidates.some(c=>c.action==="unit"&&c.argument===28))
  assert(messagesFor(pbm,null,"pbm").messages[0].content.includes("禁止PBM"))
+})
+
+test("zero ASP permits activation, land movement and strategic sea staging with distinct prompt budgets",async()=>{
+ const api=require("../js/server/llm/session"),s=api.createSession({seed:20262602,scenario,players:{Japan:"llm:glm",Allies:"erasmus-campaign"}},{clients:{glm:{}}})
+ while(s.state.active==="Allies")await api.step(s,{revision:s.revision})
+ s.state.asp[0]=[0,0]
+ const apply=(a,b)=>{const p=observe(s.rules,s.state,"Japan",31,{directOnly:true}),c=p.candidates.find(c=>c.action===a&&(b===undefined||JSON.stringify(c.argument)===JSON.stringify(b)));assert(c,`${a} ${b}`);s.state=s.rules.action(s.state,"Japan",c.action,c.argument);return c}
+ apply("card",100);apply("ops");apply("unit",7)
+ const before=observe(s.rules,s.state,"Japan",31),input=JSON.parse(messagesFor(before,null,"test").messages[1].content)
+ assert(before.candidates.some(c=>c.action==="unit"&&c.argument===43));assert.equal(before.observation.ownASPRemaining,0)
+ assert(input.decisionGuide.budgetSemantics.activation.includes("不扣ASP"));assert(input.decisionGuide.budgetSemantics.strategicSea.includes("不使用ASP"))
+ const asp=JSON.stringify(s.state.asp);apply("unit",43);assert.equal(JSON.stringify(s.state.asp),asp);apply("done");const seaBase=JSON.parse(JSON.stringify(s.state));apply("unit",43)
+ const land=observe(s.rules,s.state,"Japan",32).candidates.find(c=>c.action==="move"&&c.effect.targetHex===304&&c.effect.modeLabels.includes("陆路移动"));assert(land)
+ s.state=s.rules.action(s.state,"Japan",land.action,land.argument);assert.equal(JSON.stringify(s.state.asp),asp)
+ // Public coastal fixture: strategic sea transport, not a land path or ASP spend.
+ s.state=seaBase;s.state.location[43]=479
+ apply("unit",43);apply("advanced_move");apply("strat_move")
+ const seaPacket=observe(s.rules,s.state,"Japan",33),sea=seaPacket.candidates.find(c=>c.action==="move"&&c.argument[0]===3);assert(sea)
+ assert.equal(seaPacket.observation.hexes.find(h=>h.hex===sea.effect.targetHex).control,"Japan")
+ assert.deepEqual(sea.effect.modeLabels,["战略移动","海上移动"]);assert.equal(sea.argument[0],3)
+ s.state=s.rules.action(s.state,"Japan",sea.action,sea.argument);assert.equal(JSON.stringify(s.state.asp),asp);assert.equal(s.state.location[43],sea.effect.targetHex)
 })
