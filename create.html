@@ -98,6 +98,12 @@
         <label><input type="radio" name="human_role" value="Allies" checked> 盟军</label>
         <label><input type="radio" name="human_role" value="Japan"> 日本</label>
     </p>
+    <div id="llm_budget" hidden>
+        <p>LLM 每局额度（双方合计；刷新和回退不重置）：</p>
+        <label>模型请求上限 <input type="number" name="llm_requests" value="600" min="1" max="6000"></label>
+        <label>报告 token 上限 <input type="number" name="llm_tokens" value="10000000" min="1" max="100000000"></label>
+        <p>建局后暂停，点击“AI 下一阶段”推进。侧栏显示创建者专用的决策摘要与计划；接口失败或额度用尽会暂停在当前窗口。</p>
+    </div>
 </fieldset>
 <hr>
 <label><input type="checkbox" name="experienced" id="async">Async mode (Experienced players).</label>
@@ -147,12 +153,17 @@
             if (bp) bp.hidden = !pve
             var ba = document.getElementById("bot_picker_aivai")
             if (ba) ba.hidden = !aivai
+            var budget = document.getElementById("llm_budget")
+            if (budget) budget.hidden = !aivai || !Array.from(document.querySelectorAll("#bot_picker_aivai select")).some(s => s.value.startsWith("llm-"))
             // PvE 也允许选 1942-1945 缩短战役等 bot 支持场景, 不再强制回南太平洋。
             scenario.onchange()
         }
     })
     // bot 支持的剧本(与 rules.js 中 bots[*].scenarios 一致)。
     var BOT_SCENARIOS = {
+        "erasmus-campaign-v2": ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"],
+        "erasmus-japan-campaign-v2": ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"],
+        "erasmus-japan-campaign": ["1942-1945 (The Shortened Campaign)"],
         "erasmus-campaign": ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"],
         "erasmus-v2": ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"],
         "erasmus-v2-opt": ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"],
@@ -166,6 +177,7 @@
         ;["bot_id", "bot_id_jp", "bot_id_ap"].forEach(function (name) {
             var sel = document.querySelector("select[name='" + name + "']")
             if (sel && sel.querySelector("option[value='" + DEFAULT_BOT + "']")) sel.value = DEFAULT_BOT
+            if (sel) sel.addEventListener("change", function () { document.querySelector("input[name='mode']:checked").onchange() })
         })
         // 提交前校验所选 AI 是否支持所选剧本, 避免 "Invalid AI vs AI configuration"。
         document.querySelector("form").addEventListener("submit", function (evt) {
@@ -175,12 +187,14 @@
             for (var i = 0; i < names.length; ++i) {
                 var sel = document.querySelector("select[name='" + names[i] + "']")
                 var bot = sel ? sel.value : ""
-                if ((BOT_SCENARIOS[bot] || []).indexOf(scenario) < 0) {
+                var supported = sel && sel.selectedOptions[0].dataset.scenarios ? JSON.parse(sel.selectedOptions[0].dataset.scenarios) : (BOT_SCENARIOS[bot] || [])
+                if (supported.indexOf(scenario) < 0) {
                     alert("所选 AI (" + (bot || "无") + ") 不支持剧本「" + scenario + "」。\n支持剧本: " + (BOT_SCENARIOS[bot] || ["(未知)"]).join(" / "))
                     evt.preventDefault()
                     return
                 }
             }
         })
+        document.querySelector("input[name='mode']:checked").onchange()
     })
 </script>

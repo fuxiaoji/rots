@@ -1,0 +1,110 @@
+{
+  "task": "RTT-LLM-01",
+  "date": "2026-10-05",
+  "hashes": {
+    "js/server/llm/rtt.js": "7fc595922ef4b976fc12394a562a9bc892e9e7b1e6ea273565fbd5e26086b957",
+    "tools/install-rtt-llm.js": "f29f28cbff86b9cc5781de15b5e94f0d36839177fc33d399bfb8b15b26118275",
+    "js/client/i18n.js": "3cc27a4df9a8a08ad9c24247f11f8c5f9088151c7e3b939729230b58262889fb",
+    "create.html": "4b0ec62bf86600d61c9444431686ab9a2218ec52ca751736ebc55d30852260ec",
+    "play.js": "e297a4560b99da21b0fd69c1d3a1dd25d19c5b41fd86d0eaeaadce853994e82f",
+    "rules.js": "9e7cca94fb567af6533a553b7f0b8e6ba5d80c6bcfaf9ffc0dc854317bedb591",
+    "tools/test-rtt-llm-server.js": "74a7b47124dc4d1d467f475663be6cc1e9d5f0e18ff5d914bd0f7dab5daf655f",
+    "D:/desktop/rots-runtime-pve/server.js": "10c09b0e8082e7a46e649031041620fbc6c04a5f870f61022df85da24e43885b",
+    "D:/desktop/rots-runtime-pve/views/create_title.pug": "f13eb4304bc24508ae4d38623046acf5b486140209882baa91fdddb5a7c1c73e"
+  },
+  "checks": {
+    "bridgeTests": 9,
+    "installer": "anchors, syntax and idempotence passed",
+    "mixedStage": {
+      "kind": "mock",
+      "gameId": 1,
+      "scenario": "South Pacific",
+      "seed": 28437537694,
+      "opponent": "erasmus-v2-opt-v5",
+      "requests": 8,
+      "llmActions": 24,
+      "fsmActions": 32,
+      "authorizedOwner": 2,
+      "strangerDenied": true,
+      "mutationLocked": true,
+      "stageBoundary": "已暂停在下一阶段边界。",
+      "replayVerified": true,
+      "completeGame": false,
+      "realApiRequests": 0
+    },
+    "browser": {
+      "createOptionsVerified": true,
+      "creatorPanelVisualVerified": false,
+      "reason": "Browser not logged in; login requested",
+      "screenshot": "local only, llm-private/rtt-llm-01/create.jpg"
+    }
+  },
+  "realSmoke": {
+    "gameId": 91,
+    "seed": 17033759749,
+    "scenario": "South Pacific",
+    "opponent": "erasmus-v2-opt-v5",
+    "stats": {
+      "requests": 3,
+      "retries": 0,
+      "failedRequests": 0,
+      "invalidResponses": 0,
+      "totalTokens": 20032,
+      "promptTokens": 19414,
+      "completionTokens": 618,
+      "usageUnknown": 0,
+      "latencyMs": 5183,
+      "actions": 3,
+      "forced": 0,
+      "assisted": 0
+    },
+    "error": "BUDGET",
+    "completeGame": false,
+    "replayVerified": true,
+    "policy": "development bridge before lifecycle hardening; final bridge covered by mock tests; no new win-rate evidence"
+  },
+  "readyGame": {
+    "id": 92,
+    "location": "/empire-of-the-sun/play.html?game=92&role=Observer",
+    "ownerId": 2,
+    "readyPaused": true,
+    "realApiRequests": 0
+  },
+  "collaboration": {
+    "deepseek": {
+      "model": "deepseek-flash",
+      "promptHash": "a66d15946143221681ea755b91e232e6fcadf6f65a9469bc530ca2e76fc33ead",
+      "outputHash": "19b9579fa1e32cb0c6c4e0e888a76abc7a9dc258b1b2cf3105f8e0c3bf3e5d91",
+      "usage": {
+        "prompt_tokens": 4697,
+        "completion_tokens": 1330,
+        "total_tokens": 6027
+      },
+      "latencyMs": 6414,
+      "adopted": [
+        "async rejection catch"
+      ],
+      "rejected": "Other claims contradicted by the same SQLite connection, ordered queries, guard/canonical revision, or default Pug escaping. Astra/Sol reviews drove lifecycle fixes."
+    },
+    "glm": {
+      "model": "glm-5.3",
+      "promptHash": "a66d15946143221681ea755b91e232e6fcadf6f65a9469bc530ca2e76fc33ead",
+      "code": "EOTS_LLM_HTTP_ERROR",
+      "latencyMs": 235,
+      "usage": null,
+      "reason": "Provider unavailable; independent review incomplete; no substitute model claimed."
+    }
+  },
+  "total": {
+    "realRequests": 5,
+    "reportedTokens": 26059,
+    "usageUnknown": 1,
+    "requestLatencyMs": 11832,
+    "currencyCost": "unknown"
+  },
+  "limits": [
+    "No full real LLM game or new win-rate estimate",
+    "Creator panel visual verification pending login",
+    "No independent no-progress detector"
+  ]
+}

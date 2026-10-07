@@ -4,3 +4,4 @@
 - [ ] 补充原始英文 V3.2 规则、官方勘误与 FAQ，用于冲突裁定。
 - [ ] 确认 PvE 第一目标阵营：先实现日本、先实现盟军，或同步实现。
 - [ ] 确认首个支持剧本；建议从规则范围较小的 South Pacific 开始。
+- [ ] LLM-EVAL-01 / SP-17.10.7：GMT英文V3.2第43页Townsville隔离计分以地图东边缘为基准，当前`victory_south_pacific()`使用Oahu补给路径。另行验证两者在场景裁剪地图是否等价，未经核验不修改历史局判胜。来源和SHA见`docs/rules/llm-south-pacific.md`。

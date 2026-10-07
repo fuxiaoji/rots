@@ -6,7 +6,7 @@ const api = require("../js/server/llm/session")
 function args(argv) { const o = { command: argv[0] || "help" }; for (let i = 1; i < argv.length; i++) { if (!argv[i].startsWith("--") || !argv[i + 1]) throw Error("参数需要 --name value"); o[argv[i].slice(2)] = argv[++i] } return o }
 function secureWrite(filename, value) { fs.mkdirSync(path.dirname(filename), { recursive: true, mode: 0o700 }); fs.writeFileSync(filename, JSON.stringify(value, null, 2), { mode: 0o600 }); fs.chmodSync(filename, 0o600) }
 async function main(argv = process.argv.slice(2)) {
-    const o = args(argv), envfile = path.join(ROOT, ".env.llm.local")
+    const o = args(argv), envfile = process.env.EOTS_LLM_ENV_FILE || path.join(ROOT, ".env.llm.local")
     if (fs.existsSync(envfile)) providers.loadEnv(envfile)
     if (o.command === "profiles") return console.log(JSON.stringify(providers.listProfiles(), null, 2))
     if (o.command === "inspect") {

@@ -1,0 +1,65 @@
+[
+  {
+    "profile": "minimax",
+    "createStatus": 201,
+    "stepStatus": 200,
+    "revision": 1,
+    "stats": {
+      "requests": 1,
+      "retries": 0,
+      "failedRequests": 0,
+      "invalidResponses": 0,
+      "totalTokens": 6820,
+      "promptTokens": 6637,
+      "completionTokens": 183,
+      "usageUnknown": 0,
+      "latencyMs": 5566,
+      "forcedActions": 0,
+      "assistedActions": 0,
+      "cost": "unknown"
+    },
+    "error": null
+  },
+  {
+    "profile": "deepseek",
+    "createStatus": 201,
+    "stepStatus": 200,
+    "revision": 1,
+    "stats": {
+      "requests": 1,
+      "retries": 0,
+      "failedRequests": 0,
+      "invalidResponses": 0,
+      "totalTokens": 7029,
+      "promptTokens": 6754,
+      "completionTokens": 275,
+      "usageUnknown": 0,
+      "latencyMs": 2022,
+      "forcedActions": 0,
+      "assistedActions": 0,
+      "cost": "unknown"
+    },
+    "error": null
+  },
+  {
+    "profile": "glm",
+    "createStatus": 201,
+    "stepStatus": 200,
+    "revision": 1,
+    "stats": {
+      "requests": 1,
+      "retries": 0,
+      "failedRequests": 0,
+      "invalidResponses": 0,
+      "totalTokens": 7058,
+      "promptTokens": 6797,
+      "completionTokens": 261,
+      "usageUnknown": 0,
+      "latencyMs": 5189,
+      "forcedActions": 0,
+      "assistedActions": 0,
+      "cost": "unknown"
+    },
+    "error": null
+  }
+]

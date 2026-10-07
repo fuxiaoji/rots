@@ -1,0 +1,11 @@
+{
+  "purpose": "单次429故障诊断，独立于冻结对局；不续跑已失败局。",
+  "profile": "glm",
+  "model": "glm-5.3",
+  "status": 429,
+  "providerCode": "1308",
+  "usage": null,
+  "latencyMs": 564,
+  "interpretation": "官方接口错误码1308表示达到使用上限；未获取实际重置时间，不推断具体限额窗口。",
+  "source": "https://help.aliyun.com/zh/model-studio/glm-zhipu"
+}

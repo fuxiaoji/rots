@@ -1,0 +1,17 @@
+{
+  "version": "eots-llm-v5",
+  "formalEvaluationVersion": "eots-llm-v4",
+  "newNaturalMatches": 0,
+  "changesAfterEvaluation": [
+    "stranded movement retains only declared undo"
+  ],
+  "hashes": {
+    "js/server/llm/observation.js": "b77866b19fcbf96f521b7ddf36df33b24a75f28600a8a5301b3bb3cc65a65335",
+    "js/server/llm/prompt.js": "c16e9064a7ef9c6992004aa3c73bd0c770e523f90f5a14b398797a08df9df605",
+    "js/server/llm/harness.js": "077c51ef76d954c6813221cdbb20f6b79c612edb9ee5b447cb213813a150ba09",
+    "rules.js": "9e7cca94fb567af6533a553b7f0b8e6ba5d80c6bcfaf9ffc0dc854317bedb591"
+  },
+  "checks": 43,
+  "realSavedPositionRecovered": true,
+  "apiCallsForRepair": 0
+}

@@ -1428,7 +1428,21 @@ function esm_pin_strategy(view, context) {
     const phase = esm_phase(role)
     const seedText = `${context.seed}:${ord}:${role}:${phase}:${G.turn}`
     const ctx = esm_build_ctx(role, lock, seedText)
-    let name = esm_eval(role, phase, ctx, lock)
+    // [LLM-SEMI-01] 半自动模式: 会话层在选牌窗已向模型征求「战略 + 有序目标链」,
+    // 程序验证(阶段目录内命名、链上均为在场格)后经 context.strategyOverride 传入。
+    // 有效覆盖跳过图表骰轴/完成分配重掷/同轴延续 —— 模型是本牌战略主脑; 选牌、HQ、
+    // 编成、移动、会战、反应与 PBM 仍完全由状态机执行, 命名策略的既有语义展开照常。
+    // 覆盖仅修改 eop 焦点链(v5 profile 未开 target_scoring, 严格链首优先)。
+    const semiOverride = context.strategyOverride
+        && typeof context.strategyOverride.name === "string"
+        && esm_bind_strategy_entry(role, phase, context.strategyOverride.name)
+        ? context.strategyOverride : null
+    let name = null
+    if (semiOverride) {
+        name = semiOverride.name
+        if (ctx && ctx._nodePath) ctx._nodePath.push("SEMI-LLM:" + name)
+    } else {
+    name = esm_eval(role, phase, ctx, lock)
     // [opt japan_opening_conquest] 用户要求: 日本 T1 应让菲律宾+马来亚投降、T2-3 让
     // DEI 投降。官方 JP01 图表在判定 A(盟军 HQ 断补给)为假时整段打空优战略(不登陆),
     // 引擎里盟军 HQ 补给几乎从不断 → 马来亚/DEI 投降 8/8 局永不触发(取证 06)。
@@ -1462,6 +1476,7 @@ function esm_pin_strategy(view, context) {
     // 链首格(如 Kwajalein/Guadalcanal)永远夺不下。确定性分支(can_pass/事件/反攻/
     // 占领轰炸基地/推进B29/原子弹/登陆日本)不是轮换轴, 照常打断延续。
     name = esm_pin_axis_continuity(lock, role, phase, name)
+    }
     // 事件战略: 钉住内容统一展开到【早期】事件清单(py 三处口径殊途同归):
     //   (a) JP 表中/晚期目标 = "同早期阶段事件战略"(指针);
     //   (b) AL mid/late 决策树直接 return AL_EARLY_STRATEGIES["事件战略"](py 共用早期条目,
@@ -1764,6 +1779,33 @@ function esm_pin_strategy(view, context) {
                 note: "开局南方 key 格夺占: 马尼拉/关丹/新加坡/达沃 + 东印度 key(投降链闭合)" }
         }
     }
+    // [LLM-SEMI-01] 模型有序目标链: 默认条目按同格复用(保留 CONQUEST/SUPPRESS/GARRISON
+    // 语义、伤害等级与驻守要求); 默认表没有的格按当前控制状态合成(敌控=夺占, 己控=地面驻守)。
+    // 链序即执行优先序 —— v5 执行档未开 target_scoring, eop_focus 严格链首优先。
+    // 覆盖为空链时不替换, 沿用该命名策略的图表默认链。
+    let semiChainSource = null
+    if (semiOverride && Array.isArray(semiOverride.chain)) {
+        if (semiOverride.chain.length) {
+            const defaultByHex = new Map(targetMeta.map(t => [t.hex, t]))
+            const semiMeta = []
+            for (const hex of semiOverride.chain) {
+                if (!Number.isInteger(hex) || hex < 0 || hex > LAST_BOARD_HEX) continue
+                if (semiMeta.some(t => t.hex === hex)) continue
+                const hit = defaultByHex.get(hex)
+                semiMeta.push(hit ? { ...hit } : is_space_controlled(hex, esm_role_faction(role))
+                    ? { hex, kind: "GARRISON", garrisonClass: "ground", damageLevel: 1,
+                        objective: "半自动LLM目标: 驻守己控格" }
+                    : { hex, kind: "CONQUEST", requiresOccupation: true, damageLevel: 1,
+                        objective: "半自动LLM目标: 夺占敌控格" })
+            }
+            if (semiMeta.length) {
+                chain = semiMeta.map(t => t.hex)
+                targetMeta = semiMeta
+                dynamicTargets = []
+                semiChainSource = "model"
+            }
+        } else semiChainSource = "chart-default"
+    }
     targetMeta = esm_semantic_targets(role, phase, name, targetMeta)
     chain = [...new Set(targetMeta.map(t=>t.hex))]
     dynamicTargets = targetMeta.filter(t=>t.requiredUnits || t.escortPairs || t.dynamicBase || t.extraActivationOnly)
@@ -1773,10 +1815,16 @@ function esm_pin_strategy(view, context) {
         nodePath: (ctx._nodePath || []).slice(), conditions: (ctx._conditions || []).slice(), d10Rolls: (ctx._dice || []).slice(),
         eventPhase: isEventStrat ? "early" : undefined,
         openingSurrenderPlan, progressPlan, victoryPreparation, southOpeningPlan,
+        ...(semiOverride ? { viaLLM: { source: "llm-semi", profile: String(semiOverride.profile || "").slice(0, 64),
+            model: String(semiOverride.model || "").slice(0, 64), decisionId: String(semiOverride.decisionId || "").slice(0, 32),
+            chainSource: semiChainSource || "chart-default", reason: String(semiOverride.reason || "").slice(0, 160) } } : {}),
     } : {
         name, nameFull: name, kind: "EVENT", notes: [], targets: [], phase, role, ord,
         pinnedNow: true, goals: [], chain: [], targetMeta: [], ctx,
         nodePath: (ctx._nodePath || []).slice(), conditions: (ctx._conditions || []).slice(), d10Rolls: (ctx._dice || []).slice(),
+        ...(semiOverride ? { viaLLM: { source: "llm-semi", profile: String(semiOverride.profile || "").slice(0, 64),
+            model: String(semiOverride.model || "").slice(0, 64), decisionId: String(semiOverride.decisionId || "").slice(0, 32),
+            chainSource: semiChainSource || "chart-default", reason: String(semiOverride.reason || "").slice(0, 160) } } : {}),
     }
     // D2: 记录本轴连续运行起点的回合与链上控格数(供下一回合的延续/停滞判定)。
     const prevCache = lock.role[role]
@@ -2387,7 +2435,8 @@ function esm_log_strategy(strategy) {
             const mark = t.achieved ? "✓" : "·"
             return `${t.priority}.${mark}${nm}(${t.hex}${ctl})`
         }).join(" ")
-        log(`[ERASMUS] ${roleCn}·${phaseCn} 战略「${strategy.name}」 首位目标: ${head || "(无)"}`)
+        const via = strategy.viaLLM ? `(LLM半自动·${strategy.viaLLM.chainSource === "model" ? "模型链" : "默认链"})` : ""
+        log(`[ERASMUS] ${roleCn}·${phaseCn} 战略「${strategy.name}」${via} 首位目标: ${head || "(无)"}`)
     } catch (e) { /* 日志失败不影响决策 */ }
 }
 

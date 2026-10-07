@@ -1,0 +1,158 @@
+{
+  "phase": "v4",
+  "scope": "首局固定截点前，每个状态窗口前两次成功候选；不是全部请求知识准确率。",
+  "samples": {
+    "minimax": 8,
+    "deepseek": 16,
+    "glm": 7
+  },
+  "cases": [
+    {
+      "profile": "minimax",
+      "job": "minimax-1",
+      "request": 3,
+      "kind": "map",
+      "finding": "错误：称Yamamoto HQ在Truk；公开unit5位于engine712/map3416 Palau。",
+      "promptHash": "7dd993beeb47d54f43f5f4c430356dd069132394db7d759bba488ca31f54235d",
+      "outputHash": "b76689b2231d7a01f45fc5fc568dbeef5bc013d72e353aca2d110462d843c9f1"
+    },
+    {
+      "profile": "minimax",
+      "job": "minimax-1",
+      "request": 5,
+      "kind": "unit-and-budget",
+      "finding": "错误：把17th Army说成unit17（实际37；unit17为Aoba）；又称预算只余1，实际limit6、activeCount1、remaining5。",
+      "promptHash": "23510cdc724e3bb68e52360ac14c2f33d48a8d1034e55d850dbb369d434564f6",
+      "outputHash": "f12dcca333199a85f189a0a78f802f5b8b558786351cf35fd7afb53ec0edd444"
+    },
+    {
+      "profile": "minimax",
+      "job": "minimax-1",
+      "request": 11,
+      "kind": "victory",
+      "finding": "错误：日方计划避免盟军PW降至0；当前场景明确PW0为日本自动胜利。",
+      "promptHash": "6ab58a8e96d3088762a523f0086396fcd9f18f0be2de0fd3b84b1471d4011a20",
+      "outputHash": "6c074b98e1c926420d352e8bd52825f43e9fc315d6072a6eaf0c14ec6c7eb803"
+    },
+    {
+      "profile": "deepseek",
+      "job": "deepseek-1",
+      "request": 8,
+      "kind": "activation",
+      "finding": "错误：称3个单位已到激活上限；公开上限6。",
+      "promptHash": "b2032814ab4e7ffd3ab556c8ba5fbefb0bca120331015d20e9c388de607c83ca",
+      "outputHash": "db957728fe524a27b45100c8c8ddd04fa65e6ea153ab021dd917a6d30d2d86fe"
+    },
+    {
+      "profile": "deepseek",
+      "job": "deepseek-1",
+      "request": 15,
+      "kind": "current-card",
+      "finding": "错误：称使用Ugaki；实际当前提示C101，选择ops，卡牌为Savo。",
+      "promptHash": "42c448adae7462911777b355bab384597f24a32fc7e00dcac5960967ff19b3e4",
+      "outputHash": "9c9d75e9c1e6968d1391852a861db004e1d594598ca7bad5ddd43eb6b5c98ef5"
+    },
+    {
+      "profile": "deepseek",
+      "job": "deepseek-1",
+      "request": 28,
+      "kind": "map-and-reinforcement",
+      "finding": "错误：提示待放P59却仍叙述P51；称South Seas HQ在Rabaul，公开unit6位于Truk887。",
+      "promptHash": "47f275cc07ad8aa3dd59a1cf0db6c86c12c24de045dc2fc65a3e4b203e14521c",
+      "outputHash": "411c55c13a2e4413deaa10c9893873f8dc418333c4994851f50e4c4ffce98f1b"
+    },
+    {
+      "profile": "deepseek",
+      "job": "deepseek-1",
+      "request": 29,
+      "kind": "unit-status",
+      "finding": "错误：称Yamato未受损；公开unit74 reduced=1。",
+      "promptHash": "ff162ca86d90072e1530ce712c517780041af7866aa42fba41e90cd2d70b35e3",
+      "outputHash": "1fdc4cba6e51f1cd0ea8b239d696a849df969d029c608bcb398bd0c8e0376191"
+    },
+    {
+      "profile": "deepseek",
+      "job": "deepseek-1",
+      "request": 58,
+      "kind": "side",
+      "finding": "错误：日方把盟方ASP [3,3]当己方；本方为[6,0]。",
+      "promptHash": "36d8a844a9010d54523171a618138b9b3dc8a6cbe20e7c9876ef056bbd63995b",
+      "outputHash": "743cf0d08d5c2ead1ff02ee947d769b5882649881f102509623f81a0d38e4261"
+    },
+    {
+      "profile": "glm",
+      "job": "glm-1",
+      "request": 1,
+      "kind": "movement-fact",
+      "finding": "错误：称1st Marine Division和SF Brigade已前出Darwin；实际195/194仍在Moumea1130，仅193 Marine Brigade在Darwin603。",
+      "promptHash": "768f3396b2cd879a8eff5f6495b6a03b1ee4ea06739c47e60e83a7789b9b949b",
+      "outputHash": "89f25cfbf70a81c1072ad4984960741958670375f27296aceb48062bb7b151e9"
+    },
+    {
+      "profile": "glm",
+      "job": "glm-1",
+      "request": 2,
+      "kind": "card-mode",
+      "finding": "错误：把Ugaki事件LV6作为当前OC后勤；事件与OC预算不同，应读实际窗口预算。",
+      "promptHash": "f1223f3d0230a560a6e8da77bac2a5be7333af3c0822f8b8f089129e3bc81a68",
+      "outputHash": "3586d39843e698ce6ddebe321a3f5432a485c895d8d8fd4ce1fc99ffb3e18360"
+    },
+    {
+      "profile": "glm",
+      "job": "glm-1",
+      "request": 3,
+      "kind": "map",
+      "finding": "正确：South Seas HQ在Truk、Combined Fleet HQ在Palau，与公开单位位置一致。",
+      "promptHash": "bd2799deaee11e62b84936ccffc739a6b03970aba911038e3c846c0d1ef2d4e2",
+      "outputHash": "0ce97b39b3d8de8843e89bd1bb12f0d465211dda6d9a914ef44ca130bca2d3b0"
+    },
+    {
+      "profile": "glm",
+      "job": "glm-1",
+      "request": 4,
+      "kind": "activation-and-map",
+      "finding": "正确：读取上限5及已激活unit37，定位Tainan unit57于Buna863。",
+      "promptHash": "fd659f5ce1f2fe089adee45e4e0c83b0b7c5ecb2b6d944aaa46986703e6387bc",
+      "outputHash": "105c11b4b12b48728099fb639879ef3e58f20dbf2eba0be606caca9faf5cc0b7"
+    },
+    {
+      "profile": "glm",
+      "job": "glm-1",
+      "request": 9,
+      "kind": "state-tracking",
+      "finding": "正确：追踪程序协助advance后unit58移至Motorai597；该移动不是模型独立生成。",
+      "promptHash": "101ee70fe0d85c22aa87bcc52a5396bafd741173301ca016f64dda418357626d",
+      "outputHash": "4013b20fc806821eda64068c5ddba9f9350d285c5124c89acd6d6332bcd5a1a5"
+    }
+  ],
+  "limitations": [
+    "合法候选受引擎筛选，不能证明独立理解地图与规则。",
+    "当前VP和激活预算由程序直接提供。",
+    "图像仅glm-4.6v单次接入smoke，未计文本模型勝率。",
+    "牌metadata.oc/ec是OC/EC情报检定阈值，不是ops/LV或枚举；不能无条件把OC5/EC7认定为错误。",
+    "输出摘要与记忆仅作行为证据，不输出思维链。",
+    "截点：DeepSeek当时59请求文件/58有效响应，GLM15/14，MiniMax12/11；后续响应未扩入本轮样本。"
+  ],
+  "coverage": {
+    "allProfiles": [
+      "card-selection",
+      "card-mode",
+      "HQ",
+      "activation",
+      "movement"
+    ],
+    "deepseekOnly": [
+      "reinforcement",
+      "replacement",
+      "intelligence",
+      "reaction-card"
+    ],
+    "notCovered": [
+      "full-combat-resolution",
+      "retreat",
+      "PBM",
+      "terminal-knowledge"
+    ]
+  },
+  "protocolDeviation": "未完成原计划全30局窗口手工语义核对，本次为首局截点31条定性案例审计，展示13个案例，不报告知识准确率。"
+}

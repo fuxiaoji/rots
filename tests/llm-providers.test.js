@@ -84,6 +84,17 @@ test("JSON mode requires supported capability and never appears by default", () 
     assert.deepEqual(getProfile("custom", { EOTS_LLM_JSON_MODE: "true", EOTS_LLM_JSON_SUPPORTED: "true" }).extraBody.response_format, { type: "json_object" })
 })
 
+test("DeepSeek long planning has bounded 64K generation and preflight rejects excess before transport", async () => {
+    const p=getProfile("deepseek", { EOTS_LLM_DEEPSEEK_MAX_TOKENS:"65536", EOTS_LLM_DEEPSEEK_TIMEOUT_MS:"480000" })
+    assert.equal(p.maxTokens,65536);assert.equal(p.timeoutMs,480000)
+    let calls=0
+    await createClient({...p,apiKey:secret},{fetchImpl:async (_,options)=>{++calls;assert.equal(JSON.parse(options.body).max_tokens,65536);return ok()}}).complete(messages)
+    assert.equal(calls,1)
+    for(const bad of [{maxTokens:65537},{timeoutMs:600001},{provider:"minimax",maxTokens:65536}])assert.throws(()=>createClient({...p,apiKey:secret,...bad}),/EOTS_LLM_CONFIG_INTEGER/)
+    assert.throws(()=>getProfile("deepseek", { EOTS_LLM_MAX_TOKENS:"65537" }),/EOTS_LLM_CONFIG_INTEGER/)
+    assert.equal(calls,1)
+})
+
 test("transport preserves base paths, limits tokens and exposes bounded usage", async () => {
     for (const [baseUrl, expected] of [["https://example.test", "https://example.test/chat/completions"], ["https://example.test/v1/", "https://example.test/v1/chat/completions"], ["https://example.test/api/paas/v4", "https://example.test/api/paas/v4/chat/completions"], ["http://127.0.0.1:9/v1/chat/completions", "http://127.0.0.1:9/v1/chat/completions"]]) {
         const client = createClient({ ...profile(), baseUrl, maxTokens: 123 }, { fetchImpl: async (url, options) => {
@@ -124,9 +135,21 @@ test("vision guard rejects images for text profiles before transport", async () 
     assert.equal(called, true)
 })
 
-test("transport reports status only, never HTTP body or raw network exception", async () => {
+test("transport reports safe status, never HTTP body or raw network exception", async () => {
     for (const status of [201, 302, 401, 429, 500]) await expectCode(createClient(profile(), { fetchImpl: async () => new Response(secret, { status }) }).complete(messages), "EOTS_LLM_HTTP_ERROR", status)
     await expectCode(createClient(profile(), { fetchImpl: async () => { throw new Error(secret) } }).complete(messages), "EOTS_LLM_NETWORK_ERROR")
+})
+
+test("HTTP diagnostics retain only bounded numeric provider codes", async () => {
+    for (const [data, expected] of [[{ error: { code: "1308", message: secret } }, "1308"], [{ base_resp: { status_code: 2013, status_msg: secret } }, "2013"], [{ code: 1302, message: secret }, "1302"], [{ error: { code: secret, message: secret } }, undefined], [{ code: "1".repeat(13) }, undefined]]) {
+        await assert.rejects(createClient(profile(), { fetchImpl: async () => new Response(JSON.stringify(data), { status: 429 }) }).complete(messages), e => {
+            assert.equal(e.code, "EOTS_LLM_HTTP_ERROR"); assert.equal(e.status, 429); assert.equal(e.providerCode, expected)
+            assert(!e.message.includes(secret)); assert.equal(e.cause, undefined); return true
+        })
+    }
+    await expectCode(createClient(profile(), { fetchImpl: async () => new Response("x".repeat(1048577), { status: 500 }) }).complete(messages), "EOTS_LLM_HTTP_ERROR", 500)
+    const stream = new ReadableStream({ start() {} })
+    await expectCode(createClient({ ...profile(), timeoutMs: 15 }, { fetchImpl: async () => new Response(stream, { status: 429 }) }).complete(messages), "EOTS_LLM_TIMEOUT")
 })
 
 test("provider business errors sanitize numeric and textual codes", async () => {

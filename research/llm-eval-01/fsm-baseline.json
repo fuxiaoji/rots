@@ -1,0 +1,365 @@
+{
+  "purpose": "补充场景/阵营基线：两个AI5、同10种子，不作为LLM独立调参证据。",
+  "results": [
+    {
+      "seed": 20262201,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 429,
+      "stats": {
+        "requests": 0,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 0,
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "usageUnknown": 0,
+        "latencyMs": 0,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "error": null,
+      "end": {
+        "winner": "Japan",
+        "won_text": "Japanese Decisive Victory.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 429,
+        "complete": true,
+        "result": "Japan",
+        "finalStateHash": "7c93714aa41f98a6993b0b6cb4579a4c4c36f36cbf9c2095c53afbe5ba518337"
+      },
+      "rulesSha256": "9e7cca94fb567af6533a553b7f0b8e6ba5d80c6bcfaf9ffc0dc854317bedb591"
+    },
+    {
+      "seed": 20262202,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 312,
+      "stats": {
+        "requests": 0,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 0,
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "usageUnknown": 0,
+        "latencyMs": 0,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "error": null,
+      "end": {
+        "winner": "Japan",
+        "won_text": "Japanese Victory by Treaty Negotiations.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": true
+      },
+      "verified": {
+        "verified": true,
+        "actions": 312,
+        "complete": true,
+        "result": "Japan",
+        "finalStateHash": "c0fd70f996d3309e6788ee6c69e6f2af539fb742f57c272b54f6f48e22d7b5b7"
+      },
+      "rulesSha256": "9e7cca94fb567af6533a553b7f0b8e6ba5d80c6bcfaf9ffc0dc854317bedb591"
+    },
+    {
+      "seed": 20262203,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 296,
+      "stats": {
+        "requests": 0,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 0,
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "usageUnknown": 0,
+        "latencyMs": 0,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "error": null,
+      "end": {
+        "winner": "Japan",
+        "won_text": "Japanese Victory by Treaty Negotiations.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": true
+      },
+      "verified": {
+        "verified": true,
+        "actions": 296,
+        "complete": true,
+        "result": "Japan",
+        "finalStateHash": "496096737f29df766580dd2217aac1f327f642315ead269212a50b8e2ce3456d"
+      },
+      "rulesSha256": "9e7cca94fb567af6533a553b7f0b8e6ba5d80c6bcfaf9ffc0dc854317bedb591"
+    },
+    {
+      "seed": 20262204,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 391,
+      "stats": {
+        "requests": 0,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 0,
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "usageUnknown": 0,
+        "latencyMs": 0,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "error": null,
+      "end": {
+        "winner": "Japan",
+        "won_text": "Japanese Decisive Victory.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 391,
+        "complete": true,
+        "result": "Japan",
+        "finalStateHash": "6ba2700373ed6bfc6fccc345fc8fa26996b8fc76977be7a6d325f337abead21a"
+      },
+      "rulesSha256": "9e7cca94fb567af6533a553b7f0b8e6ba5d80c6bcfaf9ffc0dc854317bedb591"
+    },
+    {
+      "seed": 20262205,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 378,
+      "stats": {
+        "requests": 0,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 0,
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "usageUnknown": 0,
+        "latencyMs": 0,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "error": null,
+      "end": {
+        "winner": "Japan",
+        "won_text": "Japanese Decisive Victory.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 378,
+        "complete": true,
+        "result": "Japan",
+        "finalStateHash": "1b5a6b90531dae37c4408daa88dd546b434520f31b139febf3660ea625d29b02"
+      },
+      "rulesSha256": "9e7cca94fb567af6533a553b7f0b8e6ba5d80c6bcfaf9ffc0dc854317bedb591"
+    },
+    {
+      "seed": 20262206,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 440,
+      "stats": {
+        "requests": 0,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 0,
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "usageUnknown": 0,
+        "latencyMs": 0,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "error": null,
+      "end": {
+        "winner": "Japan",
+        "won_text": "Japanese Decisive Victory.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 440,
+        "complete": true,
+        "result": "Japan",
+        "finalStateHash": "9f4d4af2b10b8cb48e54677de8248b17948a9b3bfc3376a48c460abfdf136928"
+      },
+      "rulesSha256": "9e7cca94fb567af6533a553b7f0b8e6ba5d80c6bcfaf9ffc0dc854317bedb591"
+    },
+    {
+      "seed": 20262207,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 202,
+      "stats": {
+        "requests": 0,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 0,
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "usageUnknown": 0,
+        "latencyMs": 0,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "error": null,
+      "end": {
+        "winner": "Japan",
+        "won_text": "Japanese Victory by Treaty Negotiations.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": true
+      },
+      "verified": {
+        "verified": true,
+        "actions": 202,
+        "complete": true,
+        "result": "Japan",
+        "finalStateHash": "d79b69d93238be0c0f9e1bd42e416929c895c3d23e432ea66dee3558bf864d30"
+      },
+      "rulesSha256": "9e7cca94fb567af6533a553b7f0b8e6ba5d80c6bcfaf9ffc0dc854317bedb591"
+    },
+    {
+      "seed": 20262208,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 307,
+      "stats": {
+        "requests": 0,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 0,
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "usageUnknown": 0,
+        "latencyMs": 0,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "error": null,
+      "end": {
+        "winner": "Japan",
+        "won_text": "Japanese Victory by Treaty Negotiations.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": true
+      },
+      "verified": {
+        "verified": true,
+        "actions": 307,
+        "complete": true,
+        "result": "Japan",
+        "finalStateHash": "c1e26742c8fdbedcc7616b7325ad2453f0d491dc708d3297f0599c52adf376cb"
+      },
+      "rulesSha256": "9e7cca94fb567af6533a553b7f0b8e6ba5d80c6bcfaf9ffc0dc854317bedb591"
+    },
+    {
+      "seed": 20262209,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 401,
+      "stats": {
+        "requests": 0,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 0,
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "usageUnknown": 0,
+        "latencyMs": 0,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "error": null,
+      "end": {
+        "winner": "Japan",
+        "won_text": "Japanese Tactical Victory.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 401,
+        "complete": true,
+        "result": "Japan",
+        "finalStateHash": "88edffb22a2de71d7237badaa92bcde764c7321b0a8da07dd461ffde1860c011"
+      },
+      "rulesSha256": "9e7cca94fb567af6533a553b7f0b8e6ba5d80c6bcfaf9ffc0dc854317bedb591"
+    },
+    {
+      "seed": 20262210,
+      "status": "complete",
+      "winner": "Japan",
+      "actions": 389,
+      "stats": {
+        "requests": 0,
+        "retries": 0,
+        "failedRequests": 0,
+        "invalidResponses": 0,
+        "totalTokens": 0,
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "usageUnknown": 0,
+        "latencyMs": 0,
+        "forcedActions": 0,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "error": null,
+      "end": {
+        "winner": "Japan",
+        "won_text": "Japanese Decisive Victory.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 389,
+        "complete": true,
+        "result": "Japan",
+        "finalStateHash": "6bd6d9a659d42993d3f04f0d83569626ee9fff0440c6339b00046bdfd635cb8d"
+      },
+      "rulesSha256": "9e7cca94fb567af6533a553b7f0b8e6ba5d80c6bcfaf9ffc0dc854317bedb591"
+    }
+  ]
+}

@@ -238,6 +238,47 @@ function queryBlockadeStatus() {
     })
 }
 
+// Public, steady-state air-screen preparation only. This is NOT a movement
+// or elimination grant: callers still need a legal action and battle result.
+// Snapshot restores location, active-unit sets, caches, OOS, log and RNG.
+function queryCampaignAirProjection(options = {}) {
+    return rules_query_snapshot(() => {
+        const faction = options.faction === JP ? JP : AP
+        if (typeof R === "number" && R!==faction) return {eligible:false,reason:"not-requesting-faction"}
+        const moves = options.moves || [], removed = options.removeAirIds || []
+        if (moves.length > 1 || removed.length > 3) return { eligible:false, reason:"projection-bound" }
+        for (const move of moves) {
+            const p = pieces[move.unit]
+            if (!p || p.faction !== faction || p.class !== "air" || p.b29
+                || !Number.isInteger(move.hex) || move.hex < 1 || move.hex > LAST_BOARD_HEX
+                || !get_map_data(move.hex).airfield || !is_space_controlled(move.hex,faction))
+                return { eligible:false, reason:"not-own-airbase-projection" }
+        }
+        for (const id of removed) {
+            const p = pieces[id], hex = G.location[id]
+            if (!p || p.faction === faction || p.class !== "air" || !(hex > 0 && hex <= LAST_BOARD_HEX))
+                return { eligible:false, reason:"not-public-enemy-air" }
+        }
+        // Assess the position after temporary offensive supply expires.
+        G.offensive.active_units = [[],[]]
+        G.active_stack = []
+        L.move_type = ANY_MOVE
+        for (const move of moves) G.location[move.unit] = move.hex
+        for (const id of removed) G.location[id] = NOT_USED
+        const connectedResources = []
+        const diagnostics = {}
+        check_japan_resource_trace(connectedResources,diagnostics)
+        const pureSeaHexes = []
+        for (let hex=1; hex<=LAST_BOARD_HEX; hex++) {
+            if (get_map_data(hex).edges_int & WATER * 34636833 && has_non_n_zoi(hex,faction)) pureSeaHexes.push(hex)
+        }
+        return { eligible:true, connectedResources, pureSeaHexes, reachableSeaHexes:diagnostics.reachableSeaHexes || [],
+            ownOosIds:(G.oos || []).filter(id=>pieces[id]?.faction===faction),
+            assessment:removed.length ? "potential-if-all-specified-air-are-eliminated; not-a-battle-result"
+                : "steady-state-supply-screen; not-a-movement-grant" }
+    }, options.faction === JP ? JP : AP)
+}
+
 // 战果表（naval / ground）roll → 命中乘数。
 function queryBattleTable(kind, roll) {
     return kind === "ground" ? ground_battle_table(roll) : naval_battle_table(roll)
@@ -856,7 +897,7 @@ function queryPbmDestinations(unit, ctx) {
 
 const RULES_QUERY_FNS = [
     "queryZoi", "queryNonNeutralZoi", "queryGroundMoveCost", "querySupplyStatus", "queryAspRemaining", "queryProjectedStack", "queryPbmStackRecovery",
-    "queryPotentialCombatStrength", "queryDefendingGround", "queryBlockadeStatus", "queryBattleTable", "querySpaceControlled",
+    "queryPotentialCombatStrength", "queryDefendingGround", "queryBlockadeStatus", "queryCampaignAirProjection", "queryBattleTable", "querySpaceControlled",
     "queryFactionUnits", "queryLegalReinforcementHexes", "queryEmergencyRetreatHexes",
     "queryCardPreview", "queryActivationCandidates", "queryGroupMovementDestinations", "queryGroundPreparation", "queryAmphibiousPreparation", "queryGroundReachability", "queryNavalReachability",
     "queryCombatParticipation", "queryReactionCandidates",
@@ -869,7 +910,7 @@ function rules_query_dispatch(q) {
     const fn = q.fn || q.query
     const impl = {
         queryZoi, queryNonNeutralZoi, queryGroundMoveCost, querySupplyStatus, queryAspRemaining, queryProjectedStack, queryPbmStackRecovery,
-        queryPotentialCombatStrength, queryDefendingGround, queryBlockadeStatus, queryBattleTable, querySpaceControlled,
+        queryPotentialCombatStrength, queryDefendingGround, queryBlockadeStatus, queryCampaignAirProjection, queryBattleTable, querySpaceControlled,
         queryFactionUnits, queryLegalReinforcementHexes, queryEmergencyRetreatHexes,
         queryCardPreview, queryActivationCandidates, queryGroupMovementDestinations, queryGroundPreparation, queryAmphibiousPreparation, queryGroundReachability, queryNavalReachability,
         queryCombatParticipation, queryReactionCandidates,

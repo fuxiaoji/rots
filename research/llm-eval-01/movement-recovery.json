@@ -1,0 +1,14 @@
+{
+  "taskId": "LLM-EVAL-01",
+  "testedVersion": "eots-llm-v5",
+  "sourceGame": "deepseek-10",
+  "sourceRevision": 371,
+  "originalStateUnchanged": true,
+  "candidates": [
+    "undo"
+  ],
+  "afterUndoCandidateCount": 5,
+  "afterUndoState": "move_offensive_units",
+  "apiCalls": 0,
+  "formalResultUnchanged": true
+}

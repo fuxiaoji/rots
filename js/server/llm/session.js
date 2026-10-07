@@ -2,6 +2,8 @@
 const crypto = require("node:crypto"), fs = require("node:fs"), path = require("node:path")
 const { observe, visible, activeRole, clone, hash, ROLES } = require("./observation")
 const { boardSvg } = require("./board"), { decide, fail } = require("./harness")
+const { commitMemory } = require("./memory")
+const semi = require("./semi")
 const ENGINE = path.resolve(__dirname, "../../../rules.js")
 const LOADED_SOURCE = fs.readFileSync(ENGINE, "utf8"), LOADED_HASH = hash(LOADED_SOURCE)
 function compileRules(source) { const Module = require("node:module"), m = new Module(ENGINE, module); m.filename = ENGINE; m.paths = Module._nodeModulePaths(path.dirname(ENGINE)); m._compile(source, ENGINE); return m.exports }
@@ -26,23 +28,31 @@ function createSession(options = {}, deps = {}) {
     if (!rules.scenarios.includes(scenario) || !Number.isSafeInteger(seed) || seed <= 0 || seed > 0x7fffffff) throw fail("CONFIG", "剧本或种子无效")
     for (const role of ROLES) {
         const player = players[role]
-        if (typeof player !== "string" || player !== "human" && !player.startsWith("llm:") && !rules.bots[player]) throw fail("CONFIG", "未知玩家配置")
+        if (typeof player !== "string" || player !== "human" && !player.startsWith("llm:") && !player.startsWith("llmsemi:") && !rules.bots[player]) throw fail("CONFIG", "未知玩家配置")
+        if (player.startsWith("llmsemi:")) {
+            // [LLM-SEMI-01] 半自动：模型只出战略与目标链，执行状态机由 semiBots 指定。
+            const botName = options.semiBots?.[role] || "erasmus-v2-opt-v5"
+            const bot = rules.bots[botName]
+            if (!bot) throw fail("CONFIG", "半自动执行状态机不存在")
+            if (bot.scenarios && !bot.scenarios.includes(scenario)) throw fail("CONFIG", "状态机AI不支持该剧本")
+        }
         if (rules.bots[player]?.scenarios && !rules.bots[player].scenarios.includes(scenario)) throw fail("CONFIG", "状态机AI不支持该剧本")
-        if (player.startsWith("llm:") && !deps.clients?.[player.slice(4)]) {
+        if ((player.startsWith("llm:") || player.startsWith("llmsemi:")) && !deps.clients?.[player.slice(player.indexOf(":") + 1)]) {
             const { getProfile } = require("./providers")
-            const p = getProfile(player.slice(4))
+            const p = getProfile(player.slice(player.indexOf(":") + 1))
             if (!p.apiKey) throw fail("CONFIG", "所选模型未配置API密钥")
         }
     }
     if (ROLES.filter(r => players[r] === "human").length > 1) throw fail("CONFIG", "当前页面支持一名人类玩家")
     const limits = { maxRequests: options.maxRequests ?? 200, maxTotalTokens: options.maxTotalTokens ?? 2000000,
         maxActions: options.maxActions ?? 60000 }
-    for (const n of Object.values(limits)) if (!Number.isSafeInteger(n) || n < 1 || n > 10000000) throw fail("CONFIG", "预算必须为有界正整数")
-    const normalized = { seed, scenario, players: { ...players }, ...limits }
+    for (const [key, n] of Object.entries(limits)) if (!Number.isSafeInteger(n) || n < 1 || n > (key === "maxTotalTokens" ? 20000000 : 10000000)) throw fail("CONFIG", "预算必须为有界正整数")
+    const normalized = { seed, scenario, players: { ...players },
+        semiBots: { Japan: options.semiBots?.Japan || "erasmus-v2-opt-v5", Allies: options.semiBots?.Allies || "erasmus-v2-opt-v5" }, ...limits, directOnly: options.directOnly === true }
     return { id: crypto.randomUUID(), revision: 0, options: normalized, limits, rules,
         rulesSha256: deps.rulesSha256 || (deps.rules ? "injected-test-engine" : LOADED_HASH),
-        moduleHashes: Object.fromEntries(["observation", "prompt", "board", "providers", "harness", "session"].map(n => [n, hash(fs.readFileSync(path.join(__dirname, n + ".js"), "utf8"))])),
-        state: rules.setup(seed, scenario, { headless_moves: true }), memories: { Japan: null, Allies: null },
+        moduleHashes: Object.fromEntries(["observation", "prompt", "memory", "board", "providers", "harness", "session", "semi"].map(n => [n, hash(fs.readFileSync(path.join(__dirname, n + ".js"), "utf8"))])),
+        state: rules.setup(seed, scenario, { headless_moves: true }), memories: { Japan: null, Allies: null }, strategyLog: [],
         stats: { requests: 0, retries: 0, failedRequests: 0, invalidResponses: 0, totalTokens: 0, promptTokens: 0,
             completionTokens: 0, usageUnknown: 0, latencyMs: 0, forcedActions: 0, assistedActions: 0, cost: "unknown" },
         actions: [], requestLedger: [], status: "playing", clients: deps.clients || {}, profiles: deps.profiles || {}, cache: new Map(), busy: false, progressWindow: [] }
@@ -50,7 +60,7 @@ function createSession(options = {}, deps = {}) {
 function viewer(s) { return ROLES.find(r => s.options.players[r] === "human") || "Observer" }
 function packet(s, role) {
     const key = s.revision + ":" + role
-    if (!s.cache.has(key)) s.cache.set(key, observe(s.rules, s.state, role, s.revision))
+    if (!s.cache.has(key)) s.cache.set(key, observe(s.rules, s.state, role, s.revision, { directOnly: s.options.directOnly, memory: s.memories[role] }))
     return s.cache.get(key)
 }
 function snapshot(s, role = viewer(s)) {
@@ -92,6 +102,38 @@ async function step(s, request = {}) {
             const result = await decide(p, { client, profile, memory: s.memories[role], stats: s.stats, limits: s.limits,
                 decisionId: hash([s.id, role, revision, p.observationHash]).slice(0, 24), ledger: s.requestLedger })
             choice = result.candidate; nextMemory = result.memory; trace = result.trace; reason = result.reason
+        } else if (player.startsWith("llmsemi:")) {
+            // [LLM-SEMI-01] 战略由模型在选牌窗决定一次，其余窗口与全部动作执行都
+            // 走指定状态机。模型接口失败/预算耗尽照常抛出暂停；格式无效回退程序
+            // 默认战略并计数，不静默伪装成模型决策。
+            const id = player.slice("llmsemi:".length), { getProfile, createClient } = require("./providers")
+            const profile = s.profiles[id] || getProfile(id)
+            const client = s.clients[id] || (s.clients[id] = createClient(profile))
+            const bot = s.rules.bots[s.options.semiBots[role]]
+            if (!bot) throw fail("CONFIG", "半自动执行状态机不存在")
+            const copied = clone(s.state), view = s.rules.view(copied, role), count = copied.log.length
+            const requestsBefore = s.stats.requests
+            let override = null, semiTrace = null, semiReason = ""
+            if (semi.isStrategyWindow(view)) {
+                const packet = semi.buildPacket(s.rules, clone(s.state), role, { profile,
+                    strategyLog: s.strategyLog.filter(x => x.role === role) })
+                const result = await semi.decide(packet, { client, profile, stats: s.stats, limits: s.limits,
+                    decisionId: hash([s.id, role, revision, packet.observationHash]).slice(0, 24), ledger: s.requestLedger })
+                override = result.override
+                semiTrace = result.trace; semiReason = result.reason
+                s.strategyLog.push({ revision: s.revision, role, turn: view.turn, phase: result.phase || null,
+                    strategy: result.name || null, chain: (result.chain || []).slice(0, 16), dropped: result.dropped || [],
+                    source: override ? "llm" : "program-default", invalid: !!result.invalid,
+                    reason: semiReason, requests: result.requests || 0 })
+            }
+            const d = bot.decide(view, { role, seed: s.options.seed, actionOrdinal: revision + 1, strategyOverride: override })
+            if (!d || !Object.hasOwn(view.actions || {}, d.action) || !view.actions[d.action]) throw fail("ILLEGAL", "状态机返回未声明动作")
+            const raw = d.argument?.__ai ? d.argument.action : d.argument?.oos ? d.argument.action : d.argument
+            if (Array.isArray(view.actions[d.action]) && !view.actions[d.action].includes(raw)) throw fail("ILLEGAL", "状态机返回非法参数")
+            logs = copied.log.slice(count)
+            choice = { action: d.action, argument: d.argument }
+            trace = { policy: "llm-semi", executor: s.options.semiBots[role], requests: s.stats.requests - requestsBefore, ...(semiTrace ? { strategy: semiTrace } : {}) }
+            reason = semiReason
         } else {
             const copied = clone(s.state), view = s.rules.view(copied, role), count = copied.log.length
             const d = s.rules.bots[player].decide(view, { role, seed: s.options.seed, actionOrdinal: revision + 1 })
@@ -110,12 +152,13 @@ async function step(s, request = {}) {
         const nextState = s.rules.action(next, role, choice.action, clone(choice.argument ?? null))
         const progressHash = gameplayDigest(nextState), recentStates = s.progressWindow.slice(-127), repeatCount = recentStates.filter(h => h === progressHash).length + 1
         if (repeatCount > 16) throw fail("NO_PROGRESS", "重复相同局面超过16次；对局暂停供调试")
-        const oldMemory = s.memories[role] || { objective: "", notes: [], recent: [] }
-        const recent = [...(oldMemory.recent || []), { turn: p.observation.turn, window: p.observation.window,
-            action: choice.action, label: choice.label || choice.action, reason }].slice(-12)
+        let afterObservation = null
+        if (player.startsWith("llm:")) { try { afterObservation = visible(s.rules, nextState, role).observation } catch (_) { /* Projection failure is not a failed legal action. */ } }
+        const finalMemory = player.startsWith("llm:") ? commitMemory(nextMemory, p.observation, afterObservation,
+            { revision: revision + 1, action: choice.action, label: choice.label, effect: choice.effect, reason, policy: trace.policy, assisted: trace.assisted }) : null
         s.state = nextState
         s.progressWindow = [...recentStates, progressHash]
-        if (player.startsWith("llm:")) s.memories[role] = { ...(nextMemory || oldMemory), recent }
+        if (player.startsWith("llm:")) s.memories[role] = finalMemory
         s.actions.push({ role, action: choice.action, argument: clone(choice.argument ?? null), logs,
             revision, trace, reason, stateHash: digest(nextState), progressHash })
         s.revision++; s.cache.clear(); s.error = null
@@ -131,7 +174,7 @@ async function step(s, request = {}) {
 function replay(s) {
     if (s.rulesSha256 === LOADED_HASH) { fs.mkdirSync(ARCHIVES, { recursive: true, mode: 0o700 }); const file = path.join(ARCHIVES, s.rulesSha256 + ".js"); if (!fs.existsSync(file)) fs.writeFileSync(file, LOADED_SOURCE, { mode: 0o600 }) }
     return { schemaVersion: 1, kind: "eots-llm-replay", setup: s.options, rulesSha256: s.rulesSha256, moduleHashes: s.moduleHashes,
-        policyMigrations: clone(s.policyMigrations || []), requestLedger: clone(s.requestLedger), actions: clone(s.actions), finalStateHash: digest(s.state), complete: s.state.active === "None", result: s.state.result || null, stats: clone(s.stats) }
+        policyMigrations: clone(s.policyMigrations || []), requestLedger: clone(s.requestLedger), strategyLog: clone(s.strategyLog), actions: clone(s.actions), finalStateHash: digest(s.state), complete: s.state.active === "None", result: s.state.result || null, stats: clone(s.stats) }
 }
 function verifyReplay(r, rules) {
     rules ||= r.rulesSha256 === "injected-test-engine" || r.rulesSha256 === LOADED_HASH ? LOADED_RULES : archivedRules(r.rulesSha256)
@@ -164,6 +207,7 @@ function restoreSession(saved, deps = {}) {
         s.policyMigrations.push({ revision: s.revision, from: saved.replay.moduleHashes, to: s.moduleHashes })
     s.memories = clone(saved.memories); s.stats = clone(saved.replay.stats)
     s.requestLedger = clone(saved.replay.requestLedger || [])
+    s.strategyLog = clone(saved.replay.strategyLog || [])
     s.progressWindow = s.actions.slice(-128).map(a => a.progressHash).filter(Boolean)
     s.status = s.state.active === "None" ? "complete" : saved.status === "paused" ? "paused" : "playing"
     s.error = clone(saved.error || null); s.lastDecision = clone(saved.lastDecision || null)

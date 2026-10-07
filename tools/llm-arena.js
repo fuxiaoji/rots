@@ -213,7 +213,7 @@ function createArenaServer(options = {}) {
 async function main() {
     const root = path.resolve(__dirname, "..")
     const providers = require(path.join(root, "js/server/llm/providers.js"))
-    try { providers.loadEnv(path.join(root, ".env.llm.local")) }
+    try { providers.loadEnv(process.env.EOTS_LLM_ENV_FILE || path.join(root, ".env.llm.local")) }
     catch (error) { if (error.code !== "ENOENT") throw error }
     const host = process.env.EOTS_LLM_HOST || "127.0.0.1"
     if (!["127.0.0.1", "localhost", "::1"].includes(host)) throw Error("EOTS_LLM_HOST must be a loopback address")

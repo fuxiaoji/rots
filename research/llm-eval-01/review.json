@@ -1,0 +1,60 @@
+{
+  "reviews": [
+    {
+      "profile": "deepseek",
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 320,
+        "completion_tokens": 203,
+        "total_tokens": 523
+      },
+      "latencyMs": 2038,
+      "promptHash": "675fbc3210d2571d567973613ab647543c620d25ddf5832c845bd4a5e4caa0ed",
+      "outputHash": "ebcc69841e922a99b039a78d57745535c88b0cd68b0befa5b50ee29e81466998",
+      "opinion": {
+        "blocking": [],
+        "risks": [
+          "胜率分母/自然结束判定若未在评测前冻结，可能事后调整口径",
+          "if-scored-now 的 VP 标记依赖 rules_query_snapshot，需确认快照与最终计分一致",
+          "active_units 与 active_stack 分离后，预算导出若混用可能影响合法走子判定",
+          "格式修复仅一次，若修复改变语义而非格式，可能污染结果"
+        ],
+        "recommendations": [
+          "验收前冻结：分母=全部尝试、自然结束定义、合法逐步重演通过标准、VP 快照时点",
+          "记录每次格式修复前后 diff，确认仅格式变化",
+          "对 DS/GLM JSON 模式与 nonce 模板做一次端到端校验",
+          "确认私有 ACL 目录与进程环境密钥不进入任何日志/响应",
+          "抽查 1-2 局完整重演，验证 move 路径来自合法查询且 API 仅返回候选 ID"
+        ]
+      }
+    },
+    {
+      "profile": "glm",
+      "model": "glm-5.3",
+      "usage": {
+        "prompt_tokens": 352,
+        "completion_tokens": 376,
+        "total_tokens": 728
+      },
+      "latencyMs": 12197,
+      "promptHash": "675fbc3210d2571d567973613ab647543c620d25ddf5832c845bd4a5e4caa0ed",
+      "outputHash": "19e49c0791c6422da757dbd4238df0b83c1f31f7f26a8e49aef85e3bcc24c9f5",
+      "opinion": {
+        "blocking": [],
+        "risks": [
+          "view.unselect依赖服务端取消标签的准确性：若UI历史操作与规则状态不同步（如17军取消后仍显示可选），DeepSeek的重复选择可能复现，建议正式前用1局冒烟验证取消后该单位确实不可再选。",
+          "VP的if-scored-now标记若把‘假设现在得分’的VP展示得过于显眼，可能诱导模型为凑VP而改变目标优先级，属于软性泄露终局评估；建议确认标记仅描述当前快照、不包含未来推演。",
+          "‘当前激活窗口预算’由公开本方G导出，需确认公式不读取对手未公开的G，否则泄露隐藏信息。",
+          "SP提示引用GMT43页17.10.7并声明‘实际最后回合6’，这与规则文本可能矛盾，需确认这是官方勘误或赛制声明，否则等于改规则。",
+          "decisionId仅由合法查询返回候选ID，需确保候选ID一次性失效（绑定nonce+请求序号），防止GLM漏字后模型自行猜测补全仍被接受。"
+        ],
+        "recommendations": [
+          "正式前记录每局全量状态副本哈希链，供‘合法逐步重演’复核，避免重演与对局使用不同引擎版本。",
+          "对‘一次格式修复’给出精确触发与日志记录定义（修复前后原文均入私有ACL目录），防止修复被用作隐性重试。",
+          "确认日志/提示中不出现对手logistic、hq_bonus或手牌类隐藏量；建议加一个自动扫描器对提示模板做字段白名单校验。"
+        ]
+      }
+    }
+  ],
+  "decision": "Astra认为无阻断：保留合法选择切换、第6回合结束、当前公开VP投影和既有一次重选候选的重试语义；以行为、隐藏不变性和重演验收。v4去除模型nonce回显经Sol安全检查及Astra统计审查。"
+}

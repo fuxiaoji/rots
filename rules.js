@@ -18933,9 +18933,78 @@ function on_query(q, params, b) {
             if (!m || m.id !== int_to_hex(h)) continue
             hexes.push({ hex: h, id: m.id, name: m.name || String(m.id), region: m.region || null,
                 terrain: m.terrain, port: !!m.port, airfield: !!m.airfield, resource: !!m.resource,
+                neighbors: (m.nh || []).filter(n => Number.isInteger(n) && n >= 0 && n <= LAST_BOARD_HEX), edges: m.edges_int || 0,
                 named: !!m.named, control: !is_controllable_hex(h) ? null : is_space_controlled(h, JP) ? "Japan" : is_space_controlled(h, AP) ? "Allies" : null })
         }
-        return { hexes, cards: cards.map((c, id) => c ? { id, name: c.name, type: c.type,
+        let activation = null
+        if (R === G.active && L.P === "activate_units") {
+            const activeCount = G.offensive.active_units[R].length
+            const limit = G.offensive.logistic + L.hq_bonus
+            activation = { hqId: G.offensive.active_hq[R] || null, logistic: G.offensive.logistic,
+                hqBonus: L.hq_bonus, limit, activeCount, remaining: Math.max(0, limit - activeCount), overBudget: activeCount > limit }
+        }
+        const scenario = { id: G.sid, name: scenario_data().name, lastTurn: scenario_data().last_turn,
+            nations: ["PHILIPPINES", "MALAYA", "DEI", "BURMA"].map(key => {
+                const nation = nations[key], keys = nation.keys.map(mapId => {
+                    const hex = hex_to_int(mapId)
+                    return { hex, mapId, name: get_map_data(hex)?.name || String(mapId),
+                        control: is_space_controlled(hex, JP) ? "Japan" : is_space_controlled(hex, AP) ? "Allies" : null }
+                }), surrenderedTurn = Number(G.surrender[nation.id] || 0)
+                return { id: nation.id, key, name: nation.name, surrenderedTurn, keys,
+                    allJapanControlled: keys.every(h => h.control === "Japan"), engineReady: keys.every(h => h.control !== "Allies"),
+                    // check_nation_controlled requires no opposite controlled key.
+                    remainingKeys: keys.filter(h => h.control === "Allies").map(h => h.hex),
+                    status: surrenderedTurn ? "surrendered" : keys.some(h => h.control === "Allies") ? "capture-required" : "await-national-status",
+                    basis: "public national status; source PDF35-36 sections13.22/13.32/13.42/13.52; engine key-control check" }
+            }) }
+        if (G.sid === SOUTH_PACIFIC_SCENARIO) {
+            const scoring = rules_query_snapshot(() => get_victory(), G.active)
+            scenario.victoryMode = "south-pacific-vp"
+            scenario.victory = { basis: "current-engine-implementation", evaluation: "if-scored-now",
+                vp: scoring.vp, breakdown: scoring.text, winningSideIfScoredNow: scoring.won_side,
+                alliesMaximumVP: 5, japanMinimumVP: 6, politicalWillZeroWinner: "Japan" }
+        } else if (CAMPAIGN_SCENARIOS.includes(G.sid)) {
+            scenario.victoryMode = "campaign"
+            scenario.victory = { basis: "current-engine-implementation", politicalWillZeroWinner: "Japan",
+                lastTurn: scenario_data().last_turn, atomic: atomic_bomb_strategy_status(), blockade: queryBlockadeStatus(),
+                homeland: nations.JAPAN.keys.map(hex_to_int).map(hex => ({ hex, alliesControlled: is_space_controlled(hex, AP) })) }
+        }
+        const ownReaction = R !== G.offensive.attacker && R !== undefined && cards[G.offensive.counter_offensive_card]?.faction === R ? G.offensive.counter_offensive_card : null
+        const selectedCard = L.P === "offensive_segment_card_action" ? (R === G.active ? L.c : null) : ownReaction || G.offensive.offensive_card
+        const cardMode = L.P === "offensive_segment_card_action" ? null : ownReaction ? "reaction" : G.offensive.type === EC ? "event" : "ops"
+        const ownFaction = R === JP || R === AP ? R : null
+        const held = G.capture.filter(h => is_space_controlled(h, AP))
+        const ownHQs = ownFaction === null ? [] : HQ_LIST.filter(u => pieces[u].faction === ownFaction && unit_on_board(u))
+        const ownSupply = ownFaction === null ? [] : rules_query_snapshot(() => {
+            check_supply()
+            return pieces.map((p, u) => p?.faction === ownFaction && unit_on_board(u) ? { id: u, supplied: !!check_unit_supply(G.location[u], u, p) } : null).filter(Boolean)
+        }, ownFaction)
+        const previewCards = ownFaction === null || R !== G.active ? [] : /offensive_segment/.test(L.P)
+            ? [...G.hand[R], ...(G.future_offensive[R] > 0 ? [G.future_offensive[R]] : [])]
+            : selectedCard > 0 && cards[selectedCard]?.faction === R ? [selectedCard] : []
+        const previews = []
+        for (const cardId of previewCards) for (const mode of ["ops", "event"]) for (const hqId of ownHQs) {
+            if (previews.length >= 96) break
+            const preview = queryCardPreview(cardId, { faction: R, cardMode: mode, hqId })
+            previews.push({ ...preview, availability: preview.eligible ? "exact-preview" : "unavailable-not-legality-proof" })
+        }
+        return { hexes, scenario, activation, planning: {
+            ownASPRemaining: ownFaction === null ? null : get_asp_limit(ownFaction), ownSupply,
+            pow: { required: G.pow, heldCount: held.length, heldHexes: held, gap: Math.max(0, G.pow - held.length), applies: G.sid !== SOUTH_PACIFIC_SCENARIO && G.sid !== BURMA_SCENARIO },
+            currentCardId: selectedCard > 0 ? selectedCard : null, currentCardMode: selectedCard > 0 ? cardMode : null,
+            currentCardBasis: L.P === "offensive_segment_card_action" ? "own-selected-unplayed" : ownReaction ? "own-counter-offensive" : "public-attacking-card",
+            offensive: { attacker: ROLES[G.offensive.attacker] || null, cardId: G.offensive.offensive_card || null,
+                ownReactionCardId: ownReaction,
+                stage: G.offensive.stage, ownHQ: ownFaction === null ? null : G.offensive.active_hq[ownFaction] || null,
+                logistic: G.offensive.logistic, intelligence: G.offensive.intelligence,
+                navalMoveDistance: G.offensive.naval_move_distance, groundMoveDistance: G.offensive.ground_move_distance, airMoveDistance: G.offensive.air_move_distance,
+                movedUnitIds: (G.offensive.paths || []).filter((_, i) => i % 2 === 0 && pieces[G.offensive.paths[i]]?.faction === ownFaction),
+                battleHexes: (G.offensive.battle_hexes || []).slice() },
+            ownHQDistances: ownHQs.map(id => ({ id, distances: hexes.filter(h => h.named).map(h => [h.hex, get_distance(G.location[id], h.hex)]) })),
+            cardPreviews: previews, previewsLimited: previews.length >= 96,
+            ownUnitDefinitions: pieces.map((p, id) => p?.faction === ownFaction ? { id, definitionId: p.id, name: p.name || p.id, faction: p.faction, class: p.class, type: p.type || null, service: p.service || null,
+                cf: p.cf || 0, rcf: p.rcf || 0, lf: p.lf || 0, cr: p.cr || 0, cm: p.cm || 0, br: p.br || 0, ebr: p.ebr || 0, aspCost: p.asp || 0, oneStep: !!p.one_step, parenthetical: !!p.parenthetical } : null).filter(Boolean),
+        }, cards: cards.map((c, id) => c ? { id, name: c.name, type: c.type, faction: c.faction,
             ops: c.ops, logistic: c.logistic, hq: c.hq, reaction: !!c.reaction,
             metadata: Object.fromEntries(Object.entries(c).filter(([k, v]) => !["name", "type", "ops", "logistic", "hq"].includes(k) && (typeof v === "number" || typeof v === "boolean" || Array.isArray(v) && v.every(x => typeof x === "number")))) } : null) }
     }
@@ -18946,6 +19015,30 @@ function on_query(q, params, b) {
         const paths = []
         map_for_each(L.allowed_hexes || [], (hex, path) => paths.push({ hex, path: object_copy(path) }))
         return paths
+    }
+    if (q === "llm_semi_catalog") {
+        // [LLM-SEMI-01] 半自动模式战略目录: 当前阶段可命名的伊拉斯谟战略与默认有序
+        // 目标链(纯解析, 不钉选、不掷骰、不改任何缓存)。执行引用仍以钉选时的引擎
+        // 展开为准; 空优/最终防御等动态目标在真实钉选时由引擎补充。
+        const role = ROLES[R]
+        if ((role !== "Japan" && role !== "Allies") || typeof esm_phase !== "function" || typeof esm_lib !== "function") return null
+        const phase = esm_phase(role)
+        const lib = (esm_lib(role) || {})[phase] || {}
+        const describe = t => {
+            const m = get_map_data(t.hex) || {}
+            return { hex: t.hex, mapId: m.id || (typeof int_to_hex === "function" ? int_to_hex(t.hex) : String(t.hex)),
+                name: m.name || m.id || String(t.hex),
+                control: is_space_controlled(t.hex, JP) ? "Japan" : is_space_controlled(t.hex, AP) ? "Allies" : null,
+                kind: t.kind || null, requiresOccupation: !!t.requiresOccupation, damageLevel: t.damageLevel ?? null,
+                resource: !!m.resource, port: !!m.port, airfield: !!m.airfield }
+        }
+        const strategies = Object.entries(lib).map(([key, entry]) => {
+            let defaultChain = []
+            try { defaultChain = esm_goal_target_meta(esm_parse_entry(entry, role, phase)).map(describe) } catch (e) { defaultChain = [] }
+            return { name: key, kind: entry.kind, targets: entry.targets, notes: entry.notes, defaultChain }
+        })
+        return { role, phase, turn: G.turn, strategies,
+            basis: "erasmus v2.0 chart strategy library, current phase only; defaultChain is chart order — the model may return a subset/reordering of these mapIds, execution priority follows the returned order" }
     }
     if (q && typeof q === "object" && q.name === "rules_query") {
         return rules_query_dispatch(q)
@@ -26869,7 +26962,21 @@ function esm_pin_strategy(view, context) {
     const phase = esm_phase(role)
     const seedText = `${context.seed}:${ord}:${role}:${phase}:${G.turn}`
     const ctx = esm_build_ctx(role, lock, seedText)
-    let name = esm_eval(role, phase, ctx, lock)
+    // [LLM-SEMI-01] 半自动模式: 会话层在选牌窗已向模型征求「战略 + 有序目标链」,
+    // 程序验证(阶段目录内命名、链上均为在场格)后经 context.strategyOverride 传入。
+    // 有效覆盖跳过图表骰轴/完成分配重掷/同轴延续 —— 模型是本牌战略主脑; 选牌、HQ、
+    // 编成、移动、会战、反应与 PBM 仍完全由状态机执行, 命名策略的既有语义展开照常。
+    // 覆盖仅修改 eop 焦点链(v5 profile 未开 target_scoring, 严格链首优先)。
+    const semiOverride = context.strategyOverride
+        && typeof context.strategyOverride.name === "string"
+        && esm_bind_strategy_entry(role, phase, context.strategyOverride.name)
+        ? context.strategyOverride : null
+    let name = null
+    if (semiOverride) {
+        name = semiOverride.name
+        if (ctx && ctx._nodePath) ctx._nodePath.push("SEMI-LLM:" + name)
+    } else {
+    name = esm_eval(role, phase, ctx, lock)
     // [opt japan_opening_conquest] 用户要求: 日本 T1 应让菲律宾+马来亚投降、T2-3 让
     // DEI 投降。官方 JP01 图表在判定 A(盟军 HQ 断补给)为假时整段打空优战略(不登陆),
     // 引擎里盟军 HQ 补给几乎从不断 → 马来亚/DEI 投降 8/8 局永不触发(取证 06)。
@@ -26903,6 +27010,7 @@ function esm_pin_strategy(view, context) {
     // 链首格(如 Kwajalein/Guadalcanal)永远夺不下。确定性分支(can_pass/事件/反攻/
     // 占领轰炸基地/推进B29/原子弹/登陆日本)不是轮换轴, 照常打断延续。
     name = esm_pin_axis_continuity(lock, role, phase, name)
+    }
     // 事件战略: 钉住内容统一展开到【早期】事件清单(py 三处口径殊途同归):
     //   (a) JP 表中/晚期目标 = "同早期阶段事件战略"(指针);
     //   (b) AL mid/late 决策树直接 return AL_EARLY_STRATEGIES["事件战略"](py 共用早期条目,
@@ -27205,6 +27313,33 @@ function esm_pin_strategy(view, context) {
                 note: "开局南方 key 格夺占: 马尼拉/关丹/新加坡/达沃 + 东印度 key(投降链闭合)" }
         }
     }
+    // [LLM-SEMI-01] 模型有序目标链: 默认条目按同格复用(保留 CONQUEST/SUPPRESS/GARRISON
+    // 语义、伤害等级与驻守要求); 默认表没有的格按当前控制状态合成(敌控=夺占, 己控=地面驻守)。
+    // 链序即执行优先序 —— v5 执行档未开 target_scoring, eop_focus 严格链首优先。
+    // 覆盖为空链时不替换, 沿用该命名策略的图表默认链。
+    let semiChainSource = null
+    if (semiOverride && Array.isArray(semiOverride.chain)) {
+        if (semiOverride.chain.length) {
+            const defaultByHex = new Map(targetMeta.map(t => [t.hex, t]))
+            const semiMeta = []
+            for (const hex of semiOverride.chain) {
+                if (!Number.isInteger(hex) || hex < 0 || hex > LAST_BOARD_HEX) continue
+                if (semiMeta.some(t => t.hex === hex)) continue
+                const hit = defaultByHex.get(hex)
+                semiMeta.push(hit ? { ...hit } : is_space_controlled(hex, esm_role_faction(role))
+                    ? { hex, kind: "GARRISON", garrisonClass: "ground", damageLevel: 1,
+                        objective: "半自动LLM目标: 驻守己控格" }
+                    : { hex, kind: "CONQUEST", requiresOccupation: true, damageLevel: 1,
+                        objective: "半自动LLM目标: 夺占敌控格" })
+            }
+            if (semiMeta.length) {
+                chain = semiMeta.map(t => t.hex)
+                targetMeta = semiMeta
+                dynamicTargets = []
+                semiChainSource = "model"
+            }
+        } else semiChainSource = "chart-default"
+    }
     targetMeta = esm_semantic_targets(role, phase, name, targetMeta)
     chain = [...new Set(targetMeta.map(t=>t.hex))]
     dynamicTargets = targetMeta.filter(t=>t.requiredUnits || t.escortPairs || t.dynamicBase || t.extraActivationOnly)
@@ -27214,10 +27349,16 @@ function esm_pin_strategy(view, context) {
         nodePath: (ctx._nodePath || []).slice(), conditions: (ctx._conditions || []).slice(), d10Rolls: (ctx._dice || []).slice(),
         eventPhase: isEventStrat ? "early" : undefined,
         openingSurrenderPlan, progressPlan, victoryPreparation, southOpeningPlan,
+        ...(semiOverride ? { viaLLM: { source: "llm-semi", profile: String(semiOverride.profile || "").slice(0, 64),
+            model: String(semiOverride.model || "").slice(0, 64), decisionId: String(semiOverride.decisionId || "").slice(0, 32),
+            chainSource: semiChainSource || "chart-default", reason: String(semiOverride.reason || "").slice(0, 160) } } : {}),
     } : {
         name, nameFull: name, kind: "EVENT", notes: [], targets: [], phase, role, ord,
         pinnedNow: true, goals: [], chain: [], targetMeta: [], ctx,
         nodePath: (ctx._nodePath || []).slice(), conditions: (ctx._conditions || []).slice(), d10Rolls: (ctx._dice || []).slice(),
+        ...(semiOverride ? { viaLLM: { source: "llm-semi", profile: String(semiOverride.profile || "").slice(0, 64),
+            model: String(semiOverride.model || "").slice(0, 64), decisionId: String(semiOverride.decisionId || "").slice(0, 32),
+            chainSource: semiChainSource || "chart-default", reason: String(semiOverride.reason || "").slice(0, 160) } } : {}),
     }
     // D2: 记录本轴连续运行起点的回合与链上控格数(供下一回合的延续/停滞判定)。
     const prevCache = lock.role[role]
@@ -27828,7 +27969,8 @@ function esm_log_strategy(strategy) {
             const mark = t.achieved ? "✓" : "·"
             return `${t.priority}.${mark}${nm}(${t.hex}${ctl})`
         }).join(" ")
-        log(`[ERASMUS] ${roleCn}·${phaseCn} 战略「${strategy.name}」 首位目标: ${head || "(无)"}`)
+        const via = strategy.viaLLM ? `(LLM半自动·${strategy.viaLLM.chainSource === "model" ? "模型链" : "默认链"})` : ""
+        log(`[ERASMUS] ${roleCn}·${phaseCn} 战略「${strategy.name}」${via} 首位目标: ${head || "(无)"}`)
     } catch (e) { /* 日志失败不影响决策 */ }
 }
 

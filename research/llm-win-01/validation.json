@@ -1,0 +1,1916 @@
+{
+  "task": "LLM-WIN-01",
+  "status": "in_progress",
+  "recordedAt": "2026-10-07T10:32:54.856Z",
+  "scope": "User paused real experiments; publish existing RTT mode and usage accounting; no goal achieved",
+  "setup": {
+    "seed": 20262602,
+    "scenario": "1942-1945 (The Shortened Campaign)",
+    "players": {
+      "Japan": "llm:glm",
+      "Allies": "erasmus-campaign"
+    },
+    "semiBots": {
+      "Japan": "erasmus-v2-opt-v5",
+      "Allies": "erasmus-v2-opt-v5"
+    },
+    "maxRequests": 2000,
+    "maxTotalTokens": 20000000,
+    "maxActions": 30000,
+    "directOnly": true
+  },
+  "profile": {
+    "id": "glm",
+    "provider": "glm",
+    "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
+    "model": "glm-5.3",
+    "vision": false,
+    "timeoutMs": 240000,
+    "maxTokens": 32768,
+    "extraBody": {
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "high",
+      "response_format": {
+        "type": "json_object"
+      }
+    },
+    "planningOverrides": {
+      "maxTokens": 32768,
+      "timeoutMs": 300000
+    },
+    "planningEffort": "low"
+  },
+  "profileHistory": [
+    {
+      "revision": 169,
+      "from": {
+        "id": "deepseek",
+        "provider": "deepseek",
+        "baseUrl": "https://api.deepseek.com",
+        "model": "deepseek-flash",
+        "vision": false,
+        "timeoutMs": 120000,
+        "maxTokens": 16384,
+        "extraBody": {
+          "thinking": {
+            "type": "enabled"
+          },
+          "reasoning_effort": "high",
+          "response_format": {
+            "type": "json_object"
+          }
+        }
+      },
+      "to": {
+        "id": "deepseek",
+        "provider": "deepseek",
+        "baseUrl": "https://api.deepseek.com",
+        "model": "deepseek-flash",
+        "vision": false,
+        "timeoutMs": 240000,
+        "maxTokens": 32768,
+        "extraBody": {
+          "thinking": {
+            "type": "enabled"
+          },
+          "reasoning_effort": "high",
+          "response_format": {
+            "type": "json_object"
+          }
+        }
+      }
+    },
+    {
+      "revision": 500,
+      "from": {
+        "id": "deepseek",
+        "provider": "deepseek",
+        "baseUrl": "https://api.deepseek.com",
+        "model": "deepseek-flash",
+        "vision": false,
+        "timeoutMs": 240000,
+        "maxTokens": 32768,
+        "extraBody": {
+          "thinking": {
+            "type": "enabled"
+          },
+          "reasoning_effort": "high",
+          "response_format": {
+            "type": "json_object"
+          }
+        }
+      },
+      "to": {
+        "id": "deepseek",
+        "provider": "deepseek",
+        "baseUrl": "https://api.deepseek.com",
+        "model": "deepseek-flash",
+        "vision": false,
+        "timeoutMs": 240000,
+        "maxTokens": 32768,
+        "extraBody": {
+          "thinking": {
+            "type": "enabled"
+          },
+          "reasoning_effort": "high",
+          "response_format": {
+            "type": "json_object"
+          }
+        },
+        "planningOverrides": {
+          "maxTokens": 65536,
+          "timeoutMs": 480000
+        }
+      }
+    },
+    {
+      "revision": 860,
+      "from": {
+        "id": "deepseek",
+        "provider": "deepseek",
+        "baseUrl": "https://api.deepseek.com",
+        "model": "deepseek-flash",
+        "vision": false,
+        "timeoutMs": 240000,
+        "maxTokens": 32768,
+        "extraBody": {
+          "thinking": {
+            "type": "enabled"
+          },
+          "reasoning_effort": "high",
+          "response_format": {
+            "type": "json_object"
+          }
+        },
+        "planningOverrides": {
+          "maxTokens": 65536,
+          "timeoutMs": 480000
+        }
+      },
+      "to": {
+        "id": "glm",
+        "provider": "glm",
+        "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
+        "model": "glm-5.3",
+        "vision": false,
+        "timeoutMs": 240000,
+        "maxTokens": 32768,
+        "extraBody": {
+          "thinking": {
+            "type": "enabled"
+          },
+          "reasoning_effort": "high",
+          "response_format": {
+            "type": "json_object"
+          }
+        },
+        "planningOverrides": {
+          "maxTokens": 32768,
+          "timeoutMs": 300000
+        }
+      }
+    },
+    {
+      "revision": 902,
+      "from": {
+        "id": "glm",
+        "provider": "glm",
+        "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
+        "model": "glm-5.3",
+        "vision": false,
+        "timeoutMs": 240000,
+        "maxTokens": 32768,
+        "extraBody": {
+          "thinking": {
+            "type": "enabled"
+          },
+          "reasoning_effort": "high",
+          "response_format": {
+            "type": "json_object"
+          }
+        },
+        "planningOverrides": {
+          "maxTokens": 32768,
+          "timeoutMs": 300000
+        }
+      },
+      "to": {
+        "id": "glm",
+        "provider": "glm",
+        "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
+        "model": "glm-5.3",
+        "vision": false,
+        "timeoutMs": 240000,
+        "maxTokens": 32768,
+        "extraBody": {
+          "thinking": {
+            "type": "enabled"
+          },
+          "reasoning_effort": "high",
+          "response_format": {
+            "type": "json_object"
+          }
+        },
+        "planningOverrides": {
+          "maxTokens": 32768,
+          "timeoutMs": 300000
+        },
+        "planningEffort": "low"
+      }
+    }
+  ],
+  "rulesSha256": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233",
+  "sourceHashes": {
+    "js/server/llm/observation.js": "dc55dcc91e4bd15a4a30e8a653962385b155ad9839b649da3c97203573349a13",
+    "js/server/llm/prompt.js": "de3b1c2bd1694607c662eeffe7f354d3f7d03778c143954c61ac318e13479b77",
+    "js/server/llm/memory.js": "11b59ecb924cc7c41ad953e6980dbe19b2f2d56079a54db76a63c9fbc1271d63",
+    "js/server/llm/session.js": "a20f77ba6448284d75b841e347aab6844c874e6069e5f1f0ce9053569ee1ed89",
+    "js/server/llm/rtt.js": "b7ee6c8a3caa28ab7dc070c64c78906d395383cdcd3b436b74aed3dfb9b5b1b6",
+    "js/server/query.js": "da228b4f73073b7056ba260311df6bb0f6e88ecdc385c9c5bac8066d4560e3aa",
+    "tools/llm-goal-run.js": "598200d070adef50a3b72fb8c513f062560a42c33a968d6427aa675a035737b1",
+    "tests/llm-conquest.test.js": "0fa8adf1262c394502299b76c08895ec98bf9f25e0988f4c7e678acf91d46b35",
+    "docs/rules/llm-campaign-guide.md": "78287a0f69b24a2007a53a4665a0dfbbd767a90ee07183195d80c484e92cf01a",
+    "docs/rules/llm-operational-guide.md": "96dbbf88ac2b53577b0b242a525e8d331fd0820ae7bf57ba17705cff9a7c3730",
+    "rules.js": "157f93e75bf7bf19189d0d409061d8849d999808a026569c37144cb4d48bd1dd",
+    "js/server/llm/providers.js": "d303c24e50311205e2c86cc30d255d0f99dc3b01086bebe0c181deb79334ea93",
+    "tests/llm-providers.test.js": "6f941756b13fe29b43e7f02e92f6bdf18dfaeb38fda465e82538b6b4a9ab876f"
+  },
+  "checkpoints": [
+    {
+      "revision": 113,
+      "turn": 2,
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 0,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              304,
+              305
+            ]
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              245,
+              277,
+              307,
+              480,
+              452,
+              368
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              298,
+              325,
+              354,
+              382
+            ]
+          }
+        ],
+        "naturalComplete": false
+      },
+      "stats": {
+        "requests": 32,
+        "retries": 3,
+        "failedRequests": 0,
+        "invalidResponses": 3,
+        "totalTokens": 1084463,
+        "promptTokens": 980193,
+        "completionTokens": 104270,
+        "usageUnknown": 0,
+        "latencyMs": 565676,
+        "forcedActions": 18,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "verified": {
+        "verified": true,
+        "actions": 113,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "97b93c7d6a5f242b988c4d8d9f0c392305898848037c3301ceb360ce373d46f1"
+      },
+      "error": null
+    },
+    {
+      "revision": 169,
+      "turn": 2,
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 0,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              245,
+              277,
+              307,
+              480,
+              452,
+              368
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              298,
+              325,
+              354,
+              382
+            ]
+          }
+        ],
+        "naturalComplete": false
+      },
+      "stats": {
+        "requests": 59,
+        "retries": 4,
+        "failedRequests": 1,
+        "invalidResponses": 4,
+        "totalTokens": 1998634,
+        "promptTokens": 1795923,
+        "completionTokens": 202711,
+        "usageUnknown": 0,
+        "latencyMs": 1107973,
+        "forcedActions": 30,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "verified": {
+        "verified": true,
+        "actions": 169,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "0d738dd49aec1535b48af9fee67e195d3950862a4a953e0bf81a3b7761ea70ff"
+      },
+      "error": {
+        "code": "EOTS_LLM_TRUNCATED_RESPONSE"
+      }
+    },
+    {
+      "revision": 195,
+      "turn": 2,
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 0,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              245,
+              277,
+              307,
+              480,
+              452,
+              368
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              298,
+              325,
+              354,
+              382
+            ]
+          }
+        ],
+        "naturalComplete": false
+      },
+      "stats": {
+        "requests": 77,
+        "retries": 4,
+        "failedRequests": 1,
+        "invalidResponses": 4,
+        "totalTokens": 2655551,
+        "promptTokens": 2361440,
+        "completionTokens": 294111,
+        "usageUnknown": 0,
+        "latencyMs": 1571266,
+        "forcedActions": 35,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "verified": {
+        "verified": true,
+        "actions": 195,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "f70c1f9c4148c6edd0103c5ad8ed2cb9cbb3dc26643d6e32992a30fa762daded"
+      },
+      "error": null
+    },
+    {
+      "revision": 218,
+      "turn": 2,
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 0,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              245,
+              277,
+              307,
+              480,
+              452,
+              368
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              298,
+              325,
+              354,
+              382
+            ]
+          }
+        ],
+        "naturalComplete": false
+      },
+      "stats": {
+        "requests": 91,
+        "retries": 5,
+        "failedRequests": 1,
+        "invalidResponses": 5,
+        "totalTokens": 3167354,
+        "promptTokens": 2794259,
+        "completionTokens": 373095,
+        "usageUnknown": 0,
+        "latencyMs": 1965858,
+        "forcedActions": 41,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "verified": {
+        "verified": true,
+        "actions": 218,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "83c3d8bdbd844970853ba87591f9aed33b4aaad895daf81a9b127e48d3635f2b"
+      },
+      "error": null
+    },
+    {
+      "revision": 221,
+      "turn": 2,
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 0,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              245,
+              277,
+              307,
+              480,
+              452,
+              368
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              298,
+              325,
+              354,
+              382
+            ]
+          }
+        ],
+        "naturalComplete": false
+      },
+      "stats": {
+        "requests": 96,
+        "retries": 6,
+        "failedRequests": 1,
+        "invalidResponses": 7,
+        "totalTokens": 3345392,
+        "promptTokens": 2950381,
+        "completionTokens": 395011,
+        "usageUnknown": 0,
+        "latencyMs": 2084565,
+        "forcedActions": 41,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "verified": {
+        "verified": true,
+        "actions": 221,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "098e95fe30c371d499ea0a0101022836fd11d00c199e52d5c7d29f2d23d83b36"
+      },
+      "error": {
+        "code": "FORMAT"
+      }
+    },
+    {
+      "revision": 265,
+      "turn": 3,
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              245,
+              277,
+              307,
+              480,
+              452,
+              368
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              298,
+              325,
+              354,
+              382
+            ]
+          }
+        ],
+        "naturalComplete": false
+      },
+      "stats": {
+        "requests": 106,
+        "retries": 7,
+        "failedRequests": 1,
+        "invalidResponses": 8,
+        "totalTokens": 3703653,
+        "promptTokens": 3264334,
+        "completionTokens": 439319,
+        "usageUnknown": 0,
+        "latencyMs": 2323247,
+        "forcedActions": 46,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "verified": {
+        "verified": true,
+        "actions": 265,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "ac025e58fcba4051d8e91890c909753f6cfe2396419f63a147ee01067863827c"
+      },
+      "error": null
+    },
+    {
+      "requests": 170,
+      "revision": 422,
+      "turn": 3,
+      "stats": {
+        "requests": 170,
+        "retries": 10,
+        "failedRequests": 1,
+        "invalidResponses": 11,
+        "totalTokens": 6213134,
+        "promptTokens": 5467154,
+        "completionTokens": 745980,
+        "usageUnknown": 0,
+        "latencyMs": 3953221,
+        "forcedActions": 83,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 2,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              304
+            ]
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              277,
+              307,
+              480,
+              368
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              298,
+              325,
+              354,
+              382
+            ]
+          }
+        ],
+        "naturalComplete": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 422,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "48df66c13c56d4400c3b72a8ba66535576310c65adedaf8db6337fc75c22e459"
+      },
+      "segmentSha256": "da3587347a75132174615f0f336d21fd35b5e1638e4da0082ead0799a95b951f"
+    },
+    {
+      "requests": 198,
+      "revision": 500,
+      "turn": 3,
+      "stats": {
+        "requests": 198,
+        "retries": 10,
+        "failedRequests": 2,
+        "invalidResponses": 11,
+        "totalTokens": 7329673,
+        "promptTokens": 6456483,
+        "completionTokens": 873190,
+        "usageUnknown": 0,
+        "latencyMs": 4630115,
+        "forcedActions": 102,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              277,
+              307,
+              480,
+              368
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              298,
+              325,
+              354,
+              382
+            ]
+          }
+        ],
+        "naturalComplete": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 500,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "9c1df0dd35841520625edf8b598ad67adf2c02c50fea5c952c68a8b7cb4f2221"
+      },
+      "segmentSha256": "dea64cd8b55292d47dfacb1b5bdcbe3544cd671da50f0820040beb40221dcb31"
+    },
+    {
+      "requests": 199,
+      "revision": 500,
+      "turn": 3,
+      "stats": {
+        "requests": 199,
+        "retries": 10,
+        "failedRequests": 3,
+        "invalidResponses": 11,
+        "totalTokens": 7329673,
+        "promptTokens": 6456483,
+        "completionTokens": 873190,
+        "usageUnknown": 1,
+        "latencyMs": 4630118,
+        "forcedActions": 102,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              277,
+              307,
+              480,
+              368
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              298,
+              325,
+              354,
+              382
+            ]
+          }
+        ],
+        "naturalComplete": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 500,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "9c1df0dd35841520625edf8b598ad67adf2c02c50fea5c952c68a8b7cb4f2221"
+      },
+      "segmentSha256": "41ea32a47de8dc25da4a7d076f7d941063ac564ab8a1f4e17a0f46e7f5d01d4a",
+      "networkRequestSent": false,
+      "audit": "CONFIG_INTEGER from createClient before complete/fetch; local preflight failure, conservative original stats preserved"
+    },
+    {
+      "requests": 247,
+      "networkRequests": 246,
+      "localConfigFailures": 1,
+      "revision": 642,
+      "turn": 4,
+      "stats": {
+        "requests": 247,
+        "retries": 12,
+        "failedRequests": 3,
+        "invalidResponses": 13,
+        "totalTokens": 9277836,
+        "promptTokens": 8160326,
+        "completionTokens": 1117510,
+        "usageUnknown": 1,
+        "latencyMs": 5905555,
+        "forcedActions": 129,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              277,
+              307,
+              421,
+              368
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              325,
+              354,
+              382
+            ]
+          }
+        ],
+        "naturalComplete": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 642,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "059943fa571701ce1b6f100cebdb1333a669f59a4dff859f34df33f16358ed68"
+      },
+      "segmentSha256": "050db0168672866eb18705a84c08fc1d0fc7a26628ec1a0675ebcbce02dcbac4"
+    },
+    {
+      "requests": 311,
+      "networkRequests": 310,
+      "localConfigFailures": 1,
+      "revision": 823,
+      "turn": 4,
+      "stats": {
+        "requests": 311,
+        "retries": 14,
+        "failedRequests": 3,
+        "invalidResponses": 15,
+        "totalTokens": 11905682,
+        "promptTokens": 10517102,
+        "completionTokens": 1388580,
+        "usageUnknown": 1,
+        "latencyMs": 7360097,
+        "forcedActions": 157,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              421
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          }
+        ],
+        "naturalComplete": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 823,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "f3e395a280dbed8322938c9526160d8a63f4baa0025e2508dd73c9bbe041c720"
+      },
+      "segmentSha256": "c1d795fdddb984c6739dd5d4087dacb831bb59ba033f6c443750c78716bbf50c"
+    },
+    {
+      "requests": 334,
+      "networkRequests": 333,
+      "localConfigFailures": 1,
+      "revision": 860,
+      "turn": 4,
+      "stats": {
+        "requests": 334,
+        "retries": 16,
+        "failedRequests": 4,
+        "invalidResponses": 17,
+        "totalTokens": 12760653,
+        "promptTokens": 11293566,
+        "completionTokens": 1467087,
+        "usageUnknown": 2,
+        "latencyMs": 7798128,
+        "forcedActions": 162,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              421
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          }
+        ],
+        "naturalComplete": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 860,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "e21402b91b7ebf53cae2f03d994159dc24a231d42e0ae71181e7c7f94b4e3467"
+      },
+      "segmentSha256": "7932e9858314aeef4c82743bbecf381023c95ecf18c24ddfe832d11816c13ce1",
+      "error": {
+        "httpStatus": 402,
+        "actionCommitted": false
+      }
+    },
+    {
+      "requests": 345,
+      "networkRequests": 344,
+      "localConfigFailures": 1,
+      "revision": 902,
+      "turn": 5,
+      "stats": {
+        "requests": 345,
+        "retries": 16,
+        "failedRequests": 5,
+        "invalidResponses": 17,
+        "totalTokens": 13134484,
+        "promptTokens": 11664226,
+        "completionTokens": 1470258,
+        "usageUnknown": 3,
+        "latencyMs": 8171015,
+        "forcedActions": 169,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              421
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 4,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          }
+        ],
+        "naturalComplete": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 902,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "a2a76e4efc381681dc104788daca1e11c58753618594f3bb38fa1eccacad1e40"
+      },
+      "attribution": {
+        "profileId": "glm",
+        "model": "glm-5.3",
+        "mixedProviders": true,
+        "controllerHistory": [
+          {
+            "revision": 860,
+            "requests": 334,
+            "role": "Japan",
+            "from": "llm:deepseek",
+            "to": "llm:glm",
+            "seed": 20262602,
+            "rulesSha256": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233",
+            "opponent": "erasmus-campaign",
+            "stateHash": "e21402b91b7ebf53cae2f03d994159dc24a231d42e0ae71181e7c7f94b4e3467",
+            "inheritedMemoryHash": "26f7bfed484d3a1ea9eca53ef532bc540ac7b337201df3e5f25364b1faee0782",
+            "priorStats": {
+              "requests": 334,
+              "retries": 16,
+              "failedRequests": 4,
+              "invalidResponses": 17,
+              "totalTokens": 12760653,
+              "promptTokens": 11293566,
+              "completionTokens": 1467087,
+              "usageUnknown": 2,
+              "latencyMs": 7798128,
+              "forcedActions": 162,
+              "assistedActions": 0,
+              "cost": "unknown"
+            },
+            "at": "2026-10-07T08:39:47.376Z",
+            "reason": "explicit user-authorized model continuation; board, PRNG, memory and costs preserved"
+          }
+        ],
+        "profileStageStats": {
+          "requests": 11,
+          "retries": 0,
+          "failedRequests": 1,
+          "invalidResponses": 0,
+          "totalTokens": 373831,
+          "promptTokens": 370660,
+          "completionTokens": 3171,
+          "usageUnknown": 1,
+          "latencyMs": 372887,
+          "forcedActions": 7,
+          "assistedActions": 0,
+          "cost": "unknown"
+        }
+      },
+      "segmentSha256": "48fbe1bf461de1aaffacbc43d5a44972ea30217b7e94e5ede456a468b91ce1ad"
+    },
+    {
+      "requests": 361,
+      "networkRequests": 360,
+      "localConfigFailures": 1,
+      "revision": 918,
+      "turn": 5,
+      "stats": {
+        "requests": 361,
+        "retries": 16,
+        "failedRequests": 5,
+        "invalidResponses": 17,
+        "totalTokens": 13809494,
+        "promptTokens": 12333802,
+        "completionTokens": 1475692,
+        "usageUnknown": 3,
+        "latencyMs": 8304183,
+        "forcedActions": 169,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              421
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 4,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          }
+        ],
+        "naturalComplete": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 918,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "d437c1900cd9258bffa0d7ca10aeddc55c342d313250cf9741b5967a0a014486"
+      },
+      "attribution": {
+        "profileId": "glm",
+        "model": "glm-5.3",
+        "mixedProviders": true,
+        "controllerHistory": [
+          {
+            "revision": 860,
+            "requests": 334,
+            "role": "Japan",
+            "from": "llm:deepseek",
+            "to": "llm:glm",
+            "seed": 20262602,
+            "rulesSha256": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233",
+            "opponent": "erasmus-campaign",
+            "stateHash": "e21402b91b7ebf53cae2f03d994159dc24a231d42e0ae71181e7c7f94b4e3467",
+            "inheritedMemoryHash": "26f7bfed484d3a1ea9eca53ef532bc540ac7b337201df3e5f25364b1faee0782",
+            "priorStats": {
+              "requests": 334,
+              "retries": 16,
+              "failedRequests": 4,
+              "invalidResponses": 17,
+              "totalTokens": 12760653,
+              "promptTokens": 11293566,
+              "completionTokens": 1467087,
+              "usageUnknown": 2,
+              "latencyMs": 7798128,
+              "forcedActions": 162,
+              "assistedActions": 0,
+              "cost": "unknown"
+            },
+            "at": "2026-10-07T08:39:47.376Z",
+            "reason": "explicit user-authorized model continuation; board, PRNG, memory and costs preserved"
+          }
+        ],
+        "profileStageStats": {
+          "requests": 27,
+          "retries": 0,
+          "failedRequests": 1,
+          "invalidResponses": 0,
+          "totalTokens": 1048841,
+          "promptTokens": 1040236,
+          "completionTokens": 8605,
+          "usageUnknown": 1,
+          "latencyMs": 506055,
+          "forcedActions": 7,
+          "assistedActions": 0,
+          "cost": "unknown"
+        }
+      },
+      "segmentSha256": "4b04200ee5f4d92536268964773ca6d36dc63e8984454c9025503048aa6465b8"
+    }
+  ],
+  "localVerification": {
+    "combinedCases42": true,
+    "latestConquest7": true,
+    "latestPrompt9": true,
+    "rtt9": true,
+    "externalAuditScope": "Astra and Sol readonly; successful independent DeepSeek review; GLM timeout, usage unknown",
+    "latestCombinedCases45": true,
+    "latestConquest8": true
+  },
+  "v76": {
+    "version": "eots-llm-v7.6",
+    "migrationRevision": 422,
+    "tests": {
+      "conquest": 10,
+      "prompt": 9,
+      "rtt": 9,
+      "totalUnique": 28,
+      "channel": "local JavaScript; API0; unchanged-input checks reused"
+    },
+    "measurement": {
+      "task": "LLM-WIN-01",
+      "apiRequests": 0,
+      "fixtureSeed": 20262602,
+      "basis": "one deterministic public initial Japan card window; timings descriptive, UTF8 bytes are not tokens",
+      "rows": [
+        {
+          "version": "v7.5",
+          "state": "offensive_segment",
+          "queryMs": 16.011600000000044,
+          "inputUtf8Bytes": 84577,
+          "queries": 0,
+          "promptHash": "071d24c0c2d8dd1189cc43c606b238fc089f0f1d02f6139f7d66bd56b263d7fc",
+          "observationHash": "ed18e8bb6202fe7273ab5601f92f563c610d1127d2ba6f19ddcbe0d25877b6c3"
+        },
+        {
+          "version": "v7.6",
+          "state": "offensive_segment",
+          "queryMs": 49.9529,
+          "inputUtf8Bytes": 97777,
+          "queries": 128,
+          "promptHash": "26c5871cbf366ad68e1ff9a3ba57fc71a4db80c4f82969bdb90071dc2f617ba2",
+          "observationHash": "49c43657b129cd336af7a0eaaa0e7a7ba6a98110d5ee34346f2430f54e8c66ff"
+        }
+      ]
+    },
+    "review": "Astra strategy advice; Sol readonly source/HQ query audit; root integration; no new external review requests"
+  },
+  "v77": {
+    "version": "eots-llm-v7.7",
+    "migrationRevision": 500,
+    "tests": {
+      "conquest": 10,
+      "prompt": 9,
+      "providers": 16,
+      "harness": 19,
+      "rtt": 9,
+      "totalUnique": 63,
+      "channel": "local; mock API; separate runs and unchanged-input reuse"
+    },
+    "planningOverrides": {
+      "maxTokens": 65536,
+      "timeoutMs": 480000
+    },
+    "microLimits": {
+      "maxTokens": 32768,
+      "timeoutMs": 240000
+    },
+    "officialSource": "https://api-docs.deepseek.com/api/create-chat-completion/",
+    "goalAchieved": false
+  },
+  "budgetHistory": [
+    {
+      "revision": 642,
+      "requests": 247,
+      "totalTokens": 9277836,
+      "from": 10000000,
+      "to": 20000000,
+      "at": "2026-10-07T07:24:17.159Z",
+      "reason": "explicit bounded continuation of the same development trial; counters and costs preserved"
+    }
+  ],
+  "v78": {
+    "version": "eots-llm-v7.8",
+    "migrationRevision": 642,
+    "tests": {
+      "conquest": 11,
+      "prompt": 9,
+      "harness": 19,
+      "providers": 16,
+      "rtt": 9,
+      "totalUnique": 64,
+      "channel": "local; separate affected runs plus unchanged-input reuse"
+    },
+    "goalAchieved": false
+  },
+  "resourceStop": {
+    "at": "2026-10-07T08:04:00.319Z",
+    "httpStatus": 402,
+    "isAvailable": false,
+    "currency": "CNY",
+    "balance": "-0.05",
+    "sameKeyRechargeRequested": true,
+    "resolvedByUserModelSwitch": "glm",
+    "rechargeNotAssumed": true
+  },
+  "nativeDeployment": {
+    "promptVersion": "eots-llm-v7.11",
+    "pid": 21008,
+    "httpStatus": 200,
+    "rulesSha256": "48a620f5552b448d95abaa20d937388c9b985c8c3ad279c02ac555f8669ef921",
+    "trialRulesKept": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233",
+    "browserVisualCheck": false,
+    "realNativeRequests": 0,
+    "oldContexts": "Existing native contexts reject policy changes; new games load v7.11. Paused offline dev03 keeps v7.10 fingerprints and requires explicit future migration.",
+    "pending": 0,
+    "userPaused": true
+  },
+  "controllerHistory": [
+    {
+      "revision": 860,
+      "requests": 334,
+      "role": "Japan",
+      "from": "llm:deepseek",
+      "to": "llm:glm",
+      "seed": 20262602,
+      "rulesSha256": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233",
+      "opponent": "erasmus-campaign",
+      "stateHash": "e21402b91b7ebf53cae2f03d994159dc24a231d42e0ae71181e7c7f94b4e3467",
+      "inheritedMemoryHash": "26f7bfed484d3a1ea9eca53ef532bc540ac7b337201df3e5f25364b1faee0782",
+      "priorStats": {
+        "requests": 334,
+        "retries": 16,
+        "failedRequests": 4,
+        "invalidResponses": 17,
+        "totalTokens": 12760653,
+        "promptTokens": 11293566,
+        "completionTokens": 1467087,
+        "usageUnknown": 2,
+        "latencyMs": 7798128,
+        "forcedActions": 162,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "at": "2026-10-07T08:39:47.376Z",
+      "reason": "explicit user-authorized model continuation; board, PRNG, memory and costs preserved"
+    }
+  ],
+  "glmContinuation": {
+    "startRevision": 860,
+    "tests": {
+      "conquest": 12,
+      "channel": "local; API0"
+    },
+    "firstActualResponseModel": "glm-5.3",
+    "firstResponseTokens": 37494,
+    "firstResponseLatencyMs": 5189,
+    "attribution": "mixed DeepSeek to GLM; not solo GLM or pure DeepSeek"
+  },
+  "glmLatest": {
+    "revision": 1015,
+    "turn": 5,
+    "totalNetworkCalls": 380,
+    "oneLocalAttempt": 199,
+    "stats": {
+      "requests": 381,
+      "retries": 17,
+      "failedRequests": 7,
+      "invalidResponses": 18,
+      "totalTokens": 14541840,
+      "promptTokens": 13055639,
+      "completionTokens": 1486201,
+      "usageUnknown": 5,
+      "latencyMs": 8538075,
+      "forcedActions": 187,
+      "assistedActions": 0,
+      "cost": "unknown"
+    },
+    "stageStats": {
+      "requests": 47,
+      "retries": 1,
+      "failedRequests": 3,
+      "invalidResponses": 1,
+      "totalTokens": 1781187,
+      "promptTokens": 1762073,
+      "completionTokens": 19114,
+      "usageUnknown": 3,
+      "latencyMs": 739947,
+      "forcedActions": 25,
+      "assistedActions": 0,
+      "cost": "unknown"
+    },
+    "goal": {
+      "achieved": false,
+      "kind": null,
+      "nations": [
+        {
+          "key": "PHILIPPINES",
+          "surrenderedTurn": 2,
+          "allJapanControlled": true,
+          "remainingKeys": []
+        },
+        {
+          "key": "MALAYA",
+          "surrenderedTurn": 2,
+          "allJapanControlled": true,
+          "remainingKeys": []
+        },
+        {
+          "key": "DEI",
+          "surrenderedTurn": 0,
+          "allJapanControlled": false,
+          "remainingKeys": [
+            309,
+            421
+          ]
+        },
+        {
+          "key": "BURMA",
+          "surrenderedTurn": 4,
+          "allJapanControlled": false,
+          "remainingKeys": [
+            354
+          ]
+        }
+      ],
+      "naturalComplete": false
+    },
+    "verified": {
+      "verified": true,
+      "actions": 1015,
+      "complete": false,
+      "result": null,
+      "finalStateHash": "9b6889a0e10c55053eafb1f41bf83a0a14ffd0032ddaf71356b777d8f9f8d2a4"
+    },
+    "error": {
+      "attempt": 381,
+      "httpStatus": 429,
+      "providerCode": "1310",
+      "pending": false,
+      "quotaResetTimeKnown": false,
+      "source": "https://docs.z.ai/api-reference/api-code"
+    }
+  },
+  "v79": {
+    "version": "eots-llm-v7.9",
+    "preparedRevision": 1015,
+    "realAPIAfterChange": 0,
+    "semanticImprovementVerified": false,
+    "verified": {
+      "verified": true,
+      "actions": 1015,
+      "complete": false,
+      "result": null,
+      "finalStateHash": "9b6889a0e10c55053eafb1f41bf83a0a14ffd0032ddaf71356b777d8f9f8d2a4"
+    },
+    "payloadBytes": 87392,
+    "priorPayloadBytes": 85888,
+    "byteComparison": "Same saved card-mode window, UTF8 bytes only, not token or latency estimate",
+    "sourceHashes": {
+      "observation": "111385f93185591a83bcb6657aabe41d5649fffdba206934873f165f611494b7",
+      "prompt": "cbe63d86a0cd55f5142afbbc0d004064fc0912cd9ce8185483a868f3e37509e1",
+      "memory": "11b59ecb924cc7c41ad953e6980dbe19b2f2d56079a54db76a63c9fbc1271d63",
+      "board": "e0e9dea1f024af2036abb4c9e035fff586a1c1148faa4d1c79a3b56ebeb3af96",
+      "providers": "f7bcc7a657bb5737eea9668ef3ad6ba1d3028d3e2430e4fefe74f06ad1493df6",
+      "harness": "be561ec45d47496480c962955168a92a87d308219bd3939dd9dcf54f1dbbfaf1",
+      "session": "a20f77ba6448284d75b841e347aab6844c874e6069e5f1f0ce9053569ee1ed89",
+      "semi": "74b58214f07e2e06140f13b204e50fa85b2f3f7ac1559eac5db6a6f8b064a55e"
+    },
+    "ownedFileHashes": {
+      "js/server/llm/providers.js": "f7bcc7a657bb5737eea9668ef3ad6ba1d3028d3e2430e4fefe74f06ad1493df6",
+      "js/server/llm/observation.js": "111385f93185591a83bcb6657aabe41d5649fffdba206934873f165f611494b7",
+      "js/server/llm/prompt.js": "cbe63d86a0cd55f5142afbbc0d004064fc0912cd9ce8185483a868f3e37509e1",
+      "tools/llm-goal-run.js": "39b487bfdf691a6a5d1395daf37827247ead25efd30f2b5a167fc278bca8b2bd",
+      "docs/rules/llm-operational-guide.md": "8152bf4c2cd2ee44fb6910bdb9ba782fff52ba7d377054848cc0845e143ed342",
+      "tests/llm-conquest.test.js": "2fcd312c266b33655d8bf1f6e37bbbb22a95532490c4b261c13a2400f65fde1d",
+      "tests/llm-providers.test.js": "7262d06016ea8f21803be6c599cf6c096b16dd55769fac88fcea6029832239d4"
+    },
+    "tests": {
+      "conquest": 13,
+      "prompt": 9,
+      "harness": 19,
+      "providers": 17,
+      "rtt": 9,
+      "totalUnique": 67,
+      "channel": "local/mock; affected runs and unchanged-source success reuse",
+      "fixtureRulesSha256": "48a620f5552b448d95abaa20d937388c9b985c8c3ad279c02ac555f8669ef921",
+      "replayRulesSha256": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233"
+    },
+    "failedTestConstruction": "First reused moved ground unit; second chose enemy-controlled Tarakan as strategic endpoint. Corrected independent unmoved fixture and actual own-port candidate; final 13 pass."
+  },
+  "dev02Parked": {
+    "revision": 1311,
+    "turn": 7,
+    "goal": {
+      "achieved": false,
+      "kind": null,
+      "nations": [
+        {
+          "key": "PHILIPPINES",
+          "surrenderedTurn": 2,
+          "allJapanControlled": true,
+          "remainingKeys": []
+        },
+        {
+          "key": "MALAYA",
+          "surrenderedTurn": 2,
+          "allJapanControlled": true,
+          "remainingKeys": []
+        },
+        {
+          "key": "DEI",
+          "surrenderedTurn": 0,
+          "allJapanControlled": false,
+          "remainingKeys": [
+            309,
+            421
+          ]
+        },
+        {
+          "key": "BURMA",
+          "surrenderedTurn": 0,
+          "allJapanControlled": false,
+          "remainingKeys": [
+            298,
+            325,
+            354,
+            382
+          ]
+        }
+      ],
+      "naturalComplete": false
+    },
+    "stats": {
+      "requests": 457,
+      "retries": 18,
+      "failedRequests": 7,
+      "invalidResponses": 19,
+      "totalTokens": 17634028,
+      "promptTokens": 16126562,
+      "completionTokens": 1507466,
+      "usageUnknown": 5,
+      "latencyMs": 9010328,
+      "forcedActions": 239,
+      "assistedActions": 0,
+      "cost": "unknown"
+    },
+    "profileStageStats": {
+      "requests": 123,
+      "retries": 2,
+      "failedRequests": 3,
+      "invalidResponses": 2,
+      "totalTokens": 4873375,
+      "promptTokens": 4832996,
+      "completionTokens": 40379,
+      "usageUnknown": 3,
+      "latencyMs": 1212200,
+      "forcedActions": 77,
+      "assistedActions": 0,
+      "cost": "unknown"
+    },
+    "verified": {
+      "verified": true,
+      "actions": 1311,
+      "complete": false,
+      "result": null,
+      "finalStateHash": "e58fb6d5fce467467e3c38746f1eb382e37a297210742208f52e6c4e5175b344"
+    },
+    "reason": "After Miri amphibious failure and Burma losses, Astra assigned next development budget to independent 1943 trial; all old costs/history retained",
+    "archive": "llm-private/llm-win-01/dev-02-parked-v79",
+    "newCallsAfter381": 76,
+    "newReportedTokens": 3092188,
+    "newLatencyMs": 472253
+  },
+  "v79RealSemanticExamples": {
+    "requests": [
+      382,
+      383,
+      384,
+      385,
+      386,
+      387,
+      390,
+      391,
+      392,
+      393,
+      420,
+      421,
+      422
+    ],
+    "basis": "own/public request journals and executed action records",
+    "observedImprovement": "ASP1 permits actual activation/land moves; correct advanced/amphibious menu and same-origin formation",
+    "limits": "Ground route and support feasibility still misread; not full rule understanding or causal win-rate evidence"
+  },
+  "dev03": {
+    "setup": {
+      "seed": 20262603,
+      "scenario": "1943-1945 (The Even Shorter Campaign)",
+      "players": {
+        "Allies": "llm:glm",
+        "Japan": "erasmus-japan-campaign-v2"
+      },
+      "semiBots": {
+        "Japan": "erasmus-v2-opt-v5",
+        "Allies": "erasmus-v2-opt-v5"
+      },
+      "maxRequests": 2000,
+      "maxTotalTokens": 10000000,
+      "maxActions": 30000,
+      "directOnly": true
+    },
+    "rulesSha256": "48a620f5552b448d95abaa20d937388c9b985c8c3ad279c02ac555f8669ef921",
+    "opponentVersion": "erasmus-v2.2-zh.29-japan-campaign.2.0",
+    "profile": {
+      "id": "glm",
+      "provider": "glm",
+      "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
+      "model": "glm-5.3",
+      "vision": false,
+      "timeoutMs": 240000,
+      "maxTokens": 32768,
+      "extraBody": {
+        "thinking": {
+          "type": "enabled"
+        },
+        "reasoning_effort": "high",
+        "response_format": {
+          "type": "json_object"
+        }
+      },
+      "planningOverrides": {
+        "maxTokens": 32768,
+        "timeoutMs": 300000
+      },
+      "planningEffort": "low"
+    },
+    "controllerHistory": [],
+    "sourceVersion": "GLM solo from fresh setup, actual responses glm-5.3; different opponent/rules from dev02, do not pool",
+    "checkpoint": {
+      "revision": 151,
+      "turn": 5,
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 3,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 3,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 3,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 3,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          }
+        ],
+        "naturalComplete": false
+      },
+      "stats": {
+        "requests": 66,
+        "retries": 2,
+        "failedRequests": 2,
+        "invalidResponses": 2,
+        "totalTokens": 3618386,
+        "promptTokens": 3596282,
+        "completionTokens": 22104,
+        "usageUnknown": 2,
+        "latencyMs": 537365,
+        "forcedActions": 25,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "verified": {
+        "verified": true,
+        "actions": 151,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "50535cf2d6a50c3bd267cadedc1491b4664a4db7f89436857414a5d37ed625d3"
+      }
+    },
+    "firstFailure": {
+      "request": 1,
+      "httpStatus": 429,
+      "providerCode": "1308",
+      "usageUnknown": true
+    },
+    "firstActual": {
+      "request": 2,
+      "model": "glm-5.3",
+      "tokens": 58487,
+      "latencyMs": 11523
+    },
+    "running": false,
+    "userPaused": true,
+    "lastFailure": {
+      "request": 66,
+      "httpStatus": 429,
+      "providerCode": "1308",
+      "usageUnknown": true
+    },
+    "archive": "llm-private/llm-win-01/dev-03-user-pause-v710"
+  },
+  "v710": {
+    "version": "eots-llm-v7.10",
+    "changes": [
+      "Public geographic edge decoding; unknown links preserved",
+      "Public target enemy units separate from ground-only defenders",
+      "Conditional path IDs/inactive/range facts without scoring or combat prediction"
+    ],
+    "sourceHashes": {
+      "js/server/llm/observation.js": "8575f6723ff6d26ffb52645477e46a577ab6f3099926c0b6fe9cb9ebfd62b46d",
+      "js/server/llm/prompt.js": "4ac3ef4a460a987ebada913adc6fd8e632b3f99167e592129fd6abeb8c5ce3ed",
+      "tools/llm-goal-run.js": "6ff142fc0319c0a6c51d77135e889f108d2e28121a2dbd8412a3ebb7aa43a3c7",
+      "docs/rules/llm-operational-guide.md": "f7033c504cbd7ebd8f58e75f1e2c9d97787296c27184346d06db5d4926d9f900",
+      "tests/llm-conquest.test.js": "25c4da2b1340bb33c253e5ae3a04a0939524cffbb67449f54cce2bb9e1b86dbe",
+      "tests/llm-prompt.test.js": "bbafc771fe269b7aa129f347b3fb267d3e604ee097309c1ae658a13e07e3af75"
+    },
+    "tests": {
+      "conquest": 14,
+      "prompt": 10,
+      "harness": 19,
+      "providers": 17,
+      "rtt": 9,
+      "totalUnique": 69,
+      "channel": "local/mock; affected input reruns, providers unchanged success reused"
+    },
+    "review": "Astra strategy and experimental bounds; Sol read-only source/1943 registration audit; no external development-model API this phase",
+    "goalAchieved": false
+  },
+  "v711": {
+    "version": "eots-llm-v7.11",
+    "changes": [
+      "Partial map for microsteps, full planning fallback and unchanged candidates/public unit table",
+      "Plan support facts distinguish location/range from unknown actual participation"
+    ],
+    "sourceHashes": {
+      "js/server/llm/observation.js": "1442d86c6471b3feb80e32231d42d7640464a40483d8debc81ea38d6476fdad8",
+      "js/server/llm/prompt.js": "3cc84eff7aea32b9981fb3a973f791c57949f89e15070d9eb6bfe6f7a687045e",
+      "tools/llm-goal-run.js": "6ff142fc0319c0a6c51d77135e889f108d2e28121a2dbd8412a3ebb7aa43a3c7",
+      "docs/rules/llm-operational-guide.md": "f98e2530d5b19ba592d904d734e4bfda9fbbc85d3a2388135d4571099a6a7485",
+      "tests/llm-conquest.test.js": "761fc131e53eb638a2a93d24da6afc4c6fe40b3e069e36d6ddce700970732f75",
+      "tests/llm-prompt.test.js": "39ea3ed42e7621036153dde4bd613eb3347f2c3dd25fb5b6c31a238b309341bd"
+    },
+    "tests": {
+      "conquest": 14,
+      "prompt": 11,
+      "harness": 19,
+      "providers": 17,
+      "rtt": 9,
+      "totalUnique": 70,
+      "affectedRerun": 53,
+      "reusedUnchanged": 17,
+      "channel": "local/mock"
+    },
+    "realRequests": 0,
+    "measure": {
+      "revision": 151,
+      "state": "activate_units",
+      "comparison": "same current observation/memory; render-only v7.10 vs v7.11; not API token/cost evidence",
+      "oldUtf8Bytes": 124198,
+      "newUtf8Bytes": 99036,
+      "realRequests": 0
+    },
+    "semanticValidation": false,
+    "goalAchieved": false
+  },
+  "billingCloseout": {
+    "sessions": 106,
+    "completed": 73,
+    "incomplete": 33,
+    "completedTokens": 67269376,
+    "incompleteTokens": 29265415,
+    "gameTokens": 96534791,
+    "gameAttempts": 7330,
+    "provenLocalAttempts": 1,
+    "overheadAttempts": 28,
+    "overheadTokens": 506586,
+    "actualCurrencyCost": "unknown",
+    "artifactPrivate": true,
+    "artifactSha256": "d8cf6c22099003ca03c0db06727215ec4ccce0b950382cb982223987fe0a397c",
+    "dedup": "canonical session UUID; current checkpoint only; provider phases from ledger; native DB scanned completely; pure FSM and mocks excluded"
+  },
+  "release": {
+    "taskId": "LLM-RELEASE-01",
+    "status": "complete",
+    "branch": "feat/LLM-RELEASE-01-rtt",
+    "pullRequest": "https://github.com/fuxiaoji/rots/pull/4",
+    "draft": true,
+    "uploadedVerifiedSha": "96f76ec1ee8d4ca7eb44adb4170e690a07540a5c",
+    "latestIntegratedUpstream": "395bb31",
+    "publicCredentialPatternMatches": 0,
+    "changedFilesScanned": 79,
+    "generatedUncommittedFilesExcluded": [
+      "rules.js",
+      "play.js"
+    ],
+    "runtimePaused": true,
+    "goalStatus": "user-paused; no successful goal claimed"
+  }
+}
