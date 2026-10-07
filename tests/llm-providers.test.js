@@ -84,6 +84,17 @@ test("JSON mode requires supported capability and never appears by default", () 
     assert.deepEqual(getProfile("custom", { EOTS_LLM_JSON_MODE: "true", EOTS_LLM_JSON_SUPPORTED: "true" }).extraBody.response_format, { type: "json_object" })
 })
 
+test("DeepSeek long planning has bounded 64K generation and preflight rejects excess before transport", async () => {
+    const p=getProfile("deepseek", { EOTS_LLM_DEEPSEEK_MAX_TOKENS:"65536", EOTS_LLM_DEEPSEEK_TIMEOUT_MS:"480000" })
+    assert.equal(p.maxTokens,65536);assert.equal(p.timeoutMs,480000)
+    let calls=0
+    await createClient({...p,apiKey:secret},{fetchImpl:async (_,options)=>{++calls;assert.equal(JSON.parse(options.body).max_tokens,65536);return ok()}}).complete(messages)
+    assert.equal(calls,1)
+    for(const bad of [{maxTokens:65537},{timeoutMs:600001},{provider:"minimax",maxTokens:65536}])assert.throws(()=>createClient({...p,apiKey:secret,...bad}),/EOTS_LLM_CONFIG_INTEGER/)
+    assert.throws(()=>getProfile("deepseek", { EOTS_LLM_MAX_TOKENS:"65537" }),/EOTS_LLM_CONFIG_INTEGER/)
+    assert.equal(calls,1)
+})
+
 test("transport preserves base paths, limits tokens and exposes bounded usage", async () => {
     for (const [baseUrl, expected] of [["https://example.test", "https://example.test/chat/completions"], ["https://example.test/v1/", "https://example.test/v1/chat/completions"], ["https://example.test/api/paas/v4", "https://example.test/api/paas/v4/chat/completions"], ["http://127.0.0.1:9/v1/chat/completions", "http://127.0.0.1:9/v1/chat/completions"]]) {
         const client = createClient({ ...profile(), baseUrl, maxTokens: 123 }, { fetchImpl: async (url, options) => {

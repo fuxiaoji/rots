@@ -20,7 +20,7 @@ function fixture() {
  queryCardPreview:()=>({eligible:true,activationBudget:3,units:[1,2,3]}),queryReactionCandidates:()=>({air:[],naval:[],carrier:[]}),
  queryGroupMovementDestinations:(ids,c)=>({reachableHexes:c.move_type===1&&ids[0]===1?[3813]:c.move_type===8&&ids.includes(1)&&ids.includes(2)?[3709]:[],aspCost:1}),
  eop_axis:()=>null,eop_set_strategy_chain:()=>{}}
- vm.createContext(ctx);for(const p of ["erasmus_campaign.js","erasmus_japan_campaign.js"])vm.runInContext(fs.readFileSync(__dirname+"/../js/server/bots/"+p,"utf8"),ctx)
+ vm.createContext(ctx);vm.runInContext(fs.readFileSync(__dirname+"/../js/server/bots/erasmus_campaign_v2.js","utf8").split("// BEGIN CAMPAIGN V2\n")[1].split("// END CAMPAIGN V2")[0],ctx)
  return {ctx,view,owned,units,board}
 }
 test("1943 campaign plans legal Pacific garrisons, retains sole troops, excludes enemy bases",()=>{

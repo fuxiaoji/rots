@@ -17,11 +17,51 @@ test("campaign input labels compact source references and keeps every country ke
  for(const u of p.observation.units)if(p.observation.hexes.some(h=>h.hex===u.location))assert(sent.has(u.location))
  const reduced=p.observation.units.find(u=>u.id===36);assert(reduced.reduced);assert.equal(reduced.cf,18);assert.equal(reduced.currentCF,9);assert.equal(reduced.aspCost,2);assert.equal(reduced.currentBaseASP,1)
  assert(o.observation.unitColumns.includes("currentCF"));assert(o.observation.unitColumns.includes("currentBaseASP"));assert.deepEqual(o.outputGuide.unchangedMemory,{})
+ // An auto-selected offboard reinforcement has no unit candidate in its place window.
+ const reinforcement=observe(rules,s,"Japan",0);reinforcement.observation.selectedUnits=[51]
+ assert(!reinforcement.observation.units.some(u=>u.id===51))
+ const placed=JSON.parse(messagesFor(reinforcement,null,"reinforce").messages[1].content).observation
+ const row=placed.ownUnitDefinitions.find(u=>u[placed.unitColumns.indexOf("id")]===51)
+ assert(row);assert.equal(row[placed.unitColumns.indexOf("name")],reinforcement.observation.ownUnitDefinitions.find(u=>u.id===51).name)
 })
 test("direct-only candidate table cannot delegate movement to the headless program",()=>{
  const fake={view:()=>({actions:{advance:1,done:1},ai:{state:"move_offensive_units"}}),query:()=>({cards:[],hexes:[]})}
  const ordinary=observe(fake,{active:"Japan"},"Japan",1),direct=observe(fake,{active:"Japan"},"Japan",1,{directOnly:true})
  assert(ordinary.candidates.some(c=>c.action==="advance"));assert(!direct.candidates.some(c=>c.action==="advance"));assert.deepEqual(direct.candidates.map(c=>c.action),["done"])
+})
+
+test("supply observation preserves unknown cache evidence and explicit own public markers",()=>{
+ const base=rules.setup(20262602,scenario,{headless_moves:true}),view=rules.view(base,"Japan"),data=rules.query(base,"Japan","llm_public_data")
+ data.planning.ownSupply=data.planning.ownSupply.map(s=>({...s,supplied:[7,35].includes(s.id)}))
+ const fake={view:()=>({...view,oos:[36,167],offensive:{...view.offensive,active_units:[[35],[]]}}),query:()=>data}
+ const o=visible(fake,base,"Japan").observation,unit=id=>o.units.find(u=>u.id===id)
+ assert.equal(unit(43).supplied,null);assert.equal(unit(43).outOfSupplyMarker,false)
+ assert.equal(unit(36).supplied,false);assert.equal(unit(36).supplyBasis,"public-oos-marker")
+ assert.equal(unit(7).supplyBasis,"engine-hq-exemption");assert.equal(unit(35).supplyBasis,"engine-active-exemption")
+ assert(!Object.hasOwn(unit(167),"supplied"));assert(!Object.hasOwn(unit(167),"outOfSupplyMarker"))
+})
+
+test("pre-card land endpoints expose public blockers, remain pure/private-independent and bound query cost",async()=>{
+ const api=require("../js/server/llm/session"),s=api.createSession({seed:20262602,scenario,players:{Japan:"llm:deepseek",Allies:"erasmus-campaign"}},{clients:{deepseek:{}}})
+ while(s.state.active==="Allies")await api.step(s,{revision:s.revision})
+ const before=hash(s.state),o=observe(s.rules,s.state,"Japan",s.revision).observation,f=o.taskFacts.conditionalLandReachability
+ assert.equal(hash(s.state),before);assert(f&&f.queries>0&&f.queries<=128)
+ const row=f.rows.find(r=>r.cardId===101&&r.mode==="ops"&&r.hqId===7),u=row.units.find(u=>u.id===35)
+ assert(row.checked);assert(u.reachableEnemyOccupiedHexes.includes(327));assert(!u.reachableTargetHexes.some(h=>[298,325,354,382].includes(h)))
+ const hidden=JSON.parse(JSON.stringify(s.state));hidden.hand[1]=[1,2,3];hidden.future_offensive[1]=19;hidden.seed=54321;hidden.draw[1]=[4,5,6]
+ assert.deepEqual(observe(s.rules,hidden,"Japan",s.revision).observation.taskFacts.conditionalLandReachability,f)
+ const {taskFacts}=require("../js/server/llm/observation"),copy=JSON.parse(JSON.stringify(o)),preview=copy.cardPreviews.find(p=>p.cardId===101&&p.cardMode==="ops"&&p.hqId===7)
+ copy.cardPreviews=Array.from({length:96},()=>preview)
+ const bounded=taskFacts(s.rules,s.state,copy,null).conditionalLandReachability
+ assert.equal(bounded.queries,128);assert.equal(bounded.coverage,"partial");assert(bounded.rows.some(r=>r.reason==="query-limit"))
+ copy.cardPreviews=[{...preview,eligible:false}]
+ assert.equal(taskFacts(s.rules,s.state,copy,null).conditionalLandReachability.rows[0].coverage,"unknown")
+ for(const window of ["reaction","pbm"]){copy.window=window;assert.equal(taskFacts(s.rules,s.state,copy,null).conditionalLandReachability,null)}
+ copy.window=o.window;copy.state="move_offensive_units";assert.equal(taskFacts(s.rules,s.state,copy,null).conditionalLandReachability,null)
+ for(const [a,b]of[["card",101],["ops",null]])s.state=s.rules.action(s.state,"Japan",a,b)
+ const hq=observe(s.rules,s.state,"Japan",s.revision+2).observation
+ assert.equal(hq.state,"choose_hq");assert(!hq.ownCards.some(c=>c.id===101))
+ assert(hq.taskFacts.conditionalLandReachability.rows.some(r=>r.cardId===101&&r.hqId===7&&r.checked))
 })
 test("editable model memory omits program-owned fields while exact execution history remains readonly",async()=>{
  const api=require("../js/server/llm/session"),session=api.createSession({seed:20262602,scenario,players:{Japan:"llm:deepseek",Allies:"erasmus-campaign"}},{clients:{deepseek:{}}})
@@ -48,6 +88,17 @@ test("conquest acceptance needs four formal surrenders and the specified campaig
  nations[3].surrenderedTurn=4;nations[3].allJapanControlled=false;assert(!goal(s).achieved)
 })
 
+test("explicit development token budget migration preserves counters and replay actions",()=>{
+ const {migrateTokenBudget}=require("../tools/llm-goal-run"),saved={replay:{setup:{maxTotalTokens:10000000},stats:{requests:215,totalTokens:7907931,failedRequests:3},actions:[{action:"unit"}]}},config={setup:{maxTotalTokens:10000000}},before=JSON.parse(JSON.stringify(saved))
+ assert.throws(()=>migrateTokenBudget(saved,config,20000000,false),/TOKEN_BUDGET_CHANGED/);assert.deepEqual(saved,before)
+ for(const value of [7000000,20000001,NaN])assert.throws(()=>migrateTokenBudget(saved,config,value,true),/TOKEN_BUDGET_RANGE/)
+ migrateTokenBudget(saved,config,20000000,true)
+ assert.deepEqual(saved.replay.stats,before.replay.stats);assert.deepEqual(saved.replay.actions,before.replay.actions)
+ assert.equal(saved.replay.setup.maxTotalTokens,20000000);assert.equal(config.budgetHistory[0].from,10000000);assert.equal(config.budgetHistory[0].totalTokens,7907931)
+ const api=require("../js/server/llm/session"),s=api.createSession({seed:20262602,scenario,maxTotalTokens:20000000,players:{Japan:"llm:deepseek",Allies:"erasmus-campaign"}},{clients:{deepseek:{}}})
+ const restored=api.restoreSession(api.serializeSession(s),{clients:{deepseek:{}}});assert.equal(restored.limits.maxTotalTokens,20000000);assert(api.verifyReplay(api.replay(restored)).verified)
+})
+
 test("task facts bind public defenders, conditional routes and separate HQ reaction budgets without secrets or mutation",async()=>{
  const api=require("../js/server/llm/session"),session=api.createSession({seed:20262602,scenario,players:{Japan:"llm:deepseek",Allies:"erasmus-campaign"}},{clients:{deepseek:{}}})
  while(session.state.active==="Allies")await api.step(session,{revision:session.revision})
@@ -56,6 +107,11 @@ test("task facts bind public defenders, conditional routes and separate HQ react
  const before=hash(session.state),o=observe(session.rules,session.state,"Japan",15,{memory}).observation
  assert.equal(hash(session.state),before)
  assert.deepEqual(o.taskFacts.binding,{revision:15,cardId:100,mode:"ops",hqId:7})
+ assert.equal(o.taskFacts.planConsistency.contextStatus,"proposed");assert.equal(o.taskFacts.planConsistency.playerDeclarationLimit,null)
+ const planMemory={offensive:{...memory.offensive,cardId:100,mode:"ops",hqId:7}}
+ const consistency=observe(session.rules,session.state,"Japan",15,{memory:planMemory}).observation.taskFacts.planConsistency
+ assert.equal(consistency.contextStatus,"active");assert.equal(consistency.playerDeclarationLimit,1);assert(consistency.ifAllAttemptedThisOffensive.multipleDefendedTargets)
+ assert(consistency.targets.some(t=>t.targetHex===304&&t.hasDefendingGround))
  const kuantan=o.taskFacts.planned[0]
  assert.deepEqual(kuantan.groups[0].groundRoute.pathToTarget,[4,4,274,304]);assert(!Object.hasOwn(kuantan.groups[0].groundRoute,"aspCost"))
  assert.equal(o.taskFacts.defenders.find(d=>d.hex===304).ground.cf,9)

@@ -1,0 +1,591 @@
+{
+  "task": "AI-CAMPAIGN-02",
+  "seed": 20261811,
+  "scenario": "1943-1945 (The Even Shorter Campaign)",
+  "hashes": {
+    "legacy": "d1e5a0d4e5dd57f90e25950d969d973be99f72ec2209b7f427b9643370c5e703",
+    "candidate": "d04416f344e743312acfbeb590eb59e6a76d737f04186528e8d0f4c3cd651012",
+    "release": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+    "replay": "3a2c2dbf1cdc2da55375ed7ac50d256510a27c4044f74b32af828a66fcd689f7",
+    "verifier": "b2ba69a2741be873734b771f6dac0c9bd0e8b18661fc4021da31098ef8100936"
+  },
+  "actions": 1594,
+  "normalizedFinalStateSha256": "2376376f2299a1afd8662ee20a3cf5e60a503692454214aaed3e22792af0ba3b",
+  "originalFinalStateSha256": "2376376f2299a1afd8662ee20a3cf5e60a503692454214aaed3e22792af0ba3b",
+  "winner": "Allies",
+  "checks": [
+    {
+      "ordinal": 1,
+      "role": "Allies",
+      "phase": "offensive_segment",
+      "window": "card-selection",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 2,
+      "role": "Allies",
+      "phase": "offensive_segment_card_action",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 3,
+      "role": "Allies",
+      "phase": "choose_hq",
+      "window": "task-force",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 4,
+      "role": "Allies",
+      "phase": "activate_units",
+      "window": "task-force",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 7,
+      "role": "Allies",
+      "phase": "move_offensive_units",
+      "window": "task-force",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 9,
+      "role": "Allies",
+      "phase": "commit_offensive_confirm",
+      "window": "task-force",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 10,
+      "role": "Japan",
+      "phase": "cancel_offensive",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 11,
+      "role": "Japan",
+      "phase": "define_intelligence_condition",
+      "window": "reaction",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 12,
+      "role": "Allies",
+      "phase": "commit_offensive_confirm",
+      "window": "pbm",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 13,
+      "role": "Japan",
+      "phase": "offensive_segment",
+      "window": "card-selection",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 14,
+      "role": "Japan",
+      "phase": "offensive_segment_card_action",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 15,
+      "role": "Japan",
+      "phase": "choose_hq",
+      "window": "task-force",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 16,
+      "role": "Japan",
+      "phase": "activate_units",
+      "window": "task-force",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 20,
+      "role": "Japan",
+      "phase": "paratroopers",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 21,
+      "role": "Japan",
+      "phase": "move_offensive_units",
+      "window": "task-force",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 24,
+      "role": "Japan",
+      "phase": "commit_offensive_confirm",
+      "window": "task-force",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 25,
+      "role": "Allies",
+      "phase": "define_intelligence_condition",
+      "window": "reaction",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 26,
+      "role": "Allies",
+      "phase": "attack_reaction_cards",
+      "window": "reaction",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 28,
+      "role": "Allies",
+      "phase": "apply_attack_reaction",
+      "window": "reaction",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 29,
+      "role": "Japan",
+      "phase": "commit_offensive_confirm",
+      "window": "pbm",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 76,
+      "role": "Japan",
+      "phase": "choose_attack_hex",
+      "window": "task-force",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 82,
+      "role": "Japan",
+      "phase": "declare_battle_hexes",
+      "window": "task-force",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 85,
+      "role": "Allies",
+      "phase": "choose_hq",
+      "window": "reaction",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 86,
+      "role": "Allies",
+      "phase": "activate_units",
+      "window": "reaction",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 88,
+      "role": "Allies",
+      "phase": "move_offensive_units",
+      "window": "reaction",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 89,
+      "role": "Allies",
+      "phase": "commit_offensive_confirm",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 90,
+      "role": "Japan",
+      "phase": "choose_battle",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 91,
+      "role": "Allies",
+      "phase": "move_offensive_units",
+      "window": "pbm",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 93,
+      "role": "Japan",
+      "phase": "move_offensive_units",
+      "window": "pbm",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 112,
+      "role": "Japan",
+      "phase": "attack_b29_base",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 150,
+      "role": "Allies",
+      "phase": "cancel_offensive",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 168,
+      "role": "Japan",
+      "phase": "end_action",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 187,
+      "role": "Japan",
+      "phase": "tokyo_express",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 214,
+      "role": "Japan",
+      "phase": "fuel_shortage",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 225,
+      "role": "Allies",
+      "phase": "reinforcement_segment",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 231,
+      "role": "Japan",
+      "phase": "reinforcement_segment",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 235,
+      "role": "Allies",
+      "phase": "replacement_segment",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 240,
+      "role": "Japan",
+      "phase": "replacement_segment",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 242,
+      "role": "Allies",
+      "phase": "submarine_warfare",
+      "window": "reaction",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 308,
+      "role": "Japan",
+      "phase": "apply_hits",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 312,
+      "role": "Allies",
+      "phase": "apply_hits",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 319,
+      "role": "Japan",
+      "phase": "retreat",
+      "window": "pbm",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 468,
+      "role": "Japan",
+      "phase": "future_offensive",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 507,
+      "role": "Allies",
+      "phase": "choose_attack_hex",
+      "window": "reaction",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 513,
+      "role": "Allies",
+      "phase": "skip_bombing",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 516,
+      "role": "Japan",
+      "phase": "broken_aa",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 541,
+      "role": "Allies",
+      "phase": "declare_battle_hexes",
+      "window": "task-force",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 546,
+      "role": "Japan",
+      "phase": "choose_hq",
+      "window": "reaction",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 547,
+      "role": "Japan",
+      "phase": "activate_units",
+      "window": "reaction",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 551,
+      "role": "Japan",
+      "phase": "move_offensive_units",
+      "window": "reaction",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 557,
+      "role": "Japan",
+      "phase": "commit_offensive_confirm",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 558,
+      "role": "Allies",
+      "phase": "choose_battle",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 595,
+      "role": "Allies",
+      "phase": "displace_hq",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 596,
+      "role": "Allies",
+      "phase": "end_action",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 629,
+      "role": "Japan",
+      "phase": "attack_reaction_cards",
+      "window": "reaction",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 631,
+      "role": "Japan",
+      "phase": "apply_attack_reaction",
+      "window": "reaction",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    },
+    {
+      "ordinal": 892,
+      "role": "Allies",
+      "phase": "strategic_bombing",
+      "window": "decision-axis",
+      "legacySame": true,
+      "v2Same": true,
+      "readOnly": true,
+      "interleavingSame": true
+    }
+  ],
+  "fullStateReplaySame": true,
+  "normalization": "remove campaign_v2 only; no gameplay/log/plan changes",
+  "runtimeModelRequests": 0
+}

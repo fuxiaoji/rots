@@ -46,7 +46,7 @@ function createSession(options = {}, deps = {}) {
     if (ROLES.filter(r => players[r] === "human").length > 1) throw fail("CONFIG", "当前页面支持一名人类玩家")
     const limits = { maxRequests: options.maxRequests ?? 200, maxTotalTokens: options.maxTotalTokens ?? 2000000,
         maxActions: options.maxActions ?? 60000 }
-    for (const n of Object.values(limits)) if (!Number.isSafeInteger(n) || n < 1 || n > 10000000) throw fail("CONFIG", "预算必须为有界正整数")
+    for (const [key, n] of Object.entries(limits)) if (!Number.isSafeInteger(n) || n < 1 || n > (key === "maxTotalTokens" ? 20000000 : 10000000)) throw fail("CONFIG", "预算必须为有界正整数")
     const normalized = { seed, scenario, players: { ...players },
         semiBots: { Japan: options.semiBots?.Japan || "erasmus-v2-opt-v5", Allies: options.semiBots?.Allies || "erasmus-v2-opt-v5" }, ...limits, directOnly: options.directOnly === true }
     return { id: crypto.randomUUID(), revision: 0, options: normalized, limits, rules,

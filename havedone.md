@@ -1,5 +1,17 @@
 # 已完成工作记录
 
+## 2026-10-07：LLM-SEMI-01 半自动 LLM 战略模式（实现 + 首轮 74 局评测）
+
+- **模式**：`llmsemi:<profile>` 玩家。战役状态机（erasmus-v2-opt-v5）执行全部合法动作；模型只在己方每张牌的选牌窗回答一次 `{strategy, targets[], reason}`——战略必须是当前阶段目录内逐字名，目标地点为印刷 mapId 有序表（可为默认链子集/重排，至多 16 项，未知 ID 丢弃并记录）。程序验证后经 `context.strategyOverride` 进入 `esm_pin_strategy`：跳过图表掷轴/完成分配重掷/同轴延续，按模型链（同格复用默认条目语义；新格按控制状态合成 CONQUEST/GARRISON）覆盖 eop 焦点链。RTT 日志标注「LLM半自动·模型链/默认链」。
+- **信息面**（`js/server/llm/semi.js`）：己方手牌+cardPreviews 启动预算、双方全部公开单位（cf/rcf/lf/br/ebr/asp/补给）、全部命名地点+控制方、四国要求格与正式投降状态、PW/PoW、资源/ASP 轨、当前阶段战略目录（目标语义注释+默认链+每格控制/资源属性）、目标守军、两篇规则简述（OP-LLM-01/CW-LLM-01，SHA-256 入账本）。不读敌方手牌/牌库/未来随机数；模型不提交任何动作。
+- **失败语义**：格式无效重试 1 次后该牌回退程序默认战略并计入 `strategyLog(source=program-default, invalid=true)`；接口失败/预算耗尽照常暂停（429 等瞬态由评测器带退避恢复，上限可配）；请求账本逐次记录 promptHash/输出哈希/用量/延迟。
+- **实现**：`js/server/erasmus_state.js`（钉选覆盖通道）、`js/server/query.js`（`llm_semi_catalog`）、`js/server/llm/semi.js`（新）、`js/server/llm/session.js`（llmsemi 分支+strategyLog 入 replay）、`tools/semi-eval.js`（评测器）。7 项 mock 单测 `tests/llm-semi.test.js` 全绿（目录只读、覆盖链生效、无效回退与纯 bot 逐哈希一致、暂停语义、窗口判定同步）；erasmus/LLM/campaign 既有回归 37 项全绿。
+- **评测**（1942 剧本，种子 20262701–20262710，两侧配对；全部完成局自然终局+`verifyReplay` 逐步哈希一致）：
+  - 日军侧（日本被测 vs 盟军 erasmus-campaign）：基线 8/10 胜、投降 0.8 国/局、PW 6.8；**DeepSeek 9/10 胜、PW 8.2**（配对 2709 转胜；2701 菲 T4+马 T3 双投降）；MiniMax 8/10（0.7 国/局）；GLM 7/10（0.5 国/局、菲律宾 0）。模型高频选择资源/国防圈战略，守住资源与 PW 但征服慢于图表轴。
+  - 盟军侧（盟军被测 vs 日本 erasmus-japan-campaign）：基线盟军战役AI 4/10 胜；**DeepSeek/MiniMax 各 0/10、GLM 0/4，21/24 局 PW 归零条约败**。半自动接口（仅调目标顺序）无法重建盟军跨回合多任务胜路（登陆编队/B29 前推/封锁-原子弹组合）。
+  - 成本：DeepSeek ~16.2M、MiniMax ~17.1M、GLM ~11.8M tokens；三家密钥按授权写入 `.env.llm.local`（仓库外生效，不入库）。GLM 需 coding-plan 端点（`api.z.ai/api/coding/paas/v4`，计划订阅），并发 >2 触发 429；GLM 盟军臂 6 局因限流未完成，原始行归档 `tests/results/semi-eval-ap42-glm-paused.json`。
+- **结论边界**：样本每臂 10 局（GLM 盟军侧 4），差异无统计显著性；开发种子非冻结留出。方向性结论：半自动模式适合给强执行框架「换战略脑子」（日军侧防守/PW 改善明显），不适合替代已强程序化的盟军规划器；盟军侧提升需把任务编成结构暴露给模型。详见 `research/llm-semi-01/results.md`。
+
 ## 2026-09-06：Erasmus 代码化缺口整改（PR1–PR6）
 
 按 `EOTS_Erasmus_v2_代码化缺口整改清单.md` 逐项落地，原则「Erasmus 负责选什么，RTT 规则引擎负责什么是合法」，只改 bot 策略文件（`erasmus.js`/`erasmus_state.js`/`erasmus_ops.js`）+ 新增只读查询层，不动规则引擎。
@@ -660,6 +672,37 @@
 - v7.4修复观察/提示歧义：advanced_move仅展开方式，默认落点不是各方式并集；原revision200副本零API验证480经两栖方式出现。起点三元路径不算已移动，己方实际路径白名单保留且不作为PBM禁令。45项组合检查通过；真实模型第94请求主动展开，后续95/96格式失败保留。
 - dev-02第265动作/106请求完整回放通过，3,703,653累计tokens、2,323,247ms、程序强制46、协助0；菲律宾/马来亚正式标记2/2且仍正控制，DEI/BURMA0/0，任务继续，不声明四国成功。
 - v7.5派生当前军力面CF与基础ASP，避免减损43被当18CF/2ASP；实际编组费用可因建制运输、驳船或事件降低，查询/候选优先。微步骤输出仅变更字段，memory:{}保留记忆，格式校验仍严格；8项征服定点检查通过，Astra只读语义复核。未修改裁定、种子、对手或历史轨迹。
+
+### 2026-10-07 — LLM-WIN-01 补给证据及选牌陆进查询阶段（目标未达）
+
+- dev-02请求170/422动作完整回放通过：PH/MAL正式标记2/2，关丹失守，DEI余5/BURMA余4；6,213,134累计tokens、3,953,221ms，forced83/assisted0/unknown0，货币unknown。登陆缺护航与关丹反攻失败保留，不报告整局胜或四国成功。
+- v7.6观察层将无公开断补证据的快速缓存false改null，HQ/已激活true注明豁免。选牌/模式/HQ窗只查询己方精确eligible卡/HQ单兵陆进端点；96预览/128查询截断明确partial，未知事件unknown，已离手牌的当前己方牌仍授权。规则哈希不变、不自动编队、不读取敌方私有数据。
+- 10 conquest+9 prompt+9 RTT共28受影响检查分次通过；Sol只读复核和真实HQ纯查询探针通过，root整合。零API初始选牌测量16.01→49.95ms、84,577→97,777 UTF8字节，仅该窗口描述，字节不代替token费用。
+- v7.5私有归档，第422动作后显式迁移v7.6继续原局，费用不清零，当前目标仍in_progress。
+
+### 2026-10-07 — LLM-WIN-01 关丹收复与OC任务相容性阶段（目标未达）
+
+- dev-02第500动作/198真实请求完整回放通过，关丹收复、PH/MAL正式2/2且正控制；DEI余5/BURMA余4。累计7,329,673tokens/4,630,115ms、forced102/assisted0/unknown0，high选牌再截断32,768，费用保留，未称目标成功。
+- v7.7按PDF17§7.24提醒同一OC若多个任务均攻击守军格会冲突，不自动判备选/后续任务非法；稀疏表明确检查集合及完整单兵陆进否定语义。Astra只读裁决，root实现；10 conquest+9 prompt+16 provider+19 harness+9 RTT共63唯一相关本地检查分次通过。
+- 规划请求65,536生成/480秒、微步骤原32,768/240秒；provider仅DeepSeek有界上限放宽，其余不变。最初第199尝试被旧本地上限拒绝，网络API未发送，tokens0；通用失败/unknown原记录及单列审计保留。修复后预检在步进之前，同局迁移保留费用和哈希，长期目标继续。
+
+### 2026-10-07 — LLM-WIN-01 仰光推进与增援定义阶段（目标未达）
+
+- 第642动作完整回放通过，provider尝试247中真实网络246、199本地配置失败无网络。9,277,836累计tokens/5,905,555ms，forced129/assisted0；unknown1为保留的本地错误统计，已发送请求报告用量完整，货币unknown。
+- v7.7真实夺Tarakan、Rangoon；Miri被夺回，PH/MAL2/2正控制，DEI余5/BURMA余3。原局多版本开发，不声明四国达成或自然终局胜。
+- v7.8将自动selected/active己方场外单位定义保留，修复增援P51只有编号的问题；11 conquest+9 prompt、受影响19 harness通过，16 provider/9 RTT未变成功证据复用，共64唯一检查。
+- 第642动作后显式累计预算10m→20m，history记录完整，费用/失败/动作不重置；Astra裁决继续当前有进展的局，root整合。20m为暂停上限，新有界段继续，长期任务in_progress。
+
+### 2026-10-07 — LLM-WIN-01 同策略823动作检查点（目标未达）
+
+- 310实际网络请求+1本地配置失败，11,905,682累计tokens/7,360,097ms，forced157/assisted0；823动作完整回放通过。PH/MAL2/2正控制，Burma四格全控但正式0，DEI仅余309 Tjilatjap/421 Miri。中途Burma失三格已保留，重新夺控不当正式投降。
+- v7.8/20m累计上限及规则未改，64项未变输入成功检查复用；继续下一有界段，费用/失败不清零，不称整局胜率或四国目标完成。
+
+### 2026-10-07 — LLM-WIN-01 860动作保存与余额阻断（目标未达）
+
+- 333网络请求+1本地配置失败，12,760,653累计tokens/7,798,128ms，forced162/assisted0；860动作完整回放通过。第334 HTTP402未执行动作，官方余额-0.05元/is_available=false，已请求充值原账户；未改用其他模型或FSM代打。
+- PH/MAL正式2/2正控制，Burma四格全控待结算，DEI余309 Tjilatjap/421 Miri。保存paused是请求资源失败，长期任务未完成；费用/失败/策略/规则历史全保留。
+- RTT无在途请求后按项目脚本重启，PID50376/HTTP200、v7.8加载；当前生成包157f93含另项半自动扩展，原局恢复器继续使用冻结825b6d归档，两个规则包不混算。无额外原生付费请求/浏览器视觉验收。
 
 ## 2026-10-07 — AI-CAMPAIGN-01 双方战役 AI 本地实现与阶段验收
 

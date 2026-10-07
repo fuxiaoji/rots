@@ -36,7 +36,13 @@ function visible(rules, state, role) {
     observation.units = observation.units.map(u => ({ ...u, locationMapId: hexes.get(u.location)?.id || null, locationName: hexes.get(u.location)?.name || null,
         currentCF: u.reduced ? u.rcf : u.cf,
         currentBaseASP: u.class === "ground" && u.asp ? u.reduced ? u.aspr : u.aspCost : null,
-        ...(u.faction === side ? { supplied: supplies.get(u.id) ?? null } : {}) }))
+        ...(u.faction === side ? {
+            outOfSupplyMarker: Array.isArray(view.oos) ? view.oos.includes(u.id) : null,
+            supplied: view.oos?.includes(u.id) ? false : supplies.get(u.id) === true ? true : null,
+            supplyBasis: view.oos?.includes(u.id) ? "public-oos-marker" : supplies.get(u.id) === true
+                ? u.class === "hq" ? "engine-hq-exemption" : observation.activeUnits.includes(u.id) ? "engine-active-exemption" : "positive-engine-probe"
+                : "fast-cache-negative-is-unknown"
+        } : {}) }))
     observation.ownUnitDefinitions = clone(p.ownUnitDefinitions || [])
     observation.ownASP = side >= 0 ? clone(view.asp?.[side] ?? null) : null
     observation.ownASPRemaining = p.ownASPRemaining ?? null
@@ -119,7 +125,44 @@ function taskFacts(rules, state, o, memory) {
             if (reachableKeys.length) landCaptureCoverage.units.push({ id, reachableKeys })
         }
     }
-    return { binding: { revision: d.revision, cardId: card?.id || null, mode: card?.selectedMode || null, hqId: d.ownHQ || null }, defenders, planned, landCaptureCoverage,
+    let conditionalLandReachability = null
+    if (state.active === o.role && ["offensive_segment", "offensive_segment_card_action", "choose_hq"].includes(o.state) && !["reaction", "pbm"].includes(o.window)) {
+        const enemyHexes = [...new Set(o.units.filter(u => u.faction === 1 - side && o.hexes.some(h => h.hex === u.location)).map(u => u.location))]
+        const rows = [], maxQueries = 128
+        let queries = 0, partial = o.cardPreviewsLimited || o.cardPreviews.length > 96
+        for (const p of o.cardPreviews.slice(0, 96)) {
+            const row = { cardId: p.cardId, mode: p.cardMode, hqId: p.hqId, checked: false, coverage: "unknown", reason: null, units: [] }
+            const ownCard = o.ownCards.some(c => c.id === p.cardId && c.faction === side) || card?.id === p.cardId && card.faction === side
+            if (!p.eligible || !["ops", "event"].includes(p.cardMode) || !ownCard || own.get(p.hqId)?.class !== "hq") row.reason = "exact-own-activation-preview-unavailable"
+            else {
+                row.checked = true; row.coverage = "complete"
+                for (const id of p.units || []) if (own.get(id)?.class === "ground" && o.hexes.some(h => h.hex === own.get(id).location)) {
+                    if (queries >= maxQueries) { row.coverage = "partial"; row.reason = "query-limit"; partial = true; break }
+                    ++queries
+                    const r = ask("queryGroupMovementDestinations", [[id], { faction: side, cardId: p.cardId, cardMode: p.cardMode, hqId: p.hqId, move_type: 4 }])
+                    if (!r || r.reason === "no-playable-card") { row.coverage = "partial"; row.reason = "query-unavailable"; partial = true; continue }
+                    const reachableTargetHexes = targets.filter(hex => r.paths?.[hex])
+                    const reachableEnemyOccupiedHexes = enemyHexes.filter(hex => r.paths?.[hex])
+                    if (reachableTargetHexes.length || reachableEnemyOccupiedHexes.length) row.units.push({ id, reachableTargetHexes, reachableEnemyOccupiedHexes })
+                }
+            }
+            rows.push(row)
+        }
+        conditionalLandReachability = { rows, checkedTargetHexes: targets, checkedEnemyOccupiedHexes: enemyHexes, queries, maxQueries, coverage: partial ? "partial" : "complete",
+            basis: "single own eligible ground unit, exact own card/mode/HQ, land mode 4; endpoints only, no ranking; empty complete row excludes immediate land endpoints only, not staging or amphibious value" }
+    }
+    const plan = memory?.offensive
+    const planTargets = tasks.map(t => ({ targetHex: t.targetHex,
+        hasDefendingGround: !!defenders.find(x => x.hex === t.targetHex)?.ground?.lfs?.length,
+        hasEnemyHQ: o.units.some(u => u.location === t.targetHex && u.faction === 1 - side && u.class === "hq") }))
+    const defendedTargets = [...new Set(planTargets.filter(t => t.hasDefendingGround || t.hasEnemyHQ).map(t => t.targetHex))]
+    const planConsistency = !plan ? null : { contextStatus: card && (plan.cardId != null && plan.cardId !== card.id || plan.mode != null && card.selectedMode != null && plan.mode !== card.selectedMode) ? "stale"
+        : ctx && plan.cardId === ctx.cardId && plan.mode === ctx.cardMode && plan.hqId === ctx.hqId ? "active" : "proposed",
+        cardId: plan.cardId ?? null, mode: plan.mode ?? null, hqId: plan.hqId ?? null,
+        playerDeclarationLimit: plan.mode === "ops" ? 1 : null, targets: planTargets,
+        ifAllAttemptedThisOffensive: { multipleDefendedTargets: plan.mode === "ops" && defendedTargets.length > 1, defendedTargets },
+        basis: "PDF17 section7.24: OC player may actively declare one battle hex; special reactions may add battles. Conditional conflict only if all these offensive tasks attack this offensive; alternatives/future tasks are not inferred from prose. Event limits unknown." }
+    return { binding: { revision: d.revision, cardId: card?.id || null, mode: card?.selectedMode || null, hqId: d.ownHQ || null }, defenders, planned, landCaptureCoverage, conditionalLandReachability, planConsistency,
         limits: "Public facts, not a strategy or victory prediction. Routes are current-card projections, not execution authorization; activation, already moved, shared ASP and whole-plan budget still require current candidates. Air range is not a commitment; original-position naval support is unqueried. Reaction alternatives share one HQ budget; baseline excludes unknown enemy-card intervention. Single-unit land coverage does not check amphibious groups." }
 }
 function observe(rules, state, role, revision, { directOnly = false, memory = null } = {}) {

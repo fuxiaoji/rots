@@ -1691,7 +1691,7 @@ function eop_target_meta(role, hex) {
 // Shared by activation, task-force composition and actual movement. Semantic
 // restrictions remain hard filters even when a preferred candidate is unavailable.
 function eop_unit_matches_target(unit, role, meta, target) {
-    const enhancedJapan=role==="Japan" && typeof em_cfg==="function" && !!em_cfg()?.japan_campaign_planner
+    const enhancedJapan=role==="Japan" && typeof em_cfg==="function" && !!em_cfg()?.japan_campaign_planner && !!em_cfg()?.campaign_v2
     if (!meta && !enhancedJapan) return true
     const id = typeof unit === "number" ? unit : unit?.id
     const p = typeof unit === "number" ? pieces[unit] : unit

@@ -4,7 +4,7 @@ const test=require("node:test"),assert=require("node:assert/strict"),fs=require(
 const {validateAction,stateDigest}=require("./match-run")
 const FILE=path.resolve(__dirname,"../rules.js")
 function load(){const m=new Module(FILE,module);m.filename=FILE;m.paths=Module._nodeModulePaths(path.dirname(FILE));
-m._compile(fs.readFileSync(FILE,'utf8')+`
+m._compile(fs.readFileSync(FILE,'utf8').replace('// END CAMPAIGN V2','exports.__v2Plan=ec_plan;\n// END CAMPAIGN V2')+`
 exports.__goalFixture=state=>{
  G=state;R=AP;G.active=AP;G.location.fill(NOT_USED);G.control=null;G.oos=[];G.reduced=[];G.inter_service=[0,0];G.asp[AP]=[0,0];G.hand[AP]=[1];G.hand[JP]=[];G.undo=[];G.turn=7;G.pow=0;G.political_will=10;reset_offensive();
  G.L=L={P:"offensive_segment",L:{P:"goal_fixture_return"}};
@@ -23,20 +23,20 @@ exports.__islandFixture=state=>{
  G.L=L={P:"offensive_segment",L:{P:"goal_fixture_return"}};G.location[5]=hq;G.location[33]=TOKYO;
  G.supply_cache[hex_to_int(3709)]|=JP_CONTROLLED;check_supply();_save();return {ground:33,target:hex_to_int(3709),lastBoard:LAST_BOARD_HEX};
 };
-exports.__islandPlan=state=>{const view=exports.view(state,"Japan");G=state;L=G.L;R="Japan";_load();em_set_config(em_bot_config("erasmus-japan-campaign","Japan"));try{return ec_plan(view,{role:"Japan"})}finally{em_reset_config();_save()}};
+exports.__islandPlan=state=>{const view=exports.view(state,"Japan");G=state;L=G.L;R="Japan";_load();em_set_config(em_bot_config("erasmus-japan-campaign-v2","Japan"));try{return exports.__v2Plan(view,{role:"Japan"})}finally{em_reset_config();_save()}};
 exports.__guardCheck=state=>{
  G=state;L=G.L;R="Japan";_load();
  try{return rules_query_snapshot(()=>{
   const hex=hex_to_int(3813),target=hex_to_int(2813),ids=pieces.map((p,id)=>({...p,id})).filter(p=>p.faction===JP&&p.class==="ground").sort((a,b)=>a.cf-b.cf||a.id-b.id).slice(0,2).map(p=>p.id);
   is_space_controlled(hex,JP);G.supply_cache[hex]|=JP_CONTROLLED;G.reduced=[];G.location.fill(NOT_USED);G.location[ids[0]]=hex;G.offensive.attacker=JP;
-  em_set_config(em_bot_config("erasmus-japan-campaign","Japan"));const single=eop_unit_matches_target(ids[0],"Japan",null,target);
+  em_set_config(em_bot_config("erasmus-japan-campaign-v2","Japan"));const single=eop_unit_matches_target(ids[0],"Japan",null,target);
   G.location[ids[1]]=hex;const surplus=eop_unit_matches_target(ids[1],"Japan",null,target);const reserve=eop_unit_matches_target(ids[0],"Japan",null,target);G.location[ids[1]]=NOT_USED;
   G.offensive.attacker=AP;const reacting=eop_unit_matches_target(ids[0],"Japan",null,target);
   em_set_config(em_bot_config("erasmus-v2-opt-v5","Japan"));const strict=eop_unit_matches_target(ids[0],"Japan",null,target);
   return {single,surplus,reserve,reacting,strict};
  },JP)}finally{em_reset_config();_save()}
 };
-exports.__goalPlan=state=>{const view=exports.view(state,"Allies");G=state;L=G.L;R="Allies";_load();em_set_config(em_bot_config("erasmus-campaign","Allies"));try{return ec_plan(view,{role:"Allies"})}finally{em_reset_config();_save()}};
+exports.__goalPlan=state=>{const view=exports.view(state,"Allies");G=state;L=G.L;R="Allies";_load();em_set_config(em_bot_config("erasmus-campaign-v2","Allies"));try{return exports.__v2Plan(view,{role:"Allies"})}finally{em_reset_config();_save()}};
 `,FILE);return m.exports}
 const clone=x=>JSON.parse(JSON.stringify(x))
 test("actual blockade air suppression, mixed ground move, battle and PBM complete and replay",{timeout:60000},()=>{
@@ -46,7 +46,7 @@ test("actual blockade air suppression, mixed ground move, battle and PBM complet
  const initial=clone(s),actions=[];let declared=false,groundMoved=false,airEnteredEnemy=false,pbm=false
  for(let n=1;n<=180&&s.L?.P!=="goal_fixture_return";n++){
   const role=Array.isArray(s.active)?s.active[0]:s.active,v=r.view(s,role),before=JSON.stringify(s)
-  const d=r.bots[role==="Allies"?"erasmus-campaign":"erasmus-v2-opt-v5"].decide(v,{role,seed:20261551,actionOrdinal:n})
+  const d=r.bots[role==="Allies"?"erasmus-campaign-v2":"erasmus-v2-opt-v5"].decide(v,{role,seed:20261551,actionOrdinal:n})
   assert.equal(JSON.stringify(s),before,"planning is read-only");validateAction(v,d);actions.push([role,d.action,clone(d.argument??null)])
   s=r.action(s,role,d.action,d.argument);declared ||= s.offensive?.battle_hexes?.includes(f.enemy)
   groundMoved ||= s.location[f.ground]===f.port;airEnteredEnemy ||= s.location[f.air[0]]===f.enemy
@@ -68,7 +68,7 @@ test("friendly no-port Iwo garrison uses solo ASP, stays through full offensive 
  const r=load();let s=r.setup(20261561,"1943-1945 (The Even Shorter Campaign)",{headless_moves:true});const f=r.__islandFixture(s),p=r.__islandPlan(s)
  assert.equal(p.tasks[0].hex,f.target);assert.deepEqual(p.tasks[0].movementUnitIds,[f.ground]);assert.equal(p.tasks[0].movementModes[0],"AA");assert.equal(p.tasks[0].aspCost,2)
  const initial=clone(s),actions=[];for(let n=1;n<=100&&s.L?.P!=="goal_fixture_return";n++){
-  const role=s.active,v=r.view(s,role),before=JSON.stringify(s),d=r.bots[role==="Japan"?"erasmus-japan-campaign":"erasmus-campaign"].decide(v,{role,seed:20261561,actionOrdinal:n})
+  const role=s.active,v=r.view(s,role),before=JSON.stringify(s),d=r.bots[role==="Japan"?"erasmus-japan-campaign-v2":"erasmus-campaign-v2"].decide(v,{role,seed:20261561,actionOrdinal:n})
   assert.equal(JSON.stringify(s),before);validateAction(v,d);actions.push([role,d.action,clone(d.argument??null)]);s=r.action(s,role,d.action,d.argument)
  }
  assert.equal(s.L.P,"goal_fixture_return");assert.equal(s.location[f.ground],f.target);assert.equal(s.asp[0][1],2);assert(!s.oos.includes(f.ground))

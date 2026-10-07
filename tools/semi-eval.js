@@ -14,7 +14,17 @@ const { visible } = require("../js/server/llm/observation")
 const { classifyEnd } = require("../tests/campaign-metrics")
 const SCENARIO = "1942-1945 (The Shortened Campaign)"
 const ALLIES_OPPONENT = "erasmus-campaign"
+const JAPAN_OPPONENT = "erasmus-japan-campaign"
 const SEMI_EXECUTOR = "erasmus-v2-opt-v5"
+function sidesFor(side, arm, profile) {
+    // 半自动半边 + 对方战役AI；baseline 臂两侧都是程序。
+    if (side === "allies") return arm === "baseline"
+        ? { Japan: JAPAN_OPPONENT, Allies: ALLIES_OPPONENT }
+        : { Japan: JAPAN_OPPONENT, Allies: "llmsemi:" + profile }
+    return arm === "baseline"
+        ? { Japan: SEMI_EXECUTOR, Allies: ALLIES_OPPONENT }
+        : { Japan: "llmsemi:" + profile, Allies: ALLIES_OPPONENT }
+}
 const TRANSIENT = new Set(["EOTS_LLM_HTTP_ERROR", "EOTS_LLM_TIMEOUT", "EOTS_LLM_NETWORK_ERROR", "EOTS_LLM_INVALID_RESPONSE", "EOTS_LLM_PROVIDER_ERROR"])
 
 function args(argv) {
@@ -54,11 +64,9 @@ function endResources(s) {
 function publicNations(s) {
     return visible(s.rules, s.state, "Observer").observation.scenario.nations
 }
-async function playOne({ seed, arm, profile, maxRequests, maxTotalTokens, saveFile, resumeLimit = 3, resumeDelayMs = 0 }) {
+async function playOne({ seed, side = "japan", arm, profile, maxRequests, maxTotalTokens, saveFile, resumeLimit = 3, resumeDelayMs = 0 }) {
     const began = Date.now()
-    const players = arm === "baseline"
-        ? { Japan: SEMI_EXECUTOR, Allies: ALLIES_OPPONENT }
-        : { Japan: "llmsemi:" + profile, Allies: ALLIES_OPPONENT }
+    const players = sidesFor(side, arm, profile)
     let s, resumed = 0, lastError = null
     const make = () => api.createSession({ seed, scenario: SCENARIO, players, semiBots: { Japan: SEMI_EXECUTOR, Allies: SEMI_EXECUTOR },
         maxRequests, maxTotalTokens, maxActions: 30000 })
@@ -94,8 +102,8 @@ async function playOne({ seed, arm, profile, maxRequests, maxTotalTokens, saveFi
         strategyCounts[key] = (strategyCounts[key] || 0) + 1
     }
     const resources = endResources(s)
-    return { schemaVersion: 1, kind: "eots-semi-eval-game", arm, seed, scenario: SCENARIO,
-        players: s.options.players, executor: arm === "baseline" ? null : s.options.semiBots.Japan,
+    return { schemaVersion: 1, kind: "eots-semi-eval-game", side, arm, seed, scenario: SCENARIO,
+        players: s.options.players, executor: arm === "baseline" ? null : s.options.semiBots[side === "allies" ? "Allies" : "Japan"],
         status: s.status, error: s.error || lastError, resumed,
         result: s.state.result || null, turn: s.state.turn, actions: s.actions.length,
         end: { termination: end.termination, winner: end.winner, wonText: end.won_text, natural: end.natural, earlyTreatyDefeat: end.earlyTreatyDefeat },
@@ -103,7 +111,7 @@ async function playOne({ seed, arm, profile, maxRequests, maxTotalTokens, saveFi
         powHeld: (s.state.capture || []).filter(h => { const bits = (s.state.supply_cache || [])[h]; return bits && (bits & (1 << 24)) && !(bits & (1 << 23)) }).length,
         resources, nations: facts.map(n => ({ key: n.key, surrenderedTurn: n.surrenderedTurn,
             remainingKeyCount: n.remainingKeys.length, allJapanControlled: n.allJapanControlled })),
-        llm: arm === "baseline" ? null : { profile, requests: s.stats.requests, retries: s.stats.retries,
+        llm: arm === "baseline" ? null : { profile, side, requests: s.stats.requests, retries: s.stats.retries,
             failedRequests: s.stats.failedRequests, invalidResponses: s.stats.invalidResponses,
             promptTokens: s.stats.promptTokens, completionTokens: s.stats.completionTokens, totalTokens: s.stats.totalTokens,
             strategyDecisions: (s.strategyLog || []).length, sourceLlm: (s.strategyLog || []).filter(x => x.source === "llm").length,
@@ -120,7 +128,7 @@ async function runWorker(o) {
     for (const seed of seeds) {
         if (file.has(seed)) { process.stderr.write(`skip ${seed}\n`); continue }
         const saveFile = path.join(ROOT, "llm-private", "semi-eval", `${o.arm}-${o.profile || "baseline"}-${seed}.save.json`)
-        const record = await playOne({ seed, arm: o.arm, profile: o.profile,
+        const record = await playOne({ seed, side: o.side || "japan", arm: o.arm, profile: o.profile,
             maxRequests: Number(o["max-requests"] || 400), maxTotalTokens: Number(o["max-tokens"] || 8000000), saveFile,
             resumeLimit: Number(o["resume-limit"] || 3), resumeDelayMs: Number(o["resume-delay-ms"] || 0) })
         appendJsonl(out, record)
@@ -158,16 +166,16 @@ async function main() {
     const o = args(process.argv.slice(2))
     if (o.worker) return runWorker(o)
     const games = Number(o.games || 10), baseSeed = Number(o["base-seed"] || 20262701), workers = Number(o.workers || 1)
-    const arm = o.arm || "semi", profile = o.profile || "deepseek"
-    const out = path.resolve(o.out || path.join(ROOT, "tests", "results", `semi-eval-${arm}-${profile}.jsonl`))
+    const arm = o.arm || "semi", profile = o.profile || "deepseek", side = o.side || "japan"
+    const out = path.resolve(o.out || path.join(ROOT, "tests", "results", `semi-eval-${side === "allies" ? "ap" : "jp"}42-${arm}-${profile}.jsonl`))
     const seeds = Array.from({ length: games }, (_, i) => baseSeed + i).filter(seed => !doneSeeds(out).has(seed))
     if (!seeds.length) { console.log(JSON.stringify({ summary: summarize(out) }, null, 2)); return }
-    if (workers <= 1) { await runWorker({ ...o, arm, profile, out, seeds: seeds.join(",") }) }
+    if (workers <= 1) { await runWorker({ ...o, side, arm, profile, out, seeds: seeds.join(",") }) }
     else {
         const buckets = Array.from({ length: workers }, () => [])
         seeds.forEach((seed, i) => buckets[i % workers].push(seed))
         await Promise.all(buckets.filter(b => b.length).map(bucket => new Promise((resolve, reject) => {
-            const child = spawn(process.execPath, [__filename, "--worker", "--arm", arm, "--profile", profile,
+            const child = spawn(process.execPath, [__filename, "--worker", "--side", side, "--arm", arm, "--profile", profile,
                 "--seeds", bucket.join(","), "--out", out, "--max-requests", String(o["max-requests"] || 400), "--max-tokens", String(o["max-tokens"] || 8000000),
                 "--resume-limit", String(o["resume-limit"] || 3), "--resume-delay-ms", String(o["resume-delay-ms"] || 0)],
                 { stdio: ["ignore", "ignore", "inherit"], env: process.env })

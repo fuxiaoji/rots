@@ -1,7 +1,7 @@
 "use strict"
 const fs = require("node:fs"), path = require("node:path")
 const { hash } = require("./observation"), { assessment } = require("./memory")
-const ROOT = path.resolve(__dirname, "../../.."), VERSION = "eots-llm-v7.5"
+const ROOT = path.resolve(__dirname, "../../.."), VERSION = "eots-llm-v7.8"
 const CHAPTERS = { cards: "05-strategy-cards.md", supply: "06-zoi-supply-activation-control.md", offensive: "07-offensives.md", movement: "08-movement-stacking.md",
     combat: "09-combat.md", reinforcement: "10-reinforcements-asp.md", replacements: "11-replacements.md", victory: "16-campaign-victory.md" }
 function rulesContext(o) {
@@ -37,7 +37,7 @@ function rulesContext(o) {
 }
 function messagesFor(packet, memory, decisionId, repair, imageUrl) {
     const sources = rulesContext(packet.observation), o = packet.observation
-    const referenced = new Set(o.units.map(u => u.id))
+    const referenced = new Set([...o.units.map(u => u.id), ...(o.selectedUnits || []), ...(o.activeUnits || [])])
     for (const c of packet.candidates) if (c.effect?.unitId !== undefined) referenced.add(c.effect.unitId)
     for (const t of memory?.offensive?.tasks || []) for (const id of [...(t.ground || []), ...(t.escort || []), ...(t.support || [])]) referenced.add(id)
     const offboard = o.ownUnitDefinitions.filter(u => referenced.has(u.id) && !o.units.some(on => on.id === u.id))
@@ -100,6 +100,7 @@ campaignContract是本次实验目标，scenario.nations是程序当前国家状
 规则资料解释游戏，软件候选限定当前能执行的操作；资料与实现冲突要报告，不能自行改裁定。每次只选择当前candidateId，不能提交任意动作、路径或__ai。
 首先核对currentDecision：真实窗口、当前牌及ops/event模式、HQ、激活预算、已移动/激活单位和ownASPRemaining。当前事实高于旧notes和日志中的旧卡牌。单位ID不是历史番号；engineHex不是印刷mapId。oc/ec是情报检定阈值；ops是OV、eventLogistic是LV，不能混用。
 所有单位能力字段均有意义：HQ的cr/cm、军种service、reduced/rcf、地面占领能力、航空/航母br/ebr与parenthetical。cardPreviews是己方卡/HQ的合法预算和激活集合；eligible=false可能是事件钩子无法精确预览，不可猜完整事件效果。牌名和代码元数据不等于完整牌文。
+supplied=null表示没有精确补给证据；快速缓存的负值不证明断补。outOfSupplyMarker仅是当前公开断补标记，未标记不证明完整补给线。supplyBasis中的HQ/已激活豁免也不证明实际LOC；激活和移动资格按精确预览与当前合法候选，不能凭unknown删掉部队。
 cf是满军力火力，rcf是损军力火力，currentCF才是当前军力面的火力（尚未算延程/资格修正）。aspCost是满军力基础ASP，aspr是损军力基础ASP，currentBaseASP按当前军力面给出；军/集团军减损后可能只需1ASP，不能固定用满军力2ASP。基础值不包含建制运输、驳船或事件免费运输，真实编组费用/限制按当前查询和候选。current字段与程序事实高于旧notes。
 units与ownUnitDefinitions是按unitColumns排列的行，所有在场单位能力保留；hexes按hexColumns排列。读取列名再读取数值，不把列顺序猜成编号、火力或地点。
 战役模式cardPreviews按cardPreviewColumns排列；unitSetIndex指向cardPreviewUnitSets中的完整可启动单位ID列表，不能把索引当单位ID。几何表只保留目标/单位相关距离，缺项不等于不可达。
@@ -107,6 +108,10 @@ units与ownUnitDefinitions是按unitColumns排列的行，所有在场单位能�
 以地面夺占、护航/ASP、格外空海支援、补给/HQ/前沿基地形成攻势链。没有立即可夺目标时可以先合法集中或前推，为下一张牌准备。不要只选最强舰，也不要为了填满预算激活无用途单位。反应和PBM只能在各自候选内安排。
 taskFacts是绑定本次决策的公开查询事实，不替你选目标。夺占先比较真实地面CF与defenders（含城市守军），分别考虑无增援及同一敌HQ预算内的可能增援；海空CF不能替代地面夺占能力，currentCounterCF是实际减损后的棋子CF，不证明航程、攻击资格或已参战。groundRoute/amphibiousRoute仅为条件路径，仍检查激活/已移动/总预算/共同ASP；checked=false或缺少预览不能视为非法，checked=true且pathToTarget=null表示本次条件下未查到该目标路径。航空range只证明航程，舰船原地支援未查，必须按实际候选分配。反应baseline排除未知敌牌干预，不是真实完整概率界，也不能相加不同HQ的反应峰值。
 选本次任务前检查landCaptureCoverage与四国尚缺关键格；其他国家若有可达陆进机会，决定执行或说明推迟理由。东印度允许先集中/前推，下一张实际牌重新核查HQ、ASP、同港护航和路径。
+选牌/模式/HQ窗的conditionalLandReachability逐己方卡/HQ给单兵条件陆进端点，不评分或替你选牌。reachableEnemyOccupiedHexes可以是必须先清除的敌占阻挡；不能想象穿过敌地面单位直达后方关键格。coverage=partial/unknown、缺行都不证明无路；complete空行仅表示没有本次立即陆进端点，该牌仍可能用于集结、前推或两栖。单兵有路不证明地面战足够、组合预算可行或夺占成功。
+该表checkedTargetHexes含国家尚缺格和你的任务格，reachableTargetHexes不是全都国家关键格。若精确card/mode/HQ行checked且coverage=complete，单位确在该eligible激活预览且目标在本表检查集合内，缺少单位→目标链接就是本次单兵陆进无路，不能继续称“未确认”；只否定这次直接陆进，不否定其他方式或先集中。partial/unknown才保留未知。
+planConsistency只核对同一offensive计划中的公开守军和OC主动宣布战斗格上限（PDF17§7.24）。若多个有地面守军/HQ任务都要在本次OC攻击，将涉及多个主动战斗格；请明确本次执行、备选或后续攻势，不把有守军格的进入称无战斗前推。独立可达不证明各任务同时可行。摘要是条件提醒，不自动判计划非法；特殊反应可能产生额外战斗，不能理解成OC全程最多一场。事件限制未知，不假定等同OC。
+每次选牌重新检查已投降国家的当前控制与失地。撤走关键格驻军前明确决定如何防守或接受风险，投降标记不等于仍控制。两栖任务在提交移动前核对同港护航、真实支援和一个敌HQ预算内的可能反应；已开始敌方反应时只能执行当前窗口候选，不能假设可以自由撤销此前攻势。
 候选effect明确说明激活、取消、选择、移动或结束窗口。done在移动窗会让未移动单位留原地，不是结束激活。需要进攻时，应逐步选择单位→选择移动方式→选真实move路径→依法声明/分配战斗；不把仅激活当作已经发动攻势。advance是程序协助，它不保证采用你的任务计划，应优先直接可控制的候选。
 state是操作窗口，window/stage区分进攻、反应或PBM；PBM结束后不能再说准备进入本次战斗。当前没有move候选不表示无法移动：若有unit选择候选，应先选编组，再查看方式与路径。只有实际查询无路才能判定该选择无法移动。激活预算只约束激活，不能用它作为结束移动的理由。
 advanced_move只是展开更多移动方式，不是程序代替你移动。默认方式即使有其他move落点，也可能不显示任务的两栖/陆进目标；先展开，再选amphibious/ground_move等当前合法方式，重新查看目标路径。taskFacts条件路径若有目标而默认表无目标，先检查方式，不应立即换目标。currentDecision.moveMode是当前方式掩码；ownMovementRecordUnitIds含选中时登记的起点路径，movedUnitIds只表示本攻势保留路径中的实际位移，跨阶段保留、不表示当前窗口已完成或禁止PBM，仍以当前候选为准。登记不等于移动或参战。地面单位不能从邻接格参加目标地面战，必须合法进入战斗格；航空/航母格外支援另按航程与实际分配。
