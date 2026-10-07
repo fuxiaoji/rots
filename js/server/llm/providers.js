@@ -85,15 +85,16 @@ function getProfile(id, env = process.env) {
     const preset = PRESETS[id]
     const prefix = id === "custom" ? "EOTS_LLM_" : `EOTS_LLM_${id.toUpperCase().replace(/-/g, "_")}_`
     const field = name => env[prefix + name]
+    const provider = field("PROVIDER") || preset.provider, extended = provider === "deepseek"
     const profile = {
         id,
-        provider: field("PROVIDER") || preset.provider,
+        provider,
         baseUrl: field("BASE_URL") || preset.baseUrl,
         model: field("MODEL") || preset.model,
         apiKey: field("API_KEY") !== undefined ? field("API_KEY") : preset.keys.map(key => env[key]).find(value => value !== undefined) || "",
         vision: bool(field("VISION"), preset.vision),
-        timeoutMs: integer(field("TIMEOUT_MS") || env.EOTS_LLM_TIMEOUT_MS, 30000, 1, 300000),
-        maxTokens: integer(field("MAX_TOKENS") || env.EOTS_LLM_MAX_TOKENS, 4096, 1, 32768),
+        timeoutMs: integer(field("TIMEOUT_MS") || env.EOTS_LLM_TIMEOUT_MS, 30000, 1, extended ? 600000 : 300000),
+        maxTokens: integer(field("MAX_TOKENS") || env.EOTS_LLM_MAX_TOKENS, 4096, 1, extended ? 65536 : 32768),
         extraBody: extraBody(field("EXTRA_BODY"), preset.extraBody),
     }
     // JSON mode is opt-in and requires an explicit capability acknowledgement
@@ -162,8 +163,11 @@ function usageSummary(usage) {
 function createClient(profile, { fetchImpl = fetch } = {}) {
     if (!profile || typeof profile.apiKey !== "string" || !profile.apiKey.trim() || /[^\x21-\x7e]/.test(profile.apiKey) || typeof profile.model !== "string" || !profile.model.trim()) throw fail("EOTS_LLM_NOT_CONFIGURED")
     const url = endpoint(profile.baseUrl)
-    const timeoutMs = integer(profile.timeoutMs, 30000, 1, 300000)
-    const maxTokens = integer(profile.maxTokens, 4096, 1, 32768)
+    // DeepSeek supports >=64K generation (official API, checked 2026-10-07).
+    // Keep application caps bounded and other providers at their reviewed caps.
+    const extended = profile.provider === "deepseek"
+    const timeoutMs = integer(profile.timeoutMs, 30000, 1, extended ? 600000 : 300000)
+    const maxTokens = integer(profile.maxTokens, 4096, 1, extended ? 65536 : 32768)
     const extra = extraBody(profile.extraBody, {})
     return {
         async complete(messages) {

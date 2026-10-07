@@ -1,7 +1,7 @@
 "use strict"
 const fs = require("node:fs"), path = require("node:path")
 const { hash } = require("./observation"), { assessment } = require("./memory")
-const ROOT = path.resolve(__dirname, "../../.."), VERSION = "eots-llm-v7.6"
+const ROOT = path.resolve(__dirname, "../../.."), VERSION = "eots-llm-v7.7"
 const CHAPTERS = { cards: "05-strategy-cards.md", supply: "06-zoi-supply-activation-control.md", offensive: "07-offensives.md", movement: "08-movement-stacking.md",
     combat: "09-combat.md", reinforcement: "10-reinforcements-asp.md", replacements: "11-replacements.md", victory: "16-campaign-victory.md" }
 function rulesContext(o) {
@@ -109,6 +109,8 @@ units与ownUnitDefinitions是按unitColumns排列的行，所有在场单位能�
 taskFacts是绑定本次决策的公开查询事实，不替你选目标。夺占先比较真实地面CF与defenders（含城市守军），分别考虑无增援及同一敌HQ预算内的可能增援；海空CF不能替代地面夺占能力，currentCounterCF是实际减损后的棋子CF，不证明航程、攻击资格或已参战。groundRoute/amphibiousRoute仅为条件路径，仍检查激活/已移动/总预算/共同ASP；checked=false或缺少预览不能视为非法，checked=true且pathToTarget=null表示本次条件下未查到该目标路径。航空range只证明航程，舰船原地支援未查，必须按实际候选分配。反应baseline排除未知敌牌干预，不是真实完整概率界，也不能相加不同HQ的反应峰值。
 选本次任务前检查landCaptureCoverage与四国尚缺关键格；其他国家若有可达陆进机会，决定执行或说明推迟理由。东印度允许先集中/前推，下一张实际牌重新核查HQ、ASP、同港护航和路径。
 选牌/模式/HQ窗的conditionalLandReachability逐己方卡/HQ给单兵条件陆进端点，不评分或替你选牌。reachableEnemyOccupiedHexes可以是必须先清除的敌占阻挡；不能想象穿过敌地面单位直达后方关键格。coverage=partial/unknown、缺行都不证明无路；complete空行仅表示没有本次立即陆进端点，该牌仍可能用于集结、前推或两栖。单兵有路不证明地面战足够、组合预算可行或夺占成功。
+该表checkedTargetHexes含国家尚缺格和你的任务格，reachableTargetHexes不是全都国家关键格。若精确card/mode/HQ行checked且coverage=complete，单位确在该eligible激活预览且目标在本表检查集合内，缺少单位→目标链接就是本次单兵陆进无路，不能继续称“未确认”；只否定这次直接陆进，不否定其他方式或先集中。partial/unknown才保留未知。
+planConsistency只核对同一offensive计划中的公开守军和OC主动宣布战斗格上限（PDF17§7.24）。若多个有地面守军/HQ任务都要在本次OC攻击，将涉及多个主动战斗格；请明确本次执行、备选或后续攻势，不把有守军格的进入称无战斗前推。独立可达不证明各任务同时可行。摘要是条件提醒，不自动判计划非法；特殊反应可能产生额外战斗，不能理解成OC全程最多一场。事件限制未知，不假定等同OC。
 每次选牌重新检查已投降国家的当前控制与失地。撤走关键格驻军前明确决定如何防守或接受风险，投降标记不等于仍控制。两栖任务在提交移动前核对同港护航、真实支援和一个敌HQ预算内的可能反应；已开始敌方反应时只能执行当前窗口候选，不能假设可以自由撤销此前攻势。
 候选effect明确说明激活、取消、选择、移动或结束窗口。done在移动窗会让未移动单位留原地，不是结束激活。需要进攻时，应逐步选择单位→选择移动方式→选真实move路径→依法声明/分配战斗；不把仅激活当作已经发动攻势。advance是程序协助，它不保证采用你的任务计划，应优先直接可控制的候选。
 state是操作窗口，window/stage区分进攻、反应或PBM；PBM结束后不能再说准备进入本次战斗。当前没有move候选不表示无法移动：若有unit选择候选，应先选编组，再查看方式与路径。只有实际查询无路才能判定该选择无法移动。激活预算只约束激活，不能用它作为结束移动的理由。

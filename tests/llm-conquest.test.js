@@ -41,7 +41,7 @@ test("pre-card land endpoints expose public blockers, remain pure/private-indepe
  const before=hash(s.state),o=observe(s.rules,s.state,"Japan",s.revision).observation,f=o.taskFacts.conditionalLandReachability
  assert.equal(hash(s.state),before);assert(f&&f.queries>0&&f.queries<=128)
  const row=f.rows.find(r=>r.cardId===101&&r.mode==="ops"&&r.hqId===7),u=row.units.find(u=>u.id===35)
- assert(row.checked);assert(u.reachableEnemyOccupiedHexes.includes(327));assert(!u.reachableNationalKeys.some(h=>[298,325,354,382].includes(h)))
+ assert(row.checked);assert(u.reachableEnemyOccupiedHexes.includes(327));assert(!u.reachableTargetHexes.some(h=>[298,325,354,382].includes(h)))
  const hidden=JSON.parse(JSON.stringify(s.state));hidden.hand[1]=[1,2,3];hidden.future_offensive[1]=19;hidden.seed=54321;hidden.draw[1]=[4,5,6]
  assert.deepEqual(observe(s.rules,hidden,"Japan",s.revision).observation.taskFacts.conditionalLandReachability,f)
  const {taskFacts}=require("../js/server/llm/observation"),copy=JSON.parse(JSON.stringify(o)),preview=copy.cardPreviews.find(p=>p.cardId===101&&p.cardMode==="ops"&&p.hqId===7)
@@ -90,6 +90,11 @@ test("task facts bind public defenders, conditional routes and separate HQ react
  const before=hash(session.state),o=observe(session.rules,session.state,"Japan",15,{memory}).observation
  assert.equal(hash(session.state),before)
  assert.deepEqual(o.taskFacts.binding,{revision:15,cardId:100,mode:"ops",hqId:7})
+ assert.equal(o.taskFacts.planConsistency.contextStatus,"proposed");assert.equal(o.taskFacts.planConsistency.playerDeclarationLimit,null)
+ const planMemory={offensive:{...memory.offensive,cardId:100,mode:"ops",hqId:7}}
+ const consistency=observe(session.rules,session.state,"Japan",15,{memory:planMemory}).observation.taskFacts.planConsistency
+ assert.equal(consistency.contextStatus,"active");assert.equal(consistency.playerDeclarationLimit,1);assert(consistency.ifAllAttemptedThisOffensive.multipleDefendedTargets)
+ assert(consistency.targets.some(t=>t.targetHex===304&&t.hasDefendingGround))
  const kuantan=o.taskFacts.planned[0]
  assert.deepEqual(kuantan.groups[0].groundRoute.pathToTarget,[4,4,274,304]);assert(!Object.hasOwn(kuantan.groups[0].groundRoute,"aspCost"))
  assert.equal(o.taskFacts.defenders.find(d=>d.hex===304).ground.cf,9)

@@ -141,17 +141,28 @@ function taskFacts(rules, state, o, memory) {
                     ++queries
                     const r = ask("queryGroupMovementDestinations", [[id], { faction: side, cardId: p.cardId, cardMode: p.cardMode, hqId: p.hqId, move_type: 4 }])
                     if (!r || r.reason === "no-playable-card") { row.coverage = "partial"; row.reason = "query-unavailable"; partial = true; continue }
-                    const reachableNationalKeys = targets.filter(hex => r.paths?.[hex])
+                    const reachableTargetHexes = targets.filter(hex => r.paths?.[hex])
                     const reachableEnemyOccupiedHexes = enemyHexes.filter(hex => r.paths?.[hex])
-                    if (reachableNationalKeys.length || reachableEnemyOccupiedHexes.length) row.units.push({ id, reachableNationalKeys, reachableEnemyOccupiedHexes })
+                    if (reachableTargetHexes.length || reachableEnemyOccupiedHexes.length) row.units.push({ id, reachableTargetHexes, reachableEnemyOccupiedHexes })
                 }
             }
             rows.push(row)
         }
-        conditionalLandReachability = { rows, queries, maxQueries, coverage: partial ? "partial" : "complete",
+        conditionalLandReachability = { rows, checkedTargetHexes: targets, checkedEnemyOccupiedHexes: enemyHexes, queries, maxQueries, coverage: partial ? "partial" : "complete",
             basis: "single own eligible ground unit, exact own card/mode/HQ, land mode 4; endpoints only, no ranking; empty complete row excludes immediate land endpoints only, not staging or amphibious value" }
     }
-    return { binding: { revision: d.revision, cardId: card?.id || null, mode: card?.selectedMode || null, hqId: d.ownHQ || null }, defenders, planned, landCaptureCoverage, conditionalLandReachability,
+    const plan = memory?.offensive
+    const planTargets = tasks.map(t => ({ targetHex: t.targetHex,
+        hasDefendingGround: !!defenders.find(x => x.hex === t.targetHex)?.ground?.lfs?.length,
+        hasEnemyHQ: o.units.some(u => u.location === t.targetHex && u.faction === 1 - side && u.class === "hq") }))
+    const defendedTargets = [...new Set(planTargets.filter(t => t.hasDefendingGround || t.hasEnemyHQ).map(t => t.targetHex))]
+    const planConsistency = !plan ? null : { contextStatus: card && (plan.cardId != null && plan.cardId !== card.id || plan.mode != null && card.selectedMode != null && plan.mode !== card.selectedMode) ? "stale"
+        : ctx && plan.cardId === ctx.cardId && plan.mode === ctx.cardMode && plan.hqId === ctx.hqId ? "active" : "proposed",
+        cardId: plan.cardId ?? null, mode: plan.mode ?? null, hqId: plan.hqId ?? null,
+        playerDeclarationLimit: plan.mode === "ops" ? 1 : null, targets: planTargets,
+        ifAllAttemptedThisOffensive: { multipleDefendedTargets: plan.mode === "ops" && defendedTargets.length > 1, defendedTargets },
+        basis: "PDF17 section7.24: OC player may actively declare one battle hex; special reactions may add battles. Conditional conflict only if all these offensive tasks attack this offensive; alternatives/future tasks are not inferred from prose. Event limits unknown." }
+    return { binding: { revision: d.revision, cardId: card?.id || null, mode: card?.selectedMode || null, hqId: d.ownHQ || null }, defenders, planned, landCaptureCoverage, conditionalLandReachability, planConsistency,
         limits: "Public facts, not a strategy or victory prediction. Routes are current-card projections, not execution authorization; activation, already moved, shared ASP and whole-plan budget still require current candidates. Air range is not a commitment; original-position naval support is unqueried. Reaction alternatives share one HQ budget; baseline excludes unknown enemy-card intervention. Single-unit land coverage does not check amphibious groups." }
 }
 function observe(rules, state, role, revision, { directOnly = false, memory = null } = {}) {
