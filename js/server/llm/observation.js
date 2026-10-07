@@ -34,6 +34,8 @@ function visible(rules, state, role) {
         log: (view.log || []).slice(-24).filter(x => typeof x === "string" && !x.startsWith("[ERASMUS]")) }
     const p = publicData.planning || {}, hexes = new Map(observation.hexes.map(h => [h.hex, h])), supplies = new Map((p.ownSupply || []).map(s => [s.id, s.supplied]))
     observation.units = observation.units.map(u => ({ ...u, locationMapId: hexes.get(u.location)?.id || null, locationName: hexes.get(u.location)?.name || null,
+        currentCF: u.reduced ? u.rcf : u.cf,
+        currentBaseASP: u.class === "ground" && u.asp ? u.reduced ? u.aspr : u.aspCost : null,
         ...(u.faction === side ? { supplied: supplies.get(u.id) ?? null } : {}) }))
     observation.ownUnitDefinitions = clone(p.ownUnitDefinitions || [])
     observation.ownASP = side >= 0 ? clone(view.asp?.[side] ?? null) : null
@@ -53,6 +55,15 @@ function visible(rules, state, role) {
         ...pick(p.offensive, ["attacker", "cardId", "ownReactionCardId", "stage", "ownHQ", "logistic", "intelligence", "navalMoveDistance", "groundMoveDistance", "airMoveDistance", "movedUnitIds", "battleHexes"]),
         offensiveScope: { turn: observation.turn, basis: "public-play-epoch; conservative revalidation, not stable engine offensive ID",
             instance: `${observation.turn}:${p.offensive?.attacker || "none"}:${cardId || "between"}:${p.currentCardMode || "unselected"}:${plays}:${observation.state === "offensive_segment_card_action" ? "pending" : "played"}` } }
+    // Selecting a unit registers an origin-only path. That is not movement.
+    const ownMovementRecords = []
+    for (let i = 0; i < (view.offensive?.paths || []).length; i += 2) {
+        const id = view.offensive.paths[i], path = view.offensive.paths[i + 1]
+        if (observation.units.some(u => u.id === id && u.faction === side) && Array.isArray(path)) ownMovementRecords.push({ id, moved: path.length > 3 })
+    }
+    observation.currentDecision.ownMovementRecordUnitIds = ownMovementRecords.map(r => r.id)
+    observation.currentDecision.movedUnitIds = ownMovementRecords.filter(r => r.moved).map(r => r.id)
+    observation.currentDecision.moveMode = /move|movement/.test(observation.state || "") && Number.isSafeInteger(view.move_type) ? view.move_type : null
     return { view, observation }
 }
 // Facts for the model's own plans; never select a target, formation or action.
@@ -93,7 +104,7 @@ function taskFacts(rules, state, o, memory) {
         return { targetHex: t.targetHex, invalidIds, groups, airRange: air,
             unassignedEscortIds: (t.escort || []).filter(id => own.has(id) && !origins.includes(own.get(id).location)),
             groundArithmetic: { assumption: "all listed own ground can legally fight; no reaction or support included; not feasibility or capture probability", plannedCF: groundCF, hitsByMultiplier: [0.5, 1, 1.5, 2].map(m => [m, Math.ceil(groundCF * m)]), defenderLFs: defenders.find(d => d.hex === t.targetHex)?.ground?.lfs || [] },
-            currentCounterCF: ids.filter(id => own.has(id)).map(id => ({ id, class: own.get(id).class, cf: own.get(id).reduced ? own.get(id).rcf : own.get(id).cf, parenthetical: own.get(id).parenthetical, atTarget: own.get(id).location === t.targetHex, activated: o.activeUnits.includes(id), moved: d.movedUnitIds.includes(id) })),
+            currentCounterCF: ids.filter(id => own.has(id)).map(id => ({ id, class: own.get(id).class, cf: own.get(id).currentCF, baseASP: own.get(id).currentBaseASP, parenthetical: own.get(id).parenthetical, atTarget: own.get(id).location === t.targetHex, activated: o.activeUnits.includes(id), moved: d.movedUnitIds.includes(id) })),
             unqueriedNavalSupportIds: (t.support || []).filter(id => own.get(id)?.class === "naval"),
             publicReaction: reaction ? { groundOverland: reaction.groundOverland || [], hqOptions: (reaction.hqOptions || []).map(h => ({ hq: h.hq, budget: h.budget, unitIds: h.units.filter(id => reacting.has(id)) })) } : null,
             publicReactionBaseline: ctx ? { nonAmphibious: ask("queryPublicReactionChance", [t.targetHex, { ...ctx, amphibious: false }]), amphibious: ask("queryPublicReactionChance", [t.targetHex, { ...ctx, amphibious: true }]), basis: "two conditional movement assumptions; actual movement is not inferred from the plan" } : null }
@@ -147,6 +158,9 @@ function observe(rules, state, role, revision, { directOnly = false, memory = nu
                     ...(action === "action_hex" ? { targetHex: arg, mapId: hexes.get(arg)?.id || null, state: observation.state } : {}) })
         } else if (options === 1 || options === true) {
             const label = action === "advance" ? "advance — 程序选择编队和合法落点（协助，不代表模型计划会执行）"
+                : action === "advanced_move" ? "advanced_move — 展开全部移动方式；默认落点缺目标时，先展开再查两栖/陆进等方式"
+                : action === "amphibious" ? "amphibious — 选择两栖方式并重新显示合法落点"
+                : action === "ground_move" ? "ground_move — 选择陆进方式并重新显示合法落点"
                 : action === "done" && observation.state === "activate_units" ? "done — 结束激活，保留当前单位；接下来才移动"
                 : action === "done" && observation.state === "move_offensive_units" ? "done — 结束移动；未移动单位留在原地，不是结束激活"
                 : action

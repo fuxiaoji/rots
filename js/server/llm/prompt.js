@@ -1,7 +1,7 @@
 "use strict"
 const fs = require("node:fs"), path = require("node:path")
 const { hash } = require("./observation"), { assessment } = require("./memory")
-const ROOT = path.resolve(__dirname, "../../.."), VERSION = "eots-llm-v7.3"
+const ROOT = path.resolve(__dirname, "../../.."), VERSION = "eots-llm-v7.5"
 const CHAPTERS = { cards: "05-strategy-cards.md", supply: "06-zoi-supply-activation-control.md", offensive: "07-offensives.md", movement: "08-movement-stacking.md",
     combat: "09-combat.md", reinforcement: "10-reinforcements-asp.md", replacements: "11-replacements.md", victory: "16-campaign-victory.md" }
 function rulesContext(o) {
@@ -74,7 +74,9 @@ function messagesFor(packet, memory, decisionId, repair, imageUrl) {
     const decisionGuide = { currentState: o.state, currentWindow: o.window,
         phaseMeaning: o.window === "pbm" ? "战后移动；本次战斗已过去，结束PBM不能再开始本次战斗" : o.window === "reaction" ? "反应窗口；只安排当前反应候选" : o.state,
         activationBudget: o.activation || "当前不是激活窗；旧激活名额不能作为结束移动的理由",
-        movementStep: !movement ? null : packet.candidates.some(c => c.action === "move") ? "已有真实路径；选择move落点或明确主动停止的理由"
+        movementStep: !movement ? null : packet.candidates.some(c => c.action === "advanced_move") ? "当前只显示默认方式及默认落点；目标缺失时先advanced_move展开方式，再选amphibious/ground_move等重新查看落点，不应据默认表宣布不可达"
+            : packet.candidates.some(c => ["amphibious", "ground_move", "strat_move", "extended_air"].includes(c.action)) ? "当前可切换移动方式；按任务选择方式再查目标落点，当前move只覆盖当前方式"
+            : packet.candidates.some(c => c.action === "move") ? "当前方式已有真实路径；选择任务落点或明确主动停止的理由"
             : o.selectedMovementUnits.length ? "已选编组；查看当前移动方式候选，再查询落点；无move候选尚不能断定无路"
             : "尚未选择编组；unit候选用于选择待移动单位，随后才会出现移动方式/路径",
         finishMeaning: movement ? "done结束当前移动窗口；它不会自动前推单位。计划要求前推时先执行选择/移动，或明确把本次计划改为停止。" : null }
@@ -89,13 +91,16 @@ function messagesFor(packet, memory, decisionId, repair, imageUrl) {
         recent: (memory?.recent || []).slice(-8).map(r => ({ ...r, effect: r.effect ? Object.fromEntries(["kind", "unitId", "targetHex"].filter(k => r.effect[k] !== undefined).map(k => [k, r.effect[k]])) : null })) }
     const payload = { rules: deliveredSources, observation: compact,
         memory: inputMemory,
-        programMemory, memoryAssessment: assessment(memory, o), campaignContract: contract, decisionGuide, candidates: packet.candidates.map(c => ({ ...c, effect: c.effect ? Object.fromEntries(Object.entries(c.effect).filter(([k]) => k !== "unit")) : null })) }
+        programMemory, memoryAssessment: assessment(memory, o), campaignContract: contract, decisionGuide,
+        outputGuide: { patchOnly: true, unchangedMemory: {}, memoryKeys: ["objective", "notes", "campaign", "turnPlan", "offensive"], turnPlanKeys: ["objectives", "constraints"], offensiveKeys: ["objective", "cardId", "mode", "hqId", "tasks", "stopOrReplan"], taskKeys: ["targetHex", "intent", "ground", "escort", "support", "stage", "nextStep"], instruction: "只输出本步需要改变的记忆字段；已有正确计划无需重写。方式选择等微步骤可以memory:{}；改变目标/部署/阶段时更新对应任务。stopOrReplan属于offensive，notes属于memory，不属于单个task；禁止constraints_note等未列字段。" },
+        candidates: packet.candidates.map(c => ({ ...c, effect: c.effect ? Object.fromEntries(Object.entries(c.effect).filter(([k]) => k !== "unit")) : null })) }
     const system = `你是《太阳帝国》的 ${o.role} 指挥者。按当前剧本的胜利条件进行连续决策。
 campaignContract是本次实验目标，scenario.nations是程序当前国家状态。它们高于你过去写的目标。日本1942重点是四国正式投降，不把压制据点或资源点数量当全部国家投降。不要为无关消耗战提前结束长期征服；有机会先完成尚缺关键格并守住。
 计划notes只保存意图、经验与未证假设，不保存易变的地点/激活计数/预算；这些事实每步从observation和程序recent读取。所有程序投降状态、单位位置、当前牌与预算均高于旧文字。
 规则资料解释游戏，软件候选限定当前能执行的操作；资料与实现冲突要报告，不能自行改裁定。每次只选择当前candidateId，不能提交任意动作、路径或__ai。
 首先核对currentDecision：真实窗口、当前牌及ops/event模式、HQ、激活预算、已移动/激活单位和ownASPRemaining。当前事实高于旧notes和日志中的旧卡牌。单位ID不是历史番号；engineHex不是印刷mapId。oc/ec是情报检定阈值；ops是OV、eventLogistic是LV，不能混用。
 所有单位能力字段均有意义：HQ的cr/cm、军种service、reduced/rcf、地面占领能力、航空/航母br/ebr与parenthetical。cardPreviews是己方卡/HQ的合法预算和激活集合；eligible=false可能是事件钩子无法精确预览，不可猜完整事件效果。牌名和代码元数据不等于完整牌文。
+cf是满军力火力，rcf是损军力火力，currentCF才是当前军力面的火力（尚未算延程/资格修正）。aspCost是满军力基础ASP，aspr是损军力基础ASP，currentBaseASP按当前军力面给出；军/集团军减损后可能只需1ASP，不能固定用满军力2ASP。基础值不包含建制运输、驳船或事件免费运输，真实编组费用/限制按当前查询和候选。current字段与程序事实高于旧notes。
 units与ownUnitDefinitions是按unitColumns排列的行，所有在场单位能力保留；hexes按hexColumns排列。读取列名再读取数值，不把列顺序猜成编号、火力或地点。
 战役模式cardPreviews按cardPreviewColumns排列；unitSetIndex指向cardPreviewUnitSets中的完整可启动单位ID列表，不能把索引当单位ID。几何表只保留目标/单位相关距离，缺项不等于不可达。
 在同一次决策里维持三个层级：campaign说明当前剧本胜利路径和最多4个有序地点；turnPlan给本回合最多4目标和最多5约束；offensive给具体卡牌/HQ、最多4项地图任务、地面/护航/支援单位ID、下一步及最多4中止重评条件。计划引用要来自当前观察；ID合法不代表可执行、足够或已经完成。memory只含你可更新的字段；programMemory是只读程序元数据与历史，绝不能把它合入回答。
@@ -104,6 +109,7 @@ taskFacts是绑定本次决策的公开查询事实，不替你选目标。夺�
 选本次任务前检查landCaptureCoverage与四国尚缺关键格；其他国家若有可达陆进机会，决定执行或说明推迟理由。东印度允许先集中/前推，下一张实际牌重新核查HQ、ASP、同港护航和路径。
 候选effect明确说明激活、取消、选择、移动或结束窗口。done在移动窗会让未移动单位留原地，不是结束激活。需要进攻时，应逐步选择单位→选择移动方式→选真实move路径→依法声明/分配战斗；不把仅激活当作已经发动攻势。advance是程序协助，它不保证采用你的任务计划，应优先直接可控制的候选。
 state是操作窗口，window/stage区分进攻、反应或PBM；PBM结束后不能再说准备进入本次战斗。当前没有move候选不表示无法移动：若有unit选择候选，应先选编组，再查看方式与路径。只有实际查询无路才能判定该选择无法移动。激活预算只约束激活，不能用它作为结束移动的理由。
+advanced_move只是展开更多移动方式，不是程序代替你移动。默认方式即使有其他move落点，也可能不显示任务的两栖/陆进目标；先展开，再选amphibious/ground_move等当前合法方式，重新查看目标路径。taskFacts条件路径若有目标而默认表无目标，先检查方式，不应立即换目标。currentDecision.moveMode是当前方式掩码；ownMovementRecordUnitIds含选中时登记的起点路径，movedUnitIds只表示本攻势保留路径中的实际位移，跨阶段保留、不表示当前窗口已完成或禁止PBM，仍以当前候选为准。登记不等于移动或参战。地面单位不能从邻接格参加目标地面战，必须合法进入战斗格；航空/航母格外支援另按航程与实际分配。
 选择done时，reason须说明结束的是哪个窗口，以及未移动单位留原地的直接理由（任务已完成、主动停止或保留当前位置）。若计划仍要求前推而动作结束窗口，须更新计划说明本次停止，不得同时声称已经前推。阶段改变后检查并替换过期notes。
 programMemory.recent由程序记录成功执行及执行后事实，不可由你覆盖。参考它避免无新事实的激活—取消循环；只有出现不可达、资源变化、任务完成或敌军公开变化时调整计划。过期turnPlan/offensive应重评，campaign可跨回合保留。模型记忆是声明，不能当当前棋盘事实，也不能把计划中的阶段当已发生。
 只能读取己方可见牌和公开棋盘，不假设敌手牌或未来随机结果；合法动作也不保证战斗成功。选中的部队与已激活部队不同，未声明战斗/未投入地面不应预测必然夺控。

@@ -15,6 +15,8 @@ test("campaign input labels compact source references and keeps every country ke
  assert(o.rules.filter(s=>s.file.includes("normalized/")).every(s=>!s.excerpt&&s.coverage.includes("reference-only")))
  const sent=new Set(o.observation.hexes.map(h=>h[0]));for(const n of p.observation.scenario.nations)for(const h of n.keys)assert(sent.has(h.hex))
  for(const u of p.observation.units)if(p.observation.hexes.some(h=>h.hex===u.location))assert(sent.has(u.location))
+ const reduced=p.observation.units.find(u=>u.id===36);assert(reduced.reduced);assert.equal(reduced.cf,18);assert.equal(reduced.currentCF,9);assert.equal(reduced.aspCost,2);assert.equal(reduced.currentBaseASP,1)
+ assert(o.observation.unitColumns.includes("currentCF"));assert(o.observation.unitColumns.includes("currentBaseASP"));assert.deepEqual(o.outputGuide.unchangedMemory,{})
 })
 test("direct-only candidate table cannot delegate movement to the headless program",()=>{
  const fake={view:()=>({actions:{advance:1,done:1},ai:{state:"move_offensive_units"}}),query:()=>({cards:[],hexes:[]})}
@@ -85,4 +87,24 @@ test("task facts survive exact save restoration with the model's own complete ta
  const before=api.packet(s,"Japan"),restored=api.restoreSession(api.serializeSession(s),{clients:{deepseek:{}}}),after=api.packet(restored,"Japan")
  assert.deepEqual(after.observation.taskFacts,before.observation.taskFacts);assert.deepEqual(restored.memories.Japan,s.memories.Japan)
  assert(api.verifyReplay(api.replay(restored)).verified);assert.equal(restored.stats.requests,3)
+})
+
+test("advanced movement exposes an otherwise missing amphibious target; origin-only records are not movement",async()=>{
+ const api=require("../js/server/llm/session"),s=api.createSession({seed:20262602,scenario,players:{Japan:"llm:deepseek",Allies:"erasmus-campaign"}},{clients:{deepseek:{}}})
+ while(s.state.active==="Allies")await api.step(s,{revision:s.revision})
+ // Synthetic public formation reproduces the actual revision-200 menu issue.
+ s.state.location[28]=479;s.state.location[43]=421
+ const apply=(a,b)=>{const view=s.rules.view(s.state,"Japan");assert(view.actions[a]);if(Array.isArray(view.actions[a]))assert(view.actions[a].includes(b));s.state=s.rules.action(s.state,"Japan",a,b)}
+ for(const[a,b]of[["card",102],["ops",null],["unit",7],["unit",28],["unit",43],["done",null],["unit",28]])apply(a,b)
+ const packet=()=>observe(s.rules,s.state,"Japan",30,{directOnly:true}),before=packet(),location=s.state.location[28]
+ assert(before.candidates.some(c=>c.action==="advanced_move"));assert(!before.candidates.some(c=>c.effect?.targetHex===480));assert.equal(before.observation.currentDecision.moveMode,0)
+ assert(before.observation.currentDecision.ownMovementRecordUnitIds.includes(28));assert(!before.observation.currentDecision.movedUnitIds.includes(28))
+ apply("advanced_move",null);assert.equal(s.state.location[28],location);assert(packet().candidates.some(c=>c.action==="amphibious"))
+ apply("amphibious",null);assert.equal(s.state.location[28],location)
+ const p=packet(),move=p.candidates.find(c=>c.action==="move"&&c.effect.targetHex===480);assert(move);assert.equal(p.observation.currentDecision.moveMode,8)
+ s.state=s.rules.action(s.state,"Japan","move",move.argument);assert.equal(s.state.location[28],480);assert(packet().observation.currentDecision.movedUnitIds.includes(28))
+ apply("unit",43);apply("no_move",null);assert(!packet().observation.currentDecision.movedUnitIds.includes(43))
+ const publicView=s.rules.view(s.state,"Japan"),fake={view:()=>({...publicView,ai:{...publicView.ai,state:"post_battle_movement",windowKind:"pbm"},actions:{unit:[28]},offensive:{...publicView.offensive,paths:[28,[8,2,479,508,480],167,[4,1,305,304]]}}),query:(...args)=>s.rules.query(...args)},pbm=observe(fake,s.state,"Japan",31,{directOnly:true})
+ assert.deepEqual(pbm.observation.currentDecision.movedUnitIds,[28]);assert(pbm.candidates.some(c=>c.action==="unit"&&c.argument===28))
+ assert(messagesFor(pbm,null,"pbm").messages[0].content.includes("禁止PBM"))
 })
