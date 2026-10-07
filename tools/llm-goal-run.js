@@ -6,6 +6,11 @@ const {hash,visible}=require("../js/server/llm/observation")
 const {classifyEnd}=require("../tests/campaign-metrics")
 function write(file,value){fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o700});fs.writeFileSync(file+".tmp",JSON.stringify(value),{mode:0o600});fs.renameSync(file+".tmp",file)}
 const read=f=>JSON.parse(fs.readFileSync(f,"utf8"))
+function frozenRules(sha){
+ if(!/^[a-f0-9]{64}$/.test(sha))throw Error("RULES_HASH_RANGE")
+ const source=fs.readFileSync(path.resolve("llm-private/rules",sha+".js"),"utf8");if(hash(source)!==sha)throw Error("RULES_ARCHIVE_CHANGED")
+ const Module=require("node:module"),filename=path.resolve("rules.js"),m=new Module(filename,module);m.filename=filename;m.paths=Module._nodeModulePaths(path.dirname(filename));m._compile(source,filename);return m.exports
+}
 function migrateController(saved,config,profileId,allowed){
  if(!["deepseek","glm"].includes(profileId))throw Error("PROFILE_UNSUPPORTED")
  const players=saved.replay.setup.players,roles=Object.keys(players).filter(r=>players[r].startsWith("llm:"))
@@ -28,7 +33,7 @@ function migrateTokenBudget(saved,config,value,allowed){
 function goal(s){const facts=visible(s.rules,s.state,"Observer").observation.scenario.nations
  const supported=p=>["llm:deepseek","llm:glm"].includes(p)
  const conquest=supported(s.options.players.Japan)&&s.options.players.Allies==="erasmus-campaign"&&s.options.scenario==="1942-1945 (The Shortened Campaign)"&&facts.length===4&&facts.every(n=>n.surrenderedTurn>0&&n.allJapanControlled)
- const allies=supported(s.options.players.Allies)&&s.options.players.Japan==="erasmus-japan-campaign"&&s.options.scenario==="1943-1945 (The Even Shorter Campaign)"&&s.state.active==="None"&&s.state.result==="Allies"&&classifyEnd(s.state).natural
+ const allies=supported(s.options.players.Allies)&&["erasmus-japan-campaign","erasmus-japan-campaign-v2"].includes(s.options.players.Japan)&&s.options.scenario==="1943-1945 (The Even Shorter Campaign)"&&s.state.active==="None"&&s.state.result==="Allies"&&classifyEnd(s.state).natural
  return {achieved:conquest||allies,kind:conquest?"four-national-surrenders":allies?"natural-allied-victory":null,nations:facts.map(n=>({key:n.key,surrenderedTurn:n.surrenderedTurn,allJapanControlled:n.allJapanControlled,remainingKeys:n.remainingKeys})),naturalComplete:s.state.active==="None"}
 }
 async function main(){const o={};for(let i=2;i<process.argv.length;i+=2){if(!process.argv[i].startsWith("--")||process.argv[i+1]===undefined)throw Error("ARGS");o[process.argv[i].slice(2)]=process.argv[i+1]}
@@ -47,6 +52,7 @@ async function main(){const o={};for(let i=2;i<process.argv.length;i+=2){if(!pro
  let s
  if(fs.existsSync(saveFile)){
    const saved=read(saveFile),config=read(configFile)
+   if(o["rules-sha256"]&&o["rules-sha256"]!==saved.replay.rulesSha256)throw Error("RULES_CHANGED")
    migrateController(saved,config,profileId,o.migrate==="true")
    migrateTokenBudget(saved,config,o["max-total-tokens"],o.migrate==="true")
    if(hash(config.profile)!==hash(publicProfile)){if(o.migrate!=="true")throw Error("PROFILE_CHANGED");config.profileHistory=[...(config.profileHistory||[]),{revision:saved.replay.actions.length,from:config.profile,to:publicProfile}];config.profile=publicProfile}
@@ -59,7 +65,8 @@ async function main(){const o={};for(let i=2;i<process.argv.length;i+=2){if(!pro
  }else{
    const role=o.role||"Japan",scenario=o.scenario||(role==="Japan"?"1942-1945 (The Shortened Campaign)":"1943-1945 (The Even Shorter Campaign)")
    const opponent=o.opponent||(role==="Japan"?"erasmus-campaign":"erasmus-japan-campaign")
-   s=api.createSession({seed:Number(o.seed||20262601),scenario,players:{[role]:"llm:"+profileId,[role==="Japan"?"Allies":"Japan"]:opponent},directOnly:true,maxRequests:2000,maxTotalTokens:10000000,maxActions:30000},{profiles:{[profileId]:profile}})
+   const sha=o["rules-sha256"],engine=sha?{rules:frozenRules(sha),rulesSha256:sha}:{}
+   s=api.createSession({seed:Number(o.seed||20262601),scenario,players:{[role]:"llm:"+profileId,[role==="Japan"?"Allies":"Japan"]:opponent},directOnly:true,maxRequests:2000,maxTotalTokens:10000000,maxActions:30000},{...engine,profiles:{[profileId]:profile}})
    write(configFile,{profile:publicProfile,setup:s.options,rulesSha256:s.rulesSha256,moduleHashes:s.moduleHashes,runnerHash,sourceVersion:profileId==="deepseek"?"official deepseek-flash = DeepSeek V4.1 Flash (2026-09-10)":"configured GLM model; actual response model recorded per request",modelSource:profileId==="deepseek"?"https://api-docs.deepseek.com/updates/":"https://docs.z.ai/guides/llm/glm-5.3",created:new Date().toISOString()})
    write(saveFile,api.serializeSession(s));fs.mkdirSync(path.join(out,"requests"),{recursive:true,mode:0o700})
  }
@@ -71,7 +78,7 @@ async function main(){const o={};for(let i=2;i<process.argv.length;i+=2){if(!pro
    try{const r=await providers.createClient(requestProfile).complete(messages);write(file,{...record,pending:false,content:r.content,outputHash:hash(r.content),model:r.model,usage:r.usage,latencyMs:r.latencyMs});return r}
    catch(e){write(file,{...record,pending:false,code:e.code||"PROVIDER",httpStatus:e.status||null,providerCode:e.providerCode||null,usage:e.usage||null,latencyMs:Date.now()-begin});throw e}
  }}
- const startRequests=s.stats.requests;let lastPrint=startRequests,error=null,g=goal(s)
+ const startRequests=s.stats.requests,startRevision=s.revision;let lastPrint=startRequests,error=null,g=goal(s)
  while(!g.achieved&&s.status!=="complete"&&s.stats.requests-startRequests<maxNewRequests){
    try{await api.step(s,{revision:s.revision})}catch(e){error={code:e.code||"ERROR"}}
    write(saveFile,api.serializeSession(s));g=goal(s)
@@ -79,6 +86,7 @@ async function main(){const o={};for(let i=2;i<process.argv.length;i+=2){if(!pro
      console.log(JSON.stringify({action:s.revision,turn:s.state.turn,state:s.state.L?.P,requests:s.stats.requests,tokens:s.stats.totalTokens,choice:s.lastDecision?.action,reason:s.lastDecision?.reason,surrender:g.nations.map(n=>n.surrenderedTurn),remaining:g.nations.map(n=>n.remainingKeys.length),error:error?.code||null}));lastPrint=s.stats.requests
    }
    if(error)break
+   if(o["stop-at-card-boundary"]==="true"&&s.revision>startRevision&&s.options.players[s.state.active]?.startsWith("llm:")&&visible(s.rules,s.state,s.state.active).observation.state==="offensive_segment")break
    if(fs.existsSync(path.join(out,"stop-after-current")))break
  }
  const replay=api.replay(s);write(path.join(out,"replay.json"),replay);const verified=api.verifyReplay(replay)
@@ -90,4 +98,4 @@ async function main(){const o={};for(let i=2;i<process.argv.length;i+=2){if(!pro
  if(error)process.exitCode=1
 }
 if(require.main===module)main().catch(e=>{console.error(/^[A-Z_]+$/.test(e.message)?e.message:"GOAL_RUN_ERROR");process.exitCode=1})
-module.exports={goal,migrateTokenBudget,migrateController}
+module.exports={goal,migrateTokenBudget,migrateController,frozenRules}

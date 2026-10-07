@@ -1,8 +1,8 @@
 {
   "task": "LLM-WIN-01",
   "status": "in_progress",
-  "recordedAt": "2026-10-07T09:23:32.868Z",
-  "scope": "Mixed DeepSeek to GLM development; paused GLM weekly/monthly quota (429/1310), DEI309/421 and BURMA354 missing; goal incomplete",
+  "recordedAt": "2026-10-07T10:32:54.856Z",
+  "scope": "User paused real experiments; publish existing RTT mode and usage accounting; no goal achieved",
   "setup": {
     "seed": 20262602,
     "scenario": "1942-1945 (The Shortened Campaign)",
@@ -1407,14 +1407,16 @@
     "rechargeNotAssumed": true
   },
   "nativeDeployment": {
-    "promptVersion": "eots-llm-v7.9",
-    "pid": 55708,
+    "promptVersion": "eots-llm-v7.11",
+    "pid": 21008,
     "httpStatus": 200,
     "rulesSha256": "48a620f5552b448d95abaa20d937388c9b985c8c3ad279c02ac555f8669ef921",
     "trialRulesKept": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233",
     "browserVisualCheck": false,
     "realNativeRequests": 0,
-    "oldContexts": "Existing native contexts reject policy changes; new games load v7.9. Offline trial migrated explicitly."
+    "oldContexts": "Existing native contexts reject policy changes; new games load v7.11. Paused offline dev03 keeps v7.10 fingerprints and requires explicit future migration.",
+    "pending": 0,
+    "userPaused": true
   },
   "controllerHistory": [
     {
@@ -1588,5 +1590,310 @@
       "replayRulesSha256": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233"
     },
     "failedTestConstruction": "First reused moved ground unit; second chose enemy-controlled Tarakan as strategic endpoint. Corrected independent unmoved fixture and actual own-port candidate; final 13 pass."
+  },
+  "dev02Parked": {
+    "revision": 1311,
+    "turn": 7,
+    "goal": {
+      "achieved": false,
+      "kind": null,
+      "nations": [
+        {
+          "key": "PHILIPPINES",
+          "surrenderedTurn": 2,
+          "allJapanControlled": true,
+          "remainingKeys": []
+        },
+        {
+          "key": "MALAYA",
+          "surrenderedTurn": 2,
+          "allJapanControlled": true,
+          "remainingKeys": []
+        },
+        {
+          "key": "DEI",
+          "surrenderedTurn": 0,
+          "allJapanControlled": false,
+          "remainingKeys": [
+            309,
+            421
+          ]
+        },
+        {
+          "key": "BURMA",
+          "surrenderedTurn": 0,
+          "allJapanControlled": false,
+          "remainingKeys": [
+            298,
+            325,
+            354,
+            382
+          ]
+        }
+      ],
+      "naturalComplete": false
+    },
+    "stats": {
+      "requests": 457,
+      "retries": 18,
+      "failedRequests": 7,
+      "invalidResponses": 19,
+      "totalTokens": 17634028,
+      "promptTokens": 16126562,
+      "completionTokens": 1507466,
+      "usageUnknown": 5,
+      "latencyMs": 9010328,
+      "forcedActions": 239,
+      "assistedActions": 0,
+      "cost": "unknown"
+    },
+    "profileStageStats": {
+      "requests": 123,
+      "retries": 2,
+      "failedRequests": 3,
+      "invalidResponses": 2,
+      "totalTokens": 4873375,
+      "promptTokens": 4832996,
+      "completionTokens": 40379,
+      "usageUnknown": 3,
+      "latencyMs": 1212200,
+      "forcedActions": 77,
+      "assistedActions": 0,
+      "cost": "unknown"
+    },
+    "verified": {
+      "verified": true,
+      "actions": 1311,
+      "complete": false,
+      "result": null,
+      "finalStateHash": "e58fb6d5fce467467e3c38746f1eb382e37a297210742208f52e6c4e5175b344"
+    },
+    "reason": "After Miri amphibious failure and Burma losses, Astra assigned next development budget to independent 1943 trial; all old costs/history retained",
+    "archive": "llm-private/llm-win-01/dev-02-parked-v79",
+    "newCallsAfter381": 76,
+    "newReportedTokens": 3092188,
+    "newLatencyMs": 472253
+  },
+  "v79RealSemanticExamples": {
+    "requests": [
+      382,
+      383,
+      384,
+      385,
+      386,
+      387,
+      390,
+      391,
+      392,
+      393,
+      420,
+      421,
+      422
+    ],
+    "basis": "own/public request journals and executed action records",
+    "observedImprovement": "ASP1 permits actual activation/land moves; correct advanced/amphibious menu and same-origin formation",
+    "limits": "Ground route and support feasibility still misread; not full rule understanding or causal win-rate evidence"
+  },
+  "dev03": {
+    "setup": {
+      "seed": 20262603,
+      "scenario": "1943-1945 (The Even Shorter Campaign)",
+      "players": {
+        "Allies": "llm:glm",
+        "Japan": "erasmus-japan-campaign-v2"
+      },
+      "semiBots": {
+        "Japan": "erasmus-v2-opt-v5",
+        "Allies": "erasmus-v2-opt-v5"
+      },
+      "maxRequests": 2000,
+      "maxTotalTokens": 10000000,
+      "maxActions": 30000,
+      "directOnly": true
+    },
+    "rulesSha256": "48a620f5552b448d95abaa20d937388c9b985c8c3ad279c02ac555f8669ef921",
+    "opponentVersion": "erasmus-v2.2-zh.29-japan-campaign.2.0",
+    "profile": {
+      "id": "glm",
+      "provider": "glm",
+      "baseUrl": "https://open.bigmodel.cn/api/coding/paas/v4",
+      "model": "glm-5.3",
+      "vision": false,
+      "timeoutMs": 240000,
+      "maxTokens": 32768,
+      "extraBody": {
+        "thinking": {
+          "type": "enabled"
+        },
+        "reasoning_effort": "high",
+        "response_format": {
+          "type": "json_object"
+        }
+      },
+      "planningOverrides": {
+        "maxTokens": 32768,
+        "timeoutMs": 300000
+      },
+      "planningEffort": "low"
+    },
+    "controllerHistory": [],
+    "sourceVersion": "GLM solo from fresh setup, actual responses glm-5.3; different opponent/rules from dev02, do not pool",
+    "checkpoint": {
+      "revision": 151,
+      "turn": 5,
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 3,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 3,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 3,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 3,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          }
+        ],
+        "naturalComplete": false
+      },
+      "stats": {
+        "requests": 66,
+        "retries": 2,
+        "failedRequests": 2,
+        "invalidResponses": 2,
+        "totalTokens": 3618386,
+        "promptTokens": 3596282,
+        "completionTokens": 22104,
+        "usageUnknown": 2,
+        "latencyMs": 537365,
+        "forcedActions": 25,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "verified": {
+        "verified": true,
+        "actions": 151,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "50535cf2d6a50c3bd267cadedc1491b4664a4db7f89436857414a5d37ed625d3"
+      }
+    },
+    "firstFailure": {
+      "request": 1,
+      "httpStatus": 429,
+      "providerCode": "1308",
+      "usageUnknown": true
+    },
+    "firstActual": {
+      "request": 2,
+      "model": "glm-5.3",
+      "tokens": 58487,
+      "latencyMs": 11523
+    },
+    "running": false,
+    "userPaused": true,
+    "lastFailure": {
+      "request": 66,
+      "httpStatus": 429,
+      "providerCode": "1308",
+      "usageUnknown": true
+    },
+    "archive": "llm-private/llm-win-01/dev-03-user-pause-v710"
+  },
+  "v710": {
+    "version": "eots-llm-v7.10",
+    "changes": [
+      "Public geographic edge decoding; unknown links preserved",
+      "Public target enemy units separate from ground-only defenders",
+      "Conditional path IDs/inactive/range facts without scoring or combat prediction"
+    ],
+    "sourceHashes": {
+      "js/server/llm/observation.js": "8575f6723ff6d26ffb52645477e46a577ab6f3099926c0b6fe9cb9ebfd62b46d",
+      "js/server/llm/prompt.js": "4ac3ef4a460a987ebada913adc6fd8e632b3f99167e592129fd6abeb8c5ce3ed",
+      "tools/llm-goal-run.js": "6ff142fc0319c0a6c51d77135e889f108d2e28121a2dbd8412a3ebb7aa43a3c7",
+      "docs/rules/llm-operational-guide.md": "f7033c504cbd7ebd8f58e75f1e2c9d97787296c27184346d06db5d4926d9f900",
+      "tests/llm-conquest.test.js": "25c4da2b1340bb33c253e5ae3a04a0939524cffbb67449f54cce2bb9e1b86dbe",
+      "tests/llm-prompt.test.js": "bbafc771fe269b7aa129f347b3fb267d3e604ee097309c1ae658a13e07e3af75"
+    },
+    "tests": {
+      "conquest": 14,
+      "prompt": 10,
+      "harness": 19,
+      "providers": 17,
+      "rtt": 9,
+      "totalUnique": 69,
+      "channel": "local/mock; affected input reruns, providers unchanged success reused"
+    },
+    "review": "Astra strategy and experimental bounds; Sol read-only source/1943 registration audit; no external development-model API this phase",
+    "goalAchieved": false
+  },
+  "v711": {
+    "version": "eots-llm-v7.11",
+    "changes": [
+      "Partial map for microsteps, full planning fallback and unchanged candidates/public unit table",
+      "Plan support facts distinguish location/range from unknown actual participation"
+    ],
+    "sourceHashes": {
+      "js/server/llm/observation.js": "1442d86c6471b3feb80e32231d42d7640464a40483d8debc81ea38d6476fdad8",
+      "js/server/llm/prompt.js": "3cc84eff7aea32b9981fb3a973f791c57949f89e15070d9eb6bfe6f7a687045e",
+      "tools/llm-goal-run.js": "6ff142fc0319c0a6c51d77135e889f108d2e28121a2dbd8412a3ebb7aa43a3c7",
+      "docs/rules/llm-operational-guide.md": "f98e2530d5b19ba592d904d734e4bfda9fbbc85d3a2388135d4571099a6a7485",
+      "tests/llm-conquest.test.js": "761fc131e53eb638a2a93d24da6afc4c6fe40b3e069e36d6ddce700970732f75",
+      "tests/llm-prompt.test.js": "39ea3ed42e7621036153dde4bd613eb3347f2c3dd25fb5b6c31a238b309341bd"
+    },
+    "tests": {
+      "conquest": 14,
+      "prompt": 11,
+      "harness": 19,
+      "providers": 17,
+      "rtt": 9,
+      "totalUnique": 70,
+      "affectedRerun": 53,
+      "reusedUnchanged": 17,
+      "channel": "local/mock"
+    },
+    "realRequests": 0,
+    "measure": {
+      "revision": 151,
+      "state": "activate_units",
+      "comparison": "same current observation/memory; render-only v7.10 vs v7.11; not API token/cost evidence",
+      "oldUtf8Bytes": 124198,
+      "newUtf8Bytes": 99036,
+      "realRequests": 0
+    },
+    "semanticValidation": false,
+    "goalAchieved": false
+  },
+  "billingCloseout": {
+    "sessions": 106,
+    "completed": 73,
+    "incomplete": 33,
+    "completedTokens": 67269376,
+    "incompleteTokens": 29265415,
+    "gameTokens": 96534791,
+    "gameAttempts": 7330,
+    "provenLocalAttempts": 1,
+    "overheadAttempts": 28,
+    "overheadTokens": 506586,
+    "actualCurrencyCost": "unknown",
+    "artifactPrivate": true,
+    "artifactSha256": "d8cf6c22099003ca03c0db06727215ec4ccce0b950382cb982223987fe0a397c",
+    "dedup": "canonical session UUID; current checkpoint only; provider phases from ledger; native DB scanned completely; pure FSM and mocks excluded"
   }
 }

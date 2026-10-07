@@ -1,7 +1,7 @@
 "use strict"
 const fs = require("node:fs"), path = require("node:path")
 const { hash } = require("./observation"), { assessment } = require("./memory")
-const ROOT = path.resolve(__dirname, "../../.."), VERSION = "eots-llm-v7.9"
+const ROOT = path.resolve(__dirname, "../../.."), VERSION = "eots-llm-v7.11"
 const CHAPTERS = { cards: "05-strategy-cards.md", supply: "06-zoi-supply-activation-control.md", offensive: "07-offensives.md", movement: "08-movement-stacking.md",
     combat: "09-combat.md", reinforcement: "10-reinforcements-asp.md", replacements: "11-replacements.md", victory: "16-campaign-victory.md" }
 function rulesContext(o) {
@@ -44,12 +44,23 @@ function messagesFor(packet, memory, decisionId, repair, imageUrl) {
     const unitColumns = [...new Set([...o.units, ...offboard].flatMap(u => Object.keys(u)))]
     const unitRows = units => units.map(u => unitColumns.map(k => u[k] ?? null))
     const campaign = o.scenario?.name !== "South Pacific"
-    const relevantHexes = new Set(o.units.map(u => u.location))
-    for (const c of packet.candidates) if (c.effect?.targetHex !== undefined) relevantHexes.add(c.effect.targetHex)
+    const planningMap = !packet.candidates.length || /offensive_segment|choose_hq/.test(o.state || "") || o.state === "activate_units" && (!o.activation || o.activation.activeCount === 0)
+    const relevantHexes = new Set(planningMap ? o.units.map(u => u.location) : [])
+    const mapUnitIds = new Set([...(o.activeUnits || []), ...(o.selectedUnits || []), ...(o.currentDecision?.ownMovementRecordUnitIds || [])])
+    for (const c of packet.candidates) {
+        if (c.effect?.targetHex !== undefined) relevantHexes.add(c.effect.targetHex)
+        if (c.effect?.unitId !== undefined) mapUnitIds.add(c.effect.unitId)
+        if (c.action === "move" && Array.isArray(c.argument)) for (const hex of c.argument.slice(2)) relevantHexes.add(hex)
+        if (["action_hex","hex","deploy","place","place_unit","retreat","disengage","hq_relocate"].includes(c.action) && Number.isInteger(c.argument)) relevantHexes.add(c.argument)
+    }
     for (const t of memory?.campaign?.targets || []) relevantHexes.add(t.hex)
-    for (const t of memory?.offensive?.tasks || []) relevantHexes.add(t.targetHex)
-    for (const h of o.hexes) if (h.named) relevantHexes.add(h.hex)
-    const base = new Set(o.units.map(u => u.location))
+    for (const t of memory?.offensive?.tasks || []) { relevantHexes.add(t.targetHex); for (const id of [...(t.ground || []), ...(t.escort || []), ...(t.support || [])]) mapUnitIds.add(id) }
+    for (const t of o.taskFacts?.planned || []) for (const hq of t.publicReaction?.hqOptions || []) { mapUnitIds.add(hq.hq); for (const id of hq.unitIds || []) mapUnitIds.add(id) }
+    for (const n of o.scenario?.nations || []) for (const h of n.keys || []) relevantHexes.add(h.hex)
+    for (const hex of [...(o.battle?.hexes || []), ...(o.progressOfWar?.heldHexes || [])]) relevantHexes.add(hex)
+    for (const u of o.units) if (mapUnitIds.has(u.id)) relevantHexes.add(u.location)
+    if (planningMap) for (const h of o.hexes) if (h.named) relevantHexes.add(h.hex)
+    const base = new Set(relevantHexes)
     for (const h of o.hexes) if (base.has(h.hex)) for (const n of h.neighbors || []) relevantHexes.add(n)
     const map = campaign ? o.hexes.filter(h => relevantHexes.has(h.hex)) : o.hexes
     const previewUnitSets = [], previewSetIds = new Map()
@@ -61,15 +72,17 @@ function messagesFor(packet, memory, decisionId, repair, imageUrl) {
     })
     const previewColumns = [...new Set(previews.flatMap(p => Object.keys(p)))]
     const importantHexes = new Set([...(o.scenario?.nations || []).flatMap(n => n.keys.map(h => h.hex)), ...o.units.map(u => u.location), ...(memory?.campaign?.targets || []).map(t => t.hex), ...(memory?.offensive?.tasks || []).map(t => t.targetHex)])
-    const compact = { ...o, hexColumns: ["engineHex", "mapId", "name", "region", "control", "port", "airfield", "resource", "terrain", "neighborsEngineHex", "edgesBitmask"],
+    const compact = { ...o, hexColumns: ["engineHex", "mapId", "name", "region", "control", "port", "airfield", "resource", "terrain", "neighborsEngineHex", "edgesBitmask", "neighborEdgeFacts"],
         units: unitRows(o.units), unitColumns, ownUnitDefinitions: unitRows(offboard),
         ...(campaign ? { cardPreviews: previews.map(p => previewColumns.map(k => p[k] ?? null)), cardPreviewColumns: previewColumns, cardPreviewUnitSets: previewUnitSets,
             ownHQDistances: o.ownHQDistances.map(h => ({ ...h, distances: h.distances.filter(([hex]) => importantHexes.has(hex)) })) } : {}),
         unitSemantics: "units为全部公开在场单位；ownUnitDefinitions仅补充当前候选/旧计划引用的己方场外定义，不代表可部署。两表共用unitColumns，null为未知/不适用；未发送的静态目录不能据此推定不存在。",
-        mapCoverage: campaign ? "named spaces, public unit/plan/candidate locations and adjacent transit; not full graph; legality comes from candidates" : "full public map",
-        hexes: map.map(h => [h.hex, h.id, h.name, h.region, h.control, +h.port, +h.airfield, +h.resource, h.terrain, h.neighbors || [], h.edges || 0]),
+        mapCoverage: campaign ? planningMap ? "planning: named spaces, public unit/plan/candidate locations and adjacent transit; not full graph; legality comes from candidates"
+            : "microstep partial map: candidates and exact move paths, active/selected/recorded/plan/reaction units, national/battle/held PoW/plan targets and one-ring neighbors. Omitted spaces/edges are not absent, unreachable or threat-free; never deny a route using this subgraph." : "full public map",
+        hexes: map.map(h => [h.hex, h.id, h.name, h.region, h.control, +h.port, +h.airfield, +h.resource, h.terrain, h.neighbors || [], h.edges || 0, (h.neighborEdgeFacts || []).map(e => [e.to, e.checked ? +e.land : null, e.checked ? +e.water : null, e.checked ? +e.road : null])]),
         mapSemantics: { terrain: { 0: "ocean", 1: "open", 2: "jungle", 3: "mixed", 4: "mountain", 5: "atoll" },
-            geometry: "neighbors and ownHQDistances are geography only; do not prove supply, activation or movement permission" } }
+            neighborEdgeColumns: ["toEngineHex","land","water","road"], edgeValues: "1=yes, 0=no, null=unknown non-geometric scenario link",
+            geometry: "neighbors/neighborEdgeFacts/ownHQDistances are public geography only. Land/water/road flags do not prove supply, activation, road discount or legal movement permission." } }
     const movement = o.state === "move_offensive_units"
     const decisionGuide = { currentState: o.state, currentWindow: o.window,
         phaseMeaning: o.window === "pbm" ? "战后移动；本次战斗已过去，结束PBM不能再开始本次战斗" : o.window === "reaction" ? "反应窗口；只安排当前反应候选" : o.state,
@@ -112,6 +125,8 @@ units与ownUnitDefinitions是按unitColumns排列的行，所有在场单位能�
 在同一次决策里维持三个层级：campaign说明当前剧本胜利路径和最多4个有序地点；turnPlan给本回合最多4目标和最多5约束；offensive给具体卡牌/HQ、最多4项地图任务、地面/护航/支援单位ID、下一步及最多4中止重评条件。计划引用要来自当前观察；ID合法不代表可执行、足够或已经完成。memory只含你可更新的字段；programMemory是只读程序元数据与历史，绝不能把它合入回答。
 以地面夺占、护航/ASP、格外空海支援、补给/HQ/前沿基地形成攻势链。没有立即可夺目标时可以先合法集中或前推，为下一张牌准备。不要只选最强舰，也不要为了填满预算激活无用途单位。反应和PBM只能在各自候选内安排。
 taskFacts是绑定本次决策的公开查询事实，不替你选目标。夺占先比较真实地面CF与defenders（含城市守军），分别考虑无增援及同一敌HQ预算内的可能增援；海空CF不能替代地面夺占能力，currentCounterCF是实际减损后的棋子CF，不证明航程、攻击资格或已参战。groundRoute/amphibiousRoute仅为条件路径，仍检查激活/已移动/总预算/共同ASP；checked=false或缺少预览不能视为非法，checked=true且pathToTarget=null表示本次条件下未查到该目标路径。航空range只证明航程，舰船原地支援未查，必须按实际候选分配。反应baseline排除未知敌牌干预，不是真实完整概率界，也不能相加不同HQ的反应峰值。
+defenders.ground只列地面守军，不代表全部敌军；publicEnemyUnits另列目标格公开航空、海军、HQ。routeFacts把已在目标、条件陆路/两栖有路、已查无路、未知及未激活支援并列；groundArithmetic仅假设全部计划地面能参战，不能把无路部队计入本次实际战力。结束激活或提交进攻前重核实际可到达并投入的兵力；计划假设失效时重新决定继续、集结或取消。两栖先核海空阶段与登陆资格，再核地面战，地面CF不保证能进入地面战。
+plannedSupportFacts合并escort与support：地点、激活、已移动、目标格位置和航空航程逐项核对，participationStatus=unknown就是尚未核参战。航程内/已激活/写入计划不等于已参战；非航母舰需实际到目标格，位置满足也不证明参战、幸存或舰炮DRM。结束移动前，未核准支援不能当成已确定火力或DRM，仍由你选择当前合法动作移动、改计划或结束。
 选本次任务前检查landCaptureCoverage与四国尚缺关键格；其他国家若有可达陆进机会，决定执行或说明推迟理由。东印度允许先集中/前推，下一张实际牌重新核查HQ、ASP、同起点编组和路径。
 选牌/模式/HQ窗的conditionalLandReachability逐己方卡/HQ给单兵条件陆进端点，不评分或替你选牌。reachableEnemyOccupiedHexes可以是必须先清除的敌占阻挡；不能想象穿过敌地面单位直达后方关键格。coverage=partial/unknown、缺行都不证明无路；complete空行仅表示没有本次立即陆进端点，该牌仍可能用于集结、前推或两栖。单兵有路不证明地面战足够、组合预算可行或夺占成功。
 该表checkedTargetHexes含国家尚缺格和你的任务格，reachableTargetHexes不是全都国家关键格。若精确card/mode/HQ行checked且coverage=complete，单位确在该eligible激活预览且目标在本表检查集合内，缺少单位→目标链接就是本次单兵陆进无路，不能继续称“未确认”；只否定这次直接陆进，不否定其他方式或先集中。partial/unknown才保留未知。

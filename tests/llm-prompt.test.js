@@ -3,6 +3,35 @@ const test = require("node:test"), assert = require("node:assert/strict"), rules
 const { observe, visible, clone, hash } = require("../js/server/llm/observation"), { mergeMemory, commitMemory, assessment, progressSignature } = require("../js/server/llm/memory")
 const { messagesFor, rulesContext } = require("../js/server/llm/prompt"), { parseAnswer } = require("../js/server/llm/harness")
 function packet(seed = 20262401) { return observe(rules, rules.setup(seed, "South Pacific", { headless_moves: true }), "Allies", 1) }
+test("public map edges decode direction after filtered borders; unknown links remain unknown", () => {
+ const state=rules.setup(20262603,"1943-1945 (The Even Shorter Campaign)",{headless_moves:true}),before=hash(state),o=visible(rules,state,"Allies").observation
+ assert.equal(hash(state),before)
+ const border=o.hexes.find(h=>h.hex===0),se=border.neighborEdgeFacts.find(e=>e.to===29)
+ assert.equal(se.direction,"SE");assert.equal(se.water,true);assert.equal(se.land,false)
+ const south=o.hexes.find(h=>h.hex===394).neighborEdgeFacts.find(e=>e.to===395)
+ assert.equal(south.direction,"S");assert.equal(south.land,true);assert.equal(south.water,true)
+ const p=observe(rules,state,"Allies",1),payload=JSON.parse(messagesFor(p,null,"edge").messages[1].content)
+ assert.deepEqual(payload.observation.mapSemantics.neighborEdgeColumns,["toEngineHex","land","water","road"])
+ const fake={view:(...args)=>rules.view(...args),query:(...args)=>{const data=rules.query(...args);if(args[2]==="llm_public_data")data.hexes.find(h=>h.hex===0).neighbors.push(777);return data}}
+ assert.deepEqual(visible(fake,state,"Allies").observation.hexes.find(h=>h.hex===0).neighborEdgeFacts.find(e=>e.to===777),{to:777,checked:false})
+})
+test("campaign micro map retains legal paths, PoW, formations and reaction locations without pruning candidates", () => {
+ const state=rules.setup(20262603,"1943-1945 (The Even Shorter Campaign)",{headless_moves:true}),p=observe(rules,state,"Allies",7)
+ const full=JSON.parse(messagesFor(p,null,"full").messages[1].content)
+ const own=p.observation.units.filter(u=>u.faction===1),enemyHQ=p.observation.units.find(u=>u.faction===0&&u.class==="hq")
+ const memory={campaign:{targets:[{hex:421,purpose:"future"}]},offensive:{tasks:[{targetHex:834,ground:[own[0].id],escort:[own[1].id],support:[]}]}}
+ p.observation.state="move_offensive_units";p.observation.activeUnits=[own[0].id];p.observation.selectedUnits=[own[1].id];p.observation.progressOfWar.heldHexes=[979]
+ p.observation.battle.hexes=[834];p.observation.taskFacts.planned=[{publicReaction:{hqOptions:[{hq:enemyHQ.id,unitIds:[enemyHQ.id]}]}}]
+ p.candidates=[{id:"r7-a0",action:"move",argument:[4,1,835,834],label:"exact",effect:{targetHex:834,unitIds:[own[0].id]}}]
+ const before=hash(p),micro=JSON.parse(messagesFor(p,memory,"micro").messages[1].content),hexes=new Map(micro.observation.hexes.map(h=>[h[0],h]))
+ assert.equal(hash(p),before);assert.deepEqual(micro.candidates,p.candidates);assert.deepEqual(micro.observation.units,full.observation.units)
+ for(const h of [421,834,835,979,own[0].location,own[1].location,enemyHQ.location])assert(hexes.has(h))
+ for(const n of p.observation.scenario.nations)for(const h of n.keys)assert(hexes.has(h.hex))
+ for(const near of p.observation.hexes.find(h=>h.hex===834).neighbors)if(p.observation.hexes.some(h=>h.hex===near))assert(hexes.has(near))
+ assert(micro.observation.hexes.length<full.observation.hexes.length);assert(micro.observation.mapCoverage.includes("never deny a route"))
+ p.observation.state="activate_units";p.observation.activation={activeCount:0};assert(JSON.parse(messagesFor(p,memory,"first").messages[1].content).observation.mapCoverage.startsWith("planning:"))
+})
+
 test("missing memory and partial patches preserve plans; explicit null clears only chosen layer", () => {
     const p = packet(), old = { objective: "保留", notes: ["旧备注"], campaign: { objective: "胜利路径" }, turnPlan: { turn: 3, objectives: ["回合目标"] }, recent: [{ action: "card" }] }
     const a = parseAnswer(JSON.stringify({ candidateId: p.candidates[0].id }), p, "id", old)

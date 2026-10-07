@@ -91,6 +91,15 @@ test("conquest acceptance needs four formal surrenders and the specified campaig
  nations[3].surrenderedTurn=4;nations[3].allJapanControlled=false;assert(!goal(s).achieved)
 })
 
+test("1943 campaign-v2 acceptance still requires a natural Allied terminal result",()=>{
+ const {goal}=require("../tools/llm-goal-run"),s={options:{scenario:"1943-1945 (The Even Shorter Campaign)",players:{Allies:"llm:glm",Japan:"erasmus-japan-campaign-v2"}},state:{active:"None",result:"Allies",log:["Allies Victory"]},rules:{view:()=>({ai:{units:[]}}),query:()=>({cards:[],hexes:[],scenario:{nations:[]}})}}
+ assert.equal(goal(s).kind,"natural-allied-victory")
+ s.state.active="Allies";assert(!goal(s).achieved);s.state.active="None"
+ s.state.log=["Japan resigns"];assert(!goal(s).achieved);s.state.log=["Allies Victory"]
+ s.state.result="Japan";assert(!goal(s).achieved);s.state.result="Allies"
+ s.options.players.Japan="erasmus-v2-opt-v5";assert(!goal(s).achieved)
+})
+
 test("explicit development token budget migration preserves counters and replay actions",()=>{
  const {migrateTokenBudget}=require("../tools/llm-goal-run"),saved={replay:{setup:{maxTotalTokens:10000000},stats:{requests:215,totalTokens:7907931,failedRequests:3},actions:[{action:"unit"}]}},config={setup:{maxTotalTokens:10000000}},before=JSON.parse(JSON.stringify(saved))
  assert.throws(()=>migrateTokenBudget(saved,config,20000000,false),/TOKEN_BUDGET_CHANGED/);assert.deepEqual(saved,before)
@@ -131,12 +140,16 @@ test("task facts bind public defenders, conditional routes and separate HQ react
  assert.equal(consistency.contextStatus,"active");assert.equal(consistency.playerDeclarationLimit,1);assert(consistency.ifAllAttemptedThisOffensive.multipleDefendedTargets)
  assert(consistency.targets.some(t=>t.targetHex===304&&t.hasDefendingGround))
  const kuantan=o.taskFacts.planned[0]
+ assert.equal(o.taskFacts.defenders.find(d=>d.hex===304).groundOnly,true)
+ assert(o.taskFacts.defenders.find(d=>d.hex===304).publicEnemyUnits.every(u=>o.units.some(p=>p.id===u.id&&p.faction===1&&p.location===304)))
+ assert(kuantan.routeFacts.groundPathIds.includes(43));assert(!kuantan.routeFacts.noQueriedTargetPathIds.includes(43))
  assert.deepEqual(kuantan.groups[0].groundRoute.pathToTarget,[4,4,274,304]);assert(!Object.hasOwn(kuantan.groups[0].groundRoute,"aspCost"))
  assert.equal(o.taskFacts.defenders.find(d=>d.hex===304).ground.cf,9)
  assert(kuantan.publicReaction.hqOptions.some(h=>h.hq===83&&h.unitIds.includes(167)&&h.budget===4))
  assert(kuantan.publicReactionBaseline.nonAmphibious.unknownReasons.includes("enemy-intelligence-and-counter-cards-unobserved"));assert(kuantan.publicReactionBaseline.amphibious.eligible)
  assert(o.taskFacts.landCaptureCoverage.units.some(u=>u.id===43&&u.reachableKeys.includes(304)))
  const samePort=o.taskFacts.planned[2].groups[0];assert.deepEqual(samePort.colocatedEscorts,[]);assert.deepEqual(samePort.otherOriginEscortIds,[18]);assert.deepEqual(o.taskFacts.planned[2].unassignedEscortIds,[18])
+ const supportFacts=o.taskFacts.planned[2].plannedSupportFacts;assert(supportFacts.some(s=>s.id===18));assert(supportFacts.every(s=>s.participationStatus==="unknown"));assert(supportFacts.every(s=>s.origin===o.units.find(u=>u.id===s.id).location))
  assert(!Object.hasOwn(kuantan.airRange[0].range,"legal"));assert.equal(typeof kuantan.airRange[0].range.withinRange,"boolean")
  assert.deepEqual(kuantan.groundArithmetic.hitsByMultiplier,[[0.5,9],[1,18],[1.5,27],[2,36]]);assert.deepEqual(kuantan.groundArithmetic.defenderLFs,[9])
  const colocated={offensive:{tasks:[{targetHex:452,ground:[36],escort:[20],support:[]}]}}

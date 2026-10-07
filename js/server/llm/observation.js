@@ -6,6 +6,19 @@ const ROLES = ["Japan", "Allies"]
 const pick = (object, keys) => Object.fromEntries(keys.filter(k => object && object[k] !== undefined).map(k => [k, clone(object[k])]))
 const CARD_KEYS = ["id", "name", "type", "faction", "ops", "logistic", "hq", "reaction", "military", "intelligence", "logistic_alt", "previewEvent", "allowed", "metadata"]
 const UNIT_KEYS = ["id", "definitionId", "name", "faction", "class", "type", "service", "cf", "rcf", "lf", "oneStep", "br", "ebr", "cr", "cm", "asp", "aspCost", "aspr", "b29", "parenthetical", "stratMove", "reduced", "location"]
+function neighborEdgeFacts(h) {
+    // Public board coordinates, same N/NE/SE/S/SW/NW slots as common/utils.js.
+    // Filtered neighbors have lost their direction indices; never use indexOf.
+    const x = Math.floor(h.id / 100) - 10, y = h.id % 100
+    if (h.hex !== x * 29 + y) return (h.neighbors || []).map(to => ({ to, checked: false }))
+    const offsets = [-1, 29 - (1 - x % 2), 29 + x % 2, 1, -29 + x % 2, -29 - (1 - x % 2)]
+    return (h.neighbors || []).map(to => {
+        const direction = offsets.indexOf(to - h.hex)
+        if (direction < 0) return { to, checked: false } // Scenario tunnel, not a geometric edge.
+        const flags = (h.edges >>> (5 * direction)) & 31
+        return { to, checked: true, direction: ["N","NE","SE","S","SW","NW"][direction], land: !!(flags & 2), water: !!(flags & 1), road: !!(flags & 4) }
+    })
+}
 function activeRole(state) { return Array.isArray(state.active) ? state.active.slice().sort()[0] : state.active }
 function visible(rules, state, role) {
     if (![...ROLES, "Observer"].includes(role)) throw new Error("invalid observation role")
@@ -27,7 +40,7 @@ function visible(rules, state, role) {
         activeUnits: side >= 0 ? clone(view.offensive?.active_units?.[side] || []) : [],
         activation: publicData.activation,
         unselectableUnits: clone(view.unselect || []), units: (view.ai?.units || []).map(u => pick(u, UNIT_KEYS)),
-        hexes: publicData.hexes,
+        hexes: publicData.hexes.map(h => ({ ...h, neighborEdgeFacts: neighborEdgeFacts(h) })),
         battle: { hexes: clone(view.offensive?.battle_hexes || []),
             activatedUnits: clone(view.offensive?.active_units || []),
             attacker: ROLES[view.offensive?.attacker] || null, type: view.offensive?.type ?? null },
@@ -81,7 +94,8 @@ function taskFacts(rules, state, o, memory) {
     const targets = [...new Set([...(o.scenario?.nations || []).flatMap(n => n.remainingKeys || []), ...tasks.map(t => t.targetHex)])].filter(h => o.hexes.some(x => x.hex === h)).slice(0, 20)
     const defenders = targets.map(hex => {
         const g = ask("queryDefendingGround", [hex, { faction: 1 - side }])
-        return { hex, ground: g ? { ...pick(g, ["hex", "faction", "cf", "lfs"]), units: (g.units || []).map(u => pick(u, ["id", "definitionId", "name", "class", "faction", "service", "location", "reduced", "garrison", "oneStep", "cf", "fullCf", "rcf", "lf"])) } : null }
+        return { hex, publicEnemyUnits: o.units.filter(u => u.faction === 1 - side && u.location === hex).map(u => pick(u, ["id", "name", "class", "currentCF", "reduced", "parenthetical", "br", "ebr", "lf"])),
+            groundOnly: true, ground: g ? { ...pick(g, ["hex", "faction", "cf", "lfs"]), units: (g.units || []).map(u => pick(u, ["id", "definitionId", "name", "class", "faction", "service", "location", "reduced", "garrison", "oneStep", "cf", "fullCf", "rcf", "lf"])) } : null }
     })
     const d = o.currentDecision, card = d.currentCard
     const usable = card?.faction === side && ["ops", "event"].includes(card.selectedMode) && d.ownHQ && d.attacker === o.role && !["reaction", "pbm"].includes(o.window)
@@ -107,7 +121,24 @@ function taskFacts(rules, state, o, memory) {
         const reaction = ctx ? ask("queryReactionCandidates", [{ reactionFaction: 1 - side, targetHex: t.targetHex, targetOnly: true, cardContext: ctx }]) : null
         const reacting = new Set([...(reaction?.ground || []), ...(reaction?.air || []), ...(reaction?.naval || []), ...(reaction?.carrier || [])])
         const groundCF = ground.reduce((n, id) => n + (own.get(id).reduced ? own.get(id).rcf : own.get(id).cf), 0)
-        return { targetHex: t.targetHex, invalidIds, groups, airRange: air,
+        const plannedSupportFacts = [...new Set([...(t.escort || []), ...(t.support || [])])].filter(id => own.has(id)).map(id => {
+            const u = own.get(id), range = air.find(a => a.id === id)?.range
+            return { id, class: u.class, origin: u.location, originMapId: u.locationMapId, originName: u.locationName,
+                activated: o.activeUnits.includes(id), moved: d.movedUnitIds.includes(id), atTarget: u.location === t.targetHex,
+                rangeChecked: !!range, withinRange: range?.withinRange ?? null,
+                participationStatus: "unknown", basis: "public position/activation plus air range only; actual commitment and survival not queried",
+                positionRequirement: u.class === "naval" && !u.br ? "non-carrier naval units require target-hex presence; presence alone does not prove participation, survival or naval ground DRM" : "range alone does not prove activation, commitment or support DRM" }
+        })
+        const alreadyAtTarget = ground.filter(id => own.get(id).location === t.targetHex)
+        const routeFacts = { alreadyAtTargetGroundIds: alreadyAtTarget,
+            groundPathIds: groups.filter(g => g.groundRoute.pathToTarget).flatMap(g => g.ground),
+            amphibiousPathIds: groups.filter(g => g.amphibiousRoute.pathToTarget).flatMap(g => g.ground),
+            noQueriedTargetPathIds: groups.filter(g => g.groundRoute.checked && !g.groundRoute.pathToTarget && g.amphibiousRoute.checked && !g.amphibiousRoute.pathToTarget).flatMap(g => g.ground),
+            unknownRouteIds: groups.filter(g => !g.groundRoute.checked || !g.amphibiousRoute.checked).flatMap(g => g.ground).filter(id => !alreadyAtTarget.includes(id)),
+            inactiveListedIds: ids.filter(id => own.has(id) && !o.activeUnits.includes(id)),
+            outOfAirRangeIds: air.filter(a => a.range && !a.range.withinRange).map(a => a.id),
+            basis: "current conditional paths and own activation only; not permission, total reachable CF, landing survival or combat strength; inactive before activation is normal" }
+        return { targetHex: t.targetHex, invalidIds, groups, airRange: air, routeFacts, plannedSupportFacts,
             unassignedEscortIds: (t.escort || []).filter(id => own.has(id) && !origins.includes(own.get(id).location)),
             groundArithmetic: { assumption: "all listed own ground can legally fight; no reaction or support included; not feasibility or capture probability", plannedCF: groundCF, hitsByMultiplier: [0.5, 1, 1.5, 2].map(m => [m, Math.ceil(groundCF * m)]), defenderLFs: defenders.find(d => d.hex === t.targetHex)?.ground?.lfs || [] },
             currentCounterCF: ids.filter(id => own.has(id)).map(id => ({ id, class: own.get(id).class, cf: own.get(id).currentCF, baseASP: own.get(id).currentBaseASP, parenthetical: own.get(id).parenthetical, atTarget: own.get(id).location === t.targetHex, activated: o.activeUnits.includes(id), moved: d.movedUnitIds.includes(id) })),
