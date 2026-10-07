@@ -703,3 +703,9 @@
 - 333网络请求+1本地配置失败，12,760,653累计tokens/7,798,128ms，forced162/assisted0；860动作完整回放通过。第334 HTTP402未执行动作，官方余额-0.05元/is_available=false，已请求充值原账户；未改用其他模型或FSM代打。
 - PH/MAL正式2/2正控制，Burma四格全控待结算，DEI余309 Tjilatjap/421 Miri。保存paused是请求资源失败，长期任务未完成；费用/失败/策略/规则历史全保留。
 - RTT无在途请求后按项目脚本重启，PID50376/HTTP200、v7.8加载；当前生成包157f93含另项半自动扩展，原局恢复器继续使用冻结825b6d归档，两个规则包不混算。无额外原生付费请求/浏览器视觉验收。
+
+### 2026-10-07 — LLM-WIN-01 用户授权GLM接续阶段（目标未达）
+
+- 用户“用glm”后，rev860显式Japan DeepSeek→GLM-5.3，controllerHistory记录状态/冻结规则/对手/记忆哈希及priorStats；原保存点三文件归档，费用/失败/动作不重置。实际响应model与profile分开记录，结果混合归因，不称GLM独立整局/纯DeepSeek胜。
+- 12项conquest通过，新增切换保持状态/记忆/统计/完整回放检查；Astra只读裁决、root实施，真实开发协作外部API0。GLM首请求335实际glm-5.3，37,494tokens/5,189ms。
+- 实际接续进入第5回合，Burma正式4、PH/MAL2/2正控制；DEI余Tjilatjap/Miri。新有界段进行中，目标未达，完整结算与GLM阶段用量待该段结束，货币unknown。

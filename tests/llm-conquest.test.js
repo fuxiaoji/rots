@@ -83,6 +83,9 @@ test("conquest acceptance needs four formal surrenders and the specified campaig
  const {goal}=require("../tools/llm-goal-run"),nations=[0,1,2,3].map(id=>({id,key:String(id),surrenderedTurn:4,allJapanControlled:true,remainingKeys:[]}))
  const s={options:{scenario,players:{Japan:"llm:deepseek",Allies:"erasmus-campaign"}},state:{active:"Japan"},rules:{view:()=>({ai:{units:[]}}),query:()=>({cards:[],hexes:[],scenario:{nations}})}}
  assert(goal(s).achieved)
+ s.options.players.Japan="llm:glm";assert(goal(s).achieved)
+ s.options.players.Japan="llm:minimax";assert(!goal(s).achieved)
+ s.options.players.Japan="llm:deepseek"
  s.options.players.Allies="erasmus-v2-opt-v5";assert(!goal(s).achieved)
  s.options.players.Allies="erasmus-campaign";nations[3].surrenderedTurn=0;assert(!goal(s).achieved)
  nations[3].surrenderedTurn=4;nations[3].allJapanControlled=false;assert(!goal(s).achieved)
@@ -97,6 +100,21 @@ test("explicit development token budget migration preserves counters and replay 
  assert.equal(saved.replay.setup.maxTotalTokens,20000000);assert.equal(config.budgetHistory[0].from,10000000);assert.equal(config.budgetHistory[0].totalTokens,7907931)
  const api=require("../js/server/llm/session"),s=api.createSession({seed:20262602,scenario,maxTotalTokens:20000000,players:{Japan:"llm:deepseek",Allies:"erasmus-campaign"}},{clients:{deepseek:{}}})
  const restored=api.restoreSession(api.serializeSession(s),{clients:{deepseek:{}}});assert.equal(restored.limits.maxTotalTokens,20000000);assert(api.verifyReplay(api.replay(restored)).verified)
+})
+
+test("explicit provider continuation preserves state, own memory, paid statistics and exact replay",()=>{
+ const api=require("../js/server/llm/session"),{migrateController}=require("../tools/llm-goal-run"),s=api.createSession({seed:20262602,scenario,players:{Japan:"llm:deepseek",Allies:"erasmus-campaign"}},{clients:{deepseek:{}}})
+ s.stats.requests=334;s.stats.totalTokens=12760653;s.stats.failedRequests=4
+ s.memories.Japan={objective:"继续原局",notes:[],campaign:null,turnPlan:null,offensive:null,recent:[]}
+ const saved=api.serializeSession(s),config={profile:{id:"deepseek"}},before=JSON.parse(JSON.stringify(saved))
+ assert.throws(()=>migrateController(saved,config,"glm",false),/CONTROLLER_CHANGED/);assert.deepEqual(saved,before)
+ migrateController(saved,config,"glm",true)
+ assert.deepEqual(saved.memories,before.memories);assert.deepEqual(saved.replay.actions,before.replay.actions);assert.deepEqual(saved.replay.stats,before.replay.stats);assert.equal(saved.replay.finalStateHash,before.replay.finalStateHash)
+ assert.equal(saved.replay.setup.players.Japan,"llm:glm");assert.equal(saved.replay.setup.players.Allies,"erasmus-campaign")
+ const change=config.controllerHistory[0];assert.equal(change.from,"llm:deepseek");assert.equal(change.to,"llm:glm");assert.equal(change.priorStats.requests,334);assert.equal(change.inheritedMemoryHash,hash(before.memories.Japan))
+ const restored=api.restoreSession(saved,{clients:{glm:{}}});assert(api.verifyReplay(api.replay(restored)).verified);assert.equal(hash(restored.state),hash(s.state));assert.equal(restored.stats.totalTokens,12760653)
+ migrateController(saved,config,"glm",true);assert.equal(config.controllerHistory.length,1)
+ assert.throws(()=>migrateController(saved,config,"unknown",true),/PROFILE_UNSUPPORTED/)
 })
 
 test("task facts bind public defenders, conditional routes and separate HQ reaction budgets without secrets or mutation",async()=>{

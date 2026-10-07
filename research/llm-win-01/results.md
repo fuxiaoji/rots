@@ -88,3 +88,10 @@ dev-02 各行是同一局的累计检查点，不能相加。请求59的失败�
 - 2026-10-07T08:04:00Z官方余额GET返回is_available=false、CNY总余额-0.05；已向用户请求充值原账户并从原存档继续。当前PH/MAL正式2/2且正控制、Burma全控标记0、DEI缺309/421，目标未达；没有用FSM/其他模型绕过余额暂停。
 - current ASP0时43返Tarakan与舰船同港集结有明确目的，不能把返港称地理前进；本任务尚未另调策略。之前43从Tarakan到479及36到Teloekbetoeng仅为集结，没有虚报夺下最后两格。
 - 无原生在途请求后，按start-rtt.ps1重启RTT，PID50376、HTTP200，加载v7.8。当前生成规则包157f93e75bf7bf19189d0d409061d8849d999808a026569c37144cb4d48bd1dd包含另项半自动战略扩展；本试验从恢复器读取冻结825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233归档，不换规则/对手，不与新包混算。没有浏览器视觉验收或新增原生付费调用。
+
+### 用户授权GLM接续
+
+- 用户最新“用glm”解除仅DeepSeek限定；rev860显式切换Japan控制器为llm:glm，配置glm-5.3/coding-plan端点，thinking启用，选牌/HQ/首次激活high、微步骤low，生成32,768；规划300秒、微步骤240秒。模型配置与逐请求实际model分别记录，符合[官方GLM-5.3参数](https://docs.z.ai/guides/llm/glm-5.3)。
+- 切换前save/config/replay三文件私有归档；controllerHistory保存stateHash、seed、冻结rules、对手、继承己方记忆哈希和priorStats。原333次网络调用、全部tokens/失败/费用保留，程序不能静默换模型。goal入口允许明确支持的DeepSeek/GLM，结果附mixedProviders与阶段用量；不称混合轨迹GLM独立整局胜。
+- 12 conquest本地检查通过，新增provider切换测试证明棋局/动作/记忆/统计与终态哈希不变、完整恢复回放一致；Astra只读裁决同意，root实施。未改变规则/对手/PRNG，没有新增开发协作外部模型调用。
+- 第335请求首次实际GLM响应glm-5.3，37,494报告tokens/5,189ms；后续合法推进至第5回合，Burma标记由0→4，PH/MAL仍2/2且正控制。DEI仍余309/421，目标未达；GLM新的有界段运行中，完整结算证据待该段检查点，货币unknown。
