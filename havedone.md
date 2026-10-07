@@ -1,5 +1,17 @@
 # 已完成工作记录
 
+## 2026-10-07：LLM-SEMI-01 半自动 LLM 战略模式（实现 + 首轮 74 局评测）
+
+- **模式**：`llmsemi:<profile>` 玩家。战役状态机（erasmus-v2-opt-v5）执行全部合法动作；模型只在己方每张牌的选牌窗回答一次 `{strategy, targets[], reason}`——战略必须是当前阶段目录内逐字名，目标地点为印刷 mapId 有序表（可为默认链子集/重排，至多 16 项，未知 ID 丢弃并记录）。程序验证后经 `context.strategyOverride` 进入 `esm_pin_strategy`：跳过图表掷轴/完成分配重掷/同轴延续，按模型链（同格复用默认条目语义；新格按控制状态合成 CONQUEST/GARRISON）覆盖 eop 焦点链。RTT 日志标注「LLM半自动·模型链/默认链」。
+- **信息面**（`js/server/llm/semi.js`）：己方手牌+cardPreviews 启动预算、双方全部公开单位（cf/rcf/lf/br/ebr/asp/补给）、全部命名地点+控制方、四国要求格与正式投降状态、PW/PoW、资源/ASP 轨、当前阶段战略目录（目标语义注释+默认链+每格控制/资源属性）、目标守军、两篇规则简述（OP-LLM-01/CW-LLM-01，SHA-256 入账本）。不读敌方手牌/牌库/未来随机数；模型不提交任何动作。
+- **失败语义**：格式无效重试 1 次后该牌回退程序默认战略并计入 `strategyLog(source=program-default, invalid=true)`；接口失败/预算耗尽照常暂停（429 等瞬态由评测器带退避恢复，上限可配）；请求账本逐次记录 promptHash/输出哈希/用量/延迟。
+- **实现**：`js/server/erasmus_state.js`（钉选覆盖通道）、`js/server/query.js`（`llm_semi_catalog`）、`js/server/llm/semi.js`（新）、`js/server/llm/session.js`（llmsemi 分支+strategyLog 入 replay）、`tools/semi-eval.js`（评测器）。7 项 mock 单测 `tests/llm-semi.test.js` 全绿（目录只读、覆盖链生效、无效回退与纯 bot 逐哈希一致、暂停语义、窗口判定同步）；erasmus/LLM/campaign 既有回归 37 项全绿。
+- **评测**（1942 剧本，种子 20262701–20262710，两侧配对；全部完成局自然终局+`verifyReplay` 逐步哈希一致）：
+  - 日军侧（日本被测 vs 盟军 erasmus-campaign）：基线 8/10 胜、投降 0.8 国/局、PW 6.8；**DeepSeek 9/10 胜、PW 8.2**（配对 2709 转胜；2701 菲 T4+马 T3 双投降）；MiniMax 8/10（0.7 国/局）；GLM 7/10（0.5 国/局、菲律宾 0）。模型高频选择资源/国防圈战略，守住资源与 PW 但征服慢于图表轴。
+  - 盟军侧（盟军被测 vs 日本 erasmus-japan-campaign）：基线盟军战役AI 4/10 胜；**DeepSeek/MiniMax 各 0/10、GLM 0/4，21/24 局 PW 归零条约败**。半自动接口（仅调目标顺序）无法重建盟军跨回合多任务胜路（登陆编队/B29 前推/封锁-原子弹组合）。
+  - 成本：DeepSeek ~16.2M、MiniMax ~17.1M、GLM ~11.8M tokens；三家密钥按授权写入 `.env.llm.local`（仓库外生效，不入库）。GLM 需 coding-plan 端点（`api.z.ai/api/coding/paas/v4`，计划订阅），并发 >2 触发 429；GLM 盟军臂 6 局因限流未完成，原始行归档 `tests/results/semi-eval-ap42-glm-paused.json`。
+- **结论边界**：样本每臂 10 局（GLM 盟军侧 4），差异无统计显著性；开发种子非冻结留出。方向性结论：半自动模式适合给强执行框架「换战略脑子」（日军侧防守/PW 改善明显），不适合替代已强程序化的盟军规划器；盟军侧提升需把任务编成结构暴露给模型。详见 `research/llm-semi-01/results.md`。
+
 ## 2026-09-06：Erasmus 代码化缺口整改（PR1–PR6）
 
 按 `EOTS_Erasmus_v2_代码化缺口整改清单.md` 逐项落地，原则「Erasmus 负责选什么，RTT 规则引擎负责什么是合法」，只改 bot 策略文件（`erasmus.js`/`erasmus_state.js`/`erasmus_ops.js`）+ 新增只读查询层，不动规则引擎。

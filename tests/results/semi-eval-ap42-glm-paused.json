@@ -1,0 +1,513 @@
+[
+ {
+  "schemaVersion": 1,
+  "kind": "eots-semi-eval-game",
+  "side": "allies",
+  "arm": "semi",
+  "seed": 20262705,
+  "scenario": "1942-1945 (The Shortened Campaign)",
+  "players": {
+   "Japan": "erasmus-japan-campaign",
+   "Allies": "llmsemi:glm"
+  },
+  "executor": "erasmus-v2-opt-v5",
+  "status": "paused",
+  "error": {
+   "code": "EOTS_LLM_HTTP_ERROR",
+   "message": "模型接口失败：EOTS_LLM_HTTP_ERROR"
+  },
+  "resumed": 15,
+  "result": null,
+  "turn": 3,
+  "actions": 353,
+  "end": {
+   "termination": "unfinished",
+   "winner": null,
+   "wonText": null,
+   "natural": false,
+   "earlyTreatyDefeat": false
+  },
+  "politicalWill": 6,
+  "powRequired": 0,
+  "powHeld": 0,
+  "resources": {
+   "japanResource": 9,
+   "alliesResource": 5,
+   "japanNamed": 67,
+   "alliesNamed": 84
+  },
+  "nations": [
+   {
+    "key": "PHILIPPINES",
+    "surrenderedTurn": 2,
+    "remainingKeyCount": 0,
+    "allJapanControlled": true
+   },
+   {
+    "key": "MALAYA",
+    "surrenderedTurn": 2,
+    "remainingKeyCount": 0,
+    "allJapanControlled": true
+   },
+   {
+    "key": "DEI",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 4,
+    "allJapanControlled": false
+   },
+   {
+    "key": "BURMA",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 4,
+    "allJapanControlled": false
+   }
+  ],
+  "llm": {
+   "profile": "glm",
+   "side": "allies",
+   "requests": 23,
+   "retries": 0,
+   "failedRequests": 16,
+   "invalidResponses": 0,
+   "promptTokens": 89856,
+   "completionTokens": 1873,
+   "totalTokens": 91729,
+   "strategyDecisions": 7,
+   "sourceLlm": 7,
+   "sourceDefault": 0,
+   "strategyCounts": {
+    "Allies:橙色计划": 6,
+    "Allies:建立ABDA": 1
+   }
+  },
+  "rulesSha256": "157f93e75bf7bf19189d0d409061d8849d999808a026569c37144cb4d48bd1dd",
+  "verified": true,
+  "finalStateHash": "3621341424e735912decce7f581343961ab2805ec6395dcdb29ef41ba6b081d4",
+  "durationMs": 693553,
+  "finishedAt": "2026-10-07T07:17:04.565Z"
+ },
+ {
+  "schemaVersion": 1,
+  "kind": "eots-semi-eval-game",
+  "side": "allies",
+  "arm": "semi",
+  "seed": 20262706,
+  "scenario": "1942-1945 (The Shortened Campaign)",
+  "players": {
+   "Japan": "erasmus-japan-campaign",
+   "Allies": "llmsemi:glm"
+  },
+  "executor": "erasmus-v2-opt-v5",
+  "status": "paused",
+  "error": {
+   "code": "EOTS_LLM_HTTP_ERROR",
+   "message": "模型接口失败：EOTS_LLM_HTTP_ERROR"
+  },
+  "resumed": 15,
+  "result": null,
+  "turn": 7,
+  "actions": 1045,
+  "end": {
+   "termination": "unfinished",
+   "winner": null,
+   "wonText": "JP deck reshuffled due to Tojo resign discarded.",
+   "natural": false,
+   "earlyTreatyDefeat": false
+  },
+  "politicalWill": 4,
+  "powRequired": 4,
+  "powHeld": 0,
+  "resources": {
+   "japanResource": 9,
+   "alliesResource": 5,
+   "japanNamed": 67,
+   "alliesNamed": 84
+  },
+  "nations": [
+   {
+    "key": "PHILIPPINES",
+    "surrenderedTurn": 2,
+    "remainingKeyCount": 0,
+    "allJapanControlled": true
+   },
+   {
+    "key": "MALAYA",
+    "surrenderedTurn": 2,
+    "remainingKeyCount": 0,
+    "allJapanControlled": true
+   },
+   {
+    "key": "DEI",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 3,
+    "allJapanControlled": false
+   },
+   {
+    "key": "BURMA",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 4,
+    "allJapanControlled": false
+   }
+  ],
+  "llm": {
+   "profile": "glm",
+   "side": "allies",
+   "requests": 49,
+   "retries": 1,
+   "failedRequests": 16,
+   "invalidResponses": 1,
+   "promptTokens": 497791,
+   "completionTokens": 8954,
+   "totalTokens": 506745,
+   "strategyDecisions": 32,
+   "sourceLlm": 32,
+   "sourceDefault": 0,
+   "strategyCounts": {
+    "Allies:橙色计划": 10,
+    "Allies:DEI防御": 1,
+    "Allies:DEI战略": 21
+   }
+  },
+  "rulesSha256": "157f93e75bf7bf19189d0d409061d8849d999808a026569c37144cb4d48bd1dd",
+  "verified": true,
+  "finalStateHash": "73d6bafce6052b8302514cbd5cac46562ad72b0745d5840c123570e049ed8516",
+  "durationMs": 1039969,
+  "finishedAt": "2026-10-07T07:18:18.589Z"
+ },
+ {
+  "schemaVersion": 1,
+  "kind": "eots-semi-eval-game",
+  "side": "allies",
+  "arm": "semi",
+  "seed": 20262707,
+  "scenario": "1942-1945 (The Shortened Campaign)",
+  "players": {
+   "Japan": "erasmus-japan-campaign",
+   "Allies": "llmsemi:glm"
+  },
+  "executor": "erasmus-v2-opt-v5",
+  "status": "paused",
+  "error": {
+   "code": "EOTS_LLM_HTTP_ERROR",
+   "message": "模型接口失败：EOTS_LLM_HTTP_ERROR"
+  },
+  "resumed": 15,
+  "result": null,
+  "turn": 2,
+  "actions": 23,
+  "end": {
+   "termination": "unfinished",
+   "winner": null,
+   "wonText": null,
+   "natural": false,
+   "earlyTreatyDefeat": false
+  },
+  "politicalWill": 8,
+  "powRequired": 0,
+  "powHeld": 0,
+  "resources": {
+   "japanResource": 4,
+   "alliesResource": 10,
+   "japanNamed": 59,
+   "alliesNamed": 92
+  },
+  "nations": [
+   {
+    "key": "PHILIPPINES",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 1,
+    "allJapanControlled": false
+   },
+   {
+    "key": "MALAYA",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 2,
+    "allJapanControlled": false
+   },
+   {
+    "key": "DEI",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 7,
+    "allJapanControlled": false
+   },
+   {
+    "key": "BURMA",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 4,
+    "allJapanControlled": false
+   }
+  ],
+  "llm": {
+   "profile": "glm",
+   "side": "allies",
+   "requests": 16,
+   "retries": 0,
+   "failedRequests": 16,
+   "invalidResponses": 0,
+   "promptTokens": 0,
+   "completionTokens": 0,
+   "totalTokens": 0,
+   "strategyDecisions": 0,
+   "sourceLlm": 0,
+   "sourceDefault": 0,
+   "strategyCounts": {}
+  },
+  "rulesSha256": "157f93e75bf7bf19189d0d409061d8849d999808a026569c37144cb4d48bd1dd",
+  "verified": true,
+  "finalStateHash": "ef60ecf7c2693e8464e4a67d512072bc93da7c1d0e8fcec0c88ca3038e1922c5",
+  "durationMs": 473560,
+  "finishedAt": "2026-10-07T07:24:58.126Z"
+ },
+ {
+  "schemaVersion": 1,
+  "kind": "eots-semi-eval-game",
+  "side": "allies",
+  "arm": "semi",
+  "seed": 20262708,
+  "scenario": "1942-1945 (The Shortened Campaign)",
+  "players": {
+   "Japan": "erasmus-japan-campaign",
+   "Allies": "llmsemi:glm"
+  },
+  "executor": "erasmus-v2-opt-v5",
+  "status": "paused",
+  "error": {
+   "code": "EOTS_LLM_HTTP_ERROR",
+   "message": "模型接口失败：EOTS_LLM_HTTP_ERROR"
+  },
+  "resumed": 15,
+  "result": null,
+  "turn": 2,
+  "actions": 23,
+  "end": {
+   "termination": "unfinished",
+   "winner": null,
+   "wonText": null,
+   "natural": false,
+   "earlyTreatyDefeat": false
+  },
+  "politicalWill": 8,
+  "powRequired": 0,
+  "powHeld": 0,
+  "resources": {
+   "japanResource": 4,
+   "alliesResource": 10,
+   "japanNamed": 59,
+   "alliesNamed": 92
+  },
+  "nations": [
+   {
+    "key": "PHILIPPINES",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 1,
+    "allJapanControlled": false
+   },
+   {
+    "key": "MALAYA",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 2,
+    "allJapanControlled": false
+   },
+   {
+    "key": "DEI",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 7,
+    "allJapanControlled": false
+   },
+   {
+    "key": "BURMA",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 4,
+    "allJapanControlled": false
+   }
+  ],
+  "llm": {
+   "profile": "glm",
+   "side": "allies",
+   "requests": 16,
+   "retries": 0,
+   "failedRequests": 16,
+   "invalidResponses": 0,
+   "promptTokens": 0,
+   "completionTokens": 0,
+   "totalTokens": 0,
+   "strategyDecisions": 0,
+   "sourceLlm": 0,
+   "sourceDefault": 0,
+   "strategyCounts": {}
+  },
+  "rulesSha256": "157f93e75bf7bf19189d0d409061d8849d999808a026569c37144cb4d48bd1dd",
+  "verified": true,
+  "finalStateHash": "c34528dfaeb150bb0ef5c93d350f2f1efcd488386ca40065ebcd201e454c2ce0",
+  "durationMs": 472378,
+  "finishedAt": "2026-10-07T07:26:10.969Z"
+ },
+ {
+  "schemaVersion": 1,
+  "kind": "eots-semi-eval-game",
+  "side": "allies",
+  "arm": "semi",
+  "seed": 20262709,
+  "scenario": "1942-1945 (The Shortened Campaign)",
+  "players": {
+   "Japan": "erasmus-japan-campaign",
+   "Allies": "llmsemi:glm"
+  },
+  "executor": "erasmus-v2-opt-v5",
+  "status": "paused",
+  "error": {
+   "code": "EOTS_LLM_HTTP_ERROR",
+   "message": "模型接口失败：EOTS_LLM_HTTP_ERROR"
+  },
+  "resumed": 15,
+  "result": null,
+  "turn": 2,
+  "actions": 23,
+  "end": {
+   "termination": "unfinished",
+   "winner": null,
+   "wonText": null,
+   "natural": false,
+   "earlyTreatyDefeat": false
+  },
+  "politicalWill": 8,
+  "powRequired": 0,
+  "powHeld": 0,
+  "resources": {
+   "japanResource": 4,
+   "alliesResource": 10,
+   "japanNamed": 59,
+   "alliesNamed": 92
+  },
+  "nations": [
+   {
+    "key": "PHILIPPINES",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 1,
+    "allJapanControlled": false
+   },
+   {
+    "key": "MALAYA",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 2,
+    "allJapanControlled": false
+   },
+   {
+    "key": "DEI",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 7,
+    "allJapanControlled": false
+   },
+   {
+    "key": "BURMA",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 4,
+    "allJapanControlled": false
+   }
+  ],
+  "llm": {
+   "profile": "glm",
+   "side": "allies",
+   "requests": 16,
+   "retries": 0,
+   "failedRequests": 16,
+   "invalidResponses": 0,
+   "promptTokens": 0,
+   "completionTokens": 0,
+   "totalTokens": 0,
+   "strategyDecisions": 0,
+   "sourceLlm": 0,
+   "sourceDefault": 0,
+   "strategyCounts": {}
+  },
+  "rulesSha256": "157f93e75bf7bf19189d0d409061d8849d999808a026569c37144cb4d48bd1dd",
+  "verified": true,
+  "finalStateHash": "f387af586eb178e94e2d8639dfc119d9e1e6d45176ebbeb98c95d31d37fd5a7f",
+  "durationMs": 474719,
+  "finishedAt": "2026-10-07T07:32:52.846Z"
+ },
+ {
+  "schemaVersion": 1,
+  "kind": "eots-semi-eval-game",
+  "side": "allies",
+  "arm": "semi",
+  "seed": 20262710,
+  "scenario": "1942-1945 (The Shortened Campaign)",
+  "players": {
+   "Japan": "erasmus-japan-campaign",
+   "Allies": "llmsemi:glm"
+  },
+  "executor": "erasmus-v2-opt-v5",
+  "status": "paused",
+  "error": {
+   "code": "EOTS_LLM_HTTP_ERROR",
+   "message": "模型接口失败：EOTS_LLM_HTTP_ERROR"
+  },
+  "resumed": 15,
+  "result": null,
+  "turn": 2,
+  "actions": 54,
+  "end": {
+   "termination": "unfinished",
+   "winner": null,
+   "wonText": null,
+   "natural": false,
+   "earlyTreatyDefeat": false
+  },
+  "politicalWill": 8,
+  "powRequired": 0,
+  "powHeld": 0,
+  "resources": {
+   "japanResource": 5,
+   "alliesResource": 9,
+   "japanNamed": 61,
+   "alliesNamed": 90
+  },
+  "nations": [
+   {
+    "key": "PHILIPPINES",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 1,
+    "allJapanControlled": false
+   },
+   {
+    "key": "MALAYA",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 2,
+    "allJapanControlled": false
+   },
+   {
+    "key": "DEI",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 6,
+    "allJapanControlled": false
+   },
+   {
+    "key": "BURMA",
+    "surrenderedTurn": 0,
+    "remainingKeyCount": 4,
+    "allJapanControlled": false
+   }
+  ],
+  "llm": {
+   "profile": "glm",
+   "side": "allies",
+   "requests": 16,
+   "retries": 0,
+   "failedRequests": 16,
+   "invalidResponses": 0,
+   "promptTokens": 0,
+   "completionTokens": 0,
+   "totalTokens": 0,
+   "strategyDecisions": 0,
+   "sourceLlm": 0,
+   "sourceDefault": 0,
+   "strategyCounts": {}
+  },
+  "rulesSha256": "157f93e75bf7bf19189d0d409061d8849d999808a026569c37144cb4d48bd1dd",
+  "verified": true,
+  "finalStateHash": "3a19b4af80b390c22c4ed1aa8908da6501018f6a000e037384be5fd4c1c22bfb",
+  "durationMs": 485092,
+  "finishedAt": "2026-10-07T07:34:16.061Z"
+ }
+]
