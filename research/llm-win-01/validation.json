@@ -1,8 +1,8 @@
 {
   "task": "LLM-WIN-01",
   "status": "in_progress",
-  "recordedAt": "2026-10-07T07:55:25.304Z",
-  "scope": "development checkpoint823; PH/MAL formal+controlled, Burma controlled but unprocessed, DEI2 missing; goal incomplete",
+  "recordedAt": "2026-10-07T08:11:17.255Z",
+  "scope": "goal incomplete; same trial saved860; PH/MAL formal, Burma controlled but unprocessed, DEI2 missing; API account needs recharge",
   "setup": {
     "seed": 20262602,
     "scenario": "1942-1945 (The Shortened Campaign)",
@@ -912,6 +912,73 @@
         "finalStateHash": "f3e395a280dbed8322938c9526160d8a63f4baa0025e2508dd73c9bbe041c720"
       },
       "segmentSha256": "c1d795fdddb984c6739dd5d4087dacb831bb59ba033f6c443750c78716bbf50c"
+    },
+    {
+      "requests": 334,
+      "networkRequests": 333,
+      "localConfigFailures": 1,
+      "revision": 860,
+      "turn": 4,
+      "stats": {
+        "requests": 334,
+        "retries": 16,
+        "failedRequests": 4,
+        "invalidResponses": 17,
+        "totalTokens": 12760653,
+        "promptTokens": 11293566,
+        "completionTokens": 1467087,
+        "usageUnknown": 2,
+        "latencyMs": 7798128,
+        "forcedActions": 162,
+        "assistedActions": 0,
+        "cost": "unknown"
+      },
+      "goal": {
+        "achieved": false,
+        "kind": null,
+        "nations": [
+          {
+            "key": "PHILIPPINES",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "MALAYA",
+            "surrenderedTurn": 2,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          },
+          {
+            "key": "DEI",
+            "surrenderedTurn": 0,
+            "allJapanControlled": false,
+            "remainingKeys": [
+              309,
+              421
+            ]
+          },
+          {
+            "key": "BURMA",
+            "surrenderedTurn": 0,
+            "allJapanControlled": true,
+            "remainingKeys": []
+          }
+        ],
+        "naturalComplete": false
+      },
+      "verified": {
+        "verified": true,
+        "actions": 860,
+        "complete": false,
+        "result": null,
+        "finalStateHash": "e21402b91b7ebf53cae2f03d994159dc24a231d42e0ae71181e7c7f94b4e3467"
+      },
+      "segmentSha256": "7932e9858314aeef4c82743bbecf381023c95ecf18c24ddfe832d11816c13ce1",
+      "error": {
+        "httpStatus": 402,
+        "actionCommitted": false
+      }
     }
   ],
   "localVerification": {
@@ -1008,5 +1075,22 @@
       "channel": "local; separate affected runs plus unchanged-input reuse"
     },
     "goalAchieved": false
+  },
+  "resourceStop": {
+    "at": "2026-10-07T08:04:00.319Z",
+    "httpStatus": 402,
+    "isAvailable": false,
+    "currency": "CNY",
+    "balance": "-0.05",
+    "sameKeyRechargeRequested": true
+  },
+  "nativeDeployment": {
+    "promptVersion": "eots-llm-v7.8",
+    "pid": 50376,
+    "httpStatus": 200,
+    "rulesSha256": "157f93e75bf7bf19189d0d409061d8849d999808a026569c37144cb4d48bd1dd",
+    "trialRulesKept": "825b6d9d78af85e5d87222a78b2d11f4b38512a1c11b7b4657979f744777d233",
+    "browserVisualCheck": false,
+    "realNativeRequests": 0
   }
 }
