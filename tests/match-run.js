@@ -260,9 +260,11 @@ function verifyReplay(replay, options = {}) {
             }
             try { validateAction(view, { action, argument }) }
             catch (error) { throw new Error(`replay action ${index + 1}: ${error.message}`, { cause: error }) }
+            if (options.beforeAction) options.beforeAction(state, { index:index+1, role, action, argument, view, bundle:b })
             state = b.rules.action(state, role, action, argument)
         })
         openingMeter.observe(state, index + 1)
+        if (options.afterAction) options.afterAction(state, { index:index+1, role, action, argument })
     }
     const actual = stateDigest(state)
     if (actual !== replay.result.finalStateSha256) throw new Error(`replay state mismatch: ${actual} != ${replay.result.finalStateSha256}`)

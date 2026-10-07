@@ -1,0 +1,365 @@
+{
+  "seed": 20263126,
+  "replaySha256": "ed5d5f5bc5ce4a80df3db9cdb7bb6cf383c9e064069cacd9fd032dc88bdf492c",
+  "verification": {
+    "verified": true,
+    "actions": 1657,
+    "finalStateSha256": "3e4f7ce3922b99d43634c5f00ff73077cede9866e1e312c84688c2f0548e6c70",
+    "opening": {
+      "schemaVersion": 1,
+      "startTurn": 2,
+      "deadlineTurns": {
+        "early": 4,
+        "dei": 6
+      },
+      "initialSurrender": {
+        "philippines": false,
+        "malaya": false,
+        "dei": false
+      },
+      "firstSurrender": {
+        "philippines": {
+          "nation": "philippines",
+          "turn": 2,
+          "action": 210
+        },
+        "malaya": {
+          "nation": "malaya",
+          "turn": 2,
+          "action": 210
+        }
+      },
+      "firstKeysHeld": {
+        "philippines": {
+          "turn": 2,
+          "action": 96
+        },
+        "malaya": {
+          "turn": 2,
+          "action": 188
+        }
+      },
+      "events": [
+        {
+          "nation": "philippines",
+          "turn": 2,
+          "action": 210
+        },
+        {
+          "nation": "malaya",
+          "turn": 2,
+          "action": 210
+        }
+      ],
+      "checkpoints": {
+        "2": {
+          "action": 219,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "malaya": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                309,
+                245,
+                277,
+                307,
+                480,
+                452,
+                368
+              ]
+            }
+          }
+        },
+        "3": {
+          "action": 481,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "malaya": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                277,
+                307,
+                480,
+                452
+              ]
+            }
+          }
+        },
+        "4": {
+          "action": 709,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "malaya": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                480,
+                452
+              ]
+            }
+          }
+        },
+        "5": {
+          "action": 906,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "malaya": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                480,
+                452
+              ]
+            }
+          }
+        },
+        "6": {
+          "action": 1071,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "malaya": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                277,
+                307,
+                480,
+                452
+              ]
+            }
+          }
+        },
+        "7": {
+          "action": 1260,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "malaya": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                277,
+                307,
+                480,
+                452
+              ]
+            }
+          }
+        },
+        "8": {
+          "action": 1461,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "malaya": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                277,
+                307,
+                480,
+                452
+              ]
+            }
+          }
+        },
+        "9": {
+          "action": 1657,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "malaya": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                277,
+                307,
+                480,
+                452
+              ]
+            }
+          },
+          "terminal": true
+        }
+      },
+      "philippinesByThirdRound": true,
+      "malayaByThirdRound": true,
+      "bothByThirdRound": true,
+      "deiByFifthRound": false
+    },
+    "modes": {
+      "Japan": "actions-only",
+      "Allies": "actions-only"
+    },
+    "legacyDecisionChecks": {
+      "Japan": 0,
+      "Allies": 0
+    },
+    "legacyDecisionDrift": {
+      "Japan": 0,
+      "Allies": 0
+    },
+    "legacyDecisionLogDrift": {
+      "Japan": 0,
+      "Allies": 0
+    },
+    "verificationMethod": "legal-actions-and-complete-final-state",
+    "resolvedBundlePaths": {
+      "Japan": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+      "Allies": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\candidate-final01.js"
+    },
+    "winner": "Allies",
+    "won_text": "Allies Victory by blockade.",
+    "natural": true,
+    "termination": "natural",
+    "earlyTreatyDefeat": false
+  },
+  "observerSha256": "748ce8b52aac97ca7867517e924cafcf2dc75b554ea880ee02f841f459b5e85d",
+  "verifierOverlaySha256": "2720dcedf873b525ab04ba721d0ea9bec2c3faefaff5b454c7f578a018d3e0be",
+  "instrumentationSha256": "7972444edc47607cf4f1fdeb6c9a712c669dcdec11e5c38cfe3d5a880ea8017e",
+  "checks": [
+    {
+      "turn": 2,
+      "action": 210,
+      "traceJudged": true,
+      "startedTurn": 0,
+      "completedPhases": 0,
+      "currentPhaseChecked": true,
+      "allDisconnected": false
+    },
+    {
+      "turn": 3,
+      "action": 481,
+      "traceJudged": true,
+      "startedTurn": 0,
+      "completedPhases": 0,
+      "currentPhaseChecked": true,
+      "allDisconnected": false
+    },
+    {
+      "turn": 4,
+      "action": 709,
+      "traceJudged": true,
+      "startedTurn": 0,
+      "completedPhases": 0,
+      "currentPhaseChecked": true,
+      "allDisconnected": false
+    },
+    {
+      "turn": 5,
+      "action": 906,
+      "traceJudged": true,
+      "startedTurn": 0,
+      "completedPhases": 0,
+      "currentPhaseChecked": true,
+      "allDisconnected": false
+    },
+    {
+      "turn": 6,
+      "action": 1071,
+      "traceJudged": true,
+      "startedTurn": 0,
+      "completedPhases": 0,
+      "currentPhaseChecked": true,
+      "allDisconnected": false
+    },
+    {
+      "turn": 7,
+      "action": 1260,
+      "traceJudged": true,
+      "startedTurn": 7,
+      "completedPhases": 1,
+      "currentPhaseChecked": true,
+      "allDisconnected": true
+    },
+    {
+      "turn": 8,
+      "action": 1461,
+      "traceJudged": true,
+      "startedTurn": 7,
+      "completedPhases": 2,
+      "currentPhaseChecked": true,
+      "allDisconnected": true
+    },
+    {
+      "turn": 9,
+      "action": 1657,
+      "traceJudged": true,
+      "startedTurn": 7,
+      "completedPhases": 3,
+      "currentPhaseChecked": true,
+      "allDisconnected": true
+    }
+  ]
+}

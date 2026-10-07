@@ -1,0 +1,35 @@
+{
+  "task": "AI-CAMPAIGN-EVAL-50-01",
+  "frozenAt": "2026-10-07T13:12:19.324Z",
+  "sourceCommit": "1c3709e",
+  "bundle": "tmp/ai-campaign-eval-50-01/bundles/current-1c3709e.js",
+  "bundleSha256": "3de6cbedb4fb7f927f8b43e71d955b3ab2615892c016f5fbe9df6911c4b4e35d",
+  "runnerSha256": "5008983c2dfd710fbedd9eb0863c657d80efd6d6799c68867a41e7f520315f2b",
+  "metricsSha256": "5227a81f7798cadf4ce01d55afa2d903b1ecd5253a5d19c713f14f93d96ba2ac",
+  "japanProfile": "erasmus-japan-campaign-v2-1",
+  "scenarios": {
+    "1942": {
+      "scenario": "1942-1945 (The Shortened Campaign)",
+      "alliesProfile": "erasmus-campaign-v2-1",
+      "start": 20263801,
+      "end": 20263850,
+      "count": 50
+    },
+    "1943": {
+      "scenario": "1943-1945 (The Even Shorter Campaign)",
+      "alliesProfile": "erasmus-campaign-v2-2",
+      "start": 20263901,
+      "end": 20263950,
+      "count": 50
+    }
+  },
+  "maxActions": 12000,
+  "repeatStateLimit": 32,
+  "headlessMoves": true,
+  "recordReplays": "all",
+  "environmentOverrides": {},
+  "runtimeModelRequests": 0,
+  "externalApiCost": 0,
+  "policyChangedDuringBatch": false,
+  "comparison": "updated sides absolute selfplay; no paired baseline claim"
+}

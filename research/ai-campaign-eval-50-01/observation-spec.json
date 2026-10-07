@@ -1,0 +1,27 @@
+{
+  "task": "AI-CAMPAIGN-EVAL-50-01",
+  "observerSha256": "03a9cde15b610a9b223f0d3afc4187af173368ab6edcd8996327927833ea9eb9",
+  "auditSha256": "45259bb76d69271c95abd31e777820150d6103ea57a3a63a1c788b5ce171bddf",
+  "beforeAfterHookScope": "offline full replay only; runtime match loop unchanged",
+  "sourceScope": "public board locations/steps/control/official flags and public legal queries; no hands or PRNG",
+  "probe": {
+    "seed": 20263126,
+    "actions": 1657,
+    "completeHashReplay": true,
+    "nationalChecks": 8,
+    "blockade": {
+      "start": 7,
+      "win": 9,
+      "phases": [
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  "cost": {
+    "runtimeApiRequests": 0,
+    "externalApiCost": 0,
+    "nativeCodexCost": null
+  }
+}
