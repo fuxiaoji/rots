@@ -718,3 +718,13 @@
 
 - tests/match-run.js 的旧 surrender.japan / surrenderCounts.japan 使用 surrender[12]，实际是CHINA；JAPAN.id为11。旧字段不能当日本投降证据；历史结果保留，当前报告以正式winner/won_text和国家标记为准，本任务未改统计工具。
 - AI-CAMPAIGN-01 初始manifest文字写repeatStateLimit40，真实runner与实际调用始终32；只更正manifest元数据，未改历史配置或对局。
+
+## 2026-10-07 — AI-CAMPAIGN-02 战役 AI 2.0 发布完成
+
+- 新ID erasmus-campaign-v2 / erasmus-japan-campaign-v2显示盟军/日军战役AI2.0，支持1942/1943。旧两planner保留2b31b49原文，新策略同IIFE隔离；六入口、共享移动/PBM/最小守軍按持久campaign_v2分流，旧profile不增加零flag。旧公开轨迹achieved逐字恢复，2.0策略标签准确。
+- 20项唯一相关本地检查通过，112真实保存点旧动作/封包/公开轨迹及2.0决策一致；3388动作两剧本逐步完整状态归一化相同。只移除显式版本标记，不修改原始历史回放，不作新胜率评测。初次零flag4项恢复失败已修、9项重跑通过；定点11和版本3通过。
+- 源码d7f891d，发布分支feat/AI-CAMPAIGN-02-v2-release；共享目录仅8源码文件集成提交16c6d60，保留并行LLM分支及未提交文件。本地8080热载HTTP200、上下文不变，无重启。生成文件仅构建不提交。
+- 线上https://fuwenji.asia/rtt/已切换release20261007-campaign-2.0，仅更rules.js/create.html及发布manifest；旧平台/LLM源码/模型配置保持，SQLite一致备份后只重启eots-rtt。1005文件哈希、健康接口、真实登录创建页新旧选项通过；5局/8表内容哈希重启前后完全一致，原首页哈希不变。
+- 本地规则48a620f5552b448d95abaa20d937388c9b985c8c3ad279c02ac555f8669ef921，线上37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a；仅CRLF/LF字节差，完整规范换行文本一致。旧release保留可回退。
+- LLM原生指纹绑定完整rules.js，旧局推进会POLICY_CHANGED暂停，需新建局；账本/记忆未清除，不绕过版本检查。CLI原冻结局与其他工作流源文件不改。真API/外部review请求0、外部API费用0；Codex代理费用unknown。
+- 自动审批最初拒绝跨会话SSH凭据复用，用户在本次明确授权后才通过getpass连接；不存储/提交凭据。SQL rowid审计失败时切换未发生，稳定全行哈希替代后通过。证据research/ai-campaign-02；未推送GitHub。
