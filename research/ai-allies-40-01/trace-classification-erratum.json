@@ -1,0 +1,114 @@
+{
+  "task": "AI-ALLIES-40-01",
+  "checks": [
+    {
+      "seed": 20263001,
+      "sameFinalState": true,
+      "sameWinner": true,
+      "oldTraceNodeMissing": 930,
+      "newTraceNodeMissing": 0,
+      "oldValid": false,
+      "newValid": true
+    },
+    {
+      "seed": 20263002,
+      "sameFinalState": true,
+      "sameWinner": true,
+      "oldTraceNodeMissing": 917,
+      "newTraceNodeMissing": 0,
+      "oldValid": false,
+      "newValid": true
+    },
+    {
+      "seed": 20263003,
+      "sameFinalState": true,
+      "sameWinner": true,
+      "oldTraceNodeMissing": 518,
+      "newTraceNodeMissing": 0,
+      "oldValid": false,
+      "newValid": true
+    },
+    {
+      "seed": 20263004,
+      "sameFinalState": true,
+      "sameWinner": true,
+      "oldTraceNodeMissing": 528,
+      "newTraceNodeMissing": 0,
+      "oldValid": false,
+      "newValid": true
+    },
+    {
+      "seed": 20263005,
+      "sameFinalState": true,
+      "sameWinner": true,
+      "oldTraceNodeMissing": 658,
+      "newTraceNodeMissing": 0,
+      "oldValid": false,
+      "newValid": true
+    },
+    {
+      "seed": 20263006,
+      "sameFinalState": true,
+      "sameWinner": true,
+      "oldTraceNodeMissing": 910,
+      "newTraceNodeMissing": 0,
+      "oldValid": false,
+      "newValid": true
+    },
+    {
+      "seed": 20263011,
+      "sameFinalState": true,
+      "sameWinner": true,
+      "oldTraceNodeMissing": 343,
+      "newTraceNodeMissing": 0,
+      "oldValid": false,
+      "newValid": true
+    },
+    {
+      "seed": 20263012,
+      "sameFinalState": true,
+      "sameWinner": true,
+      "oldTraceNodeMissing": 378,
+      "newTraceNodeMissing": 0,
+      "oldValid": false,
+      "newValid": true
+    },
+    {
+      "seed": 20263013,
+      "sameFinalState": true,
+      "sameWinner": true,
+      "oldTraceNodeMissing": 377,
+      "newTraceNodeMissing": 0,
+      "oldValid": false,
+      "newValid": true
+    },
+    {
+      "seed": 20263014,
+      "sameFinalState": true,
+      "sameWinner": true,
+      "oldTraceNodeMissing": 379,
+      "newTraceNodeMissing": 0,
+      "oldValid": false,
+      "newValid": true
+    },
+    {
+      "seed": 20263015,
+      "sameFinalState": true,
+      "sameWinner": true,
+      "oldTraceNodeMissing": 350,
+      "newTraceNodeMissing": 0,
+      "oldValid": false,
+      "newValid": true
+    },
+    {
+      "seed": 20263016,
+      "sameFinalState": true,
+      "sameWinner": true,
+      "oldTraceNodeMissing": 382,
+      "newTraceNodeMissing": 0,
+      "oldValid": false,
+      "newValid": true
+    }
+  ],
+  "runtimeModelRequests": 0
+}

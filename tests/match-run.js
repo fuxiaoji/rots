@@ -121,7 +121,7 @@ function validDecisionTrace(trace) {
     if (!trace?.node) return false
     const chart = String(trace.chart || "")
     return /(?:JP-0[1-6]|AP-0[7-9]|AP-1[0-2])$/.test(chart)
-        || chart === "CAMPAIGN" && !!trace.campaign && trace.policy === "campaign-v1"
+        || chart === "CAMPAIGN" && !!trace.campaign && ["campaign-v1","campaign-v2.0","campaign-v2.1","campaign-v2.2","campaign-japan-v2.1"].includes(trace.policy)
 }
 function play(seed, options, runtime = createRuntime(options)) {
     const { bundles, names, metadata } = runtime

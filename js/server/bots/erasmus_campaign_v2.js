@@ -1,6 +1,23 @@
 // AI-CAMPAIGN-02: isolated 2.0 planner from afd11a2; legacy globals remain unchanged.
 const EOTS_CAMPAIGN_V2 = (() => {
 // BEGIN CAMPAIGN V2
+function ec_refined() { return !!(typeof em_cfg==="function" && em_cfg()?.allies_campaign_refinement && em_cfg()?.campaign_planner) }
+function ec_route_refined(view) {
+    return ec_refined() && !!em_cfg()?.allies_route_commitment
+        && typeof EVEN_SHORT_CAMPAIGN_SCENARIO!=="undefined" && view.sid===EVEN_SHORT_CAMPAIGN_SCENARIO
+}
+function ec_route_allows_atomic(view,board=ec_map()) {
+    if (!ec_route_refined(view)) return true
+    if (ec_manchuria_blocked(view,board)) return false
+    const turn=Number(view.turn || 0), prior=view.ai?.plan
+    const afterBombing=ec_card_window(view) || prior?.turn===turn
+        && prior?.victory?.routes?.atomic?.status==="deadline-missed"
+    return !((turn>9 || turn===9 && afterBombing) && !view.ai?.victory?.atomic?.noStrategicBombingFailure)
+}
+function ec_blockade_can_finish(view,blockade) {
+    const turn=Number(view.turn || 0), next=Number(blockade?.nextJudgementTurn ?? turn), started=Number(blockade?.startedTurn || 0)
+    return (started ? Math.max(next,started+2) : next+2)<=12
+}
 // AI-WIN-01: public-view campaign planning. This module never reads or writes G.
 // ec_plan(view, context) -> JSON PlanContext v1. Legality remains in rules_query.
 // ec_apply_plan updates only the ephemeral Erasmus strategy cache. The caller
@@ -64,6 +81,7 @@ function ec_screen_gain(before,after,env) {
 function ec_blockade_tasks(env) {
     const tasks=[]
     if (env.faction!==1 || Number(env.view.turn)<5 || env.victory.blockade?.applicable===false) return tasks
+    if (ec_refined() && !ec_blockade_can_finish(env.view,env.victory.blockade)) return tasks
     const before=ec_air_projection(env)
     if (!before) return tasks
     const air=env.available.filter(u=>u.class==="air" && !u.b29 && !env.view.oos?.includes(u.id))
@@ -154,7 +172,27 @@ function ec_map() {
         .sort((a, b) => a.hex - b.hex)
 }
 
+function ec_preserves_home_force(task,env) {
+    if (!ec_refined() || Number(env.view.turn)<9 || !env.homelandFoothold) return true
+    const remaining=env.victory.homelandKeys.filter(h=>!ec_control(h,env.faction))
+    if (!remaining.length || remaining.includes(task.hex)
+        || Number(env.view.political_will ?? 6)<=1 && env.powGap>0) return true
+    const distance=h=>Math.min(...remaining.map(key=>ec_dist(h,key)))
+    return (task.movementUnitIds || []).every(id=>{
+        const unit=env.units.find(u=>u.id===id)
+        if (!unit || unit.class!=="ground" || unit.faction!==env.faction
+            || !ec_control(unit.location,env.faction) || distance(unit.location)>8
+            || !env.victory.homelandKeys.includes(unit.location)
+                && unit.location!==env.homelandPreparation?.rallyPort
+                && !env.homelandPreparation?.groundIds?.includes(id)) return true
+        return distance(task.hex)<distance(unit.location)
+    })
+}
+
 function ec_homeland_drive(view) {
+    if (ec_route_refined(view) && !ec_route_allows_atomic(view)) return true
+    if (ec_refined() && Number(view.turn)>=9 && ec_card_window(view)
+        && !view.ai?.victory?.atomic?.noStrategicBombingFailure && !view.ai?.victory?.blockade?.startedTurn) return true
     if (ec_manchuria_blocked(view, ec_map())) return true
     const keysHeld = view.ai?.victory?.homelandKeys || []
     if ((view.ai?.units || []).some(u => u.faction === 1 && u.class === "ground"
@@ -226,7 +264,7 @@ function ec_homeland_rally(view, board, units, faction, approach) {
 function ec_campaign_objective(view, board, units, faction) {
     const previous = view.ai?.plan?.campaign?.objectiveHex
     const turn = Number(view.turn || 0), atomic = view.ai?.victory?.atomic
-    const atomicApproach = turn >= 9 && atomic?.noStrategicBombingFailure
+    const atomicApproach = turn >= 9 && atomic?.noStrategicBombingFailure && ec_route_allows_atomic(view,board)
     const baseApproach = turn >= 6 && !atomic?.b29InRangeOfTokyo
     const objectiveAge = turn - Number(view.ai?.plan?.campaign?.objectiveSinceTurn ?? view.ai?.plan?.turn ?? turn)
     const byHex = new Map(board.map(m => [m.hex, m]))
@@ -255,10 +293,12 @@ function ec_campaign_objective(view, board, units, faction) {
         return { hex: m.hex, distance, score: ec_national_bonus(m.hex,national) + (m.port ? 12 : 0) + (m.airfield ? 8 : 0)
             + (!defenders.length ? 24 : 0) + (atomicApproach && m.resource ? 120 : 0)
             + (turn >= 5 && typeof EVEN_SHORT_CAMPAIGN_SCENARIO !== "undefined"
-                && view.sid === EVEN_SHORT_CAMPAIGN_SCENARIO && m.resource ? 90 : 0)
+                && view.sid === EVEN_SHORT_CAMPAIGN_SCENARIO && m.resource && ec_route_allows_atomic(view,board) ? 90 : 0)
             + (baseApproach && m.airfield && tokyoDistance <= 8 ? 45 : 0)
             + (homelandApproach && mainland ? 135 : 0)
             + (homelandDrive && turn >= 7 && approachPort ? 65 : 0)
+            + (ec_route_refined(view) && !ec_route_allows_atomic(view,board) && turn>=7
+                && m.port && homeDistance<=8 ? mainland ? 100 : 140 : 0)
             - (m.hex === previous && objectiveAge >= 2 ? objectiveAge * 20 : 0)
             - distance * 5 - defense - tokyoDistance * 0.2 }
     }).filter(m => m.distance <= 12)
@@ -273,6 +313,10 @@ function ec_card_window(view) {
 function ec_task_complete(task, view, faction) {
     const units = view.ai?.units || []
     if (task.kind === "CONQUEST") return ec_control(task.hex, faction)
+    if (task.kind === "SUPPRESS" && task.softeningGoal) {
+        const now=typeof queryDefendingGround==="function"?queryDefendingGround(task.hex,{faction:1-faction}):null
+        return !!now && now.cf<task.softeningGoal.beforeCf
+    }
     if (task.kind === "SUPPRESS") return !units.some(u=>u.faction!==faction && u.location===task.hex && (task.targetClasses || ["air"]).includes(u.class))
     return task.movementUnitIds.every(id => units.some(u => u.id === id && u.location === task.hex))
 }
@@ -335,7 +379,7 @@ function ec_victory(view, board, faction) {
     const manchuria = board.filter(m => m.resource && m.region === "Manchuria" && ec_control(m.hex, 1 - faction)).map(m => m.hex)
     const soviet = (view.ai?.ownCards || []).find(c => /soviet/i.test(c.name || ""))
     const enemyHqs = (view.ai?.units || []).filter(u => u.faction !== faction && u.class === "hq")
-    const atomicClockLost = turn > 9 && !atomic?.noStrategicBombingFailure
+    const atomicClockLost = (turn > 9 || ec_refined() && turn===9 && ec_card_window(view)) && !atomic?.noStrategicBombingFailure
     return { atomic, jpResources: Number(visible.jpResources ?? view.resources?.[0] ?? enemyResources.length),
         resourceTargets: enemyResources, blockade, homelandKeys,
         b29Bases: airbases,
@@ -413,10 +457,10 @@ function ec_garrison_reserve(view, board, units, faction) {
     const atomic = view.ai?.victory?.atomic
     const resourceCount = Number(view.ai?.victory?.jpResources)
     const bombingRoute = atomic?.noStrategicBombingFailure && atomic?.b29InRangeOfTokyo
-        && !view.ai?.victory?.blockade?.startedTurn
+        && !view.ai?.victory?.blockade?.startedTurn && ec_route_allows_atomic(view,board)
     const evenShort = typeof EVEN_SHORT_CAMPAIGN_SCENARIO !== "undefined"
         && view.sid === EVEN_SHORT_CAMPAIGN_SCENARIO
-    const finalResourceChance = Number(view.turn) === 12 && Number(view.political_will) > 2
+    const finalResourceChance = ec_route_allows_atomic(view,board) && Number(view.turn) === 12 && Number(view.political_will) > 2
         && atomic?.noStrategicBombingFailure && atomic?.b29InRangeOfTokyo
         && (resourceCount === 2 || evenShort && resourceCount > 2 && !view.ai?.victory?.blockade?.startedTurn)
     const earlyResourceSprint = evenShort && Number(view.turn) >= 9
@@ -462,16 +506,16 @@ function ec_score_target(m, env) {
     }
     if (env.homelandApproach && Number(env.view.turn) >= 7 && m.port && m.region === "JMandates"
         && env.victory.homelandKeys.some(key => ec_dist(m.hex, key) <= 10)) score += 65
-    if (m.resource && Number(env.view.turn) >= 9 && env.victory.atomic?.noStrategicBombingFailure)
+    if (m.resource && ec_route_allows_atomic(env.view,env.board) && Number(env.view.turn) >= 9 && env.victory.atomic?.noStrategicBombingFailure)
         score += env.victory.jpResources <= 4 ? 150
             : typeof EVEN_SHORT_CAMPAIGN_SCENARIO !== "undefined" && env.view.sid === EVEN_SHORT_CAMPAIGN_SCENARIO ? 105 : 80
-    else if (m.resource && Number(env.view.turn) >= 5 && typeof EVEN_SHORT_CAMPAIGN_SCENARIO !== "undefined"
+    else if (m.resource && ec_route_allows_atomic(env.view,env.board) && Number(env.view.turn) >= 5 && typeof EVEN_SHORT_CAMPAIGN_SCENARIO !== "undefined"
         && env.view.sid === EVEN_SHORT_CAMPAIGN_SCENARIO)
         score += 95
     if (defenders.some(u => u.class === "hq")) score += env.victory.routes.headquarters.enemyHqCount <= 1 ? 120 : 38
     // A reachable resource is useful, but proximity to Tokyo alone never makes
     // a distant or impossible invasion preferable to an executable landing.
-    return score
+    return score+ec_central_pacific_bonus(m,env)
 }
 
 function ec_support(group, target, env) {
@@ -548,6 +592,7 @@ function ec_reaction(target, env) {
 }
 
 function ec_terminal_resource_target(target, env) {
+    if (!ec_route_allows_atomic(env.view,env.board)) return false
     // At the final deadline, passing up the last needed resource guarantees
     // losing this victory route. Accept a real (possibly small) capture chance,
     // while leaving immediate political survival and every legality gate intact.
@@ -560,6 +605,7 @@ function ec_terminal_resource_target(target, env) {
 }
 
 function ec_resource_clock_target(target, env) {
+    if (!ec_route_allows_atomic(env.view,env.board)) return false
     const turn = Number(env.view.turn || 0)
     const atomic = env.victory?.atomic
     return typeof EVEN_SHORT_CAMPAIGN_SCENARIO !== "undefined" && env.view.sid === EVEN_SHORT_CAMPAIGN_SCENARIO
@@ -814,6 +860,14 @@ function ec_amphibious_convergence(env) {
                 ||force.filter(u=>u.class==="ground").length+at.filter(u=>u.class==="ground"||u.class==="air").length>3
                 ||force.filter(u=>u.class==="naval").length+at.filter(u=>u.class==="naval").length>6)continue
             const support=ec_support(force,hex,env),assessment=ec_assess(force,support,hex,true,env)
+            if(env.convergenceObjective==="PACIFIC_BREAKTHROUGH" && env.centralAssaultAttempts) {
+                const prior=env.centralAssaultAttempts.get(hex)
+                if(!prior || assessment.pCapture>prior.assessment.pCapture) env.centralAssaultAttempts.set(hex,
+                    {cardId:env.cardId,hqId:env.hq.id,groundIds:force.filter(u=>u.class==="ground").map(u=>u.id),
+                        escortIds:force.filter(u=>u.class==="naval").map(u=>u.id),
+                        originById:Object.fromEntries(force.map(u=>[u.id,u.location])),aspCost:cost,assessment,
+                        evidence:"actual legal two-port AA paths, command, stack and ASP; capture estimate below threshold"})
+            }
             if(!assessment.executable||!force.some(u=>u.class==="naval"))continue
             const movementGroups=[ga,gb].map(g=>({originHex:g.origin,mode:"AA",unitIds:g.force.map(u=>u.id)}))
             const previous=env.homeAssaults.get(hex)
@@ -996,6 +1050,160 @@ function ec_assembly_command(ground, port, target, env, requireNaval=true) {
 
 // An independent public preparation witness keeps invasion transport from
 // inheriting an unrelated resource objective. It never authorizes an attack.
+// Resource preparation is an explicit two-card witness, never a movement grant.
+function ec_central_pacific_targets(env) {
+    if (!ec_route_refined(env.view) || Number(env.view.turn)<5 || Number(env.view.turn)>=12) return []
+    if (env.centralPacificTargets) return env.centralPacificTargets
+    const ring=[3416,3615,3813,3814,4017,4415,4715,3209,3709].map(hex_to_int)
+    const targets=env.board.filter(m=>(m.port || m.airfield) && ring.includes(m.hex) && ec_control(m.hex,1-env.faction))
+    const bases=env.board.filter(m=>m.port && ec_control(m.hex,env.faction)),routes=[]
+    let queries=0
+    for (const port of bases) {
+        const ground=env.available.filter(u=>u.class==="ground" && (u.asp||u.aspCost) && u.location===port.hex
+            && !env.garrisonReserve?.has(u.id)).sort((a,b)=>ec_cf(b)-ec_cf(a)||a.id-b.id).slice(0,3)
+        const ships=env.available.filter(u=>u.class==="naval" && u.location===port.hex).sort((a,b)=>ec_cf(b)-ec_cf(a)||a.id-b.id)
+        const escorts=[...new Set([ships[0],ships.find(u=>Number(u.br)>0)].filter(Boolean))]
+        for (const g of ground) for (const n of escorts) {
+            if (queries>=24 || env.budget<2 || !ec_service_compatible([g,n],env.view,env.faction)) continue
+            queries++
+            const move=ec_query_moves([g.id,n.id],AMPH_MOVE,env)
+            if (Number(move.aspCost || 0)>ec_asp_remaining(env.view,env.faction)) continue
+            const reachable=targets.filter(t=>move.reachableHexes?.includes(t.hex)).map(t=>t.hex)
+            if(reachable.length) routes.push({groundId:g.id,origin:port.hex,reachable})
+        }
+    }
+    const selected=targets.filter(t=>routes.some(r=>r.reachable.includes(t.hex)))
+        .sort((a,b)=>Math.min(...routes.filter(r=>r.reachable.includes(a.hex)).map(r=>ec_dist(r.origin,a.hex)))
+            -Math.min(...routes.filter(r=>r.reachable.includes(b.hex)).map(r=>ec_dist(r.origin,b.hex)))
+            || ec_dist(a.hex,TOKYO)-ec_dist(b.hex,TOKYO) || a.hex-b.hex).slice(0,4).map(m=>m.hex)
+    env.centralEmbarkationGroundIds=[...new Set(routes.filter(r=>r.reachable.some(h=>selected.includes(h))).map(r=>r.groundId))]
+    env.centralPacificTargets=selected
+    return selected
+}
+function ec_central_pacific_bonus(m,env) {
+    if (!ec_central_pacific_targets(env).includes(m.hex) || Number(env.view.turn)>10) return 0
+    const ports=env.board.filter(b=>b.port && ec_control(b.hex,env.faction)
+        && env.available.some(g=>g.class==="ground" && (g.asp||g.aspCost) && g.location===b.hex)
+        && env.available.some(n=>n.class==="naval" && n.location===b.hex))
+    return ec_dist(m.hex,TOKYO)+2<=Math.min(...ports.map(b=>ec_dist(b.hex,TOKYO))) ? 80 : 0
+}
+function ec_ground_softening_tasks(env,executable=[]) {
+    const tasks=[],turn=Number(env.view.turn)
+    if (!ec_route_refined(env.view) || turn<5 || turn>=12 || env.powGap) return tasks
+    const resourceRoute=ec_route_allows_atomic(env.view,env.board) && env.victory.atomic?.noStrategicBombingFailure
+        && env.victory.atomic?.b29InRangeOfTokyo && env.victory.jpResources<=3
+    const targets=[...new Set((resourceRoute ? env.victory.resourceTargets : env.victory.homelandKeys).concat(ec_central_pacific_targets(env)))]
+    const central=new Set(ec_central_pacific_targets(env))
+    for (const hex of targets.filter(h=>!ec_control(h,env.faction))) {
+        const centralOnly=central.has(hex) && !(resourceRoute ? env.victory.resourceTargets : env.victory.homelandKeys).includes(hex)
+        const witness=env.centralAssaultAttempts?.get(hex)
+        if (centralOnly && (executable.some(t=>t.kind==="CONQUEST"&&t.hex===hex)
+            || !witness || witness.assessment.pNavalWithReaction<.6
+            || (env.view.ai?.ownCards || []).length<(ec_card_window(env.view)?2:1))) continue
+        const defending=typeof queryDefendingGround==="function"?queryDefendingGround(hex,{faction:1-env.faction}):null
+        const steps=(defending?.units || []).reduce((sum,u)=>sum+(u.reduced||u.oneStep?1:2),0)
+        if (steps<=1 || env.units.some(u=>u.faction!==env.faction && u.location===hex && ["air","naval"].includes(u.class))) continue
+        const forces=[{units:[],mode:"RANGED"}]
+        const ships=env.available.filter(u=>u.class==="naval")
+        for(const origin of [...new Set(ships.map(u=>u.location))]){
+            const local=ships.filter(u=>u.location===origin).sort((a,b)=>ec_cf(b)-ec_cf(a)||a.id-b.id)
+            for(let count=1;count<=Math.min(5,local.length,env.budget);count++){
+                const group=local.slice(0,count)
+                if(ec_service_compatible(group,env.view,env.faction)
+                    &&ec_query_moves(group.map(u=>u.id),NAVAL_MOVE,env).reachableHexes?.includes(hex))forces.push({units:group,mode:"NAVAL"})
+            }
+        }
+        for(const group of forces){
+            const support=ec_support(group.units,hex,env),force=group.units.concat(support)
+            if(!force.length || force.length>env.budget)continue
+            const assessment=ec_assess(group.units,support,hex,false,env)
+            if(assessment.pNavalWithReaction<.6 || assessment.attackingAirSea<assessment.defendingAirSea
+                || assessment.attackingAirSea*.5<Math.min(...defending.units.map(u=>Number(u.lf)||1)))continue
+            tasks.push(ec_make_task("SUPPRESS",hex,group.units,support,group.mode,env,
+                {score:centralOnly ? Math.min(120,80+steps*10) : 190+Math.min(80,defending.cf)+Math.min(30,(steps-1)*10),objective:"GROUND_SOFTEN",
+                preparationOnly:true,targetClasses:["ground"],declaresBattle:true,aspCost:0,
+                rangedSupport:!group.units.length,movementGroups:group.units.length?[{originHex:group.units[0].location,mode:"NAVAL",unitIds:group.units.map(u=>u.id)}]:[],assessment,softeningGoal:{beforeCf:defending.cf,beforeSteps:steps,
+                    units:defending.units.map(u=>({id:u.id,reduced:u.reduced,cf:u.cf})),
+                    ...(centralOnly ? {landingWitness:witness} : {}),
+                    outcome:"actual ground reduction only; no occupation or victory credit"},followUpTarget:hex}))
+        }
+    }
+    return tasks
+}
+
+function ec_preparation_conflicts(prior,next) {
+    const conflict=(prepared,moving)=>prepared.objective==="RESOURCE_ASSEMBLE" && prepared.attackWitness
+        && moving.hex!==prepared.hex && (moving.movementUnitIds || []).some(id=>
+            [...prepared.attackWitness.groundIds,...prepared.attackWitness.escortIds,...prepared.attackWitness.supportIds].includes(id))
+    const landingConflict=(prepared,moving)=>!!prepared.softeningGoal?.landingWitness
+        && (moving.movementUnitIds || []).some(id=>{const origin=prepared.softeningGoal.landingWitness.originById?.[id];
+            return Number.isInteger(origin) && moving.hex!==origin})
+    return conflict(prior,next) || conflict(next,prior) || landingConflict(prior,next) || landingConflict(next,prior)
+}
+function ec_resource_assembly_tasks(env) {
+    const tasks=[],atomic=env.victory.atomic,turn=Number(env.view.turn)
+    if (!ec_route_refined(env.view) || !ec_route_allows_atomic(env.view,env.board) || turn<9
+        || !atomic?.noStrategicBombingFailure || !atomic?.b29InRangeOfTokyo || env.victory.jpResources>3
+        || env.victory.jpResources<=1 || Number(env.view.political_will)<=2
+        || env.powGap && turn<12 || (env.view.ai?.ownCards || []).length<2) return tasks
+    if (env.board.filter(m=>m.region==="Manchuria" && m.resource && ec_control(m.hex,0)).length>=2) return tasks
+    const hand=(env.view.ai?.ownCards || []).filter(c=>c.id!==env.cardId && !/soviet/i.test(c.name || ""))
+    const ops=hand.filter(c=>c.allowed?.includes("ops")).sort((a,b)=>Number(b.ops)-Number(a.ops)||a.id-b.id)
+        .filter((c,i,cs)=>cs.findIndex(x=>x.ops===c.ops)===i).slice(0,1).map(c=>({...c,mode:"ops"}))
+    const events=hand.filter(c=>c.previewEvent && c.allowed?.includes("event"))
+        .sort((a,b)=>Number(b.logistic||0)-Number(a.logistic||0)||a.id-b.id).slice(0,1).map(c=>({...c,mode:"event"}))
+    const nextCards=events.concat(ops)
+    const targets=env.victory.resourceTargets.filter(h=>env.byHex.get(h)?.region!=="Manchuria")
+    const ports=env.board.filter(m=>m.port && ec_control(m.hex,env.faction)
+        && targets.some(h=>ec_dist(m.hex,h)<=8)
+        && env.units.some(g=>g.faction===env.faction && g.class==="ground" && g.location===m.hex && (g.asp||g.aspCost))
+        && env.units.some(n=>n.faction===env.faction && n.class==="naval" && n.location===m.hex && Number(n.br)>0))
+        .sort((a,b)=>Math.min(...targets.map(h=>ec_dist(a.hex,h)))-Math.min(...targets.map(h=>ec_dist(b.hex,h)))||a.hex-b.hex).slice(0,3)
+    const hqs=env.units.filter(h=>h.faction===env.faction && h.class==="hq" && !env.view.oos?.includes(h.id))
+    for (const port of ports) {
+        const occupants=env.units.filter(u=>u.faction===env.faction && u.location===port.hex && ["ground","air"].includes(u.class))
+        const local=occupants.filter(g=>g.class==="ground" && (g.asp||g.aspCost)),slots=3-occupants.length
+        if (slots<1) continue
+        const arrivals=env.available.filter(g=>g.class==="ground" && (g.asp||g.aspCost) && g.stratMove && g.location!==port.hex
+            && !env.garrisonReserve.has(g.id) && ec_service_compatible(local.concat(g),env.view,env.faction)
+            && ec_query_moves([g.id],STRAT_MOVE,env).reachableHexes?.includes(port.hex))
+            .sort((a,b)=>ec_cf(b)-ec_cf(a)||a.id-b.id).slice(0,5)
+        const groups=arrivals.map(g=>[g]);if(slots>=2)for(let i=0;i<arrivals.length;i++)for(let j=i+1;j<arrivals.length;j++)groups.push([arrivals[i],arrivals[j]])
+        for (const incoming of groups.sort((a,b)=>b.length-a.length)) {
+            const ground=local.concat(incoming).map(g=>({...g,location:port.hex}))
+            if (incoming.length>env.budget || ground.length>3 || !ec_service_compatible(ground,env.view,env.faction)) continue
+            for (const target of targets.filter(h=>ec_dist(port.hex,h)<=8))for(const card of nextCards)for(const hq of hqs) {
+                const fleet=env.units.filter(n=>n.faction===env.faction && n.class==="naval" && n.location===port.hex
+                    && ec_service_compatible(ground.concat(n),env.view,env.faction)).sort((a,b)=>ec_cf(b)-ec_cf(a)||a.id-b.id)
+                const carrier=fleet.find(n=>Number(n.br)>0),orders=[fleet];if(carrier && carrier!==fleet[0])orders.push([carrier,...fleet.filter(n=>n!==carrier)])
+                for (const order of orders)for(let count=1;count<=Math.min(3,order.length,9-ground.length);count++) {
+                    if (env.resourceAssemblyQueries.count>=24) return tasks
+                    const escorts=order.slice(0,count),force=ground.concat(escorts);env.resourceAssemblyQueries.count++
+                    const projection=typeof queryAmphibiousPreparation==="function" ? queryAmphibiousPreparation(force.map(u=>u.id),port.hex,target,
+                        {faction:env.faction,cardId:card.id,hqId:hq.id,cardMode:card.mode}) : null
+                    if (!projection?.eligible || !projection.reachable || projection.aspCost>ec_asp_remaining(env.view,env.faction)
+                        || force.length>projection.activationBudget) continue
+                    const support=(projection.supportIds || []).map(id=>env.units.find(u=>u.id===id)).filter(Boolean)
+                        .filter(u=>ec_service_compatible(force.concat(u),env.view,env.faction))
+                        .sort((a,b)=>Number(projection.effectiveSupportCF?.[b.id]||0)-Number(projection.effectiveSupportCF?.[a.id]||0)||a.id-b.id)
+                        .slice(0,projection.activationBudget-force.length)
+                    const next={...env,hq,cardId:card.id,cardMode:card.mode,budget:projection.activationBudget,reactions:new Map()}
+                    const assessment=ec_assess(force,support,target,true,next)
+                    if (!assessment.executable) continue
+                    tasks.push(ec_make_task("REDEPLOY",port.hex,incoming,[],"STRATEGIC",env,
+                        {score:400+assessment.pCapture*120-incoming.length*5,objective:"RESOURCE_ASSEMBLE",preparationOnly:true,
+                        victoryObjective:"ATOMIC_RESOURCE",followUpTarget:target,
+                        movementGroups:incoming.map(g=>({originHex:g.location,mode:"STRATEGIC",unitIds:[g.id]})),
+                        attackWitness:{cardId:card.id,cardMode:card.mode,hqId:hq.id,groundIds:ground.map(g=>g.id),escortIds:escorts.map(n=>n.id),
+                            supportIds:support.map(u=>u.id),requiredActivations:force.length+support.length,aspCost:projection.aspCost,
+                            pCaptureEstimate:assessment.pCapture,evidence:"current-own-card legal projected AA; actual attack must revalidate"}}))
+                }
+            }
+        }
+    }
+    return tasks
+}
+
 function ec_homeland_preparation(env) {
     if (env.faction!==1 || env.powGap || !ec_homeland_preparation_enabled(env.view,env.board)) return null
     const keys=env.victory.homelandKeys.filter(h=>!ec_control(h,env.faction))
@@ -1242,7 +1450,7 @@ function ec_plan(view, context) {
     const capture = (view.capture || []).filter(h => ec_control(h, faction))
     const powGap = Math.max(0, Number(view.pow || 0) - capture.length)
     const victory = ec_victory(view, board, faction)
-    const national=ec_national_goals(view,faction), airProjections=new Map()
+    const national=ec_national_goals(view,faction), airProjections=new Map(),resourceAssemblyQueries={count:0}
     victory.national=national
     const campaignObjective = ec_campaign_objective(view, board, units, faction)
     const homelandApproach = ec_homeland_approach(view, board, units, faction)
@@ -1293,11 +1501,27 @@ function ec_plan(view, context) {
             : preCard ? card.mode === "event" ? card.logistic : card.ops : view.offensive?.logistic
         const budget = promptBudget ? Number(promptBudget[1]) : preview?.activationBudget ?? Math.max(1, Number(logistics || 0) + Number(hq.cm || 0))
         const env = { view, faction, units, board, byHex, available, hq, budget, cardId: card.id,
-            cardMode: preCard ? card.mode : undefined, powGap, powPressure, victory, national, airProjections, axisTargets, redeployments,
+            cardMode: preCard ? card.mode : undefined, powGap, powPressure, victory, national, airProjections, resourceAssemblyQueries, axisTargets, redeployments,
             previousObjective: view.ai?.plan?.objective?.hex, campaignObjective, homelandApproach, homelandRallyPort, homelandFoothold,
             moves: new Map(), reactions: new Map(), projectedStackFits, blockers, garrisonReserve, homeAssaults,assemblyCommands,assemblyPreviews,assemblyArrivals,assemblyFrames }
         env.homelandPreparation=ec_homeland_preparation(env)
         const attack = ec_missions(env)
+        if (ec_route_refined(view) && ec_route_allows_atomic(view,board) && Number(view.turn)>=5) {
+            const resources=new Set(victory.resourceTargets.filter(h=>byHex.get(h)?.region!=="Manchuria"))
+            const resourceEnv={...env,captureTargets:resources,convergenceObjective:"RESOURCES",
+                objectiveForTarget:hex=>powGap && byHex.get(hex)?.named && !(view.capture || []).includes(hex) ? "POW" : "RESOURCES"}
+            attack.push(...ec_ground_convergence(resourceEnv),...ec_amphibious_convergence(resourceEnv))
+        }
+        if (ec_route_refined(view)) {
+            env.centralAssaultAttempts=new Map()
+            const central=new Set(ec_central_pacific_targets(env))
+            if (central.size) {
+                const centralEnv={...env,available:env.available.filter(u=>u.class!=="ground"
+                        || env.centralEmbarkationGroundIds.includes(u.id)),captureTargets:central,convergenceObjective:"PACIFIC_BREAKTHROUGH",
+                    objectiveForTarget:hex=>powGap && !(view.capture || []).includes(hex) ? "POW" : "PACIFIC_BREAKTHROUGH"}
+                attack.push(...ec_amphibious_convergence(centralEnv))
+            }
+        }
         const homeTargets = new Set(victory.homelandKeys.filter(hex=>!ec_control(hex,faction)))
         if (homeTargets.size) {
             const homeEnv={...env,captureTargets:homeTargets,convergenceObjective:"HOMELAND",
@@ -1306,7 +1530,8 @@ function ec_plan(view, context) {
             attack.push(...ec_ground_convergence(homeEnv))
             attack.push(...ec_amphibious_convergence(homeEnv))
         }
-        const transport = ec_transport(env)
+        attack.push(...ec_ground_softening_tasks(env,attack))
+        const transport = ec_transport(env).concat(ec_resource_assembly_tasks(env))
         attack.push(...ec_blockade_tasks(env))
         const aspBudget = ec_asp_remaining(view,faction)
         for (const task of attack) if (task.objective === "POW" && task.aspCost <= aspBudget) {
@@ -1315,14 +1540,15 @@ function ec_plan(view, context) {
                 { hex: task.hex, cardId: card.id, hq: hq.id, pCapture: task.assessment.pCapture,
                     requiredUnits: task.requiredUnits.slice(), aspCost: task.aspCost })
         }
-        const ranked = attack.concat(transport).sort((a, b) => b.score - a.score || a.hex - b.hex || a.id.localeCompare(b.id))
+        const lastFinalCard=ec_refined() && Number(view.turn)===12 && remainingOffensives<=1
+        const ranked = attack.concat(transport).filter(t=>ec_preserves_home_force(t,env)).filter(t=>!lastFinalCard || !t.preparationOnly && !["ASSEMBLE","ASSEMBLE_ESCORT","HOMELAND_ASSEMBLE","AIR_SUPPORT_BASE"].includes(t.objective)).sort((a, b) => b.score - a.score || a.hex - b.hex || a.id.localeCompare(b.id))
         if (!ranked.length) { if (blockers.length < 16) blockers.push({ hq: hq.id, reason: available.some(u => u.class === "ground")
             ? "no-executable-capture-or-transport" : "no-legal-ground-under-hq" }); continue }
         const tasks = [], assigned = new Set(activeIds)
         let spent = 0, aspSpent = 0, battles = (view.offensive?.battle_hexes || []).length
         const multiBattle = card.mode === "event"
         for (const task of ranked) {
-            if (tasks.some(t => t.hex === task.hex) || task.requiredUnits.some(id => assigned.has(id))
+            if (tasks.some(t => t.hex === task.hex || ec_route_refined(view) && ec_preparation_conflicts(t,task)) || task.requiredUnits.some(id => assigned.has(id))
                 || spent + task.requiredUnits.length > budget || aspSpent + Number(task.aspCost || 0) > aspBudget
                 || (!multiBattle && task.declaresBattle && battles > 0)) continue
             if (!ec_service_compatible(tasks.flatMap(t => t.requiredUnits).concat(task.requiredUnits)
@@ -1357,7 +1583,7 @@ function ec_plan(view, context) {
         requiresFriendlyControl: t.kind === "REDEPLOY", requiredUnits: t.requiredUnits.slice(),
         movementUnitIds: t.movementUnitIds.slice(), supportUnitIds: t.supportUnitIds.slice(),
         movementModes: t.movementModes.slice(), ...(t.movementGroups ? {movementGroups:t.movementGroups} : {}), campaignTask: true, taskId: t.id,
-        objective: t.objective, ...(t.targetClasses ? {targetClasses:t.targetClasses,rangedSupport:!!t.rangedSupport} : {}), ...(t.victoryObjective ? {victoryObjective:t.victoryObjective} : {}),
+        objective: t.objective, ...(t.softeningGoal ? {softeningGoal:t.softeningGoal} : {}), ...(t.targetClasses ? {targetClasses:t.targetClasses,rangedSupport:!!t.rangedSupport} : {}), ...(t.victoryObjective ? {victoryObjective:t.victoryObjective} : {}),
         ...(t.retentionRisks?.length ? {retentionRisks:t.retentionRisks} : {}), damageLevel: 1 }))
     const first = tasks[0]
     const plan = { version: 1, role, turn: Number(view.turn || 0), cardId: best?.cardId || ec_offensive_key(view, role),
@@ -1365,7 +1591,7 @@ function ec_plan(view, context) {
         objective: first ? { type: first.objective, hex: first.followUpTarget ?? first.hex } : { type: "BLOCKED", hex: null },
         phase: first ? first.kind === "CONQUEST" ? "CAPTURE" : first.objective === "GARRISON" ? "GARRISON" : "ASSEMBLE" : "BLOCKED",
         focus: first?.hex ?? null, targets, tasks, blockers: blockers.slice(0, 16), garrisonReserveIds: [...garrisonReserve].sort((a,b)=>a-b),
-        campaign: { theater: "PACIFIC", objectiveHex: campaignObjective, rallyPort: best?.homelandPreparation?.rallyPort ?? homelandRallyPort, redeployments,
+        campaign: { theater: "PACIFIC", ...(ec_route_refined(view)?{route:ec_route_allows_atomic(view,board)?"ATOMIC_OPEN":"HOME"}:{}), objectiveHex: campaignObjective, rallyPort: best?.homelandPreparation?.rallyPort ?? homelandRallyPort, redeployments,
             homelandPreparation:best?.homelandPreparation || null,
             hqRelocation: view.ai?.plan?.campaign?.hqRelocation || null,
             objectiveSinceTurn: view.ai?.plan?.campaign?.objectiveHex === campaignObjective
@@ -1386,7 +1612,7 @@ function ec_plan(view, context) {
         plan.campaign.rallyReadiness="preparation-location; attack still requires card/HQ/ASP/path/combat checks"
     }
     if (preCard) {
-        const relocation = ec_hq_relocation(view, board, units, faction, powGap, ownCards, victory)
+        const relocation = ec_refined() && Number(view.turn)===12 && remainingOffensives<=1 ? null : ec_hq_relocation(view, board, units, faction, powGap, ownCards, victory)
         if (relocation) {
             plan.hqRelocation = relocation
             plan.campaign.hqRelocation = relocation
@@ -1415,6 +1641,7 @@ function ec_apply_plan(view, context) {
     const cardWindow = ec_card_window(view), chooseHq = /choose hq/i.test(String(view.prompt || ""))
     const selectAction = /select action/i.test(String(view.prompt || ""))
     const ownOffensive = cardWindow || selectAction || chooseHq || /activate units|move units/i.test(String(view.prompt || ""))
+        || ec_refined() && view.ai?.state === "declare_battle_hexes"
     // A hook-bearing EC is an entire original-Erasmus offensive, not merely a
     // delegated card choice. Its activation constraints cannot be represented by
     // the safe preview, so an empty campaign plan must not terminate its units.
@@ -1572,6 +1799,15 @@ function ec_pick_action(view, context, plan) {
     if (view.ai?.state === "strategic_bombing" && actions.all)
         return { action: "all", argument: undefined, via: "campaign-continuous-strategic-bombing" }
     if (plan.delegatedOffensive) return null
+    // Actual engine candidates are the authority. Keep pure remote support on
+    // its assigned campaign target instead of a generic easier battle hex.
+    if (ec_refined() && ["choose_attack_hex","declare_battle_hexes"].includes(view.ai?.state)
+        && Array.isArray(actions.action_hex)) {
+        const selected=view.active_stack || []
+        const target=plan.tasks.find(t=>t.declaresBattle && selected.some(id=>t.requiredUnits?.includes(id))
+            && actions.action_hex.includes(t.hex) && !ec_task_complete(t,view,1))
+        if (target) return {action:"action_hex",argument:target.hex,via:"campaign-assigned-legal-battle"}
+    }
     if (view.ai?.state === "move_units" && actions.stop)
         return { action: "stop", argument: undefined, via: "campaign-ground-stop" }
     if (/move units/i.test(prompt) && plan.focus === null && actions.done)
@@ -1739,6 +1975,7 @@ function ec_position_score(hex, faction, piece, source, position, projectionScop
         const gap=(position.islandDefense || []).find(d=>d.hex===hex && d.groundCount===0)
         const keep=source===hex && ((position.garrisonReserveIds || []).includes(id)
             || (position.islandDefense || []).some(d=>d.hex===hex && d.reserveId===id))
+        if (ej_refined() && keep) return {score:[0,-1,-200,occupied,hex],reason:"retain-critical-base-garrison"}
         if (gap || keep) return {score:[0,0,-200-(gap?.priority || 0),occupied,hex],
             reason:keep?"retain-critical-island-garrison":"fill-critical-island-garrison"}
     }
@@ -1804,20 +2041,41 @@ function ec_pbm_score(hex, faction, piece, source, targetPlan, projectionScope) 
 }
 
 // Cover the central Pacific approach while keeping southern conquest distinct.
+function ej_refined() { return !!(typeof em_cfg==="function" && em_cfg()?.japan_campaign_refinement) }
+function ej_defense_hexes() {
+    const coordinates=[2909,3009,3209,3709,3813,3814]
+    if (ej_refined()) coordinates.push(3416,4017,4415,4715,3305,3306,2813,2915)
+    return typeof hex_to_int==="function" ? coordinates.map(hex_to_int) : []
+}
+function ej_guard_required(view,hex) {
+    if (!ej_refined()) return true
+    const ph=[2813,2915].map(hex_to_int)
+    // Opening conquest may advance the sole Philippine army to the other key;
+    // completed keys and the post-deadline defence keep their garrison.
+    return !(view.sid===SHORT_CAMPAIGN_SCENARIO && Number(view.turn)<=4 && ph.includes(hex)
+        && ph.some(h=>!ec_control(h,0)))
+}
 function ej_island_defense(view,board,units) {
-    const ring=typeof hex_to_int==="function" ? [2909,3009,3209,3709,3813,3814].map(hex_to_int) : []
+    const ring=ej_defense_hexes()
     return board.filter(m=>ring.includes(m.hex) && ec_control(m.hex,0)).map(m=>{
         const ground=units.filter(u=>u.faction===0 && u.class==="ground" && u.location===m.hex)
             .sort((a,b)=>ec_cf(a)-ec_cf(b)||a.id-b.id)
         const assault=units.some(u=>u.faction===1 && u.class==="ground" && ec_dist(u.location,m.hex)<=8
             && (ec_dist(u.location,m.hex)<=2 || units.some(n=>n.faction===1 && n.class==="naval" && n.location===u.location)))
-        return {hex:m.hex,name:m.name,groundCount:ground.length,reserveId:ground[0]?.id ?? null,
-            priority:100+(Number(view.turn)>=5 ? 170 : 0)+(assault ? 180 : 0),threatened:assault}
+        const turn=Number(view.turn),raw=typeof hex_to_int==="function" ? h=>hex_to_int(h) : h=>h
+        const priorities=new Map([[2813,320],[3305,320],[3416,300],[4017,300],[2915,280],[4415,260],[4715,260],[3306,240]].map(([h,p])=>[raw(h),p]))
+        const expanded=ej_refined() && priorities.has(m.hex)
+        const early= [raw(2813),raw(2915)].includes(m.hex) ? 220 : [raw(3416),raw(4017)].includes(m.hex) ? 120 : 80
+        const base=expanded ? turn>=5 ? priorities.get(m.hex) : early : 100+(turn>=5 ? 170 : 0)
+        return {hex:m.hex,name:m.name,groundCount:ground.length,reserveId:ej_guard_required(view,m.hex) ? ground[0]?.id ?? null : null,
+            priority:base+(assault ? 180 : 0),threatened:assault,
+            ...(ej_refined() ? {groundCf:ground.reduce((n,u)=>n+ec_cf(u),0),minimumGround:1,
+                reinforcementNeeded:assault && ground.length===1 && ec_cf(ground[0])<8} : {})}
     }).sort((a,b)=>b.priority-a.priority||a.hex-b.hex)
 }
 function ej_defense_tasks(env,defense) {
     const tasks=[]
-    for (const gap of defense.filter(d=>d.groundCount===0)) {
+    for (const gap of defense.filter(d=>d.groundCount===0 || ej_refined() && d.reinforcementNeeded)) {
         for (const u of env.available.filter(u=>u.class==="ground" && !env.garrisonReserve.has(u.id))) {
             const ground=ec_query_moves([u.id],GROUND_MOVE,env).reachableHexes?.includes(gap.hex)
             const strategic=!ground && u.stratMove && ec_query_moves([u.id],STRAT_MOVE,env).reachableHexes?.includes(gap.hex)
@@ -1847,7 +2105,7 @@ function ej_defense_tasks(env,defense) {
             if (at.length>=3 || typeof queryProjectedStack==="function"
                 && !queryProjectedStack(gap.hex,group.map(x=>x.id),{faction:0}).fitsForIncoming) continue
             tasks.push(ec_make_task("REDEPLOY",gap.hex,group,[],mode,env,
-                {score:gap.priority-ec_dist(u.location,gap.hex)*2-ec_cf(u)*.25,
+                {score:gap.priority-ec_dist(u.location,gap.hex)*2-ec_cf(u)*.25-(gap.groundCount>0 ? 100 : 0),
                     aspCost,objective:"PACIFIC_ISLAND_GARRISON",followUpTarget:gap.hex,defenseEvidence:gap}))
         }
     }
@@ -2286,5 +2544,5 @@ function ej_plan(view, context) {
 }
 
 // END CAMPAIGN V2
-return {applyPlan:ec_apply_plan,pickAction:ec_pick_action,pickPlacement:ec_pick_placement,taskComplete:ec_task_complete,pbmScore:ec_pbm_score,positionProjectionScope:ec_position_projection_scope}
+return {applyPlan:ec_apply_plan,pickAction:ec_pick_action,pickPlacement:ec_pick_placement,taskComplete:ec_task_complete,pbmScore:ec_pbm_score,positionProjectionScope:ec_position_projection_scope,defenseHexes:ej_defense_hexes,guardRequired:ej_guard_required,positioningContext:ec_positioning_context}
 })()

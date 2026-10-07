@@ -1,0 +1,58 @@
+{
+  "task": "AI-ALLIES-40-01",
+  "seed": 20263013,
+  "ordinal": 1466,
+  "steps": 15,
+  "tasks": [
+    {
+      "objective": "RESOURCE_ASSEMBLE",
+      "hex": 421,
+      "movement": [
+        197,
+        194
+      ],
+      "attackWitness": {
+        "cardId": 62,
+        "hqId": 80,
+        "groundIds": [
+          198,
+          197,
+          194
+        ],
+        "escortIds": [
+          129,
+          130
+        ],
+        "supportIds": [],
+        "requiredActivations": 5,
+        "aspCost": 3,
+        "pCaptureEstimate": 0.03,
+        "evidence": "current-own-card legal projected AA; actual attack must revalidate"
+      }
+    },
+    {
+      "objective": "ASSEMBLE_ESCORT",
+      "hex": 415,
+      "movement": [
+        123,
+        134
+      ]
+    }
+  ],
+  "actualGround": [
+    {
+      "id": 194,
+      "hex": 421
+    },
+    {
+      "id": 197,
+      "hex": 421
+    },
+    {
+      "id": 198,
+      "hex": 421
+    }
+  ],
+  "verified": true,
+  "nextState": "offensive_segment"
+}

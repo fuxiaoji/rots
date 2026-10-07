@@ -1,0 +1,35 @@
+{
+  "task": "AI-ALLIES-40-01",
+  "frozenAt": "2026-10-07T10:27:14.678Z",
+  "candidate": "tmp/ai-allies-40-01/bundles/candidate-final01.js",
+  "candidateSha256": "da0c4b10955963e5d577352ff189154f3f27a99f61890a5c69f9df0e54130d79",
+  "japan": "tmp/ai-allies-40-01/bundles/baseline-v2.js",
+  "japanSha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+  "profile": "erasmus-campaign-v2-1",
+  "runnerSha256": "ea21d01a5bc360e213e82a40cea7c615578a147ae2eabdedbab857225c629982",
+  "sourceSha256": {
+    "js/server/bots/erasmus.js": "af854321194a4104f9c55e867ac72534832df9c331f88324560d731d29fe13df",
+    "js/server/bots/erasmus_campaign_v2.js": "00551c39eccd461ee3c4d97d982a64e175db8a17487f8ac8536a04ee8d62c11b",
+    "js/server/bots/erasmus_config.js": "55694462cd0fb244694d09e5468a68186c36e2aebd12edb414f8b4333be4a91a",
+    "js/server/offensive.js": "73f4482beca1c54bff4ae86393f52691f7df849729edfce01b073069cfdd0dfa"
+  },
+  "validation": {
+    "1942": {
+      "start": 20263101,
+      "count": 32
+    },
+    "1943": {
+      "start": 20263201,
+      "count": 32
+    }
+  },
+  "maxActions": 12000,
+  "repeatStateLimit": 32,
+  "headlessMoves": true,
+  "recordReplays": "all",
+  "freezeAllies": true,
+  "freezeJapan": true,
+  "environment": {},
+  "runtimeModelRequests": 0,
+  "externalApiCost": 0
+}

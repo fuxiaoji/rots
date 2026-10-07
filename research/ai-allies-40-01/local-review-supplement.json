@@ -1,0 +1,53 @@
+{
+  "task": "AI-ALLIES-40-01",
+  "localOnly": true,
+  "externalApiRequests": 0,
+  "reviews": [
+    {
+      "agent": "/root/campaign_strategy",
+      "requestedModel": "gpt-6-astra",
+      "effort": "high",
+      "prompt": "Read-only strategy for Japanese14-place garrisons and central Pacific legal convergence; root-only writer, preserve frozen Japanese2.0.",
+      "output": "Unify donor/source reservation before expanding14-place list; old PBM gap outranks stay. Use current public locations. Real source next630 permits Truk/Kwajalein without extracting Manila. Central targets must include Caroline/Oceania; score both single/multi through same scorer. Central softening must not outrank executable conquest, require legal landing witness, record rejected attempts, retain original thresholds/ASP/ISR.",
+      "adopted": [
+        "14-place ring and source retention",
+        "PBM stay and current positioning",
+        "explicit Truk/Guam map IDs",
+        "limited shared target bonus",
+        "future landing witness conflict and lower central softening score"
+      ],
+      "transcriptKind": "parent archived concise excerpt; original messages retained in task",
+      "promptSha256": "0afb5e09ac93fb25c94c0b0073b394fcd69b2efcef0be808ed9e996c4bf7f96a",
+      "outputSha256": "24d653f6a2823a14656a5e57d4616f0620756df6af4f6cb9e267488038eeebef",
+      "actualModel": "not exposed in current status",
+      "latencyMs": null,
+      "tokens": null,
+      "cost": null
+    },
+    {
+      "agent": "/root/campaign_rule_audit",
+      "requestedModel": "gpt-6.1-sol",
+      "effort": "high",
+      "prompt": "Read-only rules/geography/public replay diagnosis, no new games or edits, preserve rules and LLM scope.",
+      "output": "Extra bases verified map IDs, distinct delegated eop guard list must synchronize. SupplyStatus active-unit shortcut is not arrival-supply proof. 9.2.F.5 bombing ground retains final step and enemy control. Real20263302 prefix187 has legal13hex3OC Guam AA route; port-only and8hex filters reject it. Earlier prefix151 ASP0 and63305 Australian unit outsideUS-HQ budget are not legal earlier invasion opportunities.",
+      "adopted": [
+        "delegated guards test for added8 bases",
+        "do not claim general arrival-supply guarantee",
+        "real reduction completion and final step survival",
+        "actual movement query replaces8hex",
+        "no-port airfield target inclusion"
+      ],
+      "remaining": [
+        "single-port softening witness",
+        "nationality-aware forward assembly"
+      ],
+      "transcriptKind": "parent archived concise excerpt; original messages retained in task",
+      "promptSha256": "25aca138b39ae1ea358933961eb571638a88113dc8fa0b74fc2830edec10cae1",
+      "outputSha256": "436fd51f3b31d1a1a48324781e7dd83995775a236dcbeba015653ae085fe0fb8",
+      "actualModel": "not exposed in current status",
+      "latencyMs": null,
+      "tokens": null,
+      "cost": null
+    }
+  ]
+}

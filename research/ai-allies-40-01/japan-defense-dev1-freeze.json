@@ -1,0 +1,33 @@
+{
+  "task": "AI-ALLIES-40-01",
+  "type": "development-not-independent-rate-estimate",
+  "japanProfile": "erasmus-japan-campaign-v2-1",
+  "japan": "tmp/ai-allies-40-01/bundles/japan-defense-dev1.js",
+  "japanSha256": "5484c444b79ae9580b94b931be692b8c3801e56a140ff6914be28b4c321a59ac",
+  "allies": "tmp/ai-allies-40-01/bundles/candidate-final01.js",
+  "alliesSha256": "da0c4b10955963e5d577352ff189154f3f27a99f61890a5c69f9df0e54130d79",
+  "jobs": [
+    [
+      "1942",
+      20263511
+    ],
+    [
+      "1942",
+      20263512
+    ],
+    [
+      "1943",
+      20263521
+    ],
+    [
+      "1943",
+      20263522
+    ]
+  ],
+  "environment": {
+    "EOTS_HEADLESS_MOVES": "1",
+    "EOTS_RECORD_REPLAYS": "all"
+  },
+  "maxActions": 12000,
+  "runtimeModelRequests": 0
+}

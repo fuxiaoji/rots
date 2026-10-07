@@ -1,0 +1,53 @@
+{
+  "task": "AI-ALLIES-40-01",
+  "localOnlyUserPreference": true,
+  "externalReviews": {
+    "GLM": {
+      "called": false
+    },
+    "DeepSeek": {
+      "called": false
+    }
+  },
+  "nativeReview": {
+    "agent": "/root/campaign_strategy",
+    "requestedModel": "gpt-6-astra",
+    "requestedEffort": "high",
+    "actualModel": "not exposed in current agent status",
+    "transcriptKind": "parent-archived concise excerpt; original native messages retained in task",
+    "prompt": "只读最终关键审查源码js/server/offensive.js与erasmus_campaign_v2.js。固定候选da0c4b10955963e5d577352ff189154f3f27a99f61890a5c69f9df0e54130d79，独立32+32及配对基线正在执行，此后不改策略；不看验证结果调参，不写文件、新游戏或API。若确定bug需root裁定撤销冻结；交边界/风险。",
+    "archivedPromptSha256": "2a3db6beec44f9acf841aadde785234510b302f171ce477eb26c1c3b57402baf",
+    "output": "冻结审查结论：没有发现需要撤销本次冻结的确定性严重问题。已核对候选哈希da0c4b10955963e5d577352ff189154f3f27a99f61890a5c69f9df0e54130d79，未查看验证结果。\n已确认：合流修复限定新盟军配置，合法移动及原堆叠检查先执行；宣战只选真实合法目标；前沿保护缩至本土关键格及明确集结单位，保留PW危急例外；1942提前备战撤销；日军算法、裁定与隐藏信息边界不变。\n限制：swSpread仍计算原值，实际提前拒绝非目标并绕开Tojo提前返回；T9新drive仅卡窗成立，后续窗口可能重算为false；attainableCaptureTargets在保留过滤前收集，不能当可兑现保命保证；前沿保留不能保证最后攻势兵力/牌/胜率。\n建议：保持冻结，按32局/剧本自然结束与完整回放验收。开发4/6和3/6不是独立胜率。",
+    "archivedOutputSha256": "0ac39ecd296711be418d60fcc0563c73a1f4b851d77722bae2739d584443b354",
+    "latencyMs": null,
+    "tokens": null,
+    "cost": null,
+    "adopted": [
+      "legally assigned suppression target",
+      "explicit legal multi-port convergence",
+      "protect actual home forces with urgent PoW exception",
+      "keep frozen negative evidence"
+    ],
+    "notAdopted": [
+      "1942 early preparation after dev2 regression",
+      "post-freeze tuning"
+    ],
+    "verification": "two actual complete offensive replays, 21 tests, 57 old-profile savepoints and 2435 actions"
+  },
+  "nativeRuleAudit": {
+    "agent": "/root/campaign_rule_audit",
+    "requestedModel": "gpt-6.1-sol",
+    "requestedEffort": "high",
+    "actualModel": "not exposed in current agent status",
+    "cost": null,
+    "adopted": [
+      "exclude ordinary assembly/air-forward on final card",
+      "T9 deadline must influence actual drive"
+    ],
+    "limitations": [
+      "empty hostile AZOI landing support coverage"
+    ]
+  },
+  "runtimeModelRequests": 0,
+  "externalApiCost": 0
+}

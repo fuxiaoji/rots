@@ -1,0 +1,54 @@
+{
+  "task": "AI-ALLIES-40-01",
+  "kind": "actual-public-position-offensive-regression",
+  "sourceReplay": "tmp/ai-allies-40-01/final01-candidate-1942-20263101/game-1942-1945-The-Shortened-Campaign-20263101-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2-1.replay.json",
+  "sourceReplaySha256": "cd9b49948b19062342513217209faf93c3695cdba2e84426d85999c0fa0aa4af",
+  "sourceOrdinal": 630,
+  "candidateSha256": "5484c444b79ae9580b94b931be692b8c3801e56a140ff6914be28b4c321a59ac",
+  "decisions": [
+    {
+      "action": "card",
+      "card": 98,
+      "hq": 5,
+      "tasks": [
+        {
+          "hex": 887,
+          "units": [
+            34
+          ],
+          "modes": [
+            "STRATEGIC"
+          ],
+          "objective": "PACIFIC_ISLAND_GARRISON"
+        },
+        {
+          "hex": 1088,
+          "units": [
+            31
+          ],
+          "modes": [
+            "STRATEGIC"
+          ],
+          "objective": "PACIFIC_ISLAND_GARRISON"
+        }
+      ]
+    }
+  ],
+  "actions": 11,
+  "arrivals": [
+    {
+      "id": 31,
+      "hex": 1088
+    },
+    {
+      "id": 34,
+      "hex": 887
+    }
+  ],
+  "manilaGuardRetained": true,
+  "arrivalsSupplied": true,
+  "fragmentFullReplayVerified": true,
+  "finalStateSha256": "f7abcd0c2bae6ab31fa04ccd379ebb9a108791ba047e648760ad74ca89aafeb4",
+  "runtimeModelRequests": 0,
+  "externalApiCost": 0
+}

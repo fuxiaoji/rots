@@ -1202,6 +1202,12 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
         const next=eop_next_focus_faction(faction,G.offensive.battle_hexes,targetPlan)
         if(next){strategicFocus=next.hex;strategicMeta=next.meta}
     }
+    const committedConvergence = kind==="attack" && faction===AP && typeof em_cfg==="function"
+        && em_cfg()?.allies_campaign_refinement && strategicMeta?.campaignTask
+        && strategicMeta?.movementGroups?.length>1 && strategicMeta.kind!=="REDEPLOY"
+    const committedSoftening = kind==="attack" && faction===AP && typeof em_cfg==="function"
+        && em_cfg()?.allies_route_commitment && strategicMeta?.campaignTask && strategicMeta?.softeningGoal
+    if ((committedConvergence && hasGround || committedSoftening) && hex!==strategicFocus) return null
     const approach = steer && strategicFocus !== null
         ? get_distance(hex, strategicFocus)
         : steer && typeof eop_advance_tiebreak === "function" ? eop_advance_tiebreak(hex, faction) : -1
@@ -1238,7 +1244,7 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
         }
         if (faction === AP && targetMd && targetMd.region === "Japan" && !tojoPass
             && (!focusMd || focusMd.region !== "Japan")) return null
-        if (tojoPass && eu.count > 0) return [0, eu.naval, eu.count, nearKey(hex), hex]
+        if (tojoPass && eu.count > 0 && !committedConvergence && !committedSoftening) return [0, eu.naval, eu.count, nearKey(hex), hex]
         // 航空单位可从战斗格外参战。若后方基地不在目标战斗航程内，本次攻势先把
         // 它移动到更靠前的合法机场；到达后 choose_attack_hex 仍按 br/ebr 决定能否
         // 承诺到会战，不绕过任何移动或战斗航程检查。
