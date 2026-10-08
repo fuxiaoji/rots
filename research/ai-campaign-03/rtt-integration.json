@@ -1,0 +1,33 @@
+{
+  "isolatedDatabase": true,
+  "actualRTTServer": true,
+  "port": 8183,
+  "phases": [
+    {
+      "scenario": "1942-1945 (The Shortened Campaign)",
+      "id": 1,
+      "actions": 12,
+      "traceRows": 12,
+      "detail": "已暂停在下一阶段边界。"
+    },
+    {
+      "scenario": "1943-1945 (The Even Shorter Campaign)",
+      "id": 2,
+      "actions": 158,
+      "traceRows": 158,
+      "detail": "已暂停在下一阶段边界。"
+    }
+  ],
+  "pve": [
+    {
+      "role": "Japan",
+      "id": 3
+    },
+    {
+      "role": "Allies",
+      "id": 4
+    }
+  ],
+  "runtimeModelRequests": 0,
+  "rulesSha256": "b4fbf79e7bb3630e92d1a4c1cfd9fc7d85307568efe46a40505d0596dcb21ab3"
+}

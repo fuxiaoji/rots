@@ -1,0 +1,21 @@
+{
+  "task": "AI-CAMPAIGN-03",
+  "localOnly": true,
+  "reviewer": "gpt-6.1-sol",
+  "requestedReasoning": "high",
+  "scope": "read-only registry/config/trace/create defaults and RTT PvE role validation",
+  "findings": [
+    "Aliases preserve candidate profiles and persistent action envelopes",
+    "Manual LLM selection remains after scenario changes",
+    "Existing RTT PvE validates human_role instead of bot_role",
+    "Create page needs seat role validation"
+  ],
+  "adopted": [
+    "Bounded idempotent runtime seat-validation patch",
+    "Create submit seat validation; preserve manual choices"
+  ],
+  "verification": "44 local checks plus isolated actual RTT two phases and both PvE seats",
+  "usageTokens": null,
+  "externalModelRequests": 0,
+  "reviewOutputSha256": "c8cb2fafd5a46717327a20da0ba351aeb4636dbbf5b0007949788441001138a2"
+}

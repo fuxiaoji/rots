@@ -860,3 +860,8 @@
 ## AI-CAMPAIGN-03 · 2026-10-08：3.0注册与发布验收准备
 
 双方新3.0 ID映射最新冻结候选，旧ID和持久profile保留；44相关本地检查通过，两个新种子各600动作逐步等价、恢复与纯动作回放通过。修正RTT原有PvE反向阵营校验，创建战役默认3.0且保留手动LLM。独立分支保留最新LLM源码；运行时/开发外部API0，模型成本0。既有600冻结尝试不更名、不混算为3.0互打。详见research/ai-campaign-03/release.md。部署尚待后续记录。
+
+
+## AI-CAMPAIGN-03 · 2026-10-08：3.0已发布 complete
+
+本地RTT8080/PID55640和线上fuwenji.asia/rtt/PID3798301均HTTP200；新建两战役默认双方3.0。真实RTT隔离验收1942/1943阶段12/158动作与两阵营PvE通过。线上克隆既有发布，仅普通EOTS生成规则/创建页与PvE条件更新；15旧局和13相关持久表保持，独立半LLM目录、原生LLM异步源码、线上play/production文件哈希一致；预先备份DB且pending0。GitHub已推送feat/AI-CAMPAIGN-03-v3-release、草稿PR #5（未合并master）。原生LLM旧上下文保留，普通规则包变化后的POLICY_CHANGED暂停按原保护执行，无自动迁移重发。模型请求/费用0。详见research/ai-campaign-03/{release.md,release.json,deployment.json,rtt-integration.json}；44本地检查及1200动作等价证据复用，未重复600冻结评测。
