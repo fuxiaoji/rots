@@ -64,6 +64,10 @@ function fast_check_supply() {
     L.supply = 0
 }
 
+// Preserve the native adjudication for isolated read-only campaign projections.
+// The client-side fast cache remains the normal runtime path.
+const check_steady_supply = check_supply
+
 if (CLIENT_SIDE_SUPPLY) {
     check_supply = fast_check_supply
 }

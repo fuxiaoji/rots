@@ -1,0 +1,35 @@
+{
+  "task": "AI-CAMPAIGN-BASE1-01",
+  "kind": "counterfactual remainder from existing fixed public saved point; not independent full-game victory rate",
+  "seed": 20263904,
+  "prefix": 1424,
+  "actions": 244,
+  "candidateSha256": "1c7b3e4ac8da3336a6d893a86a9b490a66c9624dd686e1559a51ddef2146d70c",
+  "opponentSha256": "3de6cbedb4fb7f927f8b43e71d955b3ab2615892c016f5fbe9df6911c4b4e35d",
+  "winner": "Japan",
+  "turn": 12,
+  "end": "Japan did not surrender.",
+  "ended": true,
+  "fallback": [],
+  "finalStateSha256": "cf4844eb4b7a14a54873c8e0d0f78c5bef9ff1bd5edbafc94f1aac7cf6875dcc",
+  "fullRemainderReplayVerified": true,
+  "manilaAllies": true,
+  "atomic": {
+    "met": false,
+    "turn": 12,
+    "noStrategicBombingFailure": true,
+    "bombingCampaignStart": 9,
+    "bombingRequiredFromTurn": 9,
+    "b29InRangeOfTokyo": true,
+    "ruleVersion": "official-16.2",
+    "jpResources": 2,
+    "jpResourceHexes": [
+      672,
+      307
+    ],
+    "resourceLimit": 1,
+    "resourcesSatisfied": false
+  },
+  "runtimeModelRequests": 0,
+  "externalApiCost": 0
+}

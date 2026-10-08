@@ -1164,6 +1164,16 @@ function erasmus_pbm_target_score(hex, faction, piece, source, targetPlan) {
     return null
 }
 
+// Enhanced AP strategy gate only: legal movement remains the engine's decision.
+function headless_campaign_landing_supply(hex,faction,group) {
+    if (faction!==AP || !em_flag("allies_campaign_offensive_refinement")
+        || ![hex_to_int(3305),hex_to_int(3306)].includes(hex) || is_space_controlled(hex,faction)) return true
+    const ground=(group || []).filter(id=>pieces[id]?.class==="ground")
+    if (!ground.length) return true
+    const estimate=queryCampaignSupplyProjection({faction,moves:ground.map(unit=>({unit,hex})),captureHex:hex,protectedIds:ground})
+    return !!estimate?.eligible && estimate.supplied
+}
+
 function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece, source, targetPlan, movingGroup, campaignProjectionScope) {
     // [opt stack_limit_gate] 唯一漏斗闸门: 本函数是所有 headless 落点评分的必经之路
     // (焦点格 / REDEPLOY / GARRISON / DEFEND_HONSHU / 空敌控推进 / 会战格 / 反应 /
@@ -1213,6 +1223,7 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
         : steer && typeof eop_advance_tiebreak === "function" ? eop_advance_tiebreak(hex, faction) : -1
     const nearKey = hex => approach >= 0 ? approach : headless_nearest_enemy_dist(hex, 1 - faction)
     if (kind === "attack") {
+        if (hasGround && em_flag("allies_campaign_offensive_refinement") && !headless_campaign_landing_supply(hex,faction,movingGroup)) return null
         // 驻军和指定撤离的终点是己方位置；不能把这些激活改成就近攻击。
         if (strategicMeta && (strategicMeta.kind === "REDEPLOY" || strategicMeta.kind === "GARRISON" || strategicMeta.kind === "PORTS")) {
             if (!is_space_controlled(hex, faction) || eu.count > 0) return null
@@ -1623,6 +1634,7 @@ function headless_advance_one(self, kind, targetPlan) {
         if (foc !== null && foc >= 0 && foc <= LAST_BOARD_HEX && typeof get_distance === "function") {
             let appr = null, apprD = Infinity
             map_for_each(L.allowed_hexes, (h) => {
+                if (!headless_campaign_landing_supply(h,G.active,group)) return
                 if (em_flag("stack_limit_gate") && !headless_stack_fits(h, G.active, leadPiece, group)) return
                 const d = get_distance(h, foc)
                 if (d < apprD || (d === apprD && (appr === null || h < appr))) { apprD = d; appr = h }

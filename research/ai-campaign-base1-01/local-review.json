@@ -1,0 +1,36 @@
+{
+  "task": "AI-CAMPAIGN-BASE1-01",
+  "userPreference": "local-only",
+  "externalReviewRequests": 0,
+  "externalReviewCost": 0,
+  "candidateAlliesSha256": "cc048d569281c46964990b1c945cb55f1223746fa6ed7e4b8bcb630d526d8e1a",
+  "candidateJapanSha256": "425b0e8af2ba48fafe5b95370b73b0ca8cbf595608b02dbdbbda83bac35dc7e9",
+  "reviews": [
+    {
+      "requestedModel": "gpt-6-astra",
+      "requestedEffort": "high",
+      "actualModel": "unknown-not-exposed",
+      "scope": "strategy/statistics and Korean supply design, read-only",
+      "finding": "Activation supply is temporary; compatible supplied HQ plus neutralized sea trace required. Korea does not require Taiwan/Okinawa by rule. Old63927 actual AU205 Pusan has native OOS, incompatible US HQs; 63812/63820 supplied counterexamples. Conditional defenders removed and current escort positions are assumptions, no future retreat forecast.",
+      "adopted": "Native read-only supply query; Korean landing gate; aircraft/carrier/HQ PBM steady protected-ground scoring; safety gate also on delegated headless/cruise path; no hard island rule.",
+      "outputKind": "normalized-adopted-summary-not-full-agent-transcript",
+      "outputSha256": "a08fd5c242a0e97aeb788fdcc8ce7a7175ac59aeeaa18aaf5b35d53489cae6fa",
+      "tokens": "unknown",
+      "elapsedMs": "unknown",
+      "cost": "unknown"
+    },
+    {
+      "requestedModel": "gpt-6.1-sol",
+      "requestedEffort": "high",
+      "actualModel": "unknown-not-exposed",
+      "scope": "rules/query restoration and final code review, read-only",
+      "finding": "Chinese PDF12-15 sections6.21,6.22,6.24,6.4 checked. CLIENT_SIDE_SUPPLY overwrites full checker with fast cache. Need saved native alias and G.oos result rather than AP flags after JP cache clearing. Future capture must not be used to supply preparation aircraft circularly.",
+      "adopted": "Retain native checker before fast alias; snapshots restore state; empty proof rejected; new flag explicit steadySupply; preparation first independently supplies aircraft before hypothetical Korean capture.39 tests plus new contract test, no external review API.",
+      "outputKind": "normalized-adopted-summary-not-full-agent-transcript",
+      "outputSha256": "afa7c27868d137d79ef783418166bc854ede7884e341929cc60e3de23399ca42",
+      "tokens": "unknown",
+      "elapsedMs": "unknown",
+      "cost": "unknown"
+    }
+  ]
+}

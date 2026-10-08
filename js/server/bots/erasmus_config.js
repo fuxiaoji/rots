@@ -4,6 +4,8 @@
 "use strict"
 
 const EM_FLAGS = [
+    "allies_campaign_offensive_refinement", // BASE1-01: explicit new candidate only.
+    "japan_campaign_opening_refinement", // BASE1-01: low-cost early Palau defence.
     "japan_campaign_refinement", // Expanded garrisons, explicit Japanese candidate only.
     "allies_route_commitment", // AI-ALLIES-40-01: separate 1943 candidate.
     "allies_campaign_refinement", // AI-ALLIES-40-01: candidate-only execution/deadline improvements.
@@ -170,6 +172,8 @@ function em_set_config(flags, params) {
     if (flags) for (const k of Object.keys(flags)) if (EM_FLAGS.includes(flags[k] !== undefined ? k : k)) merged[k] = flags[k] ? 1 : 0
     if (flags) for (const k of Object.keys(flags)) if (k in EM_PARAMS_BASE && Number.isFinite(flags[k])) merged[k] = flags[k]
     if (params) for (const k of Object.keys(params)) if (k in EM_PARAMS_BASE) merged[k] = params[k]
+    if (!flags?.allies_campaign_offensive_refinement) delete merged.allies_campaign_offensive_refinement
+    if (!flags?.japan_campaign_opening_refinement) delete merged.japan_campaign_opening_refinement
     if (!flags?.japan_campaign_refinement) delete merged.japan_campaign_refinement
     if (!flags?.allies_route_commitment) delete merged.allies_route_commitment
     if (!flags?.allies_campaign_refinement) delete merged.allies_campaign_refinement
@@ -183,21 +187,25 @@ function em_reset_config() { em_current = null }
 // process-wide last-writer flag set. This also makes save/replay independent of env.
 function em_bot_config(name, role) {
     if (name === "erasmus-v2" || !name) return null
-    const defaults = (name === "erasmus-campaign" || name === "erasmus-campaign-v2" || name === "erasmus-campaign-v2-1" || name === "erasmus-campaign-v2-2")
+    const defaults = (name === "erasmus-campaign" || name === "erasmus-campaign-v2" || name === "erasmus-campaign-v2-1" || name === "erasmus-campaign-v2-2" || name === "erasmus-campaign-v2-3")
         ? EM_DEFAULT_PROFILE_V5 + ",erasmus_plus,campaign_planner,stack_limit_gate"
-        : (name === "erasmus-japan-campaign" || name === "erasmus-japan-campaign-v2" || name === "erasmus-japan-campaign-v2-1") ? EM_DEFAULT_PROFILE_V5 + ",erasmus_plus,japan_campaign_planner,stack_limit_gate"
+        : (name === "erasmus-japan-campaign" || name === "erasmus-japan-campaign-v2" || name === "erasmus-japan-campaign-v2-1" || name === "erasmus-japan-campaign-v2-2") ? EM_DEFAULT_PROFILE_V5 + ",erasmus_plus,japan_campaign_planner,stack_limit_gate"
         : name === "erasmus-v2-opt-v5" ? EM_DEFAULT_PROFILE_V5 : EM_DEFAULT_PROFILE
     const saved = em_current
     try {
         em_set_config(em_profile_from_env(defaults, role))
         const profile={...em_current}
-        if (name==="erasmus-campaign-v2" || name==="erasmus-japan-campaign-v2" || name==="erasmus-campaign-v2-1" || name==="erasmus-campaign-v2-2" || name==="erasmus-japan-campaign-v2-1") profile.campaign_v2=1
+        if (name==="erasmus-campaign-v2-3") profile.allies_campaign_offensive_refinement=1
+        else delete profile.allies_campaign_offensive_refinement
+        if (name==="erasmus-japan-campaign-v2-2") profile.japan_campaign_opening_refinement=1
+        else delete profile.japan_campaign_opening_refinement
+        if (name==="erasmus-campaign-v2" || name==="erasmus-japan-campaign-v2" || name==="erasmus-campaign-v2-1" || name==="erasmus-campaign-v2-2" || name==="erasmus-japan-campaign-v2-1" || name==="erasmus-campaign-v2-3" || name==="erasmus-japan-campaign-v2-2") profile.campaign_v2=1
         else delete profile.campaign_v2 // old action envelopes remain byte-compatible
-        if (name==="erasmus-campaign-v2-1" || name==="erasmus-campaign-v2-2") profile.allies_campaign_refinement=1
+        if (name==="erasmus-campaign-v2-1" || name==="erasmus-campaign-v2-2" || name==="erasmus-campaign-v2-3") profile.allies_campaign_refinement=1
         else delete profile.allies_campaign_refinement
-        if (name==="erasmus-campaign-v2-2") profile.allies_route_commitment=1
+        if (name==="erasmus-campaign-v2-2" || name==="erasmus-campaign-v2-3") profile.allies_route_commitment=1
         else delete profile.allies_route_commitment
-        if (name==="erasmus-japan-campaign-v2-1") profile.japan_campaign_refinement=1
+        if (name==="erasmus-japan-campaign-v2-1" || name==="erasmus-japan-campaign-v2-2") profile.japan_campaign_refinement=1
         else delete profile.japan_campaign_refinement
         return profile
     }
