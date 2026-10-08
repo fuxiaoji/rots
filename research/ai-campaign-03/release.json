@@ -1,0 +1,24 @@
+{
+  "task": "AI-CAMPAIGN-03",
+  "rulesSha256": "b523d1184233ebffb5493c7dfea58a811ab81375b9f1c5ff248c706740a67d69",
+  "playSha256": "235d73cc5f1a6bcb6a34715443a65d09cf224d7aea92027a95ba21e3e3966b57",
+  "releaseIds": {
+    "Allies": "erasmus-campaign-v3",
+    "Japan": "erasmus-japan-campaign-v3"
+  },
+  "evaluatedAliases": {
+    "Allies": "erasmus-campaign-v2-3",
+    "Japan": "erasmus-japan-campaign-v2-2"
+  },
+  "ruleVersion": "official-16.2",
+  "runtimeModelRequests": 0,
+  "externalReviewRequests": 0,
+  "testsPassed": 44,
+  "equivalenceSeeds": [
+    20264801,
+    20264802
+  ],
+  "equivalenceActionsPerScenario": 600,
+  "independentWinrateEvidence": "../ai-campaign-base1-01/results.md",
+  "evaluationsRerunForRename": false
+}

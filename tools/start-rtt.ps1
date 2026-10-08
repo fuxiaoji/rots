@@ -126,6 +126,8 @@ function Start-Rtt {
     }
 
     & $NodeExe (Join-Path $GameRoot 'tools/install-rtt-llm.js') $RuntimeRoot
+    & $NodeExe (Join-Path $GameRoot 'tools/install-rtt-campaign.js') $RuntimeRoot
+    if ($LASTEXITCODE -ne 0) { throw '战役 AI 阵营校验安装失败。' }
     if ($LASTEXITCODE) { throw 'RTT LLM 接口安装失败。' }
     if ($LlmEnvFile) {
         if (-not (Test-Path -LiteralPath $LlmEnvFile)) { throw 'LLM 私有配置不存在。' }

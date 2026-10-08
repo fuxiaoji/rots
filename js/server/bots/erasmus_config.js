@@ -186,6 +186,9 @@ function em_reset_config() { em_current = null }
 // Resolved configuration is persisted by role with the action, never kept as a
 // process-wide last-writer flag set. This also makes save/replay independent of env.
 function em_bot_config(name, role) {
+    // Release aliases preserve the evaluated profile and persisted action envelope.
+    if (name === "erasmus-campaign-v3") name = "erasmus-campaign-v2-3"
+    if (name === "erasmus-japan-campaign-v3") name = "erasmus-japan-campaign-v2-2"
     if (name === "erasmus-v2" || !name) return null
     const defaults = (name === "erasmus-campaign" || name === "erasmus-campaign-v2" || name === "erasmus-campaign-v2-1" || name === "erasmus-campaign-v2-2" || name === "erasmus-campaign-v2-3")
         ? EM_DEFAULT_PROFILE_V5 + ",erasmus_plus,campaign_planner,stack_limit_gate"
