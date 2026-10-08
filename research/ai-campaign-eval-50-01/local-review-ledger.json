@@ -1,0 +1,42 @@
+{
+  "task": "AI-CAMPAIGN-EVAL-50-01",
+  "mode": "native local-only read-only agents",
+  "externalApiCalls": 0,
+  "externalCost": 0,
+  "nativeActualIdsUsageLatencyCostExposed": false,
+  "limitation": "requested configurations recorded; actual backend identifiers, full-context prompt hashes, usage, elapsed time and cost not exposed, not fabricated",
+  "reviews": [
+    {
+      "agent": "/root/campaign_strategy",
+      "requestedModel": "gpt-6-astra",
+      "reasoning": "high",
+      "input": "Read only final summary.json and frozen 100-game statistics; interpret denominators, sampling limits and next priorities; no tools mutating source or games and no external API. Correct blockade case from seed20263921 to seed20263907.",
+      "outputFile": "local-review-1.md",
+      "outputSha256": "45d9ff076fe5ea5779b4537f1f44952a249469ab95ec8f44d87ab4bdd0e29046",
+      "promptSummarySha256": "f38029a4e09aeadd528d8ea17dc71ea64f4580f30fa9fa507a1f9e349f9d9e9f",
+      "promptScope": "bounded final followup summary; not claiming full prior native context hash",
+      "actualModel": "not exposed by native tool response",
+      "usage": null,
+      "elapsedMs": null,
+      "cost": null,
+      "adoption": "accepted after root verification against audited replays and deterministic summary",
+      "outputScope": "Root-normalized adopted summary; raw native messages remain in conversation"
+    },
+    {
+      "agent": "/root/campaign_rule_audit",
+      "requestedModel": "gpt-6.1-sol",
+      "reasoning": "high",
+      "input": "Read only v2 observer, national adapter and existing audited reports; verify official national timing, legal ASP, noncentral softening and actual enemy-held landing; deliver concrete defects without source edits, full game reruns or external review.",
+      "outputFile": "local-review-2.md",
+      "outputSha256": "4c6001fc0ff16e43a20ee5c3660eda6a2e655118745e922078ccb774c1a490cb",
+      "promptSummarySha256": "d8cc145f791aff4cc593c479da430b816bbc6c60ab6eb10d7214a747838ac48d",
+      "promptScope": "bounded final followup summary; not claiming full prior native context hash",
+      "actualModel": "not exposed by native tool response",
+      "usage": null,
+      "elapsedMs": null,
+      "cost": null,
+      "adoption": "accepted after root verification against audited replays and deterministic summary",
+      "outputScope": "Root-normalized adopted summary; raw native messages remain in conversation"
+    }
+  ]
+}

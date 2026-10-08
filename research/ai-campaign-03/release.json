@@ -1,0 +1,28 @@
+{
+  "task": "AI-CAMPAIGN-03",
+  "rulesSha256": "b4fbf79e7bb3630e92d1a4c1cfd9fc7d85307568efe46a40505d0596dcb21ab3",
+  "playSha256": "68b800451030cd5dfd0b7559725a31349d9adefd602d59cbd49f3dfa4fff0973",
+  "releaseIds": {
+    "Allies": "erasmus-campaign-v3",
+    "Japan": "erasmus-japan-campaign-v3"
+  },
+  "evaluatedAliases": {
+    "Allies": "erasmus-campaign-v2-3",
+    "Japan": "erasmus-japan-campaign-v2-2"
+  },
+  "ruleVersion": "official-16.2",
+  "runtimeModelRequests": 0,
+  "externalReviewRequests": 0,
+  "testsPassed": 44,
+  "equivalenceSeeds": [
+    20264801,
+    20264802
+  ],
+  "equivalenceActionsPerScenario": 600,
+  "independentWinrateEvidence": "../ai-campaign-base1-01/results.md",
+  "evaluationsRerunForRename": false,
+  "worktreeBuildRulesSha256": "b523d1184233ebffb5493c7dfea58a811ab81375b9f1c5ff248c706740a67d69",
+  "normalizedRulesSha256": "b9a16a84c2ee80f6307812a0386d20d0f22b30b6bb18fa5c8dfa27422bcff01f",
+  "worktreeBuildPlaySha256": "235d73cc5f1a6bcb6a34715443a65d09cf224d7aea92027a95ba21e3e3966b57",
+  "artifactNote": "Git checkout newline encodings differ; source/build LF-normalized bytes equal. Published rules use tested local RTT artifact."
+}

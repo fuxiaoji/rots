@@ -1,0 +1,432 @@
+{
+  "task": "AI-CAMPAIGN-BASE1-01",
+  "seed": 20264101,
+  "baselineSha256": "3de6cbedb4fb7f927f8b43e71d955b3ab2615892c016f5fbe9df6911c4b4e35d",
+  "candidateSha256": "173ab41c93763948e898837624b67396ff17c92d8533565254c45af1587a16bf",
+  "replaySha256": "d1f425ab7b6991efd2097dc2b48c505a68b9bb4f4ec74d41de81210879b0ad83",
+  "checks": [
+    {
+      "ordinal": 1,
+      "role": "Allies",
+      "state": "offensive_segment",
+      "window": "card-selection",
+      "same": true
+    },
+    {
+      "ordinal": 2,
+      "role": "Allies",
+      "state": "offensive_segment_card_action",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 3,
+      "role": "Allies",
+      "state": "choose_hq",
+      "window": "task-force",
+      "same": true
+    },
+    {
+      "ordinal": 4,
+      "role": "Allies",
+      "state": "activate_units",
+      "window": "task-force",
+      "same": true
+    },
+    {
+      "ordinal": 7,
+      "role": "Allies",
+      "state": "move_offensive_units",
+      "window": "task-force",
+      "same": true
+    },
+    {
+      "ordinal": 9,
+      "role": "Allies",
+      "state": "commit_offensive_confirm",
+      "window": "task-force",
+      "same": true
+    },
+    {
+      "ordinal": 10,
+      "role": "Japan",
+      "state": "cancel_offensive",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 11,
+      "role": "Japan",
+      "state": "define_intelligence_condition",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 12,
+      "role": "Allies",
+      "state": "commit_offensive_confirm",
+      "window": "pbm",
+      "same": true
+    },
+    {
+      "ordinal": 13,
+      "role": "Japan",
+      "state": "offensive_segment",
+      "window": "card-selection",
+      "same": true
+    },
+    {
+      "ordinal": 14,
+      "role": "Japan",
+      "state": "offensive_segment_card_action",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 15,
+      "role": "Japan",
+      "state": "choose_hq",
+      "window": "task-force",
+      "same": true
+    },
+    {
+      "ordinal": 16,
+      "role": "Japan",
+      "state": "activate_units",
+      "window": "task-force",
+      "same": true
+    },
+    {
+      "ordinal": 21,
+      "role": "Japan",
+      "state": "move_offensive_units",
+      "window": "task-force",
+      "same": true
+    },
+    {
+      "ordinal": 22,
+      "role": "Japan",
+      "state": "choose_attack_hex",
+      "window": "task-force",
+      "same": true
+    },
+    {
+      "ordinal": 26,
+      "role": "Japan",
+      "state": "declare_battle_hexes",
+      "window": "task-force",
+      "same": true
+    },
+    {
+      "ordinal": 27,
+      "role": "Japan",
+      "state": "commit_offensive_confirm",
+      "window": "task-force",
+      "same": true
+    },
+    {
+      "ordinal": 28,
+      "role": "Allies",
+      "state": "define_intelligence_condition",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 29,
+      "role": "Allies",
+      "state": "choose_hq",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 30,
+      "role": "Allies",
+      "state": "activate_units",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 34,
+      "role": "Allies",
+      "state": "move_offensive_units",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 38,
+      "role": "Allies",
+      "state": "attack_reaction_cards",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 40,
+      "role": "Allies",
+      "state": "apply_attack_reaction",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 41,
+      "role": "Allies",
+      "state": "skip_bombing",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 42,
+      "role": "Allies",
+      "state": "commit_offensive_confirm",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 43,
+      "role": "Japan",
+      "state": "choose_battle",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 44,
+      "role": "Allies",
+      "state": "apply_hits",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 46,
+      "role": "Allies",
+      "state": "move_offensive_units",
+      "window": "pbm",
+      "same": true
+    },
+    {
+      "ordinal": 49,
+      "role": "Japan",
+      "state": "move_offensive_units",
+      "window": "pbm",
+      "same": true
+    },
+    {
+      "ordinal": 51,
+      "role": "Japan",
+      "state": "commit_offensive_confirm",
+      "window": "pbm",
+      "same": true
+    },
+    {
+      "ordinal": 82,
+      "role": "Japan",
+      "state": "apply_hits",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 98,
+      "role": "Japan",
+      "state": "attack_reaction_cards",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 100,
+      "role": "Japan",
+      "state": "apply_attack_reaction",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 101,
+      "role": "Japan",
+      "state": "submarine_attack",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 217,
+      "role": "Japan",
+      "state": "end_action",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 224,
+      "role": "Allies",
+      "state": "reinforcement_segment",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 230,
+      "role": "Japan",
+      "state": "reinforcement_segment",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 234,
+      "role": "Allies",
+      "state": "replacement_segment",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 240,
+      "role": "Japan",
+      "state": "replacement_segment",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 243,
+      "role": "Allies",
+      "state": "submarine_warfare",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 244,
+      "role": "Japan",
+      "state": "future_offensive",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 319,
+      "role": "Japan",
+      "state": "retreat",
+      "window": "pbm",
+      "same": true
+    },
+    {
+      "ordinal": 482,
+      "role": "Allies",
+      "state": "end_action",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 507,
+      "role": "Allies",
+      "state": "submarine_attack",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 552,
+      "role": "Allies",
+      "state": "displace_hq",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 627,
+      "role": "Japan",
+      "state": "paratroopers",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 634,
+      "role": "Allies",
+      "state": "cancel_offensive",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 675,
+      "role": "Japan",
+      "state": "attack_b29_base",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 746,
+      "role": "Allies",
+      "state": "strategic_bombing",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 761,
+      "role": "Allies",
+      "state": "declare_battle_hexes",
+      "window": "task-force",
+      "same": true
+    },
+    {
+      "ordinal": 766,
+      "role": "Allies",
+      "state": "choose_battle",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 842,
+      "role": "Japan",
+      "state": "draw_from_discard",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 881,
+      "role": "Japan",
+      "state": "china_offensive",
+      "window": "decision-axis",
+      "same": true
+    },
+    {
+      "ordinal": 897,
+      "role": "Allies",
+      "state": "choose_attack_hex",
+      "window": "task-force",
+      "same": true
+    },
+    {
+      "ordinal": 906,
+      "role": "Japan",
+      "state": "choose_hq",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 907,
+      "role": "Japan",
+      "state": "activate_units",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 910,
+      "role": "Japan",
+      "state": "move_offensive_units",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 911,
+      "role": "Japan",
+      "state": "choose_attack_hex",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 1183,
+      "role": "Allies",
+      "state": "choose_attack_hex",
+      "window": "reaction",
+      "same": true
+    },
+    {
+      "ordinal": 1250,
+      "role": "Allies",
+      "state": "chronicle",
+      "window": "decision-axis",
+      "same": true
+    }
+  ],
+  "actions": 1473,
+  "fullReplaySame": true,
+  "finalStateSha256": "c47585f8e7e50d98f38f464f6b7ef47a371cb69280777465007a1c758597e016"
+}

@@ -1,0 +1,79 @@
+{
+  "task": "AI-CAMPAIGN-BASE1-01",
+  "userPreference": "local-only",
+  "externalReviewRequests": 0,
+  "externalReviewCost": 0,
+  "candidateAlliesSha256": "cc048d569281c46964990b1c945cb55f1223746fa6ed7e4b8bcb630d526d8e1a",
+  "candidateJapanSha256": "425b0e8af2ba48fafe5b95370b73b0ca8cbf595608b02dbdbbda83bac35dc7e9",
+  "reviews": [
+    {
+      "requestedModel": "gpt-6-astra",
+      "requestedEffort": "high",
+      "actualModel": "unknown-not-exposed",
+      "scope": "strategy/statistics and Korean supply design, read-only",
+      "finding": "Activation supply is temporary; compatible supplied HQ plus neutralized sea trace required. Korea does not require Taiwan/Okinawa by rule. Old63927 actual AU205 Pusan has native OOS, incompatible US HQs; 63812/63820 supplied counterexamples. Conditional defenders removed and current escort positions are assumptions, no future retreat forecast.",
+      "adopted": "Native read-only supply query; Korean landing gate; aircraft/carrier/HQ PBM steady protected-ground scoring; safety gate also on delegated headless/cruise path; no hard island rule.",
+      "outputKind": "normalized-adopted-summary-not-full-agent-transcript",
+      "outputSha256": "a08fd5c242a0e97aeb788fdcc8ce7a7175ac59aeeaa18aaf5b35d53489cae6fa",
+      "tokens": "unknown",
+      "elapsedMs": "unknown",
+      "cost": "unknown"
+    },
+    {
+      "requestedModel": "gpt-6.1-sol",
+      "requestedEffort": "high",
+      "actualModel": "unknown-not-exposed",
+      "scope": "rules/query restoration and final code review, read-only",
+      "finding": "Chinese PDF12-15 sections6.21,6.22,6.24,6.4 checked. CLIENT_SIDE_SUPPLY overwrites full checker with fast cache. Need saved native alias and G.oos result rather than AP flags after JP cache clearing. Future capture must not be used to supply preparation aircraft circularly.",
+      "adopted": "Retain native checker before fast alias; snapshots restore state; empty proof rejected; new flag explicit steadySupply; preparation first independently supplies aircraft before hypothetical Korean capture.39 tests plus new contract test, no external review API.",
+      "outputKind": "normalized-adopted-summary-not-full-agent-transcript",
+      "outputSha256": "afa7c27868d137d79ef783418166bc854ede7884e341929cc60e3de23399ca42",
+      "tokens": "unknown",
+      "elapsedMs": "unknown",
+      "cost": "unknown"
+    },
+    {
+      "requestedModel": "gpt-6-astra",
+      "requestedEffort": "high",
+      "actualModel": "unknown-not-exposed",
+      "scope": "stage2 preregistration, read-only",
+      "finding": "stage1 cannot estimate repaired PBM; fresh AP200 required, JP unchanged comparisons reusable",
+      "adopted": "new50 seeds per scenario paired before/fixed, no pooling stages",
+      "outputKind": "normalized-adopted-summary-not-full-agent-transcript",
+      "tokens": "unknown",
+      "elapsedMs": "unknown",
+      "cost": "unknown",
+      "outputSha256": "0831c360ffb7b7d6bd4df2fc5db919344b53d78f795a06fa74d7c1834059988b"
+    },
+    {
+      "requestedModel": "gpt-6.1-sol",
+      "requestedEffort": "high",
+      "actualModel": "unknown-not-exposed",
+      "scope": "actual PBM interface and corrective diff, read-only",
+      "finding": "raw id string/u numeric; group missing; old modes retain parse and wrapper short circuit",
+      "adopted": "newflag unit id and whole actual group; raw CV/HQ/air/BBlead tests; source frozen separately",
+      "outputKind": "normalized-adopted-summary-not-full-agent-transcript",
+      "tokens": "unknown",
+      "elapsedMs": "unknown",
+      "cost": "unknown",
+      "outputSha256": "ac2878b0914c7301567af10ab5067a2d7b2838645841bbfb2bd41ccba100e30c"
+    }
+  ],
+  "correctiveCandidateAlliesSha256": "e58b21a2436f953fbf4556bbb115f81f67e8463ff309eb8fad5f7f10e648cdb7",
+  "finalAssessment": {
+    "requestedModel": "gpt-6-astra",
+    "requestedEffort": "high",
+    "actualModel": "unknown-not-exposed",
+    "scope": "completed600 statistics/report, read-only",
+    "finding": "AP42 parity66; AP43 20 remains below40; Korea 1943 risk increased; PoW treaty regression; mixed national results; no single mechanism attribution",
+    "adopted": "retain negatives, conditional denominators, enemy cut prefix diagnosis, no retuning or deployment",
+    "outputKind": "normalized-adopted-summary-not-full-agent-transcript",
+    "tokens": "unknown",
+    "elapsedMs": "unknown",
+    "cost": "unknown",
+    "validationSha256": "430e16e41d2a813fd1e680a8976df52cbbdee1e17fa90d561ba9135f3758e102",
+    "validationStage2Sha256": "31a18e216847b20e978817b97b480e53a7616165424f15635ebd439c1ecea7e7",
+    "finalRootVerification": "Numerical results unchanged after wording correction from casualties to target ground CF reduction and added enemy-cut prefix evidence",
+    "outputSha256": "ff17ef9cf2e1453f316726ac8dfd5ca4de6ca6af23bbb7d230a881285c50a815"
+  }
+}

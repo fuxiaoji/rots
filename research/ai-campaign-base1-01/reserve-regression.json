@@ -1,0 +1,3658 @@
+{
+  "task": "AI-CAMPAIGN-BASE1-01",
+  "seed": 20263904,
+  "prefix": 1424,
+  "replaySha256": "3c9ac393937ecf78e3fabaee730552f9acd26eea12afd413c4669f56d5013b00",
+  "candidateSha256": "ee4e09893440e1267fa410964eb06ef4d12acb14c72a59d3200b4bdaa42e95a7",
+  "before": {
+    "prior": [
+      {
+        "objective": "GROUND_SOFTEN",
+        "hex": 535,
+        "softeningGoal": {
+          "beforeCf": 18,
+          "beforeSteps": 2,
+          "units": [
+            {
+              "id": 34,
+              "reduced": false,
+              "cf": 18
+            }
+          ],
+          "outcome": "actual ground reduction only; no occupation or victory credit"
+        }
+      },
+      {
+        "objective": "ASSEMBLE",
+        "hex": 421
+      }
+    ],
+    "capture": [
+      304,
+      395,
+      416,
+      1056
+    ],
+    "pow": 4,
+    "turn": 11,
+    "reserve": [
+      200,
+      165,
+      201,
+      199,
+      166,
+      189,
+      187,
+      195,
+      197,
+      198,
+      190,
+      194
+    ],
+    "tasks": [],
+    "plan": {
+      "version": 1,
+      "role": "Allies",
+      "turn": 11,
+      "cardId": 23,
+      "cardIntent": "ops",
+      "cardSpec": {
+        "id": 23,
+        "name": "PT Boats",
+        "faction": 1,
+        "type": 2,
+        "ops": 2,
+        "military": false,
+        "reaction": false,
+        "previewEvent": false,
+        "allowed": [
+          "discard",
+          "event",
+          "ops",
+          "displace_hq",
+          "future_offensive"
+        ],
+        "mode": "ops"
+      },
+      "preferredHq": 80,
+      "activationBudget": 4,
+      "objective": {
+        "type": "RESOURCE_ASSEMBLE",
+        "hex": 535
+      },
+      "phase": "ASSEMBLE",
+      "focus": 480,
+      "targets": [
+        {
+          "hex": 480,
+          "kind": "REDEPLOY",
+          "requiresOccupation": false,
+          "requiresFriendlyControl": true,
+          "requiredUnits": [
+            196
+          ],
+          "movementUnitIds": [
+            196
+          ],
+          "supportUnitIds": [],
+          "movementModes": [
+            "STRATEGIC"
+          ],
+          "movementGroups": [
+            {
+              "originHex": 421,
+              "mode": "STRATEGIC",
+              "unitIds": [
+                196
+              ]
+            }
+          ],
+          "campaignTask": true,
+          "taskId": "REDEPLOY:480:196",
+          "objective": "RESOURCE_ASSEMBLE",
+          "victoryObjective": "ATOMIC_RESOURCE",
+          "damageLevel": 1
+        },
+        {
+          "hex": 395,
+          "kind": "REDEPLOY",
+          "requiresOccupation": false,
+          "requiresFriendlyControl": true,
+          "requiredUnits": [
+            120
+          ],
+          "movementUnitIds": [
+            120
+          ],
+          "supportUnitIds": [],
+          "movementModes": [
+            "STRATEGIC"
+          ],
+          "campaignTask": true,
+          "taskId": "REDEPLOY:395:120",
+          "objective": "AIR_SUPPORT_BASE",
+          "damageLevel": 1
+        }
+      ],
+      "tasks": [
+        {
+          "id": "REDEPLOY:480:196",
+          "kind": "REDEPLOY",
+          "hex": 480,
+          "originHex": 421,
+          "movementUnitIds": [
+            196
+          ],
+          "supportUnitIds": [],
+          "escortUnitIds": [],
+          "requiredUnits": [
+            196
+          ],
+          "movementModes": [
+            "STRATEGIC"
+          ],
+          "preferredHq": 80,
+          "legality": "engine-group-query",
+          "score": 473,
+          "objective": "RESOURCE_ASSEMBLE",
+          "preparationOnly": true,
+          "victoryObjective": "ATOMIC_RESOURCE",
+          "followUpTarget": 535,
+          "movementGroups": [
+            {
+              "originHex": 421,
+              "mode": "STRATEGIC",
+              "unitIds": [
+                196
+              ]
+            }
+          ],
+          "attackWitness": {
+            "cardId": 34,
+            "cardMode": "ops",
+            "hqId": 80,
+            "groundIds": [
+              198,
+              196
+            ],
+            "escortIds": [
+              145
+            ],
+            "supportIds": [
+              135
+            ],
+            "requiredActivations": 4,
+            "aspCost": 2,
+            "pCaptureEstimate": 0.65,
+            "evidence": "current-own-card legal projected AA; actual attack must revalidate"
+          }
+        },
+        {
+          "id": "REDEPLOY:395:120",
+          "kind": "REDEPLOY",
+          "hex": 395,
+          "originHex": 368,
+          "movementUnitIds": [
+            120
+          ],
+          "supportUnitIds": [],
+          "escortUnitIds": [],
+          "requiredUnits": [
+            120
+          ],
+          "movementModes": [
+            "STRATEGIC"
+          ],
+          "preferredHq": 80,
+          "legality": "engine-group-query",
+          "score": 32,
+          "objective": "AIR_SUPPORT_BASE",
+          "followUpTarget": 307
+        }
+      ],
+      "blockers": [
+        {
+          "hex": 512,
+          "reason": "insufficient-air-sea-cover",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128
+          ]
+        },
+        {
+          "hex": 535,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128
+          ]
+        },
+        {
+          "hex": 566,
+          "reason": "insufficient-air-sea-cover",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128
+          ]
+        },
+        {
+          "hex": 512,
+          "reason": "insufficient-air-sea-cover",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128,
+            130
+          ]
+        },
+        {
+          "hex": 535,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128,
+            130
+          ]
+        },
+        {
+          "hex": 566,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128,
+            130
+          ]
+        },
+        {
+          "hex": 308,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128,
+            130,
+            134
+          ]
+        },
+        {
+          "hex": 443,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128,
+            130,
+            134
+          ]
+        },
+        {
+          "hex": 473,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128,
+            130,
+            134
+          ]
+        },
+        {
+          "hex": 502,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128,
+            130,
+            134
+          ]
+        },
+        {
+          "hex": 512,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128,
+            130,
+            134
+          ]
+        },
+        {
+          "hex": 531,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128,
+            130,
+            134
+          ]
+        }
+      ],
+      "garrisonReserveIds": [
+        165,
+        166,
+        187,
+        189,
+        190,
+        194,
+        195,
+        197,
+        198,
+        199,
+        200,
+        201
+      ],
+      "campaign": {
+        "theater": "PACIFIC",
+        "route": "ATOMIC_OPEN",
+        "objectiveHex": 307,
+        "rallyPort": null,
+        "redeployments": [
+          {
+            "turn": 11,
+            "unit": 196,
+            "from": 1127,
+            "to": 421,
+            "target": 307
+          }
+        ],
+        "homelandPreparation": null,
+        "hqRelocation": {
+          "turn": 7,
+          "hqId": 79,
+          "cardId": 49,
+          "stagingHex": 803,
+          "forwardHex": 647,
+          "reason": "forward landing port lies outside every on-map HQ command radius; redeploy next reinforcement phase"
+        },
+        "objectiveSinceTurn": 10
+      },
+      "pow": {
+        "required": 4,
+        "held": 4,
+        "gap": 0,
+        "politicalWill": 9,
+        "remainingCards": 4,
+        "remainingOffensives": 4,
+        "requiredCapturesPerCard": 0,
+        "evaluatedCardIds": [
+          23,
+          34
+        ],
+        "unexaminedCardIds": [
+          58,
+          38
+        ],
+        "attainableCaptureTargets": [],
+        "selectedCaptureTargets": [],
+        "expectedSelectedCaptures": 0,
+        "retentionRisks": [],
+        "quotaFeasibility": "already-met",
+        "reason": "Current controlled capture ledger meets this turn's quota; gains must still be held",
+        "forecastScope": "current-public-position-and-evaluated-own-cards; no future-draw-or-sequence-guarantee"
+      },
+      "victory": {
+        "atomic": {
+          "met": false,
+          "turn": 11,
+          "noStrategicBombingFailure": true,
+          "bombingCampaignStart": 9,
+          "bombingRequiredFromTurn": 9,
+          "b29InRangeOfTokyo": true,
+          "ruleVersion": "official-16.2",
+          "jpResources": 3,
+          "jpResourceHexes": [
+            672,
+            535,
+            307
+          ],
+          "resourceLimit": 1,
+          "resourcesSatisfied": false
+        },
+        "jpResources": 3,
+        "resourceTargets": [
+          307,
+          535,
+          672
+        ],
+        "blockade": {
+          "connected": true,
+          "allDisconnected": false,
+          "resources": [
+            {
+              "hex": 298,
+              "name": "Rangoon",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 304,
+              "name": "Kuantan",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 669,
+              "name": "Harbin",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 670,
+              "name": "Mukden",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 672,
+              "name": "Seoul",
+              "japanControlled": true,
+              "connected": true
+            },
+            {
+              "hex": 535,
+              "name": "Manila",
+              "japanControlled": true,
+              "connected": true
+            },
+            {
+              "hex": 245,
+              "name": "Medan",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 277,
+              "name": "Palembang",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 307,
+              "name": "Bangka",
+              "japanControlled": true,
+              "connected": true
+            },
+            {
+              "hex": 421,
+              "name": "Miri",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 480,
+              "name": "Tarakan",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 452,
+              "name": "Balikpapan",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 368,
+              "name": "Soerabaja",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 657,
+              "name": "Vogelkop",
+              "japanControlled": false,
+              "connected": false
+            }
+          ],
+          "connectedResources": [
+            307,
+            535,
+            672
+          ],
+          "disconnectedResources": [],
+          "startedTurn": 0,
+          "applicable": true,
+          "requiredPhases": 3,
+          "completedPhases": 0,
+          "remainingPhases": 3,
+          "currentPhaseChecked": false,
+          "nextJudgementTurn": 11,
+          "earliestWinTurn": null,
+          "timerWillReset": false,
+          "endpointOnly": true,
+          "assessment": "Public resource endpoints from the actual supply trace; remaining phases assume routes stay cut through each national-status check",
+          "neutralizingCarriers": [
+            {
+              "unit": 11,
+              "hex": 887,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 12,
+              "hex": 887,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 75,
+              "hex": 703,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 76,
+              "hex": 278,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 77,
+              "hex": 278,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 78,
+              "hex": 278,
+              "clearance": "not-covered-by-air-only-suppression"
+            }
+          ]
+        },
+        "homelandKeys": [
+          703,
+          731,
+          732,
+          761,
+          789,
+          788,
+          760
+        ],
+        "b29Bases": [
+          559,
+          560,
+          584,
+          585,
+          587,
+          589,
+          613,
+          614,
+          647,
+          672,
+          673,
+          674,
+          703,
+          731,
+          732,
+          761,
+          787,
+          788,
+          789,
+          792,
+          825,
+          826,
+          909
+        ],
+        "routes": {
+          "atomic": {
+            "status": "preparation-required",
+            "latestBombingStart": 9,
+            "judgementTurn": 12,
+            "bombingCampaignStart": 9,
+            "resourceCapturesNeeded": 2,
+            "b29DeploymentNeeded": false,
+            "manchurianResources": [],
+            "sovietDependency": "not-required-for-resource-limit",
+            "reason": "Bombing, B29 range and <=1 resource are separate requirements; Soviet event only affects resources",
+            "immediateResourceTargets": []
+          },
+          "blockade": {
+            "status": "deadline-missed",
+            "startedTurn": 0,
+            "latestStartTurn": 10,
+            "earliestWinTurn": null,
+            "completedSegments": 0,
+            "remainingPhases": 3,
+            "connectedResources": [
+              307,
+              535,
+              672
+            ],
+            "disconnectedResources": [],
+            "reason": "Actual resource traces determine endpoint connectivity; future national-status checks require routes to remain cut"
+          },
+          "homeland": {
+            "status": "capture-required",
+            "remainingKeys": [
+              703,
+              731,
+              732,
+              761,
+              789,
+              788,
+              760
+            ],
+            "immediatelyExecutableKeys": [],
+            "reason": "Each key needs a legal ground occupation; distance is not reachability",
+            "bestKnownAssaults": []
+          },
+          "headquarters": {
+            "status": "capture-required",
+            "enemyHqCount": 3,
+            "targets": [
+              {
+                "unit": 5,
+                "hex": 703
+              },
+              {
+                "unit": 6,
+                "hex": 887
+              },
+              {
+                "unit": 7,
+                "hex": 360
+              }
+            ],
+            "immediatelyExecutableTargets": [],
+            "reason": "Only public on-map HQs are counted; the engine determines displacement and sudden death"
+          }
+        },
+        "assessment": "public prerequisites and deadline feasibility; no assumed future draws or automatic victory",
+        "national": [
+          {
+            "name": "PHILIPPINES",
+            "id": 0,
+            "keys": [
+              535,
+              566
+            ],
+            "missingKeys": [
+              535,
+              566
+            ],
+            "politicalWill": 1,
+            "active": true,
+            "status": "capture-required"
+          },
+          {
+            "name": "MALAYA",
+            "id": 1,
+            "keys": [
+              304,
+              305
+            ],
+            "missingKeys": [
+              305
+            ],
+            "politicalWill": 1,
+            "active": true,
+            "status": "capture-required"
+          },
+          {
+            "name": "DEI",
+            "id": 2,
+            "keys": [
+              309,
+              245,
+              277,
+              307,
+              421,
+              480,
+              452,
+              368
+            ],
+            "missingKeys": [
+              309,
+              307
+            ],
+            "politicalWill": 1,
+            "active": true,
+            "status": "capture-required"
+          },
+          {
+            "name": "BURMA",
+            "id": 3,
+            "keys": [
+              298,
+              325,
+              354,
+              382
+            ],
+            "missingKeys": [],
+            "politicalWill": 1,
+            "active": false,
+            "status": "await-national-status"
+          }
+        ]
+      },
+      "preCard": true,
+      "strategySource": "CAMPAIGN_PLANNER",
+      "rulesSource": "engine legality queries"
+    }
+  },
+  "after": {
+    "prior": [
+      {
+        "objective": "GROUND_SOFTEN",
+        "hex": 535,
+        "softeningGoal": {
+          "beforeCf": 18,
+          "beforeSteps": 2,
+          "units": [
+            {
+              "id": 34,
+              "reduced": false,
+              "cf": 18
+            }
+          ],
+          "outcome": "actual ground reduction only; no occupation or victory credit"
+        }
+      },
+      {
+        "objective": "ASSEMBLE",
+        "hex": 421
+      }
+    ],
+    "capture": [
+      304,
+      395,
+      416,
+      1056
+    ],
+    "pow": 4,
+    "turn": 11,
+    "reserve": [
+      200,
+      165,
+      201,
+      199,
+      166,
+      189,
+      187,
+      195,
+      197,
+      198,
+      190,
+      194
+    ],
+    "tasks": [
+      {
+        "score": 554.05,
+        "hex": 535,
+        "ground": [
+          195,
+          196
+        ],
+        "units": [
+          195,
+          196,
+          128,
+          135
+        ],
+        "assessment": {
+          "executable": true,
+          "pCapture": 0.65,
+          "requiredProbability": 0.35,
+          "desiredProbability": 0.75,
+          "riskPolicy": "resource-clock",
+          "attackingGround": 24,
+          "defendingGround": 9,
+          "defendingGarrisons": [],
+          "pGround": 1,
+          "pGroundWithReaction": 1,
+          "pNaval": 1,
+          "pNavalWithReaction": 0,
+          "pNavalWeighted": 0,
+          "attackingAirSea": 26,
+          "defendingAirSea": 20,
+          "potentialReaction": 50,
+          "reactionWeight": 0.35,
+          "emptyLandCapture": false,
+          "unopposedLanding": false,
+          "reactionEstimate": "single-hq-budget-and-service",
+          "reactionHq": 5,
+          "reactionBudget": 5,
+          "reactionUnitIds": [
+            11,
+            14,
+            45,
+            12,
+            75
+          ],
+          "reactionGroundUnitIds": [],
+          "potentialGroundReaction": 0,
+          "uncoveredGroundReaction": null,
+          "rejection": null
+        },
+        "release": [
+          {
+            "id": 195,
+            "source": 421,
+            "target": 535,
+            "remainingSourceGround": 0,
+            "reason": "known offensive assembly or near-complete bombing resource route; real assault reevaluated",
+            "risk": "source may be recaptured"
+          }
+        ]
+      },
+      {
+        "score": 554.05,
+        "hex": 535,
+        "ground": [
+          195,
+          196
+        ],
+        "units": [
+          195,
+          196,
+          134,
+          135
+        ],
+        "assessment": {
+          "executable": true,
+          "pCapture": 0.65,
+          "requiredProbability": 0.35,
+          "desiredProbability": 0.75,
+          "riskPolicy": "resource-clock",
+          "attackingGround": 24,
+          "defendingGround": 9,
+          "defendingGarrisons": [],
+          "pGround": 1,
+          "pGroundWithReaction": 1,
+          "pNaval": 1,
+          "pNavalWithReaction": 0,
+          "pNavalWeighted": 0,
+          "attackingAirSea": 24,
+          "defendingAirSea": 20,
+          "potentialReaction": 50,
+          "reactionWeight": 0.35,
+          "emptyLandCapture": false,
+          "unopposedLanding": false,
+          "reactionEstimate": "single-hq-budget-and-service",
+          "reactionHq": 5,
+          "reactionBudget": 5,
+          "reactionUnitIds": [
+            11,
+            14,
+            45,
+            12,
+            75
+          ],
+          "reactionGroundUnitIds": [],
+          "potentialGroundReaction": 0,
+          "uncoveredGroundReaction": null,
+          "rejection": null
+        },
+        "release": [
+          {
+            "id": 195,
+            "source": 421,
+            "target": 535,
+            "remainingSourceGround": 0,
+            "reason": "known offensive assembly or near-complete bombing resource route; real assault reevaluated",
+            "risk": "source may be recaptured"
+          }
+        ]
+      },
+      {
+        "score": 554.05,
+        "hex": 535,
+        "ground": [
+          195,
+          196
+        ],
+        "units": [
+          195,
+          196,
+          134,
+          128
+        ],
+        "assessment": {
+          "executable": true,
+          "pCapture": 0.65,
+          "requiredProbability": 0.35,
+          "desiredProbability": 0.75,
+          "riskPolicy": "resource-clock",
+          "attackingGround": 24,
+          "defendingGround": 9,
+          "defendingGarrisons": [],
+          "pGround": 1,
+          "pGroundWithReaction": 1,
+          "pNaval": 1,
+          "pNavalWithReaction": 0,
+          "pNavalWeighted": 0,
+          "attackingAirSea": 30,
+          "defendingAirSea": 20,
+          "potentialReaction": 50,
+          "reactionWeight": 0.35,
+          "emptyLandCapture": false,
+          "unopposedLanding": false,
+          "reactionEstimate": "single-hq-budget-and-service",
+          "reactionHq": 5,
+          "reactionBudget": 5,
+          "reactionUnitIds": [
+            11,
+            14,
+            45,
+            12,
+            75
+          ],
+          "reactionGroundUnitIds": [],
+          "potentialGroundReaction": 0,
+          "uncoveredGroundReaction": null,
+          "rejection": null
+        },
+        "release": [
+          {
+            "id": 195,
+            "source": 421,
+            "target": 535,
+            "remainingSourceGround": 0,
+            "reason": "known offensive assembly or near-complete bombing resource route; real assault reevaluated",
+            "risk": "source may be recaptured"
+          }
+        ]
+      }
+    ],
+    "plan": {
+      "version": 1,
+      "role": "Allies",
+      "turn": 11,
+      "cardId": 23,
+      "cardIntent": "ops",
+      "cardSpec": {
+        "id": 23,
+        "name": "PT Boats",
+        "faction": 1,
+        "type": 2,
+        "ops": 2,
+        "military": false,
+        "reaction": false,
+        "previewEvent": false,
+        "allowed": [
+          "discard",
+          "event",
+          "ops",
+          "displace_hq",
+          "future_offensive"
+        ],
+        "mode": "ops"
+      },
+      "preferredHq": 80,
+      "activationBudget": 4,
+      "objective": {
+        "type": "NATIONAL_LIBERATION",
+        "hex": 535
+      },
+      "phase": "CAPTURE",
+      "focus": 535,
+      "targets": [
+        {
+          "hex": 535,
+          "kind": "CONQUEST",
+          "requiresOccupation": true,
+          "requiresFriendlyControl": false,
+          "requiredUnits": [
+            195,
+            196,
+            128,
+            135
+          ],
+          "movementUnitIds": [
+            195,
+            196,
+            128
+          ],
+          "supportUnitIds": [
+            135
+          ],
+          "movementModes": [
+            "AA"
+          ],
+          "campaignTask": true,
+          "taskId": "CONQUEST:535:195-196-128",
+          "objective": "NATIONAL_LIBERATION",
+          "damageLevel": 1
+        }
+      ],
+      "tasks": [
+        {
+          "id": "CONQUEST:535:195-196-128",
+          "kind": "CONQUEST",
+          "hex": 535,
+          "originHex": 421,
+          "movementUnitIds": [
+            195,
+            196,
+            128
+          ],
+          "supportUnitIds": [
+            135
+          ],
+          "escortUnitIds": [
+            128
+          ],
+          "requiredUnits": [
+            195,
+            196,
+            128,
+            135
+          ],
+          "movementModes": [
+            "AA"
+          ],
+          "preferredHq": 80,
+          "legality": "engine-group-query",
+          "score": 539.75,
+          "assessment": {
+            "executable": true,
+            "pCapture": 0.65,
+            "requiredProbability": 0.35,
+            "desiredProbability": 0.75,
+            "riskPolicy": "resource-clock",
+            "attackingGround": 24,
+            "defendingGround": 9,
+            "defendingGarrisons": [],
+            "pGround": 1,
+            "pGroundWithReaction": 1,
+            "pNaval": 1,
+            "pNavalWithReaction": 0,
+            "pNavalWeighted": 0,
+            "attackingAirSea": 26,
+            "defendingAirSea": 20,
+            "potentialReaction": 50,
+            "reactionWeight": 0.35,
+            "emptyLandCapture": false,
+            "unopposedLanding": false,
+            "reactionEstimate": "single-hq-budget-and-service",
+            "reactionHq": 5,
+            "reactionBudget": 5,
+            "reactionUnitIds": [
+              11,
+              14,
+              45,
+              12,
+              75
+            ],
+            "reactionGroundUnitIds": [],
+            "potentialGroundReaction": 0,
+            "uncoveredGroundReaction": null,
+            "rejection": null
+          },
+          "aspCost": 2,
+          "followupOfSoftening": {
+            "target": 535,
+            "beforeCf": 18,
+            "currentCf": 9,
+            "evidence": "actual defending ground reduction; current assault still passes original legality and probability"
+          },
+          "garrisonRelease": [
+            {
+              "id": 195,
+              "source": 421,
+              "target": 535,
+              "remainingSourceGround": 0,
+              "reason": "known offensive assembly or near-complete bombing resource route; real assault reevaluated",
+              "risk": "source may be recaptured"
+            }
+          ],
+          "declaresBattle": true,
+          "objective": "NATIONAL_LIBERATION"
+        }
+      ],
+      "blockers": [
+        {
+          "hex": 535,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            195,
+            128
+          ]
+        },
+        {
+          "hex": 535,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            195,
+            128,
+            130
+          ]
+        },
+        {
+          "hex": 535,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            195,
+            128,
+            130,
+            134
+          ]
+        },
+        {
+          "hex": 535,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            195,
+            134
+          ]
+        },
+        {
+          "hex": 535,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            195,
+            134,
+            128
+          ]
+        },
+        {
+          "hex": 535,
+          "reason": "insufficient-air-sea-cover",
+          "hq": 80,
+          "unitIds": [
+            195,
+            196,
+            128,
+            130
+          ]
+        },
+        {
+          "hex": 512,
+          "reason": "insufficient-air-sea-cover",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128
+          ]
+        },
+        {
+          "hex": 535,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128
+          ]
+        },
+        {
+          "hex": 566,
+          "reason": "insufficient-air-sea-cover",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128
+          ]
+        },
+        {
+          "hex": 512,
+          "reason": "insufficient-air-sea-cover",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128,
+            130
+          ]
+        },
+        {
+          "hex": 535,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128,
+            130
+          ]
+        },
+        {
+          "hex": 566,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128,
+            130
+          ]
+        }
+      ],
+      "garrisonReserveIds": [
+        165,
+        166,
+        187,
+        189,
+        190,
+        194,
+        195,
+        197,
+        198,
+        199,
+        200,
+        201
+      ],
+      "campaign": {
+        "theater": "PACIFIC",
+        "preparationSearch": {
+          "limit": 48,
+          "count": 48,
+          "targets": [
+            826,
+            712,
+            825,
+            535,
+            566,
+            887
+          ],
+          "exhausted": true
+        },
+        "route": "ATOMIC_OPEN",
+        "objectiveHex": 307,
+        "rallyPort": null,
+        "redeployments": [
+          {
+            "turn": 11,
+            "unit": 196,
+            "from": 1127,
+            "to": 421,
+            "target": 307
+          }
+        ],
+        "homelandPreparation": null,
+        "hqRelocation": {
+          "turn": 7,
+          "hqId": 79,
+          "cardId": 49,
+          "stagingHex": 803,
+          "forwardHex": 647,
+          "reason": "forward landing port lies outside every on-map HQ command radius; redeploy next reinforcement phase"
+        },
+        "objectiveSinceTurn": 10
+      },
+      "pow": {
+        "required": 4,
+        "held": 4,
+        "gap": 0,
+        "politicalWill": 9,
+        "remainingCards": 4,
+        "remainingOffensives": 4,
+        "requiredCapturesPerCard": 0,
+        "evaluatedCardIds": [
+          23,
+          34
+        ],
+        "unexaminedCardIds": [
+          58,
+          38
+        ],
+        "attainableCaptureTargets": [],
+        "selectedCaptureTargets": [],
+        "expectedSelectedCaptures": 0,
+        "retentionRisks": [],
+        "quotaFeasibility": "already-met",
+        "reason": "Current controlled capture ledger meets this turn's quota; gains must still be held",
+        "forecastScope": "current-public-position-and-evaluated-own-cards; no future-draw-or-sequence-guarantee"
+      },
+      "victory": {
+        "atomic": {
+          "met": false,
+          "turn": 11,
+          "noStrategicBombingFailure": true,
+          "bombingCampaignStart": 9,
+          "bombingRequiredFromTurn": 9,
+          "b29InRangeOfTokyo": true,
+          "ruleVersion": "official-16.2",
+          "jpResources": 3,
+          "jpResourceHexes": [
+            672,
+            535,
+            307
+          ],
+          "resourceLimit": 1,
+          "resourcesSatisfied": false
+        },
+        "jpResources": 3,
+        "resourceTargets": [
+          307,
+          535,
+          672
+        ],
+        "blockade": {
+          "connected": true,
+          "allDisconnected": false,
+          "resources": [
+            {
+              "hex": 298,
+              "name": "Rangoon",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 304,
+              "name": "Kuantan",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 669,
+              "name": "Harbin",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 670,
+              "name": "Mukden",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 672,
+              "name": "Seoul",
+              "japanControlled": true,
+              "connected": true
+            },
+            {
+              "hex": 535,
+              "name": "Manila",
+              "japanControlled": true,
+              "connected": true
+            },
+            {
+              "hex": 245,
+              "name": "Medan",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 277,
+              "name": "Palembang",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 307,
+              "name": "Bangka",
+              "japanControlled": true,
+              "connected": true
+            },
+            {
+              "hex": 421,
+              "name": "Miri",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 480,
+              "name": "Tarakan",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 452,
+              "name": "Balikpapan",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 368,
+              "name": "Soerabaja",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 657,
+              "name": "Vogelkop",
+              "japanControlled": false,
+              "connected": false
+            }
+          ],
+          "connectedResources": [
+            307,
+            535,
+            672
+          ],
+          "disconnectedResources": [],
+          "startedTurn": 0,
+          "applicable": true,
+          "requiredPhases": 3,
+          "completedPhases": 0,
+          "remainingPhases": 3,
+          "currentPhaseChecked": false,
+          "nextJudgementTurn": 11,
+          "earliestWinTurn": null,
+          "timerWillReset": false,
+          "endpointOnly": true,
+          "assessment": "Public resource endpoints from the actual supply trace; remaining phases assume routes stay cut through each national-status check",
+          "neutralizingCarriers": [
+            {
+              "unit": 11,
+              "hex": 887,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 12,
+              "hex": 887,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 75,
+              "hex": 703,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 76,
+              "hex": 278,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 77,
+              "hex": 278,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 78,
+              "hex": 278,
+              "clearance": "not-covered-by-air-only-suppression"
+            }
+          ]
+        },
+        "homelandKeys": [
+          703,
+          731,
+          732,
+          761,
+          789,
+          788,
+          760
+        ],
+        "b29Bases": [
+          559,
+          560,
+          584,
+          585,
+          587,
+          589,
+          613,
+          614,
+          647,
+          672,
+          673,
+          674,
+          703,
+          731,
+          732,
+          761,
+          787,
+          788,
+          789,
+          792,
+          825,
+          826,
+          909
+        ],
+        "routes": {
+          "atomic": {
+            "status": "preparation-required",
+            "latestBombingStart": 9,
+            "judgementTurn": 12,
+            "bombingCampaignStart": 9,
+            "resourceCapturesNeeded": 2,
+            "b29DeploymentNeeded": false,
+            "manchurianResources": [],
+            "sovietDependency": "not-required-for-resource-limit",
+            "reason": "Bombing, B29 range and <=1 resource are separate requirements; Soviet event only affects resources",
+            "immediateResourceTargets": [
+              535
+            ]
+          },
+          "blockade": {
+            "status": "deadline-missed",
+            "startedTurn": 0,
+            "latestStartTurn": 10,
+            "earliestWinTurn": null,
+            "completedSegments": 0,
+            "remainingPhases": 3,
+            "connectedResources": [
+              307,
+              535,
+              672
+            ],
+            "disconnectedResources": [],
+            "reason": "Actual resource traces determine endpoint connectivity; future national-status checks require routes to remain cut"
+          },
+          "homeland": {
+            "status": "capture-required",
+            "remainingKeys": [
+              703,
+              731,
+              732,
+              761,
+              789,
+              788,
+              760
+            ],
+            "immediatelyExecutableKeys": [],
+            "reason": "Each key needs a legal ground occupation; distance is not reachability",
+            "bestKnownAssaults": []
+          },
+          "headquarters": {
+            "status": "capture-required",
+            "enemyHqCount": 3,
+            "targets": [
+              {
+                "unit": 5,
+                "hex": 703
+              },
+              {
+                "unit": 6,
+                "hex": 887
+              },
+              {
+                "unit": 7,
+                "hex": 360
+              }
+            ],
+            "immediatelyExecutableTargets": [],
+            "reason": "Only public on-map HQs are counted; the engine determines displacement and sudden death"
+          }
+        },
+        "assessment": "public prerequisites and deadline feasibility; no assumed future draws or automatic victory",
+        "national": [
+          {
+            "name": "PHILIPPINES",
+            "id": 0,
+            "keys": [
+              535,
+              566
+            ],
+            "missingKeys": [
+              535,
+              566
+            ],
+            "politicalWill": 1,
+            "active": true,
+            "status": "capture-required"
+          },
+          {
+            "name": "MALAYA",
+            "id": 1,
+            "keys": [
+              304,
+              305
+            ],
+            "missingKeys": [
+              305
+            ],
+            "politicalWill": 1,
+            "active": true,
+            "status": "capture-required"
+          },
+          {
+            "name": "DEI",
+            "id": 2,
+            "keys": [
+              309,
+              245,
+              277,
+              307,
+              421,
+              480,
+              452,
+              368
+            ],
+            "missingKeys": [
+              309,
+              307
+            ],
+            "politicalWill": 1,
+            "active": true,
+            "status": "capture-required"
+          },
+          {
+            "name": "BURMA",
+            "id": 3,
+            "keys": [
+              298,
+              325,
+              354,
+              382
+            ],
+            "missingKeys": [],
+            "politicalWill": 1,
+            "active": false,
+            "status": "await-national-status"
+          }
+        ]
+      },
+      "preCard": true,
+      "strategySource": "CAMPAIGN_PLANNER",
+      "rulesSource": "engine legality queries"
+    }
+  },
+  "autonomousDecision": {
+    "action": "card",
+    "plan": {
+      "version": 1,
+      "role": "Allies",
+      "turn": 11,
+      "cardId": 23,
+      "cardIntent": "ops",
+      "cardSpec": {
+        "id": 23,
+        "name": "PT Boats",
+        "faction": 1,
+        "type": 2,
+        "ops": 2,
+        "military": false,
+        "reaction": false,
+        "previewEvent": false,
+        "allowed": [
+          "discard",
+          "event",
+          "ops",
+          "displace_hq",
+          "future_offensive"
+        ],
+        "mode": "ops"
+      },
+      "preferredHq": 80,
+      "activationBudget": 4,
+      "objective": {
+        "type": "NATIONAL_LIBERATION",
+        "hex": 535
+      },
+      "phase": "CAPTURE",
+      "focus": 535,
+      "targets": [
+        {
+          "hex": 535,
+          "kind": "CONQUEST",
+          "requiresOccupation": true,
+          "requiresFriendlyControl": false,
+          "requiredUnits": [
+            195,
+            196,
+            128,
+            135
+          ],
+          "movementUnitIds": [
+            195,
+            196,
+            128
+          ],
+          "supportUnitIds": [
+            135
+          ],
+          "movementModes": [
+            "AA"
+          ],
+          "campaignTask": true,
+          "taskId": "CONQUEST:535:195-196-128",
+          "objective": "NATIONAL_LIBERATION",
+          "damageLevel": 1
+        }
+      ],
+      "tasks": [
+        {
+          "id": "CONQUEST:535:195-196-128",
+          "kind": "CONQUEST",
+          "hex": 535,
+          "originHex": 421,
+          "movementUnitIds": [
+            195,
+            196,
+            128
+          ],
+          "supportUnitIds": [
+            135
+          ],
+          "escortUnitIds": [
+            128
+          ],
+          "requiredUnits": [
+            195,
+            196,
+            128,
+            135
+          ],
+          "movementModes": [
+            "AA"
+          ],
+          "preferredHq": 80,
+          "legality": "engine-group-query",
+          "score": 547.55,
+          "assessment": {
+            "executable": true,
+            "pCapture": 0.65,
+            "requiredProbability": 0.35,
+            "desiredProbability": 0.75,
+            "riskPolicy": "resource-clock",
+            "attackingGround": 24,
+            "defendingGround": 9,
+            "defendingGarrisons": [],
+            "pGround": 1,
+            "pGroundWithReaction": 1,
+            "pNaval": 1,
+            "pNavalWithReaction": 0,
+            "pNavalWeighted": 0,
+            "attackingAirSea": 26,
+            "defendingAirSea": 20,
+            "potentialReaction": 50,
+            "reactionWeight": 0.35,
+            "emptyLandCapture": false,
+            "unopposedLanding": false,
+            "reactionEstimate": "single-hq-budget-and-service",
+            "reactionHq": 5,
+            "reactionBudget": 5,
+            "reactionUnitIds": [
+              11,
+              14,
+              45,
+              12,
+              75
+            ],
+            "reactionGroundUnitIds": [],
+            "potentialGroundReaction": 0,
+            "uncoveredGroundReaction": null,
+            "rejection": null
+          },
+          "aspCost": 2,
+          "followupOfSoftening": {
+            "target": 535,
+            "beforeCf": 18,
+            "currentCf": 9,
+            "evidence": "actual defending ground reduction; current assault still passes original legality and probability"
+          },
+          "garrisonRelease": [
+            {
+              "id": 195,
+              "source": 421,
+              "target": 535,
+              "remainingSourceGround": 0,
+              "reason": "known offensive assembly or near-complete bombing resource route; real assault reevaluated",
+              "risk": "source may be recaptured"
+            }
+          ],
+          "declaresBattle": true,
+          "objective": "NATIONAL_LIBERATION"
+        }
+      ],
+      "blockers": [
+        {
+          "hex": 535,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            195,
+            128
+          ]
+        },
+        {
+          "hex": 535,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            195,
+            128,
+            130
+          ]
+        },
+        {
+          "hex": 535,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            195,
+            128,
+            130,
+            134
+          ]
+        },
+        {
+          "hex": 535,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            195,
+            134
+          ]
+        },
+        {
+          "hex": 535,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            195,
+            134,
+            128
+          ]
+        },
+        {
+          "hex": 535,
+          "reason": "insufficient-air-sea-cover",
+          "hq": 80,
+          "unitIds": [
+            195,
+            196,
+            128,
+            130
+          ]
+        },
+        {
+          "hex": 512,
+          "reason": "insufficient-air-sea-cover",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128
+          ]
+        },
+        {
+          "hex": 535,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128
+          ]
+        },
+        {
+          "hex": 566,
+          "reason": "insufficient-air-sea-cover",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128
+          ]
+        },
+        {
+          "hex": 512,
+          "reason": "insufficient-air-sea-cover",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128,
+            130
+          ]
+        },
+        {
+          "hex": 535,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128,
+            130
+          ]
+        },
+        {
+          "hex": 566,
+          "reason": "capture-probability-below-threshold",
+          "hq": 80,
+          "unitIds": [
+            196,
+            128,
+            130
+          ]
+        }
+      ],
+      "garrisonReserveIds": [
+        165,
+        166,
+        187,
+        189,
+        190,
+        194,
+        195,
+        197,
+        198,
+        199,
+        200,
+        201
+      ],
+      "campaign": {
+        "theater": "PACIFIC",
+        "preparationSearch": {
+          "limit": 48,
+          "count": 48,
+          "targets": [
+            826,
+            712,
+            825,
+            535,
+            566,
+            887
+          ],
+          "exhausted": true
+        },
+        "route": "ATOMIC_OPEN",
+        "objectiveHex": 307,
+        "rallyPort": null,
+        "redeployments": [
+          {
+            "turn": 11,
+            "unit": 196,
+            "from": 1127,
+            "to": 421,
+            "target": 307
+          }
+        ],
+        "homelandPreparation": null,
+        "hqRelocation": {
+          "turn": 7,
+          "hqId": 79,
+          "cardId": 49,
+          "stagingHex": 803,
+          "forwardHex": 647,
+          "reason": "forward landing port lies outside every on-map HQ command radius; redeploy next reinforcement phase"
+        },
+        "objectiveSinceTurn": 10
+      },
+      "pow": {
+        "required": 4,
+        "held": 4,
+        "gap": 0,
+        "politicalWill": 9,
+        "remainingCards": 4,
+        "remainingOffensives": 4,
+        "requiredCapturesPerCard": 0,
+        "evaluatedCardIds": [
+          23,
+          34
+        ],
+        "unexaminedCardIds": [
+          58,
+          38
+        ],
+        "attainableCaptureTargets": [],
+        "selectedCaptureTargets": [],
+        "expectedSelectedCaptures": 0,
+        "retentionRisks": [],
+        "quotaFeasibility": "already-met",
+        "reason": "Current controlled capture ledger meets this turn's quota; gains must still be held",
+        "forecastScope": "current-public-position-and-evaluated-own-cards; no future-draw-or-sequence-guarantee"
+      },
+      "victory": {
+        "atomic": {
+          "met": false,
+          "turn": 11,
+          "noStrategicBombingFailure": true,
+          "bombingCampaignStart": 9,
+          "bombingRequiredFromTurn": 9,
+          "b29InRangeOfTokyo": true,
+          "ruleVersion": "official-16.2",
+          "jpResources": 3,
+          "jpResourceHexes": [
+            672,
+            535,
+            307
+          ],
+          "resourceLimit": 1,
+          "resourcesSatisfied": false
+        },
+        "jpResources": 3,
+        "resourceTargets": [
+          307,
+          535,
+          672
+        ],
+        "blockade": {
+          "connected": true,
+          "allDisconnected": false,
+          "resources": [
+            {
+              "hex": 298,
+              "name": "Rangoon",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 304,
+              "name": "Kuantan",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 669,
+              "name": "Harbin",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 670,
+              "name": "Mukden",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 672,
+              "name": "Seoul",
+              "japanControlled": true,
+              "connected": true
+            },
+            {
+              "hex": 535,
+              "name": "Manila",
+              "japanControlled": true,
+              "connected": true
+            },
+            {
+              "hex": 245,
+              "name": "Medan",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 277,
+              "name": "Palembang",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 307,
+              "name": "Bangka",
+              "japanControlled": true,
+              "connected": true
+            },
+            {
+              "hex": 421,
+              "name": "Miri",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 480,
+              "name": "Tarakan",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 452,
+              "name": "Balikpapan",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 368,
+              "name": "Soerabaja",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 657,
+              "name": "Vogelkop",
+              "japanControlled": false,
+              "connected": false
+            }
+          ],
+          "connectedResources": [
+            307,
+            535,
+            672
+          ],
+          "disconnectedResources": [],
+          "startedTurn": 0,
+          "applicable": true,
+          "requiredPhases": 3,
+          "completedPhases": 0,
+          "remainingPhases": 3,
+          "currentPhaseChecked": false,
+          "nextJudgementTurn": 11,
+          "earliestWinTurn": null,
+          "timerWillReset": false,
+          "endpointOnly": true,
+          "assessment": "Public resource endpoints from the actual supply trace; remaining phases assume routes stay cut through each national-status check",
+          "neutralizingCarriers": [
+            {
+              "unit": 11,
+              "hex": 887,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 12,
+              "hex": 887,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 75,
+              "hex": 703,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 76,
+              "hex": 278,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 77,
+              "hex": 278,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 78,
+              "hex": 278,
+              "clearance": "not-covered-by-air-only-suppression"
+            }
+          ]
+        },
+        "homelandKeys": [
+          703,
+          731,
+          732,
+          761,
+          789,
+          788,
+          760
+        ],
+        "b29Bases": [
+          559,
+          560,
+          584,
+          585,
+          587,
+          589,
+          613,
+          614,
+          647,
+          672,
+          673,
+          674,
+          703,
+          731,
+          732,
+          761,
+          787,
+          788,
+          789,
+          792,
+          825,
+          826,
+          909
+        ],
+        "routes": {
+          "atomic": {
+            "status": "preparation-required",
+            "latestBombingStart": 9,
+            "judgementTurn": 12,
+            "bombingCampaignStart": 9,
+            "resourceCapturesNeeded": 2,
+            "b29DeploymentNeeded": false,
+            "manchurianResources": [],
+            "sovietDependency": "not-required-for-resource-limit",
+            "reason": "Bombing, B29 range and <=1 resource are separate requirements; Soviet event only affects resources",
+            "immediateResourceTargets": [
+              535
+            ]
+          },
+          "blockade": {
+            "status": "deadline-missed",
+            "startedTurn": 0,
+            "latestStartTurn": 10,
+            "earliestWinTurn": null,
+            "completedSegments": 0,
+            "remainingPhases": 3,
+            "connectedResources": [
+              307,
+              535,
+              672
+            ],
+            "disconnectedResources": [],
+            "reason": "Actual resource traces determine endpoint connectivity; future national-status checks require routes to remain cut"
+          },
+          "homeland": {
+            "status": "capture-required",
+            "remainingKeys": [
+              703,
+              731,
+              732,
+              761,
+              789,
+              788,
+              760
+            ],
+            "immediatelyExecutableKeys": [],
+            "reason": "Each key needs a legal ground occupation; distance is not reachability",
+            "bestKnownAssaults": []
+          },
+          "headquarters": {
+            "status": "capture-required",
+            "enemyHqCount": 3,
+            "targets": [
+              {
+                "unit": 5,
+                "hex": 703
+              },
+              {
+                "unit": 6,
+                "hex": 887
+              },
+              {
+                "unit": 7,
+                "hex": 360
+              }
+            ],
+            "immediatelyExecutableTargets": [],
+            "reason": "Only public on-map HQs are counted; the engine determines displacement and sudden death"
+          }
+        },
+        "assessment": "public prerequisites and deadline feasibility; no assumed future draws or automatic victory",
+        "national": [
+          {
+            "name": "PHILIPPINES",
+            "id": 0,
+            "keys": [
+              535,
+              566
+            ],
+            "missingKeys": [
+              535,
+              566
+            ],
+            "politicalWill": 1,
+            "active": true,
+            "status": "capture-required"
+          },
+          {
+            "name": "MALAYA",
+            "id": 1,
+            "keys": [
+              304,
+              305
+            ],
+            "missingKeys": [
+              305
+            ],
+            "politicalWill": 1,
+            "active": true,
+            "status": "capture-required"
+          },
+          {
+            "name": "DEI",
+            "id": 2,
+            "keys": [
+              309,
+              245,
+              277,
+              307,
+              421,
+              480,
+              452,
+              368
+            ],
+            "missingKeys": [
+              309,
+              307
+            ],
+            "politicalWill": 1,
+            "active": true,
+            "status": "capture-required"
+          },
+          {
+            "name": "BURMA",
+            "id": 3,
+            "keys": [
+              298,
+              325,
+              354,
+              382
+            ],
+            "missingKeys": [],
+            "politicalWill": 1,
+            "active": false,
+            "status": "await-national-status"
+          }
+        ]
+      },
+      "preCard": true,
+      "strategySource": "CAMPAIGN_PLANNER",
+      "rulesSource": "engine legality queries",
+      "positioning": {
+        "version": 1,
+        "role": "Allies",
+        "scenario": 8,
+        "turn": 11,
+        "focus": 535,
+        "groundAssemblyPorts": [],
+        "islandDefense": [],
+        "blockade": {
+          "connected": true,
+          "allDisconnected": false,
+          "resources": [
+            {
+              "hex": 298,
+              "name": "Rangoon",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 304,
+              "name": "Kuantan",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 669,
+              "name": "Harbin",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 670,
+              "name": "Mukden",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 672,
+              "name": "Seoul",
+              "japanControlled": true,
+              "connected": true
+            },
+            {
+              "hex": 535,
+              "name": "Manila",
+              "japanControlled": true,
+              "connected": true
+            },
+            {
+              "hex": 245,
+              "name": "Medan",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 277,
+              "name": "Palembang",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 307,
+              "name": "Bangka",
+              "japanControlled": true,
+              "connected": true
+            },
+            {
+              "hex": 421,
+              "name": "Miri",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 480,
+              "name": "Tarakan",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 452,
+              "name": "Balikpapan",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 368,
+              "name": "Soerabaja",
+              "japanControlled": false,
+              "connected": false
+            },
+            {
+              "hex": 657,
+              "name": "Vogelkop",
+              "japanControlled": false,
+              "connected": false
+            }
+          ],
+          "connectedResources": [
+            307,
+            535,
+            672
+          ],
+          "disconnectedResources": [],
+          "startedTurn": 0,
+          "applicable": true,
+          "requiredPhases": 3,
+          "completedPhases": 0,
+          "remainingPhases": 3,
+          "currentPhaseChecked": false,
+          "nextJudgementTurn": 11,
+          "earliestWinTurn": null,
+          "timerWillReset": false,
+          "endpointOnly": true,
+          "assessment": "Public resource endpoints from the actual supply trace; remaining phases assume routes stay cut through each national-status check",
+          "neutralizingCarriers": [
+            {
+              "unit": 11,
+              "hex": 887,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 12,
+              "hex": 887,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 75,
+              "hex": 703,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 76,
+              "hex": 278,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 77,
+              "hex": 278,
+              "clearance": "not-covered-by-air-only-suppression"
+            },
+            {
+              "unit": 78,
+              "hex": 278,
+              "clearance": "not-covered-by-air-only-suppression"
+            }
+          ]
+        },
+        "pacificFocus": 307,
+        "homelandKeys": [
+          703,
+          731,
+          732,
+          761,
+          789,
+          788,
+          760
+        ],
+        "interService": true,
+        "homelandApproach": false,
+        "homelandRallyPort": null,
+        "hqRelocation": {
+          "turn": 7,
+          "hqId": 79,
+          "cardId": 49,
+          "stagingHex": 803,
+          "forwardHex": 647,
+          "reason": "forward landing port lies outside every on-map HQ command radius; redeploy next reinforcement phase"
+        },
+        "bases": [
+          {
+            "hex": 5,
+            "port": true,
+            "airfield": true,
+            "region": "Ceylon",
+            "resource": false
+          },
+          {
+            "hex": 94,
+            "port": true,
+            "airfield": true,
+            "region": "Ceylon",
+            "resource": false
+          },
+          {
+            "hex": 95,
+            "port": true,
+            "airfield": true,
+            "region": "Ceylon",
+            "resource": false
+          },
+          {
+            "hex": 122,
+            "port": true,
+            "airfield": true,
+            "region": "India",
+            "resource": false
+          },
+          {
+            "hex": 237,
+            "port": true,
+            "airfield": true,
+            "region": "India",
+            "resource": false
+          },
+          {
+            "hex": 245,
+            "port": false,
+            "airfield": true,
+            "region": "Sumatra",
+            "resource": true
+          },
+          {
+            "hex": 266,
+            "port": true,
+            "airfield": true,
+            "region": "NIndia",
+            "resource": false
+          },
+          {
+            "hex": 277,
+            "port": false,
+            "airfield": true,
+            "region": "Sumatra",
+            "resource": true
+          },
+          {
+            "hex": 296,
+            "port": false,
+            "airfield": true,
+            "region": "Burma",
+            "resource": false
+          },
+          {
+            "hex": 298,
+            "port": true,
+            "airfield": true,
+            "region": "Burma",
+            "resource": true
+          },
+          {
+            "hex": 304,
+            "port": false,
+            "airfield": true,
+            "region": "Malaya",
+            "resource": true
+          },
+          {
+            "hex": 325,
+            "port": false,
+            "airfield": true,
+            "region": "Burma",
+            "resource": false
+          },
+          {
+            "hex": 353,
+            "port": false,
+            "airfield": true,
+            "region": "NIndia",
+            "resource": false
+          },
+          {
+            "hex": 354,
+            "port": false,
+            "airfield": true,
+            "region": "Burma",
+            "resource": false
+          },
+          {
+            "hex": 368,
+            "port": true,
+            "airfield": true,
+            "region": "Java",
+            "resource": true
+          },
+          {
+            "hex": 382,
+            "port": false,
+            "airfield": true,
+            "region": "Burma",
+            "resource": false
+          },
+          {
+            "hex": 395,
+            "port": false,
+            "airfield": true,
+            "region": "Borneo",
+            "resource": false
+          },
+          {
+            "hex": 415,
+            "port": true,
+            "airfield": true,
+            "region": "Indochina",
+            "resource": false
+          },
+          {
+            "hex": 421,
+            "port": true,
+            "airfield": true,
+            "region": "Borneo",
+            "resource": true
+          },
+          {
+            "hex": 432,
+            "port": true,
+            "airfield": true,
+            "region": "Australia",
+            "resource": false
+          },
+          {
+            "hex": 452,
+            "port": true,
+            "airfield": true,
+            "region": "Borneo",
+            "resource": true
+          },
+          {
+            "hex": 460,
+            "port": true,
+            "airfield": true,
+            "region": "Australia",
+            "resource": false
+          },
+          {
+            "hex": 480,
+            "port": true,
+            "airfield": true,
+            "region": "Borneo",
+            "resource": true
+          },
+          {
+            "hex": 484,
+            "port": false,
+            "airfield": true,
+            "region": "Celebes",
+            "resource": false
+          },
+          {
+            "hex": 514,
+            "port": true,
+            "airfield": true,
+            "region": "DEI",
+            "resource": false
+          },
+          {
+            "hex": 547,
+            "port": true,
+            "airfield": true,
+            "region": "Australia",
+            "resource": false
+          },
+          {
+            "hex": 568,
+            "port": false,
+            "airfield": true,
+            "region": "Celebes",
+            "resource": false
+          },
+          {
+            "hex": 594,
+            "port": true,
+            "airfield": true,
+            "region": "Philippines",
+            "resource": false
+          },
+          {
+            "hex": 603,
+            "port": true,
+            "airfield": true,
+            "region": "Australia",
+            "resource": false
+          },
+          {
+            "hex": 664,
+            "port": false,
+            "airfield": true,
+            "region": "Australia",
+            "resource": false
+          },
+          {
+            "hex": 740,
+            "port": false,
+            "airfield": true,
+            "region": "JMandates",
+            "resource": false
+          },
+          {
+            "hex": 745,
+            "port": true,
+            "airfield": true,
+            "region": "Guinea",
+            "resource": false
+          },
+          {
+            "hex": 769,
+            "port": true,
+            "airfield": true,
+            "region": "JMandates",
+            "resource": false
+          },
+          {
+            "hex": 774,
+            "port": false,
+            "airfield": true,
+            "region": "Guinea",
+            "resource": false
+          },
+          {
+            "hex": 778,
+            "port": false,
+            "airfield": true,
+            "region": "Australia",
+            "resource": false
+          },
+          {
+            "hex": 780,
+            "port": true,
+            "airfield": true,
+            "region": "Australia",
+            "resource": false
+          },
+          {
+            "hex": 803,
+            "port": true,
+            "airfield": true,
+            "region": "Guinea",
+            "resource": false
+          },
+          {
+            "hex": 804,
+            "port": false,
+            "airfield": true,
+            "region": "Guinea",
+            "resource": false
+          },
+          {
+            "hex": 810,
+            "port": true,
+            "airfield": true,
+            "region": "Australia",
+            "resource": false
+          },
+          {
+            "hex": 834,
+            "port": true,
+            "airfield": true,
+            "region": "Guinea",
+            "resource": false
+          },
+          {
+            "hex": 835,
+            "port": true,
+            "airfield": true,
+            "region": "Guinea",
+            "resource": false
+          },
+          {
+            "hex": 863,
+            "port": false,
+            "airfield": true,
+            "region": "Guinea",
+            "resource": false
+          },
+          {
+            "hex": 894,
+            "port": true,
+            "airfield": true,
+            "region": "Guinea",
+            "resource": false
+          },
+          {
+            "hex": 909,
+            "port": false,
+            "airfield": true,
+            "region": "JMandates",
+            "resource": false
+          },
+          {
+            "hex": 1009,
+            "port": true,
+            "airfield": true,
+            "region": "AMandates",
+            "resource": false
+          },
+          {
+            "hex": 1032,
+            "port": false,
+            "airfield": true,
+            "region": "Marshall",
+            "resource": false
+          },
+          {
+            "hex": 1056,
+            "port": false,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          },
+          {
+            "hex": 1092,
+            "port": false,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          },
+          {
+            "hex": 1127,
+            "port": true,
+            "airfield": true,
+            "region": "Hebrides",
+            "resource": false
+          },
+          {
+            "hex": 1128,
+            "port": true,
+            "airfield": true,
+            "region": "Hebrides",
+            "resource": false
+          },
+          {
+            "hex": 1130,
+            "port": true,
+            "airfield": true,
+            "region": "Hebrides",
+            "resource": false
+          },
+          {
+            "hex": 1157,
+            "port": false,
+            "airfield": true,
+            "region": "Hebrides",
+            "resource": false
+          },
+          {
+            "hex": 1178,
+            "port": false,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          },
+          {
+            "hex": 1189,
+            "port": true,
+            "airfield": true,
+            "region": "Alaska",
+            "resource": false
+          },
+          {
+            "hex": 1197,
+            "port": false,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          },
+          {
+            "hex": 1239,
+            "port": false,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          },
+          {
+            "hex": 1268,
+            "port": true,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          },
+          {
+            "hex": 1272,
+            "port": true,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          },
+          {
+            "hex": 1284,
+            "port": false,
+            "airfield": true,
+            "region": "",
+            "resource": false
+          },
+          {
+            "hex": 1299,
+            "port": false,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          },
+          {
+            "hex": 1316,
+            "port": false,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          },
+          {
+            "hex": 1371,
+            "port": false,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          },
+          {
+            "hex": 1380,
+            "port": false,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          },
+          {
+            "hex": 1382,
+            "port": false,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          },
+          {
+            "hex": 1387,
+            "port": false,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          },
+          {
+            "hex": 1400,
+            "port": true,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          },
+          {
+            "hex": 1406,
+            "port": false,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          },
+          {
+            "hex": 1415,
+            "port": true,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          },
+          {
+            "hex": 1429,
+            "port": false,
+            "airfield": true,
+            "region": "Oceania",
+            "resource": false
+          }
+        ],
+        "units": [
+          {
+            "id": 79,
+            "class": "hq",
+            "location": 1400,
+            "service": "us",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 80,
+            "class": "hq",
+            "location": 810,
+            "service": "us",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 82,
+            "class": "hq",
+            "location": 1130,
+            "service": "us",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 84,
+            "class": "hq",
+            "location": 803,
+            "service": "br",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 86,
+            "class": "hq",
+            "location": 835,
+            "service": "joint",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 87,
+            "class": "naval",
+            "location": 745,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 88,
+            "class": "naval",
+            "location": 1127,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 95,
+            "class": "naval",
+            "location": 810,
+            "service": "au",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 100,
+            "class": "air",
+            "location": 1400,
+            "service": "army",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 101,
+            "class": "air",
+            "location": 1197,
+            "service": "army",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 106,
+            "class": "air",
+            "location": 835,
+            "service": "au",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 107,
+            "class": "air",
+            "location": 296,
+            "service": "army",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 108,
+            "class": "air",
+            "location": 266,
+            "service": "army",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 109,
+            "class": "air",
+            "location": 421,
+            "service": "army",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 110,
+            "class": "air",
+            "location": 460,
+            "service": "army",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 111,
+            "class": "air",
+            "location": 1009,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 112,
+            "class": "air",
+            "location": 237,
+            "service": "br",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 113,
+            "class": "air",
+            "location": 245,
+            "service": "br",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 114,
+            "class": "air",
+            "location": 354,
+            "service": "army",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 115,
+            "class": "air",
+            "location": 1127,
+            "service": "army",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 116,
+            "class": "air",
+            "location": 1189,
+            "service": "army",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 117,
+            "class": "air",
+            "location": 1189,
+            "service": "army",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 118,
+            "class": "air",
+            "location": 1484,
+            "service": "army",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 119,
+            "class": "air",
+            "location": 1127,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 120,
+            "class": "air",
+            "location": 368,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 121,
+            "class": "air",
+            "location": 1484,
+            "service": "army",
+            "asp": false,
+            "b29": true
+          },
+          {
+            "id": 122,
+            "class": "air",
+            "location": 909,
+            "service": "army",
+            "asp": false,
+            "b29": true
+          },
+          {
+            "id": 123,
+            "class": "naval",
+            "location": 368,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 124,
+            "class": "naval",
+            "location": 1127,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 125,
+            "class": "naval",
+            "location": 95,
+            "service": "br",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 126,
+            "class": "naval",
+            "location": 266,
+            "service": "br",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 128,
+            "class": "naval",
+            "location": 421,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 129,
+            "class": "naval",
+            "location": 1127,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 130,
+            "class": "naval",
+            "location": 421,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 131,
+            "class": "naval",
+            "location": 95,
+            "service": "br",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 132,
+            "class": "naval",
+            "location": 452,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 133,
+            "class": "naval",
+            "location": 835,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 134,
+            "class": "naval",
+            "location": 421,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 135,
+            "class": "naval",
+            "location": 594,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 136,
+            "class": "naval",
+            "location": 421,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 137,
+            "class": "naval",
+            "location": 452,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 138,
+            "class": "naval",
+            "location": 460,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 139,
+            "class": "naval",
+            "location": 452,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 140,
+            "class": "naval",
+            "location": 368,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 141,
+            "class": "naval",
+            "location": 368,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 142,
+            "class": "naval",
+            "location": 835,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 143,
+            "class": "naval",
+            "location": 745,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 144,
+            "class": "naval",
+            "location": 769,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 145,
+            "class": "naval",
+            "location": 480,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 146,
+            "class": "naval",
+            "location": 452,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 147,
+            "class": "naval",
+            "location": 368,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 148,
+            "class": "naval",
+            "location": 368,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 149,
+            "class": "naval",
+            "location": 421,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 150,
+            "class": "naval",
+            "location": 368,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 151,
+            "class": "naval",
+            "location": 421,
+            "service": "navy",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 153,
+            "class": "naval",
+            "location": 298,
+            "service": "br",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 154,
+            "class": "naval",
+            "location": 298,
+            "service": "br",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 155,
+            "class": "ground",
+            "location": 325,
+            "service": "ch",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 156,
+            "class": "ground",
+            "location": 413,
+            "service": "ch",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 157,
+            "class": "ground",
+            "location": 413,
+            "service": "ch",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 164,
+            "class": "ground",
+            "location": 1400,
+            "service": "army",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 165,
+            "class": "ground",
+            "location": 277,
+            "service": "au",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 166,
+            "class": "ground",
+            "location": 368,
+            "service": "au",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 168,
+            "class": "ground",
+            "location": 909,
+            "service": "au",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 173,
+            "class": "ground",
+            "location": 353,
+            "service": "ind",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 187,
+            "class": "ground",
+            "location": 416,
+            "service": "army",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 188,
+            "class": "ground",
+            "location": 1009,
+            "service": "army",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 189,
+            "class": "ground",
+            "location": 395,
+            "service": "army",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 190,
+            "class": "ground",
+            "location": 657,
+            "service": "army",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 191,
+            "class": "ground",
+            "location": 415,
+            "service": "army",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 193,
+            "class": "ground",
+            "location": 1400,
+            "service": "navy",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 194,
+            "class": "ground",
+            "location": 1056,
+            "service": "navy",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 195,
+            "class": "ground",
+            "location": 421,
+            "service": "navy",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 196,
+            "class": "ground",
+            "location": 421,
+            "service": "navy",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 197,
+            "class": "ground",
+            "location": 452,
+            "service": "navy",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 198,
+            "class": "ground",
+            "location": 480,
+            "service": "navy",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 199,
+            "class": "ground",
+            "location": 304,
+            "service": "navy",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 200,
+            "class": "ground",
+            "location": 245,
+            "service": "br",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 201,
+            "class": "ground",
+            "location": 298,
+            "service": "br",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 202,
+            "class": "ground",
+            "location": 368,
+            "service": "au",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 203,
+            "class": "ground",
+            "location": 1178,
+            "service": "br",
+            "asp": true,
+            "b29": false
+          },
+          {
+            "id": 204,
+            "class": "ground",
+            "location": 296,
+            "service": "ind",
+            "asp": false,
+            "b29": false
+          },
+          {
+            "id": 205,
+            "class": "ground",
+            "location": 484,
+            "service": "au",
+            "asp": true,
+            "b29": false
+          }
+        ],
+        "captured": [
+          304,
+          395,
+          416,
+          1056
+        ],
+        "assemblyPorts": [],
+        "garrisonReserveIds": [
+          165,
+          166,
+          187,
+          189,
+          190,
+          194,
+          195,
+          197,
+          198,
+          199,
+          200,
+          201
+        ]
+      }
+    }
+  },
+  "runtimeModelRequests": 0,
+  "externalApiCost": 0
+}

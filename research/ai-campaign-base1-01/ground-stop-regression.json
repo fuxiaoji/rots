@@ -1,0 +1,197 @@
+{
+  "task": "AI-CAMPAIGN-BASE1-01",
+  "seed": 20263931,
+  "prefix": 971,
+  "sourceReplaySha256": "b7350ca60473e4241373e0f6d1c6923f4943c2dcab67de3f68bc1e06d2e60223",
+  "candidateSha256": "173ab41c93763948e898837624b67396ff17c92d8533565254c45af1587a16bf",
+  "oldFallback": true,
+  "newAction": "stop",
+  "newVia": "campaign-arrived-ground-redeployment-stop",
+  "selected": [
+    32
+  ],
+  "publicPaths": [
+    32,
+    [
+      4,
+      1,
+      673,
+      672
+    ]
+  ],
+  "plan": {
+    "theater": "PACIFIC_DEFENSE",
+    "islandDefense": [
+      {
+        "hex": 535,
+        "name": "Manila",
+        "groundCount": 1,
+        "reserveId": 34,
+        "priority": 500,
+        "threatened": true,
+        "groundCf": 18,
+        "minimumGround": 1,
+        "reinforcementNeeded": false
+      },
+      {
+        "hex": 712,
+        "name": "Palau",
+        "groundCount": 2,
+        "reserveId": 71,
+        "priority": 480,
+        "threatened": true,
+        "groundCf": 27,
+        "minimumGround": 1,
+        "reinforcementNeeded": false
+      },
+      {
+        "hex": 887,
+        "name": "Truk",
+        "groundCount": 1,
+        "reserveId": 37,
+        "priority": 480,
+        "threatened": true,
+        "groundCf": 18,
+        "minimumGround": 1,
+        "reinforcementNeeded": false
+      },
+      {
+        "hex": 566,
+        "name": "Davao",
+        "groundCount": 1,
+        "reserveId": 42,
+        "priority": 460,
+        "threatened": true,
+        "groundCf": 18,
+        "minimumGround": 1,
+        "reinforcementNeeded": false
+      },
+      {
+        "hex": 825,
+        "name": "Saipan",
+        "groundCount": 1,
+        "reserveId": 66,
+        "priority": 450,
+        "threatened": true,
+        "groundCf": 9,
+        "minimumGround": 1,
+        "reinforcementNeeded": false
+      },
+      {
+        "hex": 826,
+        "name": "Guam",
+        "groundCount": 2,
+        "reserveId": 30,
+        "priority": 450,
+        "threatened": true,
+        "groundCf": 8,
+        "minimumGround": 1,
+        "reinforcementNeeded": false
+      },
+      {
+        "hex": 672,
+        "name": "Seoul",
+        "groundCount": 0,
+        "reserveId": null,
+        "priority": 320,
+        "threatened": false,
+        "groundCf": 0,
+        "minimumGround": 1,
+        "reinforcementNeeded": false
+      },
+      {
+        "hex": 560,
+        "name": "Tainan",
+        "groundCount": 1,
+        "reserveId": 67,
+        "priority": 270,
+        "threatened": false,
+        "groundCf": 9,
+        "minimumGround": 1,
+        "reinforcementNeeded": false
+      },
+      {
+        "hex": 589,
+        "name": "Taihoku",
+        "groundCount": 1,
+        "reserveId": 40,
+        "priority": 270,
+        "threatened": false,
+        "groundCf": 9,
+        "minimumGround": 1,
+        "reinforcementNeeded": false
+      },
+      {
+        "hex": 647,
+        "name": "Okinawa",
+        "groundCount": 1,
+        "reserveId": 41,
+        "priority": 270,
+        "threatened": false,
+        "groundCf": 9,
+        "minimumGround": 1,
+        "reinforcementNeeded": false
+      },
+      {
+        "hex": 792,
+        "name": "Iwo Jima",
+        "groundCount": 1,
+        "reserveId": 33,
+        "priority": 270,
+        "threatened": false,
+        "groundCf": 18,
+        "minimumGround": 1,
+        "reinforcementNeeded": false
+      },
+      {
+        "hex": 1001,
+        "name": "Eniwetok",
+        "groundCount": 1,
+        "reserveId": 27,
+        "priority": 260,
+        "threatened": false,
+        "groundCf": 4,
+        "minimumGround": 1,
+        "reinforcementNeeded": false
+      },
+      {
+        "hex": 1088,
+        "name": "Kwajalein",
+        "groundCount": 1,
+        "reserveId": 29,
+        "priority": 260,
+        "threatened": false,
+        "groundCf": 4,
+        "minimumGround": 1,
+        "reinforcementNeeded": false
+      },
+      {
+        "hex": 673,
+        "name": "Pusan",
+        "groundCount": 2,
+        "reserveId": 28,
+        "priority": 240,
+        "threatened": false,
+        "groundCf": 20,
+        "minimumGround": 1,
+        "reinforcementNeeded": false
+      }
+    ],
+    "objectiveHex": null,
+    "rallyPort": null,
+    "redeployments": [
+      {
+        "turn": 9,
+        "unit": 32,
+        "from": 673,
+        "to": 672,
+        "target": 672
+      }
+    ],
+    "objectiveSinceTurn": 5
+  },
+  "fullFragmentHashSame": true,
+  "claim": "specific completed planned ground path submission; no historical fallback reclassification",
+  "runtimeModelRequests": 0,
+  "externalApiCost": 0
+}

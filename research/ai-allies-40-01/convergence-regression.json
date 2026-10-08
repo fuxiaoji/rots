@@ -1,0 +1,26 @@
+{
+  "task": "AI-ALLIES-40-01",
+  "kind": "convergence",
+  "ordinal": 1406,
+  "seed": 20263002,
+  "plannedTarget": 703,
+  "first": {
+    "action": "advance",
+    "locations": [
+      703,
+      703
+    ],
+    "battleHexes": [
+      703
+    ]
+  },
+  "steps": 41,
+  "end": "offensive_segment",
+  "verified": true,
+  "finalStateSha256": "b2db072f928915e37baed736ff2589b80d3c8a504c86259ba9c7efda691e11c5",
+  "bundles": {
+    "Allies": "da0c4b10955963e5d577352ff189154f3f27a99f61890a5c69f9df0e54130d79",
+    "Japan": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a"
+  },
+  "runtimeModelRequests": 0
+}

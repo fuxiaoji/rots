@@ -1,0 +1,37 @@
+{
+  "task": "AI-CAMPAIGN-BASE1-01",
+  "createdAt": "2026-10-08T03:45:20.397Z",
+  "freezeStage2Sha256": "9c6f02231b5ca10f4a012e2ee1b622f19b2bce7b14917117743a3cbde3f25341",
+  "immutableFreezePreserved": true,
+  "description": "Two ancillary fields copied from stage1 remain unchanged in original stage2 freeze; use this explicit erratum, not a rewritten freeze.",
+  "inheritedStage1Fields": {
+    "developmentSummarySha256": "baa6f9119bb3092ff6f7ee4d713c8184a0c8953142409c65f761a4338d8e0614",
+    "validationDispatchApprovedAt": "2026-10-08T01:56:00.198Z"
+  },
+  "stage2AuthoritativeEvidence": {
+    "developmentReportPath": "research/ai-campaign-base1-01/development-korean-pbm.json",
+    "developmentReportSha256": "43cbffe838a422d7231adbf1f580ada0429feee06e4d64a306911319983ebe46",
+    "testEvidence": {
+      "productTests": 42,
+      "offlineMeasurementTests": 2,
+      "passed": 44,
+      "logSha256": "df7fa3cedd487d8536414d6e273500c669850cc9f68731c06c7ac899f7653dc1",
+      "compatReports": [
+        {
+          "path": "research/ai-campaign-base1-01/compat-korean-pbm-1942.json",
+          "sha256": "3cd6a70b54f5812271ba00f39179cb84619668c2b39ae04b3ac37717b9ef6dc7"
+        },
+        {
+          "path": "research/ai-campaign-base1-01/compat-korean-pbm-1943.json",
+          "sha256": "b903fd0beb019e53bf1b6a7ce24b4a133ae05fe9bcd04e49ddcf38d16cbfc7a6"
+        }
+      ],
+      "developmentReportSha256": "43cbffe838a422d7231adbf1f580ada0429feee06e4d64a306911319983ebe46",
+      "developmentValidNaturalAndFullHash": 4
+    },
+    "freezeCreatedAt": "2026-10-08T03:21:02.715Z",
+    "dispatchStartedAt": "2026-10-08T03:21:02.768Z",
+    "configSha256": "cf08ce856c7251556f66e3201ba1fd01a752cb062e503bc0c43e8ebb5d1c10cc"
+  },
+  "noPolicyOrMatchChanges": true
+}

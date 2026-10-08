@@ -1,0 +1,953 @@
+{
+  "task": "AI-CAMPAIGN-01",
+  "seed": 20261802,
+  "scenario": "1942-1945 (The Shortened Campaign)",
+  "replaySha256": "aa5088663fddce39f86eb47cbfb55d83230cdeeb4a5ceed2e862a5e307ff9a4d",
+  "bundleSha256": "d04416f344e743312acfbeb590eb59e6a76d737f04186528e8d0f4c3cd651012",
+  "verifierSourceSha256": "68bc816428f9abfd523a435a9bec1c2566dc4cbbbfd280439fee96babe10404d",
+  "auditToolSha256": "094daaca85eb3f7d8dcee66f253a5034048f13d5d389ec018daee2458cb85065",
+  "instrumentedVerifierSha256": "00399e2bf36b47d3c5774ab409869606ccd83bee3ffc70de9b65639ce246b3a7",
+  "verification": {
+    "verified": true,
+    "actions": 2336,
+    "finalStateSha256": "f21b5af7e452cd67b057ff2171c976c00cc745d64b8dc2fdc746c808b3abaa8e",
+    "opening": {
+      "schemaVersion": 1,
+      "startTurn": 2,
+      "deadlineTurns": {
+        "early": 4,
+        "dei": 6
+      },
+      "initialSurrender": {
+        "philippines": false,
+        "malaya": false,
+        "dei": false
+      },
+      "firstSurrender": {
+        "philippines": {
+          "nation": "philippines",
+          "turn": 2,
+          "action": 227
+        },
+        "malaya": {
+          "nation": "malaya",
+          "turn": 2,
+          "action": 227
+        }
+      },
+      "firstKeysHeld": {
+        "philippines": {
+          "turn": 2,
+          "action": 129
+        },
+        "malaya": {
+          "turn": 2,
+          "action": 224
+        }
+      },
+      "events": [
+        {
+          "nation": "philippines",
+          "turn": 2,
+          "action": 227
+        },
+        {
+          "nation": "malaya",
+          "turn": 2,
+          "action": 227
+        }
+      ],
+      "checkpoints": {
+        "2": {
+          "action": 227,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "malaya": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                309,
+                245,
+                277,
+                307,
+                480,
+                452,
+                368
+              ]
+            }
+          }
+        },
+        "3": {
+          "action": 467,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "malaya": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                309,
+                277,
+                307,
+                480,
+                452,
+                368
+              ]
+            }
+          }
+        },
+        "4": {
+          "action": 702,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": false,
+              "missingKeys": [
+                535
+              ]
+            },
+            "malaya": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                309,
+                480,
+                452,
+                368
+              ]
+            }
+          }
+        },
+        "5": {
+          "action": 902,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "malaya": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                309,
+                480,
+                452,
+                368
+              ]
+            }
+          }
+        },
+        "6": {
+          "action": 1054,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "malaya": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                309,
+                480,
+                452,
+                368
+              ]
+            }
+          }
+        },
+        "7": {
+          "action": 1271,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "malaya": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                309,
+                480,
+                452,
+                368
+              ]
+            }
+          }
+        },
+        "8": {
+          "action": 1510,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": false,
+              "missingKeys": [
+                535
+              ]
+            },
+            "malaya": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                309,
+                480,
+                452,
+                368
+              ]
+            }
+          }
+        },
+        "9": {
+          "action": 1742,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": false,
+              "missingKeys": [
+                535
+              ]
+            },
+            "malaya": {
+              "surrendered": true,
+              "keysHeld": true,
+              "missingKeys": []
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                309,
+                480,
+                452,
+                368
+              ]
+            }
+          }
+        },
+        "10": {
+          "action": 1908,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": false,
+              "missingKeys": [
+                535
+              ]
+            },
+            "malaya": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                304,
+                305
+              ]
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                309,
+                277,
+                307,
+                480,
+                452,
+                368
+              ]
+            }
+          }
+        },
+        "11": {
+          "action": 2163,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": false,
+              "missingKeys": [
+                535
+              ]
+            },
+            "malaya": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                304,
+                305
+              ]
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                309,
+                277,
+                307,
+                480,
+                452,
+                368
+              ]
+            }
+          }
+        },
+        "12": {
+          "action": 2336,
+          "nations": {
+            "philippines": {
+              "surrendered": true,
+              "keysHeld": false,
+              "missingKeys": [
+                535
+              ]
+            },
+            "malaya": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                304,
+                305
+              ]
+            },
+            "dei": {
+              "surrendered": false,
+              "keysHeld": false,
+              "missingKeys": [
+                309,
+                277,
+                307,
+                480,
+                452,
+                368
+              ]
+            }
+          },
+          "terminal": true
+        }
+      },
+      "philippinesByThirdRound": false,
+      "malayaByThirdRound": true,
+      "bothByThirdRound": false,
+      "deiByFifthRound": false
+    },
+    "modes": {
+      "Japan": "actions-only",
+      "Allies": "actions-only"
+    },
+    "legacyDecisionChecks": {
+      "Japan": 0,
+      "Allies": 0
+    },
+    "legacyDecisionDrift": {
+      "Japan": 0,
+      "Allies": 0
+    },
+    "legacyDecisionLogDrift": {
+      "Japan": 0,
+      "Allies": 0
+    },
+    "verificationMethod": "legal-actions-and-complete-final-state",
+    "resolvedBundlePaths": {
+      "Japan": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-campaign-01\\bundles\\d04416f344e743312acfbeb590eb59e6a76d737f04186528e8d0f4c3cd651012.js",
+      "Allies": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-campaign-01\\bundles\\d04416f344e743312acfbeb590eb59e6a76d737f04186528e8d0f4c3cd651012.js"
+    },
+    "winner": "Japan",
+    "won_text": "Japan did not surrender.",
+    "natural": true,
+    "termination": "natural",
+    "earlyTreatyDefeat": false
+  },
+  "metrics": {
+    "garrisonArrivals": [
+      {
+        "ordinal": 158,
+        "turn": 2,
+        "unit": 27,
+        "coordinate": 2909
+      },
+      {
+        "ordinal": 216,
+        "turn": 2,
+        "unit": 42,
+        "coordinate": 3209
+      },
+      {
+        "ordinal": 360,
+        "turn": 3,
+        "unit": 38,
+        "coordinate": 3709
+      },
+      {
+        "ordinal": 594,
+        "turn": 4,
+        "unit": 41,
+        "coordinate": 3009
+      }
+    ],
+    "airScreenMoves": [
+      {
+        "ordinal": 974,
+        "turn": 6,
+        "unit": 101,
+        "coordinate": 4110
+      }
+    ],
+    "suppressionDeclarations": [],
+    "liberations": [
+      {
+        "ordinal": 1908,
+        "phaseTurn": 10,
+        "turn": 11,
+        "nation": 1
+      }
+    ],
+    "turnSamples": [
+      {
+        "turn": 3,
+        "defense": [
+          {
+            "coordinate": 2909,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3009,
+            "japanControlled": true,
+            "groundCount": 0
+          },
+          {
+            "coordinate": 3209,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3709,
+            "japanControlled": true,
+            "groundCount": 0
+          },
+          {
+            "coordinate": 3813,
+            "japanControlled": true,
+            "groundCount": 0
+          },
+          {
+            "coordinate": 3814,
+            "japanControlled": true,
+            "groundCount": 1
+          }
+        ],
+        "connectedResources": [
+          304,
+          421,
+          535,
+          669,
+          670,
+          672
+        ],
+        "blockadeStartedTurn": 0,
+        "remainingPhases": 3
+      },
+      {
+        "turn": 4,
+        "defense": [
+          {
+            "coordinate": 2909,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3009,
+            "japanControlled": true,
+            "groundCount": 0
+          },
+          {
+            "coordinate": 3209,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3709,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3813,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3814,
+            "japanControlled": true,
+            "groundCount": 1
+          }
+        ],
+        "connectedResources": [
+          245,
+          304,
+          421,
+          535,
+          669,
+          670,
+          672
+        ],
+        "blockadeStartedTurn": 0,
+        "remainingPhases": 3
+      },
+      {
+        "turn": 5,
+        "defense": [
+          {
+            "coordinate": 2909,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3009,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3209,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3709,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3813,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3814,
+            "japanControlled": true,
+            "groundCount": 1
+          }
+        ],
+        "connectedResources": [
+          245,
+          277,
+          304,
+          307,
+          421,
+          669,
+          670,
+          672
+        ],
+        "blockadeStartedTurn": 0,
+        "remainingPhases": 3
+      },
+      {
+        "turn": 6,
+        "defense": [
+          {
+            "coordinate": 2909,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3009,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3209,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3709,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3813,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3814,
+            "japanControlled": true,
+            "groundCount": 1
+          }
+        ],
+        "connectedResources": [
+          245,
+          277,
+          304,
+          307,
+          421,
+          535,
+          669,
+          670,
+          672
+        ],
+        "blockadeStartedTurn": 0,
+        "remainingPhases": 3
+      },
+      {
+        "turn": 7,
+        "defense": [
+          {
+            "coordinate": 2909,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3009,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3209,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3709,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3813,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3814,
+            "japanControlled": true,
+            "groundCount": 1
+          }
+        ],
+        "connectedResources": [
+          245,
+          277,
+          304,
+          307,
+          421,
+          535,
+          669,
+          670,
+          672
+        ],
+        "blockadeStartedTurn": 0,
+        "remainingPhases": 3
+      },
+      {
+        "turn": 8,
+        "defense": [
+          {
+            "coordinate": 2909,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3009,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3209,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3709,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3813,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3814,
+            "japanControlled": true,
+            "groundCount": 1
+          }
+        ],
+        "connectedResources": [
+          245,
+          277,
+          304,
+          307,
+          421,
+          535,
+          669,
+          670,
+          672
+        ],
+        "blockadeStartedTurn": 0,
+        "remainingPhases": 3
+      },
+      {
+        "turn": 9,
+        "defense": [
+          {
+            "coordinate": 2909,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3009,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3209,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3709,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3813,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3814,
+            "japanControlled": true,
+            "groundCount": 1
+          }
+        ],
+        "connectedResources": [
+          245,
+          277,
+          304,
+          307,
+          421,
+          669,
+          670,
+          672
+        ],
+        "blockadeStartedTurn": 0,
+        "remainingPhases": 3
+      },
+      {
+        "turn": 10,
+        "defense": [
+          {
+            "coordinate": 2909,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3009,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3209,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3709,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3813,
+            "japanControlled": false,
+            "groundCount": 0
+          },
+          {
+            "coordinate": 3814,
+            "japanControlled": true,
+            "groundCount": 1
+          }
+        ],
+        "connectedResources": [
+          245,
+          277,
+          304,
+          307,
+          421,
+          669,
+          670
+        ],
+        "blockadeStartedTurn": 0,
+        "remainingPhases": 3
+      },
+      {
+        "turn": 11,
+        "defense": [
+          {
+            "coordinate": 2909,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3009,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3209,
+            "japanControlled": true,
+            "groundCount": 2
+          },
+          {
+            "coordinate": 3709,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3813,
+            "japanControlled": false,
+            "groundCount": 0
+          },
+          {
+            "coordinate": 3814,
+            "japanControlled": true,
+            "groundCount": 1
+          }
+        ],
+        "connectedResources": [
+          245,
+          421,
+          669,
+          670
+        ],
+        "blockadeStartedTurn": 0,
+        "remainingPhases": 3
+      },
+      {
+        "turn": 12,
+        "defense": [
+          {
+            "coordinate": 2909,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3009,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3209,
+            "japanControlled": true,
+            "groundCount": 2
+          },
+          {
+            "coordinate": 3709,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3813,
+            "japanControlled": false,
+            "groundCount": 0
+          },
+          {
+            "coordinate": 3814,
+            "japanControlled": true,
+            "groundCount": 1
+          }
+        ],
+        "connectedResources": [
+          245,
+          421,
+          669,
+          670
+        ],
+        "blockadeStartedTurn": 0,
+        "remainingPhases": 3
+      },
+      {
+        "turn": 12,
+        "defense": [
+          {
+            "coordinate": 2909,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3009,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3209,
+            "japanControlled": true,
+            "groundCount": 2
+          },
+          {
+            "coordinate": 3709,
+            "japanControlled": true,
+            "groundCount": 1
+          },
+          {
+            "coordinate": 3813,
+            "japanControlled": false,
+            "groundCount": 0
+          },
+          {
+            "coordinate": 3814,
+            "japanControlled": false,
+            "groundCount": 0
+          }
+        ],
+        "connectedResources": [
+          245,
+          421,
+          669,
+          670
+        ],
+        "blockadeStartedTurn": 0,
+        "remainingPhases": 3
+      }
+    ]
+  }
+}

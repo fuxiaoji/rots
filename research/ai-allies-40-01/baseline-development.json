@@ -1,0 +1,5747 @@
+{
+  "task": "AI-ALLIES-40-01",
+  "prefix": "base-fixed-",
+  "auditSha256": "262610d55d5c2d040c5b9173f86f3e98bedcfde08964d2389b5e02069b367392",
+  "runnerSha256": "ea21d01a5bc360e213e82a40cea7c615578a147ae2eabdedbab857225c629982",
+  "summaries": [
+    {
+      "scenario": "1942",
+      "n": 6,
+      "valid": 6,
+      "wins": 1,
+      "rate": 0.16666666666666666,
+      "wilson95": [
+        0.030053369748306635,
+        0.5635028221864702
+      ],
+      "endings": {
+        "Japan did not surrender.": 3,
+        "Japanese Victory by Treaty Negotiations.": 2,
+        "Allies Victory - Japanese mainland islands captured.": 1
+      },
+      "meanElapsedMs": 131089.83333333334
+    },
+    {
+      "scenario": "1943",
+      "n": 6,
+      "valid": 6,
+      "wins": 3,
+      "rate": 0.5,
+      "wilson95": [
+        0.1876163064826506,
+        0.8123836935173494
+      ],
+      "endings": {
+        "Japan did not surrender.": 3,
+        "Japan surrenders by atomic bomb strategy.": 3
+      },
+      "meanElapsedMs": 70617.5
+    }
+  ],
+  "games": [
+    {
+      "seed": 20263001,
+      "scenario": "1942-1945 (The Shortened Campaign)",
+      "status": "complete",
+      "winner": "Japan",
+      "end": "Japan did not surrender.",
+      "validNatural": true,
+      "verified": true,
+      "verification": {
+        "verified": true,
+        "actions": 2435,
+        "finalStateSha256": "eda1cbd430eb0acda9f850d19ace1597178c19a58980eed74d8004d948e521da",
+        "opening": {
+          "schemaVersion": 1,
+          "startTurn": 2,
+          "deadlineTurns": {
+            "early": 4,
+            "dei": 6
+          },
+          "initialSurrender": {
+            "philippines": false,
+            "malaya": false,
+            "dei": false
+          },
+          "firstSurrender": {
+            "philippines": {
+              "nation": "philippines",
+              "turn": 2,
+              "action": 185
+            },
+            "malaya": {
+              "nation": "malaya",
+              "turn": 3,
+              "action": 435
+            }
+          },
+          "firstKeysHeld": {
+            "philippines": {
+              "turn": 2,
+              "action": 98
+            },
+            "malaya": {
+              "turn": 3,
+              "action": 328
+            }
+          },
+          "events": [
+            {
+              "nation": "philippines",
+              "turn": 2,
+              "action": 185
+            },
+            {
+              "nation": "malaya",
+              "turn": 3,
+              "action": 435
+            }
+          ],
+          "checkpoints": {
+            "2": {
+              "action": 188,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304,
+                    305
+                  ]
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    307,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "3": {
+              "action": 435,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    277,
+                    307,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "4": {
+              "action": 677,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "5": {
+              "action": 894,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "6": {
+              "action": 1074,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    277,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "7": {
+              "action": 1302,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    277,
+                    452
+                  ]
+                }
+              }
+            },
+            "8": {
+              "action": 1518,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    277,
+                    452
+                  ]
+                }
+              }
+            },
+            "9": {
+              "action": 1765,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    277
+                  ]
+                }
+              }
+            },
+            "10": {
+              "action": 2027,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    277,
+                    421
+                  ]
+                }
+              }
+            },
+            "11": {
+              "action": 2243,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    277,
+                    421
+                  ]
+                }
+              }
+            },
+            "12": {
+              "action": 2435,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    277,
+                    307,
+                    421
+                  ]
+                }
+              },
+              "terminal": true
+            }
+          },
+          "philippinesByThirdRound": true,
+          "malayaByThirdRound": true,
+          "bothByThirdRound": true,
+          "deiByFifthRound": false
+        },
+        "modes": {
+          "Japan": "actions-only",
+          "Allies": "actions-only"
+        },
+        "legacyDecisionChecks": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionLogDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "verificationMethod": "legal-actions-and-complete-final-state",
+        "resolvedBundlePaths": {
+          "Japan": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+          "Allies": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js"
+        },
+        "winner": "Japan",
+        "won_text": "Japan did not surrender.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": false
+      },
+      "error": null,
+      "turn": 12,
+      "actions": 2435,
+      "jpResources": 7,
+      "politicalWill": 5,
+      "elapsedMs": 160515,
+      "gamePath": "tmp\\ai-allies-40-01\\base-fixed-20263001\\game-1942-1945-The-Shortened-Campaign-20263001-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.json",
+      "replayPath": "tmp\\ai-allies-40-01\\base-fixed-20263001\\game-1942-1945-The-Shortened-Campaign-20263001-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.replay.json",
+      "replaySha256": "3703e50afc0c30588ab7a270a9f73391e69c14fa6e724ce0386c8ec890740203",
+      "metadata": {
+        "gitSha": "628f8f61f1a441fef8ab2d0d39f339effdea4d25",
+        "gitDirty": true,
+        "rulesSha256": "ef11ec5e2392f08cc39024b96978a1fd5619bda54061232063d409328b3febc0",
+        "ruleVersion": "official-16.2",
+        "adapterVersion": "campaign-bundle-adapter-v1",
+        "adapterSha256": "01234bfdb63a8105fb5002614f68a21556afe469e55f0218e5b129a9e0aad257",
+        "runnerSha256": "ea21d01a5bc360e213e82a40cea7c615578a147ae2eabdedbab857225c629982",
+        "metricsSha256": "5227a81f7798cadf4ce01d55afa2d903b1ecd5253a5d19c713f14f93d96ba2ac",
+        "openingMetricsSha256": "041bad6eba0143954ef6e3e7ef61686a65929df48804830c8c56632ceabac594",
+        "bundles": {
+          "Japan": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-japan-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-japan-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 0,
+              "japan_campaign_planner": 1,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          },
+          "Allies": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 1,
+              "japan_campaign_planner": 0,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          }
+        },
+        "runtimeModelRequests": 0
+      }
+    },
+    {
+      "seed": 20263002,
+      "scenario": "1942-1945 (The Shortened Campaign)",
+      "status": "complete",
+      "winner": "Japan",
+      "end": "Japan did not surrender.",
+      "validNatural": true,
+      "verified": true,
+      "verification": {
+        "verified": true,
+        "actions": 2439,
+        "finalStateSha256": "03aabef402a8c3b17ffbb28357f0d5d685a6fda1d13285a63a014a281b5b23d0",
+        "opening": {
+          "schemaVersion": 1,
+          "startTurn": 2,
+          "deadlineTurns": {
+            "early": 4,
+            "dei": 6
+          },
+          "initialSurrender": {
+            "philippines": false,
+            "malaya": false,
+            "dei": false
+          },
+          "firstSurrender": {
+            "philippines": {
+              "nation": "philippines",
+              "turn": 2,
+              "action": 214
+            },
+            "malaya": {
+              "nation": "malaya",
+              "turn": 2,
+              "action": 214
+            },
+            "dei": {
+              "nation": "dei",
+              "turn": 6,
+              "action": 1164
+            }
+          },
+          "firstKeysHeld": {
+            "philippines": {
+              "turn": 2,
+              "action": 102
+            },
+            "malaya": {
+              "turn": 2,
+              "action": 192
+            },
+            "dei": {
+              "turn": 6,
+              "action": 1017
+            }
+          },
+          "events": [
+            {
+              "nation": "philippines",
+              "turn": 2,
+              "action": 214
+            },
+            {
+              "nation": "malaya",
+              "turn": 2,
+              "action": 214
+            },
+            {
+              "nation": "dei",
+              "turn": 6,
+              "action": 1164
+            }
+          ],
+          "checkpoints": {
+            "2": {
+              "action": 223,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    307,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "3": {
+              "action": 471,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    277,
+                    307,
+                    480,
+                    452
+                  ]
+                }
+              }
+            },
+            "4": {
+              "action": 718,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    452
+                  ]
+                }
+              }
+            },
+            "5": {
+              "action": 956,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    452
+                  ]
+                }
+              }
+            },
+            "6": {
+              "action": 1183,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                }
+              }
+            },
+            "7": {
+              "action": 1373,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                }
+              }
+            },
+            "8": {
+              "action": 1592,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    368
+                  ]
+                }
+              }
+            },
+            "9": {
+              "action": 1800,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "10": {
+              "action": 1997,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "11": {
+              "action": 2197,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "12": {
+              "action": 2439,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    452,
+                    368
+                  ]
+                }
+              },
+              "terminal": true
+            }
+          },
+          "philippinesByThirdRound": true,
+          "malayaByThirdRound": true,
+          "bothByThirdRound": true,
+          "deiByFifthRound": true
+        },
+        "modes": {
+          "Japan": "actions-only",
+          "Allies": "actions-only"
+        },
+        "legacyDecisionChecks": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionLogDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "verificationMethod": "legal-actions-and-complete-final-state",
+        "resolvedBundlePaths": {
+          "Japan": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+          "Allies": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js"
+        },
+        "winner": "Japan",
+        "won_text": "Japan did not surrender.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": false
+      },
+      "error": null,
+      "turn": 12,
+      "actions": 2439,
+      "jpResources": 7,
+      "politicalWill": 5,
+      "elapsedMs": 177021,
+      "gamePath": "tmp\\ai-allies-40-01\\base-fixed-20263001\\game-1942-1945-The-Shortened-Campaign-20263002-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.json",
+      "replayPath": "tmp\\ai-allies-40-01\\base-fixed-20263001\\game-1942-1945-The-Shortened-Campaign-20263002-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.replay.json",
+      "replaySha256": "e459eaf283ef8cd1a7fb14d663be3455846e000390b3b649b8381887aa72ed30",
+      "metadata": {
+        "gitSha": "628f8f61f1a441fef8ab2d0d39f339effdea4d25",
+        "gitDirty": true,
+        "rulesSha256": "ef11ec5e2392f08cc39024b96978a1fd5619bda54061232063d409328b3febc0",
+        "ruleVersion": "official-16.2",
+        "adapterVersion": "campaign-bundle-adapter-v1",
+        "adapterSha256": "01234bfdb63a8105fb5002614f68a21556afe469e55f0218e5b129a9e0aad257",
+        "runnerSha256": "ea21d01a5bc360e213e82a40cea7c615578a147ae2eabdedbab857225c629982",
+        "metricsSha256": "5227a81f7798cadf4ce01d55afa2d903b1ecd5253a5d19c713f14f93d96ba2ac",
+        "openingMetricsSha256": "041bad6eba0143954ef6e3e7ef61686a65929df48804830c8c56632ceabac594",
+        "bundles": {
+          "Japan": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-japan-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-japan-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 0,
+              "japan_campaign_planner": 1,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          },
+          "Allies": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 1,
+              "japan_campaign_planner": 0,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          }
+        },
+        "runtimeModelRequests": 0
+      }
+    },
+    {
+      "seed": 20263003,
+      "scenario": "1942-1945 (The Shortened Campaign)",
+      "status": "complete",
+      "winner": "Japan",
+      "end": "Japanese Victory by Treaty Negotiations.",
+      "validNatural": true,
+      "verified": true,
+      "verification": {
+        "verified": true,
+        "actions": 1554,
+        "finalStateSha256": "ffda04fbb62d0f79c2ed4e5777613d3c658d666824ebd660deb386e26e99222b",
+        "opening": {
+          "schemaVersion": 1,
+          "startTurn": 2,
+          "deadlineTurns": {
+            "early": 4,
+            "dei": 6
+          },
+          "initialSurrender": {
+            "philippines": false,
+            "malaya": false,
+            "dei": false
+          },
+          "firstSurrender": {
+            "philippines": {
+              "nation": "philippines",
+              "turn": 2,
+              "action": 230
+            },
+            "malaya": {
+              "nation": "malaya",
+              "turn": 2,
+              "action": 230
+            },
+            "dei": {
+              "nation": "dei",
+              "turn": 5,
+              "action": 931
+            }
+          },
+          "firstKeysHeld": {
+            "philippines": {
+              "turn": 2,
+              "action": 121
+            },
+            "malaya": {
+              "turn": 2,
+              "action": 208
+            },
+            "dei": {
+              "turn": 5,
+              "action": 900
+            }
+          },
+          "events": [
+            {
+              "nation": "philippines",
+              "turn": 2,
+              "action": 230
+            },
+            {
+              "nation": "malaya",
+              "turn": 2,
+              "action": 230
+            },
+            {
+              "nation": "dei",
+              "turn": 5,
+              "action": 931
+            }
+          ],
+          "checkpoints": {
+            "2": {
+              "action": 230,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    307,
+                    480,
+                    368
+                  ]
+                }
+              }
+            },
+            "3": {
+              "action": 482,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "4": {
+              "action": 701,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "5": {
+              "action": 948,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                }
+              }
+            },
+            "6": {
+              "action": 1108,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                }
+              }
+            },
+            "7": {
+              "action": 1326,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                }
+              }
+            },
+            "8": {
+              "action": 1554,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                }
+              },
+              "terminal": true
+            }
+          },
+          "philippinesByThirdRound": true,
+          "malayaByThirdRound": true,
+          "bothByThirdRound": true,
+          "deiByFifthRound": true
+        },
+        "modes": {
+          "Japan": "actions-only",
+          "Allies": "actions-only"
+        },
+        "legacyDecisionChecks": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionLogDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "verificationMethod": "legal-actions-and-complete-final-state",
+        "resolvedBundlePaths": {
+          "Japan": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+          "Allies": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js"
+        },
+        "winner": "Japan",
+        "won_text": "Japanese Victory by Treaty Negotiations.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": true
+      },
+      "error": null,
+      "turn": 8,
+      "actions": 1554,
+      "jpResources": 11,
+      "politicalWill": 0,
+      "elapsedMs": 78083,
+      "gamePath": "tmp\\ai-allies-40-01\\base-fixed-20263001\\game-1942-1945-The-Shortened-Campaign-20263003-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.json",
+      "replayPath": "tmp\\ai-allies-40-01\\base-fixed-20263001\\game-1942-1945-The-Shortened-Campaign-20263003-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.replay.json",
+      "replaySha256": "623f8d900f0e3e587073a8be480ba3106cb4f1069995ae58ba358b89e22d4ad7",
+      "metadata": {
+        "gitSha": "628f8f61f1a441fef8ab2d0d39f339effdea4d25",
+        "gitDirty": true,
+        "rulesSha256": "ef11ec5e2392f08cc39024b96978a1fd5619bda54061232063d409328b3febc0",
+        "ruleVersion": "official-16.2",
+        "adapterVersion": "campaign-bundle-adapter-v1",
+        "adapterSha256": "01234bfdb63a8105fb5002614f68a21556afe469e55f0218e5b129a9e0aad257",
+        "runnerSha256": "ea21d01a5bc360e213e82a40cea7c615578a147ae2eabdedbab857225c629982",
+        "metricsSha256": "5227a81f7798cadf4ce01d55afa2d903b1ecd5253a5d19c713f14f93d96ba2ac",
+        "openingMetricsSha256": "041bad6eba0143954ef6e3e7ef61686a65929df48804830c8c56632ceabac594",
+        "bundles": {
+          "Japan": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-japan-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-japan-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 0,
+              "japan_campaign_planner": 1,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          },
+          "Allies": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 1,
+              "japan_campaign_planner": 0,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          }
+        },
+        "runtimeModelRequests": 0
+      }
+    },
+    {
+      "seed": 20263004,
+      "scenario": "1942-1945 (The Shortened Campaign)",
+      "status": "complete",
+      "winner": "Japan",
+      "end": "Japanese Victory by Treaty Negotiations.",
+      "validNatural": true,
+      "verified": true,
+      "verification": {
+        "verified": true,
+        "actions": 1344,
+        "finalStateSha256": "57446120d001442af8dfa5d1ce560b04722f1e80f6b8750eebfcdf2dee74f338",
+        "opening": {
+          "schemaVersion": 1,
+          "startTurn": 2,
+          "deadlineTurns": {
+            "early": 4,
+            "dei": 6
+          },
+          "initialSurrender": {
+            "philippines": false,
+            "malaya": false,
+            "dei": false
+          },
+          "firstSurrender": {
+            "philippines": {
+              "nation": "philippines",
+              "turn": 2,
+              "action": 213
+            },
+            "malaya": {
+              "nation": "malaya",
+              "turn": 2,
+              "action": 213
+            },
+            "dei": {
+              "nation": "dei",
+              "turn": 5,
+              "action": 912
+            }
+          },
+          "firstKeysHeld": {
+            "philippines": {
+              "turn": 2,
+              "action": 128
+            },
+            "malaya": {
+              "turn": 2,
+              "action": 199
+            },
+            "dei": {
+              "turn": 5,
+              "action": 837
+            }
+          },
+          "events": [
+            {
+              "nation": "philippines",
+              "turn": 2,
+              "action": 213
+            },
+            {
+              "nation": "malaya",
+              "turn": 2,
+              "action": 213
+            },
+            {
+              "nation": "dei",
+              "turn": 5,
+              "action": 912
+            }
+          ],
+          "checkpoints": {
+            "2": {
+              "action": 222,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    307,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "3": {
+              "action": 477,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "4": {
+              "action": 697,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    480,
+                    452
+                  ]
+                }
+              }
+            },
+            "5": {
+              "action": 927,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                }
+              }
+            },
+            "6": {
+              "action": 1142,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                }
+              }
+            },
+            "7": {
+              "action": 1344,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                }
+              },
+              "terminal": true
+            }
+          },
+          "philippinesByThirdRound": true,
+          "malayaByThirdRound": true,
+          "bothByThirdRound": true,
+          "deiByFifthRound": true
+        },
+        "modes": {
+          "Japan": "actions-only",
+          "Allies": "actions-only"
+        },
+        "legacyDecisionChecks": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionLogDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "verificationMethod": "legal-actions-and-complete-final-state",
+        "resolvedBundlePaths": {
+          "Japan": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+          "Allies": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js"
+        },
+        "winner": "Japan",
+        "won_text": "Japanese Victory by Treaty Negotiations.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": true
+      },
+      "error": null,
+      "turn": 7,
+      "actions": 1344,
+      "jpResources": 12,
+      "politicalWill": 0,
+      "elapsedMs": 71517,
+      "gamePath": "tmp\\ai-allies-40-01\\base-fixed-20263004\\game-1942-1945-The-Shortened-Campaign-20263004-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.json",
+      "replayPath": "tmp\\ai-allies-40-01\\base-fixed-20263004\\game-1942-1945-The-Shortened-Campaign-20263004-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.replay.json",
+      "replaySha256": "5f2bab71421a0719266ae6b3e604779d04f95cdba1e195098c63c63f302da616",
+      "metadata": {
+        "gitSha": "628f8f61f1a441fef8ab2d0d39f339effdea4d25",
+        "gitDirty": true,
+        "rulesSha256": "ef11ec5e2392f08cc39024b96978a1fd5619bda54061232063d409328b3febc0",
+        "ruleVersion": "official-16.2",
+        "adapterVersion": "campaign-bundle-adapter-v1",
+        "adapterSha256": "01234bfdb63a8105fb5002614f68a21556afe469e55f0218e5b129a9e0aad257",
+        "runnerSha256": "ea21d01a5bc360e213e82a40cea7c615578a147ae2eabdedbab857225c629982",
+        "metricsSha256": "5227a81f7798cadf4ce01d55afa2d903b1ecd5253a5d19c713f14f93d96ba2ac",
+        "openingMetricsSha256": "041bad6eba0143954ef6e3e7ef61686a65929df48804830c8c56632ceabac594",
+        "bundles": {
+          "Japan": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-japan-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-japan-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 0,
+              "japan_campaign_planner": 1,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          },
+          "Allies": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 1,
+              "japan_campaign_planner": 0,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          }
+        },
+        "runtimeModelRequests": 0
+      }
+    },
+    {
+      "seed": 20263005,
+      "scenario": "1942-1945 (The Shortened Campaign)",
+      "status": "complete",
+      "winner": "Allies",
+      "end": "Allies Victory - Japanese mainland islands captured.",
+      "validNatural": true,
+      "verified": true,
+      "verification": {
+        "verified": true,
+        "actions": 1692,
+        "finalStateSha256": "c9373fbd18da3b688d9a7680452b5b04b14556927973fe525cc6cc2512af90fd",
+        "opening": {
+          "schemaVersion": 1,
+          "startTurn": 2,
+          "deadlineTurns": {
+            "early": 4,
+            "dei": 6
+          },
+          "initialSurrender": {
+            "philippines": false,
+            "malaya": false,
+            "dei": false
+          },
+          "firstSurrender": {
+            "philippines": {
+              "nation": "philippines",
+              "turn": 2,
+              "action": 227
+            },
+            "malaya": {
+              "nation": "malaya",
+              "turn": 2,
+              "action": 227
+            }
+          },
+          "firstKeysHeld": {
+            "philippines": {
+              "turn": 2,
+              "action": 98
+            },
+            "malaya": {
+              "turn": 2,
+              "action": 198
+            }
+          },
+          "events": [
+            {
+              "nation": "philippines",
+              "turn": 2,
+              "action": 227
+            },
+            {
+              "nation": "malaya",
+              "turn": 2,
+              "action": 227
+            }
+          ],
+          "checkpoints": {
+            "2": {
+              "action": 236,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    307,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "3": {
+              "action": 506,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "4": {
+              "action": 703,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "5": {
+              "action": 867,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "6": {
+              "action": 1077,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "7": {
+              "action": 1279,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "8": {
+              "action": 1468,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    452
+                  ]
+                }
+              }
+            },
+            "9": {
+              "action": 1692,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    452
+                  ]
+                }
+              },
+              "terminal": true
+            }
+          },
+          "philippinesByThirdRound": true,
+          "malayaByThirdRound": true,
+          "bothByThirdRound": true,
+          "deiByFifthRound": false
+        },
+        "modes": {
+          "Japan": "actions-only",
+          "Allies": "actions-only"
+        },
+        "legacyDecisionChecks": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionLogDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "verificationMethod": "legal-actions-and-complete-final-state",
+        "resolvedBundlePaths": {
+          "Japan": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+          "Allies": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js"
+        },
+        "winner": "Allies",
+        "won_text": "Allies Victory - Japanese mainland islands captured.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": false
+      },
+      "error": null,
+      "turn": 9,
+      "actions": 1692,
+      "jpResources": 10,
+      "politicalWill": 3,
+      "elapsedMs": 141087,
+      "gamePath": "tmp\\ai-allies-40-01\\base-fixed-20263004\\game-1942-1945-The-Shortened-Campaign-20263005-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.json",
+      "replayPath": "tmp\\ai-allies-40-01\\base-fixed-20263004\\game-1942-1945-The-Shortened-Campaign-20263005-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.replay.json",
+      "replaySha256": "80a57eb2fb0eba237f6935e6c8736bdbbf36f72c19a1502b753fe9388eb3b7de",
+      "metadata": {
+        "gitSha": "628f8f61f1a441fef8ab2d0d39f339effdea4d25",
+        "gitDirty": true,
+        "rulesSha256": "ef11ec5e2392f08cc39024b96978a1fd5619bda54061232063d409328b3febc0",
+        "ruleVersion": "official-16.2",
+        "adapterVersion": "campaign-bundle-adapter-v1",
+        "adapterSha256": "01234bfdb63a8105fb5002614f68a21556afe469e55f0218e5b129a9e0aad257",
+        "runnerSha256": "ea21d01a5bc360e213e82a40cea7c615578a147ae2eabdedbab857225c629982",
+        "metricsSha256": "5227a81f7798cadf4ce01d55afa2d903b1ecd5253a5d19c713f14f93d96ba2ac",
+        "openingMetricsSha256": "041bad6eba0143954ef6e3e7ef61686a65929df48804830c8c56632ceabac594",
+        "bundles": {
+          "Japan": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-japan-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-japan-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 0,
+              "japan_campaign_planner": 1,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          },
+          "Allies": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 1,
+              "japan_campaign_planner": 0,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          }
+        },
+        "runtimeModelRequests": 0
+      }
+    },
+    {
+      "seed": 20263006,
+      "scenario": "1942-1945 (The Shortened Campaign)",
+      "status": "complete",
+      "winner": "Japan",
+      "end": "Japan did not surrender.",
+      "validNatural": true,
+      "verified": true,
+      "verification": {
+        "verified": true,
+        "actions": 2382,
+        "finalStateSha256": "6a55daf0fd55c83036e4a887c6e195e9eac1e46d46fe887be6b79b80347db25c",
+        "opening": {
+          "schemaVersion": 1,
+          "startTurn": 2,
+          "deadlineTurns": {
+            "early": 4,
+            "dei": 6
+          },
+          "initialSurrender": {
+            "philippines": false,
+            "malaya": false,
+            "dei": false
+          },
+          "firstSurrender": {
+            "philippines": {
+              "nation": "philippines",
+              "turn": 2,
+              "action": 219
+            },
+            "malaya": {
+              "nation": "malaya",
+              "turn": 2,
+              "action": 219
+            },
+            "dei": {
+              "nation": "dei",
+              "turn": 7,
+              "action": 1304
+            }
+          },
+          "firstKeysHeld": {
+            "philippines": {
+              "turn": 2,
+              "action": 104
+            },
+            "malaya": {
+              "turn": 2,
+              "action": 198
+            },
+            "dei": {
+              "turn": 7,
+              "action": 1208
+            }
+          },
+          "events": [
+            {
+              "nation": "philippines",
+              "turn": 2,
+              "action": 219
+            },
+            {
+              "nation": "malaya",
+              "turn": 2,
+              "action": 219
+            },
+            {
+              "nation": "dei",
+              "turn": 7,
+              "action": 1304
+            }
+          ],
+          "checkpoints": {
+            "2": {
+              "action": 226,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    307,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "3": {
+              "action": 478,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "4": {
+              "action": 703,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    480,
+                    452
+                  ]
+                }
+              }
+            },
+            "5": {
+              "action": 915,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    452
+                  ]
+                }
+              }
+            },
+            "6": {
+              "action": 1100,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    452
+                  ]
+                }
+              }
+            },
+            "7": {
+              "action": 1327,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                }
+              }
+            },
+            "8": {
+              "action": 1537,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                }
+              }
+            },
+            "9": {
+              "action": 1763,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                }
+              }
+            },
+            "10": {
+              "action": 1961,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                }
+              }
+            },
+            "11": {
+              "action": 2180,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245
+                  ]
+                }
+              }
+            },
+            "12": {
+              "action": 2382,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245,
+                    421
+                  ]
+                }
+              },
+              "terminal": true
+            }
+          },
+          "philippinesByThirdRound": true,
+          "malayaByThirdRound": true,
+          "bothByThirdRound": true,
+          "deiByFifthRound": false
+        },
+        "modes": {
+          "Japan": "actions-only",
+          "Allies": "actions-only"
+        },
+        "legacyDecisionChecks": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionLogDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "verificationMethod": "legal-actions-and-complete-final-state",
+        "resolvedBundlePaths": {
+          "Japan": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+          "Allies": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js"
+        },
+        "winner": "Japan",
+        "won_text": "Japan did not surrender.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": false
+      },
+      "error": null,
+      "turn": 12,
+      "actions": 2382,
+      "jpResources": 8,
+      "politicalWill": 4,
+      "elapsedMs": 158316,
+      "gamePath": "tmp\\ai-allies-40-01\\base-fixed-20263004\\game-1942-1945-The-Shortened-Campaign-20263006-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.json",
+      "replayPath": "tmp\\ai-allies-40-01\\base-fixed-20263004\\game-1942-1945-The-Shortened-Campaign-20263006-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.replay.json",
+      "replaySha256": "da6d1a2a6110e6cd329364638d2888717414988c742b1fad315b68e619155d4c",
+      "metadata": {
+        "gitSha": "628f8f61f1a441fef8ab2d0d39f339effdea4d25",
+        "gitDirty": true,
+        "rulesSha256": "ef11ec5e2392f08cc39024b96978a1fd5619bda54061232063d409328b3febc0",
+        "ruleVersion": "official-16.2",
+        "adapterVersion": "campaign-bundle-adapter-v1",
+        "adapterSha256": "01234bfdb63a8105fb5002614f68a21556afe469e55f0218e5b129a9e0aad257",
+        "runnerSha256": "ea21d01a5bc360e213e82a40cea7c615578a147ae2eabdedbab857225c629982",
+        "metricsSha256": "5227a81f7798cadf4ce01d55afa2d903b1ecd5253a5d19c713f14f93d96ba2ac",
+        "openingMetricsSha256": "041bad6eba0143954ef6e3e7ef61686a65929df48804830c8c56632ceabac594",
+        "bundles": {
+          "Japan": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-japan-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-japan-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 0,
+              "japan_campaign_planner": 1,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          },
+          "Allies": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 1,
+              "japan_campaign_planner": 0,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          }
+        },
+        "runtimeModelRequests": 0
+      }
+    },
+    {
+      "seed": 20263011,
+      "scenario": "1943-1945 (The Even Shorter Campaign)",
+      "status": "complete",
+      "winner": "Japan",
+      "end": "Japan did not surrender.",
+      "validNatural": true,
+      "verified": true,
+      "verification": {
+        "verified": true,
+        "actions": 1670,
+        "finalStateSha256": "1cde0010fe9727ec89b9ba25ec7ac27891080f550d5b64e66bd1c2983594992f",
+        "opening": {
+          "schemaVersion": 1,
+          "startTurn": 5,
+          "deadlineTurns": {
+            "early": 7,
+            "dei": 9
+          },
+          "initialSurrender": {
+            "philippines": true,
+            "malaya": true,
+            "dei": true
+          },
+          "firstSurrender": {},
+          "firstKeysHeld": {},
+          "events": [],
+          "checkpoints": {
+            "5": {
+              "action": 204,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245
+                  ]
+                }
+              }
+            },
+            "6": {
+              "action": 397,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245,
+                    452
+                  ]
+                }
+              }
+            },
+            "7": {
+              "action": 588,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245,
+                    421,
+                    452
+                  ]
+                }
+              }
+            },
+            "8": {
+              "action": 866,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245,
+                    421,
+                    452
+                  ]
+                }
+              }
+            },
+            "9": {
+              "action": 1085,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    421,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "10": {
+              "action": 1220,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    421,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "11": {
+              "action": 1431,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    421,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "12": {
+              "action": 1670,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    421,
+                    452,
+                    368
+                  ]
+                }
+              },
+              "terminal": true
+            }
+          },
+          "philippinesByThirdRound": false,
+          "malayaByThirdRound": false,
+          "bothByThirdRound": false,
+          "deiByFifthRound": false
+        },
+        "modes": {
+          "Japan": "actions-only",
+          "Allies": "actions-only"
+        },
+        "legacyDecisionChecks": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionLogDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "verificationMethod": "legal-actions-and-complete-final-state",
+        "resolvedBundlePaths": {
+          "Japan": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+          "Allies": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js"
+        },
+        "winner": "Japan",
+        "won_text": "Japan did not surrender.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": false
+      },
+      "error": null,
+      "turn": 12,
+      "actions": 1670,
+      "jpResources": 5,
+      "politicalWill": 7,
+      "elapsedMs": 57595,
+      "gamePath": "tmp\\ai-allies-40-01\\base-fixed-20263011\\game-1943-1945-The-Even-Shorter-Campaign-20263011-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.json",
+      "replayPath": "tmp\\ai-allies-40-01\\base-fixed-20263011\\game-1943-1945-The-Even-Shorter-Campaign-20263011-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.replay.json",
+      "replaySha256": "4ce3988ba6f08583eeaa1aa8ff4dbf5f218664922e271a7948e184f089b528c1",
+      "metadata": {
+        "gitSha": "628f8f61f1a441fef8ab2d0d39f339effdea4d25",
+        "gitDirty": true,
+        "rulesSha256": "ef11ec5e2392f08cc39024b96978a1fd5619bda54061232063d409328b3febc0",
+        "ruleVersion": "official-16.2",
+        "adapterVersion": "campaign-bundle-adapter-v1",
+        "adapterSha256": "01234bfdb63a8105fb5002614f68a21556afe469e55f0218e5b129a9e0aad257",
+        "runnerSha256": "ea21d01a5bc360e213e82a40cea7c615578a147ae2eabdedbab857225c629982",
+        "metricsSha256": "5227a81f7798cadf4ce01d55afa2d903b1ecd5253a5d19c713f14f93d96ba2ac",
+        "openingMetricsSha256": "041bad6eba0143954ef6e3e7ef61686a65929df48804830c8c56632ceabac594",
+        "bundles": {
+          "Japan": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-japan-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-japan-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 0,
+              "japan_campaign_planner": 1,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          },
+          "Allies": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 1,
+              "japan_campaign_planner": 0,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          }
+        },
+        "runtimeModelRequests": 0
+      }
+    },
+    {
+      "seed": 20263012,
+      "scenario": "1943-1945 (The Even Shorter Campaign)",
+      "status": "complete",
+      "winner": "Japan",
+      "end": "Japan did not surrender.",
+      "validNatural": true,
+      "verified": true,
+      "verification": {
+        "verified": true,
+        "actions": 1678,
+        "finalStateSha256": "b71993dc9d723c30748495efaeddbee9387388d6d43170bbb1ba9017a1ea5fe0",
+        "opening": {
+          "schemaVersion": 1,
+          "startTurn": 5,
+          "deadlineTurns": {
+            "early": 7,
+            "dei": 9
+          },
+          "initialSurrender": {
+            "philippines": true,
+            "malaya": true,
+            "dei": true
+          },
+          "firstSurrender": {},
+          "firstKeysHeld": {},
+          "events": [],
+          "checkpoints": {
+            "5": {
+              "action": 149,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245
+                  ]
+                }
+              }
+            },
+            "6": {
+              "action": 363,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245
+                  ]
+                }
+              }
+            },
+            "7": {
+              "action": 589,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245,
+                    421
+                  ]
+                }
+              }
+            },
+            "8": {
+              "action": 756,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245,
+                    421
+                  ]
+                }
+              }
+            },
+            "9": {
+              "action": 1002,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304,
+                    305
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    421,
+                    368
+                  ]
+                }
+              }
+            },
+            "10": {
+              "action": 1205,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304,
+                    305
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    421,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "11": {
+              "action": 1455,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304,
+                    305
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    421,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "12": {
+              "action": 1678,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304,
+                    305
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    421,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              },
+              "terminal": true
+            }
+          },
+          "philippinesByThirdRound": false,
+          "malayaByThirdRound": false,
+          "bothByThirdRound": false,
+          "deiByFifthRound": false
+        },
+        "modes": {
+          "Japan": "actions-only",
+          "Allies": "actions-only"
+        },
+        "legacyDecisionChecks": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionLogDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "verificationMethod": "legal-actions-and-complete-final-state",
+        "resolvedBundlePaths": {
+          "Japan": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+          "Allies": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js"
+        },
+        "winner": "Japan",
+        "won_text": "Japan did not surrender.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": false
+      },
+      "error": null,
+      "turn": 12,
+      "actions": 1678,
+      "jpResources": 3,
+      "politicalWill": 9,
+      "elapsedMs": 79644,
+      "gamePath": "tmp\\ai-allies-40-01\\base-fixed-20263011\\game-1943-1945-The-Even-Shorter-Campaign-20263012-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.json",
+      "replayPath": "tmp\\ai-allies-40-01\\base-fixed-20263011\\game-1943-1945-The-Even-Shorter-Campaign-20263012-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.replay.json",
+      "replaySha256": "a17d532150051376785b49c9d0620f44e37beda4b80abb55c31a00394d01ee91",
+      "metadata": {
+        "gitSha": "628f8f61f1a441fef8ab2d0d39f339effdea4d25",
+        "gitDirty": true,
+        "rulesSha256": "ef11ec5e2392f08cc39024b96978a1fd5619bda54061232063d409328b3febc0",
+        "ruleVersion": "official-16.2",
+        "adapterVersion": "campaign-bundle-adapter-v1",
+        "adapterSha256": "01234bfdb63a8105fb5002614f68a21556afe469e55f0218e5b129a9e0aad257",
+        "runnerSha256": "ea21d01a5bc360e213e82a40cea7c615578a147ae2eabdedbab857225c629982",
+        "metricsSha256": "5227a81f7798cadf4ce01d55afa2d903b1ecd5253a5d19c713f14f93d96ba2ac",
+        "openingMetricsSha256": "041bad6eba0143954ef6e3e7ef61686a65929df48804830c8c56632ceabac594",
+        "bundles": {
+          "Japan": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-japan-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-japan-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 0,
+              "japan_campaign_planner": 1,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          },
+          "Allies": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 1,
+              "japan_campaign_planner": 0,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          }
+        },
+        "runtimeModelRequests": 0
+      }
+    },
+    {
+      "seed": 20263013,
+      "scenario": "1943-1945 (The Even Shorter Campaign)",
+      "status": "complete",
+      "winner": "Allies",
+      "end": "Japan surrenders by atomic bomb strategy.",
+      "validNatural": true,
+      "verified": true,
+      "verification": {
+        "verified": true,
+        "actions": 1618,
+        "finalStateSha256": "8c7458897542cc8daa49d48c6beb6e90f0f720a0dee288b35f58c76b2636e322",
+        "opening": {
+          "schemaVersion": 1,
+          "startTurn": 5,
+          "deadlineTurns": {
+            "early": 7,
+            "dei": 9
+          },
+          "initialSurrender": {
+            "philippines": true,
+            "malaya": true,
+            "dei": true
+          },
+          "firstSurrender": {},
+          "firstKeysHeld": {},
+          "events": [],
+          "checkpoints": {
+            "5": {
+              "action": 153,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245
+                  ]
+                }
+              }
+            },
+            "6": {
+              "action": 377,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245
+                  ]
+                }
+              }
+            },
+            "7": {
+              "action": 609,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245
+                  ]
+                }
+              }
+            },
+            "8": {
+              "action": 825,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245
+                  ]
+                }
+              }
+            },
+            "9": {
+              "action": 1043,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    307,
+                    452
+                  ]
+                }
+              }
+            },
+            "10": {
+              "action": 1190,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    307,
+                    452
+                  ]
+                }
+              }
+            },
+            "11": {
+              "action": 1417,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    307,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "12": {
+              "action": 1618,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    307,
+                    421,
+                    452,
+                    368
+                  ]
+                }
+              },
+              "terminal": true
+            }
+          },
+          "philippinesByThirdRound": false,
+          "malayaByThirdRound": false,
+          "bothByThirdRound": false,
+          "deiByFifthRound": false
+        },
+        "modes": {
+          "Japan": "actions-only",
+          "Allies": "actions-only"
+        },
+        "legacyDecisionChecks": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionLogDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "verificationMethod": "legal-actions-and-complete-final-state",
+        "resolvedBundlePaths": {
+          "Japan": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+          "Allies": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js"
+        },
+        "winner": "Allies",
+        "won_text": "Japan surrenders by atomic bomb strategy.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": false
+      },
+      "error": null,
+      "turn": 12,
+      "actions": 1618,
+      "jpResources": 1,
+      "politicalWill": 9,
+      "elapsedMs": 66820,
+      "gamePath": "tmp\\ai-allies-40-01\\base-fixed-20263011\\game-1943-1945-The-Even-Shorter-Campaign-20263013-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.json",
+      "replayPath": "tmp\\ai-allies-40-01\\base-fixed-20263011\\game-1943-1945-The-Even-Shorter-Campaign-20263013-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.replay.json",
+      "replaySha256": "dce616b74a8843e931d9e2e3c5d71ca3c4612bdab607ed9b4f03771193f97ee9",
+      "metadata": {
+        "gitSha": "628f8f61f1a441fef8ab2d0d39f339effdea4d25",
+        "gitDirty": true,
+        "rulesSha256": "ef11ec5e2392f08cc39024b96978a1fd5619bda54061232063d409328b3febc0",
+        "ruleVersion": "official-16.2",
+        "adapterVersion": "campaign-bundle-adapter-v1",
+        "adapterSha256": "01234bfdb63a8105fb5002614f68a21556afe469e55f0218e5b129a9e0aad257",
+        "runnerSha256": "ea21d01a5bc360e213e82a40cea7c615578a147ae2eabdedbab857225c629982",
+        "metricsSha256": "5227a81f7798cadf4ce01d55afa2d903b1ecd5253a5d19c713f14f93d96ba2ac",
+        "openingMetricsSha256": "041bad6eba0143954ef6e3e7ef61686a65929df48804830c8c56632ceabac594",
+        "bundles": {
+          "Japan": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-japan-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-japan-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 0,
+              "japan_campaign_planner": 1,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          },
+          "Allies": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 1,
+              "japan_campaign_planner": 0,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          }
+        },
+        "runtimeModelRequests": 0
+      }
+    },
+    {
+      "seed": 20263014,
+      "scenario": "1943-1945 (The Even Shorter Campaign)",
+      "status": "complete",
+      "winner": "Allies",
+      "end": "Japan surrenders by atomic bomb strategy.",
+      "validNatural": true,
+      "verified": true,
+      "verification": {
+        "verified": true,
+        "actions": 1832,
+        "finalStateSha256": "f4a69deb2fa0c3abb6b4d0dd4c702861cf9773ada0e847abce1196bd3d1f9e16",
+        "opening": {
+          "schemaVersion": 1,
+          "startTurn": 5,
+          "deadlineTurns": {
+            "early": 7,
+            "dei": 9
+          },
+          "initialSurrender": {
+            "philippines": true,
+            "malaya": true,
+            "dei": true
+          },
+          "firstSurrender": {},
+          "firstKeysHeld": {},
+          "events": [],
+          "checkpoints": {
+            "5": {
+              "action": 183,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245
+                  ]
+                }
+              }
+            },
+            "6": {
+              "action": 380,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245
+                  ]
+                }
+              }
+            },
+            "7": {
+              "action": 661,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245
+                  ]
+                }
+              }
+            },
+            "8": {
+              "action": 970,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245,
+                    368
+                  ]
+                }
+              }
+            },
+            "9": {
+              "action": 1241,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    480,
+                    368
+                  ]
+                }
+              }
+            },
+            "10": {
+              "action": 1489,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    421,
+                    480,
+                    368
+                  ]
+                }
+              }
+            },
+            "11": {
+              "action": 1715,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    307,
+                    421,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "12": {
+              "action": 1832,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304,
+                    305
+                  ]
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    307,
+                    421,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              },
+              "terminal": true
+            }
+          },
+          "philippinesByThirdRound": false,
+          "malayaByThirdRound": false,
+          "bothByThirdRound": false,
+          "deiByFifthRound": false
+        },
+        "modes": {
+          "Japan": "actions-only",
+          "Allies": "actions-only"
+        },
+        "legacyDecisionChecks": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionLogDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "verificationMethod": "legal-actions-and-complete-final-state",
+        "resolvedBundlePaths": {
+          "Japan": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+          "Allies": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js"
+        },
+        "winner": "Allies",
+        "won_text": "Japan surrenders by atomic bomb strategy.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": false
+      },
+      "error": null,
+      "turn": 12,
+      "actions": 1832,
+      "jpResources": 1,
+      "politicalWill": 10,
+      "elapsedMs": 88605,
+      "gamePath": "tmp\\ai-allies-40-01\\base-fixed-20263014\\game-1943-1945-The-Even-Shorter-Campaign-20263014-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.json",
+      "replayPath": "tmp\\ai-allies-40-01\\base-fixed-20263014\\game-1943-1945-The-Even-Shorter-Campaign-20263014-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.replay.json",
+      "replaySha256": "8776f9d91fa3d039c76c74ed7d1a410f834d376da84c8f99cf1e51d78ccc1448",
+      "metadata": {
+        "gitSha": "628f8f61f1a441fef8ab2d0d39f339effdea4d25",
+        "gitDirty": true,
+        "rulesSha256": "ef11ec5e2392f08cc39024b96978a1fd5619bda54061232063d409328b3febc0",
+        "ruleVersion": "official-16.2",
+        "adapterVersion": "campaign-bundle-adapter-v1",
+        "adapterSha256": "01234bfdb63a8105fb5002614f68a21556afe469e55f0218e5b129a9e0aad257",
+        "runnerSha256": "ea21d01a5bc360e213e82a40cea7c615578a147ae2eabdedbab857225c629982",
+        "metricsSha256": "5227a81f7798cadf4ce01d55afa2d903b1ecd5253a5d19c713f14f93d96ba2ac",
+        "openingMetricsSha256": "041bad6eba0143954ef6e3e7ef61686a65929df48804830c8c56632ceabac594",
+        "bundles": {
+          "Japan": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-japan-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-japan-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 0,
+              "japan_campaign_planner": 1,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          },
+          "Allies": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 1,
+              "japan_campaign_planner": 0,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          }
+        },
+        "runtimeModelRequests": 0
+      }
+    },
+    {
+      "seed": 20263015,
+      "scenario": "1943-1945 (The Even Shorter Campaign)",
+      "status": "complete",
+      "winner": "Japan",
+      "end": "Japan did not surrender.",
+      "validNatural": true,
+      "verified": true,
+      "verification": {
+        "verified": true,
+        "actions": 1696,
+        "finalStateSha256": "b6ab4ba9ca9d47bc6a3f40cbe0d3a6f5330129dd5a4621ad5d4c072d3fc50ad3",
+        "opening": {
+          "schemaVersion": 1,
+          "startTurn": 5,
+          "deadlineTurns": {
+            "early": 7,
+            "dei": 9
+          },
+          "initialSurrender": {
+            "philippines": true,
+            "malaya": true,
+            "dei": true
+          },
+          "firstSurrender": {},
+          "firstKeysHeld": {},
+          "events": [],
+          "checkpoints": {
+            "5": {
+              "action": 187,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245
+                  ]
+                }
+              }
+            },
+            "6": {
+              "action": 457,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245
+                  ]
+                }
+              }
+            },
+            "7": {
+              "action": 679,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245,
+                    480,
+                    452
+                  ]
+                }
+              }
+            },
+            "8": {
+              "action": 1000,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "9": {
+              "action": 1225,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    421,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "10": {
+              "action": 1387,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    421,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "11": {
+              "action": 1528,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    307,
+                    421,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "12": {
+              "action": 1696,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    305
+                  ]
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    307,
+                    421,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              },
+              "terminal": true
+            }
+          },
+          "philippinesByThirdRound": false,
+          "malayaByThirdRound": false,
+          "bothByThirdRound": false,
+          "deiByFifthRound": false
+        },
+        "modes": {
+          "Japan": "actions-only",
+          "Allies": "actions-only"
+        },
+        "legacyDecisionChecks": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionLogDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "verificationMethod": "legal-actions-and-complete-final-state",
+        "resolvedBundlePaths": {
+          "Japan": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+          "Allies": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js"
+        },
+        "winner": "Japan",
+        "won_text": "Japan did not surrender.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": false
+      },
+      "error": null,
+      "turn": 12,
+      "actions": 1696,
+      "jpResources": 4,
+      "politicalWill": 9,
+      "elapsedMs": 56149,
+      "gamePath": "tmp\\ai-allies-40-01\\base-fixed-20263014\\game-1943-1945-The-Even-Shorter-Campaign-20263015-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.json",
+      "replayPath": "tmp\\ai-allies-40-01\\base-fixed-20263014\\game-1943-1945-The-Even-Shorter-Campaign-20263015-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.replay.json",
+      "replaySha256": "d175fc77f2c246d0a69388979eb435ddb789b73402a5b253240147cec445d19c",
+      "metadata": {
+        "gitSha": "628f8f61f1a441fef8ab2d0d39f339effdea4d25",
+        "gitDirty": true,
+        "rulesSha256": "ef11ec5e2392f08cc39024b96978a1fd5619bda54061232063d409328b3febc0",
+        "ruleVersion": "official-16.2",
+        "adapterVersion": "campaign-bundle-adapter-v1",
+        "adapterSha256": "01234bfdb63a8105fb5002614f68a21556afe469e55f0218e5b129a9e0aad257",
+        "runnerSha256": "ea21d01a5bc360e213e82a40cea7c615578a147ae2eabdedbab857225c629982",
+        "metricsSha256": "5227a81f7798cadf4ce01d55afa2d903b1ecd5253a5d19c713f14f93d96ba2ac",
+        "openingMetricsSha256": "041bad6eba0143954ef6e3e7ef61686a65929df48804830c8c56632ceabac594",
+        "bundles": {
+          "Japan": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-japan-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-japan-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 0,
+              "japan_campaign_planner": 1,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          },
+          "Allies": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 1,
+              "japan_campaign_planner": 0,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          }
+        },
+        "runtimeModelRequests": 0
+      }
+    },
+    {
+      "seed": 20263016,
+      "scenario": "1943-1945 (The Even Shorter Campaign)",
+      "status": "complete",
+      "winner": "Allies",
+      "end": "Japan surrenders by atomic bomb strategy.",
+      "validNatural": true,
+      "verified": true,
+      "verification": {
+        "verified": true,
+        "actions": 1757,
+        "finalStateSha256": "ec7128e703149bc8bb36ee1c3e6d06bc43bb11848b5ebd4a9ca5581ef420fcfc",
+        "opening": {
+          "schemaVersion": 1,
+          "startTurn": 5,
+          "deadlineTurns": {
+            "early": 7,
+            "dei": 9
+          },
+          "initialSurrender": {
+            "philippines": true,
+            "malaya": true,
+            "dei": true
+          },
+          "firstSurrender": {},
+          "firstKeysHeld": {},
+          "events": [],
+          "checkpoints": {
+            "5": {
+              "action": 184,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    245
+                  ]
+                }
+              }
+            },
+            "6": {
+              "action": 454,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": true,
+                  "missingKeys": []
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245
+                  ]
+                }
+              }
+            },
+            "7": {
+              "action": 704,
+              "nations": {
+                "philippines": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245
+                  ]
+                }
+              }
+            },
+            "8": {
+              "action": 940,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245
+                  ]
+                }
+              }
+            },
+            "9": {
+              "action": 1171,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    421,
+                    452
+                  ]
+                }
+              }
+            },
+            "10": {
+              "action": 1376,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    421,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "11": {
+              "action": 1525,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    421,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              }
+            },
+            "12": {
+              "action": 1757,
+              "nations": {
+                "philippines": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    535,
+                    566
+                  ]
+                },
+                "malaya": {
+                  "surrendered": true,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    304
+                  ]
+                },
+                "dei": {
+                  "surrendered": false,
+                  "keysHeld": false,
+                  "missingKeys": [
+                    309,
+                    245,
+                    277,
+                    307,
+                    421,
+                    480,
+                    452,
+                    368
+                  ]
+                }
+              },
+              "terminal": true
+            }
+          },
+          "philippinesByThirdRound": false,
+          "malayaByThirdRound": false,
+          "bothByThirdRound": false,
+          "deiByFifthRound": false
+        },
+        "modes": {
+          "Japan": "actions-only",
+          "Allies": "actions-only"
+        },
+        "legacyDecisionChecks": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "legacyDecisionLogDrift": {
+          "Japan": 0,
+          "Allies": 0
+        },
+        "verificationMethod": "legal-actions-and-complete-final-state",
+        "resolvedBundlePaths": {
+          "Japan": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+          "Allies": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js"
+        },
+        "winner": "Allies",
+        "won_text": "Japan surrenders by atomic bomb strategy.",
+        "natural": true,
+        "termination": "natural",
+        "earlyTreatyDefeat": false
+      },
+      "error": null,
+      "turn": 12,
+      "actions": 1757,
+      "jpResources": 0,
+      "politicalWill": 10,
+      "elapsedMs": 74892,
+      "gamePath": "tmp\\ai-allies-40-01\\base-fixed-20263014\\game-1943-1945-The-Even-Shorter-Campaign-20263016-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.json",
+      "replayPath": "tmp\\ai-allies-40-01\\base-fixed-20263014\\game-1943-1945-The-Even-Shorter-Campaign-20263016-Jerasmus-japan-campaign-v2-Aerasmus-campaign-v2.replay.json",
+      "replaySha256": "f64b9b1b6c75699aeea06718072c2747a6df209803dc85d8f8308c74fd6e56e8",
+      "metadata": {
+        "gitSha": "628f8f61f1a441fef8ab2d0d39f339effdea4d25",
+        "gitDirty": true,
+        "rulesSha256": "ef11ec5e2392f08cc39024b96978a1fd5619bda54061232063d409328b3febc0",
+        "ruleVersion": "official-16.2",
+        "adapterVersion": "campaign-bundle-adapter-v1",
+        "adapterSha256": "01234bfdb63a8105fb5002614f68a21556afe469e55f0218e5b129a9e0aad257",
+        "runnerSha256": "ea21d01a5bc360e213e82a40cea7c615578a147ae2eabdedbab857225c629982",
+        "metricsSha256": "5227a81f7798cadf4ce01d55afa2d903b1ecd5253a5d19c713f14f93d96ba2ac",
+        "openingMetricsSha256": "041bad6eba0143954ef6e3e7ef61686a65929df48804830c8c56632ceabac594",
+        "bundles": {
+          "Japan": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-japan-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-japan-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 0,
+              "japan_campaign_planner": 1,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          },
+          "Allies": {
+            "path": "C:\\Users\\fwj\\.codex\\worktrees\\campaign-defense-blockade\\rots\\tmp\\ai-allies-40-01\\bundles\\baseline-v2.js",
+            "sha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+            "bot": "erasmus-campaign-v2",
+            "version": "erasmus-v2.2-zh.29-campaign.2.0",
+            "frozen": true,
+            "environment": {},
+            "effectiveProfile": {
+              "epMinP": 0.6,
+              "epDesiredP": 0.75,
+              "epOvermatchDesiredP": 0.85,
+              "epDesperateMinP": 0.45,
+              "epPressureRatio": 1.35,
+              "epOvermatchRatio": 1.8,
+              "epForwardDist": 12,
+              "emWWin": 1,
+              "emWLoss": 0.6,
+              "emWCost": 0.05,
+              "emMinPWin": 0.3,
+              "emScoreDistDecay": 0.9,
+              "emDoctrineDecay": 0.92,
+              "emCvReserveMinAdv": 1.5,
+              "emRaidResTrigger": 10,
+              "emRaidMaxTargets": 4,
+              "emAmphNavalMargin": 1,
+              "emAmphEscortDist": 6,
+              "emReactionWeight": 0.35,
+              "emBlockadeTurnMin": 7,
+              "emSweepAdvDist": 4,
+              "emSweepHarborNav": 6,
+              "emSweepCluster": 6,
+              "emSweepClusterDist": 3,
+              "emBlkInsAfterPending": 2,
+              "emBlkGarrisonSteps": 2,
+              "emBlkManchCutTurn": 5,
+              "emBlkPinResTargets": 4,
+              "emBlkPinResReach": 20,
+              "emChainPrereqDist": 6,
+              "emSouthOpenMinTurn": 2,
+              "emSouthOpenMaxTurn": 5,
+              "emConcentrationMargin": 1.5,
+              "emConcentrationMinUnits": 3,
+              "emTojoTurn": 8,
+              "campaign_planner": 1,
+              "japan_campaign_planner": 0,
+              "target_scoring": 0,
+              "taskforce_math": 1,
+              "allies_cv_preserve": 1,
+              "allies_pow_quota": 1,
+              "allies_resource_raid": 1,
+              "japan_resource_defense": 0,
+              "allies_blockade": 0,
+              "allies_blockade_v2": 1,
+              "capture_rate": 0,
+              "island_sweep": 1,
+              "loss_optimal": 1,
+              "erasmus_plus": 1,
+              "japan_opening_conquest": 0,
+              "tojo_pressure": 0,
+              "amphib_asp_gate": 1,
+              "amphib_escort_math": 1,
+              "landing_value": 1,
+              "card_hq_priority": 0,
+              "chain_prereq": 1,
+              "air_forward": 1,
+              "hq_withdraw_guard": 1,
+              "stack_limit_gate": 1,
+              "japan_south_opening": 0,
+              "japan_south_opening_dei": 0,
+              "battle_decl_gate": 0,
+              "force_concentration": 0,
+              "campaign_v2": 1
+            }
+          }
+        },
+        "runtimeModelRequests": 0
+      }
+    }
+  ],
+  "runtimeModelRequests": 0,
+  "externalApiCost": 0
+}

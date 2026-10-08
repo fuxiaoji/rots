@@ -1,0 +1,4421 @@
+{
+  "task": "AI-CAMPAIGN-EVAL-50-01",
+  "freezeSha256": "02104c6ade64a103674235a68dbc03a06cfaceb86269630acb339beb8786f660",
+  "sourceBundleSha256": "3de6cbedb4fb7f927f8b43e71d955b3ab2615892c016f5fbe9df6911c4b4e35d",
+  "observationHashes": {
+    "auditSha256": "a7e49141f0b479a823263cf5e6014924f5f72b3897cafbc772118610e918fb5a",
+    "observerSha256": "748ce8b52aac97ca7867517e924cafcf2dc75b554ea880ee02f841f459b5e85d",
+    "runnerSha256": "5008983c2dfd710fbedd9eb0863c657d80efd6d6799c68867a41e7f520315f2b",
+    "verifierOverlaySha256": "2720dcedf873b525ab04ba721d0ea9bec2c3faefaff5b454c7f578a018d3e0be",
+    "instrumentationSha256": "7972444edc47607cf4f1fdeb6c9a712c669dcdec11e5c38cfe3d5a880ea8017e"
+  },
+  "auditFiles": [
+    {
+      "file": "audit-v2/selfplay-1942-20263801.json",
+      "sha256": "33344b801abad0167df2e43981dde8d5995b627d3902b60d8f9deec05e7f8310"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263803.json",
+      "sha256": "4093574aef311841cd4558b28be5ff59640c36cc2e34747c11622993e59300d1"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263805.json",
+      "sha256": "9acebd75e8fe7be535e642c2275d559bfc61d2cb920a7af08cd3740d32b5da86"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263807.json",
+      "sha256": "98d7fce2ad43838559f14acb47777b91496641d3c7afdd9941983c489065cbe3"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263809.json",
+      "sha256": "a96008b7cf1563b697721c0e6b0cd205721b1544093156c6aa7d2d559c9d1035"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263811.json",
+      "sha256": "9f4e02208ff4b5caa5f464a11dbd94acaec25bffa84d11e3dafa796854a23209"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263813.json",
+      "sha256": "a07ba6fd73d41ab37cf9d943667b2ca1493b9672be45a5375d01f80ba5281831"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263815.json",
+      "sha256": "257ae7fc0c954a897dfa779fa621f82e53a73f2b2d489f630f8b918f7d6ee042"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263817.json",
+      "sha256": "e85bdf36d426966f0365229abfcc08aa2af12d2d96bca0f3089b4fe238b5c2a9"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263819.json",
+      "sha256": "8f3124bb4f3b6347ddbf9ea4db0649247848d9d5ed30e3570adcd3828f289df1"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263821.json",
+      "sha256": "eb085b8fdc355b30331246399e51512026ae12ea7300bb71d41f33c0bf3519c4"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263823.json",
+      "sha256": "15546f0fe904c8824e855232268b3f079ab4c8395149ea96ef507c78dc125b54"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263825.json",
+      "sha256": "8661e24421e0a9d070e0a5804871b3082569005437e3f5af91e7545d7065e5df"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263827.json",
+      "sha256": "be0ffa03d7dedb019a53e3f19136ca716addfa74af37f548190ba2de574fc27c"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263829.json",
+      "sha256": "4f98a409211b40f72e11611a23d12a7aed191413ee4a8779fe62b3af248900e5"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263831.json",
+      "sha256": "15bca8fc77c7c05296192f685835cff946fe2d02d6fce129fd7bf4959dc39eda"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263833.json",
+      "sha256": "73bf76cb0f9fa4a007db7154ea188052ee6159c1866168621b1c5ddbb67dba29"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263835.json",
+      "sha256": "932cdb041e761e71019ba62ef14c972713b21699e248a6ea6b6441f86435d160"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263837.json",
+      "sha256": "5f9a80ab72f17c5bc5a20bd9aa741f9942ebc1fe53357b6eebe38c85abe69a2a"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263839.json",
+      "sha256": "8dbe6c2bc37be770d7198ce015938235d89808ab27ec0133b613afb4ea8b1a43"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263841.json",
+      "sha256": "ce5fd3b272dc7a5397757d36e70e72758bbb686b610157ac79c4e34770d1f1f9"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263843.json",
+      "sha256": "0980ae0f8e077cb3609a183221370d3f93ac136c246831dd00833313e08b1457"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263845.json",
+      "sha256": "71ebdb7c31e28f5269b5ee3d3167365a473179cb2bd1c8f928ffa8cee5be25c0"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263847.json",
+      "sha256": "389860dce98b8f86e1ee5322645920db13e8cb8c582dad00d05884017eedc824"
+    },
+    {
+      "file": "audit-v2/selfplay-1942-20263849.json",
+      "sha256": "13e0bcc9e932a6b659049637b74e9c02470002f6e226f1c2637c0c15969b751f"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263901.json",
+      "sha256": "c030f321ec447a79fc99c4ed6548ba4dc792ea78fa749e69e8f29e964c27e80c"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263903.json",
+      "sha256": "9e00ece5c97b57ef551ab1b0fd3c3c9b9c7805a13ac1c940a68c3ad1610f10b9"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263905.json",
+      "sha256": "958b1d139d508cb01eda081a450269ec4ca66a647067db306c734aba23babd67"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263907.json",
+      "sha256": "9d177830bcd1b2bd83e9a2e9bed0216f60defc222ab3e73499913ff85b7291dd"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263909.json",
+      "sha256": "ad119e85178af2480cb8a6af6f1df67c83d33d74d8faa1db10d8df665d48bd72"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263911.json",
+      "sha256": "a7b1ea62cddd721336869a152e697e13ee58bf400906864827dfd9279908af9d"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263913.json",
+      "sha256": "4d5d35dee79f9f03ced1cbddb4d411ab917da7dafd464f11e0ce72832af05fe1"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263915.json",
+      "sha256": "feff575de79f4a13083134a75250466df52c0609acebe301b8f288065385f984"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263917.json",
+      "sha256": "b6e18cfea5756893738da941b5827e6fa05183fea3dd09fbd02030d235bef169"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263919.json",
+      "sha256": "dded2bbd8102301b43f67667cfceb463f7e8f13b1c06ee3de7369f05bb56b863"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263921.json",
+      "sha256": "42c162fb5b604900be609fb8ec30ec41ce94d6d4e9a874515d7f355a6f0652ab"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263923.json",
+      "sha256": "7e1cc855d3bc2515b47007e86fcd558614734c0336c1a34c93626073df4a5174"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263925.json",
+      "sha256": "b36557bee6cfbc5c93fbf7032da33b6bd92ea86f3a50374d177cb3e1d9e3e5c1"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263927.json",
+      "sha256": "85bfff0321c28fc663496ec237d417ba8333776e0950e9daad4af8982cc7124b"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263929.json",
+      "sha256": "4d32cbe3856e903e466f972b1c7da9197c11a1661c737f9221486c48c9293f51"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263931.json",
+      "sha256": "727f23903df85d22d812f140303ccabae5e6fdfa9430b963d615d4cfea4a76c6"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263933.json",
+      "sha256": "ebee36d897a4c390ea5a952e43bc6b8ec3570ef4fbfbca8cdcb39b2e16d0bffd"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263935.json",
+      "sha256": "0bad9e308a78ae2a0f3ab5ce21d1b8788e61f7cfbdacf54ae8a1ffc8a5e9ade0"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263937.json",
+      "sha256": "316331b26c6abd94cffda80d8a1b65c8b63b65758b7bf69a9b76067424819733"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263939.json",
+      "sha256": "9e73a6a44660fe97ff9084885a3c63425c6cb57a5796ab8b448b8681d0bb3065"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263941.json",
+      "sha256": "fefc3239a200c9a226eba2ac8758d766d0236a5028148d88d0f64cb31a697831"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263943.json",
+      "sha256": "1ca72efe32901bf96d7787febafe6703eac9f370577465b06f524fbfa9afeefa"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263945.json",
+      "sha256": "dcb39b3f2fe991ddb04eae3659f5c67fac52f0fbbe965d120491b3098d5a5b1b"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263947.json",
+      "sha256": "39f5fd940bd2de4077560361d316364448c962f908b7305fb53740560c15c7fd"
+    },
+    {
+      "file": "audit-v2/selfplay-1943-20263949.json",
+      "sha256": "1247c93e9d20ce688ebaf362918c1fe55f8294e14331002ae2612347fe7d3d3d"
+    }
+  ],
+  "denominator": "50 per scenario; failed/fallback attempts retained; victories require validNatural and complete hash replay",
+  "behaviorScope": "all completely replay-verified attempts, including the separately marked one fallback game; fixed card windows are correlated snapshots, not independent games",
+  "runtimeApiRequests": 0,
+  "externalApiCost": 0,
+  "nativeCodexCost": null,
+  "scenarios": {
+    "1942": {
+      "attempted": 50,
+      "legalNatural": 50,
+      "fullHashVerified": 50,
+      "eligible": 50,
+      "alliesWins": {
+        "successes": 18,
+        "n": 50,
+        "estimate": 0.36,
+        "low": 0.24138749651846741,
+        "high": 0.49858983123887307
+      },
+      "japanWins": 32,
+      "invalid": [],
+      "routes": {
+        "Japan did not surrender.": 30,
+        "Allies Victory - Japanese mainland islands captured.": 18,
+        "Japanese Victory by Treaty Negotiations.": 2
+      },
+      "winTurn": {
+        "8": 1,
+        "9": 3,
+        "10": 6,
+        "11": 4,
+        "12": 4
+      },
+      "allEndTurn": {
+        "7": 1,
+        "8": 1,
+        "9": 3,
+        "10": 6,
+        "11": 5,
+        "12": 34
+      },
+      "actions": {
+        "n": 50,
+        "min": 1231,
+        "mean": 2075.96,
+        "median": 2142,
+        "max": 2374
+      },
+      "elapsedMs": {
+        "n": 50,
+        "min": 108405,
+        "mean": 180078.76,
+        "median": 178881,
+        "max": 281193
+      },
+      "pwMin": {
+        "n": 50,
+        "min": 0,
+        "mean": 3.7,
+        "median": 4,
+        "max": 6
+      },
+      "pwFinal": {
+        "n": 50,
+        "min": 0,
+        "mean": 5.26,
+        "median": 5,
+        "max": 10
+      },
+      "resourcesFinal": {
+        "n": 50,
+        "min": 3,
+        "mean": 6.6,
+        "median": 6,
+        "max": 11
+      },
+      "pow": {
+        "n": 246,
+        "d": 397,
+        "rate": 0.6196473551637279
+      },
+      "powGamesWithMiss": 49,
+      "amphibiousAllied": {
+        "committed": 1232,
+        "resolved": 1232,
+        "success": {
+          "n": 1149,
+          "d": 1232,
+          "rate": 0.9326298701298701
+        },
+        "includesUnopposed": true
+      },
+      "groundAttackAllied": {
+        "n": 664,
+        "d": 727,
+        "rate": 0.9133425034387895
+      },
+      "guardsAll": {
+        "samples": 1030,
+        "siteSamples": 14420,
+        "japanControl": {
+          "n": 12661,
+          "d": 14420,
+          "rate": 0.8780166435506241
+        },
+        "friendlyEmpty": {
+          "n": 1435,
+          "d": 12661,
+          "rate": 0.1133401785009083
+        },
+        "meanGroundWhileControlled": 1.0553668746544507,
+        "meanCfWhileControlled": 9.275649632730431,
+        "bySite": [
+          {
+            "coordinate": 2909,
+            "hex": 560,
+            "name": "Tainan",
+            "control": {
+              "n": 1030,
+              "d": 1030,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 112,
+              "d": 1030,
+              "rate": 0.1087378640776699
+            },
+            "meanGround": 1.133009708737864,
+            "meanCf": 9.344660194174757
+          },
+          {
+            "coordinate": 3009,
+            "hex": 589,
+            "name": "Taihoku",
+            "control": {
+              "n": 1018,
+              "d": 1030,
+              "rate": 0.9883495145631068
+            },
+            "friendlyEmpty": {
+              "n": 358,
+              "d": 1018,
+              "rate": 0.3516699410609037
+            },
+            "meanGround": 0.7053045186640472,
+            "meanCf": 6.719056974459725
+          },
+          {
+            "coordinate": 3209,
+            "hex": 647,
+            "name": "Okinawa",
+            "control": {
+              "n": 1028,
+              "d": 1030,
+              "rate": 0.9980582524271845
+            },
+            "friendlyEmpty": {
+              "n": 115,
+              "d": 1028,
+              "rate": 0.11186770428015565
+            },
+            "meanGround": 0.9620622568093385,
+            "meanCf": 8.816147859922179
+          },
+          {
+            "coordinate": 3709,
+            "hex": 792,
+            "name": "Iwo Jima",
+            "control": {
+              "n": 976,
+              "d": 1030,
+              "rate": 0.9475728155339805
+            },
+            "friendlyEmpty": {
+              "n": 215,
+              "d": 976,
+              "rate": 0.22028688524590165
+            },
+            "meanGround": 0.8063524590163934,
+            "meanCf": 7.432377049180328
+          },
+          {
+            "coordinate": 3813,
+            "hex": 825,
+            "name": "Saipan",
+            "control": {
+              "n": 976,
+              "d": 1030,
+              "rate": 0.9475728155339805
+            },
+            "friendlyEmpty": {
+              "n": 106,
+              "d": 976,
+              "rate": 0.10860655737704918
+            },
+            "meanGround": 0.9129098360655737,
+            "meanCf": 8.132172131147541
+          },
+          {
+            "coordinate": 3814,
+            "hex": 826,
+            "name": "Guam",
+            "control": {
+              "n": 938,
+              "d": 1030,
+              "rate": 0.9106796116504854
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 938,
+              "rate": 0
+            },
+            "meanGround": 1.288912579957356,
+            "meanCf": 6.711087420042644
+          },
+          {
+            "coordinate": 3416,
+            "hex": 712,
+            "name": "Palau",
+            "control": {
+              "n": 372,
+              "d": 1030,
+              "rate": 0.3611650485436893
+            },
+            "friendlyEmpty": {
+              "n": 98,
+              "d": 372,
+              "rate": 0.26344086021505375
+            },
+            "meanGround": 1.0295698924731183,
+            "meanCf": 8.46236559139785
+          },
+          {
+            "coordinate": 4017,
+            "hex": 887,
+            "name": "Truk",
+            "control": {
+              "n": 952,
+              "d": 1030,
+              "rate": 0.9242718446601942
+            },
+            "friendlyEmpty": {
+              "n": 101,
+              "d": 952,
+              "rate": 0.10609243697478991
+            },
+            "meanGround": 1.3508403361344539,
+            "meanCf": 9.617647058823529
+          },
+          {
+            "coordinate": 4415,
+            "hex": 1001,
+            "name": "Eniwetok",
+            "control": {
+              "n": 705,
+              "d": 1030,
+              "rate": 0.6844660194174758
+            },
+            "friendlyEmpty": {
+              "n": 111,
+              "d": 705,
+              "rate": 0.1574468085106383
+            },
+            "meanGround": 0.8624113475177305,
+            "meanCf": 7.699290780141844
+          },
+          {
+            "coordinate": 4715,
+            "hex": 1088,
+            "name": "Kwajalein",
+            "control": {
+              "n": 959,
+              "d": 1030,
+              "rate": 0.9310679611650485
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 959,
+              "rate": 0
+            },
+            "meanGround": 1.3065693430656935,
+            "meanCf": 5.13451511991658
+          },
+          {
+            "coordinate": 3305,
+            "hex": 672,
+            "name": "Seoul",
+            "control": {
+              "n": 1027,
+              "d": 1030,
+              "rate": 0.9970873786407767
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 1027,
+              "rate": 0
+            },
+            "meanGround": 1,
+            "meanCf": 17.982473222979554
+          },
+          {
+            "coordinate": 3306,
+            "hex": 673,
+            "name": "Pusan",
+            "control": {
+              "n": 1008,
+              "d": 1030,
+              "rate": 0.9786407766990292
+            },
+            "friendlyEmpty": {
+              "n": 202,
+              "d": 1008,
+              "rate": 0.2003968253968254
+            },
+            "meanGround": 0.8075396825396826,
+            "meanCf": 7.392857142857143
+          },
+          {
+            "coordinate": 2813,
+            "hex": 535,
+            "name": "Manila",
+            "control": {
+              "n": 697,
+              "d": 1030,
+              "rate": 0.6766990291262136
+            },
+            "friendlyEmpty": {
+              "n": 2,
+              "d": 697,
+              "rate": 0.0028694404591104736
+            },
+            "meanGround": 1.4863701578192252,
+            "meanCf": 12.057388809182209
+          },
+          {
+            "coordinate": 2915,
+            "hex": 566,
+            "name": "Davao",
+            "control": {
+              "n": 975,
+              "d": 1030,
+              "rate": 0.9466019417475728
+            },
+            "friendlyEmpty": {
+              "n": 15,
+              "d": 975,
+              "rate": 0.015384615384615385
+            },
+            "meanGround": 1.2246153846153847,
+            "meanCf": 13.78974358974359
+          }
+        ]
+      },
+      "guardsT5Plus": {
+        "samples": 730,
+        "siteSamples": 10220,
+        "japanControl": {
+          "n": 8762,
+          "d": 10220,
+          "rate": 0.8573385518590998
+        },
+        "friendlyEmpty": {
+          "n": 82,
+          "d": 8762,
+          "rate": 0.009358593928326865
+        },
+        "meanGroundWhileControlled": 1.2036064825382333,
+        "meanCfWhileControlled": 10.611047706003196,
+        "bySite": [
+          {
+            "coordinate": 2909,
+            "hex": 560,
+            "name": "Tainan",
+            "control": {
+              "n": 730,
+              "d": 730,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 3,
+              "d": 730,
+              "rate": 0.00410958904109589
+            },
+            "meanGround": 1.33013698630137,
+            "meanCf": 11.183561643835617
+          },
+          {
+            "coordinate": 3009,
+            "hex": 589,
+            "name": "Taihoku",
+            "control": {
+              "n": 718,
+              "d": 730,
+              "rate": 0.9835616438356164
+            },
+            "friendlyEmpty": {
+              "n": 61,
+              "d": 718,
+              "rate": 0.08495821727019498
+            },
+            "meanGround": 0.9958217270194986,
+            "meanCf": 9.50974930362117
+          },
+          {
+            "coordinate": 3209,
+            "hex": 647,
+            "name": "Okinawa",
+            "control": {
+              "n": 728,
+              "d": 730,
+              "rate": 0.9972602739726028
+            },
+            "friendlyEmpty": {
+              "n": 1,
+              "d": 728,
+              "rate": 0.0013736263736263737
+            },
+            "meanGround": 1.103021978021978,
+            "meanCf": 10.149725274725276
+          },
+          {
+            "coordinate": 3709,
+            "hex": 792,
+            "name": "Iwo Jima",
+            "control": {
+              "n": 676,
+              "d": 730,
+              "rate": 0.9260273972602739
+            },
+            "friendlyEmpty": {
+              "n": 12,
+              "d": 676,
+              "rate": 0.01775147928994083
+            },
+            "meanGround": 1.0207100591715976,
+            "meanCf": 9.355029585798816
+          },
+          {
+            "coordinate": 3813,
+            "hex": 825,
+            "name": "Saipan",
+            "control": {
+              "n": 676,
+              "d": 730,
+              "rate": 0.9260273972602739
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 676,
+              "rate": 0
+            },
+            "meanGround": 1.0266272189349113,
+            "meanCf": 9.146449704142011
+          },
+          {
+            "coordinate": 3814,
+            "hex": 826,
+            "name": "Guam",
+            "control": {
+              "n": 638,
+              "d": 730,
+              "rate": 0.873972602739726
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 638,
+              "rate": 0
+            },
+            "meanGround": 1.3824451410658307,
+            "meanCf": 7.551724137931035
+          },
+          {
+            "coordinate": 3416,
+            "hex": 712,
+            "name": "Palau",
+            "control": {
+              "n": 212,
+              "d": 730,
+              "rate": 0.29041095890410956
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 212,
+              "rate": 0
+            },
+            "meanGround": 1.4622641509433962,
+            "meanCf": 12.037735849056604
+          },
+          {
+            "coordinate": 4017,
+            "hex": 887,
+            "name": "Truk",
+            "control": {
+              "n": 652,
+              "d": 730,
+              "rate": 0.8931506849315068
+            },
+            "friendlyEmpty": {
+              "n": 1,
+              "d": 652,
+              "rate": 0.0015337423312883436
+            },
+            "meanGround": 1.5598159509202454,
+            "meanCf": 11.042944785276074
+          },
+          {
+            "coordinate": 4415,
+            "hex": 1001,
+            "name": "Eniwetok",
+            "control": {
+              "n": 467,
+              "d": 730,
+              "rate": 0.6397260273972603
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 467,
+              "rate": 0
+            },
+            "meanGround": 1.025695931477516,
+            "meanCf": 9.17558886509636
+          },
+          {
+            "coordinate": 4715,
+            "hex": 1088,
+            "name": "Kwajalein",
+            "control": {
+              "n": 659,
+              "d": 730,
+              "rate": 0.9027397260273973
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 659,
+              "rate": 0
+            },
+            "meanGround": 1.4036418816388467,
+            "meanCf": 6.112291350531108
+          },
+          {
+            "coordinate": 3305,
+            "hex": 672,
+            "name": "Seoul",
+            "control": {
+              "n": 727,
+              "d": 730,
+              "rate": 0.9958904109589041
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 727,
+              "rate": 0
+            },
+            "meanGround": 1,
+            "meanCf": 17.975240715268225
+          },
+          {
+            "coordinate": 3306,
+            "hex": 673,
+            "name": "Pusan",
+            "control": {
+              "n": 708,
+              "d": 730,
+              "rate": 0.9698630136986301
+            },
+            "friendlyEmpty": {
+              "n": 2,
+              "d": 708,
+              "rate": 0.002824858757062147
+            },
+            "meanGround": 1.0084745762711864,
+            "meanCf": 9.254237288135593
+          },
+          {
+            "coordinate": 2813,
+            "hex": 535,
+            "name": "Manila",
+            "control": {
+              "n": 496,
+              "d": 730,
+              "rate": 0.6794520547945205
+            },
+            "friendlyEmpty": {
+              "n": 2,
+              "d": 496,
+              "rate": 0.004032258064516129
+            },
+            "meanGround": 1.4879032258064515,
+            "meanCf": 11.850806451612904
+          },
+          {
+            "coordinate": 2915,
+            "hex": 566,
+            "name": "Davao",
+            "control": {
+              "n": 675,
+              "d": 730,
+              "rate": 0.9246575342465754
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 675,
+              "rate": 0
+            },
+            "meanGround": 1.3051851851851852,
+            "meanCf": 14.377777777777778
+          }
+        ]
+      },
+      "guardsT6Plus": {
+        "samples": 630,
+        "siteSamples": 8820,
+        "japanControl": {
+          "n": 7475,
+          "d": 8820,
+          "rate": 0.8475056689342404
+        },
+        "friendlyEmpty": {
+          "n": 15,
+          "d": 7475,
+          "rate": 0.002006688963210702
+        },
+        "meanGroundWhileControlled": 1.2275585284280937,
+        "meanCfWhileControlled": 10.888963210702341,
+        "bySite": [
+          {
+            "coordinate": 2909,
+            "hex": 560,
+            "name": "Tainan",
+            "control": {
+              "n": 630,
+              "d": 630,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 3,
+              "d": 630,
+              "rate": 0.004761904761904762
+            },
+            "meanGround": 1.373015873015873,
+            "meanCf": 11.653968253968253
+          },
+          {
+            "coordinate": 3009,
+            "hex": 589,
+            "name": "Taihoku",
+            "control": {
+              "n": 618,
+              "d": 630,
+              "rate": 0.9809523809523809
+            },
+            "friendlyEmpty": {
+              "n": 5,
+              "d": 618,
+              "rate": 0.008090614886731391
+            },
+            "meanGround": 1.0825242718446602,
+            "meanCf": 10.359223300970873
+          },
+          {
+            "coordinate": 3209,
+            "hex": 647,
+            "name": "Okinawa",
+            "control": {
+              "n": 628,
+              "d": 630,
+              "rate": 0.9968253968253968
+            },
+            "friendlyEmpty": {
+              "n": 1,
+              "d": 628,
+              "rate": 0.0015923566878980893
+            },
+            "meanGround": 1.1194267515923566,
+            "meanCf": 10.3328025477707
+          },
+          {
+            "coordinate": 3709,
+            "hex": 792,
+            "name": "Iwo Jima",
+            "control": {
+              "n": 577,
+              "d": 630,
+              "rate": 0.9158730158730158
+            },
+            "friendlyEmpty": {
+              "n": 3,
+              "d": 577,
+              "rate": 0.005199306759098787
+            },
+            "meanGround": 1.0363951473136914,
+            "meanCf": 9.493934142114385
+          },
+          {
+            "coordinate": 3813,
+            "hex": 825,
+            "name": "Saipan",
+            "control": {
+              "n": 576,
+              "d": 630,
+              "rate": 0.9142857142857143
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 576,
+              "rate": 0
+            },
+            "meanGround": 1.03125,
+            "meanCf": 9.203125
+          },
+          {
+            "coordinate": 3814,
+            "hex": 826,
+            "name": "Guam",
+            "control": {
+              "n": 538,
+              "d": 630,
+              "rate": 0.8539682539682539
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 538,
+              "rate": 0
+            },
+            "meanGround": 1.412639405204461,
+            "meanCf": 7.784386617100372
+          },
+          {
+            "coordinate": 3416,
+            "hex": 712,
+            "name": "Palau",
+            "control": {
+              "n": 182,
+              "d": 630,
+              "rate": 0.28888888888888886
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 182,
+              "rate": 0
+            },
+            "meanGround": 1.4945054945054945,
+            "meanCf": 12.384615384615385
+          },
+          {
+            "coordinate": 4017,
+            "hex": 887,
+            "name": "Truk",
+            "control": {
+              "n": 552,
+              "d": 630,
+              "rate": 0.8761904761904762
+            },
+            "friendlyEmpty": {
+              "n": 1,
+              "d": 552,
+              "rate": 0.0018115942028985507
+            },
+            "meanGround": 1.5778985507246377,
+            "meanCf": 11.268115942028986
+          },
+          {
+            "coordinate": 4415,
+            "hex": 1001,
+            "name": "Eniwetok",
+            "control": {
+              "n": 399,
+              "d": 630,
+              "rate": 0.6333333333333333
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 399,
+              "rate": 0
+            },
+            "meanGround": 1.0250626566416041,
+            "meanCf": 9.135338345864662
+          },
+          {
+            "coordinate": 4715,
+            "hex": 1088,
+            "name": "Kwajalein",
+            "control": {
+              "n": 559,
+              "d": 630,
+              "rate": 0.8873015873015873
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 559,
+              "rate": 0
+            },
+            "meanGround": 1.4257602862254024,
+            "meanCf": 6.411449016100179
+          },
+          {
+            "coordinate": 3305,
+            "hex": 672,
+            "name": "Seoul",
+            "control": {
+              "n": 627,
+              "d": 630,
+              "rate": 0.9952380952380953
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 627,
+              "rate": 0
+            },
+            "meanGround": 1,
+            "meanCf": 17.971291866028707
+          },
+          {
+            "coordinate": 3306,
+            "hex": 673,
+            "name": "Pusan",
+            "control": {
+              "n": 610,
+              "d": 630,
+              "rate": 0.9682539682539683
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 610,
+              "rate": 0
+            },
+            "meanGround": 1.0131147540983607,
+            "meanCf": 9.324590163934426
+          },
+          {
+            "coordinate": 2813,
+            "hex": 535,
+            "name": "Manila",
+            "control": {
+              "n": 404,
+              "d": 630,
+              "rate": 0.6412698412698413
+            },
+            "friendlyEmpty": {
+              "n": 2,
+              "d": 404,
+              "rate": 0.0049504950495049506
+            },
+            "meanGround": 1.5247524752475248,
+            "meanCf": 12.393564356435643
+          },
+          {
+            "coordinate": 2915,
+            "hex": 566,
+            "name": "Davao",
+            "control": {
+              "n": 575,
+              "d": 630,
+              "rate": 0.9126984126984127
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 575,
+              "rate": 0
+            },
+            "meanGround": 1.3513043478260869,
+            "meanCf": 14.833043478260869
+          }
+        ]
+      },
+      "guardPerGameT5Plus": {
+        "n": 50,
+        "min": 0,
+        "mean": 0.00968359397578939,
+        "median": 0.01,
+        "max": 0.04
+      },
+      "guardCaptures": {
+        "count": 155,
+        "preAttackKnown": 155,
+        "knownDefenseBuckets": {
+          "empty": 57,
+          "single": 90,
+          "multiple": 8
+        },
+        "bySite": [
+          {
+            "coordinate": 2909,
+            "hex": 560,
+            "name": "Tainan",
+            "captures": 0,
+            "known": 0,
+            "physical": {},
+            "ruleGround": {}
+          },
+          {
+            "coordinate": 3009,
+            "hex": 589,
+            "name": "Taihoku",
+            "captures": 1,
+            "known": 1,
+            "physical": {
+              "empty": 1
+            },
+            "ruleGround": {
+              "empty": 1
+            }
+          },
+          {
+            "coordinate": 3209,
+            "hex": 647,
+            "name": "Okinawa",
+            "captures": 1,
+            "known": 1,
+            "physical": {
+              "single": 1
+            },
+            "ruleGround": {
+              "single": 1
+            }
+          },
+          {
+            "coordinate": 3709,
+            "hex": 792,
+            "name": "Iwo Jima",
+            "captures": 4,
+            "known": 4,
+            "physical": {
+              "empty": 4
+            },
+            "ruleGround": {
+              "empty": 4
+            }
+          },
+          {
+            "coordinate": 3813,
+            "hex": 825,
+            "name": "Saipan",
+            "captures": 10,
+            "known": 10,
+            "physical": {
+              "single": 10
+            },
+            "ruleGround": {
+              "single": 10
+            }
+          },
+          {
+            "coordinate": 3814,
+            "hex": 826,
+            "name": "Guam",
+            "captures": 17,
+            "known": 17,
+            "physical": {
+              "single": 17
+            },
+            "ruleGround": {
+              "single": 17
+            }
+          },
+          {
+            "coordinate": 3416,
+            "hex": 712,
+            "name": "Palau",
+            "captures": 35,
+            "known": 35,
+            "physical": {
+              "empty": 35
+            },
+            "ruleGround": {
+              "empty": 35
+            }
+          },
+          {
+            "coordinate": 4017,
+            "hex": 887,
+            "name": "Truk",
+            "captures": 12,
+            "known": 12,
+            "physical": {
+              "single": 12
+            },
+            "ruleGround": {
+              "single": 12
+            }
+          },
+          {
+            "coordinate": 4415,
+            "hex": 1001,
+            "name": "Eniwetok",
+            "captures": 22,
+            "known": 22,
+            "physical": {
+              "empty": 16,
+              "single": 6
+            },
+            "ruleGround": {
+              "empty": 16,
+              "single": 6
+            }
+          },
+          {
+            "coordinate": 4715,
+            "hex": 1088,
+            "name": "Kwajalein",
+            "captures": 16,
+            "known": 16,
+            "physical": {
+              "single": 14,
+              "multiple": 2
+            },
+            "ruleGround": {
+              "single": 14,
+              "multiple": 2
+            }
+          },
+          {
+            "coordinate": 3305,
+            "hex": 672,
+            "name": "Seoul",
+            "captures": 1,
+            "known": 1,
+            "physical": {
+              "single": 1
+            },
+            "ruleGround": {
+              "single": 1
+            }
+          },
+          {
+            "coordinate": 3306,
+            "hex": 673,
+            "name": "Pusan",
+            "captures": 3,
+            "known": 3,
+            "physical": {
+              "empty": 1,
+              "single": 2
+            },
+            "ruleGround": {
+              "empty": 1,
+              "single": 2
+            }
+          },
+          {
+            "coordinate": 2813,
+            "hex": 535,
+            "name": "Manila",
+            "captures": 25,
+            "known": 25,
+            "physical": {
+              "single": 19,
+              "multiple": 6
+            },
+            "ruleGround": {
+              "single": 19,
+              "multiple": 6
+            }
+          },
+          {
+            "coordinate": 2915,
+            "hex": 566,
+            "name": "Davao",
+            "captures": 8,
+            "known": 8,
+            "physical": {
+              "single": 8
+            },
+            "ruleGround": {
+              "single": 8
+            }
+          }
+        ]
+      },
+      "central": {
+        "attempts": 190,
+        "declared": 72,
+        "actualLandings": 189,
+        "capturedLandings": {
+          "n": 162,
+          "d": 189,
+          "rate": 0.8571428571428571
+        },
+        "guardedAttempts": 72,
+        "guardedActualLandings": 71,
+        "ruleConfirmedGuardedLandings": 71,
+        "physicalOnlyGuardedLandings": 0,
+        "guardedTwoOriginLandings": 0,
+        "guardedCaptured": {
+          "n": 61,
+          "d": 71,
+          "rate": 0.8591549295774648
+        },
+        "guardedPureAirNaval": 1,
+        "twoOriginLandings": 0,
+        "gamesWithGuardedLanding": 35,
+        "bySite": [
+          {
+            "hex": 712,
+            "attempts": 44,
+            "declared": 1,
+            "landings": 44,
+            "guardedLandings": 1,
+            "guardedCaptured": 0,
+            "captured": 35
+          },
+          {
+            "hex": 769,
+            "attempts": 57,
+            "declared": 0,
+            "landings": 57,
+            "guardedLandings": 0,
+            "guardedCaptured": 0,
+            "captured": 50
+          },
+          {
+            "hex": 825,
+            "attempts": 12,
+            "declared": 12,
+            "landings": 12,
+            "guardedLandings": 12,
+            "guardedCaptured": 10,
+            "captured": 10
+          },
+          {
+            "hex": 826,
+            "attempts": 20,
+            "declared": 20,
+            "landings": 19,
+            "guardedLandings": 19,
+            "guardedCaptured": 17,
+            "captured": 17
+          },
+          {
+            "hex": 887,
+            "attempts": 12,
+            "declared": 12,
+            "landings": 12,
+            "guardedLandings": 12,
+            "guardedCaptured": 12,
+            "captured": 12
+          },
+          {
+            "hex": 1001,
+            "attempts": 25,
+            "declared": 7,
+            "landings": 25,
+            "guardedLandings": 7,
+            "guardedCaptured": 6,
+            "captured": 22
+          },
+          {
+            "hex": 1088,
+            "attempts": 20,
+            "declared": 20,
+            "landings": 20,
+            "guardedLandings": 20,
+            "guardedCaptured": 16,
+            "captured": 16
+          }
+        ],
+        "guardedLandingExamples": [
+          {
+            "offense": 197,
+            "hex": 826,
+            "turn": 10,
+            "firstAction": 1675,
+            "defense": {
+              "hex": 826,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 4,
+              "steps": 2,
+              "oosCount": 0,
+              "ids": [
+                29
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 4,
+              "source": "rule-query-before-action",
+              "turn": 10,
+              "action": 1675
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              165
+            ],
+            "origins": [
+              603
+            ],
+            "captured": false,
+            "seed": 20263801
+          },
+          {
+            "offense": 207,
+            "hex": 826,
+            "turn": 10,
+            "firstAction": 1784,
+            "defense": {
+              "hex": 826,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 4,
+              "steps": 2,
+              "oosCount": 0,
+              "ids": [
+                29
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 4,
+              "source": "rule-query-before-action",
+              "turn": 10,
+              "action": 1784
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              198
+            ],
+            "origins": [
+              732
+            ],
+            "captured": true,
+            "seed": 20263802
+          },
+          {
+            "offense": 200,
+            "hex": 887,
+            "turn": 10,
+            "firstAction": 1726,
+            "defense": {
+              "hex": 887,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 4,
+              "steps": 2,
+              "oosCount": 0,
+              "ids": [
+                29
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 4,
+              "source": "rule-query-before-action",
+              "turn": 10,
+              "action": 1726
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              166
+            ],
+            "origins": [
+              891
+            ],
+            "captured": true,
+            "seed": 20263803
+          },
+          {
+            "offense": 232,
+            "hex": 1088,
+            "turn": 11,
+            "firstAction": 1994,
+            "defense": {
+              "hex": 1088,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 2,
+              "steps": 1,
+              "oosCount": 0,
+              "ids": [
+                30
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 2,
+              "source": "rule-query-before-action",
+              "turn": 11,
+              "action": 1994
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              166
+            ],
+            "origins": [
+              887
+            ],
+            "captured": true,
+            "seed": 20263803
+          },
+          {
+            "offense": 177,
+            "hex": 825,
+            "turn": 9,
+            "firstAction": 1398,
+            "defense": {
+              "hex": 825,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 9,
+              "steps": 1,
+              "oosCount": 0,
+              "ids": [
+                42
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 9,
+              "source": "rule-query-before-action",
+              "turn": 9,
+              "action": 1398
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              191,
+              198
+            ],
+            "origins": [
+              769
+            ],
+            "captured": true,
+            "seed": 20263804
+          },
+          {
+            "offense": 218,
+            "hex": 826,
+            "turn": 10,
+            "firstAction": 1694,
+            "defense": {
+              "hex": 826,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 4,
+              "steps": 2,
+              "oosCount": 0,
+              "ids": [
+                28
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 4,
+              "source": "rule-query-before-action",
+              "turn": 10,
+              "action": 1694
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              193,
+              197
+            ],
+            "origins": [
+              712
+            ],
+            "captured": true,
+            "seed": 20263804
+          },
+          {
+            "offense": 207,
+            "hex": 887,
+            "turn": 10,
+            "firstAction": 1699,
+            "defense": {
+              "hex": 887,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 4,
+              "steps": 2,
+              "oosCount": 0,
+              "ids": [
+                29
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 4,
+              "source": "rule-query-before-action",
+              "turn": 10,
+              "action": 1699
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              202
+            ],
+            "origins": [
+              686
+            ],
+            "captured": true,
+            "seed": 20263805
+          },
+          {
+            "offense": 230,
+            "hex": 826,
+            "turn": 11,
+            "firstAction": 1944,
+            "defense": {
+              "hex": 826,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 4,
+              "steps": 2,
+              "oosCount": 0,
+              "ids": [
+                28
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 4,
+              "source": "rule-query-before-action",
+              "turn": 11,
+              "action": 1943
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              166
+            ],
+            "origins": [
+              712
+            ],
+            "captured": true,
+            "seed": 20263805
+          },
+          {
+            "offense": 150,
+            "hex": 826,
+            "turn": 8,
+            "firstAction": 1351,
+            "defense": {
+              "hex": 826,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 4,
+              "steps": 2,
+              "oosCount": 0,
+              "ids": [
+                29
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 4,
+              "source": "rule-query-before-action",
+              "turn": 8,
+              "action": 1350
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              196
+            ],
+            "origins": [
+              712
+            ],
+            "captured": true,
+            "seed": 20263806
+          },
+          {
+            "offense": 220,
+            "hex": 825,
+            "turn": 11,
+            "firstAction": 1993,
+            "defense": {
+              "hex": 825,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 9,
+              "steps": 1,
+              "oosCount": 0,
+              "ids": [
+                38
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 9,
+              "source": "rule-query-before-action",
+              "turn": 11,
+              "action": 1993
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              199,
+              202
+            ],
+            "origins": [
+              594
+            ],
+            "captured": true,
+            "seed": 20263806
+          }
+        ]
+      },
+      "softening": {
+        "declaredAttempts": 0,
+        "knownOutcomes": 0,
+        "reductions": 0,
+        "unknownOutcomes": 0,
+        "knownReductions": []
+      },
+      "blockade": {
+        "formalWins": 0,
+        "checks": 497,
+        "allDisconnectedChecks": 4,
+        "gamesEverAllDisconnected": 4,
+        "gamesEverStarted": 4,
+        "maxCompletedPhases": 1,
+        "resets": [
+          {
+            "seed": 20263821,
+            "previousStart": 10,
+            "turn": 11,
+            "nextStart": 0
+          }
+        ],
+        "disconnectedResourceCount": 319,
+        "connectedResourceFrequency": {
+          "Kuantan": 323,
+          "Harbin": 492,
+          "Mukden": 492,
+          "Seoul": 491,
+          "Miri": 327,
+          "Manila": 334,
+          "Tarakan": 185,
+          "Balikpapan": 176,
+          "Palembang": 206,
+          "Bangka": 188,
+          "Medan": 236,
+          "Soerabaja": 83
+        }
+      },
+      "nations": [
+        {
+          "name": "philippines",
+          "initiallySurrendered": 0,
+          "newSurrenderGames": 50,
+          "liberated": {
+            "n": 5,
+            "d": 50,
+            "rate": 0.1
+          },
+          "finalSurrendered": 45,
+          "firstLiberationTurn": {
+            "7": 2,
+            "9": 3
+          },
+          "finalMissingAlliedKeyCount": {
+            "0": 5,
+            "1": 20,
+            "2": 25
+          },
+          "missingAlliedKeyFrequency": {
+            "535": 28,
+            "566": 42
+          },
+          "allAlliedKeysButSurrendered": []
+        },
+        {
+          "name": "malaya",
+          "initiallySurrendered": 0,
+          "newSurrenderGames": 50,
+          "liberated": {
+            "n": 19,
+            "d": 50,
+            "rate": 0.38
+          },
+          "finalSurrendered": 31,
+          "firstLiberationTurn": {
+            "6": 2,
+            "7": 3,
+            "8": 5,
+            "9": 3,
+            "10": 4,
+            "11": 2
+          },
+          "finalMissingAlliedKeyCount": {
+            "0": 19,
+            "1": 14,
+            "2": 17
+          },
+          "missingAlliedKeyFrequency": {
+            "304": 20,
+            "305": 28
+          },
+          "allAlliedKeysButSurrendered": []
+        },
+        {
+          "name": "dei",
+          "initiallySurrendered": 0,
+          "newSurrenderGames": 3,
+          "liberated": {
+            "n": 0,
+            "d": 3,
+            "rate": 0
+          },
+          "finalSurrendered": 3,
+          "firstLiberationTurn": {},
+          "finalMissingAlliedKeyCount": {
+            "0": 1,
+            "1": 8,
+            "2": 8,
+            "3": 14,
+            "4": 6,
+            "5": 8,
+            "6": 3,
+            "7": 2
+          },
+          "missingAlliedKeyFrequency": {
+            "245": 19,
+            "277": 18,
+            "307": 15,
+            "309": 25,
+            "368": 12,
+            "421": 32,
+            "452": 19,
+            "480": 22
+          },
+          "allAlliedKeysButSurrendered": []
+        },
+        {
+          "name": "burma",
+          "initiallySurrendered": 0,
+          "newSurrenderGames": 0,
+          "liberated": {
+            "n": 0,
+            "d": 0,
+            "rate": null
+          },
+          "finalSurrendered": 0,
+          "firstLiberationTurn": {},
+          "finalMissingAlliedKeyCount": {
+            "0": 50
+          },
+          "missingAlliedKeyFrequency": {},
+          "allAlliedKeysButSurrendered": []
+        }
+      ],
+      "asp": [
+        {
+          "role": "Japan",
+          "cardWindows": 515,
+          "legal": {
+            "n": 515,
+            "min": 0,
+            "mean": 3.920388349514563,
+            "median": 4,
+            "max": 7
+          },
+          "legalZero": {
+            "n": 7,
+            "d": 515,
+            "rate": 0.013592233009708738
+          },
+          "rawOverstates": {
+            "n": 13,
+            "d": 515,
+            "rate": 0.02524271844660194
+          }
+        },
+        {
+          "role": "Allies",
+          "cardWindows": 515,
+          "legal": {
+            "n": 515,
+            "min": 1,
+            "mean": 5.720388349514563,
+            "median": 6,
+            "max": 11
+          },
+          "legalZero": {
+            "n": 0,
+            "d": 515,
+            "rate": 0
+          },
+          "rawOverstates": {
+            "n": 0,
+            "d": 515,
+            "rate": 0
+          }
+        }
+      ],
+      "planCounts": {
+        "Japan": {
+          "SOUTHERN_REINFORCE": 580,
+          "SOUTHERN_CONQUEST": 296,
+          "SOUTHERN_GARRISON": 138,
+          "PACIFIC_ISLAND_GARRISON": 2923,
+          "FORWARD_BASE": 94,
+          "RESOURCES": 207,
+          "SOUTHERN_ASSEMBLE": 4077,
+          "SOUTHERN_INVASION_ASSEMBLE": 50,
+          "SOUTHERN_ADVANCE": 227
+        },
+        "Allies": {
+          "ASSEMBLE_ESCORT": 6359,
+          "FORWARD_BASE": 270,
+          "GARRISON": 118,
+          "ASSEMBLE": 623,
+          "POW": 1789,
+          "AIR_SUPPORT_BASE": 931,
+          "BLOCKADE_AIR_SCREEN": 348,
+          "BLOCKADE_CLEAR_AIR": 53,
+          "HOMELAND": 63,
+          "HOMELAND_ASSEMBLE": 135,
+          "NATIONAL_LIBERATION": 16,
+          "RESOURCES": 12
+        }
+      },
+      "planBlockersTruncated": {
+        "Japan": {
+          "capture-probability-below-threshold": 7663,
+          "insufficient-air-sea-cover": 22981,
+          "insufficient-ground-reaction-cover": 5424,
+          "no-executable-southern-task": 807,
+          "planned-path-no-longer-legal": 1
+        },
+        "Allies": {
+          "no-playable-card": 262,
+          "capture-probability-below-threshold": 16682,
+          "insufficient-air-sea-cover": 25123,
+          "no-executable-capture-or-transport": 3238,
+          "planned-path-no-longer-legal": 7,
+          "no-legal-ground-under-hq": 208
+        }
+      },
+      "winners": [
+        {
+          "seed": 20263802,
+          "turn": 10,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 7,
+          "resources": 6,
+          "centralLandings": 3,
+          "guardedCentralLandings": 1,
+          "liberations": [],
+          "atomic": {
+            "met": false,
+            "turn": 10,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 6,
+            "jpResourceHexes": [
+              669,
+              670,
+              672,
+              535,
+              421,
+              480
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263807,
+          "turn": 10,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 5,
+          "resources": 4,
+          "centralLandings": 2,
+          "guardedCentralLandings": 0,
+          "liberations": [],
+          "atomic": {
+            "met": false,
+            "turn": 10,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 4,
+            "jpResourceHexes": [
+              669,
+              670,
+              672,
+              535
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263808,
+          "turn": 9,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 4,
+          "resources": 10,
+          "centralLandings": 2,
+          "guardedCentralLandings": 0,
+          "liberations": [],
+          "atomic": {
+            "met": false,
+            "turn": 9,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 10,
+            "jpResourceHexes": [
+              304,
+              669,
+              670,
+              672,
+              535,
+              245,
+              277,
+              307,
+              421,
+              480
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263812,
+          "turn": 11,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 5,
+          "resources": 7,
+          "centralLandings": 3,
+          "guardedCentralLandings": 1,
+          "liberations": [
+            {
+              "nation": "malaya",
+              "type": "liberation",
+              "turn": 6,
+              "action": 1069,
+              "source": "exact-national-status-exit"
+            }
+          ],
+          "atomic": {
+            "met": false,
+            "turn": 11,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 7,
+            "jpResourceHexes": [
+              669,
+              670,
+              672,
+              535,
+              277,
+              452,
+              368
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263813,
+          "turn": 11,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 6,
+          "resources": 6,
+          "centralLandings": 4,
+          "guardedCentralLandings": 1,
+          "liberations": [
+            {
+              "nation": "malaya",
+              "type": "liberation",
+              "turn": 10,
+              "action": 1899,
+              "source": "exact-national-status-exit"
+            }
+          ],
+          "atomic": {
+            "met": false,
+            "turn": 11,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 6,
+            "jpResourceHexes": [
+              669,
+              670,
+              672,
+              535,
+              421,
+              480
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263817,
+          "turn": 12,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 5,
+          "resources": 10,
+          "centralLandings": 3,
+          "guardedCentralLandings": 1,
+          "liberations": [],
+          "atomic": {
+            "met": false,
+            "turn": 12,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 10,
+            "jpResourceHexes": [
+              304,
+              669,
+              670,
+              672,
+              535,
+              245,
+              277,
+              307,
+              480,
+              452
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263818,
+          "turn": 10,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 4,
+          "resources": 8,
+          "centralLandings": 2,
+          "guardedCentralLandings": 0,
+          "liberations": [],
+          "atomic": {
+            "met": false,
+            "turn": 10,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 8,
+            "jpResourceHexes": [
+              669,
+              670,
+              672,
+              245,
+              277,
+              307,
+              421,
+              452
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263822,
+          "turn": 12,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 10,
+          "resources": 3,
+          "centralLandings": 2,
+          "guardedCentralLandings": 0,
+          "liberations": [
+            {
+              "nation": "philippines",
+              "type": "liberation",
+              "turn": 7,
+              "action": 1202,
+              "source": "exact-national-status-exit"
+            }
+          ],
+          "atomic": {
+            "met": false,
+            "turn": 12,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 3,
+            "jpResourceHexes": [
+              304,
+              672,
+              480
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263826,
+          "turn": 10,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 6,
+          "resources": 7,
+          "centralLandings": 2,
+          "guardedCentralLandings": 0,
+          "liberations": [],
+          "atomic": {
+            "met": false,
+            "turn": 10,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 7,
+            "jpResourceHexes": [
+              669,
+              670,
+              672,
+              535,
+              245,
+              421,
+              480
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263828,
+          "turn": 9,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 5,
+          "resources": 7,
+          "centralLandings": 2,
+          "guardedCentralLandings": 0,
+          "liberations": [
+            {
+              "nation": "malaya",
+              "type": "liberation",
+              "turn": 6,
+              "action": 1036,
+              "source": "exact-national-status-exit"
+            }
+          ],
+          "atomic": {
+            "met": false,
+            "turn": 9,
+            "noStrategicBombingFailure": false,
+            "bombingCampaignStart": 0,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 7,
+            "jpResourceHexes": [
+              669,
+              670,
+              672,
+              535,
+              245,
+              452,
+              368
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263829,
+          "turn": 10,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 6,
+          "resources": 7,
+          "centralLandings": 2,
+          "guardedCentralLandings": 0,
+          "liberations": [],
+          "atomic": {
+            "met": false,
+            "turn": 10,
+            "noStrategicBombingFailure": false,
+            "bombingCampaignStart": 10,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 7,
+            "jpResourceHexes": [
+              669,
+              670,
+              672,
+              535,
+              421,
+              480,
+              452
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263832,
+          "turn": 8,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 5,
+          "resources": 11,
+          "centralLandings": 3,
+          "guardedCentralLandings": 1,
+          "liberations": [],
+          "atomic": {
+            "met": false,
+            "turn": 8,
+            "noStrategicBombingFailure": false,
+            "bombingCampaignStart": 0,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": false,
+            "ruleVersion": "official-16.2",
+            "jpResources": 11,
+            "jpResourceHexes": [
+              304,
+              669,
+              670,
+              672,
+              535,
+              245,
+              277,
+              307,
+              421,
+              480,
+              452
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263835,
+          "turn": 10,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 4,
+          "resources": 11,
+          "centralLandings": 5,
+          "guardedCentralLandings": 3,
+          "liberations": [],
+          "atomic": {
+            "met": false,
+            "turn": 10,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 11,
+            "jpResourceHexes": [
+              304,
+              669,
+              670,
+              672,
+              535,
+              245,
+              277,
+              307,
+              421,
+              452,
+              368
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263837,
+          "turn": 11,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 8,
+          "resources": 7,
+          "centralLandings": 5,
+          "guardedCentralLandings": 2,
+          "liberations": [
+            {
+              "nation": "philippines",
+              "type": "liberation",
+              "turn": 9,
+              "action": 1579,
+              "source": "exact-national-status-exit"
+            },
+            {
+              "nation": "malaya",
+              "type": "liberation",
+              "turn": 9,
+              "action": 1579,
+              "source": "exact-national-status-exit"
+            }
+          ],
+          "atomic": {
+            "met": false,
+            "turn": 11,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 7,
+            "jpResourceHexes": [
+              669,
+              670,
+              672,
+              245,
+              277,
+              421,
+              480
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263839,
+          "turn": 12,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 7,
+          "resources": 9,
+          "centralLandings": 6,
+          "guardedCentralLandings": 4,
+          "liberations": [],
+          "atomic": {
+            "met": false,
+            "turn": 12,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 9,
+            "jpResourceHexes": [
+              304,
+              669,
+              670,
+              672,
+              535,
+              245,
+              277,
+              307,
+              368
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263846,
+          "turn": 9,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 5,
+          "resources": 10,
+          "centralLandings": 2,
+          "guardedCentralLandings": 0,
+          "liberations": [],
+          "atomic": {
+            "met": false,
+            "turn": 9,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 10,
+            "jpResourceHexes": [
+              304,
+              669,
+              670,
+              672,
+              245,
+              277,
+              307,
+              421,
+              480,
+              368
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263848,
+          "turn": 12,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 6,
+          "resources": 7,
+          "centralLandings": 4,
+          "guardedCentralLandings": 2,
+          "liberations": [],
+          "atomic": {
+            "met": false,
+            "turn": 12,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 7,
+            "jpResourceHexes": [
+              304,
+              669,
+              670,
+              672,
+              535,
+              421,
+              452
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263849,
+          "turn": 11,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 3,
+          "resources": 5,
+          "centralLandings": 2,
+          "guardedCentralLandings": 0,
+          "liberations": [],
+          "atomic": {
+            "met": false,
+            "turn": 11,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 5,
+            "jpResourceHexes": [
+              304,
+              669,
+              670,
+              672,
+              421
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        }
+      ]
+    },
+    "1943": {
+      "attempted": 50,
+      "legalNatural": 49,
+      "fullHashVerified": 50,
+      "eligible": 49,
+      "alliesWins": {
+        "successes": 3,
+        "n": 50,
+        "estimate": 0.06,
+        "low": 0.02061497034897397,
+        "high": 0.16217091688838173
+      },
+      "japanWins": 46,
+      "invalid": [
+        {
+          "seed": 20263931,
+          "status": "complete",
+          "reportedWinner": "Japan",
+          "verified": true,
+          "natural": true,
+          "fallback": 1,
+          "fallbackDetails": [
+            {
+              "role": "Japan",
+              "ordinal": 972,
+              "turn": 9,
+              "state": "move_offensive_units",
+              "prompt": "OC: 3 Ops. Move units (1/1).",
+              "action": "stop",
+              "node": "JP05-FALLBACK",
+              "legalActions": {
+                "stop": 1,
+                "barges": 1,
+                "move": 1,
+                "undo": 1
+              }
+            }
+          ],
+          "traceNodeMissing": 0,
+          "error": null
+        }
+      ],
+      "routes": {
+        "Japan did not surrender.": 46,
+        "Allies Victory - Japanese mainland islands captured.": 2,
+        "Japan surrenders by atomic bomb strategy.": 1
+      },
+      "winTurn": {
+        "11": 2,
+        "12": 1
+      },
+      "allEndTurn": {
+        "11": 2,
+        "12": 48
+      },
+      "actions": {
+        "n": 50,
+        "min": 1401,
+        "mean": 1621.92,
+        "median": 1629.5,
+        "max": 1878
+      },
+      "elapsedMs": {
+        "n": 50,
+        "min": 67189,
+        "mean": 90023.14,
+        "median": 89402.5,
+        "max": 127519
+      },
+      "pwMin": {
+        "n": 50,
+        "min": 2,
+        "mean": 4.08,
+        "median": 4,
+        "max": 6
+      },
+      "pwFinal": {
+        "n": 50,
+        "min": 4,
+        "mean": 7.66,
+        "median": 7.5,
+        "max": 10
+      },
+      "resourcesFinal": {
+        "n": 50,
+        "min": 1,
+        "mean": 5.04,
+        "median": 5,
+        "max": 11
+      },
+      "pow": {
+        "n": 364,
+        "d": 396,
+        "rate": 0.9191919191919192
+      },
+      "powGamesWithMiss": 24,
+      "amphibiousAllied": {
+        "committed": 1463,
+        "resolved": 1463,
+        "success": {
+          "n": 1400,
+          "d": 1463,
+          "rate": 0.9569377990430622
+        },
+        "includesUnopposed": true
+      },
+      "groundAttackAllied": {
+        "n": 411,
+        "d": 457,
+        "rate": 0.899343544857768
+      },
+      "guardsAll": {
+        "samples": 796,
+        "siteSamples": 11144,
+        "japanControl": {
+          "n": 11076,
+          "d": 11144,
+          "rate": 0.9938980617372577
+        },
+        "friendlyEmpty": {
+          "n": 936,
+          "d": 11076,
+          "rate": 0.08450704225352113
+        },
+        "meanGroundWhileControlled": 1.016612495485735,
+        "meanCfWhileControlled": 12.053990610328638,
+        "bySite": [
+          {
+            "coordinate": 2909,
+            "hex": 560,
+            "name": "Tainan",
+            "control": {
+              "n": 796,
+              "d": 796,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 100,
+              "d": 796,
+              "rate": 0.12562814070351758
+            },
+            "meanGround": 0.8919597989949749,
+            "meanCf": 8.638190954773869
+          },
+          {
+            "coordinate": 3009,
+            "hex": 589,
+            "name": "Taihoku",
+            "control": {
+              "n": 796,
+              "d": 796,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 124,
+              "d": 796,
+              "rate": 0.15577889447236182
+            },
+            "meanGround": 0.8442211055276382,
+            "meanCf": 8.638190954773869
+          },
+          {
+            "coordinate": 3209,
+            "hex": 647,
+            "name": "Okinawa",
+            "control": {
+              "n": 783,
+              "d": 796,
+              "rate": 0.9836683417085427
+            },
+            "friendlyEmpty": {
+              "n": 102,
+              "d": 783,
+              "rate": 0.13026819923371646
+            },
+            "meanGround": 0.8697318007662835,
+            "meanCf": 8.379310344827585
+          },
+          {
+            "coordinate": 3709,
+            "hex": 792,
+            "name": "Iwo Jima",
+            "control": {
+              "n": 796,
+              "d": 796,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 100,
+              "d": 796,
+              "rate": 0.12562814070351758
+            },
+            "meanGround": 0.8743718592964824,
+            "meanCf": 15.71608040201005
+          },
+          {
+            "coordinate": 3813,
+            "hex": 825,
+            "name": "Saipan",
+            "control": {
+              "n": 752,
+              "d": 796,
+              "rate": 0.9447236180904522
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 752,
+              "rate": 0
+            },
+            "meanGround": 1.023936170212766,
+            "meanCf": 9.417553191489361
+          },
+          {
+            "coordinate": 3814,
+            "hex": 826,
+            "name": "Guam",
+            "control": {
+              "n": 792,
+              "d": 796,
+              "rate": 0.9949748743718593
+            },
+            "friendlyEmpty": {
+              "n": 106,
+              "d": 792,
+              "rate": 0.13383838383838384
+            },
+            "meanGround": 1.3611111111111112,
+            "meanCf": 6.613636363636363
+          },
+          {
+            "coordinate": 3416,
+            "hex": 712,
+            "name": "Palau",
+            "control": {
+              "n": 796,
+              "d": 796,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 102,
+              "d": 796,
+              "rate": 0.12814070351758794
+            },
+            "meanGround": 1.0804020100502512,
+            "meanCf": 17.309045226130653
+          },
+          {
+            "coordinate": 4017,
+            "hex": 887,
+            "name": "Truk",
+            "control": {
+              "n": 796,
+              "d": 796,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 100,
+              "d": 796,
+              "rate": 0.12562814070351758
+            },
+            "meanGround": 0.9158291457286433,
+            "meanCf": 15.456030150753769
+          },
+          {
+            "coordinate": 4415,
+            "hex": 1001,
+            "name": "Eniwetok",
+            "control": {
+              "n": 792,
+              "d": 796,
+              "rate": 0.9949748743718593
+            },
+            "friendlyEmpty": {
+              "n": 100,
+              "d": 792,
+              "rate": 0.12626262626262627
+            },
+            "meanGround": 1.3042929292929293,
+            "meanCf": 7.723484848484849
+          },
+          {
+            "coordinate": 4715,
+            "hex": 1088,
+            "name": "Kwajalein",
+            "control": {
+              "n": 796,
+              "d": 796,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 796,
+              "rate": 0
+            },
+            "meanGround": 1.050251256281407,
+            "meanCf": 4.437185929648241
+          },
+          {
+            "coordinate": 3305,
+            "hex": 672,
+            "name": "Seoul",
+            "control": {
+              "n": 796,
+              "d": 796,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 796,
+              "rate": 0
+            },
+            "meanGround": 1,
+            "meanCf": 18
+          },
+          {
+            "coordinate": 3306,
+            "hex": 673,
+            "name": "Pusan",
+            "control": {
+              "n": 794,
+              "d": 796,
+              "rate": 0.9974874371859297
+            },
+            "friendlyEmpty": {
+              "n": 102,
+              "d": 794,
+              "rate": 0.12846347607052896
+            },
+            "meanGround": 0.9118387909319899,
+            "meanCf": 12.01007556675063
+          },
+          {
+            "coordinate": 2813,
+            "hex": 535,
+            "name": "Manila",
+            "control": {
+              "n": 795,
+              "d": 796,
+              "rate": 0.9987437185929648
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 795,
+              "rate": 0
+            },
+            "meanGround": 1.0025157232704403,
+            "meanCf": 17.89811320754717
+          },
+          {
+            "coordinate": 2915,
+            "hex": 566,
+            "name": "Davao",
+            "control": {
+              "n": 796,
+              "d": 796,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 796,
+              "rate": 0
+            },
+            "meanGround": 1.1030150753768844,
+            "meanCf": 18.271356783919597
+          }
+        ]
+      },
+      "guardsT5Plus": {
+        "samples": 796,
+        "siteSamples": 11144,
+        "japanControl": {
+          "n": 11076,
+          "d": 11144,
+          "rate": 0.9938980617372577
+        },
+        "friendlyEmpty": {
+          "n": 936,
+          "d": 11076,
+          "rate": 0.08450704225352113
+        },
+        "meanGroundWhileControlled": 1.016612495485735,
+        "meanCfWhileControlled": 12.053990610328638,
+        "bySite": [
+          {
+            "coordinate": 2909,
+            "hex": 560,
+            "name": "Tainan",
+            "control": {
+              "n": 796,
+              "d": 796,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 100,
+              "d": 796,
+              "rate": 0.12562814070351758
+            },
+            "meanGround": 0.8919597989949749,
+            "meanCf": 8.638190954773869
+          },
+          {
+            "coordinate": 3009,
+            "hex": 589,
+            "name": "Taihoku",
+            "control": {
+              "n": 796,
+              "d": 796,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 124,
+              "d": 796,
+              "rate": 0.15577889447236182
+            },
+            "meanGround": 0.8442211055276382,
+            "meanCf": 8.638190954773869
+          },
+          {
+            "coordinate": 3209,
+            "hex": 647,
+            "name": "Okinawa",
+            "control": {
+              "n": 783,
+              "d": 796,
+              "rate": 0.9836683417085427
+            },
+            "friendlyEmpty": {
+              "n": 102,
+              "d": 783,
+              "rate": 0.13026819923371646
+            },
+            "meanGround": 0.8697318007662835,
+            "meanCf": 8.379310344827585
+          },
+          {
+            "coordinate": 3709,
+            "hex": 792,
+            "name": "Iwo Jima",
+            "control": {
+              "n": 796,
+              "d": 796,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 100,
+              "d": 796,
+              "rate": 0.12562814070351758
+            },
+            "meanGround": 0.8743718592964824,
+            "meanCf": 15.71608040201005
+          },
+          {
+            "coordinate": 3813,
+            "hex": 825,
+            "name": "Saipan",
+            "control": {
+              "n": 752,
+              "d": 796,
+              "rate": 0.9447236180904522
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 752,
+              "rate": 0
+            },
+            "meanGround": 1.023936170212766,
+            "meanCf": 9.417553191489361
+          },
+          {
+            "coordinate": 3814,
+            "hex": 826,
+            "name": "Guam",
+            "control": {
+              "n": 792,
+              "d": 796,
+              "rate": 0.9949748743718593
+            },
+            "friendlyEmpty": {
+              "n": 106,
+              "d": 792,
+              "rate": 0.13383838383838384
+            },
+            "meanGround": 1.3611111111111112,
+            "meanCf": 6.613636363636363
+          },
+          {
+            "coordinate": 3416,
+            "hex": 712,
+            "name": "Palau",
+            "control": {
+              "n": 796,
+              "d": 796,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 102,
+              "d": 796,
+              "rate": 0.12814070351758794
+            },
+            "meanGround": 1.0804020100502512,
+            "meanCf": 17.309045226130653
+          },
+          {
+            "coordinate": 4017,
+            "hex": 887,
+            "name": "Truk",
+            "control": {
+              "n": 796,
+              "d": 796,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 100,
+              "d": 796,
+              "rate": 0.12562814070351758
+            },
+            "meanGround": 0.9158291457286433,
+            "meanCf": 15.456030150753769
+          },
+          {
+            "coordinate": 4415,
+            "hex": 1001,
+            "name": "Eniwetok",
+            "control": {
+              "n": 792,
+              "d": 796,
+              "rate": 0.9949748743718593
+            },
+            "friendlyEmpty": {
+              "n": 100,
+              "d": 792,
+              "rate": 0.12626262626262627
+            },
+            "meanGround": 1.3042929292929293,
+            "meanCf": 7.723484848484849
+          },
+          {
+            "coordinate": 4715,
+            "hex": 1088,
+            "name": "Kwajalein",
+            "control": {
+              "n": 796,
+              "d": 796,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 796,
+              "rate": 0
+            },
+            "meanGround": 1.050251256281407,
+            "meanCf": 4.437185929648241
+          },
+          {
+            "coordinate": 3305,
+            "hex": 672,
+            "name": "Seoul",
+            "control": {
+              "n": 796,
+              "d": 796,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 796,
+              "rate": 0
+            },
+            "meanGround": 1,
+            "meanCf": 18
+          },
+          {
+            "coordinate": 3306,
+            "hex": 673,
+            "name": "Pusan",
+            "control": {
+              "n": 794,
+              "d": 796,
+              "rate": 0.9974874371859297
+            },
+            "friendlyEmpty": {
+              "n": 102,
+              "d": 794,
+              "rate": 0.12846347607052896
+            },
+            "meanGround": 0.9118387909319899,
+            "meanCf": 12.01007556675063
+          },
+          {
+            "coordinate": 2813,
+            "hex": 535,
+            "name": "Manila",
+            "control": {
+              "n": 795,
+              "d": 796,
+              "rate": 0.9987437185929648
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 795,
+              "rate": 0
+            },
+            "meanGround": 1.0025157232704403,
+            "meanCf": 17.89811320754717
+          },
+          {
+            "coordinate": 2915,
+            "hex": 566,
+            "name": "Davao",
+            "control": {
+              "n": 796,
+              "d": 796,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 796,
+              "rate": 0
+            },
+            "meanGround": 1.1030150753768844,
+            "meanCf": 18.271356783919597
+          }
+        ]
+      },
+      "guardsT6Plus": {
+        "samples": 696,
+        "siteSamples": 9744,
+        "japanControl": {
+          "n": 9676,
+          "d": 9744,
+          "rate": 0.9930213464696224
+        },
+        "friendlyEmpty": {
+          "n": 36,
+          "d": 9676,
+          "rate": 0.0037205456800330715
+        },
+        "meanGroundWhileControlled": 1.1120297643654402,
+        "meanCfWhileControlled": 13.105622157916494,
+        "bySite": [
+          {
+            "coordinate": 2909,
+            "hex": 560,
+            "name": "Tainan",
+            "control": {
+              "n": 696,
+              "d": 696,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 696,
+              "rate": 0
+            },
+            "meanGround": 1.0201149425287357,
+            "meanCf": 9.879310344827585
+          },
+          {
+            "coordinate": 3009,
+            "hex": 589,
+            "name": "Taihoku",
+            "control": {
+              "n": 696,
+              "d": 696,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 24,
+              "d": 696,
+              "rate": 0.034482758620689655
+            },
+            "meanGround": 0.9655172413793104,
+            "meanCf": 9.879310344827585
+          },
+          {
+            "coordinate": 3209,
+            "hex": 647,
+            "name": "Okinawa",
+            "control": {
+              "n": 683,
+              "d": 696,
+              "rate": 0.9813218390804598
+            },
+            "friendlyEmpty": {
+              "n": 2,
+              "d": 683,
+              "rate": 0.0029282576866764276
+            },
+            "meanGround": 0.9970717423133236,
+            "meanCf": 9.60614934114202
+          },
+          {
+            "coordinate": 3709,
+            "hex": 792,
+            "name": "Iwo Jima",
+            "control": {
+              "n": 696,
+              "d": 696,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 696,
+              "rate": 0
+            },
+            "meanGround": 1,
+            "meanCf": 17.974137931034484
+          },
+          {
+            "coordinate": 3813,
+            "hex": 825,
+            "name": "Saipan",
+            "control": {
+              "n": 652,
+              "d": 696,
+              "rate": 0.9367816091954023
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 652,
+              "rate": 0
+            },
+            "meanGround": 1.0276073619631902,
+            "meanCf": 9.48159509202454
+          },
+          {
+            "coordinate": 3814,
+            "hex": 826,
+            "name": "Guam",
+            "control": {
+              "n": 692,
+              "d": 696,
+              "rate": 0.9942528735632183
+            },
+            "friendlyEmpty": {
+              "n": 6,
+              "d": 692,
+              "rate": 0.008670520231213872
+            },
+            "meanGround": 1.5578034682080926,
+            "meanCf": 7.569364161849711
+          },
+          {
+            "coordinate": 3416,
+            "hex": 712,
+            "name": "Palau",
+            "control": {
+              "n": 696,
+              "d": 696,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 2,
+              "d": 696,
+              "rate": 0.0028735632183908046
+            },
+            "meanGround": 1.235632183908046,
+            "meanCf": 19.79597701149425
+          },
+          {
+            "coordinate": 4017,
+            "hex": 887,
+            "name": "Truk",
+            "control": {
+              "n": 696,
+              "d": 696,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 696,
+              "rate": 0
+            },
+            "meanGround": 1.0474137931034482,
+            "meanCf": 17.676724137931036
+          },
+          {
+            "coordinate": 4415,
+            "hex": 1001,
+            "name": "Eniwetok",
+            "control": {
+              "n": 692,
+              "d": 696,
+              "rate": 0.9942528735632183
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 692,
+              "rate": 0
+            },
+            "meanGround": 1.4927745664739884,
+            "meanCf": 8.839595375722544
+          },
+          {
+            "coordinate": 4715,
+            "hex": 1088,
+            "name": "Kwajalein",
+            "control": {
+              "n": 696,
+              "d": 696,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 696,
+              "rate": 0
+            },
+            "meanGround": 1.0574712643678161,
+            "meanCf": 4.5
+          },
+          {
+            "coordinate": 3305,
+            "hex": 672,
+            "name": "Seoul",
+            "control": {
+              "n": 696,
+              "d": 696,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 696,
+              "rate": 0
+            },
+            "meanGround": 1,
+            "meanCf": 18
+          },
+          {
+            "coordinate": 3306,
+            "hex": 673,
+            "name": "Pusan",
+            "control": {
+              "n": 694,
+              "d": 696,
+              "rate": 0.9971264367816092
+            },
+            "friendlyEmpty": {
+              "n": 2,
+              "d": 694,
+              "rate": 0.002881844380403458
+            },
+            "meanGround": 1.043227665706052,
+            "meanCf": 13.740634005763688
+          },
+          {
+            "coordinate": 2813,
+            "hex": 535,
+            "name": "Manila",
+            "control": {
+              "n": 695,
+              "d": 696,
+              "rate": 0.9985632183908046
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 695,
+              "rate": 0
+            },
+            "meanGround": 1.0028776978417266,
+            "meanCf": 17.883453237410073
+          },
+          {
+            "coordinate": 2915,
+            "hex": 566,
+            "name": "Davao",
+            "control": {
+              "n": 696,
+              "d": 696,
+              "rate": 1
+            },
+            "friendlyEmpty": {
+              "n": 0,
+              "d": 696,
+              "rate": 0
+            },
+            "meanGround": 1.117816091954023,
+            "meanCf": 18.310344827586206
+          }
+        ]
+      },
+      "guardPerGameT5Plus": {
+        "n": 50,
+        "min": 0.08035714285714286,
+        "mean": 0.08457575886622257,
+        "median": 0.08219349457881568,
+        "max": 0.09693877551020408
+      },
+      "guardCaptures": {
+        "count": 20,
+        "preAttackKnown": 20,
+        "knownDefenseBuckets": {
+          "multiple": 2,
+          "single": 18
+        },
+        "bySite": [
+          {
+            "coordinate": 2909,
+            "hex": 560,
+            "name": "Tainan",
+            "captures": 0,
+            "known": 0,
+            "physical": {},
+            "ruleGround": {}
+          },
+          {
+            "coordinate": 3009,
+            "hex": 589,
+            "name": "Taihoku",
+            "captures": 0,
+            "known": 0,
+            "physical": {},
+            "ruleGround": {}
+          },
+          {
+            "coordinate": 3209,
+            "hex": 647,
+            "name": "Okinawa",
+            "captures": 2,
+            "known": 2,
+            "physical": {
+              "single": 2
+            },
+            "ruleGround": {
+              "single": 2
+            }
+          },
+          {
+            "coordinate": 3709,
+            "hex": 792,
+            "name": "Iwo Jima",
+            "captures": 0,
+            "known": 0,
+            "physical": {},
+            "ruleGround": {}
+          },
+          {
+            "coordinate": 3813,
+            "hex": 825,
+            "name": "Saipan",
+            "captures": 7,
+            "known": 7,
+            "physical": {
+              "single": 7
+            },
+            "ruleGround": {
+              "single": 7
+            }
+          },
+          {
+            "coordinate": 3814,
+            "hex": 826,
+            "name": "Guam",
+            "captures": 4,
+            "known": 4,
+            "physical": {
+              "multiple": 2,
+              "single": 2
+            },
+            "ruleGround": {
+              "multiple": 2,
+              "single": 2
+            }
+          },
+          {
+            "coordinate": 3416,
+            "hex": 712,
+            "name": "Palau",
+            "captures": 0,
+            "known": 0,
+            "physical": {},
+            "ruleGround": {}
+          },
+          {
+            "coordinate": 4017,
+            "hex": 887,
+            "name": "Truk",
+            "captures": 0,
+            "known": 0,
+            "physical": {},
+            "ruleGround": {}
+          },
+          {
+            "coordinate": 4415,
+            "hex": 1001,
+            "name": "Eniwetok",
+            "captures": 2,
+            "known": 2,
+            "physical": {
+              "single": 2
+            },
+            "ruleGround": {
+              "single": 2
+            }
+          },
+          {
+            "coordinate": 4715,
+            "hex": 1088,
+            "name": "Kwajalein",
+            "captures": 1,
+            "known": 1,
+            "physical": {
+              "single": 1
+            },
+            "ruleGround": {
+              "single": 1
+            }
+          },
+          {
+            "coordinate": 3305,
+            "hex": 672,
+            "name": "Seoul",
+            "captures": 0,
+            "known": 0,
+            "physical": {},
+            "ruleGround": {}
+          },
+          {
+            "coordinate": 3306,
+            "hex": 673,
+            "name": "Pusan",
+            "captures": 1,
+            "known": 1,
+            "physical": {
+              "single": 1
+            },
+            "ruleGround": {
+              "single": 1
+            }
+          },
+          {
+            "coordinate": 2813,
+            "hex": 535,
+            "name": "Manila",
+            "captures": 3,
+            "known": 3,
+            "physical": {
+              "single": 3
+            },
+            "ruleGround": {
+              "single": 3
+            }
+          },
+          {
+            "coordinate": 2915,
+            "hex": 566,
+            "name": "Davao",
+            "captures": 0,
+            "known": 0,
+            "physical": {},
+            "ruleGround": {}
+          }
+        ]
+      },
+      "central": {
+        "attempts": 84,
+        "declared": 36,
+        "actualLandings": 66,
+        "capturedLandings": {
+          "n": 55,
+          "d": 66,
+          "rate": 0.8333333333333334
+        },
+        "guardedAttempts": 36,
+        "guardedActualLandings": 18,
+        "ruleConfirmedGuardedLandings": 16,
+        "physicalOnlyGuardedLandings": 2,
+        "guardedTwoOriginLandings": 6,
+        "guardedCaptured": {
+          "n": 14,
+          "d": 18,
+          "rate": 0.7777777777777778
+        },
+        "guardedPureAirNaval": 18,
+        "twoOriginLandings": 6,
+        "gamesWithGuardedLanding": 14,
+        "bySite": [
+          {
+            "hex": 712,
+            "attempts": 1,
+            "declared": 1,
+            "landings": 0,
+            "guardedLandings": 0,
+            "guardedCaptured": 0,
+            "captured": 0
+          },
+          {
+            "hex": 769,
+            "attempts": 48,
+            "declared": 0,
+            "landings": 48,
+            "guardedLandings": 0,
+            "guardedCaptured": 0,
+            "captured": 41
+          },
+          {
+            "hex": 825,
+            "attempts": 13,
+            "declared": 13,
+            "landings": 11,
+            "guardedLandings": 11,
+            "guardedCaptured": 7,
+            "captured": 7
+          },
+          {
+            "hex": 826,
+            "attempts": 4,
+            "declared": 4,
+            "landings": 4,
+            "guardedLandings": 4,
+            "guardedCaptured": 4,
+            "captured": 4
+          },
+          {
+            "hex": 887,
+            "attempts": 0,
+            "declared": 0,
+            "landings": 0,
+            "guardedLandings": 0,
+            "guardedCaptured": 0,
+            "captured": 0
+          },
+          {
+            "hex": 1001,
+            "attempts": 17,
+            "declared": 17,
+            "landings": 2,
+            "guardedLandings": 2,
+            "guardedCaptured": 2,
+            "captured": 2
+          },
+          {
+            "hex": 1088,
+            "attempts": 1,
+            "declared": 1,
+            "landings": 1,
+            "guardedLandings": 1,
+            "guardedCaptured": 1,
+            "captured": 1
+          }
+        ],
+        "guardedLandingExamples": [
+          {
+            "offense": 177,
+            "hex": 826,
+            "turn": 11,
+            "firstAction": 1354,
+            "defense": {
+              "hex": 826,
+              "japanControlled": true,
+              "groundCount": 2,
+              "cf": 4,
+              "steps": 2,
+              "oosCount": 0,
+              "ids": [
+                27,
+                30
+              ],
+              "ruleGroundCount": 2,
+              "ruleCf": 4,
+              "source": "rule-query-before-action",
+              "turn": 11,
+              "action": 1353
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              166
+            ],
+            "origins": [
+              891
+            ],
+            "captured": true,
+            "seed": 20263902
+          },
+          {
+            "offense": 152,
+            "hex": 825,
+            "turn": 10,
+            "firstAction": 1237,
+            "defense": {
+              "hex": 825,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 9,
+              "steps": 1,
+              "oosCount": 0,
+              "ids": [
+                66
+              ],
+              "source": "physical-public-pieces-before-action",
+              "ruleGroundCount": null,
+              "ruleCf": null
+            },
+            "objective": null,
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              195
+            ],
+            "origins": [
+              740
+            ],
+            "captured": false,
+            "seed": 20263906
+          },
+          {
+            "offense": 103,
+            "hex": 825,
+            "turn": 8,
+            "firstAction": 855,
+            "defense": {
+              "hex": 825,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 9,
+              "steps": 1,
+              "oosCount": 0,
+              "ids": [
+                66
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 9,
+              "source": "rule-query-before-action",
+              "turn": 8,
+              "action": 855
+            },
+            "objective": "FORWARD_BASE",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              195,
+              196
+            ],
+            "origins": [
+              769
+            ],
+            "captured": true,
+            "seed": 20263913
+          },
+          {
+            "offense": 172,
+            "hex": 826,
+            "turn": 11,
+            "firstAction": 1260,
+            "defense": {
+              "hex": 826,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 4,
+              "steps": 2,
+              "oosCount": 0,
+              "ids": [
+                27
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 4,
+              "source": "rule-query-before-action",
+              "turn": 11,
+              "action": 1259
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              199
+            ],
+            "origins": [
+              769
+            ],
+            "captured": true,
+            "seed": 20263918
+          },
+          {
+            "offense": 89,
+            "hex": 825,
+            "turn": 8,
+            "firstAction": 625,
+            "defense": {
+              "hex": 825,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 9,
+              "steps": 1,
+              "oosCount": 0,
+              "ids": [
+                66
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 9,
+              "source": "rule-query-before-action",
+              "turn": 8,
+              "action": 625
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              195,
+              196
+            ],
+            "origins": [
+              512,
+              769
+            ],
+            "captured": true,
+            "seed": 20263920
+          },
+          {
+            "offense": 136,
+            "hex": 825,
+            "turn": 10,
+            "firstAction": 1015,
+            "defense": {
+              "hex": 825,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 9,
+              "steps": 1,
+              "oosCount": 0,
+              "ids": [
+                66
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 9,
+              "source": "rule-query-before-action",
+              "turn": 10,
+              "action": 1015
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              202,
+              195
+            ],
+            "origins": [
+              686,
+              803
+            ],
+            "captured": false,
+            "seed": 20263921
+          },
+          {
+            "offense": 183,
+            "hex": 1088,
+            "turn": 12,
+            "firstAction": 1478,
+            "defense": {
+              "hex": 1088,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 4,
+              "steps": 2,
+              "oosCount": 0,
+              "ids": [
+                29
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 4,
+              "source": "rule-query-before-action",
+              "turn": 12,
+              "action": 1477
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              199
+            ],
+            "origins": [
+              769
+            ],
+            "captured": true,
+            "seed": 20263924
+          },
+          {
+            "offense": 117,
+            "hex": 825,
+            "turn": 9,
+            "firstAction": 995,
+            "defense": {
+              "hex": 825,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 9,
+              "steps": 1,
+              "oosCount": 0,
+              "ids": [
+                66
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 9,
+              "source": "rule-query-before-action",
+              "turn": 9,
+              "action": 995
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              205,
+              202
+            ],
+            "origins": [
+              834,
+              835
+            ],
+            "captured": true,
+            "seed": 20263925
+          },
+          {
+            "offense": 203,
+            "hex": 826,
+            "turn": 12,
+            "firstAction": 1681,
+            "defense": {
+              "hex": 826,
+              "japanControlled": true,
+              "groundCount": 2,
+              "cf": 5,
+              "steps": 2,
+              "oosCount": 0,
+              "ids": [
+                30,
+                31
+              ],
+              "ruleGroundCount": 2,
+              "ruleCf": 5,
+              "source": "rule-query-before-action",
+              "turn": 12,
+              "action": 1680
+            },
+            "objective": "FORWARD_BASE",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              196
+            ],
+            "origins": [
+              825
+            ],
+            "captured": true,
+            "seed": 20263925
+          },
+          {
+            "offense": 114,
+            "hex": 825,
+            "turn": 9,
+            "firstAction": 902,
+            "defense": {
+              "hex": 825,
+              "japanControlled": true,
+              "groundCount": 1,
+              "cf": 9,
+              "steps": 1,
+              "oosCount": 0,
+              "ids": [
+                66
+              ],
+              "ruleGroundCount": 1,
+              "ruleCf": 9,
+              "source": "rule-query-before-action",
+              "turn": 9,
+              "action": 902
+            },
+            "objective": "POW",
+            "softeningGoal": null,
+            "declared": true,
+            "landed": true,
+            "groundIds": [
+              195,
+              198
+            ],
+            "origins": [
+              769
+            ],
+            "captured": true,
+            "seed": 20263929
+          }
+        ]
+      },
+      "softening": {
+        "declaredAttempts": 1,
+        "knownOutcomes": 1,
+        "reductions": 1,
+        "unknownOutcomes": 0,
+        "knownReductions": [
+          {
+            "hex": 535,
+            "turn": 11,
+            "action": 1395,
+            "beforeCf": 18,
+            "afterCf": 9,
+            "actualReduction": true,
+            "enemyControlRemains": true,
+            "seed": 20263904
+          }
+        ]
+      },
+      "blockade": {
+        "formalWins": 0,
+        "checks": 396,
+        "allDisconnectedChecks": 2,
+        "gamesEverAllDisconnected": 1,
+        "gamesEverStarted": 1,
+        "maxCompletedPhases": 2,
+        "resets": [],
+        "disconnectedResourceCount": 80,
+        "connectedResourceFrequency": {
+          "Rangoon": 202,
+          "Kuantan": 297,
+          "Harbin": 327,
+          "Mukden": 327,
+          "Seoul": 394,
+          "Manila": 384,
+          "Palembang": 161,
+          "Bangka": 315,
+          "Miri": 245,
+          "Tarakan": 178,
+          "Balikpapan": 121,
+          "Soerabaja": 190,
+          "Vogelkop": 84
+        }
+      },
+      "nations": [
+        {
+          "name": "philippines",
+          "initiallySurrendered": 50,
+          "newSurrenderGames": 0,
+          "liberated": {
+            "n": 0,
+            "d": 50,
+            "rate": 0
+          },
+          "finalSurrendered": 50,
+          "firstLiberationTurn": {},
+          "finalMissingAlliedKeyCount": {
+            "1": 3,
+            "2": 47
+          },
+          "missingAlliedKeyFrequency": {
+            "535": 47,
+            "566": 50
+          },
+          "allAlliedKeysButSurrendered": []
+        },
+        {
+          "name": "malaya",
+          "initiallySurrendered": 50,
+          "newSurrenderGames": 0,
+          "liberated": {
+            "n": 10,
+            "d": 50,
+            "rate": 0.2
+          },
+          "finalSurrendered": 40,
+          "firstLiberationTurn": {
+            "8": 1,
+            "9": 2,
+            "12": 7
+          },
+          "finalMissingAlliedKeyCount": {
+            "0": 10,
+            "1": 21,
+            "2": 19
+          },
+          "missingAlliedKeyFrequency": {
+            "304": 19,
+            "305": 40
+          },
+          "allAlliedKeysButSurrendered": []
+        },
+        {
+          "name": "dei",
+          "initiallySurrendered": 50,
+          "newSurrenderGames": 0,
+          "liberated": {
+            "n": 18,
+            "d": 50,
+            "rate": 0.36
+          },
+          "finalSurrendered": 32,
+          "firstLiberationTurn": {
+            "9": 1,
+            "10": 2,
+            "11": 6,
+            "12": 9
+          },
+          "finalMissingAlliedKeyCount": {
+            "0": 18,
+            "1": 11,
+            "2": 10,
+            "3": 3,
+            "4": 4,
+            "5": 2,
+            "6": 2
+          },
+          "missingAlliedKeyFrequency": {
+            "277": 11,
+            "307": 23,
+            "309": 16,
+            "368": 10,
+            "421": 10,
+            "452": 2,
+            "480": 6
+          },
+          "allAlliedKeysButSurrendered": []
+        },
+        {
+          "name": "burma",
+          "initiallySurrendered": 50,
+          "newSurrenderGames": 0,
+          "liberated": {
+            "n": 30,
+            "d": 50,
+            "rate": 0.6
+          },
+          "finalSurrendered": 20,
+          "firstLiberationTurn": {
+            "6": 2,
+            "7": 13,
+            "8": 4,
+            "9": 4,
+            "10": 2,
+            "11": 4,
+            "12": 1
+          },
+          "finalMissingAlliedKeyCount": {
+            "0": 30,
+            "1": 11,
+            "2": 7,
+            "3": 2
+          },
+          "missingAlliedKeyFrequency": {
+            "298": 13,
+            "325": 10,
+            "354": 3,
+            "382": 5
+          },
+          "allAlliedKeysButSurrendered": []
+        }
+      ],
+      "asp": [
+        {
+          "role": "Japan",
+          "cardWindows": 398,
+          "legal": {
+            "n": 398,
+            "min": 0,
+            "mean": 2.763819095477387,
+            "median": 3,
+            "max": 7
+          },
+          "legalZero": {
+            "n": 1,
+            "d": 398,
+            "rate": 0.002512562814070352
+          },
+          "rawOverstates": {
+            "n": 191,
+            "d": 398,
+            "rate": 0.4798994974874372
+          }
+        },
+        {
+          "role": "Allies",
+          "cardWindows": 398,
+          "legal": {
+            "n": 398,
+            "min": 4,
+            "mean": 7.484924623115578,
+            "median": 7,
+            "max": 12
+          },
+          "legalZero": {
+            "n": 0,
+            "d": 398,
+            "rate": 0
+          },
+          "rawOverstates": {
+            "n": 0,
+            "d": 398,
+            "rate": 0
+          }
+        }
+      ],
+      "planCounts": {
+        "Japan": {
+          "PACIFIC_ISLAND_GARRISON": 1234
+        },
+        "Allies": {
+          "POW": 2112,
+          "ASSEMBLE_ESCORT": 2849,
+          "ASSEMBLE": 437,
+          "NATIONAL_LIBERATION": 200,
+          "BLOCKADE_AIR_SCREEN": 207,
+          "HOMELAND": 54,
+          "HOMELAND_ASSEMBLE": 175,
+          "AIR_SUPPORT_BASE": 622,
+          "GARRISON": 89,
+          "BLOCKADE_CLEAR_AIR": 24,
+          "FORWARD_BASE": 373,
+          "GROUND_SOFTEN": 1,
+          "RESOURCE_ASSEMBLE": 10,
+          "RESOURCES": 4,
+          "B29_DEPLOYMENT": 6
+        }
+      },
+      "planBlockersTruncated": {
+        "Japan": {
+          "no-executable-southern-task": 2770
+        },
+        "Allies": {
+          "insufficient-air-sea-cover": 13982,
+          "capture-probability-below-threshold": 18682,
+          "no-playable-card": 615,
+          "no-executable-capture-or-transport": 3681,
+          "no-legal-ground-under-hq": 1011,
+          "planned-path-no-longer-legal": 3
+        }
+      },
+      "winners": [
+        {
+          "seed": 20263907,
+          "turn": 11,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 4,
+          "resources": 11,
+          "centralLandings": 1,
+          "guardedCentralLandings": 0,
+          "liberations": [],
+          "atomic": {
+            "met": false,
+            "turn": 11,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 11,
+            "jpResourceHexes": [
+              298,
+              304,
+              669,
+              670,
+              672,
+              535,
+              277,
+              307,
+              421,
+              480,
+              368
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263917,
+          "turn": 11,
+          "end": "Allies Victory - Japanese mainland islands captured.",
+          "pw": 5,
+          "resources": 9,
+          "centralLandings": 1,
+          "guardedCentralLandings": 0,
+          "liberations": [
+            {
+              "nation": "burma",
+              "type": "liberation",
+              "turn": 7,
+              "action": 529,
+              "source": "exact-national-status-exit"
+            }
+          ],
+          "atomic": {
+            "met": false,
+            "turn": 11,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 9,
+            "jpResourceHexes": [
+              669,
+              670,
+              672,
+              535,
+              277,
+              307,
+              421,
+              480,
+              368
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": false
+          }
+        },
+        {
+          "seed": 20263921,
+          "turn": 12,
+          "end": "Japan surrenders by atomic bomb strategy.",
+          "pw": 9,
+          "resources": 1,
+          "centralLandings": 2,
+          "guardedCentralLandings": 1,
+          "liberations": [
+            {
+              "nation": "burma",
+              "type": "liberation",
+              "turn": 7,
+              "action": 620,
+              "source": "exact-national-status-exit"
+            },
+            {
+              "nation": "malaya",
+              "type": "liberation",
+              "turn": 8,
+              "action": 799,
+              "source": "exact-national-status-exit"
+            },
+            {
+              "nation": "dei",
+              "type": "liberation",
+              "turn": 11,
+              "action": 1445,
+              "source": "exact-national-status-exit"
+            }
+          ],
+          "atomic": {
+            "met": true,
+            "turn": 12,
+            "noStrategicBombingFailure": true,
+            "bombingCampaignStart": 9,
+            "bombingRequiredFromTurn": 9,
+            "b29InRangeOfTokyo": true,
+            "ruleVersion": "official-16.2",
+            "jpResources": 1,
+            "jpResourceHexes": [
+              672
+            ],
+            "resourceLimit": 1,
+            "resourcesSatisfied": true
+          }
+        }
+      ]
+    }
+  }
+}

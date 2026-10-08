@@ -1,0 +1,25 @@
+{
+  "task": "AI-CAMPAIGN-EVAL-50-01",
+  "schemaVersion": 2,
+  "auditSha256": "a7e49141f0b479a823263cf5e6014924f5f72b3897cafbc772118610e918fb5a",
+  "observerSha256": "748ce8b52aac97ca7867517e924cafcf2dc75b554ea880ee02f841f459b5e85d",
+  "runnerSha256": "5008983c2dfd710fbedd9eb0863c657d80efd6d6799c68867a41e7f520315f2b",
+  "verifierOverlaySha256": "2720dcedf873b525ab04ba721d0ea9bec2c3faefaff5b454c7f578a018d3e0be",
+  "instrumentationSha256": "7972444edc47607cf4f1fdeb6c9a712c669dcdec11e5c38cfe3d5a880ea8017e",
+  "scope": "offline public board and public legal queries only; exact native national-status exit; no hands, PRNG, policy changes",
+  "behaviorDenominator": "all completely replay-verified attempts, including the separately marked one fallback game; fixed card windows are correlated snapshots, not independent games",
+  "fixes": [
+    "native national turn and exact phase snapshots",
+    "legal ISR-adjusted ASP",
+    "all declared ground softening targets",
+    "actual unit location equals amphibious path endpoint"
+  ],
+  "legacyFieldExcluded": "tests/match-run surrender.japan indexes China12; final victory from result/won_text and full replay",
+  "regression": "tests/campaign-selfplay-observer-regression.test.js",
+  "sourceUnchanged": true,
+  "cost": {
+    "runtimeModelRequests": 0,
+    "externalApiCost": 0,
+    "nativeCodexCost": null
+  }
+}

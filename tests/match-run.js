@@ -121,7 +121,7 @@ function validDecisionTrace(trace) {
     if (!trace?.node) return false
     const chart = String(trace.chart || "")
     return /(?:JP-0[1-6]|AP-0[7-9]|AP-1[0-2])$/.test(chart)
-        || chart === "CAMPAIGN" && !!trace.campaign && trace.policy === "campaign-v1"
+        || chart === "CAMPAIGN" && !!trace.campaign && ["campaign-v3.0","campaign-japan-v3.0","campaign-v1","campaign-v2.0","campaign-v2.1","campaign-v2.2","campaign-v2.3","campaign-japan-v2.1","campaign-japan-v2.2"].includes(trace.policy)
 }
 function play(seed, options, runtime = createRuntime(options)) {
     const { bundles, names, metadata } = runtime
@@ -260,9 +260,11 @@ function verifyReplay(replay, options = {}) {
             }
             try { validateAction(view, { action, argument }) }
             catch (error) { throw new Error(`replay action ${index + 1}: ${error.message}`, { cause: error }) }
+            if (options.beforeAction) options.beforeAction(state, { index:index+1, role, action, argument, view, bundle:b })
             state = b.rules.action(state, role, action, argument)
         })
         openingMeter.observe(state, index + 1)
+        if (options.afterAction) options.afterAction(state, { index:index+1, role, action, argument })
     }
     const actual = stateDigest(state)
     if (actual !== replay.result.finalStateSha256) throw new Error(`replay state mismatch: ${actual} != ${replay.result.finalStateSha256}`)

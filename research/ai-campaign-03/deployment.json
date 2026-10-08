@@ -1,0 +1,116 @@
+{
+  "task": "AI-CAMPAIGN-03",
+  "date": "2026-10-08",
+  "sourceCommit": "fe4fe4e9b5637f0d829260835e445fc3f67e0991",
+  "github": {
+    "branch": "feat/AI-CAMPAIGN-03-v3-release",
+    "pullRequest": "https://github.com/fuxiaoji/rots/pull/5",
+    "draft": true,
+    "base": "feat/LLM-RELEASE-01-rtt"
+  },
+  "local": {
+    "url": "http://localhost:8080/",
+    "pid": 55640,
+    "httpStatus": 200,
+    "gameRoot": "D:\\desktop\\rots",
+    "persistentDatabaseReplaced": false,
+    "compiledRulesSha256": "b4fbf79e7bb3630e92d1a4c1cfd9fc7d85307568efe46a40505d0596dcb21ab3"
+  },
+  "remote": {
+    "url": "https://fuwenji.asia/rtt/",
+    "release": "20261008-campaign-3.0",
+    "service": "eots-rtt",
+    "pid": 3798301,
+    "publicHttpStatus": 200,
+    "loopbackHttpStatus": 200,
+    "publicCreateBothV3IdsVerified": true,
+    "backupCreated": true,
+    "persistentOldRowsAudit": {
+      "verified": true,
+      "maxGameId": 15,
+      "current": "/opt/eots-rtt/releases/20261008-campaign-3.0",
+      "data": {
+        "games": {
+          "rows": 15,
+          "sha256": "3cae500c5f2d2f2aa3fdfa5e03ef59c79bb830c35443e56a586c8c7ec7811dd3"
+        },
+        "game_state": {
+          "rows": 15,
+          "sha256": "d6a4135f90b5e0420896ab55a3aec77b2477de7b157fe8988d97dc501fe9863f"
+        },
+        "game_replay": {
+          "rows": 20299,
+          "sha256": "a000b19df3089dc91300560e9959924c373238b7af952861db7ca5e6a2f844df"
+        },
+        "game_snap": {
+          "rows": 4143,
+          "sha256": "a0a7164483a5435422aabe603f3216c35076c4bf04b52bf365c03890ea32d8c8"
+        },
+        "game_ai_trace": {
+          "rows": 11788,
+          "sha256": "8cc8ffcf82822c449330804773c086fbf302713842169060ce6c6e902413330a"
+        },
+        "players": {
+          "rows": 30,
+          "sha256": "d2e4df26630575b07a7865fe626554827c929646af0c308abf496b6cdcc14035"
+        },
+        "game_llm_runtime": {
+          "rows": 3,
+          "sha256": "ca37ee89caa1b9f7b5a808edb00399c6b495d76a1d2b57c9b9e4b3018efff0b5"
+        },
+        "game_llm_archive": {
+          "rows": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "semi_game_llm_runtime": {
+          "rows": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "semi_game_llm_archive": {
+          "rows": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "site_llm_daily": {
+          "rows": 1,
+          "sha256": "d033dc5082d89c871602ea9f93c0e1c36816043fbebd7310cf19b6d217d13ab7"
+        },
+        "users": {
+          "rows": 3,
+          "unchangedVerified": true
+        },
+        "user_password": {
+          "rows": 2,
+          "unchangedVerified": true
+        }
+      },
+      "sources": {
+        "semi": "0b3fd6e55cd2a870c5b26fa50b176dbc33afb7cdc79826a926b6669f15a07099",
+        "llm": "e6eb726554b2221a41fbee8dc4cb6d1db7d088e649fbcfbdb72d5f0982e8ac3a",
+        "play": "729eaede901da8ac407ec811d4b8a4f13942d76b660dbaa50dd82d826226757f",
+        "production": "77f7ceb3000e5552a16426a1562b4f75983fa17b4158fe8e8247455cd4bc7f0f"
+      }
+    },
+    "pendingNative": 0,
+    "pendingSemi": 0,
+    "preservedRuntimeFiles": [
+      "public/empire-of-the-sun-semi/**",
+      "public/empire-of-the-sun/js/server/llm/**",
+      "public/empire-of-the-sun/play.js",
+      "production.js"
+    ],
+    "updatedFiles": [
+      "public/empire-of-the-sun/rules.js",
+      "public/empire-of-the-sun/create.html",
+      "server.js (bounded PvE seat validation only)"
+    ]
+  },
+  "runtimeModelRequests": 0,
+  "externalReviewRequests": 0,
+  "modelCost": 0,
+  "limitations": [
+    "Native LLM old contexts retain original fingerprint and budget; whole rules hash changed, next request is protected by POLICY_CHANGED. No automatic migration or retry.",
+    "Independent semi title files remain byte-identical.",
+    "GitHub draft PR has not merged main/master.",
+    "Historical evaluations remain candidate-version evidence; not new 3.0 selfplay."
+  ]
+}

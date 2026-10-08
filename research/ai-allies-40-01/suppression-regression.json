@@ -1,0 +1,26 @@
+{
+  "task": "AI-ALLIES-40-01",
+  "kind": "suppression",
+  "ordinal": 1642,
+  "seed": 20261802,
+  "plannedTarget": 761,
+  "first": {
+    "action": "action_hex",
+    "locations": [
+      712,
+      672
+    ],
+    "battleHexes": [
+      761
+    ]
+  },
+  "steps": 19,
+  "end": "offensive_segment",
+  "verified": true,
+  "finalStateSha256": "973c083835ca95f5b273361da40382dc6c9fa99f88d7fd095f777b3120cf8f54",
+  "bundles": {
+    "Allies": "da0c4b10955963e5d577352ff189154f3f27a99f61890a5c69f9df0e54130d79",
+    "Japan": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a"
+  },
+  "runtimeModelRequests": 0
+}

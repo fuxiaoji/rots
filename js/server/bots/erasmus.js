@@ -196,7 +196,8 @@ function target_argument(action, value, seedText, role, view, strategy) {
             strictSequential: !!axis?.strictSequential || !!meta?.strictSequential,
             chain: Array.isArray(axis?.chain) ? axis.chain.slice() : [],
             targetMeta: Array.isArray(axis?.targetMeta) ? axis.targetMeta.map(x=>({...x})) : [],
-            ...(campaign?.positioning ? { campaignPositioning: campaign.positioning } : {}),
+            ...(campaign?.positioning ? { campaignPositioning: em_flag("japan_campaign_refinement")
+                ? EOTS_CAMPAIGN_V2.positioningContext(view,campaign) : campaign.positioning } : {}),
         }
     }
     // 通用: unit 候选里若混入“已选/将被撤销”的 unselect 单位(unselect_unit 塞进来的),
@@ -788,7 +789,7 @@ function erasmus_stacking_destinations(view,role) {
             return Math.max(0,p.counts.engineGroundAirSlots-3)*2+Math.max(0,p.counts.naval-6)+Math.max(0,p.counts.hq-1)*3}
         const argument=exit ? Array.isArray(actions[exit])?actions[exit][0]:undefined
             : candidates.slice().sort((a,b)=>overflow(a)-overflow(b)||a-b)[0]
-        const trace={policy: em_flag("campaign_v2") ? "campaign-v2.0" : "campaign-v1",role,chart:"CAMPAIGN",node:"STACKING_SAFE_EXIT",nodePath:["CAMPAIGN","STACKING_SAFE_EXIT"],
+        const trace={policy: em_flag("japan_campaign_opening_refinement") ? "campaign-japan-v2.2" : em_flag("allies_campaign_offensive_refinement") ? "campaign-v2.3" : em_flag("japan_campaign_refinement") ? "campaign-japan-v2.1" : em_flag("allies_route_commitment") ? "campaign-v2.2" : em_flag("allies_campaign_refinement") ? "campaign-v2.1" : em_flag("campaign_v2") ? "campaign-v2.0" : "campaign-v1",role,chart:"CAMPAIGN",node:"STACKING_SAFE_EXIT",nodePath:["CAMPAIGN","STACKING_SAFE_EXIT"],
             action:picked,fallback:false,inferred:false,
             campaign:{version:1,phase:"STACKING_SAFE_EXIT",objective:{type:"AVOID_OVERSTACK",hex:exit?null:argument},focus:exit?null:argument},
             explanation:exit?"无可容纳本编组的合法终点，使用当前窗口的合法退出动作。"
@@ -840,7 +841,7 @@ var EOTS_BOTS = {
                     const pick = typeof ec_pick_action === "function" ? (em_flag("campaign_v2") ? EOTS_CAMPAIGN_V2.pickAction : ec_pick_action)(view, context, campaignPlan) : null
                     if (pick) return {
                         ...pick,
-                        publicTrace: { policy: em_flag("campaign_v2") ? "campaign-v2.0" : "campaign-v1", role: context.role, chart: "CAMPAIGN",
+                        publicTrace: { policy: em_flag("japan_campaign_opening_refinement") ? "campaign-japan-v2.2" : em_flag("allies_campaign_offensive_refinement") ? "campaign-v2.3" : em_flag("japan_campaign_refinement") ? "campaign-japan-v2.1" : em_flag("allies_route_commitment") ? "campaign-v2.2" : em_flag("allies_campaign_refinement") ? "campaign-v2.1" : em_flag("campaign_v2") ? "campaign-v2.0" : "campaign-v1", role: context.role, chart: "CAMPAIGN",
                             node: campaignPlan.phase, nodePath: ["CAMPAIGN", campaignPlan.phase],
                             action: pick.action, fallback: false, explanation: campaignPlan.objective },
                         privateTrace: { plan: campaignPlan },
@@ -903,10 +904,45 @@ var EOTS_BOTS = {
             return erasmus_profile_decision("erasmus-v2-opt-v5", view, context)
         },
     },
+    "erasmus-campaign-v3": {
+        name: "盟军战役 AI 3.0", version: ERASMUS_VERSION + "-campaign.3.0",
+        scenarios: ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Allies"],
+        decide(view, context) { return erasmus_campaign_v3_decision("erasmus-campaign-v2-3", view, context) },
+    },
+    "erasmus-japan-campaign-v3": {
+        name: "日军战役 AI 3.0", version: ERASMUS_VERSION + "-japan-campaign.3.0",
+        scenarios: ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Japan"],
+        decide(view, context) { return erasmus_campaign_v3_decision("erasmus-japan-campaign-v2-2", view, context) },
+    },
+    "erasmus-campaign-v2-3": {
+        name: "盟军战役 AI 2.3（进攻候选）", version: ERASMUS_VERSION + "-campaign.2.3-dev.5",
+        scenarios: ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Allies"],
+        decide(view, context) { return erasmus_profile_decision("erasmus-campaign-v2-3", view, context) },
+    },
+    "erasmus-japan-campaign-v2-2": {
+        name: "日军战役 AI 2.2（早防候选）", version: ERASMUS_VERSION + "-japan-campaign.2.2-dev.3",
+        scenarios: ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Japan"],
+        decide(view, context) { return erasmus_profile_decision("erasmus-japan-campaign-v2-2", view, context) },
+    },
+    "erasmus-campaign-v2-2": {
+        name: "盟军战役 AI 2.2（1943候选）", version: ERASMUS_VERSION + "-campaign.2.2-dev.5",
+        scenarios: ["1943-1945 (The Even Shorter Campaign)"], roles: ["Allies"],
+        decide(view, context) { return erasmus_profile_decision("erasmus-campaign-v2-2", view, context) },
+    },
+    "erasmus-campaign-v2-1": {
+        name: "盟军战役 AI 2.1（候选）", version: ERASMUS_VERSION + "-campaign.2.1-dev.3",
+        scenarios: ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Allies"],
+        decide(view, context) { return erasmus_profile_decision("erasmus-campaign-v2-1", view, context) },
+    },
     "erasmus-campaign-v2": {
         name: "盟军战役 AI 2.0", version: ERASMUS_VERSION + "-campaign.2.0",
         scenarios: ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Allies"],
         decide(view, context) { return erasmus_profile_decision("erasmus-campaign-v2", view, context) },
+    },
+    "erasmus-japan-campaign-v2-1": {
+        name: "日军战役 AI 2.1（守备候选）", version: ERASMUS_VERSION + "-japan-campaign.2.1-dev.1",
+        scenarios: ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Japan"],
+        decide(view, context) { return erasmus_profile_decision("erasmus-japan-campaign-v2-1", view, context) },
     },
     "erasmus-japan-campaign-v2": {
         name: "日军战役 AI 2.0", version: ERASMUS_VERSION + "-japan-campaign.2.0",
@@ -980,4 +1016,12 @@ function erasmus_profile_decision(name, originalView, originalContext) {
         return profile.campaign_planner || profile.japan_campaign_planner
             ? rules_query_snapshot(compute,G.active) : compute()
     } finally { G.log.length = logLength; em_reset_config() }
+}
+
+// Only the public release identity changes; action and private/persisted plan stay exact.
+function erasmus_campaign_v3_decision(candidate, view, context) {
+    const result = erasmus_profile_decision(candidate, view, context)
+    if (result.publicTrace?.chart === "CAMPAIGN")
+        result.publicTrace.policy = context.role === "Japan" ? "campaign-japan-v3.0" : "campaign-v3.0"
+    return result
 }

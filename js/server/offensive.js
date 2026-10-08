@@ -1164,6 +1164,16 @@ function erasmus_pbm_target_score(hex, faction, piece, source, targetPlan) {
     return null
 }
 
+// Enhanced AP strategy gate only: legal movement remains the engine's decision.
+function headless_campaign_landing_supply(hex,faction,group) {
+    if (faction!==AP || !em_flag("allies_campaign_offensive_refinement")
+        || ![hex_to_int(3305),hex_to_int(3306)].includes(hex) || is_space_controlled(hex,faction)) return true
+    const ground=(group || []).filter(id=>pieces[id]?.class==="ground")
+    if (!ground.length) return true
+    const estimate=queryCampaignSupplyProjection({faction,moves:ground.map(unit=>({unit,hex})),captureHex:hex,protectedIds:ground})
+    return !!estimate?.eligible && estimate.supplied
+}
+
 function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece, source, targetPlan, movingGroup, campaignProjectionScope) {
     // [opt stack_limit_gate] 唯一漏斗闸门: 本函数是所有 headless 落点评分的必经之路
     // (焦点格 / REDEPLOY / GARRISON / DEFEND_HONSHU / 空敌控推进 / 会战格 / 反应 /
@@ -1202,11 +1212,18 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
         const next=eop_next_focus_faction(faction,G.offensive.battle_hexes,targetPlan)
         if(next){strategicFocus=next.hex;strategicMeta=next.meta}
     }
+    const committedConvergence = kind==="attack" && faction===AP && typeof em_cfg==="function"
+        && em_cfg()?.allies_campaign_refinement && strategicMeta?.campaignTask
+        && strategicMeta?.movementGroups?.length>1 && strategicMeta.kind!=="REDEPLOY"
+    const committedSoftening = kind==="attack" && faction===AP && typeof em_cfg==="function"
+        && em_cfg()?.allies_route_commitment && strategicMeta?.campaignTask && strategicMeta?.softeningGoal
+    if ((committedConvergence && hasGround || committedSoftening) && hex!==strategicFocus) return null
     const approach = steer && strategicFocus !== null
         ? get_distance(hex, strategicFocus)
         : steer && typeof eop_advance_tiebreak === "function" ? eop_advance_tiebreak(hex, faction) : -1
     const nearKey = hex => approach >= 0 ? approach : headless_nearest_enemy_dist(hex, 1 - faction)
     if (kind === "attack") {
+        if (hasGround && em_flag("allies_campaign_offensive_refinement") && !headless_campaign_landing_supply(hex,faction,movingGroup)) return null
         // 驻军和指定撤离的终点是己方位置；不能把这些激活改成就近攻击。
         if (strategicMeta && (strategicMeta.kind === "REDEPLOY" || strategicMeta.kind === "GARRISON" || strategicMeta.kind === "PORTS")) {
             if (!is_space_controlled(hex, faction) || eu.count > 0) return null
@@ -1238,7 +1255,7 @@ function headless_target_score(hex, hasGround, faction, kind, steer, movingPiece
         }
         if (faction === AP && targetMd && targetMd.region === "Japan" && !tojoPass
             && (!focusMd || focusMd.region !== "Japan")) return null
-        if (tojoPass && eu.count > 0) return [0, eu.naval, eu.count, nearKey(hex), hex]
+        if (tojoPass && eu.count > 0 && !committedConvergence && !committedSoftening) return [0, eu.naval, eu.count, nearKey(hex), hex]
         // 航空单位可从战斗格外参战。若后方基地不在目标战斗航程内，本次攻势先把
         // 它移动到更靠前的合法机场；到达后 choose_attack_hex 仍按 br/ebr 决定能否
         // 承诺到会战，不绕过任何移动或战斗航程检查。
@@ -1583,7 +1600,7 @@ function headless_advance_one(self, kind, targetPlan) {
         const candidateHexes=[]
         map_for_each(L.allowed_hexes,h=>candidateHexes.push(h))
         const campaignProjectionScope=kind==="pbm" && em_flag("campaign_v2")
-            ? EOTS_CAMPAIGN_V2.positionProjectionScope(targetPlan?.campaignPositioning,leadPiece,loc,candidateHexes) : null
+            ? EOTS_CAMPAIGN_V2.positionProjectionScope(targetPlan?.campaignPositioning,leadPiece,loc,candidateHexes,group) : null
         map_for_each(L.allowed_hexes, (h) => {
         const path=map_get(L.allowed_hexes,h)
         if (hasGround && mode===GROUND_MOVE && !(path[0]&GROUND_MOVE)) return
@@ -1617,6 +1634,7 @@ function headless_advance_one(self, kind, targetPlan) {
         if (foc !== null && foc >= 0 && foc <= LAST_BOARD_HEX && typeof get_distance === "function") {
             let appr = null, apprD = Infinity
             map_for_each(L.allowed_hexes, (h) => {
+                if (!headless_campaign_landing_supply(h,G.active,group)) return
                 if (em_flag("stack_limit_gate") && !headless_stack_fits(h, G.active, leadPiece, group)) return
                 const d = get_distance(h, foc)
                 if (d < apprD || (d === apprD && (appr === null || h < appr))) { apprD = d; appr = h }

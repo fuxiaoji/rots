@@ -1,0 +1,48 @@
+{
+  "task": "AI-CAMPAIGN-01",
+  "clientDate": "2026-10-07",
+  "stage": "pre-final integration; replaced after actual no-port ferry gap audit",
+  "baseCommit": "d7f8936b4f08874bc7d51d14b84e562d642e7974",
+  "rulesSha256": "94d1d79293c8ac2344528f78fd8f8818c902d9a545e4e08fd9a93a471341f060",
+  "sourceHashes": {
+    "js/server/bots/erasmus.js": "6ed2a1ab513421b8eb93c467b804913435963758ad4e163eedfd6d5ab87f73b2",
+    "js/server/bots/erasmus_campaign.js": "1e3a800be439c5dcea966c2600f911df96491da68586ddd9b5d1e1d666b2d5af",
+    "js/server/bots/erasmus_japan_campaign.js": "a4c231f359d92a7d8956c5fb45bec8683ddc4f5cc2fb1df7858fe6bce51ab525",
+    "js/server/erasmus_ops.js": "905d40f44e62c57a91668076f6eb15a6b1ece0191d81349812da4351fad0e659",
+    "js/server/offensive.js": "7a72468e125137a03521fa2e01ddc21d14f8729f30ee7530180ebaacb5ff9f55",
+    "js/server/rules_query.js": "27e441e32217a20978c20408b886a5ce4fac2a542ebd241fb616172453106265",
+    "js/supply.js": "0220e38bf1debd19fcd0028310c527469d5071ea9fbcf96e14b9411625b6563c"
+  },
+  "bots": {
+    "Japan": "erasmus-japan-campaign",
+    "Allies": "erasmus-campaign"
+  },
+  "devSeeds": {
+    "1942": [
+      20261511
+    ],
+    "1943": [
+      20261501
+    ]
+  },
+  "frozenSeeds": {
+    "1942": [
+      20261701,
+      20261702
+    ],
+    "1943": [
+      20261711,
+      20261712
+    ]
+  },
+  "maxActions": 12000,
+  "repeatStateLimit": 32,
+  "headlessMoves": true,
+  "recordReplays": "all",
+  "runtimeModelRequests": 0,
+  "externalReviewRequests": 0,
+  "externalReview": "auto-review denied source export; user chose local-only review",
+  "limits": "four games are integration evidence, no comparative win-rate claim",
+  "configurationErratum": "Initial manifest text said 40; actual runner default and actual calls are 32. Corrected metadata only, without changing runtime or gameplay code.",
+  "reason": "Fresh seeds after fixing group departure that could otherwise move both island defenders in chart fallback."
+}

@@ -1,0 +1,40 @@
+{
+  "task": "AI-CAMPAIGN-01",
+  "clientDate": "2026-10-07",
+  "stage": "pre-final integration; demoted after source audit found group-departure reserve gap",
+  "baseCommit": "d7f8936b4f08874bc7d51d14b84e562d642e7974",
+  "rulesSha256": "34adbf9c6c80b9122710568d0c7a5fa0b4c762c35050ab81053bc3d03e81178b",
+  "bots": {
+    "Japan": "erasmus-japan-campaign",
+    "Allies": "erasmus-campaign"
+  },
+  "devSeeds": {
+    "1942": [
+      20261511
+    ],
+    "1943": [
+      20261501
+    ]
+  },
+  "frozenSeeds": {
+    "1942": [
+      20261601,
+      20261602
+    ],
+    "1943": [
+      20261611,
+      20261612
+    ]
+  },
+  "maxActions": 12000,
+  "repeatStateLimit": 32,
+  "headlessMoves": true,
+  "recordReplays": "all",
+  "runtimeModelRequests": 0,
+  "externalReviewRequests": 0,
+  "externalReview": "auto-review denied source export; user chose local-only review",
+  "limits": "four games are integration evidence, no comparative win-rate claim",
+  "configurationErratum": "Initial manifest text said 40; actual runner default and actual calls are 32. Corrected metadata only, without changing runtime or gameplay code.",
+  "reason": "Fresh seeds after fixing group departure that could otherwise move both island defenders in chart fallback.",
+  "sourceEvidence": "Exact self-contained bundle preserved by rulesSha256; source audit revision is documented separately."
+}

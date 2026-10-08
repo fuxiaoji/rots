@@ -1,0 +1,20 @@
+{
+  "task": "AI-ALLIES-40-01",
+  "branch": "feat/AI-ALLIES-40-01-win-rate",
+  "sourceBase": "628f8f6",
+  "currentBundleSha256": "3de6cbedb4fb7f927f8b43e71d955b3ab2615892c016f5fbe9df6911c4b4e35d",
+  "sources": {
+    "js/server/bots/erasmus.js": "d5d11f8bc1cc215e3a08df598bf2bf153aa2cab21fd141c082088e4ad5d563b8",
+    "js/server/bots/erasmus_config.js": "4553bd15f0e200463b0d6253b07238dff612436c962ec463b10c4885dbea7268",
+    "js/server/bots/erasmus_campaign_v2.js": "95d5dd64d247d0b8a557af47917653412161d5a8e7f6bbf88850926fbea51993",
+    "js/server/erasmus_ops.js": "d54d4412d9e2abf668ba60a11b5d777eb5a0ef53e0cea686080a0e3baca70a77",
+    "js/server/offensive.js": "cb7465974bee55d1ecf1dc01f314bd8aef567a6e3335736da67815e5c64a0516"
+  },
+  "testsPassed": 32,
+  "runtimeModelRequests": 0,
+  "externalApiCost": 0,
+  "deployed": false,
+  "sharedWorkspaceEdited": false,
+  "goal1942Met": true,
+  "goal1943Met": false
+}

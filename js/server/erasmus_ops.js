@@ -1702,7 +1702,9 @@ function eop_unit_matches_target(unit, role, meta, target) {
     // are unaffected; only proactive departures are screened.
     if (enhancedJapan && G.offensive?.attacker===JP
         && p.class==="ground" && location!==target && is_space_controlled(location,JP)
-        && [2909,3009,3209,3709,3813,3814].map(hex_to_int).includes(location)) {
+        && (typeof EOTS_CAMPAIGN_V2!=="undefined" ? EOTS_CAMPAIGN_V2.defenseHexes()
+            : [2909,3009,3209,3709,3813,3814].map(hex_to_int)).includes(location)
+        && (!em_cfg()?.japan_campaign_refinement || EOTS_CAMPAIGN_V2.guardRequired({sid:G.sid,turn:G.turn},location))) {
         const guards=pieces.map((other,u)=>({piece:other,id:u})).filter(g=>g.piece?.faction===JP
             && g.piece.class==="ground" && G.location[g.id]===location)
         const strength=g=>set_has(G.reduced,g.id) ? Number(g.piece.rcf)||Math.ceil(Number(g.piece.cf)/2) : Number(g.piece.cf)||0

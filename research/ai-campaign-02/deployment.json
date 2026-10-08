@@ -1,0 +1,105 @@
+{
+  "task": "AI-CAMPAIGN-02",
+  "date": "2026-10-07",
+  "sourceCommit": "d7f891dbe386feb7b592dcf73119b562a8d86cc1",
+  "localIntegrationCommit": "16c6d60",
+  "checks": {
+    "uniqueLocalChecksPassed": 20,
+    "realSavePoints": 112,
+    "fullReplayActions": 3388
+  },
+  "runtimeModelRequests": 0,
+  "externalApiRequests": 0,
+  "cost": {
+    "externalApiCurrency": 0,
+    "nativeCodexCost": "unknown"
+  },
+  "http": {
+    "local": {
+      "rootStatus": 200,
+      "rulesStatus": 200,
+      "rulesSha256": "48a620f5552b448d95abaa20d937388c9b985c8c3ad279c02ac555f8669ef921",
+      "alliesChoice": true,
+      "japanChoice": true
+    },
+    "remote": {
+      "rootStatus": 200,
+      "rulesStatus": 200,
+      "rulesSha256": "37d81aad99fa975fb0960b77d17934fadaa1773e70efc6fd0efece8ad60ab49a",
+      "alliesChoice": true,
+      "japanChoice": true,
+      "healthStatus": 200,
+      "health": {
+        "ok": true,
+        "basePath": "/rtt"
+      }
+    }
+  },
+  "status": "deployed",
+  "remote": {
+    "release": "/opt/eots-rtt/releases/20261007-campaign-2.0",
+    "oldRelease": "/opt/eots-rtt/releases/20261006-01",
+    "service": "eots-rtt",
+    "active": true,
+    "backup": "/var/lib/eots-rtt/backups/pre-campaign-2.0-20261007.db",
+    "persistentTablesUnchanged": true,
+    "tables": {
+      "games": {
+        "rows": 5,
+        "sha256": "df8699ac196c7733ac50d516003e6c0198902f2af60620e32bdf6a31a9e81907"
+      },
+      "players": {
+        "rows": 10,
+        "sha256": "77b27104454d11c63860a2e4967790cbc768da6f13e120a74e1fd4a0279e34b5"
+      },
+      "game_state": {
+        "rows": 5,
+        "sha256": "71043e40a2fa5013b9a4c21564ee6de6048e452bf4ff17777df8a0b142f9369c"
+      },
+      "game_replay": {
+        "rows": 4789,
+        "sha256": "b5c16a100459494d3665b077c898706478ec402e422abbe90519b843590de084"
+      },
+      "game_snap": {
+        "rows": 953,
+        "sha256": "76ee89996997c9c35a32065dc16de452cdf460c3ffc88c2b29050d2d0217a7c4"
+      },
+      "game_ai_trace": {
+        "rows": 4784,
+        "sha256": "4f372e697126796453139dd7591764dcf250493442c3216c3d4c4c49fe28752f"
+      },
+      "game_llm_runtime": {
+        "rows": 3,
+        "sha256": "b4a415e59cf14c47494b7b5afec85e9f46760b1f5fb616a63f0c552b036287d6"
+      },
+      "site_llm_daily": {
+        "rows": 1,
+        "sha256": "83347cb055c56e11e615bc358d2a34f5ad1758f83a2af16791799f86acb17b89"
+      }
+    },
+    "manifestFilesVerified": 1005,
+    "manifestSha256": "e94357304c33cfedd19a0a8b9d251891358dfa260da598ffdba64e92afc27f0e",
+    "node": "v22.22.1",
+    "rootSiteSha256": "d4dd28a2ca2e046108ee1fd53cd00a185fb6dccf982eb8bb20fd28a2fd5122e5",
+    "rootSiteUnchanged": true,
+    "platformUnchanged": true,
+    "llmSourceUnchanged": true
+  },
+  "local": {
+    "privateContextUnchanged": true,
+    "privateContextSha256": "03a598d49f47152993d7d3e8461413c2cab75313fbfce0decedd61a181ec1f25",
+    "games": 57,
+    "integrity": "ok",
+    "restart": false,
+    "hotReload": true
+  },
+  "createPage": {
+    "loginVerified": true,
+    "createHttp": 200,
+    "newChoicesPresent": true,
+    "legacyChoicesPresent": true,
+    "realApiRequests": 0
+  },
+  "ruleByteDifference": "Local CRLF / remote LF; normalized complete rule source equal before publishing.",
+  "llmCompatibility": "Existing native LLM saved games retain ledger/memory, pause with POLICY_CHANGED on next request; create new game. No migration or paid request."
+}

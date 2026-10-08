@@ -1,0 +1,9 @@
+"use strict"
+const fs=require("node:fs"),assert=require("node:assert/strict"),{loadBundle,validateAction,stateDigest,fileSha}=require("../tests/match-run")
+const [baseline,candidate,input,output]=process.argv.slice(2);if(!output)throw Error("baseline candidate replay output")
+const b=loadBundle(baseline,true),c=loadBundle(candidate,true),r=JSON.parse(fs.readFileSync(input));let s=b.rules.setup(r.setup.seed,r.setup.scenario,r.setup.options),copy=c.rules.setup(r.setup.seed,r.setup.scenario,r.setup.options);const checked=new Set(),checks=[]
+const clone=x=>JSON.parse(JSON.stringify(x));for(const [i,[role,a,arg]]of r.replayActions.entries()){
+ const v=b.rules.view(s,role),key=role+":"+v.ai?.state+":"+v.ai?.windowKind;if(!checked.has(key)&&checks.filter(x=>x.role===role).length<30){checked.add(key);const id=role==="Japan"?"erasmus-japan-campaign-v2":"erasmus-campaign-v2",context={role,seed:r.setup.seed,actionOrdinal:i+1},before=JSON.stringify(s),old=b.rules.bots[id].decide(v,context),candidateState=clone(s),now=c.rules.bots[id].decide(c.rules.view(candidateState,role),context);assert.equal(JSON.stringify(s),before);assert.equal(JSON.stringify(candidateState),before);assert.deepEqual(clone(now),clone(old),key);checks.push({ordinal:i+1,role,state:v.ai?.state,window:v.ai?.windowKind,same:true})}
+ validateAction(c.rules.view(copy,role),{action:a,argument:arg});s=b.rules.action(s,role,a,clone(arg));copy=c.rules.action(copy,role,a,clone(arg))
+}
+assert.equal(stateDigest(copy),stateDigest(s));assert.equal(stateDigest(copy),r.result.finalStateSha256);const report={task:"AI-ALLIES-40-01",seed:r.setup.seed,baselineSha256:fileSha(baseline),candidateSha256:fileSha(candidate),replaySha256:fileSha(input),checks,actions:r.replayActions.length,fullReplaySame:true,finalStateSha256:stateDigest(copy)};fs.writeFileSync(output,JSON.stringify(report,null,2)+"\n");console.log(JSON.stringify({checks:checks.length,actions:report.actions,fullReplaySame:true}))

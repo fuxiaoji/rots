@@ -161,6 +161,8 @@
     })
     // bot 支持的剧本(与 rules.js 中 bots[*].scenarios 一致)。
     var BOT_SCENARIOS = {
+        "erasmus-campaign-v3": ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"],
+        "erasmus-japan-campaign-v3": ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"],
         "erasmus-campaign-v2": ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"],
         "erasmus-japan-campaign-v2": ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"],
         "erasmus-japan-campaign": ["1942-1945 (The Shortened Campaign)"],
@@ -169,16 +171,28 @@
         "erasmus-v2-opt": ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"],
         "erasmus-v2-opt-v5": ["South Pacific", "1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"],
     }
-    // 最新版 AI(5.0) 为默认选择; 模板下拉默认选基线, 这里统一改到新版本。
+    // 战役剧本默认 3.0；用户手动选择的模型保持不变。
     var DEFAULT_BOT = "erasmus-v2-opt-v5"
+    function updateCampaignDefaults() {
+        var campaign = (BOT_SCENARIOS["erasmus-campaign-v3"] || []).indexOf(scenario.value) >= 0
+        var human = document.querySelector("input[name='human_role']:checked")?.value || "Allies"
+        ;["bot_id", "bot_id_jp", "bot_id_ap"].forEach(function (name) {
+            var sel = document.querySelector("select[name='" + name + "']")
+            var role = name === "bot_id_jp" || name === "bot_id" && human === "Allies" ? "Japan" : "Allies"
+            var id = campaign ? (role === "Japan" ? "erasmus-japan-campaign-v3" : "erasmus-campaign-v3") : DEFAULT_BOT
+            if (sel && !sel.dataset.userChosen && sel.querySelector("option[value='" + id + "']")) sel.value = id
+        })
+    }
     // 注意: 模板的 bot 下拉位于本片段注入点之后, 解析到本脚本时尚不存在,
     // 必须等 DOMContentLoaded 再绑定, 否则 querySelector 拿到 null。
     document.addEventListener("DOMContentLoaded", function () {
         ;["bot_id", "bot_id_jp", "bot_id_ap"].forEach(function (name) {
             var sel = document.querySelector("select[name='" + name + "']")
-            if (sel && sel.querySelector("option[value='" + DEFAULT_BOT + "']")) sel.value = DEFAULT_BOT
-            if (sel) sel.addEventListener("change", function () { document.querySelector("input[name='mode']:checked").onchange() })
+            if (sel) sel.addEventListener("change", function () { sel.dataset.userChosen = "true"; document.querySelector("input[name='mode']:checked").onchange() })
         })
+        scenario.addEventListener("change", updateCampaignDefaults)
+        document.querySelectorAll("input[name='human_role']").forEach(function (input) { input.addEventListener("change", updateCampaignDefaults) })
+        updateCampaignDefaults()
         // 提交前校验所选 AI 是否支持所选剧本, 避免 "Invalid AI vs AI configuration"。
         document.querySelector("form").addEventListener("submit", function (evt) {
             var mode = document.querySelector("input[name='mode']:checked").value
@@ -188,6 +202,15 @@
                 var sel = document.querySelector("select[name='" + names[i] + "']")
                 var bot = sel ? sel.value : ""
                 var supported = sel && sel.selectedOptions[0].dataset.scenarios ? JSON.parse(sel.selectedOptions[0].dataset.scenarios) : (BOT_SCENARIOS[bot] || [])
+                var human = document.querySelector("input[name='human_role']:checked")?.value || "Allies"
+                var seat = names[i] === "bot_id_jp" || names[i] === "bot_id" && human === "Allies" ? "Japan" : "Allies"
+                var roles = sel && sel.selectedOptions[0].dataset.roles ? JSON.parse(sel.selectedOptions[0].dataset.roles)
+                    : bot.startsWith("erasmus-japan-campaign") ? ["Japan"] : bot.startsWith("erasmus-campaign") ? ["Allies"] : ["Japan", "Allies"]
+                if (roles.indexOf(seat) < 0) {
+                    alert("所选 AI 不支持「" + seat + "」阵营，请重新选择该阵营的 AI。")
+                    evt.preventDefault()
+                    return
+                }
                 if (supported.indexOf(scenario) < 0) {
                     alert("所选 AI (" + (bot || "无") + ") 不支持剧本「" + scenario + "」。\n支持剧本: " + (BOT_SCENARIOS[bot] || ["(未知)"]).join(" / "))
                     evt.preventDefault()

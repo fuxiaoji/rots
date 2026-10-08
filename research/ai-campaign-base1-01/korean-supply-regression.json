@@ -1,0 +1,211 @@
+{
+  "task": "AI-CAMPAIGN-BASE1-01",
+  "candidateSha256": "425b0e8af2ba48fafe5b95370b73b0ca8cbf595608b02dbdbbda83bac35dc7e9",
+  "ruleSource": "EOTS V3.2 Chinese PDF12-13 sections6.21/6.22; original full check_supply, without offensive activation exception",
+  "cases": [
+    {
+      "seed": 20263927,
+      "prefix": 1524,
+      "turn": 11,
+      "unit": 205,
+      "hex": 673,
+      "cachedOos": false,
+      "steady": {
+        "eligible": true,
+        "projection": "steady-own-supply",
+        "protectedOosIds": [
+          205
+        ],
+        "ownOosIds": [
+          95,
+          113,
+          125,
+          126,
+          131,
+          165,
+          188,
+          189,
+          197,
+          200,
+          202,
+          203,
+          205
+        ],
+        "supplied": false,
+        "assumptions": "actual-public-position-with-specified-own-relocations",
+        "temporaryOffensiveSupply": false,
+        "movementGrant": false,
+        "captureGrant": false
+      },
+      "stateSha256": "823505ca14d01c5d8188e88698a1359fa725292d7aa638ac32abb113461bec2a",
+      "replaySha256": "51bece6b898ba4313a63343b9a0fedf3c4beccf5859b2680610f5a31d09d3fcf"
+    },
+    {
+      "seed": 20263927,
+      "prefix": 1529,
+      "turn": 11,
+      "unit": 205,
+      "hex": 673,
+      "cachedOos": false,
+      "steady": {
+        "eligible": true,
+        "projection": "steady-own-supply",
+        "protectedOosIds": [
+          205
+        ],
+        "ownOosIds": [
+          95,
+          113,
+          125,
+          126,
+          131,
+          165,
+          188,
+          189,
+          197,
+          200,
+          202,
+          203,
+          205
+        ],
+        "supplied": false,
+        "assumptions": "actual-public-position-with-specified-own-relocations",
+        "temporaryOffensiveSupply": false,
+        "movementGrant": false,
+        "captureGrant": false
+      },
+      "stateSha256": "77f8eeb9bfef8c13627dc2fc91d18e943a9d259e9f48ca458361240cf1e8be5c",
+      "replaySha256": "51bece6b898ba4313a63343b9a0fedf3c4beccf5859b2680610f5a31d09d3fcf"
+    },
+    {
+      "seed": 20263927,
+      "prefix": 1540,
+      "turn": 11,
+      "unit": 205,
+      "hex": 673,
+      "cachedOos": false,
+      "steady": {
+        "eligible": true,
+        "projection": "steady-own-supply",
+        "protectedOosIds": [
+          205
+        ],
+        "ownOosIds": [
+          95,
+          113,
+          125,
+          126,
+          131,
+          165,
+          188,
+          189,
+          197,
+          200,
+          202,
+          203,
+          205
+        ],
+        "supplied": false,
+        "assumptions": "actual-public-position-with-specified-own-relocations",
+        "temporaryOffensiveSupply": false,
+        "movementGrant": false,
+        "captureGrant": false
+      },
+      "stateSha256": "5d064f47f25ae7fdc26b99f6f3d56ec7b8e5c5611541901c0b8c6180febb26c1",
+      "replaySha256": "51bece6b898ba4313a63343b9a0fedf3c4beccf5859b2680610f5a31d09d3fcf"
+    },
+    {
+      "seed": 20263812,
+      "prefix": 515,
+      "turn": 4,
+      "unit": 158,
+      "hex": 673,
+      "cachedOos": false,
+      "steady": {
+        "eligible": true,
+        "projection": "steady-own-supply",
+        "protectedOosIds": [],
+        "ownOosIds": [
+          99,
+          103,
+          105,
+          165,
+          177,
+          180,
+          182,
+          183
+        ],
+        "supplied": true,
+        "assumptions": "actual-public-position-with-specified-own-relocations",
+        "temporaryOffensiveSupply": false,
+        "movementGrant": false,
+        "captureGrant": false
+      },
+      "stateSha256": "ac9177269820df39ce344ab80005fd3aabd5f28d9b61f0877942dbe63c040a55",
+      "replaySha256": "7d6e5b32534dc34343c54b19fa190b54f1ce3cc3f63708f6994085f257602d10"
+    },
+    {
+      "seed": 20263812,
+      "prefix": 539,
+      "turn": 4,
+      "unit": 158,
+      "hex": 673,
+      "cachedOos": false,
+      "steady": {
+        "eligible": true,
+        "projection": "steady-own-supply",
+        "protectedOosIds": [],
+        "ownOosIds": [
+          99,
+          103,
+          105,
+          165,
+          177,
+          180,
+          182,
+          183
+        ],
+        "supplied": true,
+        "assumptions": "actual-public-position-with-specified-own-relocations",
+        "temporaryOffensiveSupply": false,
+        "movementGrant": false,
+        "captureGrant": false
+      },
+      "stateSha256": "37260c0786b519492784af5ae4fae00cf47888ad9f1e29348649f73370b1e119",
+      "replaySha256": "7d6e5b32534dc34343c54b19fa190b54f1ce3cc3f63708f6994085f257602d10"
+    },
+    {
+      "seed": 20263812,
+      "prefix": 580,
+      "turn": 4,
+      "unit": 158,
+      "hex": 673,
+      "cachedOos": false,
+      "steady": {
+        "eligible": true,
+        "projection": "steady-own-supply",
+        "protectedOosIds": [],
+        "ownOosIds": [
+          99,
+          103,
+          105,
+          165,
+          177,
+          180,
+          182,
+          183
+        ],
+        "supplied": true,
+        "assumptions": "actual-public-position-with-specified-own-relocations",
+        "temporaryOffensiveSupply": false,
+        "movementGrant": false,
+        "captureGrant": false
+      },
+      "stateSha256": "3aef649bafb310e70185853075458b0f90811b472f167682a3d9d15572a3edb0",
+      "replaySha256": "7d6e5b32534dc34343c54b19fa190b54f1ce3cc3f63708f6994085f257602d10"
+    }
+  ],
+  "interpretation": "63927 real Pusan landing steady OOS even with escort present; 63812 remains supplied, so island ownership is not a mandatory rule prerequisite. Conditional projections do not predict retreats.",
+  "runtimeModelRequests": 0,
+  "externalApiCost": 0
+}

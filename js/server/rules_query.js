@@ -265,6 +265,7 @@ function queryCampaignAirProjection(options = {}) {
         L.move_type = ANY_MOVE
         for (const move of moves) G.location[move.unit] = move.hex
         for (const id of removed) G.location[id] = NOT_USED
+        if (options.steadySupply) check_steady_supply()
         const connectedResources = []
         const diagnostics = {}
         check_japan_resource_trace(connectedResources,diagnostics)
@@ -277,6 +278,52 @@ function queryCampaignAirProjection(options = {}) {
             assessment:removed.length ? "potential-if-all-specified-air-are-eliminated; not-a-battle-result"
                 : "steady-state-supply-screen; not-a-movement-grant" }
     }, options.faction === JP ? JP : AP)
+}
+
+// Conditional public position estimate, never a capture or movement grant.
+// Active offensive supply expires; actual rule supply and public ZOI are reused.
+function queryCampaignSupplyProjection(options = {}) {
+    const faction=rules_query_own_faction(options)
+    const empty=reason=>({eligible:false,reason,projection:"steady-own-supply"})
+    const moves=options.moves || [], protectedIds=options.protectedIds || []
+    const capture=options.captureHex
+    if (faction===null || !Array.isArray(moves) || !Array.isArray(protectedIds)
+        || moves.length>9 || !protectedIds.length || protectedIds.length>9
+        || new Set(moves.map(m=>m.unit)).size!==moves.length) return empty("projection-bound-or-role")
+    const onMap=id=>Number.isInteger(id) && pieces[id]?.faction===faction
+        && G.location[id]>0 && G.location[id]<=LAST_BOARD_HEX
+    if (protectedIds.some(id=>!onMap(id) || pieces[id].class!=="ground")) return empty("not-own-public-ground")
+    if (moves.some(m=>!onMap(m.unit) || !["ground","naval","air","hq"].includes(pieces[m.unit].class)
+        || !Number.isInteger(m.hex) || m.hex<1 || m.hex>LAST_BOARD_HEX)) return empty("not-own-public-move")
+    if (capture!==undefined && (!Number.isInteger(capture) || capture<1 || capture>LAST_BOARD_HEX
+        || !moves.some(m=>m.hex===capture && pieces[m.unit].class==="ground"))) return empty("capture-needs-own-ground")
+    return rules_query_snapshot(()=>{
+        // Materialize pending public control before setting the single landing assumption.
+        is_space_controlled(1,faction)
+        if (capture!==undefined) {
+            if (!is_controllable_hex(capture)) return empty("not-controllable-landing")
+            if (faction===AP) G.supply_cache[capture]&=~JP_CONTROLLED
+            else G.supply_cache[capture]|=JP_CONTROLLED
+            if (G.non_control) set_delete(G.non_control,capture)
+            // Success implies public defenders have left this hex. Their unknown
+            // retreat destinations and future enemy actions are not predicted.
+            for (let id=1;id<pieces.length;id++) if (pieces[id].faction!==faction && G.location[id]===capture)
+                G.location[id]=NOT_USED
+        }
+        for (const m of moves) {
+            if (m.hex!==capture && !is_space_controlled(m.hex,faction)) return empty("not-friendly-destination")
+            G.location[m.unit]=m.hex
+        }
+        G.offensive.active_units=[[],[]];G.active_stack=[];L.move_type=ANY_MOVE
+        check_steady_supply()
+        const ownOosIds=(G.oos || []).filter(id=>pieces[id]?.faction===faction)
+        const protectedOosIds=protectedIds.filter(id=>set_has(G.oos,id))
+        return {eligible:true,projection:"steady-own-supply",protectedOosIds,ownOosIds,
+            supplied:protectedOosIds.length===0,
+            assumptions:capture===undefined?"actual-public-position-with-specified-own-relocations"
+                :"conditional-successful-landing; public defenders absent only from target; no future enemy retreat or response",
+            temporaryOffensiveSupply:false,movementGrant:false,captureGrant:false}
+    },faction)
 }
 
 // 战果表（naval / ground）roll → 命中乘数。
@@ -897,7 +944,7 @@ function queryPbmDestinations(unit, ctx) {
 
 const RULES_QUERY_FNS = [
     "queryZoi", "queryNonNeutralZoi", "queryGroundMoveCost", "querySupplyStatus", "queryAspRemaining", "queryProjectedStack", "queryPbmStackRecovery",
-    "queryPotentialCombatStrength", "queryDefendingGround", "queryBlockadeStatus", "queryCampaignAirProjection", "queryBattleTable", "querySpaceControlled",
+    "queryPotentialCombatStrength", "queryDefendingGround", "queryBlockadeStatus", "queryCampaignAirProjection", "queryCampaignSupplyProjection", "queryBattleTable", "querySpaceControlled",
     "queryFactionUnits", "queryLegalReinforcementHexes", "queryEmergencyRetreatHexes",
     "queryCardPreview", "queryActivationCandidates", "queryGroupMovementDestinations", "queryGroundPreparation", "queryAmphibiousPreparation", "queryGroundReachability", "queryNavalReachability",
     "queryCombatParticipation", "queryReactionCandidates",
@@ -910,7 +957,7 @@ function rules_query_dispatch(q) {
     const fn = q.fn || q.query
     const impl = {
         queryZoi, queryNonNeutralZoi, queryGroundMoveCost, querySupplyStatus, queryAspRemaining, queryProjectedStack, queryPbmStackRecovery,
-        queryPotentialCombatStrength, queryDefendingGround, queryBlockadeStatus, queryCampaignAirProjection, queryBattleTable, querySpaceControlled,
+        queryPotentialCombatStrength, queryDefendingGround, queryBlockadeStatus, queryCampaignAirProjection, queryCampaignSupplyProjection, queryBattleTable, querySpaceControlled,
         queryFactionUnits, queryLegalReinforcementHexes, queryEmergencyRetreatHexes,
         queryCardPreview, queryActivationCandidates, queryGroupMovementDestinations, queryGroundPreparation, queryAmphibiousPreparation, queryGroundReachability, queryNavalReachability,
         queryCombatParticipation, queryReactionCandidates,
