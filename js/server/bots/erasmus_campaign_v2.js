@@ -2059,12 +2059,24 @@ function ec_positioning_context(view, plan) {
 }
 
 // Ephemeral per-selection projection budget; never saved or shared across games.
-function ec_position_projection_scope(position,piece,source,candidates) {
+function ec_piece_unit_id(piece) {
+    if (Number.isInteger(piece?.id)) return piece.id
+    if (Number.isInteger(piece?.u)) return piece.u
+    const i=typeof pieces!=="undefined" && Array.isArray(pieces) ? pieces.indexOf(piece) : -1
+    return i>0 ? i : null
+}
+function ec_position_projection_scope(position,piece,source,candidates,movingUnitIds) {
+    const movingIds=ec_offensive_refined() ? (Array.isArray(movingUnitIds) && movingUnitIds.length
+        ? [...new Set(movingUnitIds)] : [ec_piece_unit_id(piece)]).filter(Number.isInteger) : []
+    const supportsSupply=ec_offensive_refined() && movingIds.some(id=>{
+        const u=typeof pieces!=="undefined"?pieces[id]:piece
+        return u && (u.class==="hq" || ["air","naval"].includes(u.class) && Number(u.br)>0) && !u.b29
+    })
     const koreaSupply=ec_offensive_refined() && position?.role==="Allies" && position.supplyProtectedGroundIds?.length
-        && (piece?.class==="hq" || ["air","naval"].includes(piece?.class) && Number(piece.br)>0) && !piece.b29
+        && supportsSupply
     if (position?.role!=="Allies" || position.turn<5 || !koreaSupply && (piece?.class!=="air" || piece.b29)) return null
     const definitionIndex=typeof pieces!=="undefined" && Array.isArray(pieces) ? pieces.indexOf(piece) : -1
-    const id=piece.id ?? (definitionIndex>0 ? definitionIndex : null)
+    const id=ec_offensive_refined()?ec_piece_unit_id(piece):piece.id ?? (definitionIndex>0 ? definitionIndex : null)
     const endpoints=(position.blockade?.resources || []).filter(r=>r.japanControlled).map(r=>r.hex)
     const bases=candidates.filter(hex=>position.bases.some(b=>b.hex===hex && b.airfield)
         && position.units.filter(u=>u.location===hex && u.id!==id && (u.class==="air" || u.class==="ground")).length<3)
@@ -2072,7 +2084,7 @@ function ec_position_projection_scope(position,piece,source,candidates) {
             || Math.min(...endpoints.map(h=>ec_dist(a,h)))-Math.min(...endpoints.map(h=>ec_dist(b,h))) || a-b)
     const supplyBases=koreaSupply?candidates.slice().sort((a,b)=>Number(b===source)-Number(a===source)
         || ec_dist(a,source)-ec_dist(b,source) || a-b).slice(0,32):[]
-    return {allowed:new Set(bases.slice(0,6)),cache:new Map(),supplyAllowed:new Set(supplyBases),supplyCache:new Map(),koreaSupply}
+    return {allowed:new Set(bases.slice(0,6)),cache:new Map(),supplyAllowed:new Set(supplyBases),supplyCache:new Map(),koreaSupply,movingIds}
 }
 function ec_position_projection(scope,options) {
     const key=JSON.stringify(options)
@@ -2180,7 +2192,7 @@ function ec_position_score_core(hex, faction, piece, source, position, projectio
 function ec_position_score(hex,faction,piece,source,position,scope) {
     const result=ec_position_score_core(hex,faction,piece,source,position,scope)
     if (!Array.isArray(result?.score) || !scope?.koreaSupply || typeof queryCampaignSupplyProjection!=="function") return result
-    const id=piece.id ?? (typeof pieces!=="undefined"?pieces.indexOf(piece):null)
+    const id=ec_piece_unit_id(piece)
     if (!Number.isInteger(id) || id<1) return result
     const ask=moves=>{
         const key=JSON.stringify(moves)
@@ -2188,7 +2200,7 @@ function ec_position_score(hex,faction,piece,source,position,scope) {
         return scope.supplyCache.get(key)
     }
     const before=ask([])
-    const after=scope.supplyAllowed.has(hex)?ask([{unit:id,hex}]):null
+    const after=scope.supplyAllowed.has(hex)?ask((scope.movingIds?.length?scope.movingIds:[id]).map(unit=>({unit,hex}))):null
     const risk=after?.eligible?after.protectedOosIds.length:position.supplyProtectedGroundIds.length+1
     const newOos=before?.eligible && after?.eligible?after.protectedOosIds.filter(i=>!before.protectedOosIds.includes(i)).length:risk
     return {...result,score:[risk,newOos,...result.score],reason:newOos?"korean-supply-risk-after-support-departure"

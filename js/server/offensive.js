@@ -1600,7 +1600,7 @@ function headless_advance_one(self, kind, targetPlan) {
         const candidateHexes=[]
         map_for_each(L.allowed_hexes,h=>candidateHexes.push(h))
         const campaignProjectionScope=kind==="pbm" && em_flag("campaign_v2")
-            ? EOTS_CAMPAIGN_V2.positionProjectionScope(targetPlan?.campaignPositioning,leadPiece,loc,candidateHexes) : null
+            ? EOTS_CAMPAIGN_V2.positionProjectionScope(targetPlan?.campaignPositioning,leadPiece,loc,candidateHexes,group) : null
         map_for_each(L.allowed_hexes, (h) => {
         const path=map_get(L.allowed_hexes,h)
         if (hasGround && mode===GROUND_MOVE && !(path[0]&GROUND_MOVE)) return

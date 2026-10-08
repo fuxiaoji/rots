@@ -905,7 +905,7 @@ var EOTS_BOTS = {
         },
     },
     "erasmus-campaign-v2-3": {
-        name: "盟军战役 AI 2.3（进攻候选）", version: ERASMUS_VERSION + "-campaign.2.3-dev.4",
+        name: "盟军战役 AI 2.3（进攻候选）", version: ERASMUS_VERSION + "-campaign.2.3-dev.5",
         scenarios: ["1942-1945 (The Shortened Campaign)", "1943-1945 (The Even Shorter Campaign)"], roles: ["Allies"],
         decide(view, context) { return erasmus_profile_decision("erasmus-campaign-v2-3", view, context) },
     },
