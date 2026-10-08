@@ -83,9 +83,21 @@ test("conquest acceptance needs four formal surrenders and the specified campaig
  const {goal}=require("../tools/llm-goal-run"),nations=[0,1,2,3].map(id=>({id,key:String(id),surrenderedTurn:4,allJapanControlled:true,remainingKeys:[]}))
  const s={options:{scenario,players:{Japan:"llm:deepseek",Allies:"erasmus-campaign"}},state:{active:"Japan"},rules:{view:()=>({ai:{units:[]}}),query:()=>({cards:[],hexes:[],scenario:{nations}})}}
  assert(goal(s).achieved)
+ s.options.players.Japan="llm:glm";assert(goal(s).achieved)
+ s.options.players.Japan="llm:minimax";assert(!goal(s).achieved)
+ s.options.players.Japan="llm:deepseek"
  s.options.players.Allies="erasmus-v2-opt-v5";assert(!goal(s).achieved)
  s.options.players.Allies="erasmus-campaign";nations[3].surrenderedTurn=0;assert(!goal(s).achieved)
  nations[3].surrenderedTurn=4;nations[3].allJapanControlled=false;assert(!goal(s).achieved)
+})
+
+test("1943 campaign-v2 acceptance still requires a natural Allied terminal result",()=>{
+ const {goal}=require("../tools/llm-goal-run"),s={options:{scenario:"1943-1945 (The Even Shorter Campaign)",players:{Allies:"llm:glm",Japan:"erasmus-japan-campaign-v2"}},state:{active:"None",result:"Allies",log:["Allies Victory"]},rules:{view:()=>({ai:{units:[]}}),query:()=>({cards:[],hexes:[],scenario:{nations:[]}})}}
+ assert.equal(goal(s).kind,"natural-allied-victory")
+ s.state.active="Allies";assert(!goal(s).achieved);s.state.active="None"
+ s.state.log=["Japan resigns"];assert(!goal(s).achieved);s.state.log=["Allies Victory"]
+ s.state.result="Japan";assert(!goal(s).achieved);s.state.result="Allies"
+ s.options.players.Japan="erasmus-v2-opt-v5";assert(!goal(s).achieved)
 })
 
 test("explicit development token budget migration preserves counters and replay actions",()=>{
@@ -97,6 +109,21 @@ test("explicit development token budget migration preserves counters and replay 
  assert.equal(saved.replay.setup.maxTotalTokens,20000000);assert.equal(config.budgetHistory[0].from,10000000);assert.equal(config.budgetHistory[0].totalTokens,7907931)
  const api=require("../js/server/llm/session"),s=api.createSession({seed:20262602,scenario,maxTotalTokens:20000000,players:{Japan:"llm:deepseek",Allies:"erasmus-campaign"}},{clients:{deepseek:{}}})
  const restored=api.restoreSession(api.serializeSession(s),{clients:{deepseek:{}}});assert.equal(restored.limits.maxTotalTokens,20000000);assert(api.verifyReplay(api.replay(restored)).verified)
+})
+
+test("explicit provider continuation preserves state, own memory, paid statistics and exact replay",()=>{
+ const api=require("../js/server/llm/session"),{migrateController}=require("../tools/llm-goal-run"),s=api.createSession({seed:20262602,scenario,players:{Japan:"llm:deepseek",Allies:"erasmus-campaign"}},{clients:{deepseek:{}}})
+ s.stats.requests=334;s.stats.totalTokens=12760653;s.stats.failedRequests=4
+ s.memories.Japan={objective:"继续原局",notes:[],campaign:null,turnPlan:null,offensive:null,recent:[]}
+ const saved=api.serializeSession(s),config={profile:{id:"deepseek"}},before=JSON.parse(JSON.stringify(saved))
+ assert.throws(()=>migrateController(saved,config,"glm",false),/CONTROLLER_CHANGED/);assert.deepEqual(saved,before)
+ migrateController(saved,config,"glm",true)
+ assert.deepEqual(saved.memories,before.memories);assert.deepEqual(saved.replay.actions,before.replay.actions);assert.deepEqual(saved.replay.stats,before.replay.stats);assert.equal(saved.replay.finalStateHash,before.replay.finalStateHash)
+ assert.equal(saved.replay.setup.players.Japan,"llm:glm");assert.equal(saved.replay.setup.players.Allies,"erasmus-campaign")
+ const change=config.controllerHistory[0];assert.equal(change.from,"llm:deepseek");assert.equal(change.to,"llm:glm");assert.equal(change.priorStats.requests,334);assert.equal(change.inheritedMemoryHash,hash(before.memories.Japan))
+ const restored=api.restoreSession(saved,{clients:{glm:{}}});assert(api.verifyReplay(api.replay(restored)).verified);assert.equal(hash(restored.state),hash(s.state));assert.equal(restored.stats.totalTokens,12760653)
+ migrateController(saved,config,"glm",true);assert.equal(config.controllerHistory.length,1)
+ assert.throws(()=>migrateController(saved,config,"unknown",true),/PROFILE_UNSUPPORTED/)
 })
 
 test("task facts bind public defenders, conditional routes and separate HQ reaction budgets without secrets or mutation",async()=>{
@@ -113,12 +140,16 @@ test("task facts bind public defenders, conditional routes and separate HQ react
  assert.equal(consistency.contextStatus,"active");assert.equal(consistency.playerDeclarationLimit,1);assert(consistency.ifAllAttemptedThisOffensive.multipleDefendedTargets)
  assert(consistency.targets.some(t=>t.targetHex===304&&t.hasDefendingGround))
  const kuantan=o.taskFacts.planned[0]
+ assert.equal(o.taskFacts.defenders.find(d=>d.hex===304).groundOnly,true)
+ assert(o.taskFacts.defenders.find(d=>d.hex===304).publicEnemyUnits.every(u=>o.units.some(p=>p.id===u.id&&p.faction===1&&p.location===304)))
+ assert(kuantan.routeFacts.groundPathIds.includes(43));assert(!kuantan.routeFacts.noQueriedTargetPathIds.includes(43))
  assert.deepEqual(kuantan.groups[0].groundRoute.pathToTarget,[4,4,274,304]);assert(!Object.hasOwn(kuantan.groups[0].groundRoute,"aspCost"))
  assert.equal(o.taskFacts.defenders.find(d=>d.hex===304).ground.cf,9)
  assert(kuantan.publicReaction.hqOptions.some(h=>h.hq===83&&h.unitIds.includes(167)&&h.budget===4))
  assert(kuantan.publicReactionBaseline.nonAmphibious.unknownReasons.includes("enemy-intelligence-and-counter-cards-unobserved"));assert(kuantan.publicReactionBaseline.amphibious.eligible)
  assert(o.taskFacts.landCaptureCoverage.units.some(u=>u.id===43&&u.reachableKeys.includes(304)))
  const samePort=o.taskFacts.planned[2].groups[0];assert.deepEqual(samePort.colocatedEscorts,[]);assert.deepEqual(samePort.otherOriginEscortIds,[18]);assert.deepEqual(o.taskFacts.planned[2].unassignedEscortIds,[18])
+ const supportFacts=o.taskFacts.planned[2].plannedSupportFacts;assert(supportFacts.some(s=>s.id===18));assert(supportFacts.every(s=>s.participationStatus==="unknown"));assert(supportFacts.every(s=>s.origin===o.units.find(u=>u.id===s.id).location))
  assert(!Object.hasOwn(kuantan.airRange[0].range,"legal"));assert.equal(typeof kuantan.airRange[0].range.withinRange,"boolean")
  assert.deepEqual(kuantan.groundArithmetic.hitsByMultiplier,[[0.5,9],[1,18],[1.5,27],[2,36]]);assert.deepEqual(kuantan.groundArithmetic.defenderLFs,[9])
  const colocated={offensive:{tasks:[{targetHex:452,ground:[36],escort:[20],support:[]}]}}
@@ -158,9 +189,31 @@ test("advanced movement exposes an otherwise missing amphibious target; origin-o
  apply("advanced_move",null);assert.equal(s.state.location[28],location);assert(packet().candidates.some(c=>c.action==="amphibious"))
  apply("amphibious",null);assert.equal(s.state.location[28],location)
  const p=packet(),move=p.candidates.find(c=>c.action==="move"&&c.effect.targetHex===480);assert(move);assert.equal(p.observation.currentDecision.moveMode,8)
+ assert(move.effect.modeLabels.includes("两栖突击"));assert.equal(move.effect.pathMovementValue,move.argument[1])
  s.state=s.rules.action(s.state,"Japan","move",move.argument);assert.equal(s.state.location[28],480);assert(packet().observation.currentDecision.movedUnitIds.includes(28))
  apply("unit",43);apply("no_move",null);assert(!packet().observation.currentDecision.movedUnitIds.includes(43))
  const publicView=s.rules.view(s.state,"Japan"),fake={view:()=>({...publicView,ai:{...publicView.ai,state:"post_battle_movement",windowKind:"pbm"},actions:{unit:[28]},offensive:{...publicView.offensive,paths:[28,[8,2,479,508,480],167,[4,1,305,304]]}}),query:(...args)=>s.rules.query(...args)},pbm=observe(fake,s.state,"Japan",31,{directOnly:true})
  assert.deepEqual(pbm.observation.currentDecision.movedUnitIds,[28]);assert(pbm.candidates.some(c=>c.action==="unit"&&c.argument===28))
  assert(messagesFor(pbm,null,"pbm").messages[0].content.includes("禁止PBM"))
+})
+
+test("zero ASP permits activation, land movement and strategic sea staging with distinct prompt budgets",async()=>{
+ const api=require("../js/server/llm/session"),s=api.createSession({seed:20262602,scenario,players:{Japan:"llm:glm",Allies:"erasmus-campaign"}},{clients:{glm:{}}})
+ while(s.state.active==="Allies")await api.step(s,{revision:s.revision})
+ s.state.asp[0]=[0,0]
+ const apply=(a,b)=>{const p=observe(s.rules,s.state,"Japan",31,{directOnly:true}),c=p.candidates.find(c=>c.action===a&&(b===undefined||JSON.stringify(c.argument)===JSON.stringify(b)));assert(c,`${a} ${b}`);s.state=s.rules.action(s.state,"Japan",c.action,c.argument);return c}
+ apply("card",100);apply("ops");apply("unit",7)
+ const before=observe(s.rules,s.state,"Japan",31),input=JSON.parse(messagesFor(before,null,"test").messages[1].content)
+ assert(before.candidates.some(c=>c.action==="unit"&&c.argument===43));assert.equal(before.observation.ownASPRemaining,0)
+ assert(input.decisionGuide.budgetSemantics.activation.includes("不扣ASP"));assert(input.decisionGuide.budgetSemantics.strategicSea.includes("不使用ASP"))
+ const asp=JSON.stringify(s.state.asp);apply("unit",43);assert.equal(JSON.stringify(s.state.asp),asp);apply("done");const seaBase=JSON.parse(JSON.stringify(s.state));apply("unit",43)
+ const land=observe(s.rules,s.state,"Japan",32).candidates.find(c=>c.action==="move"&&c.effect.targetHex===304&&c.effect.modeLabels.includes("陆路移动"));assert(land)
+ s.state=s.rules.action(s.state,"Japan",land.action,land.argument);assert.equal(JSON.stringify(s.state.asp),asp)
+ // Public coastal fixture: strategic sea transport, not a land path or ASP spend.
+ s.state=seaBase;s.state.location[43]=479
+ apply("unit",43);apply("advanced_move");apply("strat_move")
+ const seaPacket=observe(s.rules,s.state,"Japan",33),sea=seaPacket.candidates.find(c=>c.action==="move"&&c.argument[0]===3);assert(sea)
+ assert.equal(seaPacket.observation.hexes.find(h=>h.hex===sea.effect.targetHex).control,"Japan")
+ assert.deepEqual(sea.effect.modeLabels,["战略移动","海上移动"]);assert.equal(sea.argument[0],3)
+ s.state=s.rules.action(s.state,"Japan",sea.action,sea.argument);assert.equal(JSON.stringify(s.state.asp),asp);assert.equal(s.state.location[43],sea.effect.targetHex)
 })
