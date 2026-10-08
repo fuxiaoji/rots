@@ -1,0 +1,19 @@
+{
+  "task": "AI-CAMPAIGN-BASE1-01",
+  "measurementRevision": 2,
+  "seed": 20264007,
+  "actualCaptureAction": 797,
+  "oldFirstSupplyAction": 817,
+  "newFirstSupplyAction": 797,
+  "finalStateSha256": "bd77c9ffcf549928f8b0f6d545fdcd546b86c075cf5c6ccadffd7e0881806e1c",
+  "unchangedFullHash": true,
+  "auditSha256": "8ca3fc8c811c1cc6ac12a5862fc29d32b49289fc20db2c001e0ee22c5c67c250",
+  "supplyObserverSha256": "104ff38eb3e0b821a5812841edb96813e0f5f9e1116934bc99742cd239257409",
+  "nativeSupplySourceSha256": "f9f4139b84abe4079d7cac37392fae5a3cd123b4bdcd605a927b2a1f6e75e84d",
+  "nativeSupplyFunctionSha256": "240f04df44ef0879fb683caf9360775294bde8a9d6d5f6ee5c246a34a19adf46",
+  "combinedInstrumentationSha256": "6b6e0d89592c655eb01bc2fa1ebc57340d145c01aff3faa9a1cf6090f302b0ce",
+  "oldAuditSha256": "abb11588ed279210ba3a62d0df96dc98879f9a9686748b2772b3e4d965698e88",
+  "newAuditSha256": "600f774a19072e74c2990438a0cde76b6c58379e93cc89ac2a34b1089f1751f6",
+  "runtimeModelRequests": 0,
+  "externalApiCost": 0
+}

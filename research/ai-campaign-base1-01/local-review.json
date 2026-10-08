@@ -59,5 +59,21 @@
       "outputSha256": "ac2878b0914c7301567af10ab5067a2d7b2838645841bbfb2bd41ccba100e30c"
     }
   ],
-  "correctiveCandidateAlliesSha256": "e58b21a2436f953fbf4556bbb115f81f67e8463ff309eb8fad5f7f10e648cdb7"
+  "correctiveCandidateAlliesSha256": "e58b21a2436f953fbf4556bbb115f81f67e8463ff309eb8fad5f7f10e648cdb7",
+  "finalAssessment": {
+    "requestedModel": "gpt-6-astra",
+    "requestedEffort": "high",
+    "actualModel": "unknown-not-exposed",
+    "scope": "completed600 statistics/report, read-only",
+    "finding": "AP42 parity66; AP43 20 remains below40; Korea 1943 risk increased; PoW treaty regression; mixed national results; no single mechanism attribution",
+    "adopted": "retain negatives, conditional denominators, enemy cut prefix diagnosis, no retuning or deployment",
+    "outputKind": "normalized-adopted-summary-not-full-agent-transcript",
+    "tokens": "unknown",
+    "elapsedMs": "unknown",
+    "cost": "unknown",
+    "validationSha256": "430e16e41d2a813fd1e680a8976df52cbbdee1e17fa90d561ba9135f3758e102",
+    "validationStage2Sha256": "31a18e216847b20e978817b97b480e53a7616165424f15635ebd439c1ecea7e7",
+    "finalRootVerification": "Numerical results unchanged after wording correction from casualties to target ground CF reduction and added enemy-cut prefix evidence",
+    "outputSha256": "ff17ef9cf2e1453f316726ac8dfd5ca4de6ca6af23bbb7d230a881285c50a815"
+  }
 }

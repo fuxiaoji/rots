@@ -1,0 +1,316 @@
+{
+  "task": "AI-CAMPAIGN-BASE1-01",
+  "purpose": "after-frozen-result public prefix diagnosis; not a new policy or win sample",
+  "alliesBundleSha256": "e58b21a2436f953fbf4556bbb115f81f67e8463ff309eb8fad5f7f10e648cdb7",
+  "cases": [
+    {
+      "seed": 20264508,
+      "ordinal": 1459,
+      "role": "Japan",
+      "action": "advance",
+      "before": {
+        "eligible": true,
+        "projection": "steady-own-supply",
+        "protectedOosIds": [],
+        "ownOosIds": [
+          95,
+          100,
+          123,
+          164,
+          166,
+          193,
+          201,
+          202,
+          203,
+          205
+        ],
+        "supplied": true,
+        "assumptions": "actual-public-position-with-specified-own-relocations",
+        "temporaryOffensiveSupply": false,
+        "movementGrant": false,
+        "captureGrant": false
+      },
+      "after": {
+        "eligible": true,
+        "projection": "steady-own-supply",
+        "protectedOosIds": [
+          187
+        ],
+        "ownOosIds": [
+          95,
+          100,
+          113,
+          114,
+          123,
+          164,
+          165,
+          166,
+          187,
+          193,
+          195,
+          201,
+          202,
+          203,
+          205
+        ],
+        "supplied": false,
+        "assumptions": "actual-public-position-with-specified-own-relocations",
+        "temporaryOffensiveSupply": false,
+        "movementGrant": false,
+        "captureGrant": false
+      },
+      "changed": [
+        {
+          "unit": 11,
+          "name": "Shokaku",
+          "faction": 0,
+          "class": "naval",
+          "from": 333,
+          "to": 672
+        }
+      ],
+      "priorStateSha256": "a7a6357ce94408782fe70c75ec14477dab47ad2e8e275c33602a4b8b95d62c93",
+      "stateSha256": "df2e1b6bcaeccf1936c957ea6742a2feb5f26e61fbf563a73b6b5b6bd514cd54",
+      "replaySha256": "4f6417705756906020df8179ce5cb01e2e0a0757f96a81f8ad79ca545f9be3f2",
+      "alreadyFullVerifiedFinalHash": "9ff2f57129538e8d05389a9faafcc1613feb8b794c2b80b0f64e2730ab7fbcaf"
+    },
+    {
+      "seed": 20264510,
+      "ordinal": 1696,
+      "role": "Japan",
+      "action": "advance",
+      "before": {
+        "eligible": true,
+        "projection": "steady-own-supply",
+        "protectedOosIds": [],
+        "ownOosIds": [
+          95,
+          125,
+          166,
+          196,
+          203
+        ],
+        "supplied": true,
+        "assumptions": "actual-public-position-with-specified-own-relocations",
+        "temporaryOffensiveSupply": false,
+        "movementGrant": false,
+        "captureGrant": false
+      },
+      "after": {
+        "eligible": true,
+        "projection": "steady-own-supply",
+        "protectedOosIds": [
+          202
+        ],
+        "ownOosIds": [
+          95,
+          125,
+          143,
+          147,
+          165,
+          166,
+          194,
+          196,
+          200,
+          202,
+          203
+        ],
+        "supplied": false,
+        "assumptions": "actual-public-position-with-specified-own-relocations",
+        "temporaryOffensiveSupply": false,
+        "movementGrant": false,
+        "captureGrant": false
+      },
+      "changed": [
+        {
+          "unit": 47,
+          "name": "4th Air Division",
+          "faction": 0,
+          "class": "air",
+          "from": 584,
+          "to": 672
+        }
+      ],
+      "priorStateSha256": "2f759c7d1c94710aaa6acfdcd9dd6ffc511887a3fd99516bbd7bb9ecae4ed2d6",
+      "stateSha256": "fc1cadbacf2807df524d0dbe821327ab48c2615b051f1ad5a6699cfd1a121952",
+      "replaySha256": "3ee69fe11b98f3fde66d5f24e335b885d5cff434b144ac40ca5a3473a97f8416",
+      "alreadyFullVerifiedFinalHash": "a0b0731210da2e3b6e6ec165d4d6c6c199b4e21bfe08852f9041268cb1c5e72e"
+    },
+    {
+      "seed": 20264516,
+      "ordinal": 1038,
+      "role": "Japan",
+      "action": "advance",
+      "before": {
+        "eligible": true,
+        "projection": "steady-own-supply",
+        "protectedOosIds": [],
+        "ownOosIds": [
+          87,
+          113,
+          125,
+          126,
+          130,
+          131,
+          132,
+          136,
+          137,
+          140,
+          165,
+          166,
+          193,
+          195,
+          197,
+          198,
+          200,
+          203
+        ],
+        "supplied": true,
+        "assumptions": "actual-public-position-with-specified-own-relocations",
+        "temporaryOffensiveSupply": false,
+        "movementGrant": false,
+        "captureGrant": false
+      },
+      "after": {
+        "eligible": true,
+        "projection": "steady-own-supply",
+        "protectedOosIds": [
+          196
+        ],
+        "ownOosIds": [
+          87,
+          113,
+          125,
+          126,
+          130,
+          131,
+          132,
+          136,
+          137,
+          140,
+          165,
+          166,
+          193,
+          195,
+          196,
+          197,
+          198,
+          200,
+          203
+        ],
+        "supplied": false,
+        "assumptions": "actual-public-position-with-specified-own-relocations",
+        "temporaryOffensiveSupply": false,
+        "movementGrant": false,
+        "captureGrant": false
+      },
+      "changed": [
+        {
+          "unit": 62,
+          "name": "10th Air Division",
+          "faction": 0,
+          "class": "air",
+          "from": 825,
+          "to": 731
+        }
+      ],
+      "priorStateSha256": "87c1ef1719967ae796ab1a188ed02ed9390c9fd25be821a25a0af440b6c8927e",
+      "stateSha256": "141f7d02b261f92620ced1d350fae3386d751501810e4dbc3d24c028e06994f3",
+      "replaySha256": "3ae67d93286b5a45838fc9a47c502a5611e436ae5b3980903d13e1e0294c5bef",
+      "alreadyFullVerifiedFinalHash": "d2993556d35c7addd156debeff13cb2442e5256a8e7fdf810c7d5754e86419f1"
+    },
+    {
+      "seed": 20264523,
+      "ordinal": 1255,
+      "role": "Japan",
+      "action": "advance",
+      "before": {
+        "eligible": true,
+        "projection": "steady-own-supply",
+        "protectedOosIds": [],
+        "ownOosIds": [
+          100,
+          123,
+          125,
+          126,
+          131,
+          135,
+          136,
+          139,
+          140,
+          164,
+          165,
+          166,
+          168,
+          193,
+          194,
+          195,
+          196,
+          202,
+          205
+        ],
+        "supplied": true,
+        "assumptions": "actual-public-position-with-specified-own-relocations",
+        "temporaryOffensiveSupply": false,
+        "movementGrant": false,
+        "captureGrant": false
+      },
+      "after": {
+        "eligible": true,
+        "projection": "steady-own-supply",
+        "protectedOosIds": [
+          188,
+          191
+        ],
+        "ownOosIds": [
+          100,
+          123,
+          125,
+          126,
+          131,
+          135,
+          136,
+          139,
+          140,
+          164,
+          165,
+          166,
+          168,
+          188,
+          191,
+          193,
+          194,
+          195,
+          196,
+          202,
+          205
+        ],
+        "supplied": false,
+        "assumptions": "actual-public-position-with-specified-own-relocations",
+        "temporaryOffensiveSupply": false,
+        "movementGrant": false,
+        "captureGrant": false
+      },
+      "changed": [
+        {
+          "unit": 54,
+          "name": "51st Air Flotilla",
+          "faction": 0,
+          "class": "air",
+          "from": 325,
+          "to": 674
+        }
+      ],
+      "priorStateSha256": "09bfecc7fab457b20ec166ca19df8076644d058d5160abe7ff0d27e50adf52c8",
+      "stateSha256": "7b9c6caf8e0f8e61c1ce3afdb0cb060efe08363ae6a6a56305a36d16085f8b33",
+      "replaySha256": "ee3244b7d8957d10152d018218a660233cd94d1712fce1f718d568f355a5fc21",
+      "alreadyFullVerifiedFinalHash": "4b3320b48696d2635a24a16764f8f1708d559782f355bc468a364abecdf1de13"
+    }
+  ],
+  "interpretation": "All four first risk transitions occur on Japanese advances, with steady supply true immediately before and false afterward. Do not call these unsupplied initial landings or own PBM withdrawals; this does not prove all own departures are guarded.",
+  "runtimeModelRequests": 0,
+  "externalApiCost": 0,
+  "executedToolPath": "tmp/ai-campaign-base1-01/korean-enemy-cut-diagnosis.js",
+  "executedToolSha256": "0e6725014ad590ff8bd02c79b9414d34a7232cd3d3cd5e995e5a3bacfc77a1d2",
+  "validationStage2Sha256": "31a18e216847b20e978817b97b480e53a7616165424f15635ebd439c1ecea7e7"
+}
